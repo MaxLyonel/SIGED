@@ -35,7 +35,10 @@ class NewHistoryInscriptionController extends Controller {
         }
         //set the student and inscriptions data
         $student = array();
-        $dataInscription = array();
+        $dataInscriptionR = array();
+        $dataInscriptionA = array();
+        $dataInscriptionE = array();
+        $dataInscriptionP = array();
         $sw = false;
         if ($request->get('form')) {
             //get the form to send
@@ -43,32 +46,45 @@ class NewHistoryInscriptionController extends Controller {
             $rude = trim($form['codigoRudeHistory']);
             //get the result of search
             $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rude));
-            //verificamos si existe el estudiante y si es menor a 15
+            //verificamos si existe el estudiante
             if ($student) {
-                $query = $em->getConnection()->prepare("select * from get_estudiante_historial_json('" . $rude . "');");
+                $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $rude . "');");
                 $query->execute();
-                $dataInscriptionJson = $query->fetchAll();
-                //dump($dataInscription);
+                $dataInscription = $query->fetchAll();
 
-                foreach ($dataInscriptionJson as $key => $inscription) {
-                  # code...
-                  $dataInscription [] = json_decode($inscription['get_estudiante_historial_json'],true);
+                foreach ($dataInscription as $key => $inscription) {
+                  switch ($inscription['institucioneducativa_tipo_id_raep']) {
+                    case '1':
+                      $dataInscriptionR[$key] = $inscription;
+                      break;
+                    case '2':
+                      $dataInscriptionA[$key] = $inscription;
+                      break;
+                    case '4':
+                      $dataInscriptionE[$key] = $inscription;
+                      break;
+                    case '5':
+                      $dataInscriptionP[$key] = $inscription;
+                      break;
+                  }
                 }
-                //$dataInscription = $em->getRepository('SieAppWebBundle:Estudiante')->getInscriptionHistoryEstudenWhitObservation($form['codigoRude']);
                 $sw = true;
             }else{
               //check if the result has some value
-              $message = 'Estudiante con rude ' . $rude . ' no se presenta registro de inscripciones';
+              $message = 'Estudiante con RUDE: ' . $rude . ', no presenta registro de inscripciones';
               $this->addFlash('notihistory', $message);
               $sw = false;
               return $this->redirectToRoute('history_new_inscription_index');
             }
         }
-        //dump($dataInscription);die;
+
         return $this->render($this->session->get('pathSystem') . ':NewHistoryInscription:index.html.twig', array(
                     'form' => $this->createSearchForm()->createView(),
                     'datastudent' => $student,
-                    'dataInscription' => $dataInscription,
+                    'dataInscriptionR' => $dataInscriptionR,
+                    'dataInscriptionA' => $dataInscriptionA,
+                    'dataInscriptionE' => $dataInscriptionE,
+                    'dataInscriptionP' => $dataInscriptionP,
                     'sw' => $sw
         ));
     }
@@ -94,7 +110,6 @@ class NewHistoryInscriptionController extends Controller {
      *
      */
     public function questAction($rude) {
-        //die('krlos');
         $em = $this->getDoctrine()->getManager();
         //check if the user is logged
         $id_usuario = $this->session->get('userId');
@@ -103,7 +118,7 @@ class NewHistoryInscriptionController extends Controller {
         }
         //set the student and inscriptions data
         $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rude));
-        //verificamos si existe el estudiante y si es menor a 15
+        //verificamos si existe el estudiante
         if ($student) {
             $dataInscription = $em->getRepository('SieAppWebBundle:Estudiante')->getInscriptionHistoryEstudenWhitObservation($rude);
         }

@@ -592,7 +592,7 @@ class InboxController extends Controller {
       
       $objObsQA = $this->getObservationQA($form);
 
-      if($objObsQA){
+      if(!$objObsQA){
         return $this->render($this->session->get('pathSystem') . ':Inbox:list_inconsistencia.html.twig', array(
           'objObsQA' => $objObsQA,
           'sie' =>  $form['sie'],
