@@ -1,0 +1,69 @@
+<div class="col-md-12">
+{% if lista_detalle is not empty %}
+    <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+        <div class="portlet-heading">
+            <div class="pull-left">
+                <h4 class="portlet-title">Inconsistencias respecto a {{ regla.descripcion }}</h4>
+            </div>
+            <div class="clearfix"></div>
+        </div><!-- /.panel-heading -->
+        <div class="portlet-body">
+            <div class="panel-body panel-primary">
+                <div id="no-more-tables" class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover cf dataTable">
+                        <thead class="cf"> 
+                            <tr>
+                                <th>No.</th>
+                                <th>Gestión</th>
+                                <th>Llave</th>
+                                <th>Observación</th>
+                                <th>Unidad Educativa</th>
+                                <th>Solución</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for detalle in lista_detalle %}
+                                <tr>
+                                    <td data-title="No.">{{ loop.index }}</td>
+                                    <td data-title="Gestion">{{detalle.gestionTipo}}</td>
+                                    <td data-title="Llave">{{detalle.llave}}</td>
+                                    <td data-title="Observacion">{{detalle.obs}}</td>
+                                    <td data-title="Unidad Educativa">{{detalle.institucionEducativaId}}</td>
+                                    <td data-title="Solucion">
+                                    {% if regla.id == 6 %}
+                                        <form action="{{path('regularizacionDobleInscripcion_result')}}" method="post" style="display: inline-block">
+                                            <input type="hidden" id="form_codigoRude" name="form[codigoRude]" value="{{detalle.llave}}">
+                                            <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                            <button type="submit" class="btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');" id="solucion{{ loop.index }}" name="solucion{{ loop.index }}"><i class="fa fa-check-o"></i> Ir a solución</button>
+                                        </form>
+                                    {% elseif regla.id == 2 %}
+                                        <form action="{{path('sie_estudiantes_result')}}" method="post" style="display: inline-block" target="_blank">
+                                            <input type="hidden" id="form_codigoRude" name="form[codigoRude]" value="{{detalle.llave}}">
+                                            <input type="hidden" id="form_mode1" name="form[mode1]" value="1">
+                                            <input type="hidden" id="form_mode3" name="form[mode3]" value="1">
+                                            <button type="submit" class="btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');" id="solucion{{ loop.index }}" name="solucion{{ loop.index }}"><i class="fa fa-check-o"></i> Ir a solución</button>
+                                        </form>
+                                    {% elseif regla.id == 3 %}
+                                        <form action="{{path('sie_estudiantes_result')}}" method="post" style="display: inline-block" target="_blank">
+                                            <input type="hidden" id="form_codigoRude" name="form[codigoRude]" value="{{detalle.llave}}">
+                                            <input type="hidden" id="form_mode3" name="form[mode3]" value="1">
+                                            <button type="submit" class="btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');" id="solucion{{ loop.index }}" name="solucion{{ loop.index }}"><i class="fa fa-check-o"></i> Ir a solución</button>
+                                        </form>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div><!-- /.panel-body -->
+    </div>
+{% else %}
+    <div class="alert alert-warning">
+        <i class="fa fa-warning"></i> No presenta inconsistencias respecto a {{ regla.descripcion }}.
+    </div>
+{% endif %}
+</div>

@@ -218,13 +218,13 @@ class UpFileUeController extends Controller {
                 //validate the allows extensions
                 $aValidTypes = array('emp');
                 if (!in_array(strtolower($fileType), $aValidTypes)) {
-                    $session->getFlashBag()->add('warningcons', 'El archivo que intenta subir No tiene la extension correcta');
+                    $session->getFlashBag()->add('warningcons', 'El archivo que intenta subir no tiene la extensión correcta.');
                     return $this->redirect($this->generateUrl('sie_herramienta_upfile_index'));
                 }
 
                 //validate the files weight
                 if (!( 10001 < $oFile->getSize()) && !($oFile->getSize() < 2000000000)) {
-                    $session->getFlashBag()->add('warningcons', 'El archivo que intenta subir no tiene el tamaño correcto');
+                    $session->getFlashBag()->add('warningcons', 'El archivo que intenta subir no tiene el tamaño correcto.');
                     return $this->redirect($this->generateUrl('sie_herramienta_upfile_index'));
                 }
 
@@ -240,7 +240,7 @@ class UpFileUeController extends Controller {
 
                 //unzip the file emp
                 if (!$result = system('unzip -P  3I35I3Client ' . $dirtmp . '/' . $originalName . ' -d ' . $dirtmp . '/')) {
-                    $session->getFlashBag()->add('warningcons', 'El archivo ' . $originalName . ' tiene problemas para descomprimirse');
+                    $session->getFlashBag()->add('warningcons', 'El archivo ' . $originalName . ' tiene problemas para descomprimirse.');
                     system('rm -fr ' . $dirtmp);
                     return $this->redirect($this->generateUrl('sie_herramienta_upfile_index'));
                 }
@@ -260,7 +260,7 @@ class UpFileUeController extends Controller {
 
                 //validate the full descompresition with the SieTypeFile from begin to the end
                 if ((strcmp(preg_replace('/\s+/', '', $fileInfoContent[0]), preg_replace('/\s+/', '', $fileInfoContent[sizeof($fileInfoContent) - 1]))) !== 0) {
-                    $session->getFlashBag()->add('warningcons', 'El archivo ' . $originalName . ' tiene fallas en el contenido');
+                    $session->getFlashBag()->add('warningcons', 'El archivo ' . $originalName . ' tiene fallas en el contenido.');
                     system('rm -fr ' . $dirtmp);
                     return $this->redirect($this->generateUrl('sie_herramienta_upfile_index'));
                 }
@@ -283,7 +283,7 @@ class UpFileUeController extends Controller {
                             (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.5'))) !== 0
                             and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED4'))) !== 0
                     ) {
-                        $session->getFlashBag()->add('warningcons', 'El archivo ' . $aDataExtractFileUE[1] . ' presenta versión incorrecta para subir el archivo ');
+                        $session->getFlashBag()->add('warningcons', 'El archivo ' . $aDataExtractFileUE[1] . ' presenta versión incorrecta para ser cargado.');
                         system('rm -fr ' . $dirtmp);
                         return $this->redirect($this->generateUrl('sie_herramienta_upfile_index'));
                     }
@@ -306,7 +306,7 @@ class UpFileUeController extends Controller {
                 if ($objUploadFile) {
                     if ($objUploadFile->getEstadoFile()) {
                         system('rm -fr ' . $dirtmp);
-                        $session->getFlashBag()->add('warningcons', 'El archivo que intenta subir ya fue cargado al repositorio');
+                        $session->getFlashBag()->add('warningcons', 'El archivo que intenta subir ya fue cargado al repositorio.');
                         return $this->redirect($this->generateUrl('sie_herramienta_upfile_index'));
                     } else {
 
@@ -411,10 +411,10 @@ class UpFileUeController extends Controller {
             }
             //everything good so need to remove the tmp file
             system('rm -fr ' . $dirtmp);
-            $session->getFlashBag()->add('successcons', 'Archivo cargado correctamente');
+            $session->getFlashBag()->add('successcons', 'Archivo cargado correctamente.');
             return $this->redirect($this->generateUrl('sie_herramienta_upfile_index'));
         } else {
-            $session->getFlashBag()->add('warningcons', 'Datos enviados incorrectamente');
+            $session->getFlashBag()->add('warningcons', 'Datos enviados incorrectamente.');
             return $this->redirect($this->generateUrl('sie_herramienta_upfile_index'));
         }
 

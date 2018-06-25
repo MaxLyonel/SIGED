@@ -3,12 +3,12 @@
 {% block contentoption%}
   <!-- Start page header -->
   <div class="header-content">
-      <h2><i class="fa fa-table"></i> Inscripcion Excepcional<span>Resultado sin rudeal</span></h2>
+      <h2><i class="fa fa-table"></i> Inscripción Excepcional<span>Resultado sin rudeal</span></h2>
       <div class="breadcrumb-wrapper hidden-xs">
-          <span class="label">Usted esta aqui:</span>
+          <span class="label">Usted esta aquí:</span>
           <ol class="breadcrumb">
                   <i class="fa fa-home"></i>
-                  <a href="dashboard.html">Inscripcion Excepcional</a>
+                  <a href="dashboard.html">Inscripción Excepcional</a>
                   <i class="fa fa-angle-right"></i>
               </li>
 
@@ -32,7 +32,7 @@
                         {% for flashMessage in app.session.flashbag.get('goodinscription') %}
                             <div class="alert alert-success alert-dismissible" >
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                <strong>Alerta!</strong> {{ flashMessage }}
+                                <strong>¡Alerta!</strong> {{ flashMessage }}
                             </div>
                         {% endfor %}
                         </div>
@@ -89,7 +89,7 @@
                                                               <input type="hidden" name="id" value="{{student.id}}">
                                                               <input type="hidden" name="codigoRude" id="codigoRude" value="{{ student.codigoRude }}" />
                                                               <input type="hidden" name="pais" id="pais" value="{{newstudent.pais}}">
-                                                              <input type="hidden" name="ueprocedencia" id=ueprocedencia"" value="{{newstudent.ueprocedencia}} "/>
+                                                              <input type="hidden" name="ueprocedencia" id="ueprocedencia" value="{{newstudent.ueprocedencia}} "/>
                                                               <button class="btn btn-success btn-sm btn-block"> <i class="fa fa-pencil"></i> Inscribir</button>
                                                           </form>
                                                       </td>

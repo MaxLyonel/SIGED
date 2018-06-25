@@ -161,7 +161,7 @@ class EstudianteController extends Controller
                     $estudiante->setLocalidadNac('');
                 }
                 $estudiante->setComplemento('');
-                $estudiante->setSegipId('13');                        
+                $estudiante->setSegipId('11');
                 $em->persist($estudiante);
                 $em->flush();
 

@@ -113,3 +113,7 @@ sie_herramienta_donwload_file_sie:
 sie_herramienta_estudiante_socieconomico:
     resource: "@SieHerramientaBundle/Resources/config/routing/estudianteSocioeconomico.yml"
     prefix:   /sie/estudiantesocioeconomico
+
+sie_herramienta_aca_multigrado:
+    resource: "@SieHerramientaBundle/Resources/config/routing/acamultigrado.yml"
+    prefix:   /sie/acamultigrado

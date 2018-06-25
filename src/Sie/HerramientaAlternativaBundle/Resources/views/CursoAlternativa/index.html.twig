@@ -228,7 +228,7 @@
                         {#statusCode: {
                         500: function () {
                             $('#mengestioncurso').empty();
-                            $('#mengestioncurso').html("<div class='alert alert-danger alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Ocurrio un error al crear el curso!</strong></div>");                        
+                            $('#mengestioncurso').html("<div class='alert alert-danger alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>Ocurrió un error al crear el curso</strong></div>");                        
                             $('#modal').modal('hide');                             
                         },#}
                         error: function(data){
@@ -240,7 +240,7 @@
                 }
             }
         else{
-            alert('¡Ingrese todos lo datos!');
+            alert('¡Ingrese todos los datos!');
             }
         };    
     

@@ -198,8 +198,8 @@ class InfoCentroController extends Controller {
                 ->add('fax', 'text', array('label' => 'Fax', 'required' => false, 'data' => $sucursal->getFax(), 'attr' => array('class' => 'form-control')))
                 ->add('telefono2', 'text', array('label' => 'Teléfono 2', 'required' => false, 'data' => $sucursal->getTelefono2(), 'attr' => array('class' => 'form-control')))
                 ->add('referenciaTelefono2', 'text', array('label' => 'Pertenece a (cargo o relación)', 'data' => $sucursal->getReferenciaTelefono2(), 'attr' => array('class' => 'form-control')))
-                ->add('email', 'text', array('label' => 'Correo electrónico de la U.E.', 'required' => false, 'data' => $sucursal->getEmail(), 'attr' => array('class' => 'form-control')))
-                ->add('casilla', 'text', array('label' => 'Casilla postal de la U.E.', 'required' => false, 'data' => $sucursal->getCasilla(), 'attr' => array('class' => 'form-control')))
+                ->add('email', 'text', array('label' => 'Correo electrónico del (CEE)', 'required' => false, 'data' => $sucursal->getEmail(), 'attr' => array('class' => 'form-control')))
+                ->add('casilla', 'text', array('label' => 'Casilla postal del (CEE)', 'required' => false, 'data' => $sucursal->getCasilla(), 'attr' => array('class' => 'form-control')))
                 ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
                 ->getForm();
 

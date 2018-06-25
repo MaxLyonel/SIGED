@@ -28,3 +28,9 @@ herramienta_clistargrados:
     defaults: { _controller: "SieHerramientaBundle:CreacionCursos:listargrados" }
     options:
          expose: true
+
+herramienta_acurso_getareas:
+    path:     /acursos/
+    defaults: { _controller: "SieHerramientaBundle:CreacionCursos:getAreas" }
+    options:
+         expose: true

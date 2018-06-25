@@ -681,7 +681,7 @@ class InscriptionHumanisticasController extends Controller {
           //$this->session->getFlashBag()->add('goodomi', 'Se realizo la inscripción del Estudiante satisfactoriamente ');
           //do the commit in DB
           $em->getConnection()->commit();
-          $this->session->getFlashBag()->add('goodinscription', 'Estudiante inscrito');
+          $this->session->getFlashBag()->add('goodinscription', 'Estudiante inscrito.');
           return $this->redirect($this->generateUrl('alternativa_inscriptionHumanisticas_index'));
       } catch (Exception $ex) {
           $em->getConnection()->rollback();
