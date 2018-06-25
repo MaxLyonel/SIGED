@@ -649,12 +649,14 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         $db = $em->getConnection();
+
         try {
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_sucursal_tramite');")->execute();
             $ies = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find($sesion->get('ie_suc_id'));            
             $iest = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalTramite')->findByInstitucioneducativaSucursal($ies);
-            if ($iest){                
-                if ($sesion->get('ie_per_estado') == '1'){//INICIO INSCRIPCIONES
+            if ($iest){           
+                if ($sesion->get('ie_per_estado') == '3'){//INICIO INSCRIPCIONES
+                    
                     //MIGRANDO DATOS DE SOCIO ECONOMICOS DEL ANTERIOR PERIODO AL ACTUAL PERIODO
                     $gestant = $this->session->get('ie_gestion');
                     $perant = $this->session->get('ie_per_cod');
@@ -687,6 +689,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                         $params = array();
                         $obs->execute($params);
                     }
+                    //MIGRANDO DATOS DE SOCIO ECONOMICOS DEL ANTERIOR PERIODO AL ACTUAL PERIODO
 
                     $query = "select * from sp_validacion_alternativa_ig_web('".$this->session->get('ie_gestion')."','".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."');";
                     //dump($query);die;
@@ -697,7 +700,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                     if ($observaciones){
                         return $this->redirect($this->generateUrl('herramienta_alter_reporte_observacionesoperativoinicio'));
                     }
-                    else{                        
+                    else{                      
                         if ($iest[0]->getTramiteEstado()->getId() == '11'){//Aceptación de apertura Inicio de Semestre
                             $iestvar = $iest[0];
                             $iestvar->setTramiteEstado($em->getRepository('SieAppWebBundle:TramiteEstado')->find('12'));//¡Inicio de Semestre - Cerrado!                           
@@ -713,11 +716,10 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                             $iestvar->setUsuarioIdModificacion($this->session->get('userId'));
                             $em->persist($iestvar);
                             $em->flush(); 
-                        }                      
+                        }
                     }
                 }
-                if ($sesion->get('ie_per_estado') == '2'){//FIN NOTAS
-                    //die('df');
+                if ($sesion->get('ie_per_estado') == '2'){//FIN NOTAS                    
                     $query = "select * from sp_validacion_alternativa_web('".$this->session->get('ie_gestion')."','".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."');";
                     $obs= $db->prepare($query);
                     $params = array();
@@ -726,11 +728,6 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                     if ($observaciones){
                         return $this->redirect($this->generateUrl('herramienta_alter_reporte_observacionesoperativo'));                    }
                     else{
-                        //die('f');
-//                        $em->getConnection()->rollback();
-//                        return $this->redirectToRoute('principal_web');
-//                        print_r($iest[0]->getTramiteEstado()->getId());
-//                        die;
                         if ($iest[0]->getTramiteEstado()->getId() == '6'){//¡En regularización notas!
                             $iestvar = $iest[0];
                             $iestvar->setTramiteEstado($em->getRepository('SieAppWebBundle:TramiteEstado')->find('8'));//Ver regularización notas terminada                          
@@ -749,7 +746,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                         } 
                     }
                 }
-                if ($sesion->get('ie_per_estado') == '3'){//OPERATIVO DE INICIO DE SISTEMA O MODO REGULARIZACION     
+                if ($sesion->get('ie_per_estado') == '3'){//OPERATIVO DE MODO REGULARIZACION     
                     $query = "select * from sp_validacion_alternativa_web('".$this->session->get('ie_gestion')."','".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."');";
                     $obs= $db->prepare($query);
                     $params = array();
@@ -778,8 +775,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                         }
                     }                        
                 }
-            }
-            else{//EN CASO QUE LA SUCURSAL PERIODO NO TENG ASIGNADO UN PERIODO TRAMITE               
+            }else{//EN CASO QUE LA SUCURSAL PERIODO NO TENG ASIGNADO UN PERIODO TRAMITE               
                 $query = "select * from sp_validacion_alternativa_web('".$this->session->get('ie_gestion')."','".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."');";
                     $obs= $db->prepare($query);
                     $params = array();
@@ -788,7 +784,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                     if ($observaciones){
                         return $this->redirect($this->generateUrl('herramienta_alter_reporte_observacionesoperativo'));
                     }
-                    else{                        
+                    else{                     
                         $iest = new InstitucioneducativaSucursalTramite();
                         $iest->setInstitucioneducativaSucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find($sesion->get('ie_suc_id')));            
                         $iest->setPeriodoEstado($em->getRepository('SieAppWebBundle:PeriodoEstadoTipo')->find('0'));
@@ -815,11 +811,11 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                     }
             }            
             $em->getConnection()->commit();
-            
+
+            return $this->redirect($this->generateUrl('herramienta_alter_reporte_operativo_exitoso_cerrado.'));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
         }
-        return $this->redirectToRoute('principal_web');
     }
     
     public function tramitecontinuaroperativoAction(Request $request, $iestid) {
@@ -1483,16 +1479,12 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                     }
                 }
             }            
-        }else{            
+        }else{
             $periodotecho = '3';
-
-            $gestion = '2017,2016,2015,2014,2013,2012,2011,2010,2009,2008,2007,2006';
-            $periodo = '2,3';
-            //NOTAS 8,14
-            //INSCRIPCIONES 9,12 
-            //$estadostramite = '7,11';
-            $estadostramite = '10';
-            $titulo = 'Regularización Gestiones Pasadas';
+            $gestion = $gestionparam;
+            $periodo = '2';                    
+            $estadostramite = '9,12';
+            $titulo = '1er Semestre 2018-Inscripciones';
         }        
 
         //$sesion = $request->getSession();
