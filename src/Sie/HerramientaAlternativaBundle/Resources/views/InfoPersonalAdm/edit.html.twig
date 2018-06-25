@@ -4,7 +4,7 @@
     <div class="header-content">
         <h2><i class="fa fa-user-secret"></i> Datos del personal administrativo <span> Datos personales, cargo, financiamiento, idiomas.</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
-            <span class="label">Usted esta aqui:</span>
+            <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
                     <li>
                         <i class="glyphicon glyphicon-leaf"></i>
@@ -231,7 +231,7 @@
                         </tr>");
                         //select idioma
                         $("#" + idioma).empty();
-                        $("#" + idioma).append('<option value="">Seleccionar...</option>');
+                        $("#" + idioma).append('<option value="">Seleccionar</option>');
                         $.each(data.idiomas, function (i, value) {
                             if (i == valores.idioma) {
                                 sel = 'selected';
@@ -241,7 +241,7 @@
                             $("#" + idioma).append('<option value="' + i + '"' + sel + '>' + value + '</option>');
                         });
                         // select lee
-                        $("#" + lee).append('<option value="">Seleccionar...</option>');
+                        $("#" + lee).append('<option value="">Seleccionar</option>');
                         $.each(data.conoce, function (i, value) {
                             if (i == valores.lee) {
                                 sel = 'selected';
@@ -251,7 +251,7 @@
                             $("#" + lee).append('<option value="' + i + '"' + sel + '>' + value + '</option>');
                         });
                         // select habla
-                        $("#" + habla).append('<option value="">Seleccionar...</option>');
+                        $("#" + habla).append('<option value="">Seleccionar</option>');
                         $.each(data.conoce, function (i, value) {
                             if (i == valores.habla) {
                                 sel = 'selected';
@@ -261,7 +261,7 @@
                             $("#" + habla).append('<option value="' + i + '"' + sel + '>' + value + '</option>');
                         });
                         // select escribe
-                        $("#" + escribe).append('<option value="">Seleccionar...</option>');
+                        $("#" + escribe).append('<option value="">Seleccionar</option>');
                         $.each(data.conoce, function (i, value) {
                             if (i == valores.escribe) {
                                 sel = 'selected';
@@ -301,22 +301,22 @@
                     },
                     success: function (data) {
                         $("#" + idioma).empty();
-                        $("#" + idioma).append('<option value="">Seleccionar...</option>');
+                        $("#" + idioma).append('<option value="">Seleccionar</option>');
                         $.each(data.idiomas, function (i, value) {
                             $("#" + idioma).append('<option value="' + i + '">' + value + '</option>');
                         });
                         // select lee
-                        $("#" + lee).append('<option value="">Seleccionar...</option>');
+                        $("#" + lee).append('<option value="">Seleccionar</option>');
                         $.each(data.conoce, function (i, value) {
                             $("#" + lee).append('<option value="' + i + '">' + value + '</option>');
                         });
                         // select habla
-                        $("#" + habla).append('<option value="">Seleccionar...</option>');
+                        $("#" + habla).append('<option value="">Seleccionar</option>');
                         $.each(data.conoce, function (i, value) {
                             $("#" + habla).append('<option value="' + i + '">' + value + '</option>');
                         });
                         // select escribe
-                        $("#" + escribe).append('<option value="">Seleccionar...</option>');
+                        $("#" + escribe).append('<option value="">Seleccionar</option>');
                         $.each(data.conoce, function (i, value) {
                             $("#" + escribe).append('<option value="' + i + '">' + value + '</option>');
                         });

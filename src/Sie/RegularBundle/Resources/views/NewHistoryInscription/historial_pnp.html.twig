@@ -9,8 +9,7 @@
       <thead>
         <tr role="row">
           <th class="text-center">Gestión</th>
-          <th class="text-center">SIE</th>
-          <th class="text-center">Centro</th>
+          <th class="text-center">Lugar</th>
           <th class="text-center">Periodo</th>
           <th class="text-center">Bloque</th>
           <th class="text-center">Parte</th>
@@ -27,7 +26,6 @@
         {% for data in dataInscription %}
           <tr class = "success">
             <td>{{data.gestion_tipo_id_raep}}</td>
-            <td>{{data.institucioneducativa_id_raep}} - {{data.sucursal_tipo_id_a}}</td>
             <td>{{data.institucioneducativa_raep}}</td>
             <td>{{data.periodo_raep}}</td>
             <td>{{data.bloque_p }} </td>
@@ -45,4 +43,5 @@
         {% endfor %}
       </tbody>
     </table>
+  </div>
 </div>
