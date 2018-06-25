@@ -356,7 +356,7 @@ class RegistroInstitucionEducativaController extends Controller {
 
             try {
                 // Registramos la sucursal
-                $query = $em->getConnection()->prepare("select * from sp_genera_institucioneducativa_sucursal('".$entity->getId()."','0','".'$this->session->get('currentyear')'."','1')");
+                $query = $em->getConnection()->prepare("select * from sp_genera_institucioneducativa_sucursal('".$entity->getId()."','0','".$this->session->get('currentyear')."','1')");
                 $query->execute();
                 $em->getConnection()->commit();
             } catch (Exception $e) {
