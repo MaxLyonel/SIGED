@@ -92,6 +92,13 @@ class DefaultController extends Controller {
                 $layout = 'layoutHerramientaAlternativa.html.twig';
                 $this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
                 break;
+            case 'eduper.sie.gob.bo':
+                $sysname = 'PERMANENTE';
+                $sysporlet = 'green';
+                $sysbutton = false;
+                $layout = 'layoutPermanente.html.twig';
+                $this->session->set('pathSystem', "SiePermanenteBundle");
+                break;
             case 'www.herramienta.local':
                 $sysname = 'Herramienta';
                 $sysporlet = 'blue';
