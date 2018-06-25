@@ -1,0 +1,240 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+
+{% block contentoption %}
+<!-- Start page header -->
+<div class="header-content">
+    <h2><i class="glyphicon glyphicon-leaf"></i> Bienvenido! <span>Usted a ingresado al sistemas academico de educación alternativa.</span></h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">Usted esta aqui:FOTOS</span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="glyphicon glyphicon-leaf"></i>
+                    <a href="{{path('principal_web')}}">Bienvenida</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+			<li>
+                <i class="fa fa-pencil"></i>
+                Edición de fotos
+                <i class="fa fa-angle-right"></i>
+            </li>
+        </ol>
+    </div><!-- /.breadcrumb-wrapper -->
+</div><!-- /.header-content -->
+<!--/ End page header -->
+
+<!-- Start body content -->
+<div class="body-content animated fadeIn">
+<div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-4">
+        <div class="panel rounded shadow">
+            <div class="panel-body">
+                <div class="inner-all">
+                    <ul class="list-unstyled">
+                        <li class="text-center">
+                            <img data-no-retina class="img-circle img-bordered-primary" height="150" width="150" src="/uploads/personasfotos/{{app.session.get('userfoto')}}" alt="{{app.session.get('name')}} {{app.session.get('lastname')}}">
+                        </li>
+                        <li class="text-center">
+                            <h4 class="text-capitalize">{{app.session.get('name')}} {{app.session.get('lastname')}}</h4>
+                            <p class="text-muted text-capitalize">{{app.session.get('cuentauser')}}</p>
+                        </li>                                        
+                        <li><br/></li>
+                        <li>
+                            <div class="btn-group-vertical btn-block">
+                                <a href="{{path('sie_usuarios_homepage')}}" class="btn btn-default"><i class="fa fa-cog pull-right"></i>Editar Cuenta - Gestión de Usuarios</a>                                
+                                <a href="{{path('logout')}}" class="btn btn-default"><i class="fa fa-sign-out pull-right"></i>Salir</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div><!-- /.panel -->                            
+    </div>
+    <div class="col-lg-9 col-md-9 col-sm-8">
+        <div class="profile-cover">
+            <div class="cover rounded shadow no-overflow">
+
+				<div class="modal-dialog">
+					<div class="modal-content">
+
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h4 class="modal-title"> <i class="fa fa-upload"></i> Fotos del centro</h4>
+						</div>
+						
+						<form onsubmit="guardarArchivo(); return false;" id="formArchivo" enctype="multipart/form-data">
+							<div class="modal-body">
+								<div class="row" id="plantillaArchivo">
+										<div class="alert alert-info">
+											<i class="fa fa-info-circle"></i> Debe seleccionar un archivo en formato <span class="badge badge-info">JPG o PNG</span>.<br>
+											<i class="fa fa-info-circle"></i> El nombre del archivo no debe contener puntos ni caracteres especiales.<br>
+											<i class="fa fa-info-circle"></i> Tamaño máximo permitido <span class="badge badge-info">13 MB</span>
+										</div>
+										<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+											<div class="panel panel-default">
+												<div class="panel-heading">
+													<h3 class="panel-title">Adjuntar fotos del centro</h3>
+												</div>
+												<div class="panel-body">
+
+												<div class="row">
+													<div class="form-group col-lg-6 col-md-6">
+														<input type="radio" name ="group1" value="1"> Seleccionar como fondo<br>														
+														<input type="file" id="archivo1" name="archivo1" class="fileupload form-control">
+													</div>
+												</div>
+
+												<div class="row">
+													<div class="form-group col-lg-6 col-md-6">
+														<input type="radio" name ="group1" value="2"> Seleccionar como fondo<br>
+														<input type="file" id="archivo2" name="archivo2" class="fileupload form-control">
+													</div>
+												</div>
+
+												<div class="row">
+													<div class="form-group col-lg-6 col-md-6">
+														<input type="radio" name ="group1" value="3"> Seleccionar como fondo<br>														
+														<input type="file" id="archivo3" name="archivo3" class="fileupload form-control">
+													</div>
+												</div>
+
+												<div class="row">
+													<div class="form-group col-lg-6 col-md-6">
+														<input type="radio" name ="group1" value="4"> Seleccionar como fondo<br>																												
+														<input type="file" id="archivo4" name="archivo4" class="fileupload form-control">
+													</div>
+												</div>
+												
+												
+											</div>
+										</div>
+									
+								</div>
+								<div id="mensajeArchivo">
+
+								</div>
+							</div>
+							<div class="modal-footer">								
+								<button type="submit" class="btn btn-primary" id="btnGuardar">
+									Subir imagenes
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+
+
+			</div><!-- /.cover -->
+        </div><!-- /.profile-cover -->
+        <div class="divider">
+
+        </div>
+    </div>
+</div><!-- /.row -->                    
+</div><!-- /.body-content -->
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+	<script type="text/javascript">
+	$(function(){		
+		$('.fileupload').change(function(){
+			var idElment = this.id;
+		    var archivo = $('#'+idElment).val();
+		    var extensionesPermitidas = new Array('.jpg','.png');
+		    miError = "";
+		    if(!archivo){
+
+		    }else{
+		        extension = (archivo.substring(archivo.lastIndexOf("."))).toLowerCase();
+		        permitida = false;
+		        var mensaje = 'El archivo no es válido, debe seleccionar un archivo en formato .pdf';
+		        for(var i = 0; i < extensionesPermitidas.length; i++){
+		            if(extensionesPermitidas[i] == extension){
+		                // Verificamos el tamño
+		                var fileSize = $('#'+idElment)[0].files[0].size;
+		                //console.log('size:',fileSize);
+		                var sizeKiloByte = parseInt(fileSize / 1024);
+		                //console.log('sizekilo:',sizeKiloByte);
+		                if(sizeKiloByte < 13312){
+		                    permitida = true
+		                }else{
+		                    var mensaje = 'El tamaño del archivo supera el límite permitido!\n(Tamaño máximo permitido 13 MB)';
+		                }
+		                break;
+		            }
+		        }
+		        if(!permitida){
+		            alert(mensaje);
+		            $('#'+idElment).val('');					
+		        }else{
+					$('#btnGuardar').show();
+				}
+		    }
+		    //console.log('archivo:',archivo);
+		});
+
+
+	})
+
+	function guardarArchivo(){
+		var archivo1 = $('#archivo1').val();
+		var archivo2 = $('#archivo2').val();
+		var archivo3 = $('#archivo3').val();
+		var archivo4 = $('#archivo4').val();
+
+		if  (  (archivo1) || (archivo2) || (archivo3) || (archivo4)  )  {
+				var formData = new FormData(document.getElementById("formArchivo"));
+			$.ajax({
+				type: 'post',
+				data: formData,
+				dataType: 'html',
+				cache: false,
+				contentType: false,
+				processData: false,
+				url: Routing.generate('herramienta_alter_galeria_fotos_centro_upload'),
+				beforeSend: function () {
+					$('#mensajeArchivo').removeClass('alert');
+					$('#mensajeArchivo').removeClass('alert-success');
+					$('#mensajeArchivo').removeClass('alert-info');
+					$('#mensajeArchivo').removeClass('alert-danger');
+					$('#mensajeArchivo').empty();
+					$("#mensajeArchivo").append('<div class="text-center"><img src="{{asset('img/loading-sm.gif')}}" class="" /> Subiendo archivo...</div>');
+
+					$('#btnGuardar').hide();
+				},
+				success: function(data){
+					data = JSON.parse(data);
+					$('#mensajeArchivo').empty();
+
+					if(data.status == 201){
+						$('#mensajeArchivo').addClass('alert alert-success');
+						$('#mensajeArchivo').append('<p> <i class="fa fa-check"></i> '+data.msg+'</p>');
+
+						window.location.href =  Routing.generate('herramienta_alter_galeria_fotos_centro');
+					}
+					if(data.status == 404){
+						$('#mensajeArchivo').addClass('alert alert-info');
+						$('#mensajeArchivo').append('<p> <i class="fa fa-info-circle"></i>'+data.msg+'</p>');
+					}
+					
+					setTimeout(function(){
+						$('#mensajeArchivo').removeClass('alert');
+						$('#mensajeArchivo').removeClass('alert-success');
+						$('#mensajeArchivo').removeClass('alert-info');
+						$('#mensajeArchivo').removeClass('alert-danger');
+						$('#mensajeArchivo').empty();
+					}, 10000);
+				},
+				error: function(data){
+					$('#mensajeArchivo').empty();
+					$('#mensajeArchivo').addClass('alert alert-danger');
+					$('#mensajeArchivo').append('<p> <i class="fa fa-ban"></i> Debe seleccionar un archivo válido</p>');
+				}
+			});
+		}else{
+			alert('Debe seleccionar algun archivo.');
+		}
+	}
+	</script>
+
+{% endblock %}

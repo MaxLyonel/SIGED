@@ -495,7 +495,7 @@ class InfoMaestroController extends Controller {
             $maestroInscripcion = $queryIns->getResult();
 
             if ($maestroInscripcion) { // verificamos si el maestro esta registrado ya en tabla maestro inscripcion
-                $this->get('session')->getFlashBag()->add('newError', 'No se realizó el registro, la persona ya esta registrada');
+                $this->get('session')->getFlashBag()->add('newError', 'No se realizó el registro, la persona ya esta registrada.');
                 return $this->redirect($this->generateUrl('herramientalt_info_maestro_index'));
             }
 
@@ -538,7 +538,7 @@ class InfoMaestroController extends Controller {
                 $maestroinscripcion->setUnidadMilitarTipo($em->getRepository('SieAppWebBundle:UnidadMilitarTipo')->find(0));
             }else{
                 $em->getConnection()->rollback();
-                $this->get('session')->getFlashBag()->add('updateError', 'Error en la modificacion de datos');
+                $this->get('session')->getFlashBag()->add('updateError', 'Error en la modificación de datos.');
                 return $this->redirect($this->generateUrl('herramientalt_info_maestro_index', array('op' => 'result')));
             }
 
@@ -587,7 +587,7 @@ class InfoMaestroController extends Controller {
                 }
             }
             $em->getConnection()->commit();
-            $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron registrados correctamente');
+            $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron registrados correctamente.');
             return $this->redirect($this->generateUrl('herramientalt_info_maestro_index'));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
@@ -706,7 +706,7 @@ class InfoMaestroController extends Controller {
                 $maestroinscripcion->setUnidadMilitarTipo($em->getRepository('SieAppWebBundle:UnidadMilitarTipo')->find(0));
             }else{
                 $em->getConnection()->rollback();
-                $this->get('session')->getFlashBag()->add('updateError', 'Error en la modificacion de datos');
+                $this->get('session')->getFlashBag()->add('updateError', 'Error en la modificación de datos.');
                 return $this->redirect($this->generateUrl('herramientalt_info_maestro_index', array('op' => 'result')));
             }
 
@@ -753,11 +753,11 @@ class InfoMaestroController extends Controller {
                 }
             }
             $em->getConnection()->commit();
-            $this->get('session')->getFlashBag()->add('updateOk', 'Datos modificados correctamente');
+            $this->get('session')->getFlashBag()->add('updateOk', 'Los datos fueron modificados correctamente.');
             return $this->redirect($this->generateUrl('herramientalt_info_maestro_index', array('op' => 'result')));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
-            $this->get('session')->getFlashBag()->add('updateError', 'Error en la modificacion de datos');
+            $this->get('session')->getFlashBag()->add('updateError', 'Error en la modificación de datos.');
             return $this->redirect($this->generateUrl('herramientalt_info_maestro_index', array('op' => 'result')));
         }
     }
@@ -796,12 +796,12 @@ class InfoMaestroController extends Controller {
                 $em->remove($maestroInscripcion);
                 $em->flush();
                 $em->getConnection()->commit();
-                $this->get('session')->getFlashBag()->add('eliminarOk', 'El registro fue eliminado exitosamente');
+                $this->get('session')->getFlashBag()->add('eliminarOk', 'El registro fue eliminado exitosamente.');
 
                 return $this->redirect($this->generateUrl('herramientalt_info_maestro_index'));
             }
             $em->getConnection()->commit();
-            $this->get('session')->getFlashBag()->add('eliminarError', 'El registro no se pudo eliminar');
+            $this->get('session')->getFlashBag()->add('eliminarError', 'El registro no se pudo eliminar.');
             return $this->redirect($this->generateUrl('herramientalt_info_maestro_index'));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();

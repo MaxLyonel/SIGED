@@ -100,6 +100,55 @@ class ReportesController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
     }
+
+    public function cerradoexitosooperativoAction() {
+        $arch = 'ACTA_CIERRE_OPERATIVO'.$this->session->get('ie_id').'_' . date('YmdHis') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_cea_Cierre_Operativo_v1_vcjm.rptdesign&__format=pdf&CEA='.$this->session->get('ie_id').'&Gestion='.$this->session->get('ie_gestion').'&SUCURSAL='.$this->session->get('ie_subcea').'&Periodo='.$this->session->get('ie_per_cod').'&operativoId=12&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    public function reportesEstudiantesExcelAction(Request $request) {
+        $this->session = $request->getSession();
+        $id_usuario = $this->session->get('userId');
+        
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        /*if ($id_usuario == 2){//EN CASO DE QUE USUARIO ES PROFESOR
+            $db = $em->getConnection();
+            $usuario = $em->getRepository('SieAppWebBundle:Usuario')->findByPersona($this->session->get('userId'));
+            $idPersona = $usuario[0]->getPersona()->getId();
+
+            $arch = 'LISTADO_ESTUDIANTES_PROFESOR'.$this->session->get('name').'_'.$this->session->get('lastname').'_'.date('YmdHis') . '.xlsx';
+            $response = new Response();
+            $response->headers->set('Content-type', 'application/xlsx');
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_lst_Estudiantes_Excel_v1_vcjm.rptdesign&__format=xlsx&gestion_tipo_id='.$this->session->get('ie_gestion').'&institucioneducativa_id='.$this->session->get('ie_id').'&sucursal_tipo_id='.$this->session->get('ie_subcea').'&periodo_tipo_id='.$this->session->get('ie_per_cod').'&&__format=xlsx&'));        
+            $response->setStatusCode(200);
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->headers->set('Pragma', 'no-cache');
+            $response->headers->set('Expires', '0');
+            return $response;
+        }else{*/
+            $arch = 'LISTADO_ESTUDIANTES_CENTRO'.$this->session->get('ie_id').'_' . date('YmdHis') . '.xlsx';
+            $response = new Response();
+            $response->headers->set('Content-type', 'application/xlsx');
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_lst_Estudiantes_Excel_v1_vcjm.rptdesign&__format=xlsx&gestion_tipo_id='.$this->session->get('ie_gestion').'&institucioneducativa_id='.$this->session->get('ie_id').'&sucursal_tipo_id='.$this->session->get('ie_subcea').'&periodo_tipo_id='.$this->session->get('ie_per_cod').'&&__format=xlsx&'));
+            $response->setStatusCode(200);
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->headers->set('Pragma', 'no-cache');
+            $response->headers->set('Expires', '0');
+            return $response;
+        //}        
+    }
     
     public function observacionesoperativoinicioAction() {
         $arch = 'LISTA_OBSERVACIONES'.$this->session->get('ie_id').'_' . date('YmdHis') . '.pdf';
@@ -383,6 +432,7 @@ class ReportesController extends Controller {
 //        //get the values of report
 //        //create the response object to down load the file
         
+
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'rudelal_' . $rude . '_' . $gestion . '.pdf'));
@@ -392,6 +442,17 @@ class ReportesController extends Controller {
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');
         return $response;
+
+
+        /*$response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'rudelal_' . $rude . '_' . $gestion . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_rude_socioeconomico_gral_v2_vcj.rptdesign&socioalteId=' . $socioalteId . '&rude=' . $rude . '&sucursalId=' . $sucursalId . '&inscripcionId=' . $inscripcionId . '&dirDep=' . $dirDep . '&dirProv=' . $dirProv . '&dirSec=' . $dirSec . '&dirLoc=' . $dirLoc . '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;*/
     } 
 
 

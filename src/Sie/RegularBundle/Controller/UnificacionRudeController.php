@@ -184,7 +184,7 @@ class UnificacionRudeController extends Controller {
         $rudecor = trim($rudecor);
         $rudeinc = trim($rudeinc);
 
-        $queryver = $em->getConnection()->prepare("select * from get_estudiantes_verificacion_historiales_gestion('" . $rudeinc . "','" . $rudecor . "','2017');");
+        $queryver = $em->getConnection()->prepare("select * from get_estudiantes_verificacion_historiales_gestion('" . $rudeinc . "','" . $rudecor . "','2018');");
         $queryver->execute();
         $dataInscriptionJsonVer = $queryver->fetchAll();
         //dump($dataInscriptionJsonVer);die;

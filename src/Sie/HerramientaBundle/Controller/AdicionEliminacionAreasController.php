@@ -68,7 +68,7 @@ class AdicionEliminacionAreasController extends Controller {
                  */
                 $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['institucioneducativa']);
                 if (!$institucioneducativa) {
-                    $this->get('session')->getFlashBag()->add('noSearch', 'El codigo ingresado no es válido');
+                    $this->get('session')->getFlashBag()->add('noSearch', 'El código ingresado no es válido.');
                     return $this->render('SieHerramientaBundle:AdicionEliminacionAreas:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
                 }
                 /*
@@ -85,7 +85,7 @@ class AdicionEliminacionAreasController extends Controller {
                     $institucion = $form['institucioneducativa'];
                     $gestion = $form['gestion'];
                 } else {
-                    $this->get('session')->getFlashBag()->add('noTuicion', 'No tiene tuición sobre la unidad educativa');
+                    $this->get('session')->getFlashBag()->add('noTuicion', 'No tiene tuición sobre la Unidad Educativa.');
                     return $this->render('SieHerramientaBundle:AdicionEliminacionAreas:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
                 }
             } else {
@@ -168,7 +168,7 @@ class AdicionEliminacionAreasController extends Controller {
             ));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
-            $this->get('session')->getFlashBag()->add('noSearch', 'El codigo ingresado no es válido');
+            $this->get('session')->getFlashBag()->add('noSearch', 'El código ingresado no es válido.');
             return $this->render('SieHerramientaBundle:AdicionEliminacionAreas:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
         }
     }
@@ -715,9 +715,9 @@ class AdicionEliminacionAreasController extends Controller {
                     
                 }
                 $em->flush();
-                $mensaje = 'Se elimino el área del curso';
+                $mensaje = 'Se eliminó el área del curso.';
             } else {
-                $mensaje = 'No se puede eliminar el área';
+                $mensaje = 'No se puede eliminar el área.';
             }
             
             $this->session = new Session();

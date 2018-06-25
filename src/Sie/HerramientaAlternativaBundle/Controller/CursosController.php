@@ -613,7 +613,7 @@ class CursosController extends Controller {
 
             //everythinng ok
             $em->getConnection()->commit();
-            $this->session->getFlashBag()->add('goodinscription', 'Inscripcion Eliminada... ');
+            $this->session->getFlashBag()->add('goodinscription', 'Inscripción eliminada.');
 
             //$exist = true;
             $objStudents = array();

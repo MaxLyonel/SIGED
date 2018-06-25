@@ -1,0 +1,21 @@
+herramienta_alter_galeria_fotos_centro:
+    path:     /galeriaFotosCentro
+    defaults: { _controller: SieHerramientaAlternativaBundle:Imagenes:galeriaFotosCentro }
+    options:
+        expose: true    
+
+herramienta_alter_galeria_fotos_centro_editar_foto:
+    path:     /galeriaFotosEditarFoto
+    defaults: { _controller: SieHerramientaAlternativaBundle:Imagenes:galeriaFotosEditarFoto }  
+
+herramienta_alter_galeria_fotos_centro_upload:
+    path:     /galeriaFotosCentroUpload
+    defaults: { _controller: SieHerramientaAlternativaBundle:Imagenes:galeriaFotosCentroUpload }
+    options:
+        expose: true
+
+herramienta_alter_galeria_fotos_centro_actualizar:
+    path:     /galeriaFotosCentroActualizar
+    defaults: { _controller: SieHerramientaAlternativaBundle:Imagenes:galeriaFotosCentroActualizar }
+    options:
+        expose: true
