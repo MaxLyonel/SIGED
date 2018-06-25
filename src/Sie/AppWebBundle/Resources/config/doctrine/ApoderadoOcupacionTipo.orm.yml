@@ -32,4 +32,9 @@ Sie\AppWebBundle\Entity\ApoderadoOcupacionTipo:
             nullable: true
             comment: ''
             column: es_ocupacion
+        esVigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente
     lifecycleCallbacks: {  }
