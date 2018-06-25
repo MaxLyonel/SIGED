@@ -458,10 +458,7 @@
                                 <span class="arrow"></span>
                             </a>
                             <ul>
-                                <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
-                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>                                
-                                <li><a onclick="getCeasPendientesShow();">Lista de CEAs Pendientes </a></li>
-                                <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
+                                <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>                                
                                 <li><a href="{{path('herramientalt_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>
                                 <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
                             </ul>
@@ -485,6 +482,7 @@
                                 <li><a href="{{path('herramientalt_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>                                                                
                                 {% if (app.session.get('ie_id') != -1) %}
                                     <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
+                                    <li><a href="{{path('sie_alt_lista_estudiantes_excel')}}">Exportar listas a Excel </a></li>
                                 {% endif %}
                                 <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
                                 <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
@@ -505,6 +503,7 @@
                                 <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>                                
                                 {% if (app.session.get('ie_id') != -1) %}
                                     <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
+                                    <li><a href="{{path('sie_alt_lista_estudiantes_excel')}}">Exportar listas a Excel </a></li>
                                 {% endif %}
                                 <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
                                 <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
@@ -528,6 +527,7 @@
                                 <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>                                
                                 {% if (app.session.get('ie_id') != -1) %}
                                     <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
+                                    <li><a href="{{path('sie_alt_lista_estudiantes_excel')}}">Exportar listas a Excel </a></li>
                                 {% endif %}
                                 <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
                                 <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
@@ -560,6 +560,7 @@
                                 <li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>                                
                                 {% if (app.session.get('ie_id') != -1) %}
                                     <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
+                                    <li><a href="{{path('sie_alt_lista_estudiantes_excel')}}">Exportar listas a Excel </a></li>
                                 {% endif %}
                                 <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
                                 <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
@@ -576,6 +577,7 @@
                             <ul>
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
                                 <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
+                                <li><a href="{{path('sie_alt_lista_estudinates_excel')}}">Exportar listas a Excel </a></li>
                                 <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
                             </ul>
                         </li>

@@ -649,11 +649,12 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         $db = $em->getConnection();
+
         try {
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_sucursal_tramite');")->execute();
             $ies = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find($sesion->get('ie_suc_id'));            
             $iest = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalTramite')->findByInstitucioneducativaSucursal($ies);
-            if ($iest){             
+            if ($iest){           
                 if ($sesion->get('ie_per_estado') == '3'){//INICIO INSCRIPCIONES
                     
                     //MIGRANDO DATOS DE SOCIO ECONOMICOS DEL ANTERIOR PERIODO AL ACTUAL PERIODO
@@ -699,7 +700,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                     if ($observaciones){
                         return $this->redirect($this->generateUrl('herramienta_alter_reporte_observacionesoperativoinicio'));
                     }
-                    else{                        
+                    else{                      
                         if ($iest[0]->getTramiteEstado()->getId() == '11'){//Aceptación de apertura Inicio de Semestre
                             $iestvar = $iest[0];
                             $iestvar->setTramiteEstado($em->getRepository('SieAppWebBundle:TramiteEstado')->find('12'));//¡Inicio de Semestre - Cerrado!                           
@@ -715,11 +716,10 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                             $iestvar->setUsuarioIdModificacion($this->session->get('userId'));
                             $em->persist($iestvar);
                             $em->flush(); 
-                        }                      
+                        }
                     }
                 }
-                if ($sesion->get('ie_per_estado') == '2'){//FIN NOTAS
-                    //die('df');
+                if ($sesion->get('ie_per_estado') == '2'){//FIN NOTAS                    
                     $query = "select * from sp_validacion_alternativa_web('".$this->session->get('ie_gestion')."','".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."');";
                     $obs= $db->prepare($query);
                     $params = array();
@@ -728,11 +728,6 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                     if ($observaciones){
                         return $this->redirect($this->generateUrl('herramienta_alter_reporte_observacionesoperativo'));                    }
                     else{
-                        //die('f');
-//                        $em->getConnection()->rollback();
-//                        return $this->redirectToRoute('principal_web');
-//                        print_r($iest[0]->getTramiteEstado()->getId());
-//                        die;
                         if ($iest[0]->getTramiteEstado()->getId() == '6'){//¡En regularización notas!
                             $iestvar = $iest[0];
                             $iestvar->setTramiteEstado($em->getRepository('SieAppWebBundle:TramiteEstado')->find('8'));//Ver regularización notas terminada                          
@@ -816,11 +811,11 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                     }
             }            
             $em->getConnection()->commit();
-            
+
+            return $this->redirect($this->generateUrl('herramienta_alter_reporte_operativo_exitoso_cerrado.'));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
         }
-        return $this->redirectToRoute('principal_web');
     }
     
     public function tramitecontinuaroperativoAction(Request $request, $iestid) {
