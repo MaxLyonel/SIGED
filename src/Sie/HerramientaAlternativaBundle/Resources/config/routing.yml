@@ -83,3 +83,7 @@ sie_herramienta_alternativa_info_estudiante:
 sie_herramienta_alternativa_curso:
     resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/cursoAlternativa.yml"
     prefix:   /altsie/cursoAlternativa 
+
+sie_herramienta_alternativa_imagenes:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/imagenes.yml"
+    prefix:   /altsie/imagenesAlternativa

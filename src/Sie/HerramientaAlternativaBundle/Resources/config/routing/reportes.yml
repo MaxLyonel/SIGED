@@ -113,5 +113,3 @@ herramienta_alter_reporte_edudiv_maestros_penitenciario_list:
 herramienta_alter_reporte_edudiv_maestros_penitenciario_listex:
     path:     /reportListMaestroRecPEX/{dataInfo}
     defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportListMaestroRecPEX }
-
-
