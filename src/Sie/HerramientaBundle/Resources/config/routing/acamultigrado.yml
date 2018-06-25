@@ -1,0 +1,40 @@
+aca_multigrado_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:AcaMultigrado:index }
+
+aca_multigrado_save:
+    path:     /multigrado_save/
+    defaults: { _controller: "SieHerramientaBundle:AcaMultigrado:save" }
+    options:
+         expose: true
+
+aca_multigrado_reload:
+    path:     /multigrado_reload/
+    defaults: { _controller: "SieHerramientaBundle:AcaMultigrado:reload" }
+    options:
+         expose: true
+
+aca_multigrado_yesMultigrado:
+    path:     /multigrado_option/
+    defaults: { _controller: "SieHerramientaBundle:AcaMultigrado:yesMultigrado" }
+    options:
+         expose: true
+
+aca_multigrado_noMultigrado:
+    path:     /multigrado_noMultigrado/
+    defaults: { _controller: "SieHerramientaBundle:AcaMultigrado:noMultigrado" }
+    options:
+         expose: true
+
+aca_multigrado_saveNewMultigrado:
+    path:     /multigrado_saveNewMultigrado/
+    defaults: { _controller: "SieHerramientaBundle:AcaMultigrado:saveNewMultigrado" }
+    options:
+         expose: true
+
+aca_multigrado_confirmMultigrado:
+    path:     /multigrado_confirmMultigrado/
+    defaults: { _controller: "SieHerramientaBundle:AcaMultigrado:confirmMultigrado" }
+    options:
+         expose: true
+

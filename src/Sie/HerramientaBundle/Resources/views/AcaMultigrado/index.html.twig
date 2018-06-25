@@ -1,0 +1,312 @@
+<div class="row">
+     
+    <div class="col-md-4">
+        <form id="formReloadMultigrado" onsubmit="saveMultigrado(); return false;" method="post" style="">
+                      <input type="hidden" id="form_jsonDataMultigrado" name="form[jsonDataMultigrado]"  value='{{jsonDataMultigrado}}'>
+                    <table>
+                      <tr>
+                        <td>
+                          INFORMACIÓN NUMERO DE ESTUDIANTES
+                          <!-- <a href="#" class='link ' onclick="reloadMultigrado('{{arrData.gestion}}','{{arrData.sie}}')"> Volver a registrar Multigrado</a> -->
+                        </td>
+                      </tr>
+                    </table>
+                    </form>
+                    <br/>
+                    <table class="table table-condensed">
+                    {% for keyst,arrStudents in arrNumberStudentes%}
+                      <tr  class='info'>
+                      <th style="width:200px;">
+                      {{keyst}}
+                      </th>
+                      <td >
+                        <table id="myTable" class="table table-bordered table-hover cf">
+                          <tr>
+                            <th colspan="2"></th>
+                            <th>No. Est.</th>
+                          </tr>
+                          {% for keyst2, students in arrStudents %}
+
+                          <tr>
+                            <td> {{students.grado}}</td>
+                            <td> {{students.paralelo}}</td>
+                            <td> {{students.students}}</td>
+                          </tr>
+                          {% endfor %}
+                        </table>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                    </table>
+    </div>
+   <div class="col-md-8">
+    <div id="responseIdMain">
+        <table id="myTable" class="table table-bordered table-hover cf">
+            <thead class="">
+                <tr class="">
+
+                    <th>Turno</th>
+                    <th>Paralelo</th>
+                    <th>Ini. 1°</th>
+                    <th>Ini. 2°</th>
+                    <th>Pri. 1°</th>
+                    <th>Pri. 2°</th>
+                    <th>Pri. 3°</th>
+                    <th>Pri. 4°</th>
+                    <th>Pri. 5°</th>
+                    <th>Pri. 6°</th>
+                    <th>Sec. 1°</th>
+                    <th>Sec. 2°</th>
+                    <th>Sec. 3°</th>
+                    <th>Sec. 4°</th>
+                    <th>Sec. 5°</th>
+                    <th>Sec. 6°</th>
+                </tr>
+            </thead>
+            <tbody>
+              <form id="formMultigrado" onsubmit="saveMultigrado(); return false;" method="post" style="">
+                <input type="hidden" id="form_jsonDataMultigrado" name="form[jsonDataMultigrado]"  value='{{jsonDataMultigrado}}'>
+                {% set cont = 0 %}
+                <div id="idMulti">
+
+
+                {% for key,ueMul in objMultigradoArr %}
+
+                    {% set cont = cont +1 %}
+                    <tr>
+
+                        <td data-title="Ini. 1°">{{ ueMul.turno }}</td>
+                        <td data-title="Ini. 1°">{{ ueMul.paralelo }}</td>
+                                                 <!-- <input type="checkbox" id="form_mode1" name="form[mode1]" class="form-control" value="1"> -->
+                        <td data-title="Ini. 2°"><input type="checkbox" name="form[multi][11_1-{{key}}]" id="form_11_1-{{key}}"  value="11_1_{{ ueMul.paraleloid }}_{{ ueMul.turnoid }}-{{key}}"  {{ ueMul.i_11_1 }} disabled></td>
+                        <td data-title="Ini. 2°"><input type="checkbox" name="form[multi][11_2-{{key}}]" id="form_11_2-{{key}}"  value="11_2_{{ ueMul.paraleloid }}_{{ ueMul.turnoid }}-{{key}}"  {{ ueMul.i_11_2 }} disabled></td>
+                        <td data-title="Pri. 1°"><input type="checkbox" name="form[multi][12_1-{{key}}]" id="form_12_1-{{key}}"  value="12_1_{{ ueMul.paraleloid }}_{{ ueMul.turnoid }}-{{key}}"  {{ ueMul.p_12_1 }} disabled></td>
+                        <td data-title="Pri. 2°"><input type="checkbox" name="form[multi][12_2-{{key}}]" id="form_12_2-{{key}}"  value="12_2_{{ ueMul.paraleloid }}_{{ ueMul.turnoid }}-{{key}}"  {{ ueMul.p_12_2 }} disabled></td>
+                        <td data-title="Pri. 3°"><input type="checkbox" name="form[multi][12_3-{{key}}]" id="form_12_3-{{key}}"  value="12_3_{{ ueMul.paraleloid }}_{{ ueMul.turnoid }}-{{key}}"  {{ ueMul.p_12_3 }} disabled></td>
+                        <td data-title="Pri. 4°"><input type="checkbox" name="form[multi][12_4-{{key}}]" id="form_12_4-{{key}}"  value="12_4_{{ ueMul.paraleloid }}_{{ ueMul.turnoid }}-{{key}}"  {{ ueMul.p_12_4 }} disabled></td>
+                        <td data-title="Pri. 5°"><input type="checkbox" name="form[multi][12_5-{{key}}]" id="form_12_5-{{key}}"  value="12_5_{{ ueMul.paraleloid }}_{{ ueMul.turnoid }}-{{key}}"  {{ ueMul.p_12_5 }} disabled></td>
+                        <td data-title="Pri. 6°"><input type="checkbox" name="form[multi][12_6-{{key}}]" id="form_12_6-{{key}}"  value="12_6_{{ ueMul.paraleloid }}_{{ ueMul.turnoid }}-{{key}}"  {{ ueMul.p_12_6 }} disabled></td>
+                        <td data-title="Sec. 1°"><input type="checkbox" name="form[multi][13_1-{{key}}]" id="form_13_1-{{key}}"  value="13_1_{{ ueMul.paraleloid }}_{{ ueMul.turnoid }}-{{key}}"  {{ ueMul.s_13_1 }} disabled></td>
+                        <td data-title="Sec. 2°"><input type="checkbox" name="form[multi][13_2-{{key}}]" id="form_13_2-{{key}}"  value="13_2_{{ ueMul.paraleloid }}_{{ ueMul.turnoid }}-{{key}}"  {{ ueMul.s_13_2 }} disabled></td>
+                        <td data-title="Sec. 3°"><input type="checkbox" name="form[multi][13_3-{{key}}]" id="form_13_3-{{key}}"  value="13_3_{{ ueMul.paraleloid }}_{{ ueMul.turnoid }}-{{key}}"  {{ ueMul.s_13_3 }} disabled></td>
+                        <td data-title="Sec. 4°"><input type="checkbox" name="form[multi][13_4-{{key}}]" id="form_13_4-{{key}}"  value="13_4_{{ ueMul.paraleloid }}_{{ ueMul.turnoid }}-{{key}}"  {{ ueMul.s_13_4 }} disabled></td>
+                        <td data-title="Sec. 5°"><input type="checkbox" name="form[multi][13_5-{{key}}]" id="form_13_5-{{key}}"  value="13_5_{{ ueMul.paraleloid }}_{{ ueMul.turnoid }}-{{key}}"  {{ ueMul.s_13_5 }} disabled></td>
+                        <td data-title="Sec. 6°"><input type="checkbox" name="form[multi][13_6-{{key}}]" id="form_13_6-{{key}}"  value="13_6_{{ ueMul.paraleloid }}_{{ ueMul.turnoid }}-{{key}}"  {{ ueMul.s_13_6 }} disabled></td>
+                    </tr>
+                {% endfor %}
+                </div>
+                <tr>
+                  <td colspan="16">
+                    {% if objMultigradoArr %}
+                      <!-- <button type="submit" class="btn btn-default">Guardar</button> -->
+                    {% endif %}
+                  </td>
+                </tr>
+
+            </tbody>
+        </table>
+       </div> 
+        <br>
+        <br>
+        <form id="idMultigradoYesNoForm" onsubmit="" method="post" style="">
+             <input type="hidden" id="form_jsonDataMultigrado" name="form[jsonDataMultigrado]"  value='{{jsonDataMultigrado}}'>
+               <table>
+                 <tr>
+                   <td>
+                     <!-- {{arrData.sie}} -->
+                     <a href="#" class='btn btn-info ' onclick="noMultigrado('{{arrData.gestion}}','{{arrData.sie}}')"> No tiene Multigrado</a>
+                     <a href="#" class='btn btn-info ' onclick="yesMultigrado('{{arrData.gestion}}','{{arrData.sie}}')"> Si tiene Multigrado</a>
+
+                   </td>
+                 </tr>
+               </table>
+            </form>
+
+        <br>
+        <br>
+         <div id="responseId" class="alert" style="display:none;"></div>
+    </div>
+    <div class="col-md-12">
+         
+    </div>
+
+    <div class="col-md-12">
+       
+    </div>
+    
+</div>
+
+<script>
+      
+      var saveMultigrado = function (){
+        if(confirm('¿Esta seguro de realizar los cambios?\nPresione aceptar para confirmar.') ){
+            var formData = $('#formMultigrado').serialize();
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('reg_multigrado_save'),
+                    data: formData,
+                    beforeSend: function () {
+                        $("#responseId").empty();
+                        $("#responseId").css('display','block');
+                        $("#responseId").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                    },
+                    success: function (data) {
+                      $("#studentOneId").css('display','none');
+                      $("#studentTwoId").css('display','none');
+
+                      $("#responseId").empty();
+                      $("#responseId").addClass('alert-'+data.typeMessage)
+                      $("#responseId").append('<p>'+data.mensaje+'</p>');
+
+                      $("#responseId").append('<p><a class="btn btn-md btn-danger" href="{{ path('ccalidad_list', {id: 5, gestion:arrData.gestion}) }}">Finalizar</a></p>');
+
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+        }
+      };
+      var reloadMultigrado = function (){
+        if(confirm('¿Esta seguro de realizar esta operación?\nPresione aceptar para confirmar.') ){
+            var formData = $('#formReloadMultigrado').serialize();
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('reg_multigrado_reload'),
+                    data: formData,
+                    beforeSend: function () {
+                        $("#responseId").empty();
+                        $("#responseId").css('display','block');
+                        $("#responseId").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                    },
+                    success: function (data) {
+                      location.reload(true);
+                      // $("#studentOneId").css('display','none');
+                      // $("#studentTwoId").css('display','none');
+                      //
+                      // $("#responseId").empty();
+                      // $("#responseId").addClass('alert-'+data.typeMessage)
+                      // $("#responseId").append('<p>'+data.mensaje+'</p>');
+                      //
+                      // $("#responseId").append('<p><a class="btn btn-md btn-danger" href="{# path('ccalidad_list', {id: 5}) #}">Finalizar</a></p>');
+
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+        }
+      };
+
+      var yesMultigrado = function (){
+        // var formData = $('#idMultigradoYesNoForm').serialize();
+        if(confirm('¿Esta seguro de realizar los cambios?\nPresione aceptar para confirmar.') ){
+           var jsonDataMultigrado = $('#form_jsonDataMultigrado').val();
+           
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('aca_multigrado_yesMultigrado'),
+                    data: {'jsonDataMultigrado': jsonDataMultigrado},
+                    beforeSend: function () {
+                        $("#responseId").empty();
+                        $("#responseId").css('display','block');
+                        $("#responseId").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                    },
+                    success: function (data) {
+
+
+                      $("#responseId").empty();
+                      // $("#responseId").addClass('alert-'+data.typeMessage)
+                      $("#responseId").append(data);
+
+                      // $("#responseId").append('<p><a class="btn btn-md btn-danger" href="{# path('ccalidad_list', {id: 5}) #}">Finalizar</a></p>');
+
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+        }
+      };
+      var noMultigrado = function (){
+        if(confirm('¿Esta seguro de realizar los cambios?\nPresione aceptar para confirmar.') ){
+           var jsonDataMultigrado = $('#form_jsonDataMultigrado').val();
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('aca_multigrado_noMultigrado'),
+                    data: {'jsonDataMultigrado': jsonDataMultigrado},
+                    beforeSend: function () {
+                      $("#responseId").empty();
+                      $("#responseId").css('display','block');
+                      $("#responseId").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                      $("#responseIdMain").empty();
+                      $("#responseIdMain").css('display','block');
+                      $("#responseIdMain").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                      // location.reload(true);
+                    },
+                    success: function (data) {
+                      // $("#studentOneId").css('display','none');
+                      // $("#studentTwoId").css('display','none');
+                      $("#responseIdMain").empty();
+                      $("#responseIdMain").append(data);
+                      $("#responseId").empty();
+
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+        }
+      };
+
+      var confirmMultigrado = function(dataInfo){
+            var formData = dataInfo;
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('reg_multigrado_confirmMultigrado'),
+                    data: ({jsonDataMultigrado:formData}) ,
+                    beforeSend: function () {
+                        $("#responseId").empty();
+                        $("#responseId").css('display','block');
+                        $("#responseId").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                    },
+                    success: function (data) {
+
+                      $("#responseId").empty();
+                      // $("#responseId").addClass('alert-'+data.typeMessage)
+                      // $("#responseId").append(data);
+                      // $("#responseId").append('<p><a class="btn btn-md btn-danger" href="{{ path('ccalidad_list', {id: 2, gestion:arrData.gestion}) }}">Finalizar</a></p>');
+
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+
+      };
+</script>
