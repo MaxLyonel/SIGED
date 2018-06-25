@@ -31,9 +31,9 @@
                 <div class="panel text-center rounded shadow">
                     <div class="panel-body bg-lilac rounded">
                         <div class="inner-all">
-                            <h4 class="text-uc">Información Unidad Educativa</h4>
+                            <h4 class="text-uc">Información del Centro de Educación Alternativa</h4>
                             <p>SIE : {{odataUedu.id}}</p>
-                            <p>Unidad Educativa : {{odataUedu.institucioneducativa}}</p>
+                            <p>Centro de Educación Alternativa : {{odataUedu.institucioneducativa}}</p>
                             <h5 class="text-uc">Opción: Información Estudiante</h5>
                         </div>
                     </div><!-- /.panel-body -->
@@ -230,7 +230,7 @@
                         sw = false;
             }
             if (sw) {
-                alert('Tiene que Seleccionar por lo menos una Inscripción...');
+                alert('Tiene que seleccionar por lo menos una inscripción.');
                 return flase;
             }
             var formIns = $('#formStudentInscription').serialize();

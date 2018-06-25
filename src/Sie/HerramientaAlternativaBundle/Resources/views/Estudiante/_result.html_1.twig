@@ -29,7 +29,7 @@
 
             <div class="alert alert-info alert-dismissible" role="alert">
 
-                <i class="fa fa-warning"></i> LA MODIFICACIO SE DEBE REALIZAR PREVIA PRESENTACION DEL FORMULARIO DE MODIFICACION Y/O INCLUSION DE DATOS (SIE-MD-300), ESTA MODIFICACION SOLO SE REALIZA UNA VEZ POR GESTION.
+                <i class="fa fa-warning"></i> LA MODIFICACIÓN SE DEBE REALIZAR PREVIA PRESENTACIÓN DEL FORMULARIO DE MODIFICACIÓN Y/O INCLUSIÓN DE DATOS (SIE-MD-300), ESTA MODIFICACIÓN SOLO SE REALIZA UNA VEZ POR GESTIÓN.
             </div>
 
         </div>
@@ -55,7 +55,7 @@
                                     <tr class="info">
                                         <th>Gestión</th>
                                         <th>Sie</th>
-                                        <th>Institución Educativa</th>
+                                        <th>Centro de Educación Alternativa</th>
                                         <!--th>Rude</th-->
                                         <th>Nivel</th>
                                         <th>Grado</th>
@@ -65,7 +65,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for inscription in infoinscription%}
+                                    {% for inscription in infoinscription %}
                                         <tr>
 
                                             <td data-title="Gestión">{{inscription.gestion}}</td>
@@ -112,7 +112,7 @@
                         {%else%}
 
                             {{form_start(form_mode1,{'attr':{'data-toggle': 'validator','form':'role'} })}}
-                            <h5>MODIFICACION Y/O INCLUSIÓN DE NOMBRE(S), APELLIDO(S) Y/O MODIFICACION DE FECHA DE NACIMIENTO</h5>
+                            <h5>MODIFICACIÓN Y/O INCLUSIÓN DE NOMBRE(S), APELLIDO(S) Y/O MODIFICACIÓN DE FECHA DE NACIMIENTO</h5>
                             <h6>Los campos con (*) son requeridos</h6>
                             <div id="no-more-tables">
 
@@ -231,7 +231,7 @@
                         {% if form_mode2 is empty %}
 
                         {%else%}
-                            <h5>ddMODIFICACION Y/O INCLUSIÓN DE NOMBRE(S), APELLIDO(S) Y/O MODIFICACION DE FECHA DE NACIMIENTO</h5>
+                            <h5>MODIFICACIÓN Y/O INCLUSIÓN DE NOMBRE(S), APELLIDO(S) Y/O MODIFICACIÓN DE FECHA DE NACIMIENTO</h5>
                             <h6>Los campos con (*) son requeridos</h6>
                             {{form_start(form_mode2,{'attr':{'data-toggle': 'validator','form':'role'} })}}
                             <div id="no-more-tables">
@@ -244,7 +244,6 @@
                                             <th>Fecha Nacimiento</th>
                                             <th>Resol. Aprobatoria</th>
                                             <th>Obs. Adicional</th>
-
                                         </tr>
                                     </thead>
                                     <tbody>

@@ -85,7 +85,7 @@ class StudentsInscriptionsController extends Controller {
 
         }else{
             //the student has an inscription on the same level
-            $this->session->getFlashBag()->add('noinscription', 'Estudiante ya cuenta con inscripcion en el mismo nivel');
+            $this->session->getFlashBag()->add('noinscription', 'El estudiante ya cuenta con inscripción en el mismo nivel');
             return $this->render($this->session->get('pathSystem').':StudentsInscriptions:inscriptions.html.twig', array(
               'exist'=>false
             ));
@@ -181,7 +181,7 @@ class StudentsInscriptionsController extends Controller {
       //reload the students list
       $exist = true;
       $objStudents = array();
-      $this->session->getFlashBag()->add('noinscription', 'Estudiante no inscrito no cumple la edad...');
+      $this->session->getFlashBag()->add('noinscription', 'Estudiante no inscrito, pues no cumple la edad.');
       $objStudents = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getListStudentPerCourseAlter($aInfoUeducativa['ueducativaInfoId']['iecId']);
       $dataUe=(unserialize($form['data']));
 
@@ -227,7 +227,7 @@ class StudentsInscriptionsController extends Controller {
         //to do the submit data into DB
         //do the commit in DB
         $em->getConnection()->commit();
-        $this->session->getFlashBag()->add('goodinscription', 'Estudiante inscrito');
+        $this->session->getFlashBag()->add('goodinscription', 'Estudiante inscrito correctamente.');
 
         //reload the students list
         $exist = true;
