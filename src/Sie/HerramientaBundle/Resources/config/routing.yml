@@ -1,3 +1,7 @@
+sie_herramienta_info_estudianteDatosCurso:
+    resource: "@SieHerramientaBundle/Resources/config/routing/infoEstudianteDatosCurso.yml"
+    prefix:   /sie/infoEstudianteDatosCurso
+
 sie_herramienta_homepage:
     path:     /hello/{name}
     defaults: { _controller: SieHerramientaBundle:Default:index }
