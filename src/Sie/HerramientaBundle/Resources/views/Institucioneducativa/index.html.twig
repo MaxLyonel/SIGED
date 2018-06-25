@@ -420,147 +420,108 @@
                                 </form>
                             </div>
                           {% endif %}
-                            <hr>
+                          <hr />
+                        </div>
+                        <div class="row">
                             <div class="col-lg-12">
                                 {% if cursos is not empty %}
-                                    {% set turno = cursos[0].turnoTipo.id %}
-                                    {% set turnoNombre = cursos[0].turnoTipo.turno %}
                                     <div class="panel panel-success">
                                         <div class="panel-heading">
                                             <div class="panel-title">
-                                                <h4>Turno - {{turnoNombre}}</h4>
+                                                <h4>Cursos</h4>
                                             </div>
-                                            <div class="panel-widgets">
-                                            </div>
-                                            <div class="clearfix"></div>
                                         </div>
-                                        <div class="panel-collapse collapse in" id="panel{{turno}}">
-                                            <div class="panel-body">
-                                                <div id="no-more-tables">
-                                                    <table class="table table bordered cf dataTable">
-                                                        <thead class="cf">
-                                                            <tr>
-
-                                                                <th>Nivel</th>
-                                                                <th>Grado</th>
-                                                                <th>Paralelo</th>
-                                                                <th>Turno</th>
-                                                                <th>Acciones</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {% for c in cursos %}
-                                                                {% if c.turnoTipo.id != turno %}
-
-                                                                    {% set turno = c.turnoTipo.id %}
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="panel panel-blue">
-                                                <div class="panel-heading">
-                                                    <div class="panel-title">
-                                                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panel{{turno}}">
-                                                            <h4>Turno - {{c.turnoTipo.turno}}</h4>
-                                                        </a>
-                                                    </div>
-                                                    <div class="panel-widgets">
-                                                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panel{{turno}}"><i class="fa fa-chevron-down"></i></a>
-                                                    </div>
-                                                    <div class="clearfix"></div>
-                                                </div>
-                                                <div class="panel-collapse collapse in" id="panel{{turno}}">
-                                                    <div class="panel-body">
-                                                        <div id="no-more-tables">
-                                                            <table class="table table bordered cf dataTable">
-                                                                <thead class="cf">
-                                                                    <tr>
-
-                                                                        <th>Nivel</th>
-                                                                        <th>Grado</th>
-                                                                        <th>Paralelo</th>
-                                                                        <th>Turno</th>
-                                                                        <th>Acciones</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr {% if c.nivelTipo.id == 11 %}
-                                                                        class="success"
-                                                                    {% else %}
-                                                                        {% if c .nivelTipo.id == 12 %}
-                                                                            class="warning"
-                                                                        {% else %}
-                                                                            class="info"
-                                                                        {% endif %}
-                                                                    {% endif %}>
-
-                                                                    <td data-title="Nivel">{{c.nivelTipo.nivel}}</td>
-                                                                    <td data-title="Grado">{{c.gradoTipo.grado|upper}}</td>
-                                                                    <td data-title="Paralelo">{{c.paraleloTipo.paralelo}}</td>
-                                                                    <td data-title="Turno">{{c.turnoTipo.turno}}</td>
-                                                                    <td data-title="Acciones">
-                                                                      {% if app.session.get('lastOperativo') != 5%}
-                                                                        <form action="{{path('herramienta_creacioncursos_delete')}}" style="display: inline-block;" method="post">
-                                                                            <input type="hidden" name="idCurso" value="{{c.id}}">
-                                                                            <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');"><i class="fa fa-eraser text-danger"></i> Eliminar</button>
-                                                                        </form>
-                                                                      {% endif %}
-                                                                    </td>
-                                                                </tr>
-                                                            {% else %}
-                                                                <tr {% if c.nivelTipo.id == 11 %}
-                                                                    class="success"
-                                                                {% else %}
-                                                                    {% if c.nivelTipo.id == 12 %}
-                                                                        class="warning"
-                                                                    {% else %}
-                                                                        class="info"
-                                                                    {% endif %}
-                                                                    {% endif %}>
-
-                                                                        <td data-title="Nivel">{{c.nivelTipo.nivel}}</td>
-                                                                        <td data-title="Grado">{{c.gradoTipo.grado|upper}}</td>
-                                                                        <td data-title="Paralelo">{{c.paraleloTipo.paralelo}}</td>
-                                                                        <td data-title="Turno">{{c.turnoTipo.turno}}</td>
-                                                                        <td data-title="Acciones">
-                                                                          {% if app.session.get('lastOperativo') != 5%}
-                                                                            <form action="{{path('herramienta_creacioncursos_delete')}}" style="display: inline-block;" method="post">
-                                                                                <input type="hidden" name="idCurso" value="{{c.id}}">
-                                                                                <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');"><i class="fa fa-eraser text-danger"></i> Eliminar</button>
-                                                                            </form>
-                                                                          {% endif %}
-                                                                        </td>
-                                                                    </tr>
-                                                                    {% endif %}
-                                                                        {% endfor %}
-                                                                        </tbody>
-                                                                    </table>
+                                        <div class="panel-body">
+                                            <div id="no-more-tables">
+                                                <table class="table table bordered cf dataTable">
+                                                    <thead class="cf">
+                                                        <tr>
+                                                            <th>Turno</th>
+                                                            <th>Nivel</th>
+                                                            <th>Grado</th>
+                                                            <th>Paralelo</th>
+                                                            <th>Acciones</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                            <div class="row">
+                                                                <div class="col-md-12 text-center">
+                                                                    {% set turno = cursos[0].turnoTipo.id %}
+                                                                    {% set turnoNombre = cursos[0].turnoTipo.turno %}
+                                                                    Turno - {{turnoNombre}}
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                    {% else %}
-                                                        <div class="alert alert-info">
-                                                            No hay cursos registrados
-                                                        </div>
-                                                        {% endif %}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div><!-- /.panel-body -->
-                                            <!--/ End tabs content -->
-                                        </div><!-- /.panel -->
-                                        <!--/ End double tabs -->
+                                                        {% for c in cursos %}
+                                                            <tr {% if c.nivelTipo.id == 11 %}
+                                                                class="success"
+                                                            {% else %}
+                                                            {% if c.nivelTipo.id == 12 %}
+                                                                class="warning"
+                                                            {% else %}
+                                                                class="info"
+                                                            {% endif %}
+                                                            {% endif %}>
+                                                                <td data-title="Turno">{{c.turnoTipo.turno}}</td>
+                                                                <td data-title="Nivel">{{c.nivelTipo.nivel}}</td>
+                                                                <td data-title="Grado">{{c.gradoTipo.grado|upper}}</td>
+                                                                <td data-title="Paralelo">{{c.paraleloTipo.paralelo}}</td>
+                                                                <td data-title="Acciones">
+                                                                  {% if app.session.get('lastOperativo') != 5%}
+                                                                    <button class="btn btn-xs btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getAreas('{{c.id}}');">
+                                                                        <i class="fa fa-list"></i> Áreas
+                                                                    </button>
+                                                                    <form action="{{path('herramienta_creacioncursos_delete')}}" style="display: inline-block;" method="post">
+                                                                        <input type="hidden" name="idCurso" value="{{c.id}}">
+                                                                        <button type="submit" class="btn btn-xs btn-danger" onclick="return confirm('Se eliminará el registro. ¿Desea continuar?');"><i class="fa fa-eraser"></i> Eliminar</button>
+                                                                    </form>
+                                                                  {% endif %}
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="alert alert-info">
+                                        No hay cursos registrados
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal"></div><!-- /.modal -->
+{% endblock %}
 
-                                    </div><!-- /.body-content -->
-                                    <!--/ End body content -->
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var getAreas = function (cursoId) {
+            $.ajax({
+                type: 'post',
+                data: ({cursoId: cursoId}),
+                url: "{{ path('herramienta_acurso_getareas') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+                statusCode: {
+                    500: function () {
 
-                                    {% endblock %}
+                    },
+                    404: function () {
 
-                                        {% block javascripts %}
-                                            {{parent()}}
-                                            <script>
-                                            </script>
-                                        {% endblock %}
+                    }
+                }
+            });
+        };
+    </script>
+{% endblock %}

@@ -148,7 +148,23 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoRegular:
             comment: ''
             default: '0'
             column: registro_finalizado
+        seccionivDescLocalidad:
+            type: string
+            nullable: true
+            length: 125
+            fixed: false
+            comment: ''
+            column: seccioniv_desc_localidad
     manyToOne:
+        seccionvEstudianteEsdiscapacidadTipo:
+            targetEntity: EstudianteInscripcionSocioeconomicoRegEstDiscapacidadTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                seccionv_estudiante_esdiscapacidad_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         seccionvHablaNinezTipo:
             targetEntity: IdiomaTipo
             cascade: {  }

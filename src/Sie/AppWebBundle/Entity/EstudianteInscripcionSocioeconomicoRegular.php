@@ -808,4 +808,60 @@ class EstudianteInscripcionSocioeconomicoRegular
     {
         return $this->estudianteInscripcion;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoRegEstDiscapacidadTipo
+     */
+    private $seccionvEstudianteEsdiscapacidadTipo;
+
+
+    /**
+     * Set seccionvEstudianteEsdiscapacidadTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoRegEstDiscapacidadTipo $seccionvEstudianteEsdiscapacidadTipo
+     * @return EstudianteInscripcionSocioeconomicoRegular
+     */
+    public function setSeccionvEstudianteEsdiscapacidadTipo(\Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoRegEstDiscapacidadTipo $seccionvEstudianteEsdiscapacidadTipo = null)
+    {
+        $this->seccionvEstudianteEsdiscapacidadTipo = $seccionvEstudianteEsdiscapacidadTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get seccionvEstudianteEsdiscapacidadTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoRegEstDiscapacidadTipo 
+     */
+    public function getSeccionvEstudianteEsdiscapacidadTipo()
+    {
+        return $this->seccionvEstudianteEsdiscapacidadTipo;
+    }
+    /**
+     * @var string
+     */
+    private $seccionivDescLocalidad;
+
+
+    /**
+     * Set seccionivDescLocalidad
+     *
+     * @param string $seccionivDescLocalidad
+     * @return EstudianteInscripcionSocioeconomicoRegular
+     */
+    public function setSeccionivDescLocalidad($seccionivDescLocalidad)
+    {
+        $this->seccionivDescLocalidad = $seccionivDescLocalidad;
+    
+        return $this;
+    }
+
+    /**
+     * Get seccionivDescLocalidad
+     *
+     * @return string 
+     */
+    public function getSeccionivDescLocalidad()
+    {
+        return $this->seccionivDescLocalidad;
+    }
 }
