@@ -1,0 +1,3 @@
+olimgestionarchivos_index:
+    path:     /
+    defaults: { _controller: "SieOlimpiadasBundle:OlimGestionArchivos:index" }
