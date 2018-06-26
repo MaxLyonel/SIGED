@@ -1240,7 +1240,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                                 d.id as ieue,	
                                 d.institucioneducativa,                    
                                 z.gestion_tipo_id as gestion_tipo_id,
-                                case when z.periodo_tipo_id = '1' then 'Primer Semestre' else 'Segundo Semestre' end as semestre,                    
+                                case when z.periodo_tipo_id = '2' then 'Primer Semestre' else 'Segundo Semestre' end as semestre,                    
                                 z.periodo_tipo_id as periodo,
                                 z.estadoId,
                                 z.tramite_estado obs                    
@@ -1302,7 +1302,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                                             d.id as ieue,	
                                             d.institucioneducativa,                    
                                             z.gestion_tipo_id as gestion_tipo_id,
-                                            case when z.periodo_tipo_id = '1' then 'Primer Semestre' else 'Segundo Semestre' end as semestre,                    
+                                            case when z.periodo_tipo_id = '2' then 'Primer Semestre' else 'Segundo Semestre' end as semestre,                    
                                             z.periodo_tipo_id as periodo,
                                             z.estadoId,
                                             z.tramite_estado obs                    
@@ -1364,7 +1364,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                                             d.id as ieue,	
                                             d.institucioneducativa,                    
                                             z.gestion_tipo_id as gestion_tipo_id,
-                                            case when z.periodo_tipo_id = '1' then 'Primer Semestre' else 'Segundo Semestre' end as semestre,                    
+                                            case when z.periodo_tipo_id = '2' then 'Primer Semestre' else 'Segundo Semestre' end as semestre,                    
                                             z.periodo_tipo_id as periodo,
                                             z.estadoId,
                                             z.tramite_estado obs                    
