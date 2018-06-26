@@ -391,7 +391,7 @@
                         {% endif %}
                     {% endif %}
 
-                    {% if rol20 == true or rol8 == true or app.session.get('userId') = 92506172 %}
+                    {% if rol20 == true or rol8 == true or app.session.get('userId') == 92506172 %}
                         <!-- Start development - sub menu -->
                         {% for key,menu in app.session.get('aMenu') %}
                             <li class="submenu {% if app.session.get('pMenuId') == menu[0]['menuId'] %} active {% endif %}">
