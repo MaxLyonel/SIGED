@@ -191,9 +191,9 @@ class EstadisticasController extends Controller
         $subEntidades = $this->buscaSubEntidadRolEspecial($codigo,$rol);
 
     //   dump($subEntidades);die;
-        // devuelve un array con los diferentes tipos de reportes 1:sexo, 2:dependencia, 3:area de atencion, 4:modalidad
+        // devuelve un array con los diferentes tipos de reportes 1:sexo, 2:dependencia, 3:area
        $entityEstadistica = $this->buscaEstadisticaAlternativaAreaRol($codigo,$rol);
-
+//dump($entityEstadistica);die;
         if(count($subEntidades)>0 and isset($subEntidades)){
             $totalgeneral=0;
             foreach ($subEntidades as $key => $dato) {
@@ -221,9 +221,9 @@ class EstadisticasController extends Controller
         //$chartMatricula = $this->chartColumnInformacionGeneral($entityEstadistica,"Matrícula",$gestionProcesada,1,"chartContainerMatricula");
 //        $chartDiscapacidad = $this->chartDonut3d($entityEstadistica[3],"Estudiantes matriculados según Área de Atención",$gestionProcesada,"Estudiantes","chartContainerDiscapacidad");
 //        //$chartNivelGrado = $this->chartDonutInformacionGeneralNivelGrado($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio y Año de Escolaridad ",$gestionProcesada,6,"chartContainerEfectivoNivelGrado");
-//        $chartGenero = $this->chartPie($entityEstadistica[1],"Estudiantes matriculados según Sexo",$gestionProcesada,"Estudiantes","chartContainerGenero");
+        $chartGenero = $this->chartPie($entityEstadistica[1],"Estudiantes matriculados según Sexo",$gestionProcesada,"Estudiantes","chartContainerGenero");
 //        //$chartArea = $this->chartPyramidInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Área Geográfica",$gestionProcesada,4,"chartContainerEfectivoArea");
-//        $chartDependencia = $this->chartColumn($entityEstadistica[2],"Estudiantes matriculados según Dependencia",$gestionProcesada,"Estudiantes","chartContainerDependencia");
+        $chartDependencia = $this->chartColumn($entityEstadistica[2],"Estudiantes matriculados según Dependencia",$gestionProcesada,"Estudiantes","chartContainerDependencia");
 //        $chartModalidad = $this->chartSemiPieDonut3d($entityEstadistica[4],"Estudiantes matriculados según Modalidad",$gestionProcesada,"Estudiantes","chartContainerModalidad");
 
 
@@ -232,12 +232,16 @@ class EstadisticasController extends Controller
                 'infoEntidad'=>$entidad,
                 'infoSubEntidad'=>$subEntidades,
                 'gestion'=>$gestionActual,
+                'datoGraficoGenero'=>$chartGenero,
+                'datoGraficoDependencia'=>$chartDependencia,
                 'fechaEstadistica'=>$fechaEstadistica
             ));
         } else {
             return $this->render('SieHerramientaAlternativaBundle:Reportes:matriculaEducativaAlternativa.html.twig', array(
                 'infoEntidad'=>$entidad,
                 'gestion'=>$gestionActual,
+                'datoGraficoGenero'=>$chartGenero,
+                'datoGraficoDependencia'=>$chartDependencia,
                 'fechaEstadistica'=>$fechaEstadistica
 
             ));
@@ -304,7 +308,7 @@ union all
             
             union all
   
-            select 3 as tipo_id, 'Área de Atención' as tipo_nombre, id, nombre, subnombre, sum(cantidad) as cantidad 
+            select 3 as tipo_id, 'Área' as tipo_nombre, id, nombre, subnombre, sum(cantidad) as cantidad 
 						from (
 								select 
 								case 
@@ -392,7 +396,7 @@ union all
             
             union all
   
-            select 3 as tipo_id, 'Área de Atención' as tipo_nombre, id, nombre, subnombre, sum(cantidad) as cantidad 
+            select 3 as tipo_id, 'Área' as tipo_nombre, id, nombre, subnombre, sum(cantidad) as cantidad 
 						from (
 								select 
 								case 
@@ -477,7 +481,7 @@ union all
             
             union all
   
-            select 3 as tipo_id, 'Área de Atención' as tipo_nombre, id, nombre, subnombre, sum(cantidad) as cantidad 
+            select 3 as tipo_id, 'Área' as tipo_nombre, id, nombre, subnombre, sum(cantidad) as cantidad 
 						from (
 								select 
 								case 
@@ -564,7 +568,7 @@ union all
             
             union all
   
-            select 3 as tipo_id, 'Área de Atención' as tipo_nombre, id, nombre, subnombre, sum(cantidad) as cantidad 
+            select 3 as tipo_id, 'Área' as tipo_nombre, id, nombre, subnombre, sum(cantidad) as cantidad 
 						from (
 								select 
 								case 
@@ -631,7 +635,7 @@ union all
            -- left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
           --  left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
           --  left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
-            where f.gestion_tipo_id = 2018 and f.periodo_tipo_id = 2 --and cast(substring(cod_dis,1,1) as integer)=2
+            where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = 2 --and cast(substring(cod_dis,1,1) as integer)=2
             and a.codigo in (15,18,19,20,21,22,23,24,25)
             group by ie.dependencia_tipo_id,a.id,b.id,d.id,es.genero_tipo_id
 )
@@ -650,7 +654,7 @@ union all
             
             union all
   
-            select 3 as tipo_id, 'Área de Atención' as tipo_nombre, id, nombre, subnombre, sum(cantidad) as cantidad 
+            select 3 as tipo_id, 'Área' as tipo_nombre, id, nombre, subnombre, sum(cantidad) as cantidad 
 						from (
 								select 
 								case 
@@ -704,8 +708,8 @@ union all
             } else {
                 $cantidadParcial = $dato['cantidad'];
             }
-            $aDato[$dato['tipo_id']]['dato'][0] = array('detalle'=>'Total', 'cantidad'=>$cantidadParcial);
-            $aDato[$dato['tipo_id']]['dato'][$dato['id']] = array('detalle'=>$dato['nombre'], 'cantidad'=>$dato['cantidad']);
+            $aDato[$dato['tipo_id']]['dato'][0] = array('detalle'=>'Total','subdetalle'=>'', 'cantidad'=>$cantidadParcial);
+            $aDato[$dato['tipo_id']]['dato'][$dato['id']] = array('detalle'=>$dato['nombre'],'subdetalle'=>$dato['subnombre'], 'cantidad'=>$dato['cantidad']);
         }
         return $aDato;
     }
