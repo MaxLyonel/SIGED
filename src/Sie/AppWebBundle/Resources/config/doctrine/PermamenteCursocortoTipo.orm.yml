@@ -1,0 +1,26 @@
+Sie\AppWebBundle\Entity\PermamenteCursocortoTipo:
+    type: entity
+    table: permamente_cursocorto_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        cursocorto:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

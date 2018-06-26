@@ -35,7 +35,6 @@ class InstitucioneducativaCursoRepository extends EntityRepository
                 ->andwhere('f.periodoTipoId = :periodo')
                 ->groupBy('h.id, a.codigo, a.facultadArea, b.codigo, b.especialidad, d.codigo, d.acreditacion, q.id, p.id')
                 ->orderBy('a.codigo, b.codigo, d.codigo, p.id')
-
                 ->setParameter('sie', $ie_id)
                 ->setParameter('gestion', $ie_gestion)
                 ->setParameter('sucursal', $ie_subcea)

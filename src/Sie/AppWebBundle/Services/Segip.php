@@ -45,6 +45,8 @@ class Segip {
 
     public function buscarPersona($carnet, $complemento, $fechaNac) {
 
+        $fechaNac = date('d/m/Y', strtotime($fechaNac));
+
         $url = 'segip/v2/personas/'.$carnet.'?fecha_nacimiento='.$fechaNac;
 
         if($complemento != ''){
@@ -77,6 +79,8 @@ class Segip {
 	}
 
     public function verificarPersona($carnet, $complemento, $paterno, $materno, $nombre, $fechaNac) {
+
+        $fechaNac = date('d/m/Y', strtotime($fechaNac));
 
         $url = 'segip/v2/personas/'.$carnet.'?fecha_nacimiento='.$fechaNac.'&primer_apellido='.$paterno.'&segundo_apellido='.$materno.'&nombre='.$nombre;
 

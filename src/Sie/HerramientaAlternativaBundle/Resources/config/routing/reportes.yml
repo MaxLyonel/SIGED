@@ -114,6 +114,17 @@ herramienta_alter_reporte_edudiv_maestros_penitenciario_listex:
     path:     /reportListMaestroRecPEX/{dataInfo}
     defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportListMaestroRecPEX }
 
+sie_alt_reportes_por_CEA:
+    path:     /sie/reportesporCEA
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:findCEAReport}
+    options:
+         expose: true
+sie_alt_reportes:
+    path:     /sie/reportes
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:openReportesIndex}
+    options:
+         expose: true
+
 herramienta_alter_reporte_operativo_exitoso_cerrado:
     path:     /cerradoexitosooperativo
     defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:cerradoexitosooperativo }

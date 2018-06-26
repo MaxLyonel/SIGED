@@ -1,0 +1,217 @@
+<div class="bs-example">
+    <ul class="nav nav-tabs" id="myTab">
+        <li><a data-toggle="tab" href="#sectionA">Lista Participantes</a></li>
+        <li><a data-toggle="tab" href="#sectionB">Estado Participantes</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="sectionA" class="tab-pane fade in active">
+            <h3>Lista Participantes</h3>
+
+
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel rounded swadow panel-danger">
+                        <div class="panel-heading">
+                            <h4>Participantes inscritos: <span class="label label-success"> {{ totalInscritos }}  </label></h4>
+                            <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
+                        </div>
+
+                        {% if objStudents is not empty %}
+
+                            <div id="no-more-tables">
+                                <table class="table table-striped table-danger">
+                                    <thead>
+                                    <tr>
+                                        <th>N°</th>
+                                        <th>Carnet de Identidad</th>
+                                        <th>Codigo Rude</th>
+                                        <th>Paterno</th>
+                                        <th>Materno</th>
+                                        <th>Nombre(s)</th>
+                                        <th>Genero</th>
+                                        <th>Fecha de Nacimiento</th>
+                                        <th> </th>
+
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for objStudents in objStudents %}
+                                        <tr>
+                                            <td data-title="N°">{{ loop.index }}</td>
+                                            <td data-title="Carnet">{{ objStudents.carnet }}</td>
+                                            <td data-title="Carnet">{{ objStudents.codigorude }}</td>
+                                            <td data-title="Paterno">{{ objStudents.paterno }}</td>
+                                            <td data-title="Materno">{{ objStudents.materno }}</td>
+                                            <td data-title="Nombre(s)">{{ objStudents.nombre }}</td>
+                                            <td data-title="Formación">{{ objStudents.genero }}</td>
+                                            <td data-title="Formación">{{ objStudents.fechanacimiento }}</td>
+                                            <td data-title="cancel">
+
+                                                <button class="btn btn-danger btn-xs" onclick="removeInscriptionStudent({{ objStudents.idcurso }},{{ objStudents.idestins }});" data-placement="top" data-original-title="Eliminar Participante">
+                                                    <i class="fa fa-times"></i>
+                                                </button>
+
+
+                                            </td>
+
+
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            No hay Participantes Registrados
+                        {% endif %}
+                    </div>
+                    <!-- /.portlet -->
+                </div>
+            </div>
+
+            <p>. </p>
+        </div>
+
+        <div id="sectionB" class="tab-pane fade">
+            <h3>Estado Participantes</h3>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel rounded swadow panel-danger">
+                        <div class="panel-heading">
+                            <h4>Participantes inscritos: <span class="label label-success"> {{ totalInscritos }}  </label></h4>
+                        </div>
+
+                        {% if objStudents is not empty %}
+
+                            <div id="no-more-tables">
+                                <table class="table table-striped table-danger">
+                                    <thead>
+                                    <tr>
+                                        <th>N°</th>
+                                        <th>Carnet de Identidad</th>
+                                        <th>Codigo Rude</th>
+                                        <th>Paterno</th>
+                                        <th>Materno</th>
+                                        <th>Nombre(s)</th>
+                                        <th>Genero</th>
+                                        <th>Estado</th>
+                                        {#<th><input type="checkbox" id="checkAll" name="selectAll" onclick="selectAllEle();"></th>#}
+
+
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for objStudents in objStudents %}
+                                        <tr>
+                                            <td data-title="N°">{{ loop.index }}</td>
+                                            <td data-title="Carnet">{{ objStudents.carnet }}</td>
+                                            <td data-title="Carnet">{{ objStudents.codigorude }}</td>
+                                            <td data-title="Paterno">{{ objStudents.paterno }}</td>
+                                            <td data-title="Materno">{{ objStudents.materno }}</td>
+                                            <td data-title="Nombre(s)">{{ objStudents.nombre }}</td>
+                                            <td data-title="Formación">{{ objStudents.genero }}</td>
+                                            {%  if (objStudents.estadomatriculaid==4) %}
+                                                <td data-title="Opcion">{{ objStudents.estadomatricula }}</td>
+                                                <td>
+                                                    <select>
+                                                        {% for item in objx %}
+                                                            {%  if (objStudents.estadomatricula==item) %}
+                                                                <option selected="selected">  {{ item }}</option>
+                                                            {% else %}
+                                                                <option>  {{ item }}</option>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </select>
+
+                                                    {#</div>#}
+                                                    {#<select>#}
+                                                    {#<option value="{{ objStudents.estadomatriculaid }}">{{ form_widget(form.matricula) }}</option>#}
+
+                                                    {#</select>#}
+                                                    {#<div>#}
+
+                                                </td>
+                                            {% endif %}
+                                            {#<div class="btn-group">#}
+                                            {#<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
+                                            {#<span class="selection"></span>{{ objStudents.estadomatricula }} <span class="caret"></span>#}
+                                            {#</button>#}
+                                            {#<ul class="dropdown-menu" role="menu">#}
+                                            {#<li><a href="#">EFECTIVO</a></li>#}
+                                            {#<li><a href="#">PROMOVIDO</a></li>#}
+                                            {#<li><a href="#">RETIRADO</a></li>#}
+                                            {#</ul>#}
+                                            {#</div>#}
+
+
+
+
+
+
+                                            {#<div class="input-group mb-15">#}
+                                            {#<div class="input-group-btn open">#}
+
+                                            {#<button data-toggle="dropdown" class="btn btn-info dropdown-toggle" type="button" aria-expanded="true">Estado <span class="caret"></span></button>#}
+                                            {#<ul class="dropdown-menu">#}
+                                            {#<li><a href="#">EFECTIVO</a></li>#}
+                                            {#<li><a href="#">PROMOVIDO</a></li>#}
+                                            {#<li><a href="#">RETIRADO</a></li>#}
+                                            {#</ul>#}
+                                            {#</div>#}
+
+                                            {#</div>#}
+                                            {#<select>#}
+                                            {#<option value="{{ objStudents.estadomatriculaid }}">{{ objStudents.estadomatricula }}</option>#}
+
+                                            {#</select>#}
+
+
+
+                                            {#<div>#}
+                                            {#<label>#}
+                                            {#<input type="checkbox" id="form_datasend_{{objStudents.idcurso}}" name="form[datasend_{{objStudents.idcurso}}][student]"   value='{{objStudents.idcurso}}'>#}
+                                            {#<input type="hidden" id="form_datasend_{{objStudents.idestins}}" name="form[datasend_{{objStudents.idestins}}][eInsId]"   value='{{objStudents.idestins}}'>#}
+                                            {#</label>#}
+
+                                            {#</div>#}
+
+
+
+                                            {#<td data-title="cancel">#}
+                                            {#<button class="btn btn-danger" onclick="removeInscriptionStudent({{ objStudents.idcurso }},{{ objStudents.idest }});" data-placement="top" data-original-title="Eliminar Participante">#}
+                                            {#<i class="fa fa-times"></i>#}
+                                            {#</button>#}
+
+
+                                            {#</td>#}
+
+
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                                <div align="right">
+
+                                    <button type="button" class="btn btn-danger"  onclick="closeInscriptions('{{infoUe}}');" data-dismiss="modal"> Cerrar Curso</button>
+                                    </button>
+                                </div>
+
+
+                            </div>
+                        {% else %}
+                            No hay Participantes Registrados
+                        {% endif %}
+                    </div>
+                    <!-- /.portlet -->
+                </div>
+            </div>
+
+            <p>. </p>
+        </div>
+
+    </div>
+</div>
+
