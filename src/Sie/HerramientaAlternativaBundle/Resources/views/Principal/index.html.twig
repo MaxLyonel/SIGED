@@ -3,13 +3,13 @@
 {% block contentoption %}
 <!-- Start page header -->
 <div class="header-content">
-    <h2><i class="glyphicon glyphicon-leaf"></i> Bienvenido! <span>Usted a ingresado al sistemas academico de educación alternativa.</span></h2>
+    <h2><i class="glyphicon glyphicon-leaf"></i> Bienvenido/a <span>Usted a ingresado al sistemas academico de educación alternativa.</span></h2>
     <div class="breadcrumb-wrapper hidden-xs">
-        <span class="label">Usted esta aqui:</span>
+        <span class="label">Usted esta aquí:</span>
         <ol class="breadcrumb">
             <li>
                 <i class="glyphicon glyphicon-leaf"></i>
-                    <a href="{{path('principal_web')}}">Bienvenida</a>
+                    <a href="{{path('principal_web')}}">Bienvenida/o</a>
                 <i class="fa fa-angle-right"></i>
             </li>
         </ol>
@@ -55,20 +55,22 @@
                                 <i class="fa fa-bars"></i>
                             </button>
                             <ul class="dropdown-menu pull-right no-border" role="menu">                                                
-                                {% if app.session.get('roluser') == 8 %}
+                                {% if app.session.get('ie_id') != -1 %}
                                     <li class="active"><a onclick="selgessubsemFormShow();"><i class="fa fa-history"></i> <span>Historial del Centro.</span></a></li>                                                
-                                    {#<li><a href="page-profile.html#"><i class="fa fa-fw fa-photo"></i> <span>Galeria de Fotos</span> <small>(98)</small></a></li>#}
+                                    <li><a href="{{path('herramienta_alter_galeria_fotos_centro')}}"><i class="fa fa-fw fa-photo"></i> <span>Galeria de Fotos</span> <small></small></a></li>
+                                    <li><a href="{{path('herramienta_alter_galeria_fotos_centro_editar_foto')}}"><i class="fa fa-pencil"></i> <span>Editar Fotos</span> <small></small></a></li>
                                     {#<li><a href="{{ path('herramientalt_ceducativa_estadistiscas_departamento')}}"><i class="fa fa-fw fa-edit"></i> <span>Estadísticas</span></a></li>#}
                                 {% endif %}
                             </ul>
                         </div>
-                        <img data-no-retina height="50" width="150" src="/uploads/institutoseducativos/40730321.jpg" class="img-responsive full-width" alt="cover">
+                        <img data-no-retina height="50" width="150" src="/uploads/institutoseducativos/{{app.session.get('ie_id')}}_Fondo" class="img-responsive full-width" alt="Edite las fotos">
                     </div>
 
                     <ul class="list-unstyled no-padding hidden-sm hidden-xs cover-menu">                                        
-                        {% if app.session.get('roluser') == 8 %}
-                            <li class="active"><a onclick="selgessubsemFormShow();"><i class="fa fa-history"></i> <span>Historial del Centro.</span></a></li>                                        
-                            {#<li><a href="page-profile.html#"><i class="fa fa-fw fa-photo"></i> <span>Galeria de Fotos</span> <small>(98)</small></a></li>#}
+                        {% if app.session.get('ie_id') != -1 %}
+                            <li class="active"><a onclick="selgessubsemFormShow();"><i class="fa fa-history"></i> <span>Historial del Centro.</span></a></li>
+                            <li><a href="{{path('herramienta_alter_galeria_fotos_centro')}}"><i class="fa fa-fw fa-photo"></i> <span>Galeria de Fotos</span> <small></small></a></li>
+                            <li><a href="{{path('herramienta_alter_galeria_fotos_centro_editar_foto')}}"><i class="fa fa-pencil"></i> <span>Editar Fotos</span> <small></small></a></li>                                                           
                             {#<li><a href="{{ path('herramientalt_ceducativa_estadistiscas_departamento')}}"><i class="fa fa-fw fa-edit"></i> <span>Estadísticas</span></a></li>#}
                         {% endif %}
                     </ul>

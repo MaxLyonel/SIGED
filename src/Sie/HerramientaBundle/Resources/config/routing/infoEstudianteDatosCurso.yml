@@ -1,0 +1,11 @@
+herramienta_infoEstudianteDatosCurso_index:
+    path:     /index
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteDatosCurso:index"}
+    options:
+         expose: true
+
+herramienta_infoEstudianteDatosCurso_save:
+    path:     /save
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteDatosCurso:save"}
+    options:
+         expose: true

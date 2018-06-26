@@ -146,7 +146,7 @@ class InfoMaestroController extends Controller {
                 ->setAction($this->generateUrl('herramientalt_info_maestro_result'))
                 //->add('carnetIdentidad', 'text', array('label' => 'Carnet de Identidad', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbers', 'pattern' => '[0-9]{5,10}', 'maxlength' => '11')))
                 //->add('complemento', 'text', array('label' => 'Complemento', 'required' => false, 'attr' => array('class' => 'form-control jonlynumbersletters jupper', 'maxlength' => '2', 'autocomplete' => 'off')))
-                ->add('buscar', 'submit', array('label' => 'Buscar coincidencias', 'attr' => array('class' => 'btn btn-primary')))
+                ->add('buscar', 'submit', array('label' => 'Buscar Coincidencias', 'attr' => array('class' => 'btn btn-primary')))
                 ->getForm();
         return $form;
     }
@@ -275,7 +275,7 @@ class InfoMaestroController extends Controller {
                 ->add('gestion', 'hidden', array('data' => $gestion))
                 ->add('persona', 'hidden', array('data' => $idPersona))
                 ->add('genero', 'entity', array('class' => 'SieAppWebBundle:GeneroTipo', 'data' => $em->getReference('SieAppWebBundle:GeneroTipo', $persona->getGeneroTipo()->getId()), 'label' => 'Género', 'required' => true, 'attr' => array('class' => 'form-control')))
-                ->add('celular', 'text', array('label' => 'Nro. de Celular', 'data' => $persona->getCelular(), 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}')))
+                ->add('celular', 'text', array('label' => 'Número de Celular', 'data' => $persona->getCelular(), 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}')))
                 ->add('correo', 'text', array('label' => 'Correo Electrónico', 'data' => $persona->getCorreo(), 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jemail')))
                 ->add('direccion', 'text', array('label' => 'Dirección de Domicilio', 'data' => $persona->getDireccion(), 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbersletters jupper')))
                 ->add('funcion', 'choice', array('label' => 'Función que desempeña (cargo)', 'required' => true, 'choices' => $cargosArray, 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
@@ -283,10 +283,10 @@ class InfoMaestroController extends Controller {
                 ->add('formacion', 'choice', array('label' => 'Último grado de formación alcanzado', 'required' => true, 'choices' => $formacionArray, 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
                 ->add('formacionDescripcion', 'text', array('label' => 'Descripción del último grado de formación alcanzado', 'required' => false, 'attr' => array('class' => 'form-control jnumbersletters jupper', 'autocomplete' => 'off', 'maxlength' => '90')))
                 ->add('normalista', 'checkbox', array('required' => false, 'label' => 'Normalista', 'attr' => array('class' => 'checkbox')))
-                ->add('item', 'text', array('label' => 'Número de Item', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'pattern' => '[0-9]{1,10}')))
+                ->add('item', 'text', array('label' => 'Número de Ítem', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'pattern' => '[0-9]{1,10}')))
                 ->add('idiomaOriginario', 'entity', array('class' => 'SieAppWebBundle:IdiomaMaterno', 'data' => $em->getReference('SieAppWebBundle:IdiomaMaterno', 97), 'label' => 'Actualmente que idioma originario esta estudiando', 'required' => false, 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
                 ->add('leeEscribeBraile', 'checkbox', array('required' => false, 'label' => 'Lee y Escribe en Braille', 'attr' => array('class' => 'checkbox')))
-                ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
+                ->add('guardar', 'submit', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary')))
                 ->add('educacionDiversaTipo', 'choice', array('required' => false, 'choices' => $EDMaestroArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarmenu(this.value)')))
                 ->add('pertUM', 'hidden', array('data'=>$pertUM ) )
                 ->add('pertP', 'hidden', array('data'=>$pertP ) )
@@ -425,7 +425,7 @@ class InfoMaestroController extends Controller {
                 ->add('idPersona', 'hidden', array('data' => $persona->getId()))
                 ->add('idMaestroInscripcion', 'hidden', array('data' => $maestroInscripcion->getId()))
                 ->add('genero', 'entity', array('class' => 'SieAppWebBundle:GeneroTipo', 'data' => $em->getReference('SieAppWebBundle:GeneroTipo', $persona->getGeneroTipo()->getId()), 'label' => 'Género', 'required' => true, 'attr' => array('class' => 'form-control')))
-                ->add('celular', 'text', array('label' => 'Nro. de Celular', 'required' => false, 'data' => $persona->getCelular(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}')))
+                ->add('celular', 'text', array('label' => 'Número de Celular', 'required' => false, 'data' => $persona->getCelular(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}')))
                 ->add('correo', 'text', array('label' => 'Correo Electrónico', 'required' => false, 'data' => $persona->getCorreo(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jemail')))
                 ->add('direccion', 'text', array('label' => 'Dirección de Domicilio', 'required' => false, 'data' => $persona->getDireccion(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbersletters jupper')))
                 ->add('funcion', 'choice', array('label' => 'Función que desempeña', 'required' => true, 'choices' => $cargosArray, 'data' => $maestroInscripcion->getCargoTipo()->getId(), 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
@@ -433,7 +433,7 @@ class InfoMaestroController extends Controller {
                 ->add('formacion', 'choice', array('label' => 'Último grado de formación alcanzado', 'required' => true, 'choices' => $formacionArray, 'data' => $maestroInscripcion->getFormacionTipo()->getId(), 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
                 ->add('formacionDescripcion', 'text', array('label' => 'Descripción del último grado de formación alcanzado', 'required' => false, 'data' => $maestroInscripcion->getFormaciondescripcion(), 'attr' => array('class' => 'form-control jnumbersletters jupper', 'autocomplete' => 'off', 'maxlength' => '90')))
                 ->add('normalista', 'checkbox', array('required' => false, 'label' => 'Normalista', 'attr' => array('class' => 'form-control', 'checked' => $maestroInscripcion->getNormalista())))
-                ->add('item', 'text', array('label' => 'Número de Item', 'required' => true, 'data' => $maestroInscripcion->getItem(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'pattern' => '[0-9]{1,10}')))
+                ->add('item', 'text', array('label' => 'Número de Ítem', 'required' => true, 'data' => $maestroInscripcion->getItem(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'pattern' => '[0-9]{1,10}')))
                 ->add('idiomaOriginario', 'entity', array('class' => 'SieAppWebBundle:IdiomaMaterno', 'data' => ($maestroInscripcion->getEstudiaiomaMaterno()), 'label' => 'Actualmente que idioma originario esta estudiando', 'required' => false, 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
                 ->add('leeEscribeBraile', 'checkbox', array('required' => false, 'label' => 'Lee y Escribe en Braille', 'attr' => array('class' => 'form-control', 'checked' => $maestroInscripcion->getLeeescribebraile())))
                 ->add('guardar', 'submit', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary')))
@@ -495,7 +495,7 @@ class InfoMaestroController extends Controller {
             $maestroInscripcion = $queryIns->getResult();
 
             if ($maestroInscripcion) { // verificamos si el maestro esta registrado ya en tabla maestro inscripcion
-                $this->get('session')->getFlashBag()->add('newError', 'No se realizó el registro, la persona ya esta registrada');
+                $this->get('session')->getFlashBag()->add('newError', 'No se realizó el registro, la persona ya esta registrada.');
                 return $this->redirect($this->generateUrl('herramientalt_info_maestro_index'));
             }
 
@@ -538,7 +538,7 @@ class InfoMaestroController extends Controller {
                 $maestroinscripcion->setUnidadMilitarTipo($em->getRepository('SieAppWebBundle:UnidadMilitarTipo')->find(0));
             }else{
                 $em->getConnection()->rollback();
-                $this->get('session')->getFlashBag()->add('updateError', 'Error en la modificacion de datos');
+                $this->get('session')->getFlashBag()->add('updateError', 'Error en la modificación de datos.');
                 return $this->redirect($this->generateUrl('herramientalt_info_maestro_index', array('op' => 'result')));
             }
 
@@ -587,7 +587,7 @@ class InfoMaestroController extends Controller {
                 }
             }
             $em->getConnection()->commit();
-            $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron registrados correctamente');
+            $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron registrados correctamente.');
             return $this->redirect($this->generateUrl('herramientalt_info_maestro_index'));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
@@ -706,7 +706,7 @@ class InfoMaestroController extends Controller {
                 $maestroinscripcion->setUnidadMilitarTipo($em->getRepository('SieAppWebBundle:UnidadMilitarTipo')->find(0));
             }else{
                 $em->getConnection()->rollback();
-                $this->get('session')->getFlashBag()->add('updateError', 'Error en la modificacion de datos');
+                $this->get('session')->getFlashBag()->add('updateError', 'Error en la modificación de datos.');
                 return $this->redirect($this->generateUrl('herramientalt_info_maestro_index', array('op' => 'result')));
             }
 
@@ -753,11 +753,11 @@ class InfoMaestroController extends Controller {
                 }
             }
             $em->getConnection()->commit();
-            $this->get('session')->getFlashBag()->add('updateOk', 'Datos modificados correctamente');
+            $this->get('session')->getFlashBag()->add('updateOk', 'Los datos fueron modificados correctamente.');
             return $this->redirect($this->generateUrl('herramientalt_info_maestro_index', array('op' => 'result')));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
-            $this->get('session')->getFlashBag()->add('updateError', 'Error en la modificacion de datos');
+            $this->get('session')->getFlashBag()->add('updateError', 'Error en la modificación de datos.');
             return $this->redirect($this->generateUrl('herramientalt_info_maestro_index', array('op' => 'result')));
         }
     }
@@ -796,12 +796,12 @@ class InfoMaestroController extends Controller {
                 $em->remove($maestroInscripcion);
                 $em->flush();
                 $em->getConnection()->commit();
-                $this->get('session')->getFlashBag()->add('eliminarOk', 'El registro fue eliminado exitosamente');
+                $this->get('session')->getFlashBag()->add('eliminarOk', 'El registro fue eliminado exitosamente.');
 
                 return $this->redirect($this->generateUrl('herramientalt_info_maestro_index'));
             }
             $em->getConnection()->commit();
-            $this->get('session')->getFlashBag()->add('eliminarError', 'El registro no se pudo eliminar');
+            $this->get('session')->getFlashBag()->add('eliminarError', 'El registro no se pudo eliminar.');
             return $this->redirect($this->generateUrl('herramientalt_info_maestro_index'));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();

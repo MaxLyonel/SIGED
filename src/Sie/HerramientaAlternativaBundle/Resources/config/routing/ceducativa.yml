@@ -47,8 +47,10 @@ herramienta_ceducativa_update:
     
 herramienta_ceducativa_cerrar_operativo:
     path:     /cerraroperativo/
-    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:cerraroperativo}       
-    
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:cerraroperativo}
+    options:
+        expose: true
+        
 herramienta_ceducativa_distrito_listaceas:
     path:     /listaceas/
     defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:listadisceas}         

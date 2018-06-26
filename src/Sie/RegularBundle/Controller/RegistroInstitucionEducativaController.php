@@ -20,6 +20,11 @@ use Sie\AppWebBundle\Entity\BonojuancitoInstitucioneducativa;
  *
  */
 class RegistroInstitucionEducativaController extends Controller {
+    public $session;
+
+    public function __construct(){
+        $this->session = new Session();
+    }
 
     /**
      * Lists all Institucioneducativa entities.
@@ -270,10 +275,11 @@ class RegistroInstitucionEducativaController extends Controller {
     }
 
     public function createAction(Request $request) {
+        
+        $em = $this->getDoctrine()->getManager();
+        $form = $request->get('form');
+        $em->getConnection()->beginTransaction();
         try {
-            $em = $this->getDoctrine()->getManager();
-            $form = $request->get('form');
-
             /* Validar la ie no esta registrada
             $buscar_institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array(
                 'institucioneducativa' => $form['institucionEducativa']));
@@ -349,28 +355,16 @@ class RegistroInstitucionEducativaController extends Controller {
             $em->persist($entity);
             $em->flush();
 
+        
             // Registramos la sucursal
-            $entity = new InstitucioneducativaSucursal();
-            $entity->setId($codigosuc);
-            $entity->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($codigoue));
-            $entity->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById(2017));
-            $entity->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($codigole));
-            $entity->setTelefono1($form['telefono']);
-            $entity->setEmail($form['correo']);
-            $entity->setDireccion(mb_strtoupper($form['direccion'], 'utf-8'));
-            $entity->setZona(mb_strtoupper($form['zona'], 'utf-8'));
-            $entity->setNombreSubcea("");
-            $entity->setCodCerradaId(10);
-            $entity->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->findOneById(0));
-            $entity->setSucursalTipo($em->getRepository('SieAppWebBundle:SucursalTipo')->findOneById(0));
-            $em->persist($entity);
-            $em->flush();
+            $query = $em->getConnection()->prepare("select * from sp_genera_institucioneducativa_sucursal('".$entity->getId()."','0','".$this->session->get('currentyear')."','1')");
+            $query->execute();            
 
             // Registramos la ue en bonojuancito_unidadeducativa
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('bonojuancito_institucioneducativa');")->execute();
             $entity = new BonojuancitoInstitucioneducativa();
             $entity->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($codigoue));
-            $entity->setGestionTipoId(2017);
+            $entity->setGestionTipoId($this->session->get('currentyear'));
             $entity->setCantidadEstudiantes(0);
             $entity->setEsactivo(1);
             $entity->setBonojuancitoInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:BonojuancitoInstitucioneducativaTipo')->findOneById(2));
@@ -386,7 +380,7 @@ class RegistroInstitucionEducativaController extends Controller {
 
                     $nivel = new InstitucioneducativaNivelAutorizado();
                     $nivel->setFechaRegistro(new \DateTime('now'));
-                    //$nivel->setGestionTipoId(2017);
+                    //$nivel->setGestionTipoId($this->session->get('currentyear'));
                     $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($niveles[$i]));
                     $nivel->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($codigoue));
                     $em->persist($nivel);
@@ -413,7 +407,7 @@ class RegistroInstitucionEducativaController extends Controller {
                     $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_nivel_autorizado');")->execute();
                     $nivel = new InstitucioneducativaNivelAutorizado();
                     $nivel->setFechaRegistro(new \DateTime('now'));
-                    $nivel->setGestionTipoId(2017);
+                    $nivel->setGestionTipoId($this->session->get('currentyear'));
                     $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($niveles[$i]));
                     $nivel->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($codigoue));
                     $em->persist($nivel);
@@ -421,10 +415,12 @@ class RegistroInstitucionEducativaController extends Controller {
                 $em->flush();
             }
 
-            $this->get('session')->getFlashBag()->add('mensaje', 'La institucion educativa fue registrada correctamente: ' . $codigoue . ' - '. mb_strtoupper($form['institucionEducativa'], 'utf-8'));
+            $em->getConnection()->commit();
+
+            $this->get('session')->getFlashBag()->add('mensaje', 'La institución educativa fue registrada correctamente: ' . $codigoue . ' - '. mb_strtoupper($form['institucionEducativa'], 'utf-8'));
             return $this->redirect($this->generateUrl('bjp_rue'));
         } catch (Exception $ex) {
-            $this->get('session')->getFlashBag()->add('mensaje', 'Error al registrar la institucion educativa');
+            $this->get('session')->getFlashBag()->add('mensaje', 'Error al registrar la Institución Educativa');
             return $this->redirect($this->generateUrl('bjp_rue'));
         }
     }
@@ -686,7 +682,7 @@ class RegistroInstitucionEducativaController extends Controller {
 
                 $nivel = new InstitucioneducativaNivelAutorizado();
                 $nivel->setFechaRegistro(new \DateTime('now'));
-                $nivel->setGestionTipoId(2017);
+                $nivel->setGestionTipoId($this->session->get('currentyear'));
                 $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($niveles[$i]));
                 $nivel->setInstitucioneducativa($entity);
                 $em->persist($nivel);
@@ -726,7 +722,7 @@ class RegistroInstitucionEducativaController extends Controller {
 
                 $nivel = new InstitucioneducativaNivelAutorizado();
                 $nivel->setFechaRegistro(new \DateTime('now'));
-                $nivel->setGestionTipoId(2017);
+                $nivel->setGestionTipoId($this->session->get('currentyear'));
                 $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($niveles[$i]));
                 $nivel->setInstitucioneducativa($entity);
                 $em->persist($nivel);
@@ -749,10 +745,10 @@ class RegistroInstitucionEducativaController extends Controller {
             $em->getConnection()->beginTransaction();
 
             $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idInstitucion'));
-            $gestion = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneById(2017);
+            $gestion = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($this->session->get('currentyear'));
 
             if ($institucioneducativa) {
-                $institucionNivelAutorizado = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->findBy(array('gestionTipoId' => 2017, 'institucioneducativa' => $institucioneducativa->getId()));
+                $institucionNivelAutorizado = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->findBy(array('gestionTipoId' => $this->session->get('currentyear'), 'institucioneducativa' => $institucioneducativa->getId()));
 
                 $institucionSucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findBy(array('gestionTipo' => $gestion->getId(), 'institucioneducativa' => $institucioneducativa->getId()));
 

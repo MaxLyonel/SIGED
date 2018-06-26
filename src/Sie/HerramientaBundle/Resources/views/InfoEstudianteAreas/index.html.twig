@@ -3,7 +3,7 @@
         <div class="panel panel-danger">
             <div class="panel-heading">
                 <div class="pull-left">
-                    <h3 class="panel-title">Adición y eliminación de Áreas / Asignación de maestros</h3>
+                    <h3 class="panel-title">Adición y Eliminación de Áreas / Asignación de Maestros</h3>
                 </div>
                 <div class="pull-right">
                     <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse"><i class="fa fa-angle-up"></i></button>
@@ -43,7 +43,7 @@
                         {% if areas.tipoUE == 2 and areas.vista != 0 %}
                             <div class="btn-group" style="width:650px; float:right;">
                                 <button type="button" class="btn btn-wordpress" onclick="verMateriaTecnica('materiasTecnicas')" style="float:right">
-                                    Agregar Áreas Tecnicas<span class="caret"></span>
+                                    Agregar Áreas Técnicas<span class="caret"></span>
                                 </button>
                                 <div id="materiasTecnicas" style="display:none; padding:10px; width:500px; position:absolute; background:#FFFFFF; border:2px solid #EEEEEE; right:10px; top:35px; z-index:3" class="animated flipInX row">
                                     {% if areas.faltantes|length > 0 %}
@@ -87,7 +87,7 @@
 </div><!-- /.modal-dialog -->
 <script>
     var newArea = function(ida,idCurso){
-        if(confirm('Realmente desea dicionar el área?\nPresione aceptar para confirmar.')){
+        if(confirm('¿Realmente desea adicionar el área?\nPresione aceptar para confirmar.')){
             $.ajax({
                 type: 'post',
                 data: ({ida:ida, idCurso:idCurso}),
@@ -114,7 +114,7 @@
         }
     }
     var deleteArea = function(idco, asignatura){
-        if(confirm('Esta seguro(a) de eliminar el área de '+ asignatura +'?\nTenga en cuenta que tambien se eliminaran las calificaciones de los estudiantes.')){
+        if(confirm('¿Esta seguro(a) de eliminar el área de '+ asignatura +'?\nTenga en cuenta que también se eliminarán las calificaciones de los estudiantes.')){
             $.ajax({
                 type: 'post',
                 data: ({idco:idco}),
@@ -131,7 +131,7 @@
                 statusCode: {
                     500: function () {
                         $('#mensajeModal').empty();
-                        $('#mensajeModal').append("<div class='alert alert-danger'>Ocurrio un error al eliminar el área !!!</div>");
+                        $('#mensajeModal').append("<div class='alert alert-danger'>¡¡¡Ocurrio un error al eliminar el área !!!</div>");
                         //setTimeout("$('#mensajeModal').empty()",5000);
                     },
                     404: function () {

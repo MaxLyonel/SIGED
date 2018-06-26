@@ -548,4 +548,25 @@ class CreacionCursosController extends Controller {
             $em->getConnection()->rollback();
         }
     }
+
+    public function getAreasAction(Request $request){        
+        $iecId = $request->get('cursoId');
+        $em = $this->getDoctrine()->getManager();
+        $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecId);
+        $operativo = 0;
+        $infoUe = null;
+        $areas = $this->get('areas')->getAreas($iecId);
+
+        if($areas){
+            return $this->render('SieHerramientaBundle:InfoEstudianteAreas:index.html.twig',array(
+                'infoUe'=>$infoUe,
+                'curso'=>$curso,
+                'operativo'=>$operativo,
+                'areas'=>$areas
+            ));
+        }
+        return $this->render('SieHerramientaBundle:InfoEstudianteAreas:index.html.twig',array(
+                'areas'=>null
+        ));
+    }
 }

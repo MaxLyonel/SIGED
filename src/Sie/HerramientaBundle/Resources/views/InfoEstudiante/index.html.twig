@@ -59,7 +59,6 @@
                                                                                 <i class="fa fa-group"></i>
                                                                             </button>
                                                                         </div>
-
                                                                         <!--button type="button" class="btn btn-warning btn-xs dropdown-toggle" data-toggle="dropdown" tabindex="-1">
                                                                             <i class="fa fa-caret-square-o-down"></i>
                                                                         </button>
@@ -80,6 +79,13 @@
                                                                             </tr>
 
                                                                         </table-->
+
+                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Areas/Maestros" style="display:none">
+                                                                            <button class="btn btn-circle btn-info btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getDatosCurso('{{dataParalelo.infoUe}}');">
+                                                                                <i class="fa fa-list"></i>
+                                                                            </button>
+                                                                        </div>
+
                                                                     </li>
                                                                 {% endfor %}
                                                             </ul>
@@ -299,6 +305,29 @@
                     /*$("#idstudents").empty();
                      $("#idparalelos").empty();*/
                     $("#idparalelos_" + key).append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+        var getDatosCurso = function (infoUe) {
+            $.ajax({
+                type: 'post',
+                data: ({infoUe: infoUe}),
+                url: "{{ path('herramienta_infoEstudianteDatosCurso_index') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
                 },
                 statusCode: {
                     500: function () {

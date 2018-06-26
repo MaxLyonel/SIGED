@@ -1,0 +1,116 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+
+{% block contentoption %}
+<!-- Start page header -->
+<div class="header-content">
+    <h2><i class="glyphicon glyphicon-leaf"></i> Bienvenido! <span>Usted a ingresado al sistemas academico de educación alternativa.</span></h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">Usted esta aqui: </span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="glyphicon glyphicon-leaf"></i>
+                    <a href="{{path('principal_web')}}">Bienvenida</a>
+                <i class="fa fa-angle-right"></i>
+            </li>            
+            <li>
+                <i class="fa fa-fw fa-photo"></i>
+                Galeria de Fotos
+                <i class="fa fa-angle-right"></i>
+            </li>
+        </ol>
+    </div><!-- /.breadcrumb-wrapper -->
+</div><!-- /.header-content -->
+<!--/ End page header -->
+
+<!-- Start body content -->
+<div class="body-content animated fadeIn">
+<div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-4">
+        <div class="panel rounded shadow">
+            <div class="panel-body">
+                <div class="inner-all">
+                    <ul class="list-unstyled">
+                        <li class="text-center">
+                            <img data-no-retina class="img-circle img-bordered-primary" height="150" width="150" src="/uploads/personasfotos/{{app.session.get('userfoto')}}" alt="{{app.session.get('name')}} {{app.session.get('lastname')}}">
+                        </li>
+                        <li class="text-center">
+                            <h4 class="text-capitalize">{{app.session.get('name')}} {{app.session.get('lastname')}}</h4>
+                            <p class="text-muted text-capitalize">{{app.session.get('cuentauser')}}</p>
+                        </li>                                        
+                        <li><br/></li>
+                        <li>
+                            <div class="btn-group-vertical btn-block">
+                                <a href="{{path('sie_usuarios_homepage')}}" class="btn btn-default"><i class="fa fa-cog pull-right"></i>Editar Cuenta - Gestión de Usuarios</a>                                
+                                <a href="{{path('logout')}}" class="btn btn-default"><i class="fa fa-sign-out pull-right"></i>Salir</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div><!-- /.panel -->                            
+    </div>
+    
+    <div class="col-lg-9 col-md-9 col-sm-8">
+        <div class="profile-cover">
+            <div class="cover rounded shadow no-overflow">
+                 
+                <div class="body-content animated fadeIn">
+
+                    <!--<div id="js-filters-mosaic-flat" class="cbp-l-filters-buttonCenter" style="margin-bottom: 10px;">
+                        <div data-filter="*" class="cbp-filter-item-active cbp-filter-item">
+                            All <div class="cbp-filter-counter"></div>
+                        </div>
+                        <div data-filter=".people" class="cbp-filter-item">
+                            People <div class="cbp-filter-counter"></div>
+                        </div>
+                        <div data-filter=".food" class="cbp-filter-item">
+                            Food <div class="cbp-filter-counter"></div>
+                        </div>
+                        <div data-filter=".animal" class="cbp-filter-item">
+                            Animal <div class="cbp-filter-counter"></div>
+                        </div>
+                        <div data-filter=".nature" class="cbp-filter-item">
+                            Nature <div class="cbp-filter-counter"></div>
+                        </div>
+                    </div>-->
+
+                    <div id="js-grid-mosaic-flat" class="cbp cbp-l-grid-mosaic-flat">
+                            {% for data in po %}  
+                                <div class="cbp-item people">
+                                    <a href="/uploads/institutoseducativos/{{data.nombre_archivo}}" class="cbp-caption cbp-lightbox"                                
+                                    data-title="{{app.session.get('ie_id')}}<br>">
+                                        <div class="cbp-caption-defaultWrap">
+                                            <img data-no-retina src="/uploads/institutoseducativos/{{data.nombre_archivo}}" alt="Archivo no encontrado"/>
+                                        </div>
+                                        <div class="cbp-caption-activeWrap">
+                                            <div class="cbp-l-caption-alignCenter">
+                                                <div class="cbp-l-caption-body">
+                                                    <div class="cbp-l-caption-title">{{app.session.get('ie_id')}}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>    
+                            {% endfor %}
+                        
+                    </div>
+
+                    <!--<div id="js-loadMore-mosaic-flat" class="cbp-l-loadMore-bgbutton" style="margin-bottom: 20px;">
+                        <a href="ajax/page-gallery-type3/loadMore.html" class="cbp-l-loadMore-link" rel="nofollow">
+                            <span class="cbp-l-loadMore-defaultText">LOAD MORE</span>
+                            <span class="cbp-l-loadMore-loadingText">LOADING...</span>
+                            <span class="cbp-l-loadMore-noMoreLoading">NO MORE WORKS</span>
+                        </a>
+                    </div>-->
+
+                </div>
+                
+            </div><!-- /.cover -->
+        </div><!-- /.profile-cover -->
+        <div class="divider">
+
+        </div>
+    </div>
+</div><!-- /.row -->                    
+</div><!-- /.body-content -->
+{% endblock %}

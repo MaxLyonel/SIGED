@@ -830,7 +830,6 @@ class InboxController extends Controller {
       $query->execute();
       $objobsQA = $query->fetchAll();
 
-
       return $objobsQA;
     }
 

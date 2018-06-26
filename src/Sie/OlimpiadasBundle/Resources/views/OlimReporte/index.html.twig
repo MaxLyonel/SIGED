@@ -222,12 +222,22 @@
                                         <tr>
                                             <td><strong>{{ item.regla.olimMateriaTipo.materia }}</strong></td>
                                             <td>
-                                                {{ item.inscripcion.estudianteInscripcion.institucioneducativaCurso.gradoTipo.id }}  
-                                                {% if item.inscripcion.estudianteInscripcion.institucioneducativaCurso.nivelTipo.id == 12 %}
-                                                    Primaria
-                                                {% else %}
-                                                    Secundaria
+                                                {% if item.superior %}
+                                                    {{ item.superior.gradoTipo.id }}
+                                                    {% if item.superior.nivelTipo.id == 12 %}
+                                                        Primaria
+                                                    {% else %}
+                                                        Secundaria
+                                                    {% endif %}
+                                                {% else %}        
+                                                    {{ item.inscripcion.estudianteInscripcion.institucioneducativaCurso.gradoTipo.id }}  
+                                                    {% if item.inscripcion.estudianteInscripcion.institucioneducativaCurso.nivelTipo.id == 12 %}
+                                                        Primaria
+                                                    {% else %}
+                                                        Secundaria
+                                                    {% endif %}
                                                 {% endif %}
+                                                
                                             </td>
                                             <td>{{ item.regla.categoria }}</td>
                                             <td>

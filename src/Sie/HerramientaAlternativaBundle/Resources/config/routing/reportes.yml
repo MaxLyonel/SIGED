@@ -125,5 +125,10 @@ sie_alt_reportes:
     options:
          expose: true
 
+herramienta_alter_reporte_operativo_exitoso_cerrado:
+    path:     /cerradoexitosooperativo
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:cerradoexitosooperativo }
 
-
+sie_alt_lista_estudiantes_excel:
+    path:     /reportesEstudiantesExcel
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportesEstudiantesExcel}    
