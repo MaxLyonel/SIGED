@@ -58,9 +58,13 @@ class ImagenesController extends Controller
 
         $countFile = 0;
         $valfondo = 0;
-        if (isset($var)) {
-            $valfondo = $_REQUEST['group1'];        
+        
+        if (isset($_REQUEST['group1'])) {
+            $valfondo = $_REQUEST['group1'];
+            //printf('dfd'); dump($valfondo);  die;
         };
+
+        //dump($valfondo);  die;
         
         $em = $this->getDoctrine()->getManager();        
         //try {
@@ -80,9 +84,9 @@ class ImagenesController extends Controller
         }
         $em->flush();
 
-        //dump($_FILES['archivo1']['type']);  die;
+        //dump($_FILES['archivo1']['name']);        dump($_FILES['archivo2']['name']);        dump($_FILES['archivo3']['name']);        dump($_FILES['archivo4']['name']);  die;
 
-		if($_FILES['archivo1']['name'] != ""){
+		if($_FILES['archivo1']['name'] != ""){            
             $countFile = $countFile + 1;
 
 		    $ruta = $this->get('kernel')->getRootDir() . '/../web/uploads/institutoseducativos';
@@ -93,19 +97,20 @@ class ImagenesController extends Controller
             $a->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
             
             if (($valfondo == 1) || ($valfondo == 0)){
-                $nombre_archivoa = $this->session->get('ie_id').'_fondo';            
+                $nombre_archivoa = $this->session->get('ie_id').'_fondo';
+                $valfondo = 1;          
             };
 
             $a->setImagenTipo($em->getRepository('SieAppWebBundle:ImagenTipo')->find('1'));
             $a->setNombreArchivo($nombre_archivoa);                        
-		    $archivador = $ruta.'/'.$nombre_archivoa;
-            move_uploaded_file($_FILES['archivo1']['tmp_name'], $archivador);
+		    $archivadora = $ruta.'/'.$nombre_archivoa;
+            move_uploaded_file($_FILES['archivo1']['tmp_name'], $archivadora);
             $a->setDescripcion("...");
             $em->persist($a);
-            $em->flush();
+            $em->flush();           
         }
 
-        if($_FILES['archivo2']['name'] != ""){
+        if($_FILES['archivo2']['name'] != ""){            
             $countFile = $countFile + 1;
 
 		    $ruta = $this->get('kernel')->getRootDir() . '/../web/uploads/institutoseducativos';
@@ -116,16 +121,17 @@ class ImagenesController extends Controller
             $a->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
             
             if (($valfondo == 2) || ($valfondo == 0)){
-                $nombre_archivob = $this->session->get('ie_id').'_fondo';            
+                $nombre_archivob = $this->session->get('ie_id').'_fondo';  
+                $valfondo = 2;                    
             };
 
             $a->setImagenTipo($em->getRepository('SieAppWebBundle:ImagenTipo')->find('1'));
             $a->setNombreArchivo($nombre_archivob);                        
-		    $archivador = $ruta.'/'.$nombre_archivob;
-            move_uploaded_file($_FILES['archivo2']['tmp_name'], $archivador);
+		    $archivadorb = $ruta.'/'.$nombre_archivob;
+            move_uploaded_file($_FILES['archivo2']['tmp_name'], $archivadorb);
             $a->setDescripcion("...");
             $em->persist($a);
-            $em->flush();
+            $em->flush();            
         }
 
         if($_FILES['archivo3']['name'] != ""){           
@@ -139,7 +145,8 @@ class ImagenesController extends Controller
             $a->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
             
             if (($valfondo == 3) || ($valfondo == 0)){
-                $nombre_archivoc = $this->session->get('ie_id').'_fondo';            
+                $nombre_archivoc = $this->session->get('ie_id').'_fondo';      
+                $valfondo = 3;                
             };
 
             $a->setImagenTipo($em->getRepository('SieAppWebBundle:ImagenTipo')->find('1'));
@@ -162,7 +169,8 @@ class ImagenesController extends Controller
             $a->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
             
             if (($valfondo == 4) || ($valfondo == 0)){
-                $nombre_archivod = $this->session->get('ie_id').'_fondo';            
+                $nombre_archivod = $this->session->get('ie_id').'_fondo';        
+                $valfondo = 4;              
             };
 
             $a->setImagenTipo($em->getRepository('SieAppWebBundle:ImagenTipo')->find('1'));
