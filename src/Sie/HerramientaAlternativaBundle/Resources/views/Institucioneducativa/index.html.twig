@@ -2,13 +2,13 @@
 
 {% block contentoption %}
     <div class="header-content">
-        <h2><i class="fa fa-university"></i> Datos del Centro de Educación Alternativa <span>Teléfono, email, casilla postal.</span></h2>
+        <h2><i class="fa fa-university"></i> Datos del CEA <span>Teléfono, email, casilla postal.</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
-            <span class="label">Usted esta aqui:</span>
+            <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
                 <li>
                     <i class="glyphicon glyphicon-leaf"></i>
-                    <a href="{{path('principal_web')}}">Bienvenida</a>
+                    <a href="{{path('principal_web')}}">Bienvenida/o</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
                 <li>
@@ -451,25 +451,27 @@
                 </div>
             </div>
         </div>
-        {% if app.session.get('roluser') != '2' %}
-            <div class="row">
-                <div class="col-md-12 well well-sm">
-                    <div class="row">
-                        <div class="col-md-3 text-center">
-                            <a class="btn btn-default btn-lg btn-slidedown" href="{{path('herramienta_alter_reporte_siecaratula')}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Generar Carátula</a>
-                        </div>
-                        <div class="col-md-3 text-center">
-                            <a class="btn btn-default btn-lg btn-slidedown" href="{{path('herramienta_alter_reporte_sieadministrativos')}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Lista Administrativos.</a>
-                        </div>
-                        <div class="col-md-3 text-center">
-                            <a class="btn btn-default btn-lg btn-slidedown" href="{{path('herramienta_alter_reporte_siemaestros')}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Lista Docentes</a>
-                        </div>
-                        <div class="col-md-3 text-center">
-                            <a class="btn btn-default btn-lg btn-slidedown" href="{{path('herramienta_alter_reporte_sieparticipantes')}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Lista Participantes</a>
+        {% if ((app.session.get('roluser') == '9') or (app.session.get('roluser') == '8') or (app.session.get('roluser') == '7') or (app.session.get('roluser') == '10')) %}
+            {% if (app.session.get('ie_per_estado') == '0')  %}
+                <div class="row">
+                    <div class="col-md-12 well well-sm">
+                        <div class="row">
+                            <div class="col-md-3 text-center">
+                                <a class="btn btn-default btn-lg btn-slidedown" href="{{path('herramienta_alter_reporte_siecaratula')}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Generar Carátula{{app.session.get('ie_per_estado')}}</a>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <a class="btn btn-default btn-lg btn-slidedown" href="{{path('herramienta_alter_reporte_sieadministrativos')}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Lista Administrativos.</a>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <a class="btn btn-default btn-lg btn-slidedown" href="{{path('herramienta_alter_reporte_siemaestros')}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Lista Docentes</a>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <a class="btn btn-default btn-lg btn-slidedown" href="{{path('herramienta_alter_reporte_sieparticipantes')}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Lista Participantes</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
         {% endif %}
     </div>
 {% endblock %}

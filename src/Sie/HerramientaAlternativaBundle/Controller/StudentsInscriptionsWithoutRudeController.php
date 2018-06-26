@@ -219,7 +219,7 @@ class StudentsInscriptionsWithoutRudeController extends Controller {
         //to do the submit data into DB
         //do the commit in DB
         $em->getConnection()->commit();
-        $this->session->getFlashBag()->add('goodinscription', 'Estudiante inscrito');
+        $this->session->getFlashBag()->add('goodinscription', 'Estudiante inscrito correctamente.');
 
         //reload the students list
         $exist = true;
@@ -312,12 +312,12 @@ class StudentsInscriptionsWithoutRudeController extends Controller {
             $em->persist($studentInscription);
             $em->flush();
         }else{
-            $this->session->getFlashBag()->add('wronginscription', 'Estudiante No inscrito');
+            $this->session->getFlashBag()->add('wronginscription', 'Estudiante No inscrito.');
         }
         //to do the submit data into DB
         //do the commit in DB
         $em->getConnection()->commit();
-        $this->session->getFlashBag()->add('goodinscription', 'Estudiante inscrito');
+        $this->session->getFlashBag()->add('goodinscription', 'Estudiante inscrito correctamente.');
 
         //reload the students list
         $exist = true;

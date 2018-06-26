@@ -37,7 +37,9 @@ a:active,
 a:focus {
     color: #34495e;
 }
-
+@media screen and (max-width: 800px) {
+    .norelative{position:static}
+}
 @media(min-width:768px) {
     body {
         background: #34495e url("../assets/images/bgleft.png");

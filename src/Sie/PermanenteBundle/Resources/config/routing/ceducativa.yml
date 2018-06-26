@@ -95,7 +95,14 @@ sie_per_ges_rudes_user:
     defaults: { _controller: SiePermanenteBundle:Default:ceasrudeuser}
     options:
          expose: true 
-         
+
+
+sie_per_operativos:
+    path:     /per/operativos
+    defaults: { _controller: SiePermanenteBundle:Institucioneducativa:operativos}
+    options:
+         expose: true
+
 sie_per_ges_sub_sem_tramite_continuar_sig_operativo:
     path:     /{iestid}/tramitecontinuaroperativo/
     defaults: { _controller: SiePermanenteBundle:Institucioneducativa:tramitecontinuaroperativo}
@@ -109,6 +116,6 @@ herramienta_per_ceducativa_estadistiscas_departamento:
          expose: true
 
 sie_per_reportes_diversa:
-    path:     /sie/reportesDiversa
+    path:     /per/reportesDiversa
     defaults: { _controller: SiePermanenteBundle:Institucioneducativa:reporteDiversa}
 

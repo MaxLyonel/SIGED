@@ -108,4 +108,32 @@ class ApoderadoOcupacionTipo
     {
         return $this->esOcupacion;
     }
+    /**
+     * @var boolean
+     */
+    private $esVigente;
+
+
+    /**
+     * Set esVigente
+     *
+     * @param boolean $esVigente
+     * @return ApoderadoOcupacionTipo
+     */
+    public function setEsVigente($esVigente)
+    {
+        $this->esVigente = $esVigente;
+    
+        return $this;
+    }
+
+    /**
+     * Get esVigente
+     *
+     * @return boolean 
+     */
+    public function getEsVigente()
+    {
+        return $this->esVigente;
+    }
 }

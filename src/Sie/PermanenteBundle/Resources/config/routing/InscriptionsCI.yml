@@ -1,0 +1,15 @@
+per_inscriptioncistudent_index:
+    path:     /indexci
+    defaults: { _controller: "SiePermanenteBundle:InscriptionsCI:index"}
+    options:
+         expose: true
+per_inscriptioncistudent_findstudent:
+    path:     /findstudentci
+    defaults: { _controller: "SiePermanenteBundle:InscriptionsCI:findStudentci"}
+    options:
+         expose: true
+per_inscriptioncistudent_saveinscription:
+    path:     /saveci
+    defaults: { _controller: "SiePermanenteBundle:InscriptionsCI:saveInscriptionci"}
+    options:
+         expose: true

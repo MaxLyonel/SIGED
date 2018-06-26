@@ -3,18 +3,18 @@
 {% block contentoption %}
     {#///PARA SUBIR EL ARCHIVO#}
     <div class="header-content">
-        <h2><i class="fa fa-language"></i> Malla Técnica <span>Lista de areas, especialidades y módulos del centro de educación alternativa.</span></h2>
+        <h2><i class="fa fa-language"></i> Malla Técnica <span>Lista de áreas, especialidades y módulos del centro de educación alternativa.</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
-            <span class="label">Usted esta aqui:</span>
+            <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
                 <li>
                     <i class="glyphicon glyphicon-leaf"></i>
-                    <a href="{{path('principal_web')}}">Bienvenida</a>
+                    <a href="{{path('principal_web')}}">Bienvenida/o</a>
                     <i class="fa fa-angle-right"></i>
                 </li> 
                 <li>
                     <i class="fa fa-th-large"></i>
-                    <a href="{{path('herramienta_ceducativa_menu_principal')}}">Menu Principal</a>
+                    <a href="{{path('herramienta_ceducativa_menu_principal')}}">Menú Principal</a>
                     <i class="fa fa-angle-right"></i>
                 </li> 
                 <li>
@@ -41,7 +41,7 @@
                                     <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevaAcreditacion();">
                                         <i class="fa fa-outdent"></i> Nueva Acreditación
                                     </button>
-                                {% endif%}
+                                {% endif %}
                                 <a class="btn btn-lilac btn-xs btn-stroke" href="{{path('herramienta_alter_reporte_mallatecnica')}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Generar Pdf</a>                                
                             </div>
                             {% for turno_superiorKey, dataturno_superior in aInfoUnidadEductiva %}

@@ -684,7 +684,7 @@ class MallaTecnicaController extends Controller {
             $ieco = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBySuperiorModuloPeriodo($smpid);
             
             if ($ieco){                
-                $this->session->getFlashBag()->add('messagetec', '¡No se puede eliminar el módulo por que se encuentra asignado a algun curso!');                
+                $this->session->getFlashBag()->add('messagetec', 'No se puede eliminar el módulo por que se encuentra asignado a algun curso.');                
                 return $this->redirectToRoute('herramienta_alter_malla_tecnica_modulos_ver', ['request' => $request], 307);
             }
             else{

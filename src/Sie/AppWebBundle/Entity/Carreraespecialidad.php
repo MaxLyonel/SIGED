@@ -35,7 +35,7 @@ class Carreraespecialidad
     private $carreraTipo;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\PermanenteprogramaTipo
+     * @var \Sie\AppWebBundle\Entity\PermanenteProgramaTipo
      */
     private $permanenteprogramaTipo;
 
@@ -155,10 +155,10 @@ class Carreraespecialidad
     /**
      * Set permanenteprogramaTipo
      *
-     * @param \Sie\AppWebBundle\Entity\PermanenteprogramaTipo $permanenteprogramaTipo
+     * @param \Sie\AppWebBundle\Entity\PermanenteProgramaTipo $permanenteprogramaTipo
      * @return Carreraespecialidad
      */
-    public function setPermanenteprogramaTipo(\Sie\AppWebBundle\Entity\PermanenteprogramaTipo $permanenteprogramaTipo = null)
+    public function setPermanenteprogramaTipo(\Sie\AppWebBundle\Entity\PermanenteProgramaTipo $permanenteprogramaTipo = null)
     {
         $this->permanenteprogramaTipo = $permanenteprogramaTipo;
     
@@ -168,9 +168,9 @@ class Carreraespecialidad
     /**
      * Get permanenteprogramaTipo
      *
-     * @return \Sie\AppWebBundle\Entity\PermanenteprogramaTipo 
+     * @return \Sie\AppWebBundle\Entity\PermanenteProgramaTipo
      */
-    public function getPermanenteprogramaTipo()
+    public function getPermanenteProgramaTipo()
     {
         return $this->permanenteprogramaTipo;
     }

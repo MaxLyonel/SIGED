@@ -1,0 +1,26 @@
+
+<form action="" id="formCursos" onsubmit="asignarCurso(); return false">
+        <table class="table table-lilac table-striped">
+        <thead>
+        <tr>
+            <th>Nuevo Curso</th>
+        </tr>
+        </thead>
+        <tbody>
+            <td>
+                <label> Nuevo curso</label>
+                <strong>{{form_widget(form.curso)}}</strong>
+
+            </td>
+
+        </tbody>
+    </table>
+    <div style="background:#EEEEEE; text-align:right; padding:5px; margin-top:-10px">
+
+        {#<button type="button" class="btn btn-danger" onclick="parent.window.close();" value="Close [x]"><i class="fa fa-ban" aria-hidden="true"></i> Cancelar</button>#}
+        <button type="button" class="btn btn-danger" onclick="cerrarcurso(5)">Cancelar</button>
+
+        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+    </div>
+</form>
+{{ form_end(form) }}

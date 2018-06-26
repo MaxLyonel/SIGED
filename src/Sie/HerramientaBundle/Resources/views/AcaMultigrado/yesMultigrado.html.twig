@@ -1,0 +1,132 @@
+
+{% if mulitgradoHead|length > 0 %}
+
+                  <form action="" id="newMultigradoForm" onsubmit="saveNewMultigrado(); return false">
+                    <input type="hidden" name="form[jsonDataMultigrado]" id="form_jsonDataMultigrado" value="{{jsonDataMultigrado}}" />
+                    <table class="table table-bordered table-striped table-hover cf dataTable">
+                      <tr>
+                        <td colspan="15" align='right'><a href="#" onclick="agregarFila('{{ mulitgradoHead|json_encode }}')">Adicionar Multigrado</a></td>
+                      </tr>
+                      <tr>
+                        <th>Aula</th>
+                        {% set valuesMulti = [] %}
+                        {% for key,multihead in mulitgradoHead %}
+                          {% set valuesMulti = valuesMulti|merge([key]) %}
+                                <th>{{key}}</th>
+                        {% endfor %}
+                      </tr>
+                      <tbody id='multiId' >
+                        <tr >
+
+                        </tr>
+                      </tbody>
+                    </table>
+                     <button type="submit" class="btn btn-success">Registrar</button>
+                  </form>
+
+{% else %}
+
+<div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+    <div class="portlet-heading">
+        <div class="pull-left">
+        </div>
+        <div class="clearfix"></div>
+    </div><!-- /.panel-heading -->
+    <div class="portlet-body">
+        <div class="panel-body panel-primary">
+            <div id="no-more-tables" class="table-responsive">
+
+                <table class="table table-bordered table-striped table-hover cf dataTable">
+                  <tr>
+                    No puede realizar agrupación Multigrado
+                  </tr>
+                </table>
+            </div>
+        </div>
+    </div><!-- /.panel-body -->
+</div>
+{% endif %}
+
+
+<script type="text/javascript">
+var cont = 0;
+function agregarFila(jsonMulti){
+  //  objMul = JSON.parse(jsonMulti);
+    cont++;
+    if(cont>5){
+      alert('Limite de creación de cursos multigrados alcanzado');
+      return false;
+    }
+        var parsed = JSON.parse(jsonMulti);
+        var arr = [];
+        var tableMulti = '<tr id="'+cont+'">\n\
+            <td>Aulta '+cont+'<button type="button" onclick="eliminarFila('+cont+')"> <i class="fa fa-trash-o text-danger"></i></button></td>\n\
+            ';
+        for(var dmulti in parsed){
+          tableMulti = tableMulti+'<td><input type="checkbox" id="form_'+dmulti+'_'+cont+'" name="form[multi]['+dmulti+'_'+cont+']" class="" value="1"></td>\n\
+              ';
+        }
+        tableMulti = tableMulti+'</tr>\n\
+            ';
+        $("#multiId").append(tableMulti);
+        // $("#multiId").append('<tr id="'+cont+'">\n\
+        //     <td>Aulta '+cont+' <button type="button" onclick="eliminarFila('+cont+')"><i class="fa fa-remove text-danger">X</i></button></td>');
+
+        // $("#multiId").append('<tr id="'+cont+'">\n\
+        // ');
+        // $("#multiId").append('<td><button type="button" class="link" onclick="eliminarFila('+cont+')"><i class="fa fa-remove text-danger">x</i></button> Aulta '+cont+'</td>');
+        // for(var dmulti in parsed){
+        //   $("#multiId").append('<td><input type="checkbox" id="form_'+dmulti+'_'+cont+'" name="form[multi]['+dmulti+'_'+cont+']" class="" value="1"></td>');
+        //   // arr.push(parsed[x]);
+        // }
+        // $("#multiId").append('</tr>');
+        //set dinamic multi table
+
+
+}
+
+function eliminarFila(id){
+    cont--;
+    $("#" + id).remove();
+}
+
+
+var saveNewMultigrado = function(){
+
+  var formData = $('#newMultigradoForm').serialize();
+  if(confirm('Esta seguro de realizar el cambio?\n click en OK para continuar')){
+    $.ajax({
+                  type: 'post',
+                  data: formData,
+                  url: "{{ path('reg_multigrado_saveNewMultigrado') }}",
+                  beforeSend: function () {
+                    $("#responseId").empty();
+                    $("#responseId").css('display','block');
+                    $("#responseId").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                    $("#responseIdMain").empty();
+                    $("#responseIdMain").css('display','block');
+                    $("#responseIdMain").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                    // location.reload(true);
+                  },
+                  success: function (data) {
+                    $("#responseIdMain").empty();
+                    $("#responseIdMain").append(data);
+                    $("#responseId").empty();
+
+                  },
+                  statusCode: {
+                      500: function () {
+
+                      },
+                      404: function () {
+
+                      }
+                  }
+              });
+              return true;
+  }else {
+    return false;
+  }
+
+}
+</script>
