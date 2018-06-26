@@ -1232,59 +1232,61 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
 
         if ($sesion->get('roluser') == '8' ) {//NACIONAL
              $query = "
-             select * from(
-                select
-                    k.id as deptoid,
-                    k.lugar,        
-                    b.distrito_cod,  
-                    d.id as ieue,	
-                    d.institucioneducativa,
-                    cast('2018' as integer) as gestion_tipo_id,
-                    cast('PRIMER SEMESTRE' as text) as semestre,
-                    cast('¡En inscripciones!' as character varying) as obs
-                    from jurisdiccion_geografica a 
-                        inner join (
-                            select id, lugar_tipo_id, codigo as distrito_cod, lugar as des_dis 
+                        select * from(
+                            select
+                                k.id as deptoid,
+                                k.lugar,        
+                                b.distrito_cod,  
+                                d.id as ieue,	
+                                d.institucioneducativa,                    
+                                z.gestion_tipo_id as gestion_tipo_id,
+                                case when z.periodo_tipo_id = '1' then 'Primer Semestre' else 'Segundo Semestre' end as semestre,                    
+                                z.periodo_tipo_id as periodo,
+                                z.estadoId,
+                                z.tramite_estado obs                    
+                        from jurisdiccion_geografica a 
+                                    inner join (
+                                        select id, lugar_tipo_id, codigo as distrito_cod, lugar as des_dis 
+                                            from lugar_tipo
+                                        where lugar_nivel_id=7 
+                                    ) b 	
+                                    on a.lugar_tipo_id_distrito = b.id
+                                    inner join (
+                                        select a.id, a.institucioneducativa, a.le_juridicciongeografica_id				
+                                        from institucioneducativa a                                                        
+                                        where a.orgcurricular_tipo_id = 2
+                                        and a.institucioneducativa_tipo_id = 2
+                                        and a.estadoinstitucion_tipo_id = 10
+                                        and a.institucioneducativa_acreditacion_tipo_id = 1
+                                    ) d on a.id=d.le_juridicciongeografica_id
+                                    inner join lugar_tipo k on k.id = b.lugar_tipo_id
+                                    left join (
+                            select ie.id as id_ie, ff.obs as tramite_estado, z.gestion_tipo_id, z.periodo_tipo_id, ff.id as estadoId
+                            from jurisdiccion_geografica jg 
+                            inner join (
+                                select id, codigo as cod_dis, lugar_tipo_id, lugar
                                 from lugar_tipo
-                            where lugar_nivel_id=7 
-                        ) b 	
-                        on a.lugar_tipo_id_distrito = b.id
-                        inner join (
-
-                            select a.id, a.institucioneducativa, a.le_juridicciongeografica_id				
-                            from institucioneducativa a                                                        
-                            where a.orgcurricular_tipo_id = 2
-                            and a.institucioneducativa_tipo_id = 2
-                            and a.estadoinstitucion_tipo_id = 10
-                            and a.institucioneducativa_acreditacion_tipo_id = 1
-                        ) d		
-                        on a.id=d.le_juridicciongeografica_id
-                        inner join lugar_tipo k on k.id = b.lugar_tipo_id                              					    
-                where d.id not in(
-                    select ie.id
-                        from jurisdiccion_geografica jg 
-                        inner join (
-                            select id, codigo as cod_dis, lugar_tipo_id, lugar
-                                from lugar_tipo
-                            where lugar_nivel_id=7 
-                        ) lt 	
-                        on jg.lugar_tipo_id_distrito = lt.id
-
-                        inner join (
-                            select a.id, a.le_juridicciongeografica_id, a.institucioneducativa
-                            from institucioneducativa a
-                        ) ie		
-                        on jg.id = ie.le_juridicciongeografica_id
-                        inner join institucioneducativa_sucursal z on ie.id = z.institucioneducativa_id
-                        inner join institucioneducativa_sucursal_tramite w on w.institucioneducativa_sucursal_id = z.id                      
-                        inner join lugar_tipo k on k.id = lt.lugar_tipo_id
-                    where z.gestion_tipo_id in (2018)
-                    and z.periodo_tipo_id in (2)
-                    and w.tramite_estado_id in (9,12) 
-                    group by k.lugar, ie.id, ie.institucioneducativa
-                    order by k.lugar, ie.id
-                                    )
-                                    order by lugar, ieue) abc ";             
+                                where lugar_nivel_id=7 
+                            ) lt 	
+                            on jg.lugar_tipo_id_distrito = lt.id
+                            inner join (
+                                select a.id, a.le_juridicciongeografica_id, a.institucioneducativa
+                                from institucioneducativa a
+                            ) ie		
+                            on jg.id = ie.le_juridicciongeografica_id
+                            inner join institucioneducativa_sucursal z on ie.id = z.institucioneducativa_id
+                            inner join institucioneducativa_sucursal_tramite w on w.institucioneducativa_sucursal_id = z.id                      
+                            inner join tramite_estado ff on ff.id = w.tramite_estado_id
+                            inner join lugar_tipo k on k.id = lt.lugar_tipo_id
+                            where z.gestion_tipo_id in (2017,2018,2019) 			    
+                            and w.tramite_estado_id not in (8,9,12,14)
+                            and z.periodo_tipo_id in (2,3)
+                            group by k.lugar, ie.id, ie.institucioneducativa, ff.tramite_estado, z.gestion_tipo_id, z.periodo_tipo_id, ff.id
+                            order by k.lugar, ie.id
+                                    ) z on z.id_ie = d.id 					    
+                        where z.gestion_tipo_id is not null                
+                        order by lugar, ieue
+                        ) abc ";             
         }
 
         if ($sesion->get('roluser') == '7' ) {//DEPARTAMENTAL
@@ -1292,59 +1294,61 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
             $idlugarusuario = $usuariorol[0]->getLugarTipo()->getId();
             
             $query = "
-             select * from(
-                select
-                    k.id as deptoid,
-                    k.lugar,        
-                    b.distrito_cod,  
-                    d.id as ieue,	
-                    d.institucioneducativa,
-                    cast('2018' as integer) as gestion_tipo_id,
-                    cast('PRIMER SEMESTRE' as text) as semestre,
-                    cast('¡En inscripciones!' as character varying) as obs
-                    from jurisdiccion_geografica a 
-                        inner join (
-                            select id, lugar_tipo_id, codigo as distrito_cod, lugar as des_dis 
-                                from lugar_tipo
-                            where lugar_nivel_id=7 
-                        ) b 	
-                        on a.lugar_tipo_id_distrito = b.id
-                        inner join (
-
-                            select a.id, a.institucioneducativa, a.le_juridicciongeografica_id				
-                            from institucioneducativa a                                                        
-                            where a.orgcurricular_tipo_id = 2
-                            and a.institucioneducativa_tipo_id = 2
-                            and a.estadoinstitucion_tipo_id = 10
-                            and a.institucioneducativa_acreditacion_tipo_id = 1
-                        ) d		
-                        on a.id=d.le_juridicciongeografica_id
-                        inner join lugar_tipo k on k.id = b.lugar_tipo_id                              					    
-                where d.id not in(
-                    select ie.id
-                        from jurisdiccion_geografica jg 
-                        inner join (
-                            select id, codigo as cod_dis, lugar_tipo_id, lugar
-                                from lugar_tipo
-                            where lugar_nivel_id=7 
-                        ) lt 	
-                        on jg.lugar_tipo_id_distrito = lt.id
-
-                        inner join (
-                            select a.id, a.le_juridicciongeografica_id, a.institucioneducativa
-                            from institucioneducativa a
-                        ) ie		
-                        on jg.id = ie.le_juridicciongeografica_id
-                        inner join institucioneducativa_sucursal z on ie.id = z.institucioneducativa_id
-                        inner join institucioneducativa_sucursal_tramite w on w.institucioneducativa_sucursal_id = z.id                      
-                        inner join lugar_tipo k on k.id = lt.lugar_tipo_id
-                    where z.gestion_tipo_id in (2018)
-                    and z.periodo_tipo_id in (2)
-                    and w.tramite_estado_id in (9,12) 
-                    group by k.lugar, ie.id, ie.institucioneducativa
-                    order by k.lugar, ie.id
-                                    )
-                                    order by lugar, ieue) abc                                    
+                                    select * from(
+                                        select
+                                            k.id as deptoid,
+                                            k.lugar,        
+                                            b.distrito_cod,  
+                                            d.id as ieue,	
+                                            d.institucioneducativa,                    
+                                            z.gestion_tipo_id as gestion_tipo_id,
+                                            case when z.periodo_tipo_id = '1' then 'Primer Semestre' else 'Segundo Semestre' end as semestre,                    
+                                            z.periodo_tipo_id as periodo,
+                                            z.estadoId,
+                                            z.tramite_estado obs                    
+                                        from jurisdiccion_geografica a 
+                                                inner join (
+                                                    select id, lugar_tipo_id, codigo as distrito_cod, lugar as des_dis 
+                                                        from lugar_tipo
+                                                    where lugar_nivel_id=7 
+                                                ) b 	
+                                                on a.lugar_tipo_id_distrito = b.id
+                                                inner join (
+                                                    select a.id, a.institucioneducativa, a.le_juridicciongeografica_id				
+                                                    from institucioneducativa a                                                        
+                                                    where a.orgcurricular_tipo_id = 2
+                                                    and a.institucioneducativa_tipo_id = 2
+                                                    and a.estadoinstitucion_tipo_id = 10
+                                                    and a.institucioneducativa_acreditacion_tipo_id = 1
+                                                ) d on a.id=d.le_juridicciongeografica_id
+                                                inner join lugar_tipo k on k.id = b.lugar_tipo_id
+                                                left join (
+                                        select ie.id as id_ie, ff.obs as tramite_estado, z.gestion_tipo_id, z.periodo_tipo_id, ff.id as estadoId
+                                        from jurisdiccion_geografica jg 
+                                        inner join (
+                                            select id, codigo as cod_dis, lugar_tipo_id, lugar
+                                            from lugar_tipo
+                                            where lugar_nivel_id=7 
+                                        ) lt 	
+                                        on jg.lugar_tipo_id_distrito = lt.id
+                                        inner join (
+                                            select a.id, a.le_juridicciongeografica_id, a.institucioneducativa
+                                            from institucioneducativa a
+                                        ) ie		
+                                        on jg.id = ie.le_juridicciongeografica_id
+                                        inner join institucioneducativa_sucursal z on ie.id = z.institucioneducativa_id
+                                        inner join institucioneducativa_sucursal_tramite w on w.institucioneducativa_sucursal_id = z.id                      
+                                        inner join tramite_estado ff on ff.id = w.tramite_estado_id
+                                        inner join lugar_tipo k on k.id = lt.lugar_tipo_id
+                                        where z.gestion_tipo_id in (2017,2018,2019) 			    
+                                        and w.tramite_estado_id not in (8,9,12,14)
+                                        and z.periodo_tipo_id in (2,3)
+                                        group by k.lugar, ie.id, ie.institucioneducativa, ff.tramite_estado, z.gestion_tipo_id, z.periodo_tipo_id, ff.id
+                                        order by k.lugar, ie.id
+                                                ) z on z.id_ie = d.id 					    
+                                    where z.gestion_tipo_id is not null                
+                                    order by lugar, ieue
+                                    ) abc                                    
                                     where abc.deptoid = '".$idlugarusuario."'";
         } 
         
@@ -1352,59 +1356,61 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
             $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$sesion->get('userId'),'rolTipo'=>$sesion->get('roluser')));     
 
             $query = "
-             select * from(
-                select
-                    k.id as deptoid,
-                    k.lugar,        
-                    b.distrito_cod,  
-                    d.id as ieue,	
-                    d.institucioneducativa,
-                    cast('2018' as integer) as gestion_tipo_id,
-                    cast('PRIMER SEMESTRE' as text) as semestre,
-                    cast('¡En inscripciones!' as character varying) as obs
-                    from jurisdiccion_geografica a 
-                        inner join (
-                            select id, lugar_tipo_id, codigo as distrito_cod, lugar as des_dis 
-                                from lugar_tipo
-                            where lugar_nivel_id=7 
-                        ) b 	
-                        on a.lugar_tipo_id_distrito = b.id
-                        inner join (
-
-                            select a.id, a.institucioneducativa, a.le_juridicciongeografica_id				
-                            from institucioneducativa a                                                        
-                            where a.orgcurricular_tipo_id = 2
-                            and a.institucioneducativa_tipo_id = 2
-                            and a.estadoinstitucion_tipo_id = 10
-                            and a.institucioneducativa_acreditacion_tipo_id = 1
-                        ) d		
-                        on a.id=d.le_juridicciongeografica_id
-                        inner join lugar_tipo k on k.id = b.lugar_tipo_id                              					    
-                where d.id not in(
-                    select ie.id
-                        from jurisdiccion_geografica jg 
-                        inner join (
-                            select id, codigo as cod_dis, lugar_tipo_id, lugar
-                                from lugar_tipo
-                            where lugar_nivel_id=7 
-                        ) lt 	
-                        on jg.lugar_tipo_id_distrito = lt.id
-
-                        inner join (
-                            select a.id, a.le_juridicciongeografica_id, a.institucioneducativa
-                            from institucioneducativa a
-                        ) ie		
-                        on jg.id = ie.le_juridicciongeografica_id
-                        inner join institucioneducativa_sucursal z on ie.id = z.institucioneducativa_id
-                        inner join institucioneducativa_sucursal_tramite w on w.institucioneducativa_sucursal_id = z.id                      
-                        inner join lugar_tipo k on k.id = lt.lugar_tipo_id
-                    where z.gestion_tipo_id in (2018)
-                    and z.periodo_tipo_id in (2)
-                    and w.tramite_estado_id in (9,12) 
-                    group by k.lugar, ie.id, ie.institucioneducativa
-                    order by k.lugar, ie.id
-                                    )
-                                    order by lugar, ieue) abc                                    
+                                    select * from(
+                                        select
+                                            k.id as deptoid,
+                                            k.lugar,        
+                                            b.distrito_cod,  
+                                            d.id as ieue,	
+                                            d.institucioneducativa,                    
+                                            z.gestion_tipo_id as gestion_tipo_id,
+                                            case when z.periodo_tipo_id = '1' then 'Primer Semestre' else 'Segundo Semestre' end as semestre,                    
+                                            z.periodo_tipo_id as periodo,
+                                            z.estadoId,
+                                            z.tramite_estado obs                    
+                                        from jurisdiccion_geografica a 
+                                                inner join (
+                                                    select id, lugar_tipo_id, codigo as distrito_cod, lugar as des_dis 
+                                                        from lugar_tipo
+                                                    where lugar_nivel_id=7 
+                                                ) b 	
+                                                on a.lugar_tipo_id_distrito = b.id
+                                                inner join (
+                                                    select a.id, a.institucioneducativa, a.le_juridicciongeografica_id				
+                                                    from institucioneducativa a                                                        
+                                                    where a.orgcurricular_tipo_id = 2
+                                                    and a.institucioneducativa_tipo_id = 2
+                                                    and a.estadoinstitucion_tipo_id = 10
+                                                    and a.institucioneducativa_acreditacion_tipo_id = 1
+                                                ) d on a.id=d.le_juridicciongeografica_id
+                                                inner join lugar_tipo k on k.id = b.lugar_tipo_id
+                                                left join (
+                                        select ie.id as id_ie, ff.obs as tramite_estado, z.gestion_tipo_id, z.periodo_tipo_id, ff.id as estadoId
+                                        from jurisdiccion_geografica jg 
+                                        inner join (
+                                            select id, codigo as cod_dis, lugar_tipo_id, lugar
+                                            from lugar_tipo
+                                            where lugar_nivel_id=7 
+                                        ) lt 	
+                                        on jg.lugar_tipo_id_distrito = lt.id
+                                        inner join (
+                                            select a.id, a.le_juridicciongeografica_id, a.institucioneducativa
+                                            from institucioneducativa a
+                                        ) ie		
+                                        on jg.id = ie.le_juridicciongeografica_id
+                                        inner join institucioneducativa_sucursal z on ie.id = z.institucioneducativa_id
+                                        inner join institucioneducativa_sucursal_tramite w on w.institucioneducativa_sucursal_id = z.id                      
+                                        inner join tramite_estado ff on ff.id = w.tramite_estado_id
+                                        inner join lugar_tipo k on k.id = lt.lugar_tipo_id
+                                        where z.gestion_tipo_id in (2017,2018,2019) 			    
+                                        and w.tramite_estado_id not in (8,9,12,14)
+                                        and z.periodo_tipo_id in (2,3)
+                                        group by k.lugar, ie.id, ie.institucioneducativa, ff.tramite_estado, z.gestion_tipo_id, z.periodo_tipo_id, ff.id
+                                        order by k.lugar, ie.id
+                                                ) z on z.id_ie = d.id 					    
+                                    where z.gestion_tipo_id is not null                
+                                    order by lugar, ieue
+                                    ) abc                                    
                                     where abc.distrito_cod = '".$usuariorol[0]->getLugarTipo()->getCodigo()."'";
         }
     
