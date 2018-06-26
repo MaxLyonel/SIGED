@@ -6,6 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Request;
 use Sie\AppWebBundle\Controller\DefaultController as DefaultCont;
+use Symfony\Component\HttpFoundation\Response;
+
 
 class EstadisticasController extends Controller
 {
@@ -1144,13 +1146,16 @@ union all
      * @param Request $request
      * @return type
      */
-    public function informacionGeneralEspecialPrintPdfAction(Request $request) {
+    public function informacionGeneralAlternativaPrintPdfAction(Request $request) {
         /*
          * Define la zona horaria y halla la fecha actual
          */
+       // dump($request);die;
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        $periodo=2;
+
 
         if ($request->isMethod('POST')) {
             /*
@@ -1159,21 +1164,23 @@ union all
             $gestion = $request->get('gestion');
             $codigoArea = base64_decode($request->get('codigo'));
             $rol = $request->get('rol');
+            $periodo=2;
         } else {
             $gestion = $gestionActual;
             $codigoArea = 0;
             $rol = 0;
+            $periodo=2;
         }
 
         $em = $this->getDoctrine()->getManager();
 
-        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
+        $arch = 'Alternativa_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_InformacionEstadistica_Nacional_v1_rcm.rptdesign&__format=pdf&gestion='.$gestion));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion.'$Periodo'.$periodo));
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {
@@ -1181,17 +1188,17 @@ union all
 
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_InformacionEstadistica_Distrital_v1_rcm.rptdesign&__format=pdf&gestion='.$gestion.'&coddis='.$codigoArea));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_distrital_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion.'$Periodo'.$periodo.'&Distrito='.$codigoArea));
         }
 
         if($rol == 7) // Tecnico Departamental
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_InformacionEstadistica_Departamental_v1_rcm.rptdesign&__format=pdf&gestion='.$gestion.'&coddep='.$codigoArea));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_departamental_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion.'$Periodo'.$periodo.'&Departamento='.$codigoArea));
         }
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_InformacionEstadistica_Nacional_v1_rcm.rptdesign&__format=pdf&gestion='.$gestion));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion.'$Periodo'.$periodo));
         }
 
         $response->setStatusCode(200);
@@ -1207,7 +1214,7 @@ union all
      * @param Request $request
      * @return type
      */
-    public function informacionGeneralEspecialPrintXlsAction(Request $request) {
+    public function informacionGeneralAlternativaPrintXlsAction(Request $request) {
         /*
          * Define la zona horaria y halla la fecha actual
          */

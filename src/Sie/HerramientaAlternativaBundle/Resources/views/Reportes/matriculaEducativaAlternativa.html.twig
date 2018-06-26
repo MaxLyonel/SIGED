@@ -126,12 +126,12 @@
                         </div>
                     </div>
                 </div>  
-                <form name="formEstadisticaEspecialPdf" id="formEstadisticaEspecialPdf" role="form" action="{{ path('reporte_especial_informacion_general_print_pdf') }}" method="POST">
+                <form name="formEstadisticaEspecialPdf" id="formEstadisticaEspecialPdf" role="form" action="{{ path('estadistica_alternativa_informacion_general_print_pdf') }}" method="POST">
                     <input type="hidden" name="gestion" value="{{ gestion }}" />
                     <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />  
                     <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />     
                 </form> 
-                <form name="formEstadisticaEspecialXls" id="formEstadisticaEspecialXls" role="form" action="{{ path('reporte_especial_informacion_general_print_xls') }}" method="POST">
+                <form name="formEstadisticaEspecialXls" id="formEstadisticaEspecialXls" role="form" action="{{ path('estadistica_alternativa_informacion_general_print_xls') }}" method="POST">
                     <input type="hidden" name="gestion" value="{{ gestion }}" />
                     <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />  
                     <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />   
