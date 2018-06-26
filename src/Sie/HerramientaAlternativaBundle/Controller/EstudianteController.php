@@ -156,7 +156,7 @@ class EstudianteController extends Controller {
                 'generoTipo' => $form['generoTipo']
             ));
             if ($buscar_estudiante) {
-                $this->get('session')->getFlashBag()->add('registroEstudianteError', 'El estudiante ya esta registrado en el sistema');
+                $this->get('session')->getFlashBag()->add('registroEstudianteError', 'El estudiante ya esta registrado en el sistema.');
                 return $this->redirect($this->generateUrl('estudiante_main_new'));
             }
 
@@ -202,10 +202,10 @@ class EstudianteController extends Controller {
             $sesion = $request->getSession();
             $sesion->set('estudianteId', $estudiante->getId());
 
-            $this->get('session')->getFlashBag()->add('registroEstudiante', 'El estudiante fue registrado correctamente');
+            $this->get('session')->getFlashBag()->add('registroEstudiante', 'El estudiante fue registrado correctamente.');
             return $this->redirect($this->generateUrl('estudianteinscripcion_new'));
         } catch (Exception $ex) {
-            $this->get('session')->getFlashBag()->add('registroEstudiante', 'Error al registrar el estudiante');
+            $this->get('session')->getFlashBag()->add('registroEstudiante', 'Error al registrar el estudiante.');
             return $this->redirect($this->generateUrl('estudianteespecialindirecta'));
         }
     }

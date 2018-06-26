@@ -80,7 +80,7 @@ class InstitucioneducativaController extends Controller {
             $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($institucion);
 
             if (!$institucioneducativa) {
-                $this->get('session')->getFlashBag()->add('noSearch', 'El codigo ingresado no es válido');
+                $this->get('session')->getFlashBag()->add('noSearch', 'El código ingresado no es válido.');
                 return $this->redirect($this->generateUrl('herramienta_ieducativa_index'));
             }
         } else {

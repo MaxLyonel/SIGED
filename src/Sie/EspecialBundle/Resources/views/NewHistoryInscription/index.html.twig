@@ -87,14 +87,14 @@
                                 <div class="clearfix"></div>
                             </div>
                             <div class="panel-body">
+                                {% if dataInscriptionE %}
+                                    {% include 'SieEspecialBundle:NewHistoryInscription:historial_especial.html.twig' with {'dataInscription': dataInscriptionE} %}
+                                {% endif %}
                                 {% if dataInscriptionR %}
                                     {% include 'SieEspecialBundle:NewHistoryInscription:historial_regular.html.twig' with {'dataInscription': dataInscriptionR} %}
                                 {% endif %}
                                 {% if dataInscriptionA %}
                                     {% include 'SieEspecialBundle:NewHistoryInscription:historial_alternativa.html.twig' with {'dataInscription': dataInscriptionA} %}
-                                {% endif %}
-                                {% if dataInscriptionE %}
-                                    {% include 'SieEspecialBundle:NewHistoryInscription:historial_especial.html.twig' with {'dataInscription': dataInscriptionE} %}
                                 {% endif %}
                                 {% if dataInscriptionP %}
                                     {% include 'SieEspecialBundle:NewHistoryInscription:historial_pnp.html.twig' with {'dataInscription': dataInscriptionP} %}

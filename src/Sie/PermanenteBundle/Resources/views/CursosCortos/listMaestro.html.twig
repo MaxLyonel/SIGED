@@ -1,0 +1,113 @@
+
+<div class="panel panel-danger" id="listMaestro">
+    <div class="panel-heading">
+        <div class="pull-left">
+            <h3 class="panel-title">Facilitadores</h3>
+        </div>
+
+        <div class="clearfix"></div>
+    </div>
+    <div class="panel-body">
+
+        {#{{ form_start(form, {'attr':{'id':'facilitadorsFormId' } }) }}#}
+        <form id="facilitadorsFormId" onsubmit="addMaestro({{ institucioncurso.id }}); return false;">
+            <div class="row">
+                <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
+                <div class="form-group col-lg-2">
+                    <label for="form_facilitador" class="required"> Buscar Facilitador:</label>
+                </div>
+                <div class="form-group col-lg-4 col-md-6">
+                    <select  id="form_facilitador" name="form[facilitador]">
+                        {% for maestro in maestro %}
+                            <option value="{{ maestro.id }}">{{ maestro.paterno }}  {{ maestro.materno }}  {{ maestro.nombre }}</option>
+                        {% endfor %}
+                    </select>
+
+
+
+                </div>
+
+                <div class="form-group col-lg-6 col-md-6">
+
+                {% if maestro is not empty %}
+                    <div class="form-group col-lg-2 ">
+                        <laberl >{{ form_widget(form.horas ) }}</laberl>
+                    </div>
+                    <div class="form-group col-lg-2 ">
+                        <p>Hrs.</p>
+                    </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-user"></i> Asignar Facilitador
+                        </button>
+                {% else %}
+                    <div hidden class="form-group col-lg-2 " >
+                        <laberl >{{ form_widget(form.horas ) }}</laberl>
+                    </div>
+                    <div hidden class="form-group col-lg-1 ">
+                        <p>Hrs.</p>
+                    </div>
+                {% endif %}
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i> Cerrar</button>
+
+
+
+                </div>
+            </div>
+
+            {{ form_end(form) }}
+    </div><!-- /.panel-body -->
+    <div class="panel-body panel-primary" >
+        {% if maestroins is not empty %}
+
+            <div id="no-more-tables">
+                <table class="table table-striped table-primary">
+                    <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Carnet de Identidad</th>
+                        <th>Paterno</th>
+                        <th>Materno</th>
+                        <th>Nombre(s)</th>
+                        <th>Formación</th>
+                        <th>Hrs. Maestro</th>
+                        <th>Hrs. Curso</th>
+                        <th> </th>
+
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for maestroins in maestroins %}
+                        <tr>
+                            <td data-title="N°">{{ loop.index }}</td>
+                            <td data-title="Carnet">{{ maestroins.carnet }}</td>
+                            <td data-title="Paterno">{{ maestroins.paterno }}</td>
+                            <td data-title="Materno">{{ maestroins.materno }}</td>
+                            <td data-title="Nombre(s)">{{ maestroins.nombre }}</td>
+                            <td data-title="Formación">{{ maestroins.formacion }}</td>
+                            <td data-title="Hrs maestro" class="hmaestro">{{ maestroins.horasmes }}</td>
+                            <td data-title="Hrs Curso" class="hrcurso">{{ maestroins.duracionhoras }}</td>
+                            <td data-title="cancel">
+                                <button class="btn btn-danger btn-xs" onclick="deleteMaestro({{ maestroins.id }},{{ maestroins.idoferta }},{{ maestroins.idofermaes }},'{{ infoUe }}');" data-placement="top" data-original-title="Eliminar Facilitador">
+                                    <i class="fa fa-times"></i>
+                                </button>
+
+
+                            </td>
+
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            No hay Maestros Registrados
+        {% endif %}
+
+
+    </div>
+
+
+</div><!-- /.panel -->
+

@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\PermanenteSubAreaTipo:
+    type: entity
+    table: permanente_sub_area_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        subArea:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+            column: sub_area
+        obs:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

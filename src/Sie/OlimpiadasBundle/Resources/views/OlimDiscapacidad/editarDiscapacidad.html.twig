@@ -1,0 +1,23 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        {{form_start(form)}}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Editar discapacidad</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+        <div class="row">
+            <div class="form-body col-lg-4 col-md-6">
+                <label> Nombre de la discapacidad</label>
+                {{ form_widget(form.discapacidad, {'attr':{'class':'form-control', 'placeholder':'discapacidad'} })}}
+                {{form_widget(form.guardar, {'attr':{'class':'btn btn-primary mb-2'} })}}
+            </div>
+        </div>
+           </div>
+        </div>
+        {{form_end(form)}}
+    </div>
+</div>

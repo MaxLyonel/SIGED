@@ -1,17 +1,163 @@
 
+<html>
+<title>W3.CSS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<div class="header-content" >
+    {#<head>#}
+        {#<meta charset="utf-8">#}
+        {#<meta http-equiv="X-UA-Compatible" content="IE=edge">#}
+        {#<meta name="viewport" content="width=device-width, initial-scale=1">#}
+        {#<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">#}
+        {#<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>#}
+        {#<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>#}
+        {#<script type="text/javascript">#}
+            {#$(document).ready(function(){#}
+                {#$("#myTab li:eq(0) a").tab('show');#}
+            {#});#}
+        {#</script>#}
+        {#<style type="text/css">#}
+            {#.bs-example{#}
+                {#margin: 20px;#}
+            {#}#}
+        {#</style>#}
+    {#</head>#}
+
+
+
+
+
 {% if exist == true %}
-  <small>
-        <div class="header-content">
-            <h4><i class="glyphicon glyphicon-list-alt"></i> {{etapaespecialidad}} <span> - {{dataUe['paralelo']}}</span></h4>
-            <div class="breadcrumb-wrapper hidden-xs">
-                <span class="label"> Turno:</span>
-                <ol class="breadcrumb">
-                    <li>
-                        <a href="">{{dataUe['turno']}}</a>
-                    </li>
-                </ol>
-            </div><!-- /.breadcrumb-wrapper -->
+
+  <small id="listEstudiante">
+
+      <div class="w3-container">
+          <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
+          <h3><i class="glyphicon glyphicon-list-alt"></i> {{ cursocorto[0].cursocorto }} </h3>
+          <hr>
+          <h4> Número de Horas - {{ cursocorto[0].duracionhoras }} h. </h4>
+          {#<h2>London</h2>#}
+          <div class="breadcrumb-wrapper hidden-xs">
+              <span class="label"> Turno:  {{ cursocorto[0].turno }}</span>
+
+          </div><!-- /.breadcrumb-wrapper -->
+
+          {% if cursocorto is not empty %}
+
+              <div id="no-more-tables">
+                  <table class="table">
+                      <thead>
+                      <tr>
+                          <th>Facilitador(es)</th>
+                          <th> </th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      {% for cursocorto in cursocorto %}
+
+                        {% if cursocorto.maestro_inscripcion_id is not empty %}
+                          <tr>
+                              <td> {{ loop.index }}</td>
+                              <td data-title="Nombre">{{ cursocorto.paterno }} {{ cursocorto.materno }} {{ cursocorto.nombre }}</td>
+
+                          </tr>
+                        {% else %}
+                            <tr>
+                                <td> </td>
+                                <td data-title="Nombre"> No hay Facilitadores Registrados</td>
+
+                            </tr>
+
+                      {% endif %}
+                      {% endfor %}
+                      </tbody>
+                  </table>
+              </div>
+          {% else %}
+              No hay Facilitadores Registrados
+          {% endif %}
+
+
+
+          <h5> </h5>
+              <hr>
+      </div>
+
+
+
+      {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3') %}
+          {#{% if existins == false  %} #}
+
+
+
+           {#endif#}
+
+          {% if  cursocorto[0].esabierto ==true %}
+              <div class="col-md-3">
+                  <button type="button" class="btn btn-danger btn-stroke" onclick="deletecurso('{{infoUe}}');" >
+                      <i class="fa fa-eraser"></i> Eliminar Curso
+                  </button>
+              </div>
+              <div class="col-md-3">
+                  <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptions('{{infoUe}}');" >
+                      <i class="fa fa-user"></i> Inscrip. con Rudeal
+                  </button>
+              </div>
+              {#<div class="col-md-3">#}
+                  {#<button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsCI('{{infoUe}}');" >#}
+                      {#<i class="fa fa-user"></i> Inscrip. con Carnet#}
+                  {#</button>#}
+              {#</div>#}
+              <div class="col-md-3">
+
+                  <a href="{{path('permanente_reporte_participantes_curso_corto', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Imprimir Lista</a>
+
+                  {#<button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="Imprimir('{{infoUe}}');" >#}
+                  {##}
+                  {#</button>#}
+              </div>
+
+    {% else %}
+        {#<div class="col-md-3">#}
+            {#<button type="button" class="btn btn-danger btn-stroke" onclick="deletecurso('{{infoUe}}');" >#}
+                {#<i class="fa fa-eraser"></i> Eliminar Curso#}
+            {#</button>#}
+        {#</div>#}
+        <div class="col-md-3">
+
+            <a href="{{path('permanente_reporte_participantes_curso_corto', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Imprimir Lista</a>
+
+            {#<button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="Imprimir('{{infoUe}}');" >#}
+            {##}
+            {#</button>#}
         </div>
+        <div class="col-md-3">
+
+            <a href="{{path('permanente_reporte_cert_participantes_curso_corto', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Imprimir Certificados</a>
+
+            {#<button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="Imprimir('{{infoUe}}');" >#}
+            {##}
+            {#</button>#}
+        </div>
+        {% if (app.session.get('roluser') == 10)or(app.session.get('roluser') == 7)or(app.session.get('roluser') == 8) or (app.session.get('roluser') == 31)%}
+
+            <div class="col-md-3">
+            <button type="button" class="btn btn-danger btn-stroke" onclick="opencurso('{{infoUe}}');" >
+                <i class="fa fa-check"></i> Habilitar Curso
+            </button>
+            </div>
+        {% endif %}
+    {% endif %}
+
+
+
+
+
+
+      {% endif %}
+
+
         <BR>
         <div class="row">
             <div class="col-md-12">
@@ -37,68 +183,52 @@
         <div class="row">
             <div class="col-md-12" align="center">
                  <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">
-                    {% for flashIdcurso in app.session.flashbag.get('idcursodup') %}                    
+                    {% for flashIdcurso in app.session.flashbag.get('idcursodup') %}
                         <a href="#" onclick="doCursoDuplicado('{{ infoUe }}','{{ flashIdcurso }}');">
                             <span><i class="icon-leaf"></i>
                                 VER CURSO DUPLICADO -- {{ flashIdcurso }}
                             </span>
                         </a>
-                    {% endfor %}    
-                </div>                
+                    {% endfor %}
+                </div>
             </div>
             <p>
-            <div class="col-md-12">                
+            <div class="col-md-12">
                 <div class="alert alert-danger alert-dismissible" role="alert">
                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                     <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}                        
+                     <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
                 </div>
-            </div>                                 
+            </div>
         </div>
         {% endfor %}
 
         {% for flashMessage in app.session.flashbag.get('seedatoscursoduplicado') %}
-        <div class="row">            
-            <div class="col-md-12">                
+        <div class="row">
+            <div class="col-md-12">
                 <div class="alert alert-warning alert-dismissible" role="alert">
                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                     <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}                        
+                     <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
                 </div>
-            </div>                                 
+            </div>
         </div>
         {% endfor %}
         
-        <div class="row">
-        {% if (app.session.get('ie_per_estado') != '1')%}
-            <div class="col-md-3">
-                <form action="{{path('herramienta_alter_reporte_centralizadores')}}" method="post" style="">
-                    <input type="hidden" name="dat" value="{{infoUe}}">
-                    <button type="submit" class="btn btn-primary btn-stroke">
-                        <i class="fa fa-cloud-download"></i> Imprimir centralizador.
-                    </button>
-                </form>
-            </div>
-        {% endif %}
-        {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3') %}
-            {# if existins == false #}
-                <div class="col-md-3">
-                    <button type="button" class="btn btn-danger btn-stroke" onclick="deletecurso('{{infoUe}}');" >
-                        <i class="fa fa-eraser"></i> Eliminar Curso
-                    </button>
-                </div>
-            {# endif #}
-            <div class="col-md-3">
-                <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptions('{{infoUe}}');" >
-                    <i class="fa fa-user"></i> Inscrip. con Rudeal
-                </button>
-            </div>
-            <!--div class="col-md-3">
-                <button type="button" class="btn btn-danger btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsWithOutRude('{#{{infoUe}}#}');" >
-                    <i class="fa fa-user-plus"></i> Inscrip. sin Rudeal
-                </button>
-            </div-->
-        {% endif %}
-      </div>
+        {#<div class="row">#}
+        {#{% if (app.session.get('ie_per_estado') != '1')%}#}
+            {#<div class="col-md-3">#}
+                {#<form action="{{path('herramienta_alter_reporte_centralizadores')}}" method="post" style="">#}
+                    {#<input type="hidden" name="dat" value="{{infoUe}}">#}
+                    {#<button type="submit" class="btn btn-primary btn-stroke">#}
+                        {#<i class="fa fa-cloud-download"></i> Imprimir centralizador.#}
+                    {#</button>#}
+                {#</form>#}
+            {#</div>#}
+        {#{% endif %}#}
+
+
+
       <BR>
+
     {#<div class="row">
       <div class="col-md-12">
         <div class="header-content">
@@ -110,159 +240,190 @@
       </div>
     </div>#}
 
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="panel rounded swadow panel-teal">
-                    <div class="panel-heading">
-                        <h4>Estudiantes inscritos: <span class="label label-success">{{totalInscritos}}</label></h4>
-                    </div>
-                    <div id="no-more-tables">
-                        <table class="table table-bordered table-hover cf">
-                            <tr>
-                                <td align="center" class="warning"></td>
-                                <td align="center" class="warning">Código Rudeal</td>
-                                <td align="center" class="warning">Paterno</td>
-                                <td align="center" class="warning">Materno</td>
-                                <td align="center" class="warning">Nombres</td>
-                                <td align="center" class="warning">Fecha de Nacimiento</td>
-                                <td class="warning">Opciones</td>
-                                <!--td>
-                                    <input type="checkbox" id="checkAll" name="selectAll" onclick="selectAllEle();"   >
-                                </td-->
-                            </tr>
-                            {#init the array info student #}
-                            {% set objInfoStudent = [] %}
-                            {% for data in objStudents %}
 
-                              {% set items = {
-                                              'estadomatriculaId': data.estadomatriculaId,
-                                              'id': data.id,
-                                              'carnetIdentidad': data.carnetIdentidad,
-                                              'codigoRude': data.codigoRude,
-                                              'paterno': '',
-                                              'materno': '',
-                                              'nombre': '',
-                                              'fechaNacimiento': data.fechaNacimiento,
-                                              'eInsId': data.eInsId,
-                                              'nivelId': data.nivelId,
-                                              'cicloId': data.cicloId,
-                                              'gradoId': data.gradoId,
-                                              } %}
+      <div class="bs-example" >
+          <ul class="nav nav-tabs" id="myTab">
+              <li><a data-toggle="tab" href="#sectionA">Lista Participantes</a></li>
+              <li><a data-toggle="tab" href="#sectionB">Estado Participantes</a></li>
+          </ul>
+          <div class="tab-content">
+              <div id="sectionA" class="tab-pane fade in active">
+                  <h3>Lista Participantes</h3>
 
-                                {# set the array student info and convert on json string #}
-                                {# set objInfoStudent = objInfoStudent|merge(data) #}
-                                {# set jsnInfoStudent = objInfoStudent #}
-                                {% set jsnInfoStudent = items|json_encode() %}
 
-                                <tr >
-                                    <td>{{loop.index}}</td>
-                                    <td  align="">{{data.codigoRude}}</td>
-                                    <td  align="">{{data.paterno}}</td>
-                                    <td  align="">{{data.materno}}</td>
-                                    <td  align="">{{data.nombre}}</td>
-                                    <td  align="">{{data.fechaNacimiento |date('d-m-Y')}}</td>
-                                    <td  align="center">
-                                          <div class="input-group mb-8">
-                                            <div class="">
-                                                <button data-toggle="dropdown" class="btn btn-success dropdown-toggle" type="button" aria-expanded="false">Opciones <span class="caret"></span></button>
-                                                <ul class="dropdown-menu">
-                                                    {#SE CONTROLA EL ACESSO EN LA PANTALLA DE NOTAS POR ESO ESTA ACTIVO PARA TODOS LO ESTADOS MENOS INCRIPCIONES#}
-                                                    {% if (app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '0') %}
-                                                        <li>
-                                                          <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}', '{{jsnInfoStudent}}');" >
-                                                            <span class="label label-primary"><i class="fa fa-list"></i> Registro de Notas</span>
-                                                          </a>
-                                                        </li>
-                                                    {% endif %}
 
-                                                    {#LIBRETAS SOLO EN MODO LECTURA Y AÑOS 2015,2016,2017#}
-                                                    {% if (app.session.get('ie_per_estado') == '0') and ((app.session.get('ie_gestion') == '2015') or (app.session.get('ie_gestion') == '2016') or (app.session.get('ie_gestion') == '2017')) %}
-                                                        <li>
-                                                          <a href="{{path('herramienta_alter_libretas', {'eInsId': data.eInsId, 'nivel': data.nivelId})}}">
-                                                              <span class="label label-warning"> <i class="fa fa-credit-card"></i> Imprimir Libreta</span>
-                                                          </a>
-                                                        </li>
-                                                    {% endif %}
-                                                    
-                                                    {#IMPRIMIR FORMULARIO RUDE AL SEGUN EL CASO#}
-                                                    {% if (((app.session.get('ie_gestion') == '2016') and (app.session.get('ie_per_cod') == '3')) 
-                                                            or ((app.session.get('ie_gestion') == '2017') and (app.session.get('ie_per_cod') == '2'))
-                                                            or ((app.session.get('ie_gestion') == '2017') and (app.session.get('ie_per_cod') == '3'))
-                                                            or ((app.session.get('ie_gestion') == '2018') and (app.session.get('ie_per_cod') == '2'))
-                                                            or ((app.session.get('ie_gestion') == '2018') and (app.session.get('ie_per_cod') == '3'))
-                                                            or ((app.session.get('ie_gestion') == '2019') and (app.session.get('ie_per_cod') == '2'))
-                                                            or ((app.session.get('ie_gestion') == '2019') and (app.session.get('ie_per_cod') == '3'))
-                                                            ) %}
-                                                            {% if (app.session.get('ie_per_estado') == '0') %}
-                                                                <li>
-                                                                <a href="{{path('herramienta_alter_reporte_socioeconomico', {'inscripcionId': data.eInsId,'rude': data.codigoRude })}}">
-                                                                    <span class="label label-warning"> <i class="fa fa-credit-card"></i> Imprimir Formulario Rudeal</span>
-                                                                </a>
-                                                                </li>
-                                                            {% else %}
-                                                                    <li>
-                                                                        <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getRudeal('{{infoUe}}', '{{jsnInfoStudent}}');" >
-                                                                            <span class="label label-success"><i class="fa fa-edit"></i> Registro de Rudeal</span>
-                                                                        </a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="{{path('herramienta_alter_reporte_socioeconomico', {'inscripcionId': data.eInsId,'rude': data.codigoRude })}}">
-                                                                            <span class="label label-warning"> <i class="fa fa-credit-card"></i> Imprimir Formulario Rudeal</span>
-                                                                        </a>
-                                                                    </li>
-                                                                {% endif %}                                                            
-                                                    {% endif %} 
-                                                    
-                                                    {#ACTIVO ELIMINACION SOLO EN INSCRIPCIONES Y REGULARIZAION#}
-                                                    {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3') %}                                                        
-                                                        <li>
-                                                            <a href="#" type="link"  class="" onclick="removeInscriptionStudent('{{infoUe}}', '{{ jsnInfoStudent }}');" >
-                                                              <span class="label label-danger"><i class="fa fa-remove"></i>Eliminar Inscripción</span>
-                                                          </a>
-                                                        </li>
-                                                    {% endif %}
+                      <div class="row">
+                          <div class="col-lg-12">
+                              <div class="panel rounded swadow panel-danger">
+                                  <div class="panel-heading">
+                                      <h4>Participantes inscritos: <span class="label label-success"> {{ totalInscritos }}  </label></h4>
+                                      <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
+                                  </div>
 
-                                                    {#ACTIVO TOMA DE AREAS SOLO EN NOTAS Y REGULARIZAION#}
-                                                    {% if (app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') %}                                                          
-                                                        <li>
-                                                          <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="addModulosToStudeent('{{infoUe}}', '{{jsnInfoStudent}}');" >
-                                                            <span class="label label-lilac"><i class="fa fa-file-text"></i> Toma de Areas/Módulo</span>
-                                                          </a>
-                                                        </li>                                                        
-                                                    {% endif %}
-                                                    <li class="divider"></li>
-                                                    {#ACTIVO DECLARACION JURADA EN LOS ULTIMOS GRADOS DE HUMANISTICA Y TECNICA#}
-                                                    {% if ( ((data.nivelId == 15) and (data.cicloId == 2) and (data.gradoId == 3)) or ((data.nivelId == 5) and (data.cicloId == 2) and (data.gradoId == 2)) )%}
-                                                        <li>
-                                                          <a href="{{path('herramienta_alter_reporte_ddjj_hum', {'rude': data.codigoRude, 'gestion':app.session.get('ie_gestion') , 'sie': app.session.get('ie_id') } )}}">
-                                                              <span class="label label-warning"> <i class="fa fa-cloud-download"></i>Descargar DDJJ</span>
-                                                          </a>
-                                                        </li>
-                                                    {% endif %}
-                                                    {% if data.nivelId in ['18','19','20','21','22','23','24','25'] %}
-                                                        <li>
-                                                          <a href="{{path('herramienta_alter_reporte_ddjj_tec', {'insId': data.eInsId, 'rude': data.codigoRude, 'gestion':app.session.get('ie_gestion') } )}}">
-                                                              <span class="label label-warning"> <i class="fa fa-cloud-download"></i>Descargar DDJJ</span>
-                                                          </a>
-                                                        </li>
-                                                    {% endif %}
-                                                </ul>
-                                            </div>
+                                  {% if objStudents is not empty %}
+
+                                      <div id="no-more-tables">
+                                          <table class="table table-striped table-danger">
+                                              <thead>
+                                              <tr>
+                                                  <th>N°</th>
+                                                  <th>Carnet de Identidad</th>
+                                                  <th>Codigo Rude</th>
+                                                  <th>Paterno</th>
+                                                  <th>Materno</th>
+                                                  <th>Nombre(s)</th>
+                                                  <th>Genero</th>
+                                                  <th>Fecha de Nacimiento</th>
+                                                  <th> </th>
+
+
+                                              </tr>
+                                              </thead>
+                                              <tbody>
+                                              {% for objStudents in objStudents %}
+                                                  <tr>
+
+                                                      <td data-title="N°">{{ loop.index }}</td>
+                                                      <td data-title="Carnet">{{ objStudents.carnet }}</td>
+                                                      <td data-title="Carnet">{{ objStudents.codigorude }}</td>
+                                                      <td data-title="Paterno">{{ objStudents.paterno }}</td>
+                                                      <td data-title="Materno">{{ objStudents.materno }}</td>
+                                                      <td data-title="Nombre(s)">{{ objStudents.nombre }}</td>
+                                                      <td data-title="Formación">{{ objStudents.genero }}</td>
+                                                      <td data-title="Formación">{{ objStudents.fechanacimiento }}</td>
+                                                      {%  if ( (cursocorto[0].esabierto) ==true) %}
+                                                      <td data-title="cancel">
+
+                                                          <button class="btn btn-danger btn-xs" onclick="removeInscriptionStudent({{ objStudents.idcurso }},{{ objStudents.idestins }},'{{infoUe}}');" data-placement="top" data-original-title="Eliminar Participante">
+                                                              <i class="fa fa-times"></i>
+                                                          </button>
+
+
+                                                      </td>
+                                                      {% endif %}
+
+
+                                                  </tr>
+                                              {% endfor %}
+                                              </tbody>
+                                          </table>
+                                      </div>
+                                  {% else %}
+                                      No hay Participantes Registrados
+                                  {% endif %}
+                              </div>
+                              <!-- /.portlet -->
+                          </div>
+                      </div>
+
+                  <p>. </p>
+              </div>
+
+              <div id="sectionB" class="tab-pane fade">
+                  <h3>Estado Participantes</h3>
+
+                  <div class="row">
+                      <div class="col-lg-12">
+                          <div class="panel rounded swadow panel-danger">
+                              <div class="panel-heading">
+                                  <h4>Participantes inscritos: <span class="label label-success"> {{ totalInscritos }}  </label></h4>
+                              </div>
+
+                              {% if objStudents is not empty %}
+
+                                  <div id="no-more-tables">
+                                      <table class="table table-striped table-danger">
+                                          <thead>
+                                          <tr>
+                                              <th>N°</th>
+                                              <th>Carnet de Identidad</th>
+                                              <th>Codigo Rude</th>
+                                              <th>Paterno</th>
+                                              <th>Materno</th>
+                                              <th>Nombre(s)</th>
+                                              <th>Genero</th>
+                                              <th>Estado</th>
+
+                                              {#<th><input type="checkbox" id="checkAll" name="selectAll" onclick="selectAllEle();"></th>#}
+
+
+
+                                          </tr>
+                                          </thead>
+                                          <tbody>
+                                          {% for objStudents in objStudents %}
+                                              <tr>
+                                                  <td data-title="N°">{{ loop.index }}</td>
+                                                  <td data-title="Carnet">{{ objStudents.carnet }}</td>
+                                                  <td data-title="Carnet">{{ objStudents.codigorude }}</td>
+                                                  <td data-title="Paterno">{{ objStudents.paterno }}</td>
+                                                  <td data-title="Materno">{{ objStudents.materno }}</td>
+                                                  <td data-title="Nombre(s)">{{ objStudents.nombre }}</td>
+                                                  <td data-title="Formación">{{ objStudents.genero }}</td>
+                                                  {#{%  if (objStudents.estadomatriculaid==4) %}#}
+                                                  {#{{ objStudents.idest }}#}
+                                                  {%  if ( (cursocorto[0].esabierto) ==true) %}
+                                                      <td>
+                                                          <select class="estados" id="estado-{{objStudents.idestins }}">
+                                                              {% for item in objx %}
+                                                                  {%  if (objStudents.estadomatricula==item) %}
+                                                                      <option selected="selected" value="{{ item }}">  {{ item }}</option>
+                                                                  {% else %}
+                                                                      <option value="{{ item }}">  {{ item }}</option>
+                                                                  {% endif %}
+                                                              {% endfor %}
+                                                          </select>
+                                                      </td>
+                                                      {% else %}
+                                                      <td>
+                                                          <select disabled class="estados" id="estado-{{objStudents.idestins }}">
+                                                              {% for item in objx %}
+                                                                  {%  if (objStudents.estadomatricula==item) %}
+                                                                      <option selected="selected" value="{{ item }}">  {{ item }}</option>
+                                                                  {% else %}
+                                                                      <option value="{{ item }}">  {{ item }}</option>
+                                                                  {% endif %}
+                                                              {% endfor %}
+                                                          </select>
+
+                                                      </td>
+                                                  {% endif %}
+
+
+
+                                              </tr>
+                                          {% endfor %}
+                                          </tbody>
+                                      </table>
+
+                                      {%  if ( (cursocorto[0].esabierto) ==true) %}
+                                          <div align="right">
+                                              <button type="button" class="btn btn-danger"  onclick="closeInscriptions('{{infoUe}}');" data-dismiss="modal"> Cerrar Curso</button>
+                                              </button>
                                           </div>
+                                      {% endif %}
 
 
-                                    </td>
 
-                                </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
-                    <!-- /.portlet -->
-                </div>
-            </div>
+                                  </div>
+                              {% else %}
+                                  No hay Participantes Registrados
+                              {% endif %}
+                              <p id="menestado">  </p>
+                          </div>
+                          <!-- /.portlet -->
+                      </div>
+                  </div>
+
+                  <p>. </p>
+              </div>
+
+          </div>
+      </div>
         </div>
-    </small>
+
     <!-- /.row -->
+
 {% else %}
     <div class="row">
         <div class="col-md-12">
@@ -288,35 +449,48 @@
     </div>
 {% endif %}
 
+</small>
+
+
 <script>
     $(document).ready( function(){
         $(".tooltips").tooltip();
-    });
+        //onchange="getSelectedValue()"
+        //herramienta_per_estudiantechange_estado
+        $( "body .estados" ).on( "change", function() {
+//            console.log( $(this).val() );
+//            console.log( $(this).attr('id').split('-')[1] );
+            matricula = $(this).val();
+            idestins = $(this).attr('id').split('-')[1];
+            $.ajax({
+                type: "post",
+                data: ({matricula:matricula,idestins:idestins}),
+                url: "{{ path('herramienta_per_estudiantechange_estado') }}",
+                beforeSend: function () {
+                    //$('#listEstudiante').empty();
+                    $("#menestado").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $('#menestado').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
 
-    var getNotas = function (infoUe, infoStudent) {
-        $.ajax({
-            type: 'post',
-            data: ({infoUe: infoUe, infoStudent: infoStudent}),
-            url: "{{ path('herramienta_alter_infoEstudianteNotas_index') }}",
-            beforeSend: function () {
-                $('#modal').empty();
-            },
-            success: function (data) {
-                $('#modal').empty();
-                $('#modal').append(data);
-            },
-            statusCode: {
-                500: function () {
+//                    $('#listEstudiante').empty();
+//                    $('#listEstudiante').append(data);
 
                 },
-                404: function () {
+                statusCode: {
+                    500: function () {
 
+                    },
+                    404: function () {
+
+                    }
                 }
-            }
+            });
         });
-    }
 
-    var getRudeal = function (infoUe, infoStudent) {
+    });
+
+     var getRudeal = function (infoUe, infoStudent) {
         $.ajax({
             type: 'post',
             data: ({infoUe: infoUe, infoStudent: infoStudent}),
@@ -340,23 +514,23 @@
         });
     }
 
-    var removeInscriptionStudent = function (infoUe, infoStudent) {
+    var removeInscriptionStudent = function (idcurso, idestins,infoUe) {
 
       if(confirm('¡¡Advertencia!! Esta por eliminar una inscripción. ¿Esta seguro de continuar?')){
         $.ajax({
             type: 'post',
-            data: ({infoUe: infoUe, infoStudent: infoStudent}),
-            url: "{{ path('herramienta_alter_estudianterequest_removeinscription') }}",
+            data: ({idcurso: idcurso, idestins: idestins,infoUe:infoUe}),
+            url: "{{ path('herramienta_per_estudianterequest_removeinscription') }}",
             beforeSend: function () {
-              $("#idstudents").empty();
-              $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+//              $("#listEstudiante").empty();
+              $("#listEstudiante").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
             },
             success: function (data) {
-              $("#idstudents").empty();
-              $("#idstudents").append(data);
+              $("#listEstudiante").empty();
+              $("#listEstudiante").append(data);
             },
             statusCode: {
-                500: function () {
+                    500: function () {
 
                 },
                 404: function () {
@@ -374,7 +548,7 @@
      $.ajax({
          type: 'post',
          data: ({infoUe: data }),
-         url: "{{ path('alter_inscriptionstudent_index') }}",
+         url: "{{ path('per_inscriptionstudent_index') }}",
          beforeSend: function () {
              $('#modal').empty();
          },
@@ -392,6 +566,87 @@
          }
      });
    };
+
+    var doInscriptionsCI = function(data){
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: data }),
+            url: "{{ path('per_inscriptioncistudent_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+    var Imprimir = function(data){
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: data }),
+            url: "{{ path('permanente_reporte_participantes_curso_corto') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+
+    var closeInscriptions = function(data){
+        if(confirm('¡¡Advertencia!! Esta por cerrar el curso, no se permitiran realizar modificaciones. ¿Esta seguro de continuar?')){
+
+            $.ajax({
+            type: 'post',
+            data: ({infoUe: data }),
+            url: "{{ path('herramienta_per_estudianterequest_closeinscription') }}",
+            beforeSend: function () {
+//                $('#listEstudiante').empty();
+                $("#listEstudiante").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+
+            },
+            success: function (data) {
+                $('#listEstudiante').empty();
+                $('#listEstudiante').append(data);
+                window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
+
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+        }else{
+            return false;
+        }
+    };
+
+
 
 
    var doCursoDuplicado = function (infoUe,idcursodup) {
@@ -466,24 +721,70 @@
     };
 
     var deletecurso = function(infoUe){
-     $.ajax({
+        if(confirm('¡¡Advertencia!! Esta por eliminar el curso. ¿Esta seguro de continuar?')){
+
+            $.ajax({
          type: 'post',
          data: ({infoUe: infoUe }),
-         url: "{{ path('herramienta_curso_alternativa_delete') }}",
-         beforeSend: function () {
-            $('#mengestioncurso').empty();
-            $('#mengestioncurso').append("<div style='text-align:center; color:#5C9FFB'>Eliminando curso...</div>");
-        },
-        success: function (data) {
-            $('#mengestioncurso').empty();
-            $('#mengestioncurso').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
-            window.location.href =  Routing.generate('herramienta_alter_cursos_index');
-        },
-        error: function(data){
-            $('#mengestioncurso').empty();            
-            $('#mengestioncurso').html("<div class='alert alert-warning alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Proceso detenido!</strong> Si desea eliminar el curso debe antes eliminar lo siguiente: Toma de materias, inscripciones, materias/módulos maestro asignados.</div>");
-            //window.location.href =  Routing.generate('herramienta_alter_cursos_index');                            
-        },
-     });
+         url: "{{ path('herramienta_per_cursocorto_delete') }}",
+                beforeSend: function () {
+                    $('#mengestioncurso').empty();
+                    $('#mengestioncurso').append("<div style='text-align:center; color:#5C9FFB'>Eliminando curso...</div>");
+                },
+                success: function (data) {
+                    $('#mengestioncurso').empty();
+                    $('#mengestioncurso').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
+                    window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
+                },
+                error: function(data){
+                    $('#mengestioncurso').empty();
+                    $('#mengestioncurso').html("<div class='alert alert-warning alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Proceso detenido!</strong> Si desea eliminar el curso debe antes eliminar lo siguiente: Toma de materias, inscripciones, materias/módulos maestro asignados.</div>");
+                    //window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
+                }
+            });
+        }
+    else{
+        return false;
+    }
    };
+
+    var opencurso = function(infoUe){
+        if(confirm('¡¡Advertencia!! Se Abrira el curso para realizar operaciones. ¿Esta seguro de continuar?')){
+
+            $.ajax({
+                type: 'post',
+                data: ({infoUe: infoUe }),
+                url: "{{ path('herramienta_per_open_curso_nuevo') }}",
+                beforeSend: function () {
+                    $('#mengestioncurso').empty();
+                    $('#mengestioncurso').append("<div style='text-align:center; color:#5C9FFB'>Habilitando curso...</div>");
+                },
+                success: function (data) {
+                    $('#mengestioncurso').empty();
+                    $('#mengestioncurso').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
+                    window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
+                },
+                error: function(data){
+                    $('#mengestioncurso').empty();
+                    $('#mengestioncurso').html("<div class='alert alert-warning alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Proceso detenido!</strong> Si desea eliminar el curso debe antes eliminar lo siguiente: Toma de materias, inscripciones, materias/módulos maestro asignados.</div>");
+                    //window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
+                }
+            });
+        }
+        else{
+            return false;
+        }
+    };
+
+
+function getSelectedValue()
+{
+
+    console.log($(this).val());
+    //var selectedValue = document.getElementById("estado").value();
+
+
+}
+
+
 </script>

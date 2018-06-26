@@ -63,7 +63,7 @@ class NewSpecialityController extends Controller {
 
     public function findAction(Request $request){
       //create the DB conexion
-      $em = $this->getDoctrine()->getManager();
+      $em = $this->getDoctrine()->getManager(); 
       //get the values send
       $form = $request->get('form');
       $jsonForm = json_encode($form);
@@ -125,7 +125,7 @@ class NewSpecialityController extends Controller {
       ));
       if($InstitucioneducativaEspecialidadTecnicoHumanisticoExist){
         //exist speciality do nothing
-        $message = 'Especialidad no registrada, ya existe...';
+        $message = 'Especialidad no registrada, ya existe.';
         $typemessage='warning';
       }else{
         try {
@@ -137,7 +137,7 @@ class NewSpecialityController extends Controller {
           $em->persist($InstitucioneducativaEspecialidadTecnicoHumanisticoObj);
           $em->flush();
           $em->getConnection()->commit();
-          $message = 'La especialidad fue registrada...';
+          $message = 'La especialidad fue registrada.';
           $typemessage='success';
         } catch (Exception $e) {
           $em->getConnection()->rollback();

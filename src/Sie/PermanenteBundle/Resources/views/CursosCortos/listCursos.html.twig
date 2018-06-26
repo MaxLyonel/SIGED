@@ -1,0 +1,209 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    <form id="listas" onsubmit="listarcurso(); return false;">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Lista de cursos</h3>
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                        <div class="form-body">
+                            <h3> Listado de Cursos por Fechas</h3>
+                                <div class="row">
+                                    <div id='sandbox-container'>
+                                        <div class="input-daterange" id="datepicker">
+                                            <div class="form-group col-lg-6 col-md-6">
+                                                <label>  Fecha inicio </label>
+                                                {{form_widget(form.fechaInicio) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-6 col-md-6">
+                                                <label> Fecha Fin</label>
+                                                {{form_widget(form.fechaFin) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                <div class="form-group col-lg-4 col-md-6">
+
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fa fa-user"></i> mostrar
+                                            </button>
+
+
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i> Cerrar</button>
+
+                                </div>
+
+                                </div>
+
+
+
+                            <div id="listascursos">
+
+                            </div>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="form-footer">
+
+
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+</div>
+
+
+<script>
+    var peticion1;
+    //$('#form_turno').on('change',function(){
+    function listarProvincias(idDpto) {
+        if (peticion1 && peticion1.readyState != 4) {
+            peticion1.abort();
+        }
+
+        peticion1 = $.ajax({
+            type: 'get',
+            url: Routing.generate('sie_alt_clistarprovincias', {'dpto': idDpto}),
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                $('#form_provincia').empty();
+                $('#form_municipio').empty();
+                $('#form_canton').empty();
+                $('#form_localidad').empty();
+                $("#form_provincia").append('<option value="">Seleccionar...</option>');
+                $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                $("#form_canton").append('<option value="">Seleccionar...</option>');
+                $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                $.each(data.listaprovincias, function (i, value) {
+                    $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                });
+            }
+        });
+    }
+
+    var peticion2;
+    //$('#form_turno').on('change',function(){
+    function listarMunicipios(idProv) {
+        if (peticion2 && peticion2.readyState != 4) {
+            peticion2.abort();
+        }
+
+        peticion2 = $.ajax({
+            type: 'get',
+            url: Routing.generate('sie_alt_clistarmunicipios', {'prov': idProv}),
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                $('#form_municipio').empty();
+                $('#form_canton').empty();
+                $('#form_localidad').empty();
+                $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                $("#form_canton").append('<option value="">Seleccionar...</option>');
+                $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                $.each(data.listamunicipios, function (i, value) {
+                    $("#form_municipio").append('<option value="' + i + '">' + value + '</option>');
+                });
+            }
+        });
+    }
+
+</script>
+
+
+<script type="text/javascript">
+    listarcurso = function () {
+           var formData = $('#listas').serialize();
+ //       alert('asdfasdfsdf');
+        $.ajax({
+            type: 'get',
+            data: formData,
+            url: "{{ path('herramienta_per_show_list_curso_corto') }}",
+            beforeSend: function () {
+                //$('#modal').empty();
+                $("#listascursos").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+            },
+            success: function (data) {
+//                        nuevoMaestro(data.infoUe);
+                 $('#listascursos').empty();
+                $('#listascursos').append(data);
+                //  $('#modal').modal('show');
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+    var listaCurso = function () {
+        $.ajax({
+            type: 'get',
+            url: "{{ path('herramienta_per_list_curso_corto') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+
+    // DateRangePicker
+    $('#sandbox-container .input-daterange').datepicker({
+        format: 'dd-mm-yyyy',
+        todayBtn: 'linked'
+    });
+    $('#form_fechaInicio').on('change',function(){
+        if($("#form_fechaFin").val().length < 1){
+            $("#form_fechaFin").val($('#form_fechaInicio').val());
+        }
+    });
+    $('#form_fechaFin').on('change',function(){
+        //if($("#form_fechaFin").val().length >= 1){
+        //   alert('adsjkfhkasd');
+        if($("#form_fechaFin").val() < $("#form_fechaInicio").val()){
+            $("#form_fechaInicio").val($('#form_fechaFin').val());
+        }
+        //}
+    });
+
+
+
+    $('.calendario').datepicker({
+
+        format: 'dd-mm-yyyy',
+
+        todayBtn: 'linked'
+
+    });
+
+</script>

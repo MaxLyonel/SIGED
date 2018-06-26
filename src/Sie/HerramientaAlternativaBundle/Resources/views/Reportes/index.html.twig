@@ -1,0 +1,91 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+
+{% block contentoption %}
+<!-- Start page header -->
+<div class="header-content">
+    <h2><i class="glyphicon glyphicon-leaf"></i> Bienvenido! <span>Usted a ingresado a los reportes del sistemas academico de educación alternativa.</span></h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">Usted esta aqui:</span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="glyphicon glyphicon-leaf"></i>
+                    <a href="{{path('principal_web')}}">Bienvenida</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+        </ol>
+    </div><!-- /.breadcrumb-wrapper -->
+</div><!-- /.header-content -->
+<!--/ End page header -->
+
+<!-- Start body content -->
+    <div class="body-content animated fadeIn">
+
+        <div class="row">
+            <div class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('noSearch') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('noTuicion') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('newOk') %}
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('newError') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-warning"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('updateOk') %}
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('updateError') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-warning"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('eliminarOk') %}
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('eliminarError') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-warning"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+
+
+
+</div><!-- /.body-content -->
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{% if app.session.get('ie_id') != '-1' %}
+            <script>
+            $(document).ready(function () {                
+                selgessubsemFormShow();
+            });  
+            </script>
+{% endif %}
+{% endblock %}
+    

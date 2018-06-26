@@ -48,7 +48,7 @@ class NewHistoryInscriptionController extends Controller {
             $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rude));
             //verificamos si existe el estudiante
             if ($student) {
-                $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $rude . "');");
+                $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $rude . "') order by gestion_tipo_id_raep desc;");
                 $query->execute();
                 $dataInscription = $query->fetchAll();
 

@@ -73,7 +73,7 @@
                 <form action="{{path('herramienta_alter_reporte_centralizadores')}}" method="post" style="">
                     <input type="hidden" name="dat" value="{{infoUe}}">
                     <button type="submit" class="btn btn-primary btn-stroke">
-                        <i class="fa fa-cloud-download"></i> Imprimir centralizador.
+                        <i class="fa fa-cloud-download"></i> Imprimir Centralizador
                     </button>
                 </form>
             </div>
@@ -88,7 +88,7 @@
             {# endif #}
             <div class="col-md-3">
                 <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptions('{{infoUe}}');" >
-                    <i class="fa fa-user"></i> Inscrip. con Rudeal
+                    <i class="fa fa-user"></i> Inscripción con Rudeal
                 </button>
             </div>
             <!--div class="col-md-3">
@@ -114,7 +114,7 @@
             <div class="col-lg-12">
                 <div class="panel rounded swadow panel-teal">
                     <div class="panel-heading">
-                        <h4>Estudiantes inscritos: <span class="label label-success">{{totalInscritos}}</label></h4>
+                        <h4>Estudiantes Inscritos:<span class="label label-success">{{totalInscritos}}</label></h4>
                     </div>
                     <div id="no-more-tables">
                         <table class="table table-bordered table-hover cf">
@@ -226,7 +226,7 @@
                                                     {% if (app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') %}                                                          
                                                         <li>
                                                           <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="addModulosToStudeent('{{infoUe}}', '{{jsnInfoStudent}}');" >
-                                                            <span class="label label-lilac"><i class="fa fa-file-text"></i> Toma de Areas/Módulo</span>
+                                                            <span class="label label-lilac"><i class="fa fa-file-text"></i> Toma de Áreas/Módulo</span>
                                                           </a>
                                                         </li>                                                        
                                                     {% endif %}

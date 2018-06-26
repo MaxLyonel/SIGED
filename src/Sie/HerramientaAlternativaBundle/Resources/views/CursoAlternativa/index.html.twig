@@ -5,7 +5,7 @@
         <div class="panel panel-danger">
             <div class="panel-heading">
                 <div class="pull-left">
-                    <h3 class="panel-title">Creación de curso</h3>
+                    <h3 class="panel-title">Creación de Curso</h3>
                 </div>
                 <div class="pull-right">
                     <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse"><i class="fa fa-angle-up"></i></button>
@@ -228,7 +228,7 @@
                         {#statusCode: {
                         500: function () {
                             $('#mengestioncurso').empty();
-                            $('#mengestioncurso').html("<div class='alert alert-danger alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Ocurrio un error al crear el curso!</strong></div>");                        
+                            $('#mengestioncurso').html("<div class='alert alert-danger alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>Ocurrió un error al crear el curso</strong></div>");                        
                             $('#modal').modal('hide');                             
                         },#}
                         error: function(data){
@@ -240,7 +240,7 @@
                 }
             }
         else{
-            alert('¡Ingrese todos lo datos!');
+            alert('¡Ingrese todos los datos!');
             }
         };    
     
