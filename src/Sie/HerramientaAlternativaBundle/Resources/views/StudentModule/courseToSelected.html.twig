@@ -21,7 +21,7 @@
                     <h5 class="text-lilac">Datos del Curso</h5>
                     <table class="table table-condensed table-bordered" style="background:#EEEEEE">
                         <tr>
-                            <th>Area</th><td>{{area}}</td>
+                            <th>Área</th><td>{{area}}</td>
                             <th>Turno</th><td>{{turno}}</td>
                         </tr>
                         <tr>
@@ -42,7 +42,7 @@
                         </tr>
                     </table>
                 </div>
-                <h5 class="text-success" style="margin-left:10px; margin-top:-15px">Seleccione Modulos</h5>
+                <h5 class="text-success" style="margin-left:10px; margin-top:-15px">Seleccione Módulos</h5>
 
                 <table id="datatable-sample" class="table table-default table-middle table-striped table-bordered table-condensed dataTable" role="grid" aria-describedby="datatable-sample_info">
                   <thead>
@@ -143,12 +143,12 @@
                 sw = false;
     }
     if (sw) {
-        alert('Tiene que Seleccionar por lo menos un Módulo...');
+        alert('Tiene que seleccionar por lo menos un Módulo...');
         return false;
     }
     if(!sw){
       //validate the send
-      if(confirm('Esta seguro de guardar lo seleccionado?')){
+      if(confirm('¿Esta seguro de guardar lo seleccionado?')){
         var formData = $('#moduleToStudentForm').serialize();
         $.ajax({
             type: 'post',

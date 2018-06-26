@@ -3,7 +3,7 @@
         <div class="panel panel-danger">
             <div class="panel-heading">
                 <div class="pull-left">
-                    <h3 class="panel-title">Adición y eliminación de Áreas / Asignación de maestros</h3>
+                    <h3 class="panel-title">Adición y Eliminación de Áreas / Asignación de Maestros</h3>
                 </div>
                 <div class="pull-right">
                     <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse"><i class="fa fa-angle-up"></i></button>
@@ -91,7 +91,7 @@
 <script>
     var newArea = function(ida, infoUe){
     
-        if(confirm('Realmente desea adicionar el área?\nPresione aceptar para confirmar.')){
+        if(confirm('¿Realmente desea adicionar el área?\nPresione aceptar para confirmar.')){
             $.ajax({
                 type: 'post',
                 data: ({ida:ida, infoUe: infoUe}),
@@ -118,7 +118,7 @@
         }
     }
     var deleteArea = function(idco, infoUe, asignatura, smpId){
-        if(confirm('Esta seguro(a) de eliminar el área de '+ asignatura +'?\nTenga en cuenta que tambien se eliminaran las calificaciones de los estudiantes.')){
+        if(confirm('¿Esta seguro(a) de eliminar el área de '+ asignatura +'?\nTenga en cuenta que también se eliminaran las calificaciones de los estudiantes.')){
             $.ajax({
                 type: 'post',
                 data: ({idco:idco, infoUe: infoUe, smpId: smpId}),
