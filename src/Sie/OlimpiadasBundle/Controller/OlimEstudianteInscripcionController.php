@@ -1431,8 +1431,8 @@ class OlimEstudianteInscripcionController extends Controller{
             if(isset($val['studentInscription'])){
                 // dump($val);   
                 $objOLimStudentInscription = new OlimEstudianteInscripcion();
-                $objOLimStudentInscription->setTelefonoEstudiante($val['fono']);
-                $objOLimStudentInscription->setCorreoEstudiante($val['email']);
+                $objOLimStudentInscription->setTelefonoEstudiante(trim($val['fono']));
+                $objOLimStudentInscription->setCorreoEstudiante(trim($val['email']));
                 $objOLimStudentInscription->setFechaRegistro(new \DateTime('now'));
                 $objOLimStudentInscription->setUsuarioRegistroId($this->session->get('userId'));
                 $objOLimStudentInscription->setOlimReglasOlimpiadasTipo($em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->find($arrDataInscription['categoryId']) );
@@ -1486,8 +1486,8 @@ class OlimEstudianteInscripcionController extends Controller{
                 if(isset($val['studentInscription'])){
                     // dump($val);   
                     $objOLimStudentInscription = new OlimEstudianteInscripcion();
-                    $objOLimStudentInscription->setTelefonoEstudiante($val['fono']);
-                    $objOLimStudentInscription->setCorreoEstudiante($val['email']);
+                    $objOLimStudentInscription->setTelefonoEstudiante(trim($val['fono']));
+                    $objOLimStudentInscription->setCorreoEstudiante(trim($val['email']));
                     $objOLimStudentInscription->setFechaRegistro(new \DateTime('now'));
                     $objOLimStudentInscription->setUsuarioRegistroId($this->session->get('userId'));
                     $objOLimStudentInscription->setOlimReglasOlimpiadasTipo($em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->find($arrDataInscription['categoryId']) );
@@ -1856,8 +1856,8 @@ class OlimEstudianteInscripcionController extends Controller{
         try {
 
             $objOLimStudentInscription = new OlimEstudianteInscripcion();
-            $objOLimStudentInscription->setTelefonoEstudiante($form['fono']);
-            $objOLimStudentInscription->setCorreoEstudiante($form['email']);
+            $objOLimStudentInscription->setTelefonoEstudiante(trim($form['fono']));
+            $objOLimStudentInscription->setCorreoEstudiante(trim($form['email']));
             $objOLimStudentInscription->setFechaRegistro(new \DateTime('now'));
             $objOLimStudentInscription->setUsuarioRegistroId($this->session->get('userId'));
             $objOLimStudentInscription->setOlimReglasOlimpiadasTipo($em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->find($arrDataInscription['categoryId']) );

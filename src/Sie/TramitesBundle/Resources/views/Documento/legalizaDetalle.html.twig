@@ -1,0 +1,91 @@
+{% extends "::layoutTramites.html.twig"%}
+{% block contentBread %}
+    <ol class="breadcrumb">
+        <li>
+            <i class="fa fa-home"></i>
+            <a href="{{path('tramite_homepage')}}">Perfil</a>
+            <i class="fa fa-angle-right"></i>
+            <a >Seguimiento Trámite</a>
+        </li>
+    </ol>
+{% endblock %}
+{% block contentoption %}
+    {% if listaDocumento is defined  %}
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="panel panel-invoice rounded">
+                    <div class="panel-sub-heading">
+                        <div class="row inner-all">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <div class="text-left mb-10">
+                                    <h3 class="mt-0 text-primary"><strong>{{listaDocumento.paterno}} {{listaDocumento.materno}} {{listaDocumento.nombre}}</strong></h3>
+                                    <address>
+                                        <strong>Código rude: </strong>{{listaDocumento.rude}}<br>
+                                        <strong>Código SIE: </strong>{{listaDocumento.sie}}<br>
+                                        <strong>Fecha de nacimiento: </strong>{{listaDocumento.fechanacimiento|date('d/m/Y') }}<br>
+                                        <strong>Lugar de nacimiento: </strong>
+                                            {% if listaDocumento.departamentonacimiento != "" %}{{ listaDocumento.departamentonacimiento }} - {% endif %}
+                                            {{ listaDocumento.paisnacimiento }}
+                                    </address>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <div class="text-right">
+                                    <h3 class="mt-0 text-primary"><strong>N° SERIE:</strong> {{listaDocumento.serie}}</h3>
+                                    <address>
+                                        <strong>Tipo documento: </strong> {{listaDocumento.documentoTipo}}<br>
+                                        <strong>Fecha de emisión: </strong> {{listaDocumento.fechaemision|date('d/m/Y')}}<br>
+                                        <strong>D.D.E. Emisor: </strong> {{listaDocumento.departamentoemision}}<br>
+                                        tramite                             <strong>Nro. Trámite: </strong> {{listaDocumento.tramite}}<br>
+                                    </address>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- /.panel-sub-heading -->
+                    <div class="panel-body">                        
+                        <form name="formLegalizacion" role="form" action="{{ path('tramite_documento_legalizacion_numero_serie_guarda') }}" method="POST">
+                            <input type="hidden" name="codigo" value="{{listaDocumento.id|base64_encode}}"/>
+                            <input type="hidden" name="_token" value="{{ csrf_token(listaDocumento.id) }}">
+                            <button type="submit" class="btn btn-primary col-md-12" data-original-title="Legalizar Documento" onclick="this.style.visibility='hidden';"><strong>Legalizar Documento</strong></button>
+                        </form>
+                    </div><!-- /.panel-body -->
+                    <div class="panel-footer">
+                        <div class="alert alert-success text-center">
+                            <strong>DETALLE</strong>
+                        </div>
+                        <ul class="list-unstyled list-real-estate">
+                            {% if listaDocumentoDetalle is defined  %}
+                                {% for detalle in listaDocumentoDetalle %}                                    
+                                    <li>
+                                        <a>
+                                            <div class="pull-left">
+                                                {% if detalle.documentoTipoId == 2  %}
+                                                    <p class="text-lilac">{{ detalle.tramiteTipo }} Legalizado</p>
+                                                {% else %}
+                                                    <p>{{ detalle.tramiteTipo }}</p>
+                                                {% endif %}
+                                                <h3>{{ detalle.fechaemision|date('d/m/Y') }}</h3>
+                                            </div>
+                                            <div class="pull-right">
+                                                {% if detalle.documentoTipoId == 2  %}
+                                                    <form name="formPdf" role="form" action="{{ path('tramite_documento_legalizacion_numero_serie_pdf') }}" method="POST">
+                                                        <input type="hidden" name="codigo" value="{{detalle.id|base64_encode}}"/>
+                                                        <input type="hidden" name="_token" value="{{ csrf_token(detalle.id) }}">
+                                                        <button type="submit" class="btn btn-circle btn-lilac" data-original-title="Imprime Legalización">
+                                                            <i class="fa fa-print"></i>
+                                                        </button>
+                                                    </form>   
+                                                {% endif %}                                             
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+                        </ul>
+                    </div><!-- /.panel-footer -->
+                </div>
+            </div>
+        </div><!-- /.row -->
+    {% endif %}
+{% endblock %}
