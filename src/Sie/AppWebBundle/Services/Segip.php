@@ -61,21 +61,7 @@ class Segip {
 
         $responseDecode = json_decode($response, true);
 
-        $response = array();
-
-        foreach($responseDecode as $value) {
-            $response = [
-                'EsValido' => $value['EsValido'],
-                'Mensaje' => $value['Mensaje'],
-                'TipoMensaje' => $value['TipoMensaje'],
-                'CodigoRespuesta' => $value['CodigoRespuesta'],
-                'CodigoUnico' => $value['CodigoUnico'],
-                'DescripcionRespuesta' => $value['DescripcionRespuesta'],
-                'DatosPersonaEnFormatoJson' => $value['DatosPersonaEnFormatoJson']
-            ];
-        }
-
-		return $response;
+		return $responseDecode;
 	}
 
     public function verificarPersona($carnet, $complemento, $paterno, $materno, $nombre, $fechaNac) {
@@ -96,16 +82,12 @@ class Segip {
 
         $responseDecode = json_decode($response, true);
 
-        $response = array();
-
-        foreach($responseDecode as $value) {
-            $response = [
-                'DatosPersonaEnFormatoJson' => $value['DatosPersonaEnFormatoJson']
-            ];
+        if ($responseDecode['ConsultaDatoPersonaEnJsonResult']['EsValido']) {
+            $persona = $responseDecode['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson'];
+            $resultado = true;
+        } else {
+            $resultado = false;
         }
-
-        $persona = $response['DatosPersonaEnFormatoJson'];
-        $resultado = true;
 
         if($persona == 'null') {
             $resultado = false;
