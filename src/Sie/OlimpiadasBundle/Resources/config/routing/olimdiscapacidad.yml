@@ -1,0 +1,38 @@
+olimdiscapacidad_index:
+    path:     /disc/
+    defaults: { _controller: "SieOlimpiadasBundle:OlimDiscapacidad:index" }
+    options:
+        expose: true
+
+olimdiscapacidad_nuevo:
+    path:     /nuevo
+    defaults: { _controller: "SieOlimpiadasBundle:OlimDiscapacidad:nuevo" }
+    options:
+        expose: true
+
+olimdiscapacidad_guardar:
+    path:     /guardar
+    defaults: { _controller: "SieOlimpiadasBundle:OlimDiscapacidad:guardar" }
+    options:
+        expose: true
+
+olimdiscapacidad_editar:
+    path:     /editar/
+    defaults: { _controller: "SieOlimpiadasBundle:OlimDiscapacidad:editar" }
+    options:
+        expose: true
+        
+olimdiscapacidad_edit:
+    path:     /edit/
+    defaults: { _controller: "SieOlimpiadasBundle:OlimDiscapacidad:edit" }
+    options:
+        expose: true        
+
+olimdiscapacidad_eliminar:
+    path:     /eliminar/{id}
+    defaults: { _controller: "SieOlimpiadasBundle:OlimDiscapacidad:eliminar" }
+    options:
+        expose: true
+
+
+       

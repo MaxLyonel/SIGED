@@ -57,3 +57,7 @@ sie_app_web_olimestudiantemodificacion:
 sie_app_web_oliminscriptions_depurations:
     resource: "@SieOlimpiadasBundle/Resources/config/routing/oliminscripciondepurations.yml"
     prefix:   /depurations
+
+sie_app_web_olimdiscapacidad:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimdiscapacidad.yml"
+    
