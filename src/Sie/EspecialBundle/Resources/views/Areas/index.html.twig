@@ -65,13 +65,13 @@
 </div>
 <!-- Start page header -->
 <div class="header-content">
-    <h2><i class="fa fa-table"></i> Asignación Area/Maestro <span>Lista</span></h2>
+    <h2><i class="fa fa-table"></i> Asignación Área/Maestro <span>Lista</span></h2>
     <div class="breadcrumb-wrapper hidden-xs">
-        <span class="label">Usted esta aqui:</span>
+        <span class="label">Usted esta aquí:</span>
         <ol class="breadcrumb">
             <li>
                 <i class="fa fa-home"></i>
-                <a href="#">Asignación Area/Maestro</a>
+                <a href="#">Asignación Área/Maestro</a>
                 <i class="fa fa-angle-right"></i>
             </li>
 
@@ -83,9 +83,9 @@
 <div class="body-content animated fadeIn">
 
     {% if institucion %}
-        {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Asignación Area/Maestro', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
+        {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Asignación Área/Maestro', 'gestión': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opción': 'Lista'} %}
     {% else %}
-        {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Asignación Area/Maestro', 'gestion': gestion,'sie': '-1', 'ieducativa':'-1', 'opcion': 'Lista'} %}
+        {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Asignación Área/Maestro', 'gestión': gestion,'sie': '-1', 'ieducativa':'-1', 'opción': 'Lista'} %}
     {% endif %}
     {% include 'SieEspecialBundle:Principal:onlyview.html.twig'%}
     <div class="row">
@@ -160,7 +160,7 @@
                     <div class="panel-body">
                         <div class="panel-body panel-primary">
                             <div style="background: #EEE; padding:3px 10px 10px 10px">
-                                <h4 class="text-orange">Seleccionar curso</h4>
+                                <h4 class="text-orange">Seleccionar Curso</h4>
                                 {{form_start(form,{'attr':{'id':'formAreas','onsubmit':'return validateForm()'} })}}
                                 <div class="row">
                                     <div class="col-lg-3 col-md-6">
@@ -206,7 +206,7 @@
                     <div class="panel-body">
                         <div id="divMensaje"></div>
                         <div id="divAreas">
-                            Debe seleccionar un curso
+                            Debe Seleccionar un Curso
                         </div>
                     </div>
                 </div>
@@ -548,7 +548,7 @@ var xhr5;
                 var idco = data.ieco;
 
                 $('#'+idco).empty();
-                $('#'+idco).append("<div style='background:#906094; color:#FFFFFF; padding:5px; text-align:center;'>Cambios guardados</div>");
+                $('#'+idco).append("<div style='background:#906094; color:#FFFFFF; padding:5px; text-align:center;'>Cambios Guardados</div>");
                 setTimeout("cerrarMaestros('"+idco+"')",2000)
                 
             },
