@@ -1,9 +1,9 @@
 {% extends 'layoutHerramientaAlternativa.html.twig' %}
-{% block fechaReporte %}
-    {% if fechaEstadisticaRegular is defined  %}
-        {{ fechaEstadistica }}
-    {% endif %}
-{% endblock %}
+{#{% block fechaReporte %}#}
+    {#{% if fechaEstadisticaRegular is defined  %}#}
+        {#{{ fechaEstadistica }}#}
+    {#{% endif %}#}
+{#{% endblock %}#}
 {% block contentoption %}
     {% set ingresa = 0 %}
     {% set ingresaAdmin = 0 %}
@@ -17,7 +17,7 @@
     {% endfor %} 
     <!-- Start page header -->
     <div id="tour-6" class="header-content">
-        <h2><i class="fa fa-th-large"></i>Matrícula Educativa<span>Subsistema de Educación Regular</span></h2>
+        <h2><i class="fa fa-th-large"></i>Matrícula Educativa<span>Subsistema de Educación Alternativa</span></h2>
         <div" class="breadcrumb-wrapper hidden-xs">
             <!--<span class="label">Info.:</span>-->
             <ol class="breadcrumb">
@@ -35,7 +35,7 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <!-- Start widget newsletter -->
                     <div class="panel text-center rounded shadow">
-                        <div class="panel-body bg-lilac rounded">
+                        <div class="panel-body bg-success rounded">
                             <!--<div class="inner-all">-->
                                 <h5 class="text-uc"><b>{{infoEntidad.nombre}}</b></h5>
                             <!--</div>-->
@@ -107,7 +107,7 @@
                                 {% set id = data.codigo %}
                                 {% set nombre = data.nombre %} 
                                 {% set rol = data.rolusuario %}                                 
-                                <form name="form" role="form" action="{{ path('reporte_especial_index') }}" method="POST"> 
+                                <form name="form" role="form" action="{{ path('sie_alt_reportes') }}" method="POST">
                                     <input type="hidden" name="codigo" value="{{id|base64_encode}}" />
                                     <input type="hidden" name="rol" value="{{rol}}" />
                                     <button type="submit" id="submit{{id}}" style="display:none;"></button>
@@ -126,12 +126,12 @@
                         </div>
                     </div>
                 </div>  
-                <form name="formEstadisticaEspecialPdf" id="formEstadisticaEspecialPdf" role="form" action="{{ path('reporte_especial_informacion_general_print_pdf') }}" method="POST">  
+                <form name="formEstadisticaEspecialPdf" id="formEstadisticaEspecialPdf" role="form" action="{{ path('estadistica_alternativa_informacion_general_print_pdf') }}" method="POST">
                     <input type="hidden" name="gestion" value="{{ gestion }}" />
                     <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />  
                     <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />     
                 </form> 
-                <form name="formEstadisticaEspecialXls" id="formEstadisticaEspecialXls" role="form" action="{{ path('reporte_especial_informacion_general_print_xls') }}" method="POST">  
+                <form name="formEstadisticaEspecialXls" id="formEstadisticaEspecialXls" role="form" action="{{ path('estadistica_alternativa_informacion_general_print_xls') }}" method="POST">
                     <input type="hidden" name="gestion" value="{{ gestion }}" />
                     <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />  
                     <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />   
@@ -362,6 +362,9 @@
         </div>
     </div>
     <!--/ END ADDITIONAL ELEMENT -->
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
     <script>
         $(document).ready(function() {
 
@@ -405,10 +408,10 @@
 
 
             $(function () {
-                chartContainerDiscapacidadLoad(); 
+              //  chartContainerDiscapacidadLoad();
                 chartContainerGeneroLoad();  
-                chartContainerDependenciaLoad(); 
-                chartContainerModalidadLoad(); 
+                chartContainerDependenciaLoad();
+             //   chartContainerModalidadLoad();
             });  
 
             function seeGraphic (infoTipo,infoCodigo,infoRol) {
@@ -421,8 +424,9 @@
                 );                 
             };
         });
+
     </script> 
-    {% if infoEntidad is defined %}
+    {% if infoEntidad is defined and 1>1 %}
         <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
         <script>
             function initialize() {
