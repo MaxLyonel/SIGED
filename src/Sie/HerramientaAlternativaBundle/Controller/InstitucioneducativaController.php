@@ -812,7 +812,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
             }            
             $em->getConnection()->commit();
 
-            return $this->redirect($this->generateUrl('herramienta_alter_reporte_operativo_exitoso_cerrado.'));
+            return $this->redirect($this->generateUrl('herramienta_alter_reporte_operativo_exitoso_cerrado'));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
         }
