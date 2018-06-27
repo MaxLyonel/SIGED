@@ -161,7 +161,7 @@ class DocumentoController extends Controller {
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp    .lugarTipo')
                 ->where('t.id = :codTramite')
                 ->setParameter('codTramite', $tramite)
-                ->orderBy('d.fechaRegistro', 'DESC');
+                ->orderBy('d.fechaImpresion', 'DESC');
         $entityDocumento = $query->getQuery()->getResult();
         if(count($entityDocumento)>0){
             return $entityDocumento;
