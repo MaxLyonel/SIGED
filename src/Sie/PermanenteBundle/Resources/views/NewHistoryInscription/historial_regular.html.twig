@@ -16,7 +16,6 @@
       <th class="text-center">Turno</th>
       <th class="text-center">Inscripción</th>
       <th class="text-center">Estado Matrícula</th>
-      <th class="text-center">Acciones</th>
     </tr>
   </thead>
   <tbody>
@@ -32,9 +31,9 @@
         <td>{{data.turno_raep}} </td>
         <td class="text-center">{{data.estadomatricula_inicio_r}}</td>
         <td class="text-center">{{data.estadomatricula_fin_r}}</td>
-        <td class="text-center">
-          <a href="#" onclick="seeNotaNew('{{data.estudiante_inscripcion_id_raep}}', '{{data.estudiante_id_raep}}', '{{data.nivel_tipo_id_r}}', '{{data.grado_tipo_id_r}}', '{{data.paralelo_tipo_id_raep}}', '{{data.turno_tipo_id_raep}}', '{{data.gestion_tipo_id_raep}}', '{{data.institucioneducativa_id_raep}}','{{data.estadomatricula_tipo_id_fin_r}}')" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>
-        </td>
+        {#<td class="text-center">#}
+          {#<a href="#" onclick="seeNotaNew('{{data.estudiante_inscripcion_id_raep}}', '{{data.estudiante_id_raep}}', '{{data.nivel_tipo_id_r}}', '{{data.grado_tipo_id_r}}', '{{data.paralelo_tipo_id_raep}}', '{{data.turno_tipo_id_raep}}', '{{data.gestion_tipo_id_raep}}', '{{data.institucioneducativa_id_raep}}','{{data.estadomatricula_tipo_id_fin_r}}')" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>#}
+        {#</td>#}
       </tr>
     {% endfor %}
   </tbody>

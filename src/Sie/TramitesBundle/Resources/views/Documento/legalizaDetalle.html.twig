@@ -36,7 +36,7 @@
                                         <strong>Tipo documento: </strong> {{listaDocumento.documentoTipo}}<br>
                                         <strong>Fecha de emisión: </strong> {{listaDocumento.fechaemision|date('d/m/Y')}}<br>
                                         <strong>D.D.E. Emisor: </strong> {{listaDocumento.departamentoemision}}<br>
-                                        tramite                             <strong>Nro. Trámite: </strong> {{listaDocumento.tramite}}<br>
+                                        <strong>Nro. Trámite: </strong> {{listaDocumento.tramite}}<br>
                                     </address>
                                 </div>
                             </div>
@@ -55,7 +55,8 @@
                         </div>
                         <ul class="list-unstyled list-real-estate">
                             {% if listaDocumentoDetalle is defined  %}
-                                {% for detalle in listaDocumentoDetalle %}                                    
+                                {% for detalle in listaDocumentoDetalle %}  
+
                                     <li>
                                         <a>
                                             <div class="pull-left">
@@ -67,7 +68,7 @@
                                                 <h3>{{ detalle.fechaemision|date('d/m/Y') }}</h3>
                                             </div>
                                             <div class="pull-right">
-                                                {% if detalle.documentoTipoId == 2  %}
+                                                {% if detalle.documentoTipoId == 2 and loop.first  %}
                                                     <form name="formPdf" role="form" action="{{ path('tramite_documento_legalizacion_numero_serie_pdf') }}" method="POST">
                                                         <input type="hidden" name="codigo" value="{{detalle.id|base64_encode}}"/>
                                                         <input type="hidden" name="_token" value="{{ csrf_token(detalle.id) }}">

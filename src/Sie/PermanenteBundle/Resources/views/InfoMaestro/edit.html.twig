@@ -208,7 +208,7 @@
 
             $.ajax({
                 type: 'get',
-                url: Routing.generate('listaridiomasleehablaescribe_edit', {'idMaestroInscripcion': idMaestro}),
+                url: Routing.generate('herramienta_listaridiomasleehablaescribe_edit', {'idMaestroInscripcion': idMaestro}),
                 beforeSend: function () {
                     $("#idiomas").empty();
                     $("#loading").css('display', 'inline-block');

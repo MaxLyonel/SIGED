@@ -746,7 +746,7 @@ class CursosCortosController extends Controller {
             $institucioncursoferta = new InstitucioneducativaCursoOferta();
             $institucioncursoferta ->setInsitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('id' => $form['cursoscortos'])));
             $institucioncursoferta ->setHorasmes($horas);
-            $institucioncursoferta ->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find(0));
+            $institucioncursoferta ->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find(1));
 
             $em->persist($institucioncursoferta);
            // dump($institucioncursoferta);die;

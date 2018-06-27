@@ -5,3 +5,9 @@ history_new_inscription_index:
 history_new_inscription_quest:
     path:    /{rude}/quest
     defaults: { _controller: SieRegularBundle:NewHistoryInscription:quest }
+
+student_main_history_perm:
+    path:     /historyalt/{idStudent}
+    defaults: { _controller: "SieRegularBundle:NewHistoryInscription:historyalt" }
+    options:
+        expose: true
