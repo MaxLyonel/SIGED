@@ -4,8 +4,8 @@
     <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
     <style>
         .higherWider {
-            width: 800px;
-            margin-top:100px;
+            width: 1000px;
+            margin-top:50px;
         }
     </style>
 {% endblock %}
@@ -123,7 +123,7 @@
             $('#historyInscriptions').modal('show');
             $.ajax({
                 type: 'get',
-                url: Routing.generate('student_main_history_alt', {'idStudent': idStudent}),
+                url: Routing.generate('student_main_history_perm', {'idStudent': idStudent}),
                 beforeSend: function () {
                     $("#idHistory").empty();
                     $("#idHistory").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" /></div>');
@@ -131,6 +131,31 @@
                 success: function (data) {
                     $("#idHistory").empty();
                     $("#idHistory").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+
+        var seeNotaNew = function (inscripcionid, idstudent, nivel, grado, paralelo, turno, gestion, sie, estadomatriculaTipo) {
+
+            $('#myModalNotas').modal('show');
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('note_consultation_parents_sie_nota_new', {'inscripcionid': inscripcionid,'idstudent': idstudent, 'nivel': nivel, 'grado': grado, 'paralelo': paralelo, 'turno': turno, 'gestion': gestion, 'sie': sie,'estadomatriculaTipo': estadomatriculaTipo}),
+                beforeSend: function () {
+                    $("#idNotas").empty();
+                    $("#idNotas").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#idNotas").empty();
+                    $("#idNotas").append(data);
                 },
                 statusCode: {
                     500: function () {
