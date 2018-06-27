@@ -210,7 +210,7 @@ class DownloadFileSieController extends Controller {
           * Validacion Unidades Educativas: MODULAR, PLENAS,TEC-TEG, NOCTURNAS
           * send array => sie, gestion, reglas *
           * return type of UE *
-          * *
+            * *
           \************************************/
           $query = $em->getConnection()->prepare('select * from sp_validacion_regular_web(:gestion, :sie, :periodo)');
           $query->bindValue(':gestion', $form['gestion']);
@@ -472,6 +472,8 @@ class DownloadFileSieController extends Controller {
                           $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txtIG('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
                           break;
                         case '2':
+                            $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt_2B_2018('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
+                          break;
                         case '3':
                         case '4':
                         case '5':
