@@ -219,18 +219,18 @@
                 {% endif %}
             {% endif %}
             <div id="tour-7" class="col-lg-8 col-md-8 col-sm-12 col-xs-12">     
-                <div class="row">                                       
+                <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="panel panel-default shadow">
                             <div class="panel-body">
                                 <!-- Start project overview -->
-                                <div class="row">         
+                                <div class="row">
 
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <div id="chartContainerDiscapacidad" style="height:300px;"> </div> 
-                                    </div>   
-                                    
-                                </div>                            
+                                        <div id="chartContainerDiscapacidad" style="height:300px;"> </div>
+                                    </div>
+
+                                </div>
                             </div><!-- /.panel-body -->
                         </div>
                     </div>
@@ -240,13 +240,13 @@
                         <div class="panel panel-default shadow">
                             <div class="panel-body">
                                 <!-- Start project overview -->
-                                <div class="row">                                    
+                                <div class="row">
                                     <div id="chartContainerGenero" style="height: 300px;"> </div>
                                 </div>
                             </div><!-- /.panel-body -->
                         </div>
-                    </div>                    
-                </div> 
+                    </div>
+                </div>
                 <div class="row">                   
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="panel panel-default shadow">
@@ -259,22 +259,22 @@
                         </div>
                     </div>
                 </div> 
-                <div class="row">                                       
+                <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="panel panel-default shadow">
                             <div class="panel-body">
                                 <!-- Start project overview -->
-                                <div class="row">         
+                                <div class="row">
 
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <div id="chartContainerModalidad" style="height:400px;"> </div> 
-                                    </div>   
-                                    
-                                </div>                            
+                                        <div id="chartContainerModalidad" style="height:400px;"> </div>
+                                    </div>
+
+                                </div>
                             </div><!-- /.panel-body -->
                         </div>
                     </div>
-                </div> 
+                </div>
                 {% if infoEstadisticaUE is defined and infoEstadisticaEE is defined %}
                     <div class="row">     
                         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">             
@@ -318,7 +318,7 @@
                                 </div><!-- /.panel-body -->
                             </div>
                         </div>                         
-                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">             
+                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                             <div class="panel panel-default shadow">
                                 <div class="panel-heading">
                                     <div class="pull-left">
@@ -333,15 +333,15 @@
                                 </div><!-- /.panel-heading -->
                                 <div class="panel-body">
                                     <!-- Start project overview -->
-                                    <div class="row">                           
+                                    <div class="row">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                             <div class="mini-stat-type-4 bg-facebook shadow">
                                                 <i class="fa fa-building fa-2x"></i>
                                                 <h2>{{infoEstadisticaEE['cant_total']|number_format(0, ',', '.')}}</h2>
                                                 <h5>Ed. Educativo</h5>
                                             </div>
-                                        </div>                                   
-                                    </div>                            
+                                        </div>
+                                    </div>
                                 </div><!-- /.panel-body -->
                             </div>
                         </div>
@@ -382,7 +382,7 @@
             {% autoescape %}
                 {% if datoGraficoDiscapacidad is defined %}
                     {{ datoGraficoDiscapacidad|raw }}
-                {% endif %} 
+                {% endif %}
             {% endautoescape %}
 
             {% autoescape %}
@@ -400,15 +400,15 @@
             {% autoescape %}
                 {% if datoGraficoModalidad is defined %}
                     {{ datoGraficoModalidad|raw }}
-                {% endif %} 
+                {% endif %}
             {% endautoescape %}
 
 
             $(function () {
-                chartContainerDiscapacidadLoad(); 
+                chartContainerDiscapacidadLoad();
                 chartContainerGeneroLoad();  
                 chartContainerDependenciaLoad(); 
-                chartContainerModalidadLoad(); 
+                chartContainerModalidadLoad();
             });  
 
             function seeGraphic (infoTipo,infoCodigo,infoRol) {

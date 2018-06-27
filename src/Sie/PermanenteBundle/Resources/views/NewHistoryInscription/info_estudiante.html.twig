@@ -1,0 +1,40 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-teal">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <h4>Información Estudiante</h4>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered table-hover cf">
+                    <thead class="cf">
+                        <tr class="info">
+                            <th class="text-center">RUDE</th>
+                            <th class="text-center">Nombre(s)</th>
+                            <th class="text-center">Paterno</th>
+                            <th class="text-center">Materno</th>
+                            <th class="text-center">CI</th>
+                            <th class="text-center">Complemento</th>
+                            <th class="text-center">Genero</th>
+                            <th class="text-center">F. Nacimiento</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-title="Rude">{{datastudent.codigoRude}}</td>
+                            <td data-title="Nombre">{{ datastudent.nombre|e }} </td>
+                            <td data-title="Paterno">{{datastudent.paterno|e}}</td>
+                            <td data-title="Materno">{{datastudent.materno|e}}</td>
+                            <td data-title="CI">{{datastudent.carnetIdentidad}} </td>
+                            <td data-title="Complemento" class="text-center">{{datastudent.complemento}}</td>
+                            <td data-title="Genero" class="text-center">{{datastudent.generoTipo}} </td>
+                            <td data-title="F. Nacimiento" class="text-center">{{datastudent.fechaNacimiento|date('d-m-Y')}}</td>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

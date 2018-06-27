@@ -486,6 +486,7 @@
                                 {% endif %}
                                 <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
                                 <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
+                                <li><a href="{{path('sie_alt_reportes')}}">Reportes Educación Alternativa </a></li>
                             </ul>
                         </li>
                     {% endif %}
@@ -1165,6 +1166,11 @@
             <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
             <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
             <!--/ END GOOGLE ANALYTICS -->
+
+            <script src="{{ asset('js/highcharts/highcharts.js')}}"></script>
+            <script src="{{ asset('js/highcharts/funnel.js')}}"></script>
+            <script src="{{ asset('js/highcharts/highcharts-3d.js')}}"></script>
+            <script src="{{ asset('js/highcharts/exporting.js')}}"></script>
 
 
             <script>
