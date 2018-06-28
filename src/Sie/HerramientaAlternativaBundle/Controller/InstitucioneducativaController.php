@@ -655,7 +655,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
             $ies = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find($sesion->get('ie_suc_id'));            
             $iest = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalTramite')->findByInstitucioneducativaSucursal($ies);
             if ($iest){           
-                if ($sesion->get('ie_per_estado') == '3'){//INICIO INSCRIPCIONES
+                if ($sesion->get('ie_per_estado') == '1'){//INICIO INSCRIPCIONES
                     
                     //MIGRANDO DATOS DE SOCIO ECONOMICOS DEL ANTERIOR PERIODO AL ACTUAL PERIODO
                     $gestant = $this->session->get('ie_gestion');
