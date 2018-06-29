@@ -275,10 +275,11 @@ class RegistroInstitucionEducativaController extends Controller {
     }
 
     public function createAction(Request $request) {
+        
+        $em = $this->getDoctrine()->getManager();
+        $form = $request->get('form');
+        $em->getConnection()->beginTransaction();
         try {
-            $em = $this->getDoctrine()->getManager();
-            $form = $request->get('form');
-
             /* Validar la ie no esta registrada
             $buscar_institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array(
                 'institucioneducativa' => $form['institucionEducativa']));
@@ -354,16 +355,10 @@ class RegistroInstitucionEducativaController extends Controller {
             $em->persist($entity);
             $em->flush();
 
-            try {
-                // Registramos la sucursal
-                $query = $em->getConnection()->prepare("select * from sp_genera_institucioneducativa_sucursal('".$entity->getId()."','0','".$this->session->get('currentyear')."','1')");
-                $query->execute();
-                $em->getConnection()->commit();
-            } catch (Exception $e) {
-                $em->getConnection()->rollback();
-                echo 'Excepción capturada: ', $ex->getMessage(), "\n";
-            }
-            
+        
+            // Registramos la sucursal
+            $query = $em->getConnection()->prepare("select * from sp_genera_institucioneducativa_sucursal('".$entity->getId()."','0','".$this->session->get('currentyear')."','1')");
+            $query->execute();            
 
             // Registramos la ue en bonojuancito_unidadeducativa
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('bonojuancito_institucioneducativa');")->execute();
@@ -420,10 +415,12 @@ class RegistroInstitucionEducativaController extends Controller {
                 $em->flush();
             }
 
-            $this->get('session')->getFlashBag()->add('mensaje', 'La institucion educativa fue registrada correctamente: ' . $codigoue . ' - '. mb_strtoupper($form['institucionEducativa'], 'utf-8'));
+            $em->getConnection()->commit();
+
+            $this->get('session')->getFlashBag()->add('mensaje', 'La institución educativa fue registrada correctamente: ' . $codigoue . ' - '. mb_strtoupper($form['institucionEducativa'], 'utf-8'));
             return $this->redirect($this->generateUrl('bjp_rue'));
         } catch (Exception $ex) {
-            $this->get('session')->getFlashBag()->add('mensaje', 'Error al registrar la institucion educativa');
+            $this->get('session')->getFlashBag()->add('mensaje', 'Error al registrar la Institución Educativa');
             return $this->redirect($this->generateUrl('bjp_rue'));
         }
     }

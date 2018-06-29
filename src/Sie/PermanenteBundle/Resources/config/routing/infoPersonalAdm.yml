@@ -57,3 +57,9 @@ permanente_info_personal_adm_find:
 permanente_info_personal_adm_result:
     path:     /result/
     defaults: { _controller: "SiePermanenteBundle:InfoPersonalAdm:result" }
+
+permanente_listaridiomasleehablaescribe_edit:
+     path:    /idiomasmaestro/{idMaestroInscripcion}/
+     defaults: { _controller: SiePermanenteBundle:InfoMaestro:listaridiomasleehablaescribeedit }
+     options:
+         expose: true

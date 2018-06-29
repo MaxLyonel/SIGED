@@ -21,9 +21,9 @@
 <div class="body-content animated fadeIn">
 
     {% if institucion %}
-        {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Asignación Área/Maestro', 'gestión': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opción': 'Buscar'} %}
+        {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Asignación Área/Maestro', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Buscar'} %}
     {% else %}
-        {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Asignación Área/Maestro', 'gestión': gestion,'sie': '-1', 'ieducativa':'-1', 'opción': 'Buscar'} %}
+        {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Asignación Área/Maestro', 'gestion': gestion,'sie': '-1', 'ieducativa':'-1', 'opcion': 'Buscar'} %}
     {% endif %}
     {% include 'SieEspecialBundle:Principal:onlyview.html.twig'%}
     <div class="row">

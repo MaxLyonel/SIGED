@@ -1,3 +1,23 @@
 tramite_documento:
     path:     /documento
     defaults: { _controller: SieTramitesBundle:Default:Generar }
+
+tramite_documento_legalizacion_numero_serie:
+    path:     /legalizacion/numero/serie
+    defaults: { _controller: SieTramitesBundle:Documento:legalizacionNumeroSerie }
+
+tramite_documento_legalizacion_numero_serie_detalle:
+    path:     /legalizacion/numero/serie/detalle
+    defaults: { _controller: SieTramitesBundle:Documento:legalizacionNumeroSerieDetalle }
+
+tramite_documento_legalizacion_numero_serie_guarda:
+    path:     /legalizacion/numero/serie/guarda
+    defaults: { _controller: SieTramitesBundle:Documento:legalizacionNumeroSerieGuarda }
+
+tramite_documento_legalizacion_numero_serie_pdf:
+    path:     /legalizacion/numero/serie/pdf
+    defaults: { _controller: SieTramitesBundle:Documento:legalizacionNumeroSeriePdf }
+
+tramite_documento_legalizacion_institucion_educativa:
+    path:     /legalizacion/institucion/educativa
+    defaults: { _controller: SieTramitesBundle:Documento:legalizacionInstitucionEducativa }

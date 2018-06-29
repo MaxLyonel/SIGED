@@ -1,6 +1,6 @@
 <?php
 
-namespace Sie\RegularBundle\Controller;
+namespace Sie\PermanenteBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -42,7 +42,7 @@ class EstudianteController extends Controller {
     private function createSearchForm() {
         $estudiante = new Estudiante();
         $form = $this->createFormBuilder($estudiante)
-                ->setAction($this->generateUrl('student_result'))
+                ->setAction($this->generateUrl('per_student_result'))
                 ->add('paterno', 'text', array('required' => false, 'invalid_message' => 'Campo obligatorio', 'attr' => array('pattern' => '[a-zñáéíóú A-ZÑÁÉÍÓÚ]{1,25}', 'style' => 'text-transform:uppercase', 'class' => 'form-control')))
                 ->add('materno', 'text', array('required' => false, 'invalid_message' => 'Campo obligatorio', 'attr' => array('pattern' => '[a-zñáéíóú A-ZÑÁÉÍÓÚ]{1,25}', 'style' => 'text-transform:uppercase', 'class' => 'form-control')))
                 ->add('nombre', 'text', array('required' => false, 'invalid_message' => 'Campor obligatorio', 'attr' => array('pattern' => '[a-zñáéíóú A-ZÑÁÉÍÓÚ]{1,25}', 'style' => 'text-transform:uppercase', 'class' => 'form-control')))
@@ -74,7 +74,7 @@ class EstudianteController extends Controller {
         if (!$entities) {
             $message = "Busqueda no encontrada...";
             $this->addFlash('warningstudent', $message);
-            return $this->redirectToRoute('estudiante_index');
+            return $this->redirectToRoute('per_estudiante_index');
         }
 
         $message = 'Resultado de la busqueda...';
@@ -175,7 +175,7 @@ class EstudianteController extends Controller {
             ));
             if ($buscar_estudiante) {
                 $this->get('session')->getFlashBag()->add('registroEstudianteError', 'El estudiante ya esta registrado en el sistema');
-                return $this->redirect($this->generateUrl('estudiante_main_new'));
+                return $this->redirect($this->generateUrl('per_estudiante_main_new'));
             }
 
             echo "registrado";

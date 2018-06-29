@@ -680,6 +680,10 @@ class DefaultController extends Controller {
                             $this->session->set('sysname', 'OLIMPIADA CIENTÍFICA ESTUDIANTIL PURINACIONAL BOLIVIANA');
                             $this->session->set('sysporlet', '#0101DF');                            
                             break;
+                        case 'SiePermanenteBundle':
+                            $this->session->set('sysname', 'EDUCACIÓN PERMANENTE');
+                            $this->session->set('sysporlet', '#0101DF');                            
+                            break;    
                         default:
                             $this->session->set('sysname', 'SIGED');
                             $this->session->set('sysporlet', '#0101DF');                            

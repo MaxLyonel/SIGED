@@ -48,7 +48,7 @@ class NewHistoryInscriptionController extends Controller {
             $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rude));
             //verificamos si existe el estudiante
             if ($student) {
-                $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $rude . "');");
+                $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $rude . "') order by gestion_tipo_id_raep desc;");
                 $query->execute();
                 $dataInscription = $query->fetchAll();
 
@@ -128,6 +128,46 @@ class NewHistoryInscriptionController extends Controller {
                     'datastudent' => $student,
                     'dataInscription' => $dataInscription,
                     'sw' => $sw
+        ));
+    }
+
+    public function historyaltAction(Request $request, $idStudent) {
+        $em = $this->getDoctrine()->getManager();
+        $student = $em->getRepository('SieAppWebBundle:Estudiante')->find($idStudent);
+
+        $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $student->getCodigoRude() . "') order by gestion_tipo_id_raep desc;");
+        $query->execute();
+        $dataInscription = $query->fetchAll();
+
+        $dataInscriptionR = array();
+        $dataInscriptionA = array();
+        $dataInscriptionE = array();
+        $dataInscriptionP = array();
+        foreach ($dataInscription as $key => $inscription) {
+            switch ($inscription['institucioneducativa_tipo_id_raep']) {
+                case '1':
+                    $dataInscriptionR[$key] = $inscription;
+                    break;
+                case '2':
+                    $dataInscriptionA[$key] = $inscription;
+                    break;
+                case '4':
+                    $dataInscriptionE[$key] = $inscription;
+                    break;
+                case '5':
+                    $dataInscriptionP[$key] = $inscription;
+                    break;
+            }
+        }
+        $sw = true;
+
+        return $this->render($this->session->get('pathSystem') . ':NewHistoryInscription:index_history.html.twig', array(
+            'datastudent' => $student,
+            'dataInscriptionR' => $dataInscriptionR,
+            'dataInscriptionA' => $dataInscriptionA,
+            'dataInscriptionE' => $dataInscriptionE,
+            'dataInscriptionP' => $dataInscriptionP,
+            'sw' => $sw
         ));
     }
 }

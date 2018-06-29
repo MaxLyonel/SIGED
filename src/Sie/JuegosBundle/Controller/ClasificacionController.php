@@ -1168,6 +1168,9 @@ class ClasificacionController extends Controller {
             if ($entidadUsuarioId == 31422  ){  // YACO MALLA
                 $xCupo = 2;
             }
+            if ($entidadUsuarioId == 99226  ){  // VILLA ABECIA - LAS CARRERAS
+                $xCupo = 2;
+            }
         }
         if ($nivel == 12){
             $xCupo = $xCupo * 1;

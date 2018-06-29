@@ -102,11 +102,18 @@ class ReportesController extends Controller {
     }
 
     public function cerradoexitosooperativoAction() {
+        $em = $this->getDoctrine()->getManager();
+        
+
         $arch = 'ACTA_CIERRE_OPERATIVO'.$this->session->get('ie_id').'_' . date('YmdHis') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_cea_Cierre_Operativo_v1_vcjm.rptdesign&__format=pdf&CEA='.$this->session->get('ie_id').'&Gestion='.$this->session->get('ie_gestion').'&SUCURSAL='.$this->session->get('ie_subcea').'&Periodo='.$this->session->get('ie_per_cod').'&operativoId=12&&__format=pdf&'));
+
+        $ies = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find($this->session->get('ie_suc_id'));            
+        $iest = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalTramite')->findByInstitucioneducativaSucursal($ies);
+
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_cea_Cierre_Operativo_v1_vcjm.rptdesign&__format=pdf&CEA='.$this->session->get('ie_id').'&Gestion='.$this->session->get('ie_gestion').'&SUCURSAL='.$this->session->get('ie_subcea').'&Periodo='.$this->session->get('ie_per_cod').'&operativoId='.$iest[0]->getTramiteEstado()->getId().'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');

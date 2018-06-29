@@ -1,0 +1,40 @@
+<div class="row">
+  <div class="col-md-12 text-center">
+    <h3 class="text-primary">Educación Alternativa</h3>
+  </div>
+</div>
+<table class="table table-bordered table-hover table-striped cf">
+  <thead class="cf">
+    <tr class="info">
+      <th class="text-center">Gestión</th>
+      <th class="text-center">SIE / Subcentro</th>
+      <th class="text-center">Centro</th>
+      <th class="text-center">Periodo</th>
+      <th class="text-center">Acreditación</th>
+      <th class="text-center">Área</th>
+      <th class="text-center">Especialidad</th>
+      <th class="text-center">Paralelo</th>
+      <th class="text-center">Turno</th>
+      <th class="text-center">Acciones</th>
+    </tr>
+  </thead>
+  <tbody role="alert" aria-live="polite" aria-relevant="all">
+    {% for data in dataInscription %}
+      <tr>
+        <td>{{data.gestion_tipo_id_raep}}</td>
+        <td>{{data.institucioneducativa_id_raep}} - {{data.sucursal_tipo_id_a}}</td>
+        <td>{{data.institucioneducativa_raep}}</td>
+        <td>{{data.periodo_raep}}</td>
+        <td>{{data.acreditacion_a }} </td>
+        <td>{{data.facultad_area_a}}</td>
+        <td>{{data.especialidad_a}}</td>
+        <td>{{data.paralelo_raep}} </td>
+        <td>{{data.turno_raep}} </td>
+        <td class="text-center">
+          {#<a href="#" onclick="seeNotaNew('{{data.eiid}}', '{{data.eid}}', '{{data.nivel_tipo_id}}', '{{data.grado_tipo_id}}', '{{data.pid}}', '{{data.turno_tipo_id}}', '{{data.gestion_tipo_id}}', '{{data.institucioneducativa_id}}','{{data.estadomatricula_tipo_id}}')" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>#}
+          Calificaciones
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

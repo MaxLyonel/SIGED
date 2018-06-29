@@ -1,0 +1,34 @@
+per_estudiante_index:
+    path:     /per/
+    defaults: { _controller: "SiePermanenteBundle:Estudiante:index" }
+
+per_estudiante_main_show:
+    path:     /{id}/show
+    defaults: { _controller: "SiePermanenteBundle:Estudiante:show" }
+
+per_estudiante_main_new:
+    path:     /new
+    defaults: { _controller: "SiePermanenteBundle:Estudiante:new" }
+
+per_estudiante_main_create:
+    path:     /create
+    defaults: { _controller: "SiePermanenteBundle:Estudiante:create" }
+    methods:  POST
+
+per_estudiante_main_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SiePermanenteBundle:Estudiante:edit" }
+
+per_estudiante_main_update:
+    path:     /{id}/update
+    defaults: { _controller: "SiePermanenteBundle:Estudiante:update" }
+    methods:  [POST, PUT]
+
+per_estudiante_main_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SiePermanenteBundle:Estudiante:delete" }
+    methods:  [POST, DELETE]
+
+per_student_result:
+    path:     /result
+    defaults: { _controller: "SiePermanenteBundle:Estudiante:result" }
