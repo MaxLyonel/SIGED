@@ -1,3 +1,5 @@
 olimgestionarchivos_index:
-    path:     /
+    path:     /{idMateria}/{gestion}
     defaults: { _controller: "SieOlimpiadasBundle:OlimGestionArchivos:index" }
+    options:
+        methods: GET
