@@ -293,8 +293,8 @@ class InscripcionNivelSuperController extends Controller{
         try {
 
             $objOLimStudentInscription = new OlimEstudianteInscripcion();
-            $objOLimStudentInscription->setTelefonoEstudiante($form['fono']);
-            $objOLimStudentInscription->setCorreoEstudiante($form['email']);
+            $objOLimStudentInscription->setTelefonoEstudiante(trim($form['fono']));
+            $objOLimStudentInscription->setCorreoEstudiante(trim($form['email']));
             $objOLimStudentInscription->setFechaRegistro(new \DateTime('now'));
             $objOLimStudentInscription->setUsuarioRegistroId($this->session->get('userId'));
             $objOLimStudentInscription->setOlimReglasOlimpiadasTipo($em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->find($form['category']) );

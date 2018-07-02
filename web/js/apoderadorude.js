@@ -19,71 +19,26 @@ $('#tb_complemento').on('keyup',function(){
 
 $('#t_idioma').chosen({width: "100%"});
 $('#t_ocupacion').chosen({width: "100%"});
-$('#t_bloqueOcupacion .chosen-search input').autocomplete({
-    minLength: 3,
-    source: function(request, response){
-        $.ajax({
-            url: Routing.generate('estudianteSocioeconomico_buscar_ocupaciones',{'texto':request.term}),
-            dataType: "json",
-            beforeSend: function(){ $('#t_bloqueOcupacion ul.chosen-results').empty(); $('#t_ocupacion').empty(); }
-        }).done(function(data){
-            console.log('tutor');
-            response(
-                $.each(data, function(i, value){
-                    $('#t_ocupacion').append('<option value="'+i+'">'+value+'</option>');
-                }));
+// $('#t_bloqueOcupacion .chosen-search input').autocomplete({
+//     minLength: 3,
+//     source: function(request, response){
+//         $.ajax({
+//             url: Routing.generate('estudianteSocioeconomico_buscar_ocupaciones',{'texto':request.term}),
+//             dataType: "json",
+//             beforeSend: function(){ $('#t_bloqueOcupacion ul.chosen-results').empty(); $('#t_ocupacion').empty(); }
+//         }).done(function(data){
+//             console.log('tutor');
+//             response(
+//                 $.each(data, function(i, value){
+//                     $('#t_ocupacion').append('<option value="'+i+'">'+value+'</option>');
+//                 }));
 
-            var valor = $('#t_bloqueOcupacion .chosen-search input').val();
-            $('#t_ocupacion').trigger("chosen:updated");
-            $('#t_bloqueOcupacion .chosen-search input').val(valor);
-        });
-    }
-});
-
-// Verificar si la persona es nueva para pedir la fotocopia de carnet
-var t_verificarPersonaNuevo = function(){
-    var idPersona = $('#t_idPersona').val();
-    if(idPersona == 'nuevo'){
-        //$('#t_documento').attr('required','required');
-    }else{
-        $('#t_documento').removeAttr('required');        
-    }
-}
-
-t_verificarPersonaNuevo();
-
-// Validar el tipo de archivo subido
-$('#t_documento').change(function(){
-    var archivo = $('#t_documento').val();
-    var extensionesPermitidas = new Array('.jpg','.jpeg','.png','.bmp');
-    miError = "";
-    if(!archivo){
-
-    }else{
-        extension = (archivo.substring(archivo.lastIndexOf("."))).toLowerCase();
-        permitida = false;
-        var mensaje = 'El archivo no es válido, solo puede subir imagenes con formato .jpg .jpeg .png .bmp';
-        for(var i = 0; i < extensionesPermitidas.length; i++){
-            if(extensionesPermitidas[i] == extension){
-                // Verificamos el tamño
-                var fileSize = $('#t_documento')[0].files[0].size;
-                console.log(fileSize);
-                var sizeKiloByte = parseInt(fileSize / 1024);
-                console.log(sizeKiloByte);
-                if(sizeKiloByte < 1024){
-                    permitida = true
-                }else{
-                    var mensaje = 'El tamaño de la imagen supera el límite permitido!\n(Tamaño máximo permitido 1024 KB)';
-                }
-                break;
-            }
-        }
-        if(!permitida){
-            alert(mensaje);
-            $('#t_documento').val('');
-        }
-    }
-});
+//             var valor = $('#t_bloqueOcupacion .chosen-search input').val();
+//             $('#t_ocupacion').trigger("chosen:updated");
+//             $('#t_bloqueOcupacion .chosen-search input').val(valor);
+//         });
+//     }
+// });
 
 // funcion para validar si tiene o no tutor
 var t_validarTieneTutor = function(){    
@@ -99,9 +54,6 @@ var t_validarTieneTutor = function(){
         $('#t_instruccion').attr('required','required');
         $('#t_parentesco').attr('required','required');
 
-        // ejecutamos funcion para poner en requerido o no el campo documento file
-        t_verificarPersonaNuevo();
-
     }else{
         $('#t_divTutor').css('display','none');
         $('#t_carnet').removeAttr('required');
@@ -113,7 +65,6 @@ var t_validarTieneTutor = function(){
         $('#t_ocupacion').removeAttr('required');
         $('#t_instruccion').removeAttr('required');
         $('#t_parentesco').removeAttr('required');
-        $('#t_documento').removeAttr('required');
     }
 }
 
@@ -126,10 +77,6 @@ var t_cambiar = function(){
 
         t_borrarDatos();
 
-        $('#t_paterno').removeAttr('readonly');
-        $('#t_materno').removeAttr('readonly');
-        $('#t_nombre').removeAttr('readonly');
-
         $('#t_genero').val('');
         $('#t_correo').val('');
         $('#t_telefono').val('');
@@ -139,14 +86,12 @@ var t_cambiar = function(){
         $('#t_parentesco').val('');
 
         $('#top2').css('display','block');
-
-        $('#t_fotoCarnet').css('display','none');
     }
 }
 
 // Ocultar el campo otra ocupacion si la ocupacion es diferente de otro
 var ocultart_ocupacionOtro = function(){
-    if($('#t_ocupacion').val() == 10004){
+    if($('#t_ocupacion').val() == 10035){
         $('#t_ocupacionOtro').css('display','block');                                                                      
         $('#t_ocupacionOtro').attr('required','required');                                                                      
     }else{
@@ -166,46 +111,30 @@ $('#t_ocupacion').on('change',function(){
 var t_buscarTutor = function(){
     var t_carnet = $('#tb_carnet').val();
     var t_complemento = $('#tb_complemento').val();
+    var t_paterno = $('#tb_paterno').val();
+    var t_materno = $('#tb_materno').val();
+    var t_nombre = $('#tb_nombre').val();
     var t_fechaNacimiento = $('#tb_fechaNacimiento').val();
 
-    if(t_carnet != "" && t_fechaNacimiento != ""){
+    if(t_carnet != "" && t_fechaNacimiento != "" && t_nombre != ""){
 
         $.ajax({
             type: 'get',
-            url: Routing.generate('estudianteSocioeconomico_buscar_persona',{'carnet':t_carnet, 'complemento':t_complemento, 'fechaNacimiento': t_fechaNacimiento}),
+            url: Routing.generate('estudianteSocioeconomico_buscar_persona',{'carnet':t_carnet, 'complemento':t_complemento, 'paterno':t_paterno, 'materno': t_materno, 'nombre': t_nombre, 'fechaNacimiento': t_fechaNacimiento}),
             beforeSend: function(){
                 $('#t_mensaje').empty();
                 t_cambiarFondoMensaje(1);
                 $('#t_mensaje').append('Buscando...');
             },
             success: function(data){
-                if(data.result != 'null'){
+
+                // Ponemos el id de tutor en nuevo
+                $('#m_idPersona').val('nuevo');
+
+                if(data.status == 200){
                     console.log('Encontrado');
                     // Cargamos los datos devueltos por el servicio
-                    t_cargarDatos(data.result[0]);
-                    // Ponemos el id de tutor en nuevo
-                    $('#t_idPersona').val(data.result[0].id);
-
-                    // Verificamos si el dato devuelto esta validado por el segip para bloquear determinados controles
-                    if(data.result[0].segip_id >= 1){
-                        $('#t_carnet').attr('readonly','readonly');
-                        $('#t_complemento').attr('readonly','readonly');
-                        $('#t_paterno').attr('readonly','readonly');
-                        $('#t_materno').attr('readonly','readonly');
-                        $('#t_nombre').attr('readonly','readonly');
-                        $('#t_fechaNacimiento').attr('readonly','readonly');
-                    }else{
-                        $('#t_carnet').attr('readonly','readonly');
-                        $('#t_complemento').attr('readonly','readonly');
-                        $('#t_paterno').removeAttr('readonly');
-                        $('#t_materno').removeAttr('readonly');
-                        $('#t_nombre').removeAttr('readonly');
-                        $('#t_fechaNacimiento').removeAttr('readonly');
-                    }
-
-                    // Ocultamos el campo de file documento y le quitamos el attr requerido
-                    $('#t_documento').removeAttr('required');
-                    $('#t_filaDocumento').css('display','none');
+                    t_cargarDatos(data.persona);
 
                     // Ubicamos el cursor en el campo telefono
                     $('#t_correo').focus();
@@ -214,32 +143,12 @@ var t_buscarTutor = function(){
                     $('#t_mensaje').empty();
                     t_cambiarFondoMensaje(2);
                     $('#t_mensaje').append('La persona fue encontrada');
+
                 }else{
                     console.log('No encontrado');
                     t_borrarDatos();
                     // Ponemos el id de tutor en nuevo
                     $('#t_idPersona').val('nuevo');
-
-                    // Asignamos los datos de la busqueda y se bloquean y desbloquean algunos controles
-                    $('#t_carnet').val(t_carnet);
-                    $('#t_carnet').attr('readonly','readonly');
-
-                    $('#t_complemento').val(t_complemento);
-                    $('#t_complemento').attr('readonly','readonly');
-
-                    $('#t_fechaNacimiento').val(t_fechaNacimiento);
-                    $('#t_fechaNacimiento').attr('readonly','readonly');
-
-                    $('#t_paterno').removeAttr('readonly');
-                    $('#t_materno').removeAttr('readonly');
-                    $('#t_nombre').removeAttr('readonly');
-
-                    // Mostramos el campo de file documento y le asignamos el attr requerido
-                    //$('#t_documento').attr('required','required');
-                    $('#t_filaDocumento').css('display','table-row');
-
-                    // Ubicamos el cursor en el campo paterno
-                    $('#t_paterno').focus();
 
                     // Creasmos el mensaje de la busqueda
                     $('#t_mensaje').empty();
@@ -252,20 +161,12 @@ var t_buscarTutor = function(){
 
             },
             error: function(data){
+
+                // Ponemos el id de tutor en nuevo
+                $('#t_idPersona').val('nuevo');
+
                 t_borrarDatos();
-                //$('#t_carnet').val(t_carnet);
-                $('#t_carnet').attr('readonly','readonly');
-
-                //$('#t_complemento').val(t_complemento);
-                $('#t_complemento').attr('readonly','readonly');
-
-                //$('#t_fechaNacimiento').val(t_fechaNacimiento);
-                $('#t_fechaNacimiento').attr('readonly','readonly');
-
-                $('#t_paterno').removeAttr('readonly');
-                $('#t_materno').removeAttr('readonly');
-                $('#t_nombre').removeAttr('readonly');
-
+                
                 $('#t_mensaje').empty();
                 t_cambiarFondoMensaje(4);
                 $('#t_mensaje').append('Los datos introducidos son incorrectos o no hay conexion con el servicio.');
@@ -286,11 +187,7 @@ var t_cargarDatos = function(data){
     $('#t_materno').val(data.materno);
     $('#t_nombre').val(data.nombre);
     $('#t_fechaNacimiento').val(data.fecha_nacimiento);
-    $('#t_genero').val(data.genero_tipo_id);
-    $('#t_correo').val(data.correo);
-    $('#t_segipId').val(data.segipId);
 }
-
 
 // borrar los datos si el servicio no devuelve datos
 var t_borrarDatos = function(){
@@ -302,7 +199,7 @@ var t_borrarDatos = function(){
     $('#t_fechaNacimiento').val('');
     $('#t_genero').val('');
     $('#t_correo').val('');
-    $('#t_segipId').val('');
+    $('#t_telefono').val('');
 }
 
 // VAlidar los apellidos del estudiante y del padre para mostrar el mensaje

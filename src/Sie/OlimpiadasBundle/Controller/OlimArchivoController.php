@@ -63,7 +63,7 @@ class OlimArchivoController extends Controller {
 
 
 		    // $nombre_archivo = md5(uniqid()).'.'.$tipo[1];
-		    $nombre_archivo = $sie.'_'.$gestion.'_'.$grupoId.'.'.$tipo[1];
+		    $nombre_archivo = $sie.'_'.$gestion.'_'.$grupoId.'.pdf';
 		    $archivador = $ruta.'/'.$nombre_archivo;
 		    //unlink($archivador);
 		    if(move_uploaded_file($_FILES['archivo']['tmp_name'], $archivador)){

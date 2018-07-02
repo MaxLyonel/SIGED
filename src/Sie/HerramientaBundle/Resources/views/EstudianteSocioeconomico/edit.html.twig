@@ -195,18 +195,24 @@
                                         <tr>
                                             <td>2.4. DOCUMENTO DE IDENTIFICACIÓN</td>
                                             <td>
-                                                {% if student.carnetIdentidad or student.pasaporte %}
+                                                {% if student.carnetIdentidad and student.carnetIdentidad != '0' %}
                                                     <div class="row">
                                                         <div class="col-lg-4">Cédula de Identidad:</div>
                                                         <div class="col-lg-8"><strong>{{ student.carnetIdentidad }}</strong></div>
                                                     </div>
-                                                    <div class="row">
-                                                        <div class="col-lg-4">Pasaporte:</div>
-                                                        <div class="col-lg-8"><strong>{{ student.pasaporte }}</strong></div>
-                                                    </div>
+                                                    <span class="text-danger"> Si el número de carnet es incorrecto puede solucionarlo con su tecnico de distrito, solicitando una modificación de datos.</span>
                                                 {% else %}
-                                                    <span class="label label-danger">No cuenta con identificación</span>
-                                                    <span class="text-danger">Debe actualizar este dato por el módulo de modificacion de datos.</span>
+                                                    <div class="row">
+                                                        <div class="col-md-7">
+                                                            <input type="text" name="carnet" value="" class="form-control" autocomplete="off" placeholder="Número de carnet" title="2.4 Carnet identidad">
+                                                        </div>
+                                                        <div class="col-md-5 input-group">
+                                                            <input type="text" name="complemento" value="" class="form-control" autocomplete="off" placeholder="Complemento">
+                                                            <span class="input-group-addon pointer" data-toggle="popover" data-content="El complemento es..." >
+                                                                <i class="fa fa-info-circle"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
                                                 {% endif %}</td>
                                         </tr>
                                         <tr>
@@ -317,12 +323,12 @@
                                 </td>
                                 <td>{{ form_widget(form.municipio) }}</td>
                             </tr>
-                            <tr>
+                            {# <tr>
                                 <td>
                                     Canton<br /><span class="asterisk">* (Este campo es obligatorio)</span>
                                 </td>
                                 <td>{{ form_widget(form.canton) }}</td>
-                            </tr>
+                            </tr> #}
                             <tr>
                                 <td>
                                     Localidad<br /><span class="asterisk">* (Este campo es obligatorio)</span>
@@ -538,19 +544,19 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <th>Apellido Paterno</th>
-                                                                    <td><input type="text" name="t_paterno" id="t_paterno" class="form-control jupper" autocomplete="off" value="{{padreTutor[0].paterno}}" onkeyup="t_validarParentesco();" {% if padreTutor[0].segipId == 1 %} readonly {% endif %}></td>
+                                                                    <td><input type="text" name="t_paterno" id="t_paterno" class="form-control jupper" autocomplete="off" value="{{padreTutor[0].paterno}}" onkeyup="t_validarParentesco();" readonly></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <th>Apellido Materno</th>
-                                                                    <td><input type="text" name="t_materno" id="t_materno" class="form-control jupper" autocomplete="off" value="{{padreTutor[0].materno}}" {% if padreTutor[0].segipId == 1 %} readonly {% endif %}></td>
+                                                                    <td><input type="text" name="t_materno" id="t_materno" class="form-control jupper" autocomplete="off" value="{{padreTutor[0].materno}}" readonly></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <th>Nombre <span class="text-danger">*</span></th>
-                                                                    <td><input type="text" name="t_nombre" id="t_nombre" class="form-control jupper" autocomplete="off" value="{{padreTutor[0].nombre}}" required {% if padreTutor[0].segipId == 1 %} readonly {% endif %} title="6.1 Nombre"></td>
+                                                                    <td><input type="text" name="t_nombre" id="t_nombre" class="form-control jupper" autocomplete="off" value="{{padreTutor[0].nombre}}" required readonly title="6.1 Nombre"></td>
                                                                 </tr>
                                                                 <tr id="t_filaFechaNacimiento">
                                                                     <th>Fecha de Nac. <span class="text-danger">*</span></th>
-                                                                    <td><input type="text" name="t_fechaNacimiento" id="t_fechaNacimiento" class="form-control" autocomplete="off" required value="{{padreTutor[0].fechaNacimiento}}" {% if padreTutor[0].corregirFecha == false %} readonly {% endif %} title="6.1 Fecha de Nacimiento"></td>
+                                                                    <td><input type="text" name="t_fechaNacimiento" id="t_fechaNacimiento" class="form-control" autocomplete="off" required value="{{padreTutor[0].fechaNacimiento}}" readonly title="6.1 Fecha de Nacimiento"></td>
                                                                 </tr>
                                                                 <tr id="t_filaGenero">  
                                                                     <th>Género <span class="text-danger">*</span></th>
@@ -588,7 +594,7 @@
                                                                         <div style="width:250px" id="t_bloqueOcupacion">
                                                                         <select name="t_ocupacion" id="t_ocupacion" class="form-control" required title="6.1 Ocupación laboral actual">
                                                                             <option value="">Seleccionar...</option>
-                                                                            {% for ot in ocupacionTutorTipo %}
+                                                                            {% for ot in ocupacionTipo %}
                                                                                 <option value="{{ot.id}}" {% if padreTutor[0].ocupacion == ot.id %} selected {% endif %}>{{ot.ocupacion}}</option>
                                                                             {% endfor %}
                                                                         </select>
@@ -621,12 +627,6 @@
                                                                         </select>
                                                                     </td>
                                                                 </tr>
-                                                                <tr id="t_filaDocumento" {% if padreTutor[0].segipId is not null %} style="display:none" {% endif %}>
-                                                                    <th>Adjuntar Fotografia C.I. <span class="text-danger">*</span></th>
-                                                                    <td>
-                                                                        <input type="file" name="t_documento" id="t_documento" class="form-control" title="6.1 Adjuntar fotografia C.I."><small style="color:#9A9FC5">(Tamaño máximo permitido 1024 KB)</small>
-                                                                    </td>
-                                                                </tr>
                                                             </table>
                                                         </div>
                                                         <div class="col-md-4 col-sm-12">
@@ -644,6 +644,9 @@
                                                                         <p>Para buscar al nuevo padre o tutor, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarlo.</p>
                                                                         <input type="text" name="tb_carnet" id="tb_carnet" class="form-control" placeholder="Nro de Carnet" value="">
                                                                         <input type="text" name="tb_complemento" id="tb_complemento" class="form-control" placeholder="Complemento" maxlength="2">
+                                                                        <input type="text" name="tb_paterno" id="tb_paterno" class="form-control jupper" placeholder="Paterno" value="">
+                                                                        <input type="text" name="tb_materno" id="tb_materno" class="form-control jupper" placeholder="Materno" value="">
+                                                                        <input type="text" name="tb_nombre" id="tb_nombre" class="form-control jupper" placeholder="Nombre" value="">
                                                                         <input type="text" name="tb_fechaNacimiento" id="tb_fechaNacimiento" class="form-control" placeholder="Fecha de nacimiento" value="">
                                                                         <button type="button" class="btn btn-block btn-info" onclick="t_buscarTutor();"> <i class="fa fa-search"></i> Buscar</button>
                                                                     </div>
@@ -652,15 +655,11 @@
                                                                         <p>Para buscar al nuevo padre o tutor, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarlo.</p>
                                                                         <input type="text" name="tb_carnet" id="tb_carnet" class="form-control" placeholder="Nro de Carnet" value="">
                                                                         <input type="text" name="tb_complemento" id="tb_complemento" class="form-control" placeholder="Complemento" maxlength="2">
+                                                                        <input type="text" name="tb_paterno" id="tb_paterno" class="form-control jupper" placeholder="Paterno" value="">
+                                                                        <input type="text" name="tb_materno" id="tb_materno" class="form-control jupper" placeholder="Materno" value="">
+                                                                        <input type="text" name="tb_nombre" id="tb_nombre" class="form-control jupper" placeholder="Nombre" value="">
                                                                         <input type="text" name="tb_fechaNacimiento" id="tb_fechaNacimiento" class="form-control" placeholder="Fecha de nacimiento" value="">
                                                                         <button type="button" class="btn btn-block btn-info" onclick="t_buscarTutor();"> <i class="fa fa-search"></i> Buscar</button>
-                                                                    </div>
-                                                                {% endif %}
-                                                                {% if padreTutor[0].foto is not null %}
-                                                                    <br>
-                                                                    <div style="padding:20px 10px 10px 10px; text-align:center; background:#ffffff" id="t_fotoCarnet">
-                                                                        <img src="{{asset('uploads/documentos/carnet/' ~ padreTutor[0].foto )}}" width="200px" height="auto">
-                                                                        <p style="color:#3460BC">Imagen del documento de identidad</p>
                                                                     </div>
                                                                 {% endif %}
                                                             </div>
@@ -707,22 +706,22 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <th>Apellido Paterno</th>
-                                                                    <td><input type="text" name="m_paterno" id="m_paterno" class="form-control jupper" autocomplete="off" value="{{madre[0].paterno}}" onkeyup="m_validarParentesco();" {% if madre[0].segipId == 1 %} readonly {% endif %}></td>
+                                                                    <td><input type="text" name="m_paterno" id="m_paterno" class="form-control jupper" autocomplete="off" value="{{madre[0].paterno}}" onkeyup="m_validarParentesco();" readonly></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <th>Apellido Materno</th>
-                                                                    <td><input type="text" name="m_materno" id="m_materno" class="form-control jupper" autocomplete="off" value="{{madre[0].materno}}" {% if madre[0].segipId == 1 %} readonly {% endif %}></td>
+                                                                    <td><input type="text" name="m_materno" id="m_materno" class="form-control jupper" autocomplete="off" value="{{madre[0].materno}}" readonly></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <th>Nombre <span class="text-danger">*</span></th>
-                                                                    <td><input type="text" name="m_nombre" id="m_nombre" class="form-control jupper" autocomplete="off" value="{{madre[0].nombre}}" required {% if madre[0].segipId == 1 %} readonly {% endif %} title="6.2 Nombre"></td>
+                                                                    <td><input type="text" name="m_nombre" id="m_nombre" class="form-control jupper" autocomplete="off" value="{{madre[0].nombre}}" required readonly title="6.2 Nombre"></td>
                                                                 </tr>
                                                                 <tr id="m_filaFechaNacimiento">
                                                                     <th>Fecha de Nac. <span class="text-danger">*</span></th>
-                                                                    <td><input type="text" name="m_fechaNacimiento" id="m_fechaNacimiento" class="form-control" autocomplete="off" required value=" {{madre[0].fechaNacimiento}}" {% if madre[0].corregirFecha == false %} readonly {% endif %} title="6.2 Fecha de Nacimiento"></td>
+                                                                    <td><input type="text" name="m_fechaNacimiento" id="m_fechaNacimiento" class="form-control" autocomplete="off" required value=" {{madre[0].fechaNacimiento}}" readonly title="6.2 Fecha de Nacimiento"></td>
                                                                 </tr>
                                                                 <tr id="m_filaGenero">
-                                                                    <th>Género <span class="text-danger">*</span>/th>
+                                                                    <th>Género <span class="text-danger">*</span></th>
                                                                     <td>
                                                                         <select name="m_genero" id="m_genero" class="form-control" required title="6.2 Género">
                                                                             <option value="">Seleccionar...</option>
@@ -757,7 +756,7 @@
                                                                         <div style="width:250px" id="m_bloqueOcupacion">
                                                                         <select name="m_ocupacion" id="m_ocupacion" class="form-control" required title="6.2 Ocupación laboral actual">
                                                                             <option value="">Seleccionar...</option>
-                                                                            {% for ot in ocupacionMadreTipo %}
+                                                                            {% for ot in ocupacionTipo %}
                                                                                 <option value="{{ot.id}}" {% if madre[0].ocupacion == ot.id %} selected {% endif %}>{{ot.ocupacion}}</option>
                                                                             {% endfor %}
                                                                         </select>
@@ -790,12 +789,7 @@
                                                                         </select>
                                                                     </td>
                                                                 </tr>
-                                                                <tr id="m_filaDocumento" {% if madre[0].segipId is not null %} style="display:none" {% endif %}>
-                                                                    <th>Adjuntar Fotografia C.I. <span class="text-danger">*</span></th>
-                                                                    <td>
-                                                                        <input type="file" name="m_documento" id="m_documento" class="form-control" title="6.2 Adjuntar fotografia C.I."><small style="color:#9A9FC5">(Tamaño máximo permitido 1024 KB)</small>
-                                                                    </td>
-                                                                </tr>
+                                                                
                                                             </table>
                                                         </div>
                                                         <div class="col-md-4 col-sm-12">
@@ -813,6 +807,9 @@
                                                                         <p>Para buscar los datos de la madre, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarlo.</p>
                                                                         <input type="text" name="mb_carnet" id="mb_carnet" class="form-control" placeholder="Nro de Carnet" value="">
                                                                         <input type="text" name="mb_complemento" id="mb_complemento" class="form-control" placeholder="Complemento" maxlength="2">
+                                                                        <input type="text" name="mb_paterno" id="mb_paterno" class="form-control jupper" placeholder="Paterno" value="">
+                                                                        <input type="text" name="mb_materno" id="mb_materno" class="form-control jupper" placeholder="Materno" value="">
+                                                                        <input type="text" name="mb_nombre" id="mb_nombre" class="form-control jupper" placeholder="Nombre" value="">
                                                                         <input type="text" name="mb_fechaNacimiento" id="mb_fechaNacimiento" class="form-control" placeholder="Fecha de nacimiento" value="">
                                                                         <button type="button" class="btn btn-block btn-info" onclick="m_buscarMadre();"> <i class="fa fa-search"></i> Buscar</button>
                                                                     </div>
@@ -821,15 +818,11 @@
                                                                         <p>Para buscar los datos de la madre, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarlo.</p>
                                                                         <input type="text" name="mb_carnet" id="mb_carnet" class="form-control" placeholder="Nro de Carnet" value="">
                                                                         <input type="text" name="mb_complemento" id="mb_complemento" class="form-control" placeholder="Complemento" maxlength="2">
+                                                                        <input type="text" name="mb_paterno" id="mb_paterno" class="form-control jupper" placeholder="Paterno" value="">
+                                                                        <input type="text" name="mb_materno" id="mb_materno" class="form-control jupper" placeholder="Materno" value="">
+                                                                        <input type="text" name="mb_nombre" id="mb_nombre" class="form-control jupper" placeholder="Nombre" value="">
                                                                         <input type="text" name="mb_fechaNacimiento" id="mb_fechaNacimiento" class="form-control" placeholder="Fecha de nacimiento" value="">
                                                                         <button type="button" class="btn btn-block btn-info" onclick="m_buscarMadre();"> <i class="fa fa-search"></i> Buscar</button>
-                                                                    </div>
-                                                                {% endif %}
-                                                                {% if madre[0].foto is not null %}
-                                                                    <br>
-                                                                    <div id="m_fotoCarnet" style="padding:20px 10px 10px 10px; text-align:center; background:#ffffff">
-                                                                        <img src="{{asset('uploads/documentos/carnet/' ~ madre[0].foto )}}" width="200px" height="auto">
-                                                                        <p style="color:#3460BC">Imagen del documento de identidad</p>
                                                                     </div>
                                                                 {% endif %}
                                                             </div>
@@ -844,7 +837,7 @@
                                     <div class="row" style="padding:10px">
                                         <div class="col-md-6">
                                             Lugar de registro del Formulario RUDE
-                                            {{ form_widget(form.lugarRegistro) }}
+                                            {{ form_widget(form.lugarRegistro, {'attr':{'readonly':true} }) }}
                                         </div>
                                         <div class="col-md-6">
                                             Fecha de registro del Formulario RUDE
