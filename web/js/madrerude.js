@@ -9,7 +9,7 @@ $("#mb_carnet").attr("maxlength",'10');
 
 // aplicamos las mascaras para las fechas
 $("#m_fechaNacimiento").inputmask({ "alias": "dd-mm-yyyy" });
-$("#mb_fechaNacimiento").inputmask({ "alias": "dd-mm-yyyy" });
+$("#mb_fechaNacimiento").inputmask({ "alias": "dd/mm/yyyy" });
 $("#mb_complemento").inputmask({mask: "9a"});
 
 // convertimos el complemento en mayusculas
@@ -19,70 +19,25 @@ $('#mb_complemento').on('keyup',function(){
 
 $('#m_idioma').chosen({width: "100%"});
 $('#m_ocupacion').chosen({width: "100%"});
-$('#m_bloqueOcupacion .chosen-search input').autocomplete({
-    minLength: 3,
-    source: function(request, response){
-        $.ajax({
-            url: Routing.generate('estudianteSocioeconomico_buscar_ocupaciones',{'texto':request.term}),
-            dataType: "json",
-            beforeSend: function(){ $('#m_bloqueOcupacion ul.chosen-results').empty(); $('#m_ocupacion').empty(); }
-        }).done(function(data){
-            console.log('madre');
-            response(
-                $.each(data, function(i, value){
-                    $('#m_ocupacion').append('<option value="'+i+'">'+value+'</option>');
-                }));
-            var valor = $('#m_bloqueOcupacion .chosen-search input').val();
-            $('#m_ocupacion').trigger("chosen:updated");
-            $('#m_bloqueOcupacion .chosen-search input').val(valor);
-        });
-    }
-});
-
-// Verificar si la persona es nueva para pedir la fotocopia de carnet
-var m_verificarPersonaNuevo = function(){
-    var idPersona = $('#m_idPersona').val();
-    if(idPersona == 'nuevo'){
-        //$('#m_documento').attr('required','required');
-    }else{
-        $('#m_documento').removeAttr('required');        
-    }
-}
-
-m_verificarPersonaNuevo();
-
-// Validar el tipo de archivo subido
-$('#m_documento').change(function(){
-    var archivo = $('#m_documento').val();
-    var extensionesPermitidas = new Array('.jpg','.jpeg','.png','.bmp');
-    miError = "";
-    if(!archivo){
-
-    }else{
-        extension = (archivo.substring(archivo.lastIndexOf("."))).toLowerCase();
-        permitida = false;
-        var mensaje = 'El archivo no es válido, solo puede subir imagenes con formato .jpg .jpeg .png .bmp';
-        for(var i = 0; i < extensionesPermitidas.length; i++){
-            if(extensionesPermitidas[i] == extension){
-                // Verificamos el tamño
-                var fileSize = $('#m_documento')[0].files[0].size;
-                console.log(fileSize);
-                var sizeKiloByte = parseInt(fileSize / 1024);
-                console.log(sizeKiloByte);
-                if(sizeKiloByte < 1024){
-                    permitida = true
-                }else{
-                    var mensaje = 'El tamaño de la imagen supera el límite permitido!\n(Tamaño máximo permitido 1024 KB)';
-                }
-                break;
-            }
-        }
-        if(!permitida){
-            alert(mensaje);
-            $('#m_documento').val('');
-        }
-    }
-});
+// $('#m_bloqueOcupacion .chosen-search input').autocomplete({
+//     minLength: 3,
+//     source: function(request, response){
+//         $.ajax({
+//             url: Routing.generate('estudianteSocioeconomico_buscar_ocupaciones',{'texto':request.term}),
+//             dataType: "json",
+//             beforeSend: function(){ $('#m_bloqueOcupacion ul.chosen-results').empty(); $('#m_ocupacion').empty(); }
+//         }).done(function(data){
+//             console.log('madre');
+//             response(
+//                 $.each(data, function(i, value){
+//                     $('#m_ocupacion').append('<option value="'+i+'">'+value+'</option>');
+//                 }));
+//             var valor = $('#m_bloqueOcupacion .chosen-search input').val();
+//             $('#m_ocupacion').trigger("chosen:updated");
+//             $('#m_bloqueOcupacion .chosen-search input').val(valor);
+//         });
+//     }
+// });
 
 // funcion para validar si tiene o no madre
 var m_validarTieneMadre = function(){    
@@ -98,9 +53,6 @@ var m_validarTieneMadre = function(){
         $('#m_instruccion').attr('required','required');
         $('#m_parentesco').attr('required','required');
 
-        // ejecutamos funcion para poner en requerido o no el campo documento file
-        m_verificarPersonaNuevo();
-
     }else{
         $('#m_divMadre').css('display','none');
         $('#m_carnet').removeAttr('required');
@@ -112,7 +64,6 @@ var m_validarTieneMadre = function(){
         $('#m_ocupacion').removeAttr('required');
         $('#m_instruccion').removeAttr('required');
         $('#m_parentesco').removeAttr('required');
-        $('#m_documento').removeAttr('required');
     }
 }
 
@@ -124,10 +75,6 @@ var m_cambiar = function(){
         $('#mop1').css('display','none');
 
         m_borrarDatos();
-
-        $('#m_paterno').removeAttr('readonly');
-        $('#m_materno').removeAttr('readonly');
-        $('#m_nombre').removeAttr('readonly');
 
         $('#m_genero').val('');
         $('#m_correo').val('');
@@ -145,7 +92,7 @@ var m_cambiar = function(){
 
 // Ocultar el campo otra ocupacion si la ocupacion es diferente de otro
 var ocultarm_ocupacionOtro = function(){
-    if($('#m_ocupacion').val() == 10004){
+    if($('#m_ocupacion').val() == 10035){
         $('#m_ocupacionOtro').css('display','block');
         $('#m_ocupacionOtro').attr('required','required');
     }else{
@@ -165,46 +112,30 @@ $('#m_ocupacion').on('change',function(){
 var m_buscarMadre = function(){
     var m_carnet = $('#mb_carnet').val();
     var m_complemento = $('#mb_complemento').val();
+    var m_paterno = $('#mb_paterno').val();
+    var m_materno = $('#mb_materno').val();
+    var m_nombre = $('#mb_nombre').val();
     var m_fechaNacimiento = $('#mb_fechaNacimiento').val();
 
-    if(m_carnet != "" && m_fechaNacimiento != ""){
+    if(m_carnet != "" && m_fechaNacimiento != "" && m_nombre != ""){
 
         $.ajax({
             type: 'get',
-            url: Routing.generate('estudianteSocioeconomico_buscar_persona',{'carnet':m_carnet, 'complemento':m_complemento, 'fechaNacimiento': m_fechaNacimiento}),
+            url: Routing.generate('estudianteSocioeconomico_buscar_persona',{'carnet':m_carnet, 'complemento':m_complemento, 'paterno': m_paterno, 'materno': m_materno, 'nombre': m_nombre, 'fechaNacimiento': m_fechaNacimiento}),
             beforeSend: function(){
                 $('#m_mensaje').empty();
                 cambiarFondoMensaje(1);
                 $('#m_mensaje').append('Buscando...');
             },
             success: function(data){
-                if(data.result != 'null'){
+
+                // Ponemos el id de tutor en nuevo
+                $('#m_idPersona').val('nuevo');
+
+                if(data.status == 200){
                     console.log('Encontrado');
                     // Cargamos los datos devueltos por el servicio
-                    m_cargarDatos(data.result[0]);
-                    // Ponemos el id de madre en nuevo
-                    $('#m_idPersona').val(data.result[0].id);
-
-                    // Verificamos si el dato devuelto esta validado por el segip para bloquear determinados controles
-                    if(data.result[0].segip_id >= 1){
-                        $('#m_carnet').attr('readonly','readonly');
-                        $('#m_complemento').attr('readonly','readonly');
-                        $('#m_paterno').attr('readonly','readonly');
-                        $('#m_materno').attr('readonly','readonly');
-                        $('#m_nombre').attr('readonly','readonly');
-                        $('#m_fechaNacimiento').attr('readonly','readonly');
-                    }else{
-                        $('#m_carnet').attr('readonly','readonly');
-                        $('#m_complemento').attr('readonly','readonly');
-                        $('#m_paterno').removeAttr('readonly');
-                        $('#m_materno').removeAttr('readonly');
-                        $('#m_nombre').removeAttr('readonly');
-                        $('#m_fechaNacimiento').removeAttr('readonly');
-                    }
-
-                    // Ocultamos el campo de file documento y le quitamos el attr requerido
-                    $('#m_documento').removeAttr('required');
-                    $('#m_filaDocumento').css('display','none');
+                    m_cargarDatos(data.persona);
 
                     // Ubicamos el cursor en el campo telefono
                     $('#m_correo').focus();
@@ -216,29 +147,6 @@ var m_buscarMadre = function(){
                 }else{
                     console.log('No encontrado');
                     m_borrarDatos();
-                    // Ponemos el id de madre en nuevo
-                    $('#m_idPersona').val('nuevo');
-
-                    // Asignamos los datos de la busqueda y se bloquean y desbloquean algunos controles
-                    $('#m_carnet').val(m_carnet);
-                    $('#m_carnet').attr('readonly','readonly');
-
-                    $('#m_complemento').val(m_complemento);
-                    $('#m_complemento').attr('readonly','readonly');
-
-                    $('#m_fechaNacimiento').val(m_fechaNacimiento);
-                    $('#m_fechaNacimiento').attr('readonly','readonly');
-
-                    $('#m_paterno').removeAttr('readonly');
-                    $('#m_materno').removeAttr('readonly');
-                    $('#m_nombre').removeAttr('readonly');
-
-                    // Mostramos el campo de file documento y le asignamos el attr requerido
-                    //$('#m_documento').attr('required','required');
-                    $('#m_filaDocumento').css('display','table-row');
-
-                    // Ubicamos el cursor en el campo paterno
-                    $('#m_paterno').focus();
 
                     // Creasmos el mensaje de la busqueda
                     $('#m_mensaje').empty();
@@ -251,19 +159,11 @@ var m_buscarMadre = function(){
 
             },
             error: function(data){
+
+                // Ponemos el id de tutor en nuevo
+                $('#m_idPersona').val('nuevo');
+
                 m_borrarDatos();
-                //$('#m_carnet').val(m_carnet);
-                $('#m_carnet').attr('readonly','readonly');
-
-                //$('#m_complemento').val(m_complemento);
-                $('#m_complemento').attr('readonly','readonly');
-
-                //$('#m_fechaNacimiento').val(m_fechaNacimiento);
-                $('#m_fechaNacimiento').attr('readonly','readonly');
-
-                $('#m_paterno').removeAttr('readonly');
-                $('#m_materno').removeAttr('readonly');
-                $('#m_nombre').removeAttr('readonly');
 
                 $('#m_mensaje').empty();
                 cambiarFondoMensaje(4);
@@ -285,10 +185,6 @@ var m_cargarDatos = function(data){
     $('#m_materno').val(data.materno);
     $('#m_nombre').val(data.nombre);
     $('#m_fechaNacimiento').val(data.fecha_nacimiento);
-    $('#m_fechaNacimiento').val(data.fecha_nacimiento);
-    $('#m_genero').val(data.genero_tipo_id);
-    $('#m_correo').val(data.correo);
-    $('#m_segipId').val(data.segipId);
 }
 
 
@@ -302,7 +198,7 @@ var m_borrarDatos = function(){
     $('#m_fechaNacimiento').val('');
     $('#m_genero').val('');
     $('#m_correo').val('');
-    $('#m_segipId').val('');
+    $('#m_telefono').val('');
 }
 
 // VAlidar los apellidos del estudiante y del padre para mostrar el mensaje

@@ -105,6 +105,8 @@ class EstudianteSocioeconomicoController extends Controller {
                         ->getQuery()
                         ->getResult();
 
+        $ocupacionTipo = $em->getRepository('SieAppWebBundle:ApoderadoOcupacionTipo')->findBy(array('esVigente'=>true));
+
         //////////////////
 
         $instruccionTipo = $em->getRepository('SieAppWebBundle:InstruccionTipo')->findBy(array('id'=>array(2,3,4,5,6,7,8,9,10,11,99)));
@@ -166,6 +168,7 @@ class EstudianteSocioeconomicoController extends Controller {
                         'idiomaMaternoTipo'=>$idiomaMaternoTipo,
                         'ocupacionTutorTipo'=>$ocupacionTutorTipo,
                         'ocupacionMadreTipo'=>$ocupacionMadreTipo,
+                        'ocupacionTipo'=>$ocupacionTipo,
                         'instruccionTipo'=>$instruccionTipo,
                         'parentescoTipoPadreTutor'=>$parentescoTipoPadreTutor,
                         'parentescoTipoMadre'=>$parentescoTipoMadre
@@ -173,46 +176,7 @@ class EstudianteSocioeconomicoController extends Controller {
                 ));
             }
         } else {
-            /* OPCION PARA OBTENER LOS DATOS DE UNA GESTION ANTERIOR
-
-            $inscripcionAnterior = $em->createQueryBuilder()
-                                    ->select('ei.id')
-                                    ->from('SieAppWebBundle:EstudianteInscripcion','ei')
-                                    ->innerJoin('SieAppWebBundle:Estudiante','e','with','ei.estudiante = e.id')
-                                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
-                                    ->innerJoin('SieAppWebBundle:GestionTipo','gt','with','iec.gestionTipo = gt.id')
-                                    ->where('e.codigoRude = :rude')
-                                    ->andWhere('gt.id = :gestion')
-                                    ->setParameter('rude',$student->getCodigoRude())
-                                    ->setParameter('gestion',$gestion - 1)
-                                    ->setMaxResults(1)
-                                    ->getQuery()
-                                    ->getResult();
-
-            if($inscripcionAnterior){
-                $socioeconomicoAnterior = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegular')->findOneBy(array('estudianteInscripcion' => $inscripcionAnterior[0]['id']));
-                if($socioeconomicoAnterior){
-
-                    return $this->render('SieHerramientaBundle:EstudianteSocioeconomico:new.html.twig', array(
-                        'socioeconomico' => $socioeconomico,
-                        'institucion' => $institucion,
-                        'estudiante' => $estudiante,
-                        'student' => $student,
-                        'inscripcion' => $inscripcion,
-                        'form' => $this->editForm($idInscripcion, $gestion, $socioeconomicoAnterior, $infoUe, $infoStudent)->createView(),
-                        'procedencia'=>$procedencia,
-                        'padreTutor'=>$padreTutor,
-                        'madre'=>$madre,
-                        'generoTipo'=>$generoTipo,
-                        'idiomaMaternoTipo'=>$idiomaMaternoTipo,
-                        'actividadTipo'=>$actividadTipo,
-                        'dedicaTipo'=>$dedicaTipo,
-                        'instruccionTipo'=>$instruccionTipo,
-                        'parentescoTipoPadreTutor'=>$parentescoTipoPadreTutor,
-                        'parentescoTipoMadre'=>$parentescoTipoMadre
-                    ));
-                }
-            }*/
+            /* OPCION PARA OBTENER LOS DATOS DE UNA GESTION ANTERIOR */
 
             return $this->render('SieHerramientaBundle:EstudianteSocioeconomico:new.html.twig', array(
                         'socioeconomico' => $socioeconomico,
@@ -229,6 +193,7 @@ class EstudianteSocioeconomicoController extends Controller {
                         'idiomaMaternoTipo'=>$idiomaMaternoTipo,
                         'ocupacionTutorTipo'=>$ocupacionTutorTipo,
                         'ocupacionMadreTipo'=>$ocupacionMadreTipo,
+                        'ocupacionTipo'=>$ocupacionTipo,
                         'instruccionTipo'=>$instruccionTipo,
                         'parentescoTipoPadreTutor'=>$parentescoTipoPadreTutor,
                         'parentescoTipoMadre'=>$parentescoTipoMadre
@@ -425,8 +390,8 @@ class EstudianteSocioeconomicoController extends Controller {
 
         $prov = array();
         $muni = array();
-        $cantn = array();
-        $locald = array();
+        // $cantn = array();
+        // $locald = array();
 
         // Clasificador de discapacidades
         $especialArea = $em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findBy(array('id'=>array(2,3,4,5,6,7,8,9,10)));
@@ -447,6 +412,7 @@ class EstudianteSocioeconomicoController extends Controller {
                 ->add('seccioniiDepartamento', 'choice', array('data' => $dptoNac ? $dptoNac->getId() : 0, 'label' => 'Departamento', 'required' => false, 'choices' => $dptoNacArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control jupper', 'onchange' => 'prov(this.value);','title'=>'2.2. LUGAR DE NACIMIENTO - Departamento')))
                 ->add('seccioniiProvincia', 'choice', array('data' => $provNac ? $provNac->getId() : 0, 'label' => 'Provincia', 'required' => false, 'choices' => $provNacArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control jupper','title'=>'2.2. LUGAR DE NACIMIENTO - Provincia')))
                 ->add('seccioniiLocalidad', 'text', array('data' => $localidadNac,'required' => false, 'attr' => array('class' => 'form-control jupper','title'=>'2.2. LUGAR DE NACIMIENTO - Localidad')))
+                // ->add('carnet', 'text', array('data' => $estudiante->getCarnetIdentidad(),'required' => true, 'attr' => array('class' => 'form-control jupper','title'=>'2.4. Carnet de identidad')))
                 ->add('seccioniiOficialia', 'text', array('data' => $estudiante->getOficialia(), 'required' => false, 'attr' => array('class' => 'form-control jupper','maxlength'=>15,'title'=>'2.7. CERTIFICADO DE NACIMIENTO - Oficialia')))
                 ->add('seccioniiLibro', 'text', array('data' => $estudiante->getLibro(), 'required' => false, 'attr' => array('class' => 'form-control jupper','maxlength'=>10)))
                 ->add('seccioniiPartida', 'text', array('data' => $estudiante->getPartida(), 'required' => false, 'attr' => array('class' => 'form-control jupper','maxlength'=>10)))
@@ -463,8 +429,9 @@ class EstudianteSocioeconomicoController extends Controller {
                      }, 'attr' => array('class' => 'form-control jupper', 'onchange' => 'listarProvincias(this.value);','title'=>'4. Departamento')))
                 ->add('provincia', 'choice', array('label' => 'Provincia', 'required' => true, 'choices' => $prov, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control jupper', 'onchange' => 'listarMunicipios(this.value)','title'=>'4. Provincia')))
                 ->add('municipio', 'choice', array('label' => 'Municipio', 'required' => true, 'choices' => $muni, 'empty_value' => 'Seleccionar...','attr' => array('class' => 'form-control jupper', 'onchange' => 'listarCantones(this.value)','title'=>'4. Municipio')))
-                ->add('canton', 'choice', array('label' => 'Cantón', 'required' => true, 'choices' => $cantn, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control jupper', 'onchange' => 'listarLocalidades(this.value)','title'=>'4. Canton')))
-                ->add('localidad', 'choice', array('label' => 'Localidad', 'required' => true, 'choices' => $locald, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control jupper','title'=>'4. Localidad')))
+                // ->add('canton', 'choice', array('label' => 'Cantón', 'required' => true, 'choices' => $cantn, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control jupper', 'onchange' => 'listarLocalidades(this.value)','title'=>'4. Canton')))
+                // ->add('localidad', 'choice', array('label' => 'Localidad', 'required' => true, 'choices' => $locald, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control jupper','title'=>'4. Localidad')))
+                ->add('localidad', 'text', array('required' => true, 'attr' => array('class' => 'form-control jupper','maxlength'=>50,'title'=>'4. Localidad')))
                 ->add('seccioniiiZona', 'text', array('required' => false, 'attr' => array('class' => 'form-control jupper','maxlength'=>50,'title'=>'4. Zona')))
                 ->add('seccioniiiAvenida', 'text', array('required' => false, 'attr' => array('class' => 'form-control jupper','maxlength'=>50,'title'=>'4. Avenida')))
                 ->add('seccioniiiNumero', 'text', array('data' => '', 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{0,5}', 'maxlength' => '5','title'=>'4. Numero de vivienda')))
@@ -536,7 +503,7 @@ class EstudianteSocioeconomicoController extends Controller {
                 ->add('seccionvTiempotrans', 'entity', array('required' => true, 'label' => false, 'class' => 'SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegTiempotransTipo', 'property' => 'tiempoTransporte', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control jupper','title'=>'5.5.4. En el medio de transporte señalado ¿Cuál es el tiempo máximo que demora en llegar de su casa a la Unidad Educativa o viceversa?')))
 
                 // VI DATOS DEL PADRE
-                ->add('lugarRegistro','text',array('required'=>true,'label'=>false, 'attr'=>array('class'=>'form-control jupper','maxlength'=>50,'title'=>'Lugar de registro')))
+                ->add('lugarRegistro','text',array('required'=>true, 'data'=>$this->obtenerDepartamentoUe($estudianteInscripcion->getId()),'label'=>false, 'attr'=>array('class'=>'form-control jupper','maxlength'=>50,'title'=>'Lugar de registro')))
                 ->add('fechaRegistro','text',array('required'=>true,'label'=>false, 'data'=> date('d-m-Y'), 'attr'=>array('class'=>'form-control jupper','maxlength'=>50,'title'=>'Fecha de registro')))
 
                 ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
@@ -564,35 +531,16 @@ class EstudianteSocioeconomicoController extends Controller {
             $paisNac =  $em->getRepository('SieAppWebBundle:PaisTipo')->findOneBy(array('id' => 1));
         }
 
+
         $lt5_id = $socioeconomico->getSeccionivLocalidadTipo()->getLugarTipo();
         $lt4_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getLugarTipo();
         $lt3_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getLugarTipo();
-        $lt2_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt3_id)->getLugarTipo();
-        $lt1_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt2_id)->getLugarTipo();
 
-        $l_id = $socioeconomico->getSeccionivLocalidadTipo()->getId();
-        $c_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getId();
-        $m_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getId();
-        $p_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt3_id)->getId();
-        $d_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt2_id)->getId();
+        $m_id = $socioeconomico->getSeccionivLocalidadTipo()->getId();
+        $p_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getId();
+        $d_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getId();
 
-        $query = $em->createQuery(
-                        'SELECT p
-                FROM SieAppWebBundle:PaisTipo p
-                WHERE p.id != 0
-                ORDER BY p.id');
-        $paisNacE = $query->getResult();
-
-        $paisNacArray = array();
-        foreach ($paisNacE as $value) {
-            $paisNacArray[$value->getId()] = $value->getPais();
-        }
-
-        $dpto = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findBy(array('id'=>array(1,2,3,4,5,6,7,8,9)));
-        $dptoArray = array();
-        foreach($dpto as $value){
-            $dptoArray[$value->getId()] = $value->getDepartamento();
-        }
+        
 
         $genero = $em->getRepository('SieAppWebBundle:GeneroTipo')->findBy(array('id'=>array(1,2)));
         $generoArray = array();
@@ -600,22 +548,8 @@ class EstudianteSocioeconomicoController extends Controller {
             $generoArray[$value->getId()] = $value->getGenero();
         }
 
-        $query = $em->createQuery(
-                        'SELECT lt
-                FROM SieAppWebBundle:LugarTipo lt
-                WHERE lt.lugarNivel = :nivel
-                AND lt.lugarTipo = :lt1
-                ORDER BY lt.id')
-                ->setParameter('nivel', 2)
-                ->setParameter('lt1', $d_id);
-        $prov = $query->getResult();
-
-        $provArray = array();
-        foreach ($prov as $value) {
-            $provArray[$value->getId()] = $value->getLugar();
-        }
-
-        //Lugar de Nacimiento
+        // NACIMIENTO
+        // Lugar de Nacimiento
         $query = $em->createQuery(
                         'SELECT lt
                 FROM SieAppWebBundle:LugarTipo lt
@@ -647,6 +581,42 @@ class EstudianteSocioeconomicoController extends Controller {
         }
 
         $query = $em->createQuery(
+                        'SELECT p
+                FROM SieAppWebBundle:PaisTipo p
+                WHERE p.id != 0
+                ORDER BY p.id');
+        $paisNacE = $query->getResult();
+
+        $paisNacArray = array();
+        foreach ($paisNacE as $value) {
+            $paisNacArray[$value->getId()] = $value->getPais();
+        }
+
+        // DIRECCION
+
+        $dpto = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findBy(array('id'=>array(1,2,3,4,5,6,7,8,9)));
+        $dptoArray = array();
+        foreach($dpto as $value){
+            $dptoArray[$value->getId()] = $value->getDepartamento();
+        }
+
+        $query = $em->createQuery(
+                        'SELECT lt
+                FROM SieAppWebBundle:LugarTipo lt
+                WHERE lt.lugarNivel = :nivel
+                AND lt.lugarTipo = :lt1
+                ORDER BY lt.id')
+                ->setParameter('nivel', 2)
+                ->setParameter('lt1', $d_id);
+        $prov = $query->getResult();
+
+        $provArray = array();
+        foreach ($prov as $value) {
+            $provArray[$value->getId()] = $value->getLugar();
+        }
+        
+
+        $query = $em->createQuery(
                         'SELECT lt
                 FROM SieAppWebBundle:LugarTipo lt
                 WHERE lt.lugarNivel = :nivel
@@ -661,35 +631,35 @@ class EstudianteSocioeconomicoController extends Controller {
             $muniArray[$value->getId()] = $value->getLugar();
         }
 
-        $query = $em->createQuery(
-                        'SELECT lt
-                FROM SieAppWebBundle:LugarTipo lt
-                WHERE lt.lugarNivel = :nivel
-                AND lt.lugarTipo = :lt1
-                ORDER BY lt.id')
-                ->setParameter('nivel', 4)
-                ->setParameter('lt1', $m_id);
-        $cantn = $query->getResult();
+        // $query = $em->createQuery(
+        //                 'SELECT lt
+        //         FROM SieAppWebBundle:LugarTipo lt
+        //         WHERE lt.lugarNivel = :nivel
+        //         AND lt.lugarTipo = :lt1
+        //         ORDER BY lt.id')
+        //         ->setParameter('nivel', 4)
+        //         ->setParameter('lt1', $m_id);
+        // $cantn = $query->getResult();
 
-        $cantnArray = array();
-        foreach ($cantn as $value) {
-            $cantnArray[$value->getId()] = $value->getLugar();
-        }
+        // $cantnArray = array();
+        // foreach ($cantn as $value) {
+        //     $cantnArray[$value->getId()] = $value->getLugar();
+        // }
 
-        $query = $em->createQuery(
-                        'SELECT lt
-                FROM SieAppWebBundle:LugarTipo lt
-                WHERE lt.lugarNivel = :nivel
-                AND lt.lugarTipo = :lt1
-                ORDER BY lt.id')
-                ->setParameter('nivel', 5)
-                ->setParameter('lt1', $c_id);
-        $locald = $query->getResult();
+        // $query = $em->createQuery(
+        //                 'SELECT lt
+        //         FROM SieAppWebBundle:LugarTipo lt
+        //         WHERE lt.lugarNivel = :nivel
+        //         AND lt.lugarTipo = :lt1
+        //         ORDER BY lt.id')
+        //         ->setParameter('nivel', 5)
+        //         ->setParameter('lt1', $c_id);
+        // $locald = $query->getResult();
 
-        $localdArray = array();
-        foreach ($locald as $value) {
-            $localdArray[$value->getId()] = $value->getLugar();
-        }
+        // $localdArray = array();
+        // foreach ($locald as $value) {
+        //     $localdArray[$value->getId()] = $value->getLugar();
+        // }
 
         /*idiomas*/
         $idiomas = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegHablaFrec')->findBy(array('estudianteInscripcionSocioeconomicoRegular' => $socioeconomico));
@@ -780,8 +750,9 @@ class EstudianteSocioeconomicoController extends Controller {
                 ->add('departamento', 'choice', array('data' => $d_id - 1, 'label' => 'Departamento', 'required' => true, 'choices' => $dptoArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control jupper', 'onchange' => 'listarProvincias(this.value);','title'=>'4. Departamento')))
                 ->add('provincia', 'choice', array('data' => $p_id, 'label' => 'Provincia', 'required' => true, 'choices' => $provArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control jupper', 'onchange' => 'listarMunicipios(this.value)','title'=>'4. Provincia')))
                 ->add('municipio', 'choice', array('data' => $m_id, 'label' => 'Municipio', 'required' => true, 'choices' => $muniArray, 'empty_value' => 'Seleccionar...','attr' => array('class' => 'form-control jupper', 'onchange' => 'listarCantones(this.value)','title'=>'4. Municipio')))
-                ->add('canton', 'choice', array('data' => $c_id, 'label' => 'Cantón', 'required' => true, 'choices' => $cantnArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control jupper', 'onchange' => 'listarLocalidades(this.value)','title'=>'4. Canton')))
-                ->add('localidad', 'choice', array('data' => $l_id, 'label' => 'Localidad', 'required' => true, 'choices' => $localdArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control jupper','title'=>'4. Localidad')))
+                // ->add('canton', 'choice', array('data' => $c_id, 'label' => 'Cantón', 'required' => true, 'choices' => $cantnArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control jupper', 'onchange' => 'listarLocalidades(this.value)','title'=>'4. Canton')))
+                // ->add('localidad', 'choice', array('data' => $l_id, 'label' => 'Localidad', 'required' => true, 'choices' => $localdArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control jupper','title'=>'4. Localidad')))
+                ->add('localidad', 'text', array('data' => $socioeconomico->getSeccionivDescLocalidad(), 'required' => true, 'attr' => array('class' => 'form-control jupper','maxlength'=>50,'title'=>'4. Localidad')))
                 ->add('seccioniiiZona', 'text', array('data' => $socioeconomico->getSeccionivZona(), 'required' => false, 'attr' => array('class' => 'form-control jupper','maxlength'=>50,'title'=>'4. Zona')))
                 ->add('seccioniiiAvenida', 'text', array('data' => $socioeconomico->getSeccionivAvenida(),'required' => false, 'attr' => array('class' => 'form-control jupper','maxlength'=>50, 'title'=>'4. Avenida')))
                 ->add('seccioniiiNumero', 'text', array('data' => $socioeconomico->getSeccionivNumero(), 'required' => false, 'attr' => array('class' => 'form-control jupper', 'pattern' => '[0-9]{0,5}', 'maxlength' => '5','title'=>'4. Número')))
@@ -879,6 +850,16 @@ class EstudianteSocioeconomicoController extends Controller {
             $procedencia = $this->obtenerProcedencia($estudiante->getCodigoRude(),$form['gestionId']);
             $estudianteInscripcion->setCodUeProcedenciaId($procedencia['sie']);
 
+            /**
+             * REGISTRO DE CARNET DE IDENTIDAD
+             */
+            $carnet = $request->get('carnet');
+            if(isset($carnet) and $carnet != ''){
+                $complemento = $request->get('complemento');
+                $estudiante->setCarnetIdentidad($carnet);
+                $estudiante->setComplemento($complemento);
+            }
+
             $estudiante->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->findOneBy(array('id' => $form['seccioniiPais'])));
             $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $form['seccioniiDepartamento'] ? $form['seccioniiDepartamento'] : null)));
             $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $form['seccioniiProvincia'] ? $form['seccioniiProvincia'] : null)));
@@ -896,7 +877,11 @@ class EstudianteSocioeconomicoController extends Controller {
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion_socioeconomico_regular');")->execute();
             $socioinscripcion = new EstudianteInscripcionSocioeconomicoRegular();
             $socioinscripcion->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($form['estudianteInscripcion']));
-            $socioinscripcion->setSeccionivLocalidadTipo($em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($form['localidad']));
+
+            $socioinscripcion->setSeccionivLocalidadTipo($em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($form['municipio']));
+            $socioinscripcion->setSeccionivDescLocalidad($form['localidad'] ? mb_strtoupper($form['localidad'], 'utf-8') : '');
+            
+            
             $socioinscripcion->setSeccionivZona($form['seccioniiiZona'] ? mb_strtoupper($form['seccioniiiZona'], 'utf-8') : '');
             $socioinscripcion->setSeccionivAvenida($form['seccioniiiAvenida'] ? mb_strtoupper($form['seccioniiiAvenida'], 'utf-8') : '');
             $socioinscripcion->setSeccionivNumero($form['seccioniiiNumero'] ? $form['seccioniiiNumero'] : 0);
@@ -1001,129 +986,69 @@ class EstudianteSocioeconomicoController extends Controller {
 
                 // Verificamos si la persona es nueva
                 if($request->get('t_idPersona') == 'nuevo'){
-                    // Enviamos los parametros al servicio de registro
-                    /*$registrarPersona = $this->get('sie_app_web.persona')->registrarPersona(
-                        $request->get('t_idioma'),
-                        $request->get('t_genero'),
-                        7,
-                        0,
-                        $request->get('t_carnet'),
-                        0,
-                        '',
-                        '',
-                        $request->get('t_paterno'),
-                        $request->get('t_materno'),
-                        $request->get('t_nombre'),
-                        $request->get('t_fechaNacimiento'),
-                        10,
-                        $request->get('t_complemento'),
-                        1,
-                        $request->get('t_correo'),
-                        '',
-                        $request->get('t_telefono'),
-                        '',
-                        1,
-                        1,
-                        0,
-                        '',
-                        0
-                    );
-                    $idPersona = 23519419;*/
 
-                    // Actualizamos el registro si el carnet ingresado ya existe
-                    $personaAnterior = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('carnet'=>$request->get('t_carnet')));
-                    if($personaAnterior){
-                        $personaAnterior->setCarnet('9-'.$personaAnterior->getCarnet());
-                        $personaAnterior->setSegipId(12);
+                    $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
+                        'carnet'=>$request->get('t_carnet'),
+                        'complemento'=>$request->get('t_complemento'),
+                        'paterno'=>$request->get('t_paterno'),
+                        'materno'=>$request->get('t_materno'),
+                        'nombre'=>$request->get('t_nombre')
+                    ));
+
+                    // VERIFICAMOS SI LA PERSONA EXISTE
+                    if($persona){
+                        // SI EXISTE LA PERSONA SOLO ACTUALIZAMOS SU FECHA DE NACIMIENTO
+                        $persona->setFechaNacimiento(new \DateTime($request->get('t_fechaNacimiento')));
                         $em->flush();
-                    }
 
-                    $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('persona');")->execute();
-                    $nuevaPersona = new Persona();
-                    $nuevaPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->find($request->get('t_idioma')));
-                    $nuevaPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($request->get('t_genero')));
-                    $nuevaPersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->find(7));
-                    $nuevaPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find(0));
-                    $nuevaPersona->setCarnet($request->get('t_carnet'));
-                    $nuevaPersona->setRda(0);
-                    $nuevaPersona->setPaterno(mb_strtoupper($request->get('t_paterno'),'utf-8'));
-                    $nuevaPersona->setMaterno(mb_strtoupper($request->get('t_materno'),'utf-8'));
-                    $nuevaPersona->setNombre(mb_strtoupper($request->get('t_nombre'),'utf-8'));
-                    $nuevaPersona->setFechaNacimiento(new \DateTime($request->get('t_fechaNacimiento')));
-                    $nuevaPersona->setSegipId(13);
-                    //$nuevaPersona->setEsExtranjero(0);
+                        $idPersona = $persona->getId();
 
-                    // Registrar fotografia del CI
+                    }else{
 
+                        // VERIFICAMOS SI EL CARNET YA ESTA OCUPADO
+                        $personaAnterior = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
+                            'carnet'=>$request->get('t_carnet'),
+                            'complemento'=>$request->get('t_complemento')
+                        ));
 
-                    $em->persist($nuevaPersona);
-                    $em->flush();
+                        if($personaAnterior){
+                            // SI EXISTE LA PERSONA PERO SUS DATOS NO SON IGUALES
+                            // ACTUALIZAMOS EL NUMERO DE CARNET CON EL CARACTER ESPECIAL
+                            $personaAnterior->setCarnet($personaAnterior->getCarnet().'±');
+                            $em->flush();
+                        }
 
-                    $idPersona = $nuevaPersona->getId();
+                        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('persona');")->execute();
+                        $nuevaPersona = new Persona();
+                        $nuevaPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->find($request->get('t_idioma')));
+                        $nuevaPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($request->get('t_genero')));
+                        $nuevaPersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->find(7));
+                        $nuevaPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find(0));
+                        $nuevaPersona->setCarnet($request->get('t_carnet'));
+                        $nuevaPersona->setRda(0);
+                        $nuevaPersona->setPaterno(mb_strtoupper($request->get('t_paterno'),'utf-8'));
+                        $nuevaPersona->setMaterno(mb_strtoupper($request->get('t_materno'),'utf-8'));
+                        $nuevaPersona->setNombre(mb_strtoupper($request->get('t_nombre'),'utf-8'));
+                        $nuevaPersona->setFechaNacimiento(new \DateTime($request->get('t_fechaNacimiento')));
+                        $nuevaPersona->setSegipId(20);
 
-                    // Registro de fotografia de CI - movemos el archivo al repositorio
-                    $file = $_FILES['t_documento'];
-                    if($file){
-                        $ruta = $this->get('kernel')->getRootDir() . '/../web/uploads/documentos/carnet';
-                        $tipo = explode('/',$_FILES['t_documento']['type']);
-                        $nombre_archivo = $request->get('t_carnet').'.'.$tipo[1];
-                        $archivador = $ruta.'/'.$nombre_archivo;
-                        move_uploaded_file($_FILES['t_documento']['tmp_name'], $archivador);
-
-                        // registramos la imagen file en la respectiva tabla
-                        $registroFile = new PersonaDocumento();
-                        $registroFile->setPersonaId($idPersona);
-                        $registroFile->setRuta($nombre_archivo);
-                        $registroFile->setDocumento($em->getRepository('SieAppWebBundle:DocumentoTipo')->find(10));
-                        $em->persist($registroFile);
+                        $em->persist($nuevaPersona);
                         $em->flush();
+
+                        $idPersona = $nuevaPersona->getId();
                     }
-
-
+                    
                 }else{
-                    // Enviamos los datos de la persona al servicio de modificacion o actualizacion
-                    /*$registrarPersona = $this->get('sie_app_web.persona')->actualizarPersona(
-                        $request->get('t_idPersona'),
-                        $request->get('t_idioma'),
-                        $request->get('t_genero'),
-                        7,
-                        0,
-                        $request->get('t_carnet'),
-                        0,
-                        '',
-                        '',
-                        $request->get('t_paterno'),
-                        $request->get('t_materno'),
-                        $request->get('t_nombre'),
-                        $request->get('t_fechaNacimiento'),
-                        10,
-                        $request->get('t_complemento'),
-                        1,
-                        $request->get('t_correo'),
-                        '',
-                        $request->get('t_telefono'),
-                        '',
-                        1,
-                        1,
-                        0,
-                        '',
-                        0
-                    );*/
 
                     // Modificamos los datos de la persona
                     $actualizarPersona = $em->getRepository('SieAppWebBundle:Persona')->find($request->get('t_idPersona'));
                     if($actualizarPersona){
                         // Actualizmos los datos de la persona
-                        // Actualizmos los datos de la persona
-                        $actualizarPersona->setPaterno(mb_strtoupper($request->get('t_paterno'),'utf-8'));
-                        $actualizarPersona->setMaterno(mb_strtoupper($request->get('t_materno'),'utf-8'));
-                        $actualizarPersona->setNombre(mb_strtoupper($request->get('t_nombre'),'utf-8'));
                         $actualizarPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($request->get('t_genero')));
                         $actualizarPersona->setCorreo($request->get('t_correo'));
-                        $actualizarPersona->setSegipId(12);
                         $em->flush();
-
                     }
+
                     $idPersona = $actualizarPersona->getId();
                 }
 
@@ -1160,7 +1085,7 @@ class EstudianteSocioeconomicoController extends Controller {
                     //$nuevoApoderadoDatos->setTieneocupacion($request->get('t_empleo'));
                     //$nuevoApoderadoDatos->setActividadTipo($em->getRepository('SieAppWebBundle:ApoderadoActividadTipo')->find($request->get('t_actividad')));
                     $nuevoApoderadoDatos->setOcupacionTipo($em->getRepository('SieAppWebBundle:ApoderadoOcupacionTipo')->find($request->get('t_ocupacion')));
-                    $nuevoApoderadoDatos->setObs(mb_strtoupper($request->get('t_empleoOtro'),'utf-8'));
+                    $nuevoApoderadoDatos->setObs(mb_strtoupper($request->get('t_ocupacionOtro'),'utf-8'));
                     $em->persist($nuevoApoderadoDatos);
                     $em->flush();
                 }else{
@@ -1172,7 +1097,7 @@ class EstudianteSocioeconomicoController extends Controller {
                         //$actualizarApoderadoDatos->setTieneocupacion($request->get('t_empleo'));
                         //$actualizarApoderadoDatos->setActividadTipo($em->getRepository('SieAppWebBundle:ApoderadoActividadTipo')->find($request->get('t_actividad')));
                         $actualizarApoderadoDatos->setOcupacionTipo($em->getRepository('SieAppWebBundle:ApoderadoOcupacionTipo')->find($request->get('t_ocupacion')));
-                        $actualizarApoderadoDatos->setObs(mb_strtoupper($request->get('t_empleoOtro'),'utf-8'));
+                        $actualizarApoderadoDatos->setObs(mb_strtoupper($request->get('t_ocupacionOtro'),'utf-8'));
                         $em->flush();
                     }
                 }
@@ -1199,127 +1124,73 @@ class EstudianteSocioeconomicoController extends Controller {
 
                 // Verificamos si la persona es nueva
                 if($request->get('m_idPersona') == 'nuevo'){
-                    // Enviamos los parametros al servicio de registro
-                    /*$registrarPersona = $this->get('sie_app_web.persona')->registrarPersona(
-                        $request->get('m_idioma'),
-                        $request->get('m_genero'),
-                        7,
-                        0,
-                        $request->get('m_carnet'),
-                        0,
-                        '',
-                        '',
-                        $request->get('m_paterno'),
-                        $request->get('m_materno'),
-                        $request->get('m_nombre'),
-                        $request->get('m_fechaNacimiento'),
-                        10,
-                        $request->get('m_complemento'),
-                        1,
-                        $request->get('m_correo'),
-                        '',
-                        $request->get('m_telefono'),
-                        '',
-                        1,
-                        1,
-                        0,
-                        '',
-                        0
-                    );
-                    $idPersona = 23519419;*/
 
-                    // Actualizamos el registro si el carnet ingresado ya existe
-                    $personaAnterior = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('carnet'=>$request->get('m_carnet')));
-                    if($personaAnterior){
-                        $personaAnterior->setCarnet('9-'.$personaAnterior->getCarnet());
-                        $personaAnterior->setSegipId(12);
+                    
+                    $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
+                        'carnet'=>$request->get('m_carnet'),
+                        'complemento'=>$request->get('m_complemento'),
+                        'paterno'=>$request->get('m_paterno'),
+                        'materno'=>$request->get('m_materno'),
+                        'nombre'=>$request->get('m_nombre')
+                    ));
+
+                    // VERIFICAMOS SI LA PERSONA EXISTE
+                    if($persona){
+                        // SI EXISTE LA PERSONA SOLO ACTUALIZAMOS SU FECHA DE NACIMIENTO
+                        $persona->setFechaNacimiento(new \DateTime($request->get('m_fechaNacimiento')));
                         $em->flush();
+
+                        $idPersona = $persona->getId();
+
+                    }else{
+
+                        // VERIFICAMOS SI EL CARNET YA ESTA OCUPADO
+                        $personaAnterior = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
+                            'carnet'=>$request->get('m_carnet'),
+                            'complemento'=>$request->get('m_complemento')
+                        ));
+
+                        if($personaAnterior){
+                            // SI EXISTE LA PERSONA PERO SUS DATOS NO SON IGUALES
+                            // ACTUALIZAMOS EL NUMERO DE CARNET CON EL CARACTER ESPECIAL
+                            $personaAnterior->setCarnet($personaAnterior->getCarnet().'±');
+                            $em->flush();
+                        }
+
+                        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('persona');")->execute();
+                        $nuevaPersona = new Persona();
+                        $nuevaPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->find($request->get('m_idioma')));
+                        $nuevaPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($request->get('m_genero')));
+                        $nuevaPersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->find(7));
+                        $nuevaPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find(0));
+                        $nuevaPersona->setCarnet($request->get('m_carnet'));
+                        $nuevaPersona->setComplemento($request->get('m_complemento'));
+                        $nuevaPersona->setRda(0);
+                        $nuevaPersona->setPaterno(mb_strtoupper($request->get('m_paterno'),'utf-8'));
+                        $nuevaPersona->setMaterno(mb_strtoupper($request->get('m_materno'),'utf-8'));
+                        $nuevaPersona->setNombre(mb_strtoupper($request->get('m_nombre'),'utf-8'));
+                        $nuevaPersona->setFechaNacimiento(new \DateTime($request->get('m_fechaNacimiento')));
+                        $nuevaPersona->setSegipId(20);
+                        $em->persist($nuevaPersona);
+                        $em->flush();
+
+                        $idPersona = $nuevaPersona->getId();
+
                     }
 
-                    $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('persona');")->execute();
-                    $nuevaPersona = new Persona();
-                    $nuevaPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->find($request->get('m_idioma')));
-                    $nuevaPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($request->get('m_genero')));
-                    $nuevaPersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->find(7));
-                    $nuevaPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find(0));
-                    $nuevaPersona->setCarnet($request->get('m_carnet'));
-                    $nuevaPersona->setRda(0);
-                    $nuevaPersona->setPaterno(mb_strtoupper($request->get('m_paterno'),'utf-8'));
-                    $nuevaPersona->setMaterno(mb_strtoupper($request->get('m_materno'),'utf-8'));
-                    $nuevaPersona->setNombre(mb_strtoupper($request->get('m_nombre'),'utf-8'));
-                    $nuevaPersona->setFechaNacimiento(new \DateTime($request->get('m_fechaNacimiento')));
-                    $nuevaPersona->setSegipId(13);
-                    //$nuevaPersona->setEsExtranjero(0);
-
-                    // Registrar fotografia del CI
-
-
-                    $em->persist($nuevaPersona);
-                    $em->flush();
-
-                    $idPersona = $nuevaPersona->getId();
-
-                    // Registro de fotografia de CI - movemos el archivo al repositorio
-                    $file = $_FILES['m_documento'];
-                    if($file){
-                        $ruta = $this->get('kernel')->getRootDir() . '/../web/uploads/documentos/carnet';
-                        $tipo = explode('/',$_FILES['m_documento']['type']);
-                        $nombre_archivo = $request->get('m_carnet').'.'.$tipo[1];
-                        $archivador = $ruta.'/'.$nombre_archivo;
-                        move_uploaded_file($_FILES['m_documento']['tmp_name'], $archivador);
-
-                        // registramos la imagen file en la respectiva tabla
-                        $registroFile = new PersonaDocumento();
-                        $registroFile->setPersonaId($idPersona);
-                        $registroFile->setRuta($nombre_archivo);
-                        $registroFile->setDocumento($em->getRepository('SieAppWebBundle:DocumentoTipo')->find(10));
-                        $em->persist($registroFile);
-                        $em->flush();
-                    }
 
 
                 }else{
-                    // Enviamos los datos de la persona al servicio de modificacion
-                    /*$registrarPersona = $this->get('sie_app_web.persona')->modificarPersona(
-                        $request->get('m_idPersona'),
-                        $request->get('m_idioma'),
-                        $request->get('m_genero'),
-                        7,
-                        0,
-                        $request->get('m_carnet'),
-                        0,
-                        '',
-                        '',
-                        $request->get('m_paterno'),
-                        $request->get('m_materno'),
-                        $request->get('m_nombre'),
-                        $request->get('m_fechaNacimiento'),
-                        10,
-                        $request->get('m_complemento'),
-                        1,
-                        $request->get('m_correo'),
-                        '',
-                        $request->get('m_telefono'),
-                        '',
-                        1,
-                        1,
-                        0,
-                        '',
-                        0
-                    );*/
 
                     // Modificamos los datos de la persona
                     $actualizarPersona = $em->getRepository('SieAppWebBundle:Persona')->find($request->get('m_idPersona'));
                     if($actualizarPersona){
                         // Actualizmos los datos de la persona
-                        $actualizarPersona->setPaterno(mb_strtoupper($request->get('m_paterno'),'utf-8'));
-                        $actualizarPersona->setMaterno(mb_strtoupper($request->get('m_materno'),'utf-8'));
-                        $actualizarPersona->setNombre(mb_strtoupper($request->get('m_nombre'),'utf-8'));
                         $actualizarPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($request->get('m_genero')));
                         $actualizarPersona->setCorreo($request->get('m_correo'));
-                        $actualizarPersona->setSegipId(12);
                         $em->flush();
                     }
+
                     $idPersona = $actualizarPersona->getId();
                 }
 
@@ -1356,7 +1227,7 @@ class EstudianteSocioeconomicoController extends Controller {
                     //$nuevoApoderadoDatos->setTieneocupacion($request->get('m_empleo'));
                     //$nuevoApoderadoDatos->setActividadTipo($em->getRepository('SieAppWebBundle:ApoderadoActividadTipo')->find($request->get('m_actividad')));
                     $nuevoApoderadoDatos->setOcupacionTipo($em->getRepository('SieAppWebBundle:ApoderadoOcupacionTipo')->find($request->get('m_ocupacion')));
-                    $nuevoApoderadoDatos->setObs(mb_strtoupper($request->get('m_empleoOtro'),'utf-8'));
+                    $nuevoApoderadoDatos->setObs(mb_strtoupper($request->get('m_ocupacionOtro'),'utf-8'));
                     $em->persist($nuevoApoderadoDatos);
                     $em->flush();
                 }else{
@@ -1368,10 +1239,12 @@ class EstudianteSocioeconomicoController extends Controller {
                         //$actualizarApoderadoDatos->setTieneocupacion($request->get('m_empleo'));
                         //$actualizarApoderadoDatos->setActividadTipo($em->getRepository('SieAppWebBundle:ApoderadoActividadTipo')->find($request->get('m_actividad')));
                         $actualizarApoderadoDatos->setOcupacionTipo($em->getRepository('SieAppWebBundle:ApoderadoOcupacionTipo')->find($request->get('m_ocupacion')));
-                        $actualizarApoderadoDatos->setObs(mb_strtoupper($request->get('m_empleoOtro'),'utf-8'));
+                        $actualizarApoderadoDatos->setObs(mb_strtoupper($request->get('m_ocupacionOtro'),'utf-8'));
                         $em->flush();
                     }
                 }
+
+                
             }else{
                 $apod = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion'=>$estudianteInscripcion->getId(),'apoderadoTipo'=>array(2)));
                 foreach ($apod as $a) {
@@ -1384,9 +1257,6 @@ class EstudianteSocioeconomicoController extends Controller {
                     $em->flush();
                 }
             }
-
-            // Registramos los datos de apoderado
-
 
             
             $em->getConnection()->commit();
@@ -1420,6 +1290,16 @@ class EstudianteSocioeconomicoController extends Controller {
             $procedencia = $this->obtenerProcedencia($estudiante->getCodigoRude(),$form['gestionId']);
             $estudianteInscripcion->setCodUeProcedenciaId($procedencia['sie']);
 
+            /**
+             * REGISTRO DE CARNET DE IDENTIDAD
+             */
+            $carnet = $request->get('carnet');
+            if(isset($carnet) and $carnet != ''){
+                $complemento = $request->get('complemento');
+                $estudiante->setCarnetIdentidad($carnet);
+                $estudiante->setComplemento($complemento);
+            }
+
             $estudiante->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->findOneBy(array('id' => $form['seccioniiPais'])));
             $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $form['seccioniiDepartamento'] ? $form['seccioniiDepartamento'] : null)));
             $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $form['seccioniiProvincia'] ? $form['seccioniiProvincia'] : null)));
@@ -1435,7 +1315,8 @@ class EstudianteSocioeconomicoController extends Controller {
             $socioId = $form['socioeconomico'];
 
             $socioinscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegular')->findOneById($socioId);
-            $socioinscripcion->setSeccionivLocalidadTipo($em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($form['localidad']));
+            $socioinscripcion->setSeccionivLocalidadTipo($em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($form['municipio']));
+            $socioinscripcion->setSeccionivDescLocalidad($form['localidad'] ? mb_strtoupper($form['localidad'], 'utf-8') : '');
             $socioinscripcion->setSeccionivZona($form['seccioniiiZona'] ? mb_strtoupper($form['seccioniiiZona'], 'utf-8') : '');
             $socioinscripcion->setSeccionivAvenida($form['seccioniiiAvenida'] ? mb_strtoupper($form['seccioniiiAvenida'], 'utf-8') : '');
             $socioinscripcion->setSeccionivNumero($form['seccioniiiNumero'] ? $form['seccioniiiNumero'] : 0);
@@ -1567,112 +1448,70 @@ class EstudianteSocioeconomicoController extends Controller {
 
                 // Verificamos si la persona es nueva
                 if($request->get('t_idPersona') == 'nuevo'){
-                    // Enviamos los parametros al servicio de registro
-                    /*$registrarPersona = $this->get('sie_app_web.persona')->registrarPersona(
-                        $request->get('t_idioma'),
-                        $request->get('t_genero'),
-                        7,
-                        0,
-                        $request->get('t_carnet'),
-                        0,
-                        '',
-                        '',
-                        $request->get('t_paterno'),
-                        $request->get('t_materno'),
-                        $request->get('t_nombre'),
-                        $request->get('t_fechaNacimiento'),
-                        10,
-                        $request->get('t_complemento'),
-                        1,
-                        $request->get('t_correo'),
-                        '',
-                        $request->get('t_telefono'),
-                        '',
-                        1,
-                        1,
-                        0,
-                        '',
-                        0
-                    );
-                    $idPersona = 23519419;*/
 
+                    $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
+                        'carnet'=>$request->get('t_carnet'),
+                        'complemento'=>$request->get('t_complemento'),
+                        'paterno'=>$request->get('t_paterno'),
+                        'materno'=>$request->get('t_materno'),
+                        'nombre'=>$request->get('t_nombre')
+                    ));
 
-                    // Actualizamos el registro si el carnet ingresado ya existe
-                    $personaAnterior = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('carnet'=>$request->get('t_carnet')));
-                    if($personaAnterior){
-                        $personaAnterior->setCarnet('9-'.$personaAnterior->getCarnet());
-                        $personaAnterior->setSegipId(12);
+                    // VERIFICAMOS SI LA PERSONA EXISTE
+                    if($persona){
+                        // SI EXISTE LA PERSONA SOLO ACTUALIZAMOS SU FECHA DE NACIMIENTO
+                        $persona->setFechaNacimiento(new \DateTime($request->get('t_fechaNacimiento')));
                         $em->flush();
-                    }
 
-                    $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('persona');")->execute();
-                    $nuevaPersona = new Persona();
-                    $nuevaPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->find($request->get('t_idioma')));
-                    $nuevaPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($request->get('t_genero')));
-                    $nuevaPersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->find(7));
-                    $nuevaPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find(0));
-                    $nuevaPersona->setCarnet($request->get('t_carnet'));
-                    $nuevaPersona->setRda(0);
-                    $nuevaPersona->setPaterno(mb_strtoupper($request->get('t_paterno'),'utf-8'));
-                    $nuevaPersona->setMaterno(mb_strtoupper($request->get('t_materno'),'utf-8'));
-                    $nuevaPersona->setNombre(mb_strtoupper($request->get('t_nombre'),'utf-8'));
-                    $nuevaPersona->setFechaNacimiento(new \DateTime($request->get('t_fechaNacimiento')));
-                    $nuevaPersona->setSegipId(13);
-                    //$nuevaPersona->setEsExtranjero(0);
+                        $idPersona = $persona->getId();
 
-                    // Registrar fotografia del CI
+                    }else{
 
+                        // VERIFICAMOS SI EL CARNET YA ESTA OCUPADO
+                        $personaAnterior = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
+                            'carnet'=>$request->get('t_carnet'),
+                            'complemento'=>$request->get('t_complemento')
+                        ));
 
-                    $em->persist($nuevaPersona);
-                    $em->flush();
+                        if($personaAnterior){
+                            // SI EXISTE LA PERSONA PERO SUS DATOS NO SON IGUALES
+                            // ACTUALIZAMOS EL NUMERO DE CARNET CON EL CARACTER ESPECIAL
+                            $personaAnterior->setCarnet($persona->getCarnet().'±');
+                            $em->flush();
+                        }
 
-                    $idPersona = $nuevaPersona->getId();
+                        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('persona');")->execute();
+                        $nuevaPersona = new Persona();
+                        $nuevaPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->find($request->get('t_idioma')));
+                        $nuevaPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($request->get('t_genero')));
+                        $nuevaPersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->find(7));
+                        $nuevaPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find(0));
+                        $nuevaPersona->setCarnet($request->get('t_carnet'));
+                        $nuevaPersona->setComplemento($request->get('t_complemento'));
+                        $nuevaPersona->setRda(0);
+                        $nuevaPersona->setPaterno(mb_strtoupper($request->get('t_paterno'),'utf-8'));
+                        $nuevaPersona->setMaterno(mb_strtoupper($request->get('t_materno'),'utf-8'));
+                        $nuevaPersona->setNombre(mb_strtoupper($request->get('t_nombre'),'utf-8'));
+                        $nuevaPersona->setFechaNacimiento(new \DateTime($request->get('t_fechaNacimiento')));
+                        $nuevaPersona->setSegipId(20);
 
-                    // Registro de fotografia de CI - movemos el archivo al repositorio
-                    $file = $_FILES['t_documento'];
-                    if($file){
-                        $ruta = $this->get('kernel')->getRootDir() . '/../web/uploads/documentos/carnet';
-                        $tipo = explode('/',$_FILES['t_documento']['type']);
-                        $nombre_archivo = $request->get('t_carnet').'.'.$tipo[1];
-                        $archivador = $ruta.'/'.$nombre_archivo;
-                        move_uploaded_file($_FILES['t_documento']['tmp_name'], $archivador);
-
-                        // registramos la imagen file en la respectiva tabla
-                        $registroFile = new PersonaDocumento();
-                        $registroFile->setPersonaId($idPersona);
-                        $registroFile->setRuta($nombre_archivo);
-                        $registroFile->setDocumento($em->getRepository('SieAppWebBundle:DocumentoTipo')->find(10));
-                        $em->persist($registroFile);
+                        $em->persist($nuevaPersona);
                         $em->flush();
+
+                        $idPersona = $nuevaPersona->getId();
                     }
                     
                 }else{
-                    // Enviamos los datos de la persona al servicio de modificacion o actualizacion
-                    /*$registrarPersona = $this->get('sie_app_web.persona')->actualizarPersona(
-                        $request->get('t_idPersona'),
-                        $request->get('t_carnet'),
-                        $request->get('t_complemento'),
-                        $request->get('t_fechaNacimiento'),
-                        $request->get('t_paterno'),
-                        $request->get('t_materno'),
-                        $request->get('t_nombre'),
-                        $request->get('t_genero')
-                    );*/
-
-                    //dump($registrarPersona);die;
 
                     // Modificamos los datos de la persona
                     $actualizarPersona = $em->getRepository('SieAppWebBundle:Persona')->find($request->get('t_idPersona'));
                     if($actualizarPersona){
                         // Actualizmos los datos de la persona
-                        $actualizarPersona->setPaterno(mb_strtoupper($request->get('t_paterno'),'utf-8'));
-                        $actualizarPersona->setMaterno(mb_strtoupper($request->get('t_materno'),'utf-8'));
-                        $actualizarPersona->setNombre(mb_strtoupper($request->get('t_nombre'),'utf-8'));
                         $actualizarPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($request->get('t_genero')));
                         $actualizarPersona->setCorreo($request->get('t_correo'));
-                        $actualizarPersona->setSegipId(12);
                         $em->flush();
                     }
+
                     $idPersona = $actualizarPersona->getId();
                 }
 
@@ -1709,7 +1548,7 @@ class EstudianteSocioeconomicoController extends Controller {
                     //$nuevoApoderadoDatos->setTieneocupacion($request->get('t_empleo'));
                     //$nuevoApoderadoDatos->setActividadTipo($em->getRepository('SieAppWebBundle:ApoderadoActividadTipo')->find($request->get('t_actividad')));
                     $nuevoApoderadoDatos->setOcupacionTipo($em->getRepository('SieAppWebBundle:ApoderadoOcupacionTipo')->find($request->get('t_ocupacion')));
-                    $nuevoApoderadoDatos->setObs(mb_strtoupper($request->get('t_empleoOtro'),'utf-8'));
+                    $nuevoApoderadoDatos->setObs(mb_strtoupper($request->get('t_ocupacionOtro'),'utf-8'));
                     $em->persist($nuevoApoderadoDatos);
                     $em->flush();
                 }else{
@@ -1721,7 +1560,7 @@ class EstudianteSocioeconomicoController extends Controller {
                         //$actualizarApoderadoDatos->setTieneocupacion($request->get('t_empleo'));
                         //$actualizarApoderadoDatos->setActividadTipo($em->getRepository('SieAppWebBundle:ApoderadoActividadTipo')->find($request->get('t_actividad')));
                         $actualizarApoderadoDatos->setOcupacionTipo($em->getRepository('SieAppWebBundle:ApoderadoOcupacionTipo')->find($request->get('t_ocupacion')));
-                        $actualizarApoderadoDatos->setObs(mb_strtoupper($request->get('t_empleoOtro'),'utf-8'));
+                        $actualizarApoderadoDatos->setObs(mb_strtoupper($request->get('t_ocupacionOtro'),'utf-8'));
                         $em->flush();
                     }
                 }
@@ -1748,129 +1587,71 @@ class EstudianteSocioeconomicoController extends Controller {
 
                 // Verificamos si la persona es nueva
                 if($request->get('m_idPersona') == 'nuevo'){
-                    // Enviamos los parametros al servicio de registro
-                    /*$registrarPersona = $this->get('sie_app_web.persona')->registrarPersona(
-                        $request->get('m_idioma'),
-                        $request->get('m_genero'),
-                        7,
-                        0,
-                        $request->get('m_carnet'),
-                        0,
-                        '',
-                        '',
-                        $request->get('m_paterno'),
-                        $request->get('m_materno'),
-                        $request->get('m_nombre'),
-                        $request->get('m_fechaNacimiento'),
-                        10,
-                        $request->get('m_complemento'),
-                        1,
-                        $request->get('m_correo'),
-                        '',
-                        $request->get('m_telefono'),
-                        '',
-                        1,
-                        1,
-                        0,
-                        '',
-                        0
-                    );
-                    $idPersona = 23519419;*/
-
-
-                    // Actualizamos el registro si el carnet ingresado ya existe
-                    $personaAnterior = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('carnet'=>$request->get('m_carnet')));
-                    if($personaAnterior){
-                        $personaAnterior->setCarnet('9-'.$personaAnterior->getCarnet());
-                        $personaAnterior->setSegipId(12);
-                        $em->flush();
-                    }
-
-                    $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('persona');")->execute();
-                    $nuevaPersona = new Persona();
-                    $nuevaPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->find($request->get('m_idioma')));
-                    $nuevaPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($request->get('m_genero')));
-                    $nuevaPersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->find(7));
-                    $nuevaPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find(0));
-                    $nuevaPersona->setCarnet($request->get('m_carnet'));
-                    $nuevaPersona->setRda(0);
-                    $nuevaPersona->setPaterno(mb_strtoupper($request->get('m_paterno'),'utf-8'));
-                    $nuevaPersona->setMaterno(mb_strtoupper($request->get('m_materno'),'utf-8'));
-                    $nuevaPersona->setNombre(mb_strtoupper($request->get('m_nombre'),'utf-8'));
-                    $nuevaPersona->setFechaNacimiento(new \DateTime($request->get('m_fechaNacimiento')));
-                    $nuevaPersona->setSegipId(13);
-                    //$nuevaPersona->setEsExtranjero(0);
-
-                    // Registrar fotografia del CI
-
-
-                    $em->persist($nuevaPersona);
-                    $em->flush();
-
-                    $idPersona = $nuevaPersona->getId();
 
                     
-                    // Registro de fotografia de CI - movemos el archivo al repositorio
-                    $file = $_FILES['m_documento'];
-                    if($file){
-                        $ruta = $this->get('kernel')->getRootDir() . '/../web/uploads/documentos/carnet';
-                        $tipo = explode('/',$_FILES['m_documento']['type']);
-                        $nombre_archivo = $request->get('m_carnet').'.'.$tipo[1];
-                        $archivador = $ruta.'/'.$nombre_archivo;
-                        move_uploaded_file($_FILES['m_documento']['tmp_name'], $archivador);
+                    $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
+                        'carnet'=>$request->get('m_carnet'),
+                        'complemento'=>$request->get('m_complemento'),
+                        'paterno'=>$request->get('m_paterno'),
+                        'materno'=>$request->get('m_materno'),
+                        'nombre'=>$request->get('m_nombre')
+                    ));
 
-                        // registramos la imagen file en la respectiva tabla
-                        $registroFile = new PersonaDocumento();
-                        $registroFile->setPersonaId($idPersona);
-                        $registroFile->setRuta($nombre_archivo);
-                        $registroFile->setDocumento($em->getRepository('SieAppWebBundle:DocumentoTipo')->find(10));
-                        $em->persist($registroFile);
+                    // VERIFICAMOS SI LA PERSONA EXISTE
+                    if($persona){
+                        // SI EXISTE LA PERSONA SOLO ACTUALIZAMOS SU FECHA DE NACIMIENTO
+                        $persona->setFechaNacimiento(new \DateTime($request->get('m_fechaNacimiento')));
                         $em->flush();
+
+                        $idPersona = $persona->getId();
+
+                    }else{
+
+                        // VERIFICAMOS SI EL CARNET YA ESTA OCUPADO
+                        $personaAnterior = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
+                            'carnet'=>$request->get('m_carnet'),
+                            'complemento'=>$request->get('m_complemento')
+                        ));
+
+                        if($personaAnterior){
+                            // SI EXISTE LA PERSONA PERO SUS DATOS NO SON IGUALES
+                            // ACTUALIZAMOS EL NUMERO DE CARNET CON EL CARACTER ESPECIAL
+                            $personaAnterior->setCarnet($persona->getCarnet().'±');
+                            $em->flush();
+                        }
+
+                        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('persona');")->execute();
+                        $nuevaPersona = new Persona();
+                        $nuevaPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->find($request->get('m_idioma')));
+                        $nuevaPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($request->get('m_genero')));
+                        $nuevaPersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->find(7));
+                        $nuevaPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find(0));
+                        $nuevaPersona->setCarnet($request->get('m_carnet'));
+                        $nuevaPersona->setComplemento($request->get('m_complemento'));
+                        $nuevaPersona->setRda(0);
+                        $nuevaPersona->setPaterno(mb_strtoupper($request->get('m_paterno'),'utf-8'));
+                        $nuevaPersona->setMaterno(mb_strtoupper($request->get('m_materno'),'utf-8'));
+                        $nuevaPersona->setNombre(mb_strtoupper($request->get('m_nombre'),'utf-8'));
+                        $nuevaPersona->setFechaNacimiento(new \DateTime($request->get('m_fechaNacimiento')));
+                        $nuevaPersona->setSegipId(20);
+                        $em->persist($nuevaPersona);
+                        $em->flush();
+
+                        $idPersona = $nuevaPersona->getId();
+
                     }
 
-
                 }else{
-                    // Enviamos los datos de la persona al servicio de modificacion
-                    /*$registrarPersona = $this->get('sie_app_web.persona')->modificarPersona(
-                        $request->get('m_idPersona'),
-                        $request->get('m_idioma'),
-                        $request->get('m_genero'),
-                        7,
-                        0,
-                        $request->get('m_carnet'),
-                        0,
-                        '',
-                        '',
-                        $request->get('m_paterno'),
-                        $request->get('m_materno'),
-                        $request->get('m_nombre'),
-                        $request->get('m_fechaNacimiento'),
-                        10,
-                        $request->get('m_complemento'),
-                        1,
-                        $request->get('m_correo'),
-                        '',
-                        $request->get('m_telefono'),
-                        '',
-                        1,
-                        1,
-                        0,
-                        '',
-                        0
-                    );*/
 
                     // Modificamos los datos de la persona
                     $actualizarPersona = $em->getRepository('SieAppWebBundle:Persona')->find($request->get('m_idPersona'));
                     if($actualizarPersona){
                         // Actualizmos los datos de la persona
-                        $actualizarPersona->setPaterno(mb_strtoupper($request->get('m_paterno'),'utf-8'));
-                        $actualizarPersona->setMaterno(mb_strtoupper($request->get('m_materno'),'utf-8'));
-                        $actualizarPersona->setNombre(mb_strtoupper($request->get('m_nombre'),'utf-8'));
                         $actualizarPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($request->get('m_genero')));
                         $actualizarPersona->setCorreo($request->get('m_correo'));
-                        $actualizarPersona->setSegipId(12);
                         $em->flush();
                     }
+
                     $idPersona = $actualizarPersona->getId();
                 }
 
@@ -1907,7 +1688,7 @@ class EstudianteSocioeconomicoController extends Controller {
                     //$nuevoApoderadoDatos->setTieneocupacion($request->get('m_empleo'));
                     //$nuevoApoderadoDatos->setActividadTipo($em->getRepository('SieAppWebBundle:ApoderadoActividadTipo')->find($request->get('m_actividad')));
                     $nuevoApoderadoDatos->setOcupacionTipo($em->getRepository('SieAppWebBundle:ApoderadoOcupacionTipo')->find($request->get('m_ocupacion')));
-                    $nuevoApoderadoDatos->setObs(mb_strtoupper($request->get('m_empleoOtro'),'utf-8'));
+                    $nuevoApoderadoDatos->setObs(mb_strtoupper($request->get('m_ocupacionOtro'),'utf-8'));
                     $em->persist($nuevoApoderadoDatos);
                     $em->flush();
                 }else{
@@ -1919,7 +1700,7 @@ class EstudianteSocioeconomicoController extends Controller {
                         //$actualizarApoderadoDatos->setTieneocupacion($request->get('m_empleo'));
                         //$actualizarApoderadoDatos->setActividadTipo($em->getRepository('SieAppWebBundle:ApoderadoActividadTipo')->find($request->get('m_actividad')));
                         $actualizarApoderadoDatos->setOcupacionTipo($em->getRepository('SieAppWebBundle:ApoderadoOcupacionTipo')->find($request->get('m_ocupacion')));
-                        $actualizarApoderadoDatos->setObs(mb_strtoupper($request->get('m_empleoOtro'),'utf-8'));
+                        $actualizarApoderadoDatos->setObs(mb_strtoupper($request->get('m_ocupacionOtro'),'utf-8'));
                         $em->flush();
                     }
                 }
@@ -2163,22 +1944,36 @@ class EstudianteSocioeconomicoController extends Controller {
     public function buscarPersonaAction(Request $request){
         try {
             $carnet = $request->get('carnet');
-            $complemento = ($request->get('complemento') != "")?$request->get('complemento'):0;
+            $complemento = $request->get('complemento');
+            // $complemento = ($request->get('complemento') != "")?$request->get('complemento'):0;
+            $paterno = $request->get('paterno');
+            $materno = $request->get('materno');
+            $nombre = $request->get('nombre');
             $fechaNacimiento = $request->get('fechaNacimiento');
-            $servicioPersona = $this->get('sie_app_web.persona')->buscarPersonaPorCarnetComplementoFechaNacimiento($carnet, $complemento,$fechaNacimiento);
+            
 
-            $servicioPersona = json_encode($servicioPersona);
-            $servicioPersona = json_decode($servicioPersona,true);
-            //dump($servicioPersona);die;
-            if(is_array($servicioPersona['result'])){
-                
-                $fechaNacimiento = $servicioPersona['result'][0]['fecha_nacimiento'];
-                $servicioPersona['result'][0]['fecha_nacimiento'] = date_format(new \DateTime($fechaNacimiento),'d-m-Y');
+            $respuesta = $this->get('sie_app_web.segip')->verificarPersona($carnet, $complemento, $paterno, $materno, $nombre, $fechaNacimiento);
+
+            //dump($respuesta);die;
+
+            $respuesta = false;
+
+            if($respuesta){
+                $data['status'] = 200;
+                $data['persona'] = array(
+                    'carnet'=> $carnet,
+                    'complemento'=> $complemento,
+                    'paterno'=> $paterno,
+                    'materno'=> $materno,
+                    'nombre'=> $nombre,
+                    'fecha_nacimiento'=> $fechaNacimiento
+                );
+            }else{
+                $data['status'] = 404;
             }
+
             $response = new JsonResponse();
-            //$servicioPersona = json_encode($servicioPersona);
-            //dump($servicioPersona);die;
-            $response->setData($servicioPersona);
+            $response->setData($data);
             return $response;
         } catch (Exception $e) {
             
@@ -2255,5 +2050,9 @@ class EstudianteSocioeconomicoController extends Controller {
         }
     }
 
+    private function obtenerDepartamentoUe($inscripcionId){
+        $em = $this->getDoctrine()->getManager();
+        return 'LA PAZ';
+    }
 
 }
