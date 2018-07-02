@@ -28,7 +28,7 @@ class Segip {
 
         $response = $this->client->request(
             'GET', 
-            'segip/v2/status', 
+            'dev/segip/v2/status', 
             ['headers' => ['Accept' => 'application/json', 'Authorization' => $this->token], 
             ['debug' => true]])->getBody()->getContents();
 
@@ -47,7 +47,7 @@ class Segip {
 
         $fechaNac = date('d/m/Y', strtotime($fechaNac));
 
-        $url = 'segip/v2/personas/'.$carnet.'?fecha_nacimiento='.$fechaNac;
+        $url = 'dev/segip/v2/personas/'.$carnet.'?fecha_nacimiento='.$fechaNac;
 
         if($complemento != ''){
             $url = 'segip/v2/personas/'.$carnet.'?fecha_nacimiento='.$fechaNac.'&complemento='.$complemento;
@@ -68,7 +68,9 @@ class Segip {
 
         $fechaNac = date('d/m/Y', strtotime($fechaNac));
 
-        $url = 'segip/v2/personas/'.$carnet.'?fecha_nacimiento='.$fechaNac.'&primer_apellido='.$paterno.'&segundo_apellido='.$materno.'&nombre='.$nombre;
+        
+
+        $url = 'dev/segip/v2/personas/'.$carnet.'?fecha_nacimiento='.$fechaNac.'&primer_apellido='.$paterno.'&segundo_apellido='.$materno.'&nombre='.$nombre;
 
         if($complemento != ''){
             $url = 'segip/v2/personas/'.$carnet.'?fecha_nacimiento='.$fechaNac.'&primer_apellido='.$paterno.'&segundo_apellido='.$materno.'&nombre='.$nombre.'&complemento='.$complemento;
@@ -82,10 +84,11 @@ class Segip {
 
         $responseDecode = json_decode($response, true);
 
-        if ($responseDecode['ConsultaDatoPersonaEnJsonResult']['EsValido']) {
+        if ($responseDecode['ConsultaDatoPersonaEnJsonResult']['EsValido'] === "true") {
             $persona = $responseDecode['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson'];
             $resultado = true;
         } else {
+            $persona = 'null';
             $resultado = false;
         }
 
