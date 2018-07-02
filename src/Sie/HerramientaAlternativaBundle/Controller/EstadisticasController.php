@@ -1239,9 +1239,9 @@ union all
         $response = new Response();
         $response->headers->set('Content-type', 'application/vnd.ms-excel');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-
+     //   dump($this->container->getParameter('urlreportweb') . 'alt_est_nacional_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo);die;
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion.'&Periodo='.$periodo));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_nacional_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo));
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {
@@ -1249,19 +1249,146 @@ union all
 
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_distrital_v1_ma.rptdesign&__format=xls&Gestion='.$gestion.'&Periodo='.$periodo.'&Distrito='.$codigoArea));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_distrital_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo.'&Distrito='.$codigoArea));
 
         }
 
         if($rol == 7) // Tecnico Departamental
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_departamental_v1_ma.rptdesign&__format=xls&Gestion='.$gestion.'&Periodo='.$periodo.'&Departamento='.$codigoArea));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_departamental_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo.'&Departamento='.$codigoArea));
 
         }
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_nacional_v1_ma.rptdesign&__format=xls&Gestion='.$gestion.'&Periodo='.$periodo));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_nacional_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo));
+
+        }
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+
+    public function informacionGeneralAlternativaEspPrintPdfAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+        if ($request->isMethod('POST')) {
+            /*
+             * Recupera datos del formulario
+             */
+            $gestion = $request->get('gestion');
+            $codigoArea = base64_decode($request->get('codigo'));
+            $rol = $request->get('rol');
+            $periodo = 2;
+        } else {
+            $gestion = $gestionActual;
+            $codigoArea = 0;
+            $rol = 0;
+            $periodo = 2;
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+
+        // por defecto
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion.'&Periodo='.$periodo));
+
+        if($rol == 9 or $rol == 5) // Director o Administrativo
+        {
+        }
+
+        if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
+        {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_distrital_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion.'&Periodo='.$periodo.'&Distrito='.$codigoArea));
+        }
+
+        if($rol == 7) // Tecnico Departamental
+        {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_departamental_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion.'&Periodo='.$periodo.'&Departamento='.$codigoArea));
+        }
+
+        if($rol == 8 or $rol == 20) // Tecnico Nacional
+        {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion.'&Periodo='.$periodo));
+        }
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    /**
+     * Imprime reportes estadisticos segun el tipo de rol en formato EXCEL - Educación Especial
+     * Jurlan
+     * @param Request $request
+     * @return type
+     */
+    public function informacionGeneralAlternativaEspPrintXlsAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+        $periodo=2;
+
+        if ($request->isMethod('POST')) {
+            /*
+             * Recupera datos del formulario
+             */
+            $gestion = $request->get('gestion');
+            $codigoArea = base64_decode($request->get('codigo'));
+            $rol = $request->get('rol');
+        } else {
+            $gestion = $gestionActual;
+            $codigoArea = 0;
+            $rol = 0;
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xls';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+     //   dump($this->container->getParameter('urlreportweb') . 'alt_est_nacional_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo);die;
+        // por defecto
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_nacional_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo));
+
+        if($rol == 9 or $rol == 5) // Director o Administrativo
+        {
+        }
+
+        if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
+        {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_distrital_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo.'&Distrito='.$codigoArea));
+
+        }
+
+        if($rol == 7) // Tecnico Departamental
+        {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_departamental_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo.'&Departamento='.$codigoArea));
+
+        }
+
+        if($rol == 8 or $rol == 20) // Tecnico Nacional
+        {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_nacional_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo));
 
         }
 
