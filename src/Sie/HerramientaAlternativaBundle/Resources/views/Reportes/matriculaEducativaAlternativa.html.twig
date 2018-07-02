@@ -72,10 +72,22 @@
                                 <h3 class="panel-title"><i class='fa fa-cloud-download' aria-hidden="true"></i></h3>
                             </div>  
                             <div class="pull-right">
+                                Estadistica
                                 <button id="tour-13" onclick="document.forms['formEstadisticaEspecialPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+
                                     <i class="fa fa-file-pdf-o"></i>
                                 </button>
                                 <button id="tour-14" onclick="document.forms['formEstadisticaEspecialXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+
+                                    <i class="fa fa-file-excel-o"></i>
+                                </button>
+                                Especialidades
+                                <button id="tour-13" onclick="document.forms['formEspEstadisticaEspecialPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+
+                                    <i class="fa fa-file-pdf-o"></i>
+                                </button>
+                                <button id="tour-14" onclick="document.forms['formEspEstadisticaEspecialXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+
                                     <i class="fa fa-file-excel-o"></i>
                                 </button>
                             </div>     
@@ -135,7 +147,17 @@
                     <input type="hidden" name="gestion" value="{{ gestion }}" />
                     <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />  
                     <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />   
-                </form>                      
+                </form>
+                <form name="formEspEstadisticaEspecialPdf" id="formEspEstadisticaEspecialPdf" role="form" action="{{ path('estadistica_esp_alternativa_informacion_general_print_pdf') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ gestion }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
+                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
+                </form>
+                <form name="formEspEstadisticaEspecialXls" id="formEspEstadisticaEspecialXls" role="form" action="{{ path('estadistica_esp_alternativa_informacion_general_print_xls') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ gestion }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
+                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
+                </form>
             {% endif %}
             {% if infoEntidad is defined %}
                 {% if infoEntidad.rolactual == 9 or infoEntidad.rolactual == 5 %}
