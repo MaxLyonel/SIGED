@@ -1,6 +1,6 @@
 {% extends 'layoutEspecialSie.html.twig' %}
 {% block contentoption %}
-
+{% set onlyview = app.session.get('onlyview') %}
     <!-- Start page header -->
     <div class="header-content">
         <h2><i class="fa fa-table"></i> Recibidos <span>Solicitudes usuario</span></h2>
@@ -108,7 +108,7 @@
                     <div class="panel-body">
                         <div class="panel-body panel-primary">
                             <div class="pull-right">
-                                {% if activar_acciones and (app.session.get('lastOperativo') != 5) %}
+                                {% if activar_acciones and (app.session.get('lastOperativo') != 5) and onlyview == false %}
                                     <a href="{{path('herramienta_especial_info_personal_adm_find')}}" id="nuevoA" name="nuevoA" class="btn btn-teal btn-md" style="display:inline-block"><i class="fa fa-user"></i> Nueva/o Administrativa/o</a>
                                 {% endif %}
                                 {% if personal_no_idioma is empty and personal_no_genero is empty and contador == 1 and personal is not empty %}
@@ -187,7 +187,7 @@
                                                         {% if persona.id in personal_no_genero|keys %}<i class="fa fa-fw fa-warning" aria-hidden="true"></i>Corrija el género{% else %}<i class="fa fa-fw fa-check" aria-hidden="true"></i>(Género) Correcto{% endif %}
                                                     </td>
                                                     <td data-title="Acciones">
-                                                        {% if activar_acciones and (app.session.get('lastOperativo') != 5) %}
+                                                        {% if activar_acciones and (app.session.get('lastOperativo') != 5 and onlyview == false) %}
                                                             <form action="{{path('herramienta_especial_info_personal_adm_edit')}}" method="post" style="display:inline-block">
                                                                 <input type="hidden" name="idPersona" value="{{persona.id}}">
                                                                 <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
@@ -207,7 +207,7 @@
                                                         {% endif %}
                                                     </td>
                                                     <td>
-                                                      {% if (app.session.get('lastOperativo') != 5) %}
+                                                      {% if (app.session.get('lastOperativo') != 5 and onlyview == false) %}
                                                         <form action="{{path('herramienta_especial_info_personal_adm_es_vigente_administrativo')}}" method="post" style="display: inline-block">
                                                             <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
                                                             <input type="hidden" name="gestion" value="{{gestion}}">
@@ -219,7 +219,17 @@
                                                                 <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está segura/o de continuar?');">Definir como Vigente</button>
                                                             {% endif %}
                                                         </form>
-                                                      {% endif %}
+                                                      {% else %}
+                                                        {% if personal.esVigenteAdministrativo %}
+                                                            <span class="text-success">
+                                                                Vigente
+                                                            </span>
+                                                        {% else %}
+                                                            <span class="text-danger">
+                                                                No vigente
+                                                            </span>
+                                                        {% endif %}
+                                                    {% endif %}
                                                     </td>
                                                 </tr>
                                             {% endfor %}
