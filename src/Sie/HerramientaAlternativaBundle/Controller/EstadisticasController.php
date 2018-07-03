@@ -162,7 +162,9 @@ class EstadisticasController extends Controller
 
 
     public function alternativaIndexAction(Request $request) {
-
+dump($request);die;
+        $form = $request->get('form');
+       // $fechaini = $form['gestion'] ;
       //  die;
         /*di
          * Define la zona horaria y halla la fecha actual
@@ -173,6 +175,7 @@ class EstadisticasController extends Controller
         $fechaEstadistica = $fechaActual->format('d-m-Y H:i:s');
 
         $gestionProcesada = $gestionActual;
+    //    $gestionreporte
 
         $codigo = 0;
         $nivel = 0;
@@ -181,6 +184,8 @@ class EstadisticasController extends Controller
             //die;
             $codigo = base64_decode($request->get('codigo'));
             $rol = $request->get('rol');
+
+            dump($codigo);dump($rol);die;
         } else {
             $codigo = 0;
             $rol = 0;
@@ -1646,8 +1651,56 @@ union all
         }
     }
 
+    public function reportesIndexAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
 
+        $repository = $em->getRepository('SieAppWebBundle:GestionTipo');
+        $query = $repository->createQueryBuilder('g')
+            ->orderBy('g.id', 'DESC')
+            ->where('g.id < 2019 AND g.id > 2013')
+            ->getQuery();
+        $gestiones = $query->getResult();
+        $gestionesArray = array();
+        foreach ($gestiones as $g) {
+            $gestionesArray[$g->getId()] = $g->getId();
+        }
+//dump($gestionesArray);die;
+        $repository = $em->getRepository('SieAppWebBundle:PeriodoTipo');
+        $query = $repository->createQueryBuilder('p')
+            ->orderBy('p.id')
+            ->where('p.id in (2,3)')
+            ->getQuery();
+        $periodos = $query->getResult();
+        $periodosArray = array();
+        foreach ($periodos as $p) {
+            $periodosArray[$p->getId()] = $p->getPeriodo();
+        }
 
+        $repository = $em->getRepository('SieAppWebBundle:SucursalTipo');
+        $query = $repository->createQueryBuilder('s')
+            ->orderBy('s.id')
+            ->getQuery();
+        $sucursales = $query->getResult();
+        $sucursalesArray = array();
+        foreach ($sucursales as $s) {
+            $sucursalesArray[$s->getId()] = $s->getId();
+        }
+
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl('sie_alt_reportes'))
+     //       ->add('idInstitucion', 'text', array('label' => 'Código SIE del CEA', 'required' => true, 'attr' => array('class' => 'form-control', 'autocomplete' => 'off', 'maxlength' => 8, 'pattern' => '[0-9]{8}')))
+            ->add('gestion', 'choice', array('label' => 'Gestión', 'required' => true, 'choices' => $gestionesArray, 'attr' => array('class' => 'form-control')))
+            ->add('periodo', 'choice', array('label' => 'Periodo', 'required' => true, 'choices' => $periodosArray, 'attr' => array('class' => 'form-control')))
+         //   ->add('subcea', 'choice', array('label' => 'Sub CEA', 'required' => true, 'choices' => $sucursalesArray, 'attr' => array('class' => 'form-control')))
+            ->add('crear', 'submit', array('label' => 'Generar Reportes', 'attr' => array('class' => 'btn btn-primary')))
+            ->getForm();
+
+        return $this->render($this->session->get('pathSystem') . ':Reportes:index.html.twig', array(
+            'form' => $form->createView()
+        ));
+
+    }
 
 
 
