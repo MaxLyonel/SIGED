@@ -1,4 +1,4 @@
-
+{% set onlyview = app.session.get('onlyview') %}
 {% if exist == true %}
     <small>
       <div class="row">
@@ -35,9 +35,11 @@
                 </a>
           </div>#}
           <div class="col-md-12 text-center">
+            {% if onlyview == false %}
               <button type="button" class="btn btn-md btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}');" >
                   <i class="fa fa-user"></i> Inscripción
               </button>
+            {% endif %}
           </div>
           <!--div class="col-md-3" >
             {% if app.session.get('ue_modular') and nivel >= 13 %}
@@ -106,7 +108,7 @@
                                     </div>
                                     { endif }
                                     #}
-                                    {% if gestion != 2017 %}
+                                    {% if gestion >= 2013 and gestion <= 2016 or onlyview == false %}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
                                         <button type="button" class="btn btn-circle btn-warning " data-toggle="" data-target="" onclick="removeInscriptionSpecial('{{infoUe}}',{{data.estInsEspId}},{{data.estInsId}});" >
                                             <i class="fa fa-trash"></i>

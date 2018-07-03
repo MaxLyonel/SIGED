@@ -287,6 +287,26 @@ class Login {
                             b.institucioneducativa_tipo_id in (7,8,9) and
                             e.esactivo is true and
                             a.es_vigente is true
+
+                            UNION--DIRECTOR PERMANENTE
+                            select '2' as peso, (cast(e.id as varchar)||cast(g.id as varchar)||cast(b.id as varchar)) as key, f.id as id, f.rol, h.id as idNivelLugar, h.nivel, g.id as rollugarid, g.lugar, a.persona_id as idPersona, cast(b.id as varchar) as sie, b.institucioneducativa, cast(b.institucioneducativa_tipo_id as varchar) as idIETipo, c.orgcurricula
+                            from maestro_inscripcion a
+                            inner join institucioneducativa b on a.institucioneducativa_id = b.id
+                            inner join orgcurricular_tipo c on b.orgcurricular_tipo_id = c.id
+                            inner join usuario d on d.persona_id = a.persona_id
+                            left join usuario_rol e on e.usuario_id = d.id
+                            left join rol_tipo f on e.rol_tipo_id = f.id
+                            inner join lugar_tipo g on e.lugar_tipo_id = g.id
+                            inner join lugar_nivel_tipo h on f.lugar_nivel_tipo_id = h.id                  
+                            where 
+                            a.persona_id = '".$id."' and
+                            c.id = 2 and
+                            a.gestion_tipo_id = '".$gestion."' and
+                            (a.cargo_tipo_id = 1 or a.cargo_tipo_id = 12 ) and
+                            a.es_vigente_administrativo is true and
+                            b.institucioneducativa_tipo_id = 5 and                 
+                            f.id = 9 and
+                            e.esactivo is true
                 ) z";
         if ($key == '-1') {
             $query = $query."
