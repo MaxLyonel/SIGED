@@ -1,7 +1,7 @@
 {% extends 'layoutEspecialSie.html.twig' %}
 
 {% block contentoption %}
-
+{% set onlyview = app.session.get('onlyview') %}
 
 
 
@@ -162,26 +162,28 @@
             </div><br></div>
             {{form_end(infotStudentform)}}
 
-            {{form_start(closeOperativoform, { 'attr':{'id':'formCloseOperativo' }} )}}
-            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
-                <div class="cbp-caption">
-                    <div class="cbp-caption-defaultWrap">
-                        <div class="headerOptions" style="height:20px; background:#bbf628"></div>
-                        <img src="{{asset('img/closeOperativo.jpg')}}" alt="...">
-                    </div>
-                    <div class="cbp-caption-activeWrap">
-                        <div class="cbp-l-caption-alignCenter">
-                            <div class="cbp-l-caption-body">
-                                {{form_widget(closeOperativoform.next)}}<br>
-                                <span style="color:#FFFFFF">Cerrar Operativo</span>
+            {% if onlyview == false %}
+                {{form_start(closeOperativoform, { 'attr':{'id':'formCloseOperativo' }} )}}
+                <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                    <div class="cbp-caption">
+                        <div class="cbp-caption-defaultWrap">
+                            <div class="headerOptions" style="height:20px; background:#bbf628"></div>
+                            <img src="{{asset('img/closeOperativo.jpg')}}" alt="...">
+                        </div>
+                        <div class="cbp-caption-activeWrap">
+                            <div class="cbp-l-caption-alignCenter">
+                                <div class="cbp-l-caption-body">
+                                    {{form_widget(closeOperativoform.next)}}<br>
+                                    <span style="color:#FFFFFF">Cerrar Operativo</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">Cerrar Operativo</div>
-                <div class="cbp-l-grid-masonry-projects-desc"></div>
-            </div><br></div>
-            {{form_end(closeOperativoform)}}
+                    <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">Cerrar Operativo</div>
+                    <div class="cbp-l-grid-masonry-projects-desc"></div>
+                </div><br></div>
+                {{form_end(closeOperativoform)}}
+            {% endif %}
         </div></div></div>
         <div class="col-lg-12 col-md-12 col-sm-12" >
             <div id="answerClose" style="overflow: scroll; height:400px"></div>

@@ -1,6 +1,6 @@
 {% extends 'layoutEspecialSie.html.twig' %}
 {% block contentoption %}
-
+{% set onlyview = app.session.get('onlyview') %}
     <!-- Start page header -->
     <div class="header-content">
         <h2><i class="fa fa-table"></i> Recibidos <span>Solicitudes usuario</span></h2>
@@ -410,7 +410,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            {{ form_widget(form.telefono1) }}
+                                            {{ form_widget(form.telefono1, {'attr': {'readonly': onlyview}}) }}
                                         </div>
                                     </div>
                                 </div>
@@ -422,7 +422,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            {{ form_widget(form.telefono2) }}
+                                            {{ form_widget(form.telefono2, {'attr': {'readonly': onlyview}}) }}
                                         </div>
                                     </div>
                                 </div>
@@ -434,7 +434,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            {{ form_widget(form.referenciaTelefono2) }}
+                                            {{ form_widget(form.referenciaTelefono2, {'attr': {'readonly': onlyview}}) }}
                                         </div>
                                     </div>
                                 </div>
@@ -448,7 +448,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            {{ form_widget(form.email) }}
+                                            {{ form_widget(form.email, {'attr': {'readonly': onlyview}}) }}
                                         </div>
                                     </div>
                                 </div>
@@ -460,7 +460,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            {{ form_widget(form.fax) }}
+                                            {{ form_widget(form.fax, {'attr': {'readonly': onlyview}}) }}
                                         </div>
                                     </div>
                                 </div>
@@ -472,14 +472,14 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            {{ form_widget(form.casilla) }}
+                                            {{ form_widget(form.casilla, {'attr': {'readonly': onlyview}}) }}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-4">
-                                    {{ form_widget(form.guardar) }}
+                                    {{ form_widget(form.guardar, {'attr': {'disabled': onlyview}}) }}
                                 </div>
                             </div>
                             {{ form_end(form) }}

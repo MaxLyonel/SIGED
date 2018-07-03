@@ -1,6 +1,6 @@
 {% extends 'layoutEspecialSie.html.twig' %}
 {% block contentoption %}
-
+{% set onlyview = app.session.get('onlyview') %}
 <!-- Start page header -->
 <div class="header-content">
     <h2><i class="fa fa-table"></i> Creación de Cursos <span>Buscar</span></h2>
@@ -85,11 +85,13 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="pull-right">
-                <form action="{{path('creacioncursos_especial_new')}}" style="display: inline-block" method="post">
-                    <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
-                    <input type="hidden" name="idGestion" value="{{gestion}}">
-                    <button type="submit" class="btn btn-md btn-teal"><i class="fa fa-save"></i> Nuevo Curso</button>
-                </form>
+                {% if onlyview == false %}
+                    <form action="{{path('creacioncursos_especial_new')}}" style="display: inline-block" method="post">
+                        <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
+                        <input type="hidden" name="idGestion" value="{{gestion}}">
+                        <button type="submit" class="btn btn-md btn-teal"><i class="fa fa-save"></i> Nuevo Curso</button>
+                    </form>
+                {% endif %}
             </div>
             <div class="callout callout-warning">
                 <strong>Recuerde que:</strong><br />
@@ -186,10 +188,14 @@
                                                 <td data-title="Tecnica">{{c.especialNivelTecnicoTipo.nivelTecnico}}-{{c.especialTecnicaEspecialidadTipo.especialidad}}</td>
                                                 <td data-title="Turno">{{c.institucioneducativaCurso.turnoTipo.turno}}</td>
                                                 <td data-title="Acciones">
-                                                    <form action="{{path('creacioncursos_especial_delete')}}" style="display: inline-block;" method="post">
-                                                        <input type="hidden" name="idCurso" value="{{c.id}}">
-                                                        <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');"><i class="fa fa-eraser text-danger"></i> Eliminar</button>
-                                                    </form>
+                                                    {% if onlyview %}
+                                                        -
+                                                    {% else %}
+                                                        <form action="{{path('creacioncursos_especial_delete')}}" style="display: inline-block;" method="post">
+                                                            <input type="hidden" name="idCurso" value="{{c.id}}">
+                                                            <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');"><i class="fa fa-eraser text-danger"></i> Eliminar</button>
+                                                        </form>
+                                                    {% endif %}
                                                 </td>
                                             </tr>
                                         {% else %}
@@ -212,10 +218,14 @@
                                                     <td data-title="Tecnica">{{c.especialNivelTecnicoTipo.nivelTecnico}}-{{c.especialTecnicaEspecialidadTipo.especialidad}}</td>
                                                     <td data-title="Turno">{{c.institucioneducativaCurso.turnoTipo.turno}}</td>
                                                     <td data-title="Acciones">
-                                                        <form action="{{path('creacioncursos_especial_delete')}}" style="display: inline-block;" method="post">
-                                                            <input type="hidden" name="idCurso" value="{{c.id}}">
-                                                            <button type="submit" class="btn-link" onclick="return confirm('Se eliminará el registro. ¿Desea continuar?');"><i class="fa fa-eraser text-danger"></i> Eliminar</button>
-                                                        </form>
+                                                        {% if onlyview %}
+                                                            -
+                                                        {% else %}
+                                                            <form action="{{path('creacioncursos_especial_delete')}}" style="display: inline-block;" method="post">
+                                                                <input type="hidden" name="idCurso" value="{{c.id}}">
+                                                                <button type="submit" class="btn-link" onclick="return confirm('Se eliminará el registro. ¿Desea continuar?');"><i class="fa fa-eraser text-danger"></i> Eliminar</button>
+                                                            </form>
+                                                        {% endif %}
                                                     </td>
                                                 </tr>
                                                 {% endif %}
