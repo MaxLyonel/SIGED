@@ -162,7 +162,7 @@ class EstadisticasController extends Controller
 
 
     public function alternativaIndexAction(Request $request) {
-dump($request);die;
+//dump($request);die;
         $form = $request->get('form');
        // $fechaini = $form['gestion'] ;
       //  die;
@@ -171,21 +171,28 @@ dump($request);die;
          */
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d H:i:s'));
-        $gestionActual = date_format($fechaActual,'Y');
         $fechaEstadistica = $fechaActual->format('d-m-Y H:i:s');
-
-        $gestionProcesada = $gestionActual;
-    //    $gestionreporte
+        //$gestionProcesada = $gestionActual;
 
         $codigo = 0;
         $nivel = 0;
 
         if ($request->isMethod('POST')) {
             //die;
-            $codigo = base64_decode($request->get('codigo'));
-            $rol = $request->get('rol');
-
-            dump($codigo);dump($rol);die;
+            $form = $request->get('form');
+            if($form)
+            {
+                $gestion =$form['gestion'] ;
+                $periodo=$form['periodo'] ;
+                $codigo = 0;
+                $rol = 0;
+            }else{
+                $gestion= $request->get('gestion');
+                $periodo= $request->get('periodo');
+                $codigo = base64_decode($request->get('codigo'));
+                $rol = $request->get('rol');
+            }
+           // dump($codigo);dump($rol);die;
         } else {
             $codigo = 0;
             $rol = 0;
@@ -195,11 +202,13 @@ dump($request);die;
         $defaultController->setContainer($this->container);
 
         $entidad = $this->buscaEntidadRol($codigo,$rol);
-        $subEntidades = $this->buscaSubEntidadRolEspecial($codigo,$rol);
+   //     dump($gestion);die;
+        $subEntidades = $this->buscaSubEntidadRolEspecial($codigo,$rol,$gestion,$periodo);
 
     //   dump($subEntidades);die;
         // devuelve un array con los diferentes tipos de reportes 1:sexo, 2:dependencia, 3:area
-       $entityEstadistica = $this->buscaEstadisticaAlternativaAreaRol($codigo,$rol);
+       $entityEstadistica = $this->buscaEstadisticaAlternativaAreaRol($codigo,$rol,$gestion,$periodo);
+
 //dump($entityEstadistica);die;
         if(count($subEntidades)>0 and isset($subEntidades)){
             $totalgeneral=0;
@@ -218,19 +227,21 @@ dump($request);die;
 //                    $subEntidades[$key]['total_general'] = 0;
 //                }
                 $subEntidades[$key]['total_general'] = $totalgeneral;
+                $subEntidades[$key]['gestion'] = $gestion;
+                $subEntidades[$key]['periodo'] = $periodo;
             }
         } else {
             $subEntidades = null;
         }
-
+      //  dump($subEntidades);die;
         // para seleccionar ti
 
         //$chartMatricula = $this->chartColumnInformacionGeneral($entityEstadistica,"Matrícula",$gestionProcesada,1,"chartContainerMatricula");
 //        $chartDiscapacidad = $this->chartDonut3d($entityEstadistica[3],"Estudiantes matriculados según Área de Atención",$gestionProcesada,"Estudiantes","chartContainerDiscapacidad");
 //        //$chartNivelGrado = $this->chartDonutInformacionGeneralNivelGrado($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio y Año de Escolaridad ",$gestionProcesada,6,"chartContainerEfectivoNivelGrado");
-        $chartGenero = $this->chartPie($entityEstadistica[1],"Estudiantes matriculados según Sexo",$gestionProcesada,"Estudiantes","chartContainerGenero");
+        $chartGenero = $this->chartPie($entityEstadistica[1],"Estudiantes matriculados según Sexo",$gestion,"Estudiantes","chartContainerGenero");
 //        //$chartArea = $this->chartPyramidInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Área Geográfica",$gestionProcesada,4,"chartContainerEfectivoArea");
-        $chartDependencia = $this->chartColumn($entityEstadistica[2],"Estudiantes matriculados según Dependencia",$gestionProcesada,"Estudiantes","chartContainerDependencia");
+        $chartDependencia = $this->chartColumn($entityEstadistica[2],"Estudiantes matriculados según Dependencia",$gestion,"Estudiantes","chartContainerDependencia");
 //        $chartModalidad = $this->chartSemiPieDonut3d($entityEstadistica[4],"Estudiantes matriculados según Modalidad",$gestionProcesada,"Estudiantes","chartContainerModalidad");
 
 
@@ -238,7 +249,7 @@ dump($request);die;
             return $this->render('SieHerramientaAlternativaBundle:Reportes:matriculaEducativaAlternativa.html.twig', array(
                 'infoEntidad'=>$entidad,
                 'infoSubEntidad'=>$subEntidades,
-                'gestion'=>$gestionActual,
+                'gestion'=>$gestion,
                 'datoGraficoGenero'=>$chartGenero,
                 'datoGraficoDependencia'=>$chartDependencia,
                 'fechaEstadistica'=>$fechaEstadistica
@@ -246,7 +257,7 @@ dump($request);die;
         } else {
             return $this->render('SieHerramientaAlternativaBundle:Reportes:matriculaEducativaAlternativa.html.twig', array(
                 'infoEntidad'=>$entidad,
-                'gestion'=>$gestionActual,
+                'gestion'=>$gestion,
                 'datoGraficoGenero'=>$chartGenero,
                 'datoGraficoDependencia'=>$chartDependencia,
                 'fechaEstadistica'=>$fechaEstadistica
@@ -261,13 +272,13 @@ dump($request);die;
      * @param Request $request
      * @return type
      */
-    public function buscaEstadisticaAlternativaAreaRol($area,$rol) {
+    public function buscaEstadisticaAlternativaAreaRol($area,$rol,$gestion,$periodo) {
         /*
          * Define la zona horaria y halla la fecha actual
          */
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
-        $gestionActual = date_format($fechaActual,'Y');
+        $gestionActual = $gestion;
         $gestionProcesada = $this->buscaGestionVistaMaterializadaAlternativa();
         //$gestionActual = 2016;
 
@@ -296,7 +307,7 @@ dump($request);die;
            -- left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
           --  left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
           --  left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
-            where f.gestion_tipo_id = 2018 and f.periodo_tipo_id = 2 --and cast(substring(cod_dis,1,1) as integer)=2
+            where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = ".$periodo." --and cast(substring(cod_dis,1,1) as integer)=2
             and a.codigo in (15,18,19,20,21,22,23,24,25)
             group by ie.dependencia_tipo_id,a.id,b.id,d.id,es.genero_tipo_id
 )
@@ -384,7 +395,7 @@ union all
            -- left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
           --  left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
           --  left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
-            where f.gestion_tipo_id = 2018 and f.periodo_tipo_id = 2 --and cast(substring(cod_dis,1,1) as integer)=2
+            where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = ".$periodo." --and cast(substring(cod_dis,1,1) as integer)=2
             and a.codigo in (15,18,19,20,21,22,23,24,25)
             group by ie.dependencia_tipo_id,a.id,b.id,d.id,es.genero_tipo_id
 )
@@ -469,7 +480,7 @@ union all
 			--			inner join dependencia_tipo as dt on dt.id = ie.dependencia_tipo_id
             inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
                     left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
-                    where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = 2 and lt5.codigo='".$area."'-- and cast(substring(cod_dis,1,1) as integer)=2
+                    where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = ".$periodo." and lt5.codigo='".$area."'-- and cast(substring(cod_dis,1,1) as integer)=2
                        and a.codigo in (15,18,19,20,21,22,23,24,25)
             group by ie.dependencia_tipo_id,a.id,b.id,d.id,es.genero_tipo_id
 )
@@ -556,7 +567,7 @@ union all
                                 left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
                                 left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
                                 left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
-                                where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = 2 and lt4.codigo='".$area."'-- and cast(substring(cod_dis,1,1) as integer)=2
+                                where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = ".$periodo." and lt4.codigo='".$area."'-- and cast(substring(cod_dis,1,1) as integer)=2
                             and a.codigo in (15,18,19,20,21,22,23,24,25)
             group by ie.dependencia_tipo_id,a.id,b.id,d.id,es.genero_tipo_id
 )
@@ -642,7 +653,7 @@ union all
            -- left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
           --  left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
           --  left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
-            where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = 2 --and cast(substring(cod_dis,1,1) as integer)=2
+            where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = ".$periodo." --and cast(substring(cod_dis,1,1) as integer)=2
             and a.codigo in (15,18,19,20,21,22,23,24,25)
             group by ie.dependencia_tipo_id,a.id,b.id,d.id,es.genero_tipo_id
 )
@@ -1010,13 +1021,14 @@ union all
      * @param Request $request
      * @return type
      */
-    public function buscaSubEntidadRolEspecial($area,$rol) {
+    public function buscaSubEntidadRolEspecial($area,$rol,$gestion,$periodo) {
         /*
          * Define la zona horaria y halla la fecha actual
          */
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
-        $gestionActual = date_format($fechaActual,'Y');
+        $gestionActual = $gestion;
+     //   dump($gestionActual);die;
      //   $gestionProcesada = $this->buscaGestionVistaMaterializadaAlternativa();
         //$gestionActual = 2016;
 
@@ -1041,7 +1053,7 @@ union all
             left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
             left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
             left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
-            where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = 2 -- and cast(substring(cod_dis,1,1) as integer)=2
+            where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = ".$periodo." -- and cast(substring(cod_dis,1,1) as integer)=2
             and a.codigo in (15,18,19,20,21,22,23,24,25)
             group by lt4.id, lt4.codigo, lt4.lugar
         ");
@@ -1068,7 +1080,7 @@ union all
                     inner join institucioneducativa as ie on ie.id  =  h.institucioneducativa_id
                     inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
                     left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
-                    where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = 2 and lt5.codigo='".$area."'-- and cast(substring(cod_dis,1,1) as integer)=2
+                    where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = ".$periodo." and lt5.codigo='".$area."'-- and cast(substring(cod_dis,1,1) as integer)=2
                     and a.codigo in (15,18,19,20,21,22,23,24,25)
                     group by ie.id, ie.institucioneducativa
                     order by ie.id, ie.institucioneducativa
@@ -1098,7 +1110,7 @@ union all
                                 left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
                                 left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
                                 left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
-                                where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = 2 and lt4.codigo='".$area."'-- and cast(substring(cod_dis,1,1) as integer)=2
+                                where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = ".$periodo." and lt4.codigo='".$area."'-- and cast(substring(cod_dis,1,1) as integer)=2
                                 and a.codigo in (15,18,19,20,21,22,23,24,25)
                                 group by lt5.id, lt5.codigo, lt5.lugar
                                 order by lt5.id, lt5.codigo, lt5.lugar
@@ -1129,7 +1141,7 @@ union all
             left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
             left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
             left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
-            where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = 2 -- and cast(substring(cod_dis,1,1) as integer)=2
+            where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = ".$periodo." -- and cast(substring(cod_dis,1,1) as integer)=2
             and a.codigo in (15,18,19,20,21,22,23,24,25)
             group by lt4.id, lt4.codigo, lt4.lugar
             order by lt4.id, lt4.codigo, lt4.lugar
@@ -1155,6 +1167,7 @@ union all
         /*
          * Define la zona horaria y halla la fecha actual
          */
+       // dump($request);die;
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
@@ -1166,12 +1179,13 @@ union all
             $gestion = $request->get('gestion');
             $codigoArea = base64_decode($request->get('codigo'));
             $rol = $request->get('rol');
-            $periodo = 2;
+            $periodo= $request->get('periodo');
+           // $periodo = 2;
         } else {
             $gestion = $gestionActual;
             $codigoArea = 0;
             $rol = 0;
-            $periodo = 2;
+            $periodo= 2;
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -1223,7 +1237,7 @@ union all
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
-        $periodo=2;
+
 
         if ($request->isMethod('POST')) {
             /*
@@ -1232,10 +1246,12 @@ union all
             $gestion = $request->get('gestion');
             $codigoArea = base64_decode($request->get('codigo'));
             $rol = $request->get('rol');
+            $periodo= $request->get('periodo');
         } else {
             $gestion = $gestionActual;
             $codigoArea = 0;
             $rol = 0;
+            $periodo=2;
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -1293,7 +1309,7 @@ union all
             $gestion = $request->get('gestion');
             $codigoArea = base64_decode($request->get('codigo'));
             $rol = $request->get('rol');
-            $periodo = 2;
+            $periodo= $request->get('periodo');
         } else {
             $gestion = $gestionActual;
             $codigoArea = 0;
@@ -1350,7 +1366,7 @@ union all
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
-        $periodo=2;
+
 
         if ($request->isMethod('POST')) {
             /*
@@ -1359,10 +1375,12 @@ union all
             $gestion = $request->get('gestion');
             $codigoArea = base64_decode($request->get('codigo'));
             $rol = $request->get('rol');
+            $periodo= $request->get('periodo');
         } else {
             $gestion = $gestionActual;
             $codigoArea = 0;
             $rol = 0;
+            $periodo=2;
         }
 
         $em = $this->getDoctrine()->getManager();
