@@ -1,0 +1,253 @@
+{% extends 'layoutDiplomas.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .higherWider {
+            width:800px;
+            margin-top:100px;
+        }
+    </style>
+
+{% endblock %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Historial de Inscripción
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  Buscar</li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('notihistory') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>¡Advertencia!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('goodhistory') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Bien!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            <!-- Website Stats  Widget -->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 col-lg-12">
+                        <div class="panel panel-icon panel-primary">
+                            <div class="panel-heading">
+                                <i class="fa fa-search"></i> Inserte Rude
+                            </div>
+                            <div class="panel-body">
+
+                                {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                                <div class="form-group">
+                                    <label for="form_codigoRudeHistory" class="col-sm-2 control-label">
+                                        {{form_label(form.codigoRudeHistory)}}
+                                    </label>
+                                    <div class="col-sm-10">
+                                        {{ form_widget(form.codigoRudeHistory) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+
+                                        {{ form_widget(form.buscar,{ 'attr':{'class':'btn btn-primary' } } ) }}
+                                    </div>
+                                </div>
+                                {{form_end(form)}}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!--start of result of search history  -->
+            {% if sw  %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="portlet portlet-blue">
+                            <div class="portlet-heading">
+                                <div class="portlet-title">
+                                    <h4>Información Estudiante</h4>
+                                </div>
+                                <div class="portlet-widgets">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinfoestudiante"><i class="fa fa-chevron-down"></i></a>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div id="pinfoestudiante" class="panel-collapse collapse in">
+                                <div class="portlet-body">
+                                    <div id="no-more-tables">
+                                        <table class="table table-bordered table-hover cf">
+                                            <thead class="cf">
+                                                <tr class="info">
+                                                    <th class="text-center">Rude</th>
+                                                    <th class="text-center">Nombre(s)</th>
+                                                    <th class="text-center">Paterno</th>
+                                                    <th class="text-center">Materno</th>
+                                                    <th class="text-center">CI</th>
+                                                    <th class="text-center">Complemento</th>
+                                                    <th class="text-center">Genero</th>
+                                                    <th class="text-center">F. Nacimiento</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td data-title="Rude">{{datastudent.codigoRude}}</td>
+                                                    <td data-title="Nombre">{{ datastudent.nombre|e }} </td>
+                                                    <td data-title="Paterno">{{datastudent.paterno|e}}</td>
+                                                    <td data-title="Materno">{{datastudent.materno|e}}</td>
+                                                    <td data-title="CI">{{datastudent.carnetIdentidad}} </td>
+                                                    <td data-title="Complemento" class="text-center">{{datastudent.complemento}}</td>
+                                                    <td data-title="Genero" class="text-center">{{datastudent.generoTipo}} </td>
+                                                    <td data-title="F. Nacimiento" class="text-center">{{datastudent.fechaNacimiento|date('d-m-Y')}}</td>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+<small>
+                <div class="row">
+                                <div class="col-lg-12">
+
+                                    <div class="portlet portlet-blue">
+                                        <div class="portlet-heading">
+                                            <div class="portlet-title">
+                                                <h4>Historial de Inscripción</h4>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="portlet-body">
+                                            <div class="table-responsive">
+                                                <div id="example-table_wrapper" class="dataTables_wrapper form-inline" role="grid">
+                                                  <table id="example-table" class="table table-striped table-bordered table-hover table-green dataTable" aria-describedby="example-table_info">
+                                                    <thead>
+                                                        <tr role="row">
+                                                          <th class="text-center">Gestion</th>
+                                                          <th class="text-center">SIE</th>
+                                                          <th class="text-center">Unidad Educativa</th>
+                                                          <th class="text-center">Nivel</th>
+                                                          <th class="text-center">Grado</th>
+                                                          <th class="text-center">Paralelo</th>
+                                                          <th class="text-center">Turno</th>
+                                                          <th class="text-center">Estado Matricula</th>
+                                                          <th class="text-center">Inscripcion</th>
+                                                          <th class="text-center">Opciones</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                <tbody role="alert" aria-live="polite" aria-relevant="all">
+                                                  {% for data in dataInscription%}
+
+                                                          <tr class = "success">
+                                                              <td data-title="Rude">{{data.gestion_tipo_id}}</td>
+                                                              <td data-title="Rude">{{data.institucioneducativa_titulo}}</td>
+                                                              <td data-title="Rude">{{data.institucioneducativa}}</td>
+                                                              <td data-title="Nombre">{{ data.nivel|e }} </td>
+                                                              <td data-title="Paterno">{{data.grado|e}}</td>
+                                                              <td data-title="Materno">{{data.paralelo|e}}</td>
+                                                              <td data-title="Turno">{{data.turno}} </td>
+                                                              <td data-title="Est. Matricula" class="text-center">{{data.em}}</td>
+                                                              <td data-title="Est. Matricula" class="text-center">{{data.emi}}</td>
+                                                              <td data-title="VerNota" class="text-center">
+                                                                   <a href="#" onclick="seeNotaNew('{{data.eiid}}', '{{data.eid}}', '{{data.nivel_tipo_id}}', '{{data.grado_tipo_id}}', '{{data.pid}}', '{{data.turno_tipo_id}}', '{{data.gestion_tipo_id}}', '{{data.institucioneducativa_id}}','{{data.estadomatricula_tipo_id}}')" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>
+                                                              </td>
+                                                          </tr>
+                                                  {% endfor %}
+                                                      </tbody>
+                                                    </table>
+
+                                              </div>
+                                            </div>
+                                            <!-- /.table-responsive -->
+                                        </div>
+                                        <!-- /.portlet-body -->
+                                    </div>
+                                    <!-- /.portlet -->
+
+                                </div>
+                                <!-- /.col-lg-12 -->
+
+                            </div>
+</small>
+                {%else%}
+
+            {% endif %}
+            <!-- en of the result of search history -->
+        </div>
+    </div>
+    <div class="modal modal-flex fade" id="myModalNotas" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+        <div class="modal-dialog higherWider">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="flexModalLabel">Calificaciones</h4>
+
+                </div>
+                <div class="modal-body">
+                    <div id="idNotas"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var seeNotaNew = function (inscripcionid, idstudent, nivel, grado, paralelo, turno, gestion, sie, estadomatriculaTipo) {
+
+            $('#myModalNotas').modal('show');
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('note_consultation_parents_sie_nota_new', {'inscripcionid': inscripcionid,'idstudent': idstudent, 'nivel': nivel, 'grado': grado, 'paralelo': paralelo, 'turno': turno, 'gestion': gestion, 'sie': sie,'estadomatriculaTipo': estadomatriculaTipo}),
+                beforeSend: function () {
+                    $("#idNotas").empty();
+                    $("#idNotas").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#idNotas").empty();
+                    $("#idNotas").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+    </script>
+{% endblock %}

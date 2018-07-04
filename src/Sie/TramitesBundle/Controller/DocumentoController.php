@@ -13,6 +13,7 @@ use Sie\AppWebBundle\Entity\Documento;
 
 use Sie\TramitesBundle\Controller\DefaultController as defaultTramiteController;
 use Sie\TramitesBundle\Controller\TramiteDetalleController as tramiteProcesoController;
+use Sie\TramitesBundle\Controller\TramiteController as tramiteController;
 
 class DocumentoController extends Controller {
 
@@ -107,7 +108,7 @@ class DocumentoController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $entityDocumento = $em->getRepository('SieAppWebBundle:Documento');
         $query = $entityDocumento->createQueryBuilder('d')
-                ->select("d.id as id, t.id as tramite, ds.id as serie, d.fechaImpresion as fechaemision, dept.departamento as departamentoemision, dept.id as departamentoemision_codigo, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documentoTipo as documentoTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad, tt.tramiteTipo as tramiteTipo")
+                ->select("d.id as id, t.id as tramite, ds.id as serie, d.fechaImpresion as fechaemision, dept.departamento as departamentoemision, dept.id as departamentoemision_codigo, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, gt1.id as gestionMatricula, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documentoTipo as documentoTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad, tt.tramiteTipo as tramiteTipo")
                 ->leftJoin('SieAppWebBundle:DocumentoEstado', 'de', 'WITH', 'de.id = d.documentoEstado')
                 ->innerJoin('SieAppWebBundle:DocumentoTipo', 'dt', 'WITH', 'dt.id = d.documentoTipo')
                 ->innerJoin('SieAppWebBundle:DocumentoSerie', 'ds', 'WITH', 'ds.id = d.documentoSerie')
@@ -118,6 +119,7 @@ class DocumentoController extends Controller {
                 ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')
                 ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = iec.institucioneducativa')
                 ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = ds.gestion')
+                ->innerJoin('SieAppWebBundle:GestionTipo', 'gt1', 'WITH', 'gt1.id = iec.gestionTipo')
                 ->innerJoin('SieAppWebBundle:PaisTipo', 'pt', 'WITH', 'pt.id = e.paisTipo')
                 ->innerJoin('SieAppWebBundle:DepartamentoTipo', 'dept', 'WITH', 'dept.id = ds.departamentoTipo')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
@@ -161,6 +163,46 @@ class DocumentoController extends Controller {
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp    .lugarTipo')
                 ->where('t.id = :codTramite')
                 ->setParameter('codTramite', $tramite)
+                ->orderBy('d.fechaImpresion', 'DESC');
+        $entityDocumento = $query->getQuery()->getResult();
+        if(count($entityDocumento)>0){
+            return $entityDocumento;
+        } else {
+            return $entityDocumento;
+        }
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que lista el detalle de documento supletorios generados dentro de un trámite
+    // PARAMETROS: id
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getDocumentoSupletorioDetalle($tramite) {
+        $em = $this->getDoctrine()->getManager();
+        $entityDocumento = $em->getRepository('SieAppWebBundle:Documento');
+        $query = $entityDocumento->createQueryBuilder('d')
+                ->select("d.id as id, t.id as tramite, ds.id as serie, d.fechaImpresion as fechaemision, dept.departamento as departamentoemision, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.id as documentoTipoId, dt.documentoTipo as documentoTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad, tt.tramiteTipo as tramiteTipo, de.documentoEstado as documentoEstado, de.id as documentoEstadoId, d.fechaRegistro as fechaRegistro, d.obs as observacion")
+                ->leftJoin('SieAppWebBundle:DocumentoEstado', 'de', 'WITH', 'de.id = d.documentoEstado')
+                ->innerJoin('SieAppWebBundle:DocumentoTipo', 'dt', 'WITH', 'dt.id = d.documentoTipo')
+                ->innerJoin('SieAppWebBundle:DocumentoSerie', 'ds', 'WITH', 'ds.id = d.documentoSerie')
+                ->innerJoin('SieAppWebBundle:Tramite', 't', 'WITH', 't.id = d.tramite')
+                ->innerJoin('SieAppWebBundle:TramiteTipo', 'tt', 'WITH', 'tt.id = t.tramiteTipo')
+                ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'ei.id = t.estudianteInscripcion')
+                ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'e.id = ei.estudiante')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')
+                ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = iec.institucioneducativa')
+                ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = ds.gestion')
+                ->innerJoin('SieAppWebBundle:PaisTipo', 'pt', 'WITH', 'pt.id = e.paisTipo')
+                ->innerJoin('SieAppWebBundle:DepartamentoTipo', 'dept', 'WITH', 'dept.id = ds.departamentoTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp    .lugarTipo')
+                ->where('t.id = :codTramite')
+                ->andWhere('de.id = :codDocumentoEstado')
+                ->andWhere('dt.id = :codDocumentoTipo')
+                ->setParameter('codTramite', $tramite)
+                ->setParameter('codDocumentoEstado', 1)
+                ->setParameter('codDocumentoTipo', 9)
                 ->orderBy('d.fechaImpresion', 'DESC');
         $entityDocumento = $query->getQuery()->getResult();
         if(count($entityDocumento)>0){
@@ -273,6 +315,92 @@ class DocumentoController extends Controller {
             return "";
         } else {
             return "El número de serie ".$serie." no esta asignado para ".$documentoTipo.".";
+        }
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que valida el estado activo y el tipo de documento de un determinado numero de serie para generar el certificado supletorio
+    // PARAMETROS: serie
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function validaNumeroSerieParaSupletorio($serie) {
+        /*
+         * Halla datos del documento supletorio en caso de existir
+         */
+        $em = $this->getDoctrine()->getManager();
+
+        $entityDocumento = $em->getRepository('SieAppWebBundle:Documento');
+        $query = $entityDocumento->createQueryBuilder('d')
+                ->select("d.id as id, t.id as tramite, ds.id as serie, d.fechaImpresion as fechaemision, dept.departamento as departamentoemision, dept.id as departamentoemision_codigo, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, gt1.id as gestionMatricula, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documentoTipo as documentoTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad, tt.tramiteTipo as tramiteTipo")
+                ->leftJoin('SieAppWebBundle:DocumentoEstado', 'de', 'WITH', 'de.id = d.documentoEstado')
+                ->innerJoin('SieAppWebBundle:DocumentoTipo', 'dt', 'WITH', 'dt.id = d.documentoTipo')
+                ->innerJoin('SieAppWebBundle:DocumentoSerie', 'ds', 'WITH', 'ds.id = d.documentoSerie')
+                ->innerJoin('SieAppWebBundle:Tramite', 't', 'WITH', 't.id = d.tramite')
+                ->innerJoin('SieAppWebBundle:TramiteTipo', 'tt', 'WITH', 'tt.id = t.tramiteTipo')
+                ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'ei.id = t.estudianteInscripcion')
+                ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'e.id = ei.estudiante')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')
+                ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = iec.institucioneducativa')
+                ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = ds.gestion')
+                ->innerJoin('SieAppWebBundle:GestionTipo', 'gt1', 'WITH', 'gt1.id = iec.gestionTipo')
+                ->innerJoin('SieAppWebBundle:PaisTipo', 'pt', 'WITH', 'pt.id = e.paisTipo')
+                ->innerJoin('SieAppWebBundle:DepartamentoTipo', 'dept', 'WITH', 'dept.id = ds.departamentoTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp    .lugarTipo')
+                ->where('ds.id = :serie')
+                ->andWhere('dt.id in (1,3,4,5)')
+                ->andWhere('de.id in (1)')
+                ->setParameter('serie', $serie);
+        $entityDocumento = $query->getQuery()->getResult();
+        
+        if(count($entityDocumento)>0){
+            return "";
+        } else {
+            return "El documento con número de serie ".$serie." no es válido para generar un certificado supletorio.";
+        }
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que valida el estado activo y el tipo de documento de un determinado numero de serie para su legalizacion
+    // PARAMETROS: serie
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function validaNumeroSerieParaLegalizar($serie) {
+        /*
+         * Halla datos del documento supletorio en caso de existir
+         */
+        $em = $this->getDoctrine()->getManager();
+
+        $entityDocumento = $em->getRepository('SieAppWebBundle:Documento');
+        $query = $entityDocumento->createQueryBuilder('d')
+                ->select("d.id as id, t.id as tramite, ds.id as serie, d.fechaImpresion as fechaemision, dept.departamento as departamentoemision, dept.id as departamentoemision_codigo, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, gt1.id as gestionMatricula, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documentoTipo as documentoTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad, tt.tramiteTipo as tramiteTipo")
+                ->leftJoin('SieAppWebBundle:DocumentoEstado', 'de', 'WITH', 'de.id = d.documentoEstado')
+                ->innerJoin('SieAppWebBundle:DocumentoTipo', 'dt', 'WITH', 'dt.id = d.documentoTipo')
+                ->innerJoin('SieAppWebBundle:DocumentoSerie', 'ds', 'WITH', 'ds.id = d.documentoSerie')
+                ->innerJoin('SieAppWebBundle:Tramite', 't', 'WITH', 't.id = d.tramite')
+                ->innerJoin('SieAppWebBundle:TramiteTipo', 'tt', 'WITH', 'tt.id = t.tramiteTipo')
+                ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'ei.id = t.estudianteInscripcion')
+                ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'e.id = ei.estudiante')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')
+                ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = iec.institucioneducativa')
+                ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = ds.gestion')
+                ->innerJoin('SieAppWebBundle:GestionTipo', 'gt1', 'WITH', 'gt1.id = iec.gestionTipo')
+                ->innerJoin('SieAppWebBundle:PaisTipo', 'pt', 'WITH', 'pt.id = e.paisTipo')
+                ->innerJoin('SieAppWebBundle:DepartamentoTipo', 'dept', 'WITH', 'dept.id = ds.departamentoTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp    .lugarTipo')
+                ->where('ds.id = :serie')
+                ->andWhere('dt.id in (1,3,4,5,6,7,8)')
+                ->andWhere('de.id in (1)')
+                ->setParameter('serie', $serie);
+        $entityDocumento = $query->getQuery()->getResult();
+        
+        if(count($entityDocumento)>0){
+            return "";
+        } else {
+            return "El documento con número de serie ".$serie." no es válido para generar un certificado supletorio.";
         }
     }
 
@@ -685,7 +813,7 @@ class DocumentoController extends Controller {
             // VALIDACION DE LA ASIGNACION DE UN NUMERO DE SERIE A UN DOCUMENTO
             $valSerieAsigando = $this->validaNumeroSerieAsignado($serie);
             if($valSerieAsigando == ""){
-                $msgContenido = ($msgContenido=="") ? $valSerieAsigando : $msgContenido.", ".$valSerieAsigando;
+                $msgContenido = ($msgContenido=="") ? "No existe el documento con número de serie ".$serie : "No existe el documento con número de serie ".$serie.", ".$valSerieAsigando;
             }
 
             $departamentoCodigo = $this->getCodigoLugarRol($usuarioId,$rolPermitido);
@@ -706,6 +834,13 @@ class DocumentoController extends Controller {
             }
 
             $entityDocumento = $this->getDocumentoSerieActivo($serie);
+
+            $msgvalidaNumeroSerieTipoDocumento = $this->validaNumeroSerieParaLegalizar($serie);
+
+            if ($msgvalidaNumeroSerieTipoDocumento != ""){
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msgvalidaNumeroSerieTipoDocumento));
+                return $this->redirectToRoute('tramite_documento_supletorio');
+            }  
 
             $entityDocumentoDetalle = $this->getDocumentoDetalle($entityDocumento['tramite']);
             
@@ -850,4 +985,438 @@ class DocumentoController extends Controller {
             return $this->redirectToRoute('tramite_documento_legalizacion_numero_serie');
         }                       
     }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que genera el formulario para la busqueda de documentos por numero de serie
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function legalizacionInstitucionEducativaAction(Request $request) {
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = $fechaActual->format('Y');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $defaultTramiteController = new defaultTramiteController();
+        $defaultTramiteController->setContainer($this->container);
+
+        $activeMenu = $defaultTramiteController->setActiveMenu();
+
+        $rolPermitido = array(8,17);
+
+        $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
+
+        if (!$esValidoUsuarioRol){
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
+        }
+
+        return $this->render($this->session->get('pathSystem') . ':Documento:legalizaInstitucionEducativaIndex.html.twig', array(
+            'form' => $this->creaFormBuscaInstitucionEducativa('tramite_documento_legalizacion_institucion_educativa_pdf', '',$gestionActual)->createView()
+            , 'titulo' => 'Legalización'
+            , 'subtitulo' => 'Documentos'
+        ));
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que genera un formulario par ala busqueda de instituciones educativas por gestion
+    // PARAMETROS: institucionEducativaId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function creaFormBuscaInstitucionEducativa($routing, $institucionEducativaId, $gestionId) {
+        $em = $this->getDoctrine()->getManager();
+        $entidadGestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id' => $gestionId));
+        if($institucionEducativaId==0){
+            $institucionEducativaId = "";
+        }
+        $form = $this->createFormBuilder()
+                ->setAction($this->generateUrl($routing))
+                ->add('sie', 'number', array('label' => 'SIE', 'attr' => array('value' => $institucionEducativaId, 'class' => 'form-control', 'placeholder' => 'Código de institución educativa', 'onInput' => 'valSie()', ' onchange' => 'valSieFocusOut()', 'pattern' => '[0-9]{6,8}', 'maxlength' => '8', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
+                ->add('gestion', 'entity', array('data' => $entidadGestionTipo, 'empty_value' => 'Seleccione Gestión', 'attr' => array('class' => 'form-control'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
+                    'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('gt')
+                                ->where('gt.id > 2008')
+                                ->orderBy('gt.id', 'DESC');
+                    },
+                ))
+                ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-blue')))
+                ->getForm();
+        return $form;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que descarga la legalización de un documento segun el numero de serie enviado en formato pdf
+    // PARAMETROS: documentoLegalizadoId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function legalizacionInstitucionEducativaPdfAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+
+        $sesion = $request->getSession();
+        $usuarioId = $sesion->get('userId');
+        $gestionActual = new \DateTime("Y");
+        //validation if the user is logged
+        if (!isset($usuarioId)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        if ($request->getMethod() == 'POST') {
+            $form = $request->get('form');
+            if ($form){  
+                $sie = $form['sie'];  
+                $ges = $form['gestion']; 
+
+                $tramiteController = new tramiteController();
+                $tramiteController->setContainer($this->container);
+                $rolPermitido = array(8,17);
+                $usuarioRol = $this->session->get('roluser');
+                $verTuicionUnidadEducativa = $tramiteController->verTuicionUnidadEducativa($usuarioId, $sie, $usuarioRol, 'DIPLOMAS');
+
+                if ($verTuicionUnidadEducativa != ''){
+                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Su usuario no cuenta con la respectiva tuición de la institución educativa'.$sie));
+                    return $this->redirectToRoute('tramite_documento_legalizacion_institucion_educativa');
+                }
+
+                $arch = $sie.'_'.$ges.'_legalizacion'.date('YmdHis').'.pdf';
+                $response = new Response();
+                $response->headers->set('Content-type', 'application/pdf');
+                $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_Estudiantelegalizacion_ue_v1.rptdesign&sie='.$sie.'&gestion='.$ges.'&&__format=pdf&'));
+                $response->setStatusCode(200);
+                $response->headers->set('Content-Transfer-Encoding', 'binary');
+                $response->headers->set('Pragma', 'no-cache');
+                $response->headers->set('Expires', '0');
+                return $response;
+            } else {
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al enviar el formulario, intente nuevamente'));
+                return $this->redirectToRoute('tramite_documento_legalizacion_institucion_educativa');
+            } 
+        } else {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar la operación, intente nuevamente'));
+            return $this->redirectToRoute('tramite_documento_legalizacion_institucion_educativa');
+        }                       
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que genera el formulario para la busqueda de documentos por numero de serie
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function supletorioAction(Request $request) {
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        $gestionActual = new \DateTime("Y");
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $defaultTramiteController = new defaultTramiteController();
+        $defaultTramiteController->setContainer($this->container);
+
+        $activeMenu = $defaultTramiteController->setActiveMenu();
+
+        $rolPermitido = array(8,17);
+
+        $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
+
+        if (!$esValidoUsuarioRol){
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
+        }
+
+        return $this->render($this->session->get('pathSystem') . ':Documento:supletorioIndex.html.twig', array(
+            'form' => $this->creaFormBuscaDocumentoSerie('tramite_documento_supletorio_detalle', '')->createView()
+            , 'titulo' => 'Certificado Supletorio'
+            , 'subtitulo' => 'Busca'
+        ));
+    }
+    
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que muestra el detalle del documento y sus certificados supletorio segun el numero de serie enviado
+    // PARAMETROS: numeroSerie
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function supletorioDetalleAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+
+        $sesion = $request->getSession();
+        $usuarioId = $sesion->get('userId');
+        $gestionActual = new \DateTime("Y");
+        //validation if the user is logged
+        if (!isset($usuarioId)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $rolPermitido = 16;
+
+        $form = $request->get('form');
+
+        if ($form) {
+            $serie = $form['serie'];
+            $msgContenido = "";
+            // VALIDACION DE LA ASIGNACION DE UN NUMERO DE SERIE A UN DOCUMENTO
+            $valSerieAsigando = $this->validaNumeroSerieAsignado($serie);
+
+            if($valSerieAsigando == ""){
+                $msgContenido = ($msgContenido=="") ? "No existe el documento con número de serie ".$serie : "No existe el documento con número de serie ".$serie.", ".$valSerieAsigando;
+            }
+
+            $departamentoCodigo = $this->getCodigoLugarRol($usuarioId,$rolPermitido);
+
+            if ($departamentoCodigo == 0){
+                $msgContenido = ($msgContenido=="") ? "el usuario no cuenta con autorizacion para los documentos" : $msgContenido.", "."el usuario no cuenta con autorizacion para los el documentos ";
+            } else {
+                // VALIDACION DE TUICION DEL CARTON
+                $valSerieTuicion = $this->validaNumeroSerieTuicion($serie, $departamentoCodigo);
+                if($valSerieTuicion != ""){
+                    $msgContenido = ($msgContenido=="") ? $valSerieTuicion : $msgContenido.", ".$valSerieTuicion;
+                }
+            }
+
+            // $msgContenido = "";
+            if($msgContenido == ""){
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msgContenido));
+                return $this->redirectToRoute('tramite_documento_supletorio');
+            }
+
+            $entityDocumento = $this->getDocumentoSerieActivo($serie);
+
+            $msgvalidaNumeroSerieTipoDocumento = $this->validaNumeroSerieParaSupletorio($serie);
+
+            if ($msgvalidaNumeroSerieTipoDocumento != ""){
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msgvalidaNumeroSerieTipoDocumento));
+                return $this->redirectToRoute('tramite_documento_supletorio');
+            }  
+
+            $entityDocumentoDetalle = $this->getDocumentoSupletorioDetalle($entityDocumento['tramite']);
+            
+            return $this->render($this->session->get('pathSystem') . ':Documento:supletorioDetalle.html.twig', array(
+                'form' => $this->creaFormularioSupletorio('tramite_documento_supletorio_guarda', '', $entityDocumento['id'])->createView(),
+                'listaDocumento' => $entityDocumento,
+                'listaDocumentoDetalle' => $entityDocumentoDetalle,
+                'titulo' => 'Certificado Supletorio',
+                'subtitulo' => 'Registra'
+            ));
+        } else {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar el registro, intente nuevamente'));
+            return $this->redirectToRoute('tramite_documento_supletorio');
+        }
+    }
+
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que genera un formulario para la generación de certificados supletorio
+    // PARAMETROS: numeroSerie, documentoId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    private function creaFormularioSupletorio($routing, $serie, $documentoId) {
+        $form = $this->createFormBuilder()
+                ->setAction($this->generateUrl($routing))
+                ->add('serie', 'text', array('label' => 'Serie - Supletorio', 'attr' => array('value' => '', 'placeholder' => 'Número y Serie del cartón', 'class' => 'form-control', 'pattern' => '^@?(\w){1,8}$', 'maxlength' => '8', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))                    
+                ->add('codigo', 'hidden', array('attr' => array('value' => base64_encode($documentoId))))
+                ->add('search', 'submit', array('label' => 'Generar Certificado Supletorio', 'attr' => array('class' => 'btn btn-blue')))
+                ->getForm();
+        return $form;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que registra el certificado supletorio de un documento segun el numero de serie enviado
+    // PARAMETROS: documentoId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function supletorioGuardaAction(Request $request) {
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        $gestionActual = new \DateTime("Y");
+        $mensaje = "";
+        $rolPermitido = 16;
+        //validation if the user is logged        
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }   
+        if ($request->isMethod('POST')) {
+            /*
+             * Recupera datos del formulario
+             */
+            $form = $request->get('form');
+            //get the values throght the infoUe
+            if ($form) {
+                $numeroSerieSupletorio = $form['serie'];
+                $documentoId = base64_decode($form['codigo']); 
+
+                $entityDocumento = $this->getDocumento($documentoId);                
+                if (count($entityDocumento)<1) {  
+                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Diploma de bachiller no encontrado, intente nuevamente'));
+                    return $this->redirectToRoute('tramite_documento_supletorio');
+                } 
+
+                $formBusqueda = array('serie'=>$entityDocumento['serie']);
+
+                $tramiteProcesoController = new tramiteProcesoController();
+                $tramiteProcesoController->setContainer($this->container);
+
+                $usuarioLugarId = $this->getCodigoLugarRol($id_usuario,$rolPermitido);
+                if (count($usuarioLugarId)<1) {  
+                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Lugar de procedencia del usuario inexistente, intente nuevamente'));
+                    return $this->redirectToRoute('tramite_documento_supletorio_detalle', ['form'=>$formBusqueda], 307);
+                } 
+                
+                $codTramite = $entityDocumento["tramite"];
+
+                $em = $this->getDoctrine()->getManager();
+                $em->getConnection()->beginTransaction();
+                try {
+                    
+                    $msgContenidoDocumento = $this->getDocumentoValidación($numeroSerieSupletorio, '', $fechaActual, $id_usuario, $rolPermitido, 9);
+                    if($msgContenidoDocumento == ""){
+                        $idDocumento = $this->setDocumento($codTramite, $id_usuario, 9, $numeroSerieSupletorio, '', $fechaActual); 
+                        $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'El certificado supletorio con numero de serie "'.$numeroSerieSupletorio.'" fue generado'));
+                        $em->getConnection()->commit();
+                    } else {
+                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msgContenidoDocumento));
+                        $em->getConnection()->rollback();
+                    }             
+                } catch (Exception $ex) {
+                    $em->getConnection()->rollback();
+                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $ex->getMessage()));                    
+                }  
+                return $this->redirectToRoute('tramite_documento_supletorio_detalle', ['form' => $formBusqueda], 307);
+            }  else {                
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Formulario enviado de forma incorrecta, intente nuevamente'));
+                return $this->redirectToRoute('tramite_documento_supletorio');
+            }
+        } else {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al enviar información, intente nuevamente'));
+            return $this->redirectToRoute('tramite_documento_supletorio');
+        }   
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que descarga el certificado supletorio de un documento  en formato pdf segun el numero de serie enviado
+    // PARAMETROS: documentoId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function supletorioPdfAction(Request $request) {
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        $gestionActual = new \DateTime("Y");
+        $this->session->set('save', false);
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        //$cod_url = urlencode($cadena); 
+        //$deco_url = urldecode($cod_url); 
+
+        //$codifica1 = base64_encode($cadena); 
+        //$decodifica2 = base64_decode($codifica1); 
+
+        //$codifica3 = convert_uuencode($cadena); 
+        //$decodifica4 = convert_uudecode($codifica3);
+        
+
+        $codigoDocumento = base64_decode($request->get('supletorio'));
+        $token = $request->get('_token');
+
+        $em = $this->getDoctrine()->getManager();
+        $entityDocumento = $em->getRepository('SieAppWebBundle:Documento')->findOneBy(array('id' => $codigoDocumento));
+
+        if (!$this->isCsrfTokenValid($codigoDocumento, $token)) {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al enviar información, intente nuevamente'));
+            return $this->redirectToRoute('tramite_documento_supletorio');
+        } 
+
+        $lk = "http://diplomas.sie.gob.bo/diplomas/documento/certificado/supletorio/qr/".md5($codigoDocumento);
+      
+        ///////return $this->redirectToRoute('sie_diploma_tramite_legalizacion');
+        $arch = 'CertificadoSupletorio_'.$entityDocumento->getDocumentoSerie()->getId().'_'.date('YmdHis').'.pdf';
+
+        $departamentoIdDocumentoSerie = $entityDocumento->getDocumentoSerie()->getDepartamentoTipo()->getId();
+        $gestionIdDocumentoSerie = $entityDocumento->getDocumentoSerie()->getGestion()->getId();
+        $fileContent = "";      
+
+        switch ($gestionIdDocumentoSerie) {
+            case 2017:
+                if ($departamentoIdDocumentoSerie == 1) {
+                    $fileContent = $this->container->getParameter('urlreportweb') . 'gen_dpl_certificadoSupletorio_estudiante_2017_v1_ch.rptdesign&supletorio='.md5($codigoDocumento).'&lk='.$lk.'&&__format=pdf&';
+                } elseif ($departamentoIdDocumentoSerie == 2) {
+                    $fileContent = $this->container->getParameter('urlreportweb') . 'gen_dpl_certificadoSupletorio_estudiante_2017_v1_lp.rptdesign&supletorio='.md5($codigoDocumento).'&lk='.$lk.'&&__format=pdf&';
+                } elseif ($departamentoIdDocumentoSerie == 3) {
+                    $fileContent = $this->container->getParameter('urlreportweb') . 'gen_dpl_certificadoSupletorio_estudiante_2017_v1_cba.rptdesign&supletorio='.md5($codigoDocumento).'&lk='.$lk.'&&__format=pdf&';
+                } elseif ($departamentoIdDocumentoSerie == 4) {
+                    $fileContent = $this->container->getParameter('urlreportweb') . 'gen_dpl_certificadoSupletorio_estudiante_2017_v1_or.rptdesign&supletorio='.md5($codigoDocumento).'&lk='.$lk.'&&__format=pdf&';
+                } elseif ($departamentoIdDocumentoSerie == 5) {
+                    $fileContent = $this->container->getParameter('urlreportweb') . 'gen_dpl_certificadoSupletorio_estudiante_2017_v1_pt.rptdesign&supletorio='.md5($codigoDocumento).'&lk='.$lk.'&&__format=pdf&';
+                } elseif ($departamentoIdDocumentoSerie == 6) {
+                    $fileContent = $this->container->getParameter('urlreportweb') . 'gen_dpl_certificadoSupletorio_estudiante_2017_v1_tj.rptdesign&supletorio='.md5($codigoDocumento).'&lk='.$lk.'&&__format=pdf&';
+                } elseif ($departamentoIdDocumentoSerie == 7) {
+                    $fileContent = $this->container->getParameter('urlreportweb') . 'gen_dpl_certificadoSupletorio_estudiante_2017_v1_scz.rptdesign&supletorio='.md5($codigoDocumento).'&lk='.$lk.'&&__format=pdf&';
+                } elseif ($departamentoIdDocumentoSerie == 8) {
+                    $fileContent = $this->container->getParameter('urlreportweb') . 'gen_dpl_certificadoSupletorio_estudiante_2017_v1_bn.rptdesign&supletorio='.md5($codigoDocumento).'&lk='.$lk.'&&__format=pdf&';
+                } elseif ($departamentoIdDocumentoSerie == 9) {
+                    $fileContent = $this->container->getParameter('urlreportweb') . 'gen_dpl_certificadoSupletorio_estudiante_2017_v1_pn.rptdesign&supletorio='.md5($codigoDocumento).'&lk='.$lk.'&&__format=pdf&';
+                }else {
+                    $fileContent = $this->container->getParameter('urlreportweb') . 'gen_dpl_certificadoSupletorio_estudiante_2017_v1_ch.rptdesign&supletorio='.md5($codigoDocumento).'&lk='.$lk.'&&__format=pdf&';
+                }
+                break;                
+            default :
+                if ($departamentoIdDocumentoSerie == 1) {
+                    $fileContent = $this->container->getParameter('urlreportweb') . 'gen_dpl_certificadoSupletorio_estudiante_2017_v1_ch.rptdesign&supletorio='.md5($codigoDocumento).'&lk='.$lk.'&&__format=pdf&';
+                } elseif ($departamentoIdDocumentoSerie == 2) {
+                    $fileContent = $this->container->getParameter('urlreportweb') . 'gen_dpl_certificadoSupletorio_estudiante_2017_v1_lp.rptdesign&supletorio='.md5($codigoDocumento).'&lk='.$lk.'&&__format=pdf&';
+                } elseif ($departamentoIdDocumentoSerie == 3) {
+                    $fileContent = $this->container->getParameter('urlreportweb') . 'gen_dpl_certificadoSupletorio_estudiante_2017_v1_cba.rptdesign&supletorio='.md5($codigoDocumento).'&lk='.$lk.'&&__format=pdf&';
+                } elseif ($departamentoIdDocumentoSerie == 4) {
+                    $fileContent = $this->container->getParameter('urlreportweb') . 'gen_dpl_certificadoSupletorio_estudiante_2017_v1_or.rptdesign&supletorio='.md5($codigoDocumento).'&lk='.$lk.'&&__format=pdf&';
+                } elseif ($departamentoIdDocumentoSerie == 5) {
+                    $fileContent = $this->container->getParameter('urlreportweb') . 'gen_dpl_certificadoSupletorio_estudiante_2017_v1_pt.rptdesign&supletorio='.md5($codigoDocumento).'&lk='.$lk.'&&__format=pdf&';
+                } elseif ($departamentoIdDocumentoSerie == 6) {
+                    $fileContent = $this->container->getParameter('urlreportweb') . 'gen_dpl_certificadoSupletorio_estudiante_2017_v1_tj.rptdesign&supletorio='.md5($codigoDocumento).'&lk='.$lk.'&&__format=pdf&';
+                } elseif ($departamentoIdDocumentoSerie == 7) {
+                    $fileContent = $this->container->getParameter('urlreportweb') . 'gen_dpl_certificadoSupletorio_estudiante_2017_v1_scz.rptdesign&supletorio='.md5($codigoDocumento).'&lk='.$lk.'&&__format=pdf&';
+                } elseif ($departamentoIdDocumentoSerie == 8) {
+                    $fileContent = $this->container->getParameter('urlreportweb') . 'gen_dpl_certificadoSupletorio_estudiante_2017_v1_bn.rptdesign&supletorio='.md5($codigoDocumento).'&lk='.$lk.'&&__format=pdf&';
+                } elseif ($departamentoIdDocumentoSerie == 9) {
+                    $fileContent = $this->container->getParameter('urlreportweb') . 'gen_dpl_certificadoSupletorio_estudiante_2017_v1_pn.rptdesign&supletorio='.md5($codigoDocumento).'&lk='.$lk.'&&__format=pdf&';
+                }else {
+                    $fileContent = $this->container->getParameter('urlreportweb') . 'gen_dpl_certificadoSupletorio_estudiante_2017_v1_ch.rptdesign&supletorio='.md5($codigoDocumento).'&lk='.$lk.'&&__format=pdf&';
+                }
+                break; 
+        }
+        
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($fileContent));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }   
 }
