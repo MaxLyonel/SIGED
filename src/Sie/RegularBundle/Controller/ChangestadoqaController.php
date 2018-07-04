@@ -346,8 +346,20 @@ class ChangestadoqaController extends Controller {
               
               $inscriptionStudentAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('estudianteInscripcion' => $arrDataInfo['estInsId']));
               foreach ($inscriptionStudentAsignatura as $key => $value) {
+                // delete notas
+                $objNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findBy(array('estudianteAsignatura' => $value));
+                foreach($objNota as $element2) {
+                    $em->remove($element2);
+                }
+
                 $em->remove($value);
                 $em->flush();
+              }
+
+              // delete notas cualitativas
+              $objNotaCualitativa = $em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findBy(array('estudianteInscripcion' => $arrDataInfo['estInsId']));
+              foreach($objNotaCualitativa as $element3) {
+                  $em->remove($element3);
               }
 
               $inscriptionStudent = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($arrDataInfo['estInsId']);

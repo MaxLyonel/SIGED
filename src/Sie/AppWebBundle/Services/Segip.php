@@ -20,7 +20,7 @@ class Segip {
         ]);
 
         /*TOKEN DE CONEXIÓN*/
-        $this->token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjODY5N25tY1M3TzViTmoxMFBEelI4OFY0QmtDQmlrVyIsInVzZXIiOiJhZmllbmdvIiwiZXhwIjoxNjE5OTgyMzAwfQ.sq_5MqNRGWl8x4DypeHJo-9_trLLFrYvF933B_8Niis';
+        $this->token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJXREdHc3VvQ1dVS1VFdDgxWFdnRk9NSnlBdzVRZDBxQyIsInVzZXIiOiJzaWVhY2FkZW1pY28iLCJleHAiOjE2MjUyMzg0MjB9.mZAIX3k76FkMxLKH8BlJ5CiGPlKEyKAFrsLTYG21Bqs';//'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJXREdHc3VvQ1dVS1VFdDgxWFdnRk9NSnlBdzVRZDBxQyIsInVzZXIiOiJzaWVhY2FkZW1pY28iLCJleHAiOjE2MjUyMzg0MjB9.mZAIX3k76FkMxLKH8BlJ5CiGPlKEyKAFrsLTYG21Bqs';//'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjODY5N25tY1M3TzViTmoxMFBEelI4OFY0QmtDQmlrVyIsInVzZXIiOiJhZmllbmdvIiwiZXhwIjoxNjE5OTgyMzAwfQ.sq_5MqNRGWl8x4DypeHJo-9_trLLFrYvF933B_8Niis';
         /*TOKEN DE CONEXIÓN*/
     }
     
@@ -82,10 +82,11 @@ class Segip {
 
         $responseDecode = json_decode($response, true);
 
-        if ($responseDecode['ConsultaDatoPersonaEnJsonResult']['EsValido']) {
+        if ($responseDecode['ConsultaDatoPersonaEnJsonResult']['EsValido'] === "true") {
             $persona = $responseDecode['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson'];
             $resultado = true;
         } else {
+            $persona = 'null';
             $resultado = false;
         }
 

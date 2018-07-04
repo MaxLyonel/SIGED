@@ -35,6 +35,7 @@
 </style>
 {% endblock %}
 {% block contentoption %}
+
 <div class="modal modal-flex fade" id="newModal" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -83,9 +84,9 @@
 <div class="body-content animated fadeIn">
 
     {% if institucion %}
-        {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Asignación Área/Maestro', 'gestión': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opción': 'Lista'} %}
+        {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Asignación Área/Maestro', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
     {% else %}
-        {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Asignación Área/Maestro', 'gestión': gestion,'sie': '-1', 'ieducativa':'-1', 'opción': 'Lista'} %}
+        {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Asignación Área/Maestro', 'gestion': gestion,'sie': '-1', 'ieducativa':'-1', 'opcion': 'Lista'} %}
     {% endif %}
     {% include 'SieEspecialBundle:Principal:onlyview.html.twig'%}
     <div class="row">

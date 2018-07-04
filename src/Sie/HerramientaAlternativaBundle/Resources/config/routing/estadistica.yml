@@ -9,3 +9,11 @@ estadistica_alternativa_informacion_general_print_pdf:
 estadistica_alternativa_informacion_general_print_xls:
     path:     /informacion/general/alternativa/print/xls
     defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:informacionGeneralAlternativaPrintXls }
+
+estadistica_esp_alternativa_informacion_general_print_pdf:
+    path:     /informacion/general/alternativaesp/print/pdf
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:informacionGeneralAlternativaEspPrintPdf }
+
+estadistica_esp_alternativa_informacion_general_print_xls:
+    path:     /informacion/general/alternativaesp/print/xls
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:informacionGeneralAlternativaEspPrintXls }
