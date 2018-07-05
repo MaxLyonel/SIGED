@@ -1,3 +1,4 @@
+{% set onlyview = app.session.get('onlyview') %}
 {% if notas is defined %}
 	<div class="modal-dialog">
 	    <div class="modal-content" style="width:900px; margin-left:-100px">
@@ -70,7 +71,7 @@
 	        </div>
 	        <div class="modal-footer">
 	            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-	            {% if notas.estadoMatricula in notas.estadosPermitidos and notas.cuantitativas|length > 0 %}
+	            {% if notas.estadoMatricula in notas.estadosPermitidos and notas.cuantitativas|length > 0 and onlyview == false %}
 		            <button type="submit" class="btn btn-success">Guardar Cambios</button>
 		        {% endif %}
 	        </div>

@@ -307,7 +307,7 @@
                             <span class="selected"></span>
                         </a>
                     </li>
-                    {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10   %}
+                    {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10 or app.session.get('roluser') == 20 %}
 
                     <li class="submenu">
                         <a href="javascript:void(0);">
@@ -371,19 +371,20 @@
                             <li><a href="{{ path('herramienta_info_estudiante_bjp_index')}}">Validar Estudiantes</a></li>
                         </ul>
                     </li>#}
-
-                    <li class="submenu">
-                        <a href="javascript:void(0);">
-                            <span class="icon"><i class="fa fa-home"></i></span>
-                            <span class="text">Herramientas</span>
-                            <span class="arrow"></span>
-                        </a>
-                        <ul>
-                            {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 %}
-                                <li><a href="{{ path('herramienta_especial_habilitar_gestion_search')}}">Habilitar gestión</a></li>
-                            {% endif %}
-                        </ul>
-                    </li>
+                    {% if app.session.get('roluser') != 20 %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-home"></i></span>
+                                <span class="text">Herramientas</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 %}
+                                    <li><a href="{{ path('herramienta_especial_habilitar_gestion_search')}}">Habilitar gestión</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    {% endif %}
 
 
                     <!-- Start navigation - dashboard -->

@@ -278,133 +278,56 @@
                   <div class="cbp-l-grid-masonry-projects-desc"></div>
               </div><br></div>
 
-                {% if (app.session.get('roluser') == 9) %} {#SOLO EL DIRECTOR PUEDE CERRAR EL OPERATIVO#}
-                    {% if (app.session.get('ie_per_estado') != '0') %}                                
-                                    {% if (app.session.get('ie_gestion') < '2010') %}
-                                            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
-                                                <div class="cbp-caption">
-                                                        <div class="cbp-caption-defaultWrap">
-                                                            <div class="headerOptions" style="height:20px; background:#ffffff"></div>
-                                                            <img src="{{asset('img/lista.jpg')}}" alt="...">
-                                                        </div>
-                                                        <div class="cbp-caption-activeWrap">
-                                                            <div class="cbp-l-caption-alignCenter">
-                                                                <div class="cbp-l-caption-body">
-                                                                    <br>
-                                                                        <form action="{{path('herramienta_alter_reporte_observacionesoperativo')}}" method="post" style="display:inline-block"> 
-                                                                            <button class="btn btn-inverse btn-stroke">GENERAR</button>
-                                                                        </form>
-                                                                        <br>
-                                                                    <span style="color:#FFFFFF">Genera un archivo de inconsistencias de información del periodo, para ser analizadas por el usuario.</span>
-                                                                </div>
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">GENERAR REPORTE DE INCONSISTENCIAS</div>
-                                                <div class="cbp-l-grid-masonry-projects-desc"></div>
-                                            </div><br></div>
-                                    {% else %}
-                                        {% if (app.session.get('ie_per_estado') == '0') %}                                        
-                                            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
-                                                <div class="cbp-caption">
-                                                        <div class="cbp-caption-defaultWrap">
-                                                            <div class="headerOptions" style="height:20px; background:#ffffff"></div>
-                                                            <img src="{{asset('img/lista.jpg')}}" alt="...">
-                                                        </div>
-                                                        <div class="cbp-caption-activeWrap">
-                                                            <div class="cbp-l-caption-alignCenter">
-                                                                <div class="cbp-l-caption-body">
-                                                                    <br>
-                                                                        <form action="{{path('herramienta_alter_reporte_observacionesoperativo')}}" method="post" style="display:inline-block"> 
-                                                                            <button class="btn btn-inverse btn-stroke">GENERAR</button>
-                                                                        </form>
-                                                                        <br>
-                                                                    <span style="color:#FFFFFF">Genera un archivo de inconsistencias de información del periodo, para ser analizadas por el usuario.</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                    <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">GENERAR REPORTE DE INCONSISTENCIAS</div>
-                                                <div class="cbp-l-grid-masonry-projects-desc"></div>
-                                            </div><br></div>
-                                        {% elseif ((app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3')) %}
-                                            <div id="BotonCerrar" class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
-                                                <div class="cbp-caption">
-                                                    <div class="cbp-caption-defaultWrap">
-                                                        <div class="headerOptions" style="height:20px; background:#7b0cde"></div>
-                                                        <img src="{{asset('img/cerraralter.jpg')}}" alt="...">
-                                                    </div>
-                                                    <div class="cbp-caption-activeWrap">
-                                                        <div class="cbp-l-caption-alignCenter">
-                                                            <div class="cbp-l-caption-body">
-                                                                <br>
-                                                                    <form onsubmit="return verificarCerrado();" action="{{path('herramienta_ceducativa_cerrar_operativo')}}" method="post" style="display:inline-block" >
-                                                                        <button class="btn btn-inverse btn-stroke">CERRAR OPERATIVO</button>
-                                                                    </form>
-                                                                    <br>
-                                                                <span style="color:#FFFFFF">Cierra el operativo actual, dando de esta manera por concluido la declaración de la información educativa solicitada. </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">CERRAR OPERATIVO</div>
-                                                <div class="cbp-l-grid-masonry-projects-desc"></div>
-                                            </div><br></div>
-                                        {% endif %}
-                                    {% endif %}
-                    {% else %}
-                            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
-                            <div class="cbp-caption">
-                                    <div class="cbp-caption-defaultWrap">
-                                        <div class="headerOptions" style="height:20px; background:#ffffff"></div>
-                                        <img src="{{asset('img/lista.jpg')}}" alt="...">
-                                    </div>
-                                    <div class="cbp-caption-activeWrap">
-                                        <div class="cbp-l-caption-alignCenter">
-                                            <div class="cbp-l-caption-body">
+            {% if (app.session.get('roluser') == 9) %} {#SOLO EL DIRECTOR PUEDE CERRAR EL OPERATIVO#}
+                {% if (app.session.get('ie_per_estado') == '0') %}  {#GENERA ACTA DE CIERRE UNA VES CERRADO EL OPERATIVO#}                                      
+                    <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                        <div class="cbp-caption">
+                                <div class="cbp-caption-defaultWrap">
+                                    <div class="headerOptions" style="height:20px; background:#ffffff"></div>
+                                    <img src="{{asset('img/administrativo300.jpg')}}" alt="...">
+                                </div>
+                                <div class="cbp-caption-activeWrap">
+                                    <div class="cbp-l-caption-alignCenter">
+                                        <div class="cbp-l-caption-body">
+                                            <br>
+                                                <form action="{{path('herramienta_alter_reporte_operativo_exitoso_cerrado')}}" method="post" style="display:inline-block"> 
+                                                    <button class="btn btn-inverse btn-stroke">GENERAR</button>
+                                                </form>
                                                 <br>
-                                                    <form action="{{path('herramienta_alter_reporte_observacionesoperativo')}}" method="post" style="display:inline-block"> 
-                                                        <button class="btn btn-inverse btn-stroke">GENERAR</button>
-                                                    </form>
-                                                    <br>
-                                                <span style="color:#FFFFFF">Genera un archivo de inconsistencias de información del periodo, para ser analizadas por el usuario.</span>
-                                            </div>
+                                            <span style="color:#FFFFFF">Genera el acta de cierre de operativo del periodo.</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">GENERAR REPORTE DE INCONSISTENCIAS</div>
-                                <div class="cbp-l-grid-masonry-projects-desc"></div>
-                            </div><br></div>
-                    {% endif %}
-                {% else %}
-                      <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
-                      <div class="cbp-caption">
+
+                            </div>
+                            <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">GENERAR ACTA DE CIERRE DE OPERATIVO</div>
+                        <div class="cbp-l-grid-masonry-projects-desc"></div>
+                    </div><br></div>
+                {% elseif ((app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3')) %}{#PARA OPERATIVO DE INCRIPCIONES NOTAS Y REGULARIZACION#}
+                    <div id="BotonCerrar" class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                        <div class="cbp-caption">
                             <div class="cbp-caption-defaultWrap">
-                                <div class="headerOptions" style="height:20px; background:#ffffff"></div>
-                                <img src="{{asset('img/lista.jpg')}}" alt="...">
+                                <div class="headerOptions" style="height:20px; background:#7b0cde"></div>
+                                <img src="{{asset('img/cerraralter.jpg')}}" alt="...">
                             </div>
                             <div class="cbp-caption-activeWrap">
                                 <div class="cbp-l-caption-alignCenter">
                                     <div class="cbp-l-caption-body">
                                         <br>
-                                            <form action="{{path('herramienta_alter_reporte_observacionesoperativo')}}" method="post" style="display:inline-block">
-                                                <button class="btn btn-inverse btn-stroke">GENERAR</button>
+                                            <form onsubmit="return verificarCerrado();" action="{{path('herramienta_ceducativa_cerrar_operativo')}}" method="post" style="display:inline-block" >
+                                                <button class="btn btn-inverse btn-stroke">CERRAR OPERATIVO</button>
                                             </form>
                                             <br>
-
-                                        <span style="color:#FFFFFF">Genera un archivo de inconsistencias de información del periodo, para ser analizadas por el usuario.</span>
+                                        <span style="color:#FFFFFF">Cierra el operativo actual, dando de esta manera por concluido la declaración de la información educativa solicitada. </span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">GENERAR REPORTE DE INCONSISTENCIAS</div>
+                        <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">CERRAR OPERATIVO</div>
                         <div class="cbp-l-grid-masonry-projects-desc"></div>
-                        </div><br></div>
+                    </div><br></div>
                 {% endif %}
-
-
+            {% endif %}
 
           <div class="col-lg-6 col-md-6 col-sm-6" >
           <div class="cbp-item-wrapper">

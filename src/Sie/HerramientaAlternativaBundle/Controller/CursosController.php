@@ -443,6 +443,17 @@ class CursosController extends Controller {
         $arrInfoStudent = json_decode($infoStudent, true);
         //dump($arrInfoStudent['eInsId']); die;
         try {
+             //step 1 remove the inscription observado
+            $objStudentInscriptionObservados = $em->getRepository('SieAppWebBundle:EstudianteInscripcionObservacion')->findBy(array('estudianteInscripcion' => $arrInfoStudent['eInsId']));
+            
+            if ($objStudentInscriptionObservados){
+                foreach ($objStudentInscriptionObservados as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+                
+                $obs = $element->getObs();
+            }
             //look for estudiante asignatura info
             $objStudentAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('estudianteInscripcion' => $arrInfoStudent['eInsId']));
             foreach ($objStudentAsignatura as $key => $asignatura) {

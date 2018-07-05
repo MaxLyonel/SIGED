@@ -1,0 +1,60 @@
+{% extends "::layoutTramites.html.twig"%}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+    </style>
+{% endblock %}
+
+{% block contentBread %}
+    <ol class="breadcrumb">
+        <li>
+            <i class="fa fa-home"></i>
+            <a href="{{path('tramite_documento_supletorio')}}">Perfil</a>
+            <i class="fa fa-angle-right"></i>
+            <a href="#">Legalización de documentos</a>
+        </li>
+        {% block contentSearchBread %}
+        {% endblock %}
+    </ol>
+{% endblock %}
+
+{% block contentoption %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    {% if form is defined  %}
+                        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'class': 'form-horizontal'} } )}}
+                            <div class="form-body">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{ form_label(form.serie) }} </label>
+                                    <div class="col-sm-7">
+                                        {{ form_widget(form.serie) }}
+                                    </div>
+                                </div><!-- /.form-group -->
+                            </div><!-- /.form-body -->
+                            <div class="form-footer">
+                                <div class="col-sm-12">
+                                    {{ form_widget(form.search,{ 'attr':{'class':'btn btn-primary mb-15 btn-block' } } ) }}
+                                </div>
+                            </div><!-- /.form-footer -->
+                        {{form_end(form)}}
+                    {% endif %}
+                </div><!-- /.panel-body -->
+            </div>
+        </div>
+    </div><!-- /.row -->
+    {% block contentsearch %}
+    {% endblock %}
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+
+       $(window).load(function(){
+
+        });
+    </script>
+    {% if listaParticipante is defined  %}
+    {% endif %}
+{%endblock%}

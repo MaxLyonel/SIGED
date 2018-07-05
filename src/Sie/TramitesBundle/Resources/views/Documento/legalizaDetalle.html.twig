@@ -61,9 +61,9 @@
                                         <a>
                                             <div class="pull-left">
                                                 {% if detalle.documentoTipoId == 2  %}
-                                                    <p class="text-lilac">{{ detalle.tramiteTipo }} Legalizado</p>
+                                                    <p class="text-lilac">{{ detalle.documentoTipo }} Legalizado</p>
                                                 {% else %}
-                                                    <p>{{ detalle.tramiteTipo }}</p>
+                                                    <p>{{ detalle.documentoTipo }}</p>
                                                 {% endif %}
                                                 <h3>{{ detalle.fechaemision|date('d/m/Y') }}</h3>
                                             </div>

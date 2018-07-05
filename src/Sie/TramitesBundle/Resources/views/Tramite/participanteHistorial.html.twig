@@ -17,6 +17,7 @@
                 <thead>
                     <tr>
                         <th class="text-center border-right">No.</th>
+                        <th class="text-center">Centro de Educación Alternativa</th>
                         <th class="text-center">Periodo</th>
                         <th class="text-center">Gestión</th>
                         <th class="text-center">Módulo</th>
@@ -28,6 +29,7 @@
                     {% for moduloHoras in listaModuloCargaHoraria %}
                         <tr>
                             <td class="text-center border-right">{{ loop.index }}</td>
+                            <td class="text-center">{{ moduloHoras.institucioneducativa_id }} - {{ moduloHoras.institucioneducativa }}</td>
                             <td class="text-center">{{ moduloHoras.periodo }}</td>
                             <td class="text-center">{{ moduloHoras.gestion }}</td>
                             <td class="text-center">{{ moduloHoras.modulo }}</td>

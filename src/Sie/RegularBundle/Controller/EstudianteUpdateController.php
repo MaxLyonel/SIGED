@@ -256,6 +256,14 @@ class EstudianteUpdateController extends Controller {
             }
         }
 
+        if(!$student->getLugarNacTipo()){
+            $objStudentUpdate = $em->getRepository('SieAppWebBundle:Estudiante')->find($student->getId());
+            $objStudentUpdate->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find(79355));
+            $objStudentUpdate->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find(11));
+            $em->persist($objStudentUpdate);
+            $em->flush();
+        }
+
         //echo $student->getLugarNacTipo()->getId();        die;
         if (!$m3) {
 

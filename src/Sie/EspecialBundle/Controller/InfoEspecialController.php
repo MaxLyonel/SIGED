@@ -41,6 +41,11 @@ class InfoEspecialController extends Controller{
                 $institucion = $form['sie'];
                 // creamos variables de sesion de la institucion educativa y gestion
                 $request->getSession()->set('ie_id', $institucion);
+                if ($this->session->get('roluser') == 7 or $this->session->get('roluser') == 8 or $this->session->get('roluser') == 9 or $this->session->get('roluser') == 10) {
+                  $request->getSession()->set('onlyview', false);
+                } else {
+                  $request->getSession()->set('onlyview', true);
+                }
             } else {
                 $this->get('session')->getFlashBag()->add('noTuicion', 'No tiene tuición sobre la unidad educativa');
                 return $this->redirect($this->generateUrl('herramienta_especial_buscar_centro'));
