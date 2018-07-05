@@ -118,10 +118,15 @@
                                 {% set porcentaje = (cantidad * 100)/(totalGeneral)%} 
                                 {% set id = data.codigo %}
                                 {% set nombre = data.nombre %} 
-                                {% set rol = data.rolusuario %}                                 
+                                {% set rol = data.rolusuario %}
+                                {% set periodo = data.periodo %}
+                                {% set gestion = data.gestion %}
+
                                 <form name="form" role="form" action="{{ path('sie_alt_reportes') }}" method="POST">
                                     <input type="hidden" name="codigo" value="{{id|base64_encode}}" />
                                     <input type="hidden" name="rol" value="{{rol}}" />
+                                    <input type="hidden" name="gestion" value="{{ gestion }}" />
+                                    <input type="hidden" name="periodo" value="{{ periodo }}" />
                                     <button type="submit" id="submit{{id}}" style="display:none;"></button>
                                     <a href="javascript:;" class="text-inverse" style="text-decoration:none;" onclick="$('#submit{{id}}').click();">
                                          <span class="pull-right" style="width:50px; text-align:right"><b>{{cantidad|number_format(0, ',', '.')}}</b></span><span class="">{{nombre}}</span>
@@ -137,24 +142,29 @@
                         <div class="panel-footer">
                         </div>
                     </div>
-                </div>  
+                </div>
+
                 <form name="formEstadisticaEspecialPdf" id="formEstadisticaEspecialPdf" role="form" action="{{ path('estadistica_alternativa_informacion_general_print_pdf') }}" method="POST">
-                    <input type="hidden" name="gestion" value="{{ gestion }}" />
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
                     <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />  
                     <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />     
                 </form> 
                 <form name="formEstadisticaEspecialXls" id="formEstadisticaEspecialXls" role="form" action="{{ path('estadistica_alternativa_informacion_general_print_xls') }}" method="POST">
-                    <input type="hidden" name="gestion" value="{{ gestion }}" />
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
                     <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />  
                     <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />   
                 </form>
                 <form name="formEspEstadisticaEspecialPdf" id="formEspEstadisticaEspecialPdf" role="form" action="{{ path('estadistica_esp_alternativa_informacion_general_print_pdf') }}" method="POST">
-                    <input type="hidden" name="gestion" value="{{ gestion }}" />
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
                     <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
                     <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
                 </form>
                 <form name="formEspEstadisticaEspecialXls" id="formEspEstadisticaEspecialXls" role="form" action="{{ path('estadistica_esp_alternativa_informacion_general_print_xls') }}" method="POST">
-                    <input type="hidden" name="gestion" value="{{ gestion }}" />
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
                     <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
                     <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
                 </form>

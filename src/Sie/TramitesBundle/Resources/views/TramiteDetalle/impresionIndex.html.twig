@@ -108,7 +108,13 @@
                                 <tbody>
                                     {% for participante in listaParticipante %}
                                         <tr {% if participante.segip_id > 1 or participante.segip_id == 0 %}class="text-danger"{% endif %}>
-                                            <td style="text-align:center;">{{ loop.index }}</td>
+                                            <td style="text-align:center;">
+                                                {% if participante.segip_id > 1 or participante.segip_id == 0 %}
+                                                    <buttom onclick="participanteHistorial('{{ participante.estudiante_id|base64_encode }}','{{ participante.especialidad_id|base64_encode }}','{{ participante.nivel|base64_encode }}');" data-toggle="modal" class="btn btn-circle btn-danger btn-stroke btn-xs" data-target=".bs-example-modal-table">{{ loop.index }}</buttom>
+                                                {% else %}
+                                                    <buttom onclick="participanteHistorial('{{ participante.estudiante_id|base64_encode }}','{{ participante.especialidad_id|base64_encode }}','{{ participante.nivel|base64_encode }}');" data-toggle="modal" class="btn btn-circle btn-teal btn-stroke btn-xs" data-target=".bs-example-modal-table">{{ loop.index }}</buttom>
+                                                {% endif %}
+                                            </td>
                                             <td>{{ participante.tramite_id }}</td>
                                             <td>{{ participante.codigo_rude }}</td>
                                             <td>{{ participante.carnet_identidad }}</td>

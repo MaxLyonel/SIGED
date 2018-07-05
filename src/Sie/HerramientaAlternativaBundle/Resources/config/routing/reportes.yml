@@ -119,6 +119,13 @@ sie_alt_reportes_por_CEA:
     defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:findCEAReport}
     options:
          expose: true
+
+sie_alt_reportes_search:
+    path:     /sie/reportes/index
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:reportesIndex}
+    options:
+         expose: true
+
 sie_alt_reportes:
     path:     /sie/reportes
     defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:alternativaIndex}

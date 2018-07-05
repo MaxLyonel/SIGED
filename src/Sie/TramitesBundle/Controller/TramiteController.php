@@ -1633,7 +1633,7 @@ class TramiteController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
             select e.id as estudiante_id, e.codigo_rude, e.paterno||' '||e.materno||' '||e.nombre as participante, sest.id as especialidad_id, sest.especialidad, sat.codigo as nivel_id, sat.acreditacion
-            , smp.horas_modulo, smt.modulo, en.nota_cuantitativa, ies.gestion_tipo_id as gestion, pt.periodo as periodo
+            , smp.horas_modulo, smt.modulo, en.nota_cuantitativa, ies.gestion_tipo_id as gestion, pt.periodo as periodo, ie.id as institucioneducativa_id, ie.institucioneducativa
             from superior_facultad_area_tipo as sfat
             inner join superior_especialidad_tipo as sest on sfat.id = sest.superior_facultad_area_tipo_id
             inner join superior_acreditacion_especialidad as sae on sest.id = sae.superior_especialidad_tipo_id
@@ -1650,6 +1650,7 @@ class TramiteController extends Controller {
             inner join estudiante_asignatura as ea on ea.institucioneducativa_curso_oferta_id = ieco.id and ea.estudiante_inscripcion_id = ei.id
             inner join estudiante_nota as en on en.estudiante_asignatura_id = ea.id
             inner join periodo_tipo as pt on pt.id = ies.periodo_tipo_id
+            inner join institucioneducativa as ie on ie.id = iec.institucioneducativa_id
             where sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and en.nota_tipo_id::integer = 22
             order by smt.id
         ");
