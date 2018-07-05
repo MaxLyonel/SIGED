@@ -148,6 +148,9 @@ class EstudianteSocioeconomicoController extends Controller {
         //Datos Socioeconómicos
         $socioeconomico = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegular')->findOneBy(array('estudianteInscripcion' => $aInfoStudent['eInsId']));
 
+        // MENSAJE DE AYUDA PARA LOS COMPLEMENTOS
+        $ayudaComplemento = ["Complementito","Contenido del complemento, no se refiere al lugar de expedición del documento."];
+
         if ($socioeconomico) {
             //return $this->redirect($this->generateUrl('herramienta_alter_cursos_index'));
             if($editar == 0){
@@ -171,7 +174,8 @@ class EstudianteSocioeconomicoController extends Controller {
                         'ocupacionTipo'=>$ocupacionTipo,
                         'instruccionTipo'=>$instruccionTipo,
                         'parentescoTipoPadreTutor'=>$parentescoTipoPadreTutor,
-                        'parentescoTipoMadre'=>$parentescoTipoMadre
+                        'parentescoTipoMadre'=>$parentescoTipoMadre,
+                        'ayudaComplemento'=>$ayudaComplemento
 
                 ));
             }
@@ -196,7 +200,8 @@ class EstudianteSocioeconomicoController extends Controller {
                         'ocupacionTipo'=>$ocupacionTipo,
                         'instruccionTipo'=>$instruccionTipo,
                         'parentescoTipoPadreTutor'=>$parentescoTipoPadreTutor,
-                        'parentescoTipoMadre'=>$parentescoTipoMadre
+                        'parentescoTipoMadre'=>$parentescoTipoMadre,
+                        'ayudaComplemento'=>$ayudaComplemento
             ));
         }
     }
@@ -1956,7 +1961,7 @@ class EstudianteSocioeconomicoController extends Controller {
 
             //dump($respuesta);die;
 
-            $respuesta = false;
+            //$respuesta = false;
 
             if($respuesta){
                 $data['status'] = 200;

@@ -206,11 +206,8 @@
                                                         <div class="col-md-7">
                                                             <input type="text" name="carnet" value="" class="form-control" autocomplete="off" placeholder="Número de carnet" title="2.4 Carnet identidad">
                                                         </div>
-                                                        <div class="col-md-5 input-group">
-                                                            <input type="text" name="complemento" value="" class="form-control" autocomplete="off" placeholder="Complemento">
-                                                            <span class="input-group-addon pointer" data-toggle="popover" data-content="El complemento es..." >
-                                                                <i class="fa fa-info-circle"></i>
-                                                            </span>
+                                                        <div class="col-md-5">
+                                                            <input type="text" name="complemento" value="" class="form-control" autocomplete="off" placeholder="Complemento" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
                                                         </div>
                                                     </div>
                                                 {% endif %}</td>
@@ -643,7 +640,7 @@
                                                                     <div id="top2" style="padding:10px; border:1px solid #cccccc; display:none">
                                                                         <p>Para buscar al nuevo padre o tutor, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarlo.</p>
                                                                         <input type="text" name="tb_carnet" id="tb_carnet" class="form-control" placeholder="Nro de Carnet" value="">
-                                                                        <input type="text" name="tb_complemento" id="tb_complemento" class="form-control" placeholder="Complemento" maxlength="2">
+                                                                        <input type="text" name="tb_complemento" id="tb_complemento" class="form-control" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
                                                                         <input type="text" name="tb_paterno" id="tb_paterno" class="form-control jupper" placeholder="Paterno" value="">
                                                                         <input type="text" name="tb_materno" id="tb_materno" class="form-control jupper" placeholder="Materno" value="">
                                                                         <input type="text" name="tb_nombre" id="tb_nombre" class="form-control jupper" placeholder="Nombre" value="">
@@ -654,7 +651,7 @@
                                                                     <div id="top2" style="padding:10px; border:1px solid #cccccc">
                                                                         <p>Para buscar al nuevo padre o tutor, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarlo.</p>
                                                                         <input type="text" name="tb_carnet" id="tb_carnet" class="form-control" placeholder="Nro de Carnet" value="">
-                                                                        <input type="text" name="tb_complemento" id="tb_complemento" class="form-control" placeholder="Complemento" maxlength="2">
+                                                                        <input type="text" name="tb_complemento" id="tb_complemento" class="form-control" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
                                                                         <input type="text" name="tb_paterno" id="tb_paterno" class="form-control jupper" placeholder="Paterno" value="">
                                                                         <input type="text" name="tb_materno" id="tb_materno" class="form-control jupper" placeholder="Materno" value="">
                                                                         <input type="text" name="tb_nombre" id="tb_nombre" class="form-control jupper" placeholder="Nombre" value="">
@@ -806,7 +803,7 @@
                                                                     <div id="mop2" style="padding:10px; border:1px solid #cccccc; display:none">
                                                                         <p>Para buscar los datos de la madre, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarlo.</p>
                                                                         <input type="text" name="mb_carnet" id="mb_carnet" class="form-control" placeholder="Nro de Carnet" value="">
-                                                                        <input type="text" name="mb_complemento" id="mb_complemento" class="form-control" placeholder="Complemento" maxlength="2">
+                                                                        <input type="text" name="mb_complemento" id="mb_complemento" class="form-control" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
                                                                         <input type="text" name="mb_paterno" id="mb_paterno" class="form-control jupper" placeholder="Paterno" value="">
                                                                         <input type="text" name="mb_materno" id="mb_materno" class="form-control jupper" placeholder="Materno" value="">
                                                                         <input type="text" name="mb_nombre" id="mb_nombre" class="form-control jupper" placeholder="Nombre" value="">
@@ -817,7 +814,7 @@
                                                                     <div id="mop2" style="padding:10px; border:1px solid #cccccc">
                                                                         <p>Para buscar los datos de la madre, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarlo.</p>
                                                                         <input type="text" name="mb_carnet" id="mb_carnet" class="form-control" placeholder="Nro de Carnet" value="">
-                                                                        <input type="text" name="mb_complemento" id="mb_complemento" class="form-control" placeholder="Complemento" maxlength="2">
+                                                                        <input type="text" name="mb_complemento" id="mb_complemento" class="form-control" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
                                                                         <input type="text" name="mb_paterno" id="mb_paterno" class="form-control jupper" placeholder="Paterno" value="">
                                                                         <input type="text" name="mb_materno" id="mb_materno" class="form-control jupper" placeholder="Materno" value="">
                                                                         <input type="text" name="mb_nombre" id="mb_nombre" class="form-control jupper" placeholder="Nombre" value="">
