@@ -1,0 +1,155 @@
+{% extends "::layoutTramites.html.twig"%}
+   
+{% block contentBread %}
+    <ol class="breadcrumb">
+        <li>
+            <i class="fa fa-home"></i>
+            <a href="{{path('tramite_homepage')}}">Perfil</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        {% block contentSearchBread %}
+        {% endblock %}
+    </ol>
+{% endblock %}
+
+{% block contentoption %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel rounded shadow">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">
+                            <i class="glyphicon glyphicon-edit"></i>
+                            Regularización del Diploma Técnico
+                        </h3>
+                    </div>
+                    <div class="pull-right">
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body no-padding">
+                    {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'class': 'form-horizontal'} } )}}
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label class="col-lg-2 col-md-4 col-sm-6 col-xs-12 control-label">
+                                    {{form_label(form.rude)}}                                    
+                                </label>
+                                <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12">
+                                    {{ form_widget(form.rude) }}
+                                </div>  
+                            </div>  
+                            <div class="form-group">
+                                <label class="col-lg-2 col-md-4 col-sm-6 col-xs-12 control-label">
+                                    {{form_label(form.gestion)}}                                    
+                                </label>
+                                <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12">
+                                    {{ form_widget(form.gestion) }}
+                                </div>  
+                            </div>  
+                            <div class="form-group">
+                                <label class="col-lg-2 col-md-4 col-sm-6 col-xs-12 control-label">
+                                    {{form_label(form.diploma)}}                                    
+                                </label>
+                                <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12">
+                                    {{ form_widget(form.diploma) }}
+                                </div>
+                            </div>  
+                            <div class="form-group">
+                                <label class="col-lg-2 col-md-4 col-sm-6 col-xs-12 control-label">
+                                    {{form_label(form.serie)}}                                    
+                                </label>
+                                <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12">
+                                    {{ form_widget(form.serie) }}
+                                </div>
+                            </div>  
+                            <div class="form-group">
+                                <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 control-label">
+                                {{ form_widget(form.submit,{ 'attr':{'class':'btn btn-primary col-lg-12 col-md-12 col-sm-12 col-xs-12' } } ) }}
+                            </div>
+                        </div>
+                    {{form_end(form)}} 
+                </div><!-- /.panel-body -->
+            </div>
+        </div><!-- /.panel-body -->
+    </div>
+       
+    {% if entities is defined  %}
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="row"> 
+                    <div class="col-lg-12 col-md-12">                
+                        <div class="portlet portlet-default">
+                            <div class="portlet-heading">
+                                <div class="portlet-title">
+                                    <h4><i class="fa fa-circle text-dpl"></i> Detalle </h4>
+                                </div>
+                                <div class="portlet-widgets">
+                                    <span class="divider"></span>
+                                    <a data-toggle="collapse" data-parent="#accordion" href="index.html#infouser"><i class="fa fa-chevron-down"></i></a>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="portlet-body">
+                                <table id="myTableTitle" class="table table-bordered table-hover cf table-striped">
+                                    <thead class="">
+                                        <tr class="">
+                                            <th>Trámite</th>
+                                            <th>SIE</th>
+                                            <th>Código Rude</th>
+                                            <th>C.I.</th>
+                                            <th>Nombre</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            {% if entities|length > 0 %}
+                                                <td data-title="Trámite">{{ entities[0].flujo_tramite }}</td>
+                                                <td data-title="SIE" >{{ entities[0].sie }}</td>
+                                                <td data-title="Código Rude">{{ entities[0].codigo_rude }}</td>
+                                                <td data-title="C.I.">{{ entities[0].carnet_identidad }}</td>
+                                                <td data-title="Nombre" >{{ entities[0].nombre }} {{ entities[0].paterno }} {{ entities[0].materno }}</td>
+                                            {% else %}
+                                                <td data-title="Trámite">&nbsp;</td>
+                                                <td data-title="SIE" >&nbsp;</td>
+                                                <td data-title="Código Rude">&nbsp;</td>
+                                                <td data-title="C.I.">&nbsp;</td>
+                                                <td data-title="Nombre" >&nbsp;</td>
+                                            {% endif %}
+                                        </tr>
+                                    </tbody>
+                                </table>  
+                                <div id="no-more-tables"> 
+                                    <table id="myTable" class="table table-bordered table-hover cf table-green">
+                                        <thead class="">
+                                            <tr class="">
+                                                <th>#</th>
+                                                <th>Trámite</th>
+                                                <th>Responsable</th>
+                                                <th>Fecha Registro</th>
+                                                <th>Proceso</th>
+                                                <th>Comentario</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% set cont = 0 %}
+                                            {% for entity in entities %}
+                                                {% set cont = cont +1 %}
+                                                <tr>
+                                                    <td data-title="#">{{ cont }}</td>
+                                                    <td data-title="Trámite">{{ entity.numero_tramite }}</td>
+                                                    <td data-title="Responsable">{{ entity.usuario_remitente }}</td>
+                                                    <td data-title="Fecha Registro">{{ entity.fecha_envio }}</td>
+                                                    <td data-title="Proceso">{{ entity.proceso }}</td>
+                                                    <td data-title="Comentario" >{{ entity.comentario }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>                                                                                      
+                                </div>  
+                            </div>                                       
+                        </div>           
+                    </div>
+                </form>                             
+            </div>
+        </div>
+    {% endif %}    
+{% endblock %}
