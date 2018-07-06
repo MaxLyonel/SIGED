@@ -1444,7 +1444,7 @@ union all
             $rol = 0;
             $periodo = 2;
         }
-        
+
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1518,7 +1518,7 @@ union all
         $response = new Response();
         $response->headers->set('Content-type', 'application/vnd.ms-excel');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        //   dump($this->container->getParameter('urlreportweb') . 'alt_est_nacional_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo);die;
+        //   dump($this->container->getParameter('urlreportweb') . 'alt_esp_nacional_cant_centros_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo);die;
         // por defecto
         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_nacional_cant_centros_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo));
 
