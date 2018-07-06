@@ -394,7 +394,10 @@ class SolicitudModificacionCalificacionesController extends Controller {
                                 $tipo_nota = 'Bimestre';
                                 $cantidad_notas = 4;
                                 $valor_inicial = 1;
-                                $valor_final = $this->get('funciones')->obtenerOperativo($idInstitucion,$gestion);
+                                $valor_final = $this->get('funciones')->obtenerOperativo($idInstitucion,$gestion) - 1;
+                                if ($valor_final < 0) {
+                                    $valor_final = 0;
+                                }
                             }else{
                                 $tipo_nota = 'Bimestre';
                                 $cantidad_notas = 4;
@@ -488,6 +491,7 @@ class SolicitudModificacionCalificacionesController extends Controller {
                                         ->getResult();
                 switch ($tipo_nota) {
                     case 'Bimestre':
+                        $cont2 = 0;
                         // Notas de 1er a cuarto Bimestre
                         for($i=$valor_inicial;$i<=$valor_final;$i++){
                             $cont2 = 0;

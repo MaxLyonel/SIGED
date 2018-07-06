@@ -3888,7 +3888,7 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
              $maestroinscripcion=$em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array(
                 'cargoTipo'  => 14, 'institucioneducativa' => $ie, 'gestionTipo'=>$gestion_g, 'persona'=>$persona,'periodoTipo'=>5,'institucioneducativaSucursal'=>$institucioneducativa_sucursal_id
             ));
-            if (!$maestroinscripcion){//carlos
+            if (!$maestroinscripcion){
                 $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('maestro_inscripcion');");
                 $query->execute();
                 $maestroinscripcion = new MaestroInscripcion();

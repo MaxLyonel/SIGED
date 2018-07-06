@@ -58,23 +58,20 @@ class InscriptionSpecialNewController extends Controller
       //get one less inscription of student
       $inscriptionsGestionSelected = $this->getCurrentInscriptionsByGestoin($form['codigoRude'], $form['gestion']-1,4);
       $swDooInscription = $this->reviewInscription($inscriptionsGestionSelected);
-      
+   
       //look for the current inscription
-      $inscriptionsGestionSelected = $this->getCurrentInscriptionsByGestoin($form['codigoRude'], $form['gestion'],1);
-      $swDooInscriptionCurrent = $this->reviewInscription($inscriptionsGestionSelected);
-
+      // $inscriptionsGestionSelected = $this->getCurrentInscriptionsByGestoin($form['codigoRude'], $form['gestion'],1);
+      // $swDooInscriptionCurrent = $this->reviewInscription($inscriptionsGestionSelected);
+      
       if( $swDooInscription ){
-        if($swDooInscriptionCurrent){
-          $message = 'Estudiante ya cuenta con registro de Inscripcion';
-          $this->addFlash('notiext', $message);
-          return $this->render('SieRegularBundle:InscriptionSpecialNew:index.html.twig', array(
-                    'form' => $this->createSearchForm()->createView(),
-              ));
-        }else{
-
-        }
+               
       }else{
-        $message = 'Estudiante ya cuenta con registro de Inscripcion';
+          // $message = 'Estudiante ya cuenta con registro de Inscripcion';
+          // $this->addFlash('notiext', $message);
+          // return $this->render('SieRegularBundle:InscriptionSpecialNew:index.html.twig', array(
+          //           'form' => $this->createSearchForm()->createView(),
+          //     ));
+        $message = 'Estudiante no se encuentra registrado en el Sistema De Educacion Especial.';
         $this->addFlash('notiext', $message);
         return $this->render('SieRegularBundle:InscriptionSpecialNew:index.html.twig', array(
                   'form' => $this->createSearchForm()->createView(),
@@ -181,24 +178,24 @@ class InscriptionSpecialNewController extends Controller
                    ->leftjoin('SieAppWebBundle:TurnoTipo', 't', 'WITH', 'iec.turnoTipo = t.id')
                    ->leftJoin('SieAppWebBundle:EstadoMatriculaTipo', 'em', 'WITH', 'ei.estadomatriculaTipo = em.id')
                    ->where('e.codigoRude = :id')
-                   ->andwhere('iec.gestionTipo = :gestion')
+                   // ->andwhere('iec.gestionTipo = :gestion')
                   //  ->andwhere('ei.estadomatriculaTipo IN (:mat)')
                    ->andwhere('i.institucioneducativaTipo = :instTipo')
                    ->setParameter('id', $id)
-                   ->setParameter('gestion', $gestion)
+                   // ->setParameter('gestion', $gestion)
                    ->setParameter('instTipo', $instTipo)
                   //  ->setParameter('mat', array( 4,5,26,37,55,56,57,58 ))
                    ->orderBy('iec.gestionTipo', 'DESC')
                    ->getQuery();
            try {
                $objInfoInscription = $query->getResult();
-               
+               // dump($objInscription);die;
                if(sizeof($objInfoInscription)>0){
                  $swInscription = true;
                  foreach ($objInfoInscription as $key => $value) {
                    $objLastInscription = $value;
                  }
-                 return $objLastInscription['institucioneducativaTipo'];
+                 return $instTipo;//$objLastInscription['institucioneducativaTipo'];
                 //  if(in_array($objLastInscription['institucioneducativaTipo'],array(4))){
                 //    $swInscription=true;
                 //  }else{

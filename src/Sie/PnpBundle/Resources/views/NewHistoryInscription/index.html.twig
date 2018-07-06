@@ -1,0 +1,125 @@
+{% extends 'layoutPnp.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .higherWider {
+            width:2200px;
+            margin-top:50px;
+        }
+    </style>
+
+{% endblock %}
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Historial de Inscripción
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  Buscar</li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('notihistory') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>¡Advertencia!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('goodhistory') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Bien!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+          
+            <!--start of result of search history  -->
+            {% if sw  %}
+                {% include 'SiePnpBundle:NewHistoryInscription:info_estudiante.html.twig' with {'datastudent': datastudent} %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="portlet portlet-blue">
+                            <div class="portlet-heading">
+                                <div class="portlet-title">
+                                    <h4>Historial de Inscripción</h4>
+                                </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="portlet-body">
+                            {% if dataInscriptionP %}
+                                {% include 'SiePnpBundle:NewHistoryInscription:historial_pnp.html.twig' with {'dataInscription': dataInscriptionP} %}
+                            {% endif %}
+                            {% if dataInscriptionR %}
+                                {% include 'SiePnpBundle:NewHistoryInscription:historial_regular.html.twig' with {'dataInscription': dataInscriptionR} %}
+                            {% endif %}
+                            {% if dataInscriptionA %}
+                                {% include 'SiePnpBundle:NewHistoryInscription:historial_alternativa.html.twig' with {'dataInscription': dataInscriptionA} %}
+                            {% endif %}
+                            {% if dataInscriptionE %}
+                                {% include 'SiePnpBundle:NewHistoryInscription:historial_especial.html.twig' with {'dataInscription': dataInscriptionE} %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <!-- en of the result of search history -->
+        </div>
+    </div>
+    <div class="modal modal-flex fade" id="myModalNotas" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+        <div class="modal-dialog higherWider">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="flexModalLabel">Calificaciones</h4>
+
+                </div>
+                <div class="modal-body">
+                    <div id="idNotas"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var seeNotaNew = function (inscripcionid, idstudent, nivel, grado, paralelo, turno, gestion, sie, estadomatriculaTipo) {
+
+            $('#myModalNotas').modal('show');
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('note_consultation_parents_sie_nota_new', {'inscripcionid': inscripcionid,'idstudent': idstudent, 'nivel': nivel, 'grado': grado, 'paralelo': paralelo, 'turno': turno, 'gestion': gestion, 'sie': sie,'estadomatriculaTipo': estadomatriculaTipo}),
+                beforeSend: function () {
+                    $("#idNotas").empty();
+                    $("#idNotas").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#idNotas").empty();
+                    $("#idNotas").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+    </script>
+{% endblock %}

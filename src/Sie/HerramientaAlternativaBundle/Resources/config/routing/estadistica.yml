@@ -17,3 +17,11 @@ estadistica_esp_alternativa_informacion_general_print_pdf:
 estadistica_esp_alternativa_informacion_general_print_xls:
     path:     /informacion/general/alternativaesp/print/xls
     defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:informacionGeneralAlternativaEspPrintXls }
+
+estadistica_esp_alternativa_informacion_centro_print_pdf:
+    path:     /informacion/centro/alternativaesp/print/pdf
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:informacionCentroAlternativaEspPrintPdf }
+
+estadistica_esp_alternativa_informacion_centro_print_xls:
+    path:     /informacion/centro/alternativaesp/print/xls
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:informacionCentroAlternativaEspPrintXls }
