@@ -1,7 +1,5 @@
 {% extends "::layoutTramites.html.twig"%}
 
-{% block contenttitulo %}{{ titulo }}{% endblock %}
-{% block contenttitulosmall %}{{ subtitulo }}{% endblock %}
 {% block contentnavegacion %}<li class="active"><i class="fa fa-dashboard"></i> Principal</li><li class="active">Gestiones Anteriores</li>{% endblock %}
 
 {% block contentoption %}
@@ -139,7 +137,7 @@
 
             peticion = $.ajax({
                 type: 'POST',
-                url: '{{ path('tramite_certificacion_homologacion_verifica_estudiante')}}',
+                url: '{{ path('tramite_homologacion_certificacion_verifica_estudiante')}}',
                 data: {'rudeal': rudeal},
                 beforeSend: function () {
                     $("#form_nombre_student").attr('disabled', 'true');
@@ -185,7 +183,7 @@
 
             peticion1 = $.ajax({
                 type: 'POST',
-                url: '{{ path('tramite_certificacion_homologacion_lista_especialidad')}}',
+                url: '{{ path('tramite_homologacion_certificacion_lista_especialidad')}}',
                 data: {'id': id},
                 beforeSend: function () {
                     $("#form_especialidad").attr('disabled', 'true');
@@ -214,7 +212,7 @@
 
             peticion2 = $.ajax({
                 type: 'POST',
-                url: '{{ path('tramite_certificacion_homologacion_lista_cea')}}',
+                url: '{{ path('tramite_homologacion_certificacion_lista_cea')}}',
                 data: {'sies': sie},
                 beforeSend: function () {
                     $("#form_ue").attr('disabled', 'true');

@@ -1,26 +1,75 @@
-tramite_certificacion_homologacion_index:
-    path:     /index
+tramite_homologacion_certificacion_index:
+    path:     /certificacion/index
     defaults: { _controller: SieTramitesBundle:Homologacion:certTecIndex }
 
-tramite_certificacion_homologacion_guarda:
-    path:     /guarda
+tramite_homologacion_certificacion_guarda:
+    path:     /certificacion/guarda
     defaults: { _controller: SieTramitesBundle:Homologacion:certTecGuarda }
 
-tramite_certificacion_homologacion_detalle:
-    path:     /detalle
+tramite_homologacion_certificacion_detalle:
+    path:     /certificacion/detalle
     defaults: { _controller: SieTramitesBundle:Homologacion:certTecDetalle }
 
-tramite_certificacion_homologacion_lista_especialidad:
-    path:     /lista/especialidad
+tramite_homologacion_certificacion_lista_especialidad:
+    path:     /certificacion/lista/especialidad
     defaults: { _controller: SieTramitesBundle:Homologacion:certTecListaEspecialidad}
     methods:  [POST]
 
-tramite_certificacion_homologacion_lista_cea:
-    path:     /lista/cea
+tramite_homologacion_certificacion_lista_cea:
+    path:     /certificacion/lista/cea
     defaults: { _controller: SieTramitesBundle:Homologacion:certTecListaCea}
     methods:  [POST]
 
-tramite_certificacion_homologacion_verifica_estudiante:
-    path:     /verifica/estudiante
+tramite_homologacion_certificacion_verifica_estudiante:
+    path:     /certificacion/verifica/estudiante
     defaults: { _controller: SieTramitesBundle:Homologacion:certTecListaVerificarParticipante}
     methods:  [POST]
+
+
+tramite_homologacion_diploma_humanistico_index:
+    path:    /diploma/humanistico/index
+    defaults: { _controller: SieTramitesBundle:DipHumHomologacion:index }
+
+tramite_homologacion_diploma_humanistico_result:
+    path:    /diploma/humanistico/result
+    defaults: { _controller: SieTramitesBundle:DipHumHomologacion:result }
+
+tramite_homologacion_diploma_humanistico_saveMateriasNotas:
+    path: /diploma/humanistico/saveMateriasNotas
+    defaults: { _controller: SieTramitesBundle:DipHumHomologacion:saveMateriasNotas }
+    
+tramite_homologacion_diploma_humanistico_new:
+    path: /diploma/humanistico/new
+    defaults: { _controller: SieTramitesBundle:DipHumHomologacion:new }
+    
+tramite_homologacion_diploma_humanistico_exist:
+    path: /diploma/humanistico/exist
+    defaults: { _controller: SieTramitesBundle:DipHumHomologacion:exist}
+    
+tramite_homologacion_diploma_humanistico_savenew:
+    path: /diploma/humanistico/savenew
+    defaults: { _controller: SieTramitesBundle:DipHumHomologacion:savenew}
+    
+tramite_homologacion_diploma_humanistico_findIE:
+     path:    /diploma/humanistico/findIE/{ges}/{id}
+     defaults: { _controller: SieTramitesBundle:DipHumHomologacion:findIE }
+     options:
+         expose: true   
+
+tramite_homologacion_diploma_humanistico_findgrado:
+     path:    /diploma/humanistico/findgrado/{idnivel}/{ges}/{sie}
+     defaults: { _controller: SieTramitesBundle:DipHumHomologacion:findgrado }
+     options:
+         expose: true
+
+tramite_homologacion_diploma_humanistico_findparalelo:
+     path:    /diploma/humanistico/findparalelo/{grado}/{ges}/{sie}/{nivel}
+     defaults: { _controller: SieTramitesBundle:DipHumHomologacion:findparalelo }
+     options:
+         expose: true
+         
+tramite_homologacion_diploma_humanistico_findturno:         
+    path:    /diploma/humanistico/findturno/{paralelo}/{ges}/{sie}/{nivel}/{grado}
+    defaults: { _controller: SieTramitesBundle:DipHumHomologacion:findturno }
+    options:
+        expose: true    

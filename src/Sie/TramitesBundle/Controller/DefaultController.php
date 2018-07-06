@@ -3143,7 +3143,7 @@ class DefaultController extends Controller {
     //****************************************************************************************************
     public function setActiveMenu() {
         $path = str_replace('/','_',substr($_SERVER['PATH_INFO'],1));
-
+ 
         $em = $this->getDoctrine()->getManager();
         //****SE GENERAN LOS MENUS PARA EL SIGEN EN BASE AL ID DEL ROL DEL USUARIO
         $query = $em->getConnection()->prepare('SELECT get_objeto_menu_path(:pathMenu)');

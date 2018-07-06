@@ -2827,4 +2827,414 @@ class TramiteController extends Controller {
         return $listaHistorial;
     }
 
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que genera el formulario para regularizar diplomas tecnicos de gestiones pasadas
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function dipTecRecepcionAction(Request $request) {
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        $gestionActual = new \DateTime("Y");
+        $this->session->set('save', false);
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $defaultTramiteController = new defaultTramiteController();
+        $defaultTramiteController->setContainer($this->container);
+
+        $activeMenu = $defaultTramiteController->setActiveMenu();
+
+        $rolPermitido = array(16);
+
+        $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
+
+        if (!$esValidoUsuarioRol){
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
+        }
+
+        $form = $this->createFormBuilder()
+                    ->setAction($this->generateUrl('tramite_tecnico_humanistico_registro'))
+                    ->add('rude', 'text', array('label' => 'Rude', 'invalid_message' => 'campo obligatorio', 'attr' => array('style' => 'text-transform:uppercase', 'maxlength' => 20, 'required' => true, 'class' => 'form-control')))
+                    ->add('gestion', 'entity', array('data' => '', 'attr' => array('class' => 'form-control'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
+                        'query_builder' => function(EntityRepository $er) {
+                            return $er->createQueryBuilder('gt')
+                                    ->where('gt.id > 2008')
+                                    ->orderBy('gt.id', 'DESC');
+                        },
+                    ))
+                    ->add('diploma','choice',
+                      array('label' => 'Modalidad',
+                            'choices' => array( '3' => 'Agropecuario'
+                                                ,'4' => 'Industrial'
+                                                ,'5' => 'Comercial'
+                                                ),
+                            'data' => '', 'attr' => array('class' => 'form-control')))
+                    ->add('serie', 'text', array('label' => 'Nro. Serie', 'invalid_message' => 'campo obligatorio', 'attr' => array('style' => 'text-transform:uppercase', 'maxlength' => 8, 'required' => true, 'class' => 'form-control')))
+                    ->add('submit', 'submit', array('label' => 'Registrar', 'attr' => array('class' => 'btn btn-blue')))
+                    ->getForm()->createView();
+
+        return $this->render($this->session->get('pathSystem') . ':Tramite:dipTecIndex.html.twig', array(
+            'form' => $form
+            , 'titulo' => 'Registro'
+            , 'subtitulo' => 'Diploma Técnico'
+        ));
+    }
+
+
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que registra la regularización de diplomas tecnicos de gestiones pasadas
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function dipTecRegistroAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        $gestionActual = new \DateTime("Y");
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $rolPermitido = 16;
+
+        $em = $this->getDoctrine()->getManager();
+        $form = $request->get('form');
+
+        if ($form) {
+            $rude = $form['rude'];
+            $ges = $form['gestion'];
+            $tipoDiploma = $form['diploma'];
+            $serie = $form['serie'];
+
+            $em->getConnection()->beginTransaction();
+            try {
+                /*
+                 * Extrae los datos de estudiante en funcion a su codigo rude y gestion de inscripcion
+                 */
+                $query = $em->getConnection()->prepare("
+                    select e.id as estudianteId, ei.id as estudianteInscripcionId, iec.gestion_tipo_id from estudiante as e
+                    inner join estudiante_inscripcion as ei on ei.estudiante_id = e.id
+                    inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
+                    where e.codigo_rude = '".$rude."' and iec.gestion_tipo_id = ".$ges."
+                    and case when iec.gestion_tipo_id >=2011 then (iec.nivel_tipo_id=13 and iec.grado_tipo_id=6) or (iec.nivel_tipo_id=15 and iec.grado_tipo_id=3) when iec.gestion_tipo_id <= 2010 then (iec.nivel_tipo_id=3 and iec.grado_tipo_id=4) or (iec.nivel_tipo_id=5 and iec.grado_tipo_id=2) else iec.nivel_tipo_id=13 and iec.grado_tipo_id=6 end
+                ");
+                $query->execute();
+                $entityEstudianteInscripcion = $query->fetchAll();
+
+                if (count($entityEstudianteInscripcion) > 0){
+                    $estudianteInscripcionId = $entityEstudianteInscripcion[0]["estudianteinscripcionid"];
+                    /*
+                     * Verifica si ya cuenta con un diploma de nivel tecnico
+                     */
+                    $query = $em->getConnection()->prepare("
+                        select * from documento as d
+                        inner join tramite as t on t.id = d.tramite_id
+                        inner join estudiante_inscripcion as ei on ei.estudiante_id = t.estudiante_inscripcion_id
+                        inner join estudiante as e on e.id = ei.estudiante_id
+                        where e.codigo_rude = '".$rude."' and t.tramite_tipo = 2 and d.documento_tipo_id = ".$tipoDiploma." and d.documento_estado_id = 1
+                    ");
+                    $query->execute();
+                    $entityEstudianteDiplomaTecnico = $query->fetchAll();
+                    if (count($entityEstudianteDiplomaTecnico) == 0){
+                        $entityTramite = new Tramite();
+                        /*
+                         * Verifica si el numero de serie esta disponible y asignado a su departamento
+                         */
+
+                        $documentoController = new documentoController();
+                        $documentoController->setContainer($this->container);
+
+                        if ($tipoDiploma == 3 or $tipoDiploma == 4 or $tipoDiploma == 5){
+                            $tipoDocumento = 1;
+                        } else {
+                            $tipoDocumento = $tipoDiploma;
+                        }
+
+                        $msgContenidoDocumento = $documentoController->getDocumentoValidación($serie, '', $fechaActual, $id_usuario, $rolPermitido, $tipoDocumento);
+                        if($msgContenidoDocumento != ""){
+                            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msgContenidoDocumento));
+                            return $this->redirectToRoute('tramite_tecnico_humanistico_recepcion');
+                        } 
+                        
+                        //$numeroSerie = $entitySerie[0]["numero_serie"];
+                        //$tipoSerie = $entitySerie[0]["tipo_serie"];
+                        //$gestionSerie = $entitySerie[0]["gestion_serie"];
+
+
+                        $tramiteProcesoController = new tramiteProcesoController();
+                        $tramiteProcesoController->setContainer($this->container);
+
+                        /*REGISTRAR EL DOCUMENTO*/  
+                        $tramiteId = $this->setTramiteEstudiante($estudianteInscripcionId, $ges, 2, 2, $em);
+
+                        // $error = $this->procesaTramite($tramiteId, $id_usuario, 'Adelante','');
+                        $tramiteDetalleId = $tramiteProcesoController->setProcesaTramiteInicio($tramiteId, $id_usuario, 'REGISTRO DEL TRÁMITE', $em);
+
+                        $idDocumento = $documentoController->setDocumento($tramiteId, $id_usuario, $tipoDiploma, $serie, '', $fechaActual); 
+
+                        $em->getConnection()->commit();
+                        $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'Diploma Técnico Registrado'));
+
+                        return $this->redirectToRoute('tramite_tecnico_humanistico_recepcion');
+
+                    } else {
+                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar el registro, ya cuenta con un diploma técnico"'. $serie .'" no existe o no tiene tuición sobre el mismo, intente nuevamente'));
+                        return $this->redirectToRoute('tramite_tecnico_humanistico_recepcion');
+                    }
+                } else {
+                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar el registro, no cuenta con una inscripción válida para otorgar al estudiante un diploma"'. $serie .'" no existe o no tiene tuición sobre el mismo, intente nuevamente'));
+                    return $this->redirectToRoute('tramite_tecnico_humanistico_recepcion');
+                }
+                $em->getConnection()->commit();
+            } catch (Exception $ex) {
+                $em->getConnection()->rollback();
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar el registro, intente nuevamente'));
+                return $this->redirectToRoute('tramite_tecnico_humanistico_recepcion');
+            }
+        } else {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar el registro, intente nuevamente'));
+            return $this->redirectToRoute('tramite_tecnico_humanistico_recepcion');
+        }
+    }
+
+    ///****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que genera el formulario para la impresion de los diplomas técnicos regularizados de gestiones pasadas
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function dipTecImpresionAction(Request $request) {
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        $gestionActual = new \DateTime("Y");
+        $this->session->set('save', false);
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        return $this->render($this->session->get('pathSystem') . ':Tramite:dipTecImpresion.html.twig', array(
+                    'form' => $this->creaFormularioImpresion('tramite_tecnico_humanistico_impresion_pdf', '', $gestionActual, '')->createView()
+                    , 'titulo' => 'Impresión'
+                    , 'subtitulo' => 'Diplomas Técnicos'
+        ));
+    }
+
+    private function creaFormularioImpresion($routing, $value1, $value2, $value3) {
+        $form = $this->createFormBuilder()
+                ->setAction($this->generateUrl($routing))
+                ->add('sie', 'text', array('label' => 'Código S.I.E.', 'attr' => array('value' => $value1, 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '8', 'autocomplete' => 'on', 'placeholder' => 'Código de institución educativa', 'style' => 'text-transform:uppercase')))
+                ->add('gestion', 'entity', array('label' => 'Gestión Cartón', 'data' => $value2, 'attr' => array('class' => 'form-control'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
+                    'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('gt')
+                                ->where('gt.id < 2017')
+                                ->andWhere('gt.id > 2008')
+                                ->orderBy('gt.id', 'DESC');
+                    },
+                ))
+                ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-blue')))
+                ->getForm();
+        return $form;
+    }
+
+    public function dipTecImpresionPdfAction(Request $request) {
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        $em = $this->getDoctrine()->getManager();
+        /*
+         * Recupera datos del formulario
+         */
+        $form = $request->get('form');
+        if ($form) {
+            $ue = $form['sie'];
+            $gestion = $form['gestion'];
+        } else {
+            $ue = $request->get('sie');
+            $gestion = $request->get('gestion');
+        }
+
+        /*
+         * Halla el departamento de la Unidad Educativa
+         */
+        $query = $em->getConnection()->prepare("
+                select dt.departamento_tipo_id as codigo from institucioneducativa as ie
+                inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+                inner join distrito_tipo as dt on dt.id = jg.distrito_tipo_id
+                where ie.id = :sie::INT
+                ");
+        $query->bindValue(':sie', $ue);
+        $query->execute();
+        $entityDepto = $query->fetchAll();
+        if (count($entityDepto)>0){
+            $depto = $entityDepto[0]['codigo'];
+        } else {
+            $depto = 1;
+        }
+
+
+        $arch = $ue.'_'.$gestion.'_DIPLOMA_'.date('YmdHis').'.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+
+        switch ($gestion) {
+            case 2009:
+                if ($depto == 1) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_ch_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 2) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_lp_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 3) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_cba_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 4) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_or_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 5) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_pt_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 6) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_tj_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 7) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_scz_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 8) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_bn_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 9) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_pn_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                }else {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_ch_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                }
+                break;
+            case 2010:
+                if ($depto == 1) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_ch_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 2) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_lp_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 3) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_cba_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 4) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_or_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 5) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_pt_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 6) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_tj_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 7) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_scz_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 8) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_bn_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 9) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_pn_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                }else {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_ch_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                }
+                break;
+            case 2011:
+                if ($depto == 1) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_ch_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 2) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_lp_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 3) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_cba_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 4) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_or_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 5) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_pt_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 6) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_tj_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 7) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_scz_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 8) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_bn_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 9) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_pn_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                }else {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_ch_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                }
+                break;
+            case 2012 :
+                if ($depto == 1) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2012_ch_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 2) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2012_lp_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 3) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2012_cba_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 4) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2012_or_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 5) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2012_pt_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 6) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2012_tj_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 7) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2012_scz_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 8) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2012_bn_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 9) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2012_pn_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                }else {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2012_ch_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                }
+                break;
+            case 2013 :
+                if ($depto == 1) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_ch_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 2) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2013_lp_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 3) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2013_cba_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 4) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_or_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 5) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_pt_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 6) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_tj_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 7) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2013_scz_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 8) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_bn_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 9) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_pn_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                }else {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_ch_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                }
+                break;
+            default :
+                if ($depto == 1) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_ch_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 2) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2015_lp_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 3) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2015_cba_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 4) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_or_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 5) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_pt_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 6) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_tj_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 7) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2015_scz_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 8) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_bn_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                } elseif ($depto == 9) {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_pn_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                }else {
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_ch_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
+                }
+                break;
+        }
+
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
 }

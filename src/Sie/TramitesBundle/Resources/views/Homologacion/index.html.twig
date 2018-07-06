@@ -1,0 +1,201 @@
+{% extends "::layoutTramites.html.twig"%}
+
+{% block contentoption%}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Homologación - Busqueda e Inscripción
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="{{path('tramite_homologacion_diploma_humanistico_index')}}">Buscar</a></li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('notiiniprim') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Warning!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('goodiniprim') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Bien!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            <!-- Website Stats  Widget -->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 col-lg-12">
+                        <div class="panel panel-icon panel-primary">
+                            <div class="panel-heading">
+                                <i class="fa fa-search"></i> Formulario
+                            </div>
+                            <div class="panel-body">
+
+                                {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        {{form_label(form.gestion)}}
+                                        {{form_widget(form.gestion)}}
+                                    </div>
+                                    <div class="col-md-3">
+                                        {{form_label(form.ci)}}
+                                        {{form_widget(form.ci)}}
+                                    </div>
+                                    <div class="col-md-3">
+                                        {{form_label(form.complemento)}}
+                                        {{form_widget(form.complemento)}}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        {{form_label(form.generoTipo)}}
+                                        {{form_widget(form.generoTipo)}}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        {{form_label(form.paterno)}}
+                                        {{form_widget(form.paterno)}}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        {{form_label(form.materno)}}
+                                        {{form_widget(form.materno)}}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+
+                                    <div class="col-md-3 form-group">
+                                        {{form_label(form.nombre)}}
+                                        {{form_widget(form.nombre)}}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        {{form_label(form.fnacimiento)}}
+                                        <div id="sandbox-container">
+                                            {{form_widget(form.fnacimiento)}}
+                                        </div>
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        {{form_label(form.pais)}}
+                                        {{form_widget(form.pais,{'attr':{'onchange':'dep(this.value)'} })}}
+
+                                    </div>
+                                    <div class="col-md-3">
+                                        {{form_label(form.departamento)}}
+                                        {{form_widget(form.departamento,{'attr':{'onchange':'prov(this.value)'} })}}
+
+                                    </div>
+                                    <div class="col-md-3">
+                                        {{form_label(form.provincia)}}
+                                        {{form_widget(form.provincia)}}
+                                    </div>
+                                    <div class="col-md-3">
+                                        {{form_label(form.localidad)}}
+                                        {{form_widget(form.localidad)}}
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        {{form_label(form.oficialia)}}
+                                        {{form_widget(form.oficialia)}}
+                                    </div>
+                                    <div class="col-md-3">
+                                        {{form_label(form.libro)}}
+                                        {{form_widget(form.libro)}}
+                                    </div>
+                                    <div class="col-md-3">
+                                        {{form_label(form.partida)}}
+                                        {{form_widget(form.partida)}}
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        {{form_label(form.folio)}}
+                                        {{form_widget(form.folio)}}
+                                    </div>
+                                </div>
+
+                                <br/>
+
+
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        {{ form_widget(form.buscar,{ 'attr':{'class':'btn btn-primary' } } ) }}
+                                    </div>
+                                </div>
+                                {{form_end(form)}}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- End of Website Stats Widget -->
+
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+
+        function dep(es) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('search_departamentos', {'pais': parseInt(es)}),
+                beforeSend: function () {
+                    $("#form_departamento").empty();
+                    $("#form_provincia").empty();
+                    /*$("#localidad").empty();*/
+                    $("#div-load").parent().append('<div class="loading"></div>');
+                },
+                success: function (data) {
+                    $("#form_departamento").empty();
+                    $("#form_provincia").empty();
+                    $.each(data.departamento, function (i, value) {
+                        $("#form_departamento").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    $(".loading").remove();
+                }
+            });
+        }
+
+
+
+        function prov(d) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('search_provincias', {'departamento': parseInt(d)}),
+                beforeSend: function () {
+                    $("#form_provincia").empty();
+                    $("#div-load-prov").parent().append('<div class="loading"></div>');
+                },
+                success: function (data) {
+                    $("#form_provincia").empty();
+                    $.each(data.provincia, function (i, value) {
+                        $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    $(".loading").remove();
+                }
+            });
+        }
+    </script>
+{% endblock %}
