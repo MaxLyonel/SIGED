@@ -90,6 +90,17 @@
 
                                     <i class="fa fa-file-excel-o"></i>
                                 </button>
+                                <br>
+                                <br>
+                                Cant. CEAs
+                                <button id="tour-13" onclick="document.forms['formEspCentrosPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+
+                                    <i class="fa fa-file-pdf-o"></i>
+                                </button>
+                                <button id="tour-14" onclick="document.forms['formEspCentrosXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+
+                                    <i class="fa fa-file-excel-o"></i>
+                                </button>
                             </div>     
                             <div class="clearfix"></div>
                         </div>
@@ -168,6 +179,20 @@
                     <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
                     <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
                 </form>
+
+                <form name="formEspCentrosPdf" id="formEspCentrosPdf" role="form" action="{{ path('estadistica_esp_alternativa_informacion_centro_print_pdf') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
+                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
+                </form>
+                <form name="formEspCentrosXls" id="formEspCentrosXls" role="form" action="{{ path('estadistica_esp_alternativa_informacion_centro_print_xls') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
+                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
+                </form>
+
             {% endif %}
             {% if infoEntidad is defined %}
                 {% if infoEntidad.rolactual == 9 or infoEntidad.rolactual == 5 %}

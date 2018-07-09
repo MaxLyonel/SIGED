@@ -197,7 +197,7 @@ sie_pnp_buscar_historial_estudiante_result:
 
 sie_pnp_buscar_historial_estudiante_result_list:
     path:     /pnp/buscar_historial_estudiante/result/list/{idStudent}
-    defaults: { _controller: SiePnpBundle:Default:buscar_historial_estudiante_result_list }
+    defaults: { _controller: SiePnpBundle:NewHistoryInscription:historypnp }
     options:
          expose: true
 
@@ -206,6 +206,10 @@ sie_pnp_buscar_historial_estudiante_ci:
     defaults: { _controller: SiePnpBundle:Default:buscar_historial_estudiante_ci }
     options:
          expose: true
+
+sie_pnp_buscar_historial_estudiante_rude:
+    path:    /pnp/buscar_historial_estudiante_rude
+    defaults: { _controller: SiePnpBundle:NewHistoryInscription:index }       
 
 sie_pnp_reporte_general:
     path:     /pnp/reporte_general/{nivel_ini}/{lugar}/{nivel_fin}
@@ -267,3 +271,4 @@ sie_pnp_cambiar_facilitador_encontrado:
     defaults: { _controller: SiePnpBundle:Default:cambiar_facilitador_encontrado, ci:0, complemento:0,curso_id:0 }
     options:
          expose: true
+

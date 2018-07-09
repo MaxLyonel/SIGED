@@ -1,16 +1,15 @@
-{% extends "layoutTramites.html.twig"%}
+{% extends 'layoutPnp.html.twig' %}
 {% block stylesheets %}
     {{parent()}}
     <style>
         .higherWider {
-            width:800px;
-            margin-top:100px;
+            width:2200px;
+            margin-top:50px;
         }
     </style>
 
 {% endblock %}
-{% block contentoption %}
-
+{% block body %}
     <div class="row">
         <div class="col-lg-12">
             <div class="page-title">
@@ -41,44 +40,10 @@
                     <strong>Bien!</strong> {{ flashMessage }}
                 </div>
             {% endfor %}
-            <!-- Website Stats  Widget -->
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-xs-12 col-lg-12">
-                        <div class="panel panel-icon panel-primary">
-                            <div class="panel-heading">
-                                <i class="fa fa-search"></i> Inserte Rude
-                            </div>
-                            <div class="panel-body">
-
-                                {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
-                                <div class="form-group">
-                                    <label for="form_codigoRudeHistory" class="col-sm-2 control-label">
-                                        {{form_label(form.codigoRudeHistory)}}
-                                    </label>
-                                    <div class="col-sm-10">
-                                        {{ form_widget(form.codigoRudeHistory) }}
-                                        <div class="help-block with-errors"></div>
-                                    </div>
-
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="col-sm-offset-2 col-sm-10">
-
-                                        {{ form_widget(form.buscar,{ 'attr':{'class':'btn btn-primary' } } ) }}
-                                    </div>
-                                </div>
-                                {{form_end(form)}}
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
+          
             <!--start of result of search history  -->
             {% if sw  %}
-                {% include 'SieRegularBundle:NewHistoryInscription:info_estudiante.html.twig' with {'datastudent': datastudent} %}
+                {% include 'SiePnpBundle:NewHistoryInscription:info_estudiante.html.twig' with {'datastudent': datastudent} %}
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="portlet portlet-blue">
@@ -89,17 +54,17 @@
                             <div class="clearfix"></div>
                         </div>
                         <div class="portlet-body">
+                            {% if dataInscriptionP %}
+                                {% include 'SiePnpBundle:NewHistoryInscription:historial_pnp.html.twig' with {'dataInscription': dataInscriptionP} %}
+                            {% endif %}
                             {% if dataInscriptionR %}
-                                {% include 'SieRegularBundle:NewHistoryInscription:historial_regular.html.twig' with {'dataInscription': dataInscriptionR} %}
+                                {% include 'SiePnpBundle:NewHistoryInscription:historial_regular.html.twig' with {'dataInscription': dataInscriptionR} %}
                             {% endif %}
                             {% if dataInscriptionA %}
-                                {% include 'SieRegularBundle:NewHistoryInscription:historial_alternativa.html.twig' with {'dataInscription': dataInscriptionA} %}
+                                {% include 'SiePnpBundle:NewHistoryInscription:historial_alternativa.html.twig' with {'dataInscription': dataInscriptionA} %}
                             {% endif %}
                             {% if dataInscriptionE %}
-                                {% include 'SieRegularBundle:NewHistoryInscription:historial_especial.html.twig' with {'dataInscription': dataInscriptionE} %}
-                            {% endif %}
-                            {% if dataInscriptionP %}
-                                {% include 'SieRegularBundle:NewHistoryInscription:historial_pnp.html.twig' with {'dataInscription': dataInscriptionP} %}
+                                {% include 'SiePnpBundle:NewHistoryInscription:historial_especial.html.twig' with {'dataInscription': dataInscriptionE} %}
                             {% endif %}
                         </div>
                     </div>

@@ -46,7 +46,7 @@ class HomologacionController extends Controller {
         $activeMenu = $defaultTramiteController->setActiveMenu();
 
         return $this->render('SieTramitesBundle:Homologacion:cerAltIndex.html.twig', array(
-                    'form' => $this->creaFormularioCertTecHomologacion('tramite_certificacion_homologacion_guarda', '', $gestionActual)->createView()
+                    'form' => $this->creaFormularioCertTecHomologacion('tramite_homologacion_certificacion_guarda', '', $gestionActual)->createView()
                     , 'titulo' => 'Registro Gestiones Anteriores'
                     , 'subtitulo' => 'Certificación Técnica'
         ));
@@ -171,13 +171,13 @@ class HomologacionController extends Controller {
             $em->getConnection()->beginTransaction();
             $em->getConnection()->rollback();
             $this->session->getFlashBag()->set('success', array('title' => 'Exito!!', 'message' => 'Se Registro Correctamente'));
-            return $this->redirectToRoute('tramite_certificacion_homologacion_index');
+            return $this->redirectToRoute('tramite_homologacion_certificacion_index');
         } else {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             $em->getConnection()->rollback();
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Estos datos ya se encuentran Registrados'));
-            return $this->redirectToRoute('tramite_certificacion_homologacion_index');
+            return $this->redirectToRoute('tramite_homologacion_certificacion_index');
         }
     }
 

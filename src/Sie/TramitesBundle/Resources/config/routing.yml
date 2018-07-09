@@ -24,7 +24,7 @@ sie_tramite_documento:
 
 sie_tramite_homologacion:
     resource: "@SieTramitesBundle/Resources/config/routing/tramiteHomologacion.yml"
-    prefix:   /tramite/certificacion/homologacion
+    prefix:   /tramite/homologacion
 
 sie_tramite_busca_ue:
     path:     /lista/estudiantes/unidad/educativa

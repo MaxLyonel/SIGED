@@ -1,0 +1,282 @@
+{% extends 'SieDiplomaBundle:Default:Registros.html.twig' %}
+{% block contenttitulo %}{{ titulo }}{% endblock %}
+{% block contenttitulosmall %}{{ subtitulo }}{% endblock %}
+{% block contentnavegacion %}<li class="active"><i class="fa fa-dashboard"></i> Principal</li><li class="active">Listado de Estudiantes</li>{% endblock %}  
+{% block contentbuscador %}    
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="portlet portlet-default">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4><i class="fa fa-circle text-dpl"></i> Búsqueda de Unidad Educativa</h4>
+                        </div>
+                        <div class="portlet-widgets">
+                            <span class="divider"></span>
+                            <a data-toggle="collapse" data-parent="#accordion" href="index.html#infouser"><i class="fa fa-chevron-down"></i></a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="row">
+                        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                            <div class="form-group">
+                                {{ form_widget(form.identificador) }}
+                                <label class="col-lg-1 col-md-2 col-sm-9 col-xs-12 control-label">
+                                    {{form_label(form.sie)}}                                    
+                                </label>
+                                <div class="col-lg-9 col-md-7 col-sm-9 col-xs-12">
+                                    {{ form_widget(form.sie) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>                                
+                                <div class="col-lg-1 col-md-7 col-sm-9 col-xs-12">
+                                    {{ form_widget(form.gestion,{ 'attr':{'class':'btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12' } }) }}
+                                </div>
+                                <div class="col-lg-1 col-md-2 col-sm-3 col-xs-12">
+                                    {{ form_widget(form.search,{ 'attr':{'class':'btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12' } } ) }}
+                                </div>
+                            </div>
+                        {{form_end(form)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    </div>
+{% endblock %} 
+{% block contentregistros %} 
+    {% if bachilleres is defined  %}        
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="row">                                
+                {% if identificador == 13 or identificador == 14 %}
+                    {% set nombreBotonPrincipal = "Recepcionar los marcados" %}
+                {% endif %}  
+                {% if identificador == 15 %}
+                    {% set nombreBotonPrincipal = "Autorizar los marcados" %}
+                {% endif %}                                      
+                {% if identificador == 16 %}
+                    {% set nombreBotonPrincipal = "Asignar serie a los marcados" %}
+                {% endif %}                                      
+                {% if identificador == 17 or identificador == 18 %}
+                    {% set nombreBotonPrincipal = "Entrega Los Marcados" %}
+                {% endif %}   
+                <form name="formtable" role="form" action="{{ path('sie_diploma_tramite_procesa') }}" method="POST" onsubmit="return verificaCampos()">                    
+                    <div class="form-group">
+                        <div class="col-lg-12 col-md-12">                
+                            <div class="portlet portlet-default">
+                                <div class="portlet-heading">
+                                    <div class="portlet-title">
+                                        <h4><i class="fa fa-circle text-dpl"></i> Bachilleres - {{ gestion }} </h4>
+                                    </div>
+                                    <div class="portlet-widgets">
+
+                                        <div class="btn-group">
+                                            <input type="hidden" name="tipoImpresion" value="1" />
+                                            <input type="hidden" name="gestion" value="{{ gestion }}" />
+                                            <input type="hidden" name="identificador" value="{{ identificador }}" />
+                                            <input type="hidden" name="sie" value="{{ unidadEducativa.id }}" />  
+                                            {% if identificador == 16 %}                                                                                    
+                                                <a class="btn btn-success" href="{{ path('sie_diploma_tramite_impresion_pdf', {'sie': unidadEducativa.id, 'gestion':gestion, 'identificador':identificador}) }}">
+                                                    Imprimir Diplomas
+                                                </a>
+                                            {% endif %} 
+                                            <input type="submit" name="botonAceptar" id="botonAceptar" class="btn btn-warning" value="{{nombreBotonPrincipal}}" disabled="true" />
+                                            {% if identificador == 14 or identificador == 15 or identificador == 16 or identificador == 17 or identificador == 18 %}                                                                                    
+                                                <button name="botonModalDevolver" id="botonModalDevolver" class="btn btn-danger" data-toggle="modal" data-target="#modalDevolver"  disabled="true" >
+                                                    Devolver los marcados
+                                                </button>
+                                            {% endif %} 
+                                            {% if identificador == 14 %}                                                                                    
+                                                <a class="btn btn-success" href="{{ path('sie_diploma_tramite_descarga_reporte_departamental_pdf', {'sie': unidadEducativa.id, 'gestion':gestion, 'identificador':identificador}) }}">
+                                                    Imprimir Enviados
+                                                </a>                                                                                 
+                                            {% endif %}  
+                                            {% if identificador == 16 %}                                                                                    
+                                                <a class="btn btn-success" href="{{ path('sie_diploma_tramite_documento_impresion_pdf', {'sie': unidadEducativa.id, 'gestion':gestion, 'identificador':identificador}) }}">
+                                                    Imprimir Listado
+                                                </a>
+                                            {% endif %}                                             
+                                            {% if identificador == 16 %}      
+                                                <input type="submit" name="botonAnular" id="botonAnular" class="btn btn-red" value="Anular" disabled="true"/>
+                                            {% endif %}                                            
+                                            {% if identificador == 17 %}      
+                                                <input type="submit" name="botonEntregar" id="botonEntregar" class="btn btn-success" value="Entregar Diploma" disabled="true" />
+                                            {% endif %}  
+                                        </div>
+                                        <span class="divider"></span>
+                                        <a data-toggle="collapse" data-parent="#accordion" href="index.html#infouser"><i class="fa fa-chevron-down"></i></a>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="portlet-body">
+                                    {% if identificador == 16 %} 
+                                        <div class="col-lg-12 col-md-12">                
+                                            <div class="portlet portlet-green">
+                                                <div class="portlet-body">  
+                                                    <div class="row">
+                                                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                            Nro. Serie Inicial: <input type="number" name="numeroSerie" id="numeroSerie" min="1" max="999999" class="form-control" onKeyDown="habilitarBotones()" onKeyUp="habilitarBotones()"/>
+                                                        </div>       
+                                                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                            Serie: 
+                                                            <select class="form-control" name="serie">
+                                                                {% for ser in series %}
+                                                                    {% if ser.serie == gestion %}
+                                                                        <option value="{{ ser.serie }}" selected>{{ ser.serie }}</option>
+                                                                    {% else %}
+                                                                        <option value="{{ ser.serie }}">{{ ser.serie }}</option>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>       
+                                                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                            Gestión:
+                                                            <select class="form-control" name="gestion">
+                                                                {% for ges in gestiones %}
+                                                                    {% if ges.id == gestion %}
+                                                                        <option value="{{ ges.id }}" selected>{{ ges.id }}</option>
+                                                                    {% else %}
+                                                                        <option value="{{ ges.id }}">{{ ges.id }}</option>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>       
+                                                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                            Fecha Emisión: <div id="sandbox-container"><input type="text" name="fecha" id="fecha" class="form-control" onKeyDown="habilitarBotones()" onKeyUp="habilitarBotones()" onkeypress="return habilitarBotones()" onchange="habilitarBotones()"/></div>
+                                                        </div> 
+                                                    </div> 
+                                                </div>
+                                            </div>
+                                        </div>                                                                
+                                    {% endif %} 
+                                    <div id="no-more-tables"> 
+                                        <table id="myTable" class="table table-bordered table-hover cf dataTable">
+                                            <thead class="">
+                                                <tr class="">
+                                                    <th>#</th>
+                                                    <th>Codigo Rude</th>
+                                                    <th>C.I.</th>
+                                                    <th>Paterno</th>
+                                                    <th>Materno</th>
+                                                    <th>Nombre(s)</th>
+                                                    <th>Fecha - Lugar Nacimiento</th>
+                                                    <th>Estado</th>
+                                                    <th>Sub Sistema</th>
+                                                    <th>Periodo</th>
+                                                    <th style="width:50px; text-align: center;"><input type="checkbox" id="marcarTodos" name="marcarTodos" onclick="marcarTodasAreas()"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% set cont = 0 %}
+                                                {% for bachiller in bachilleres %}
+                                                    {% set cont = cont +1 %}
+                                                    {% if bachiller.complemento == "" %}
+                                                        {% set ci = bachiller.carnet_identidad %}
+                                                    {% else %}
+                                                        {% set ci = bachiller.carnet_identidad~'-'~bachiller.complemento%}
+                                                    {% endif %}
+                                                    {% if identificador == 13 %}
+                                                        {% set id = bachiller.estudiante_inscripcion_id %}                                                 
+                                                        {% set flujo = 0 %}
+                                                    {% else %}
+                                                        {% set id = bachiller.tramite_id %}                                                        
+                                                        {% set flujo = bachiller.flujo_proceso_id %}
+                                                    {% endif %}
+                                                    <tr>
+                                                        <td data-title="#">{{ id }}</td>
+                                                        <td data-title="Codigo Rude">{{ bachiller.codigo_rude }}</td>
+                                                        <td data-title="C.I.">{{ ci }}</td>
+                                                        <td data-title="Paterno">{{ bachiller.paterno }}</td>
+                                                        <td data-title="Materno">{{ bachiller.materno }}</td>
+                                                        <td data-title="Nombre(s)" >{{ bachiller.nombre }}</td>
+                                                        <td data-title="Fecha - Lugar Nacimiento">{{bachiller.fecha_nacimiento|date('d/m/Y')}} - {{bachiller.depto_nacimiento}}</td>
+                                                        <td data-title="Estado">{{bachiller.desc_estado_matricula}}</td>
+                                                        <td data-title="Sub Sistema">{{bachiller.subsistema}}</td>
+                                                        <td data-title="Periodo">{{bachiller.periodo}}</td>
+                                                        <td class="text-center" style="width: 50px"> 
+                                                            <input type="checkbox" name="estudiantes[]" value="{{id}}" onclick="habilitarBotones()">
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>                                                                                      
+                                    </div>  
+                                </div> 
+                                <div class="portlet-footer">
+                                    <div style="display: none;" class="modal modal-flex fade in" id="modalDevolver" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="false">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                    <h4 class="modal-title" id="flexModalLabel">Observación de la devolución</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="form-group has-error">
+                                                        {% if identificador == 17 %}
+                                                            <select class="form-control" name="observaciones" id="observaciones" onchange="return cambiaObservacion(this);">
+                                                                <option value="6" selected>Reprobación</option>
+                                                                <option value="5" >Fecha incorrecta</option>
+                                                                <option value="4" >Lugar de nacimiento incorrecto</option>
+                                                                <option value="3" >Número de serie incorrecto</option>
+                                                                <option value="2" >Gestión incorrecta</option>
+                                                                <option value="1" >Falla de impresora</option>
+                                                                <option value="0" >Otro</option>
+                                                            </select>
+                                                            <hr>
+                                                            <textarea id="obs" name="obs" class="form-control" maxlength="225" rows="4" readonly >Reprobación</textarea>
+                                                        {% else %}
+                                                            <textarea id="obs" name="obs" class="form-control" maxlength="225" rows="4" placeholder="Límite de 225 caracteres."></textarea>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" name="botonCancelar" id="botonCancelar" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                                    <input type="submit" name="botonDevolver" id="botonDevolver" class="btn btn-danger" value="Devolver" onclick="return verificarCampoObs();" />
+                                                </div>
+                                            </div>
+                                            <!-- /.modal-content -->
+                                        </div>
+                                        <!-- /.modal-dialog -->
+                                    </div>
+                                </div>            
+                            </div>           
+                        </div>         
+                    </div>
+                </form>                             
+            </div>
+        </div>
+        <script>
+            //datepicker calendario
+            $('#sandbox-container input').datepicker({
+                autoclose: true,
+                todayHighlight: true,
+                format: 'dd-mm-yyyy',
+                language: "es"
+            });
+            
+            function cambiaObservacion(select){
+                var obs = document.getElementsByName('obs')[0];
+                var selectedOption = select.options[select.selectedIndex];
+                if (selectedOption.text === 'Otro'){
+                    obs.readOnly = false;
+                    obs.value = '';
+                } else {
+                    obs.readOnly = true;
+                    obs.value = selectedOption.text;
+                }
+            }
+            
+            
+            
+            function verificarCampoObs(){
+                var textObs = document.getElementsByName('obs')[0]; 
+                if (textObs){
+                    if (textObs.value == ""){
+                        alert("Ingrese el motivo de la devolución");
+                        return false;
+                    }
+                }
+            }
+        </script>
+    {% endif %}    
+{% endblock %}
