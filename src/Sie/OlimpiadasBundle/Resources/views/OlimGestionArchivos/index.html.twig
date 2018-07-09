@@ -40,6 +40,7 @@
 					    					<th>Tutor</th>
 					    					<th>Nombre del Grupo</th>
 					    					<th width="300px">Nombre del Proyecto</th>
+					    					<th>Cantidad Inscritos</th>
 					    					<th>Archivo</th>
 					    				</tr>
 					    			</thead>
@@ -57,8 +58,12 @@
 					    				    	</td>
 					    				    	<td>{{ grupo.grupo }}</td>
 					    				    	<td>{{ grupo.nombreProyecto }}</td>
+					    				    	<td align="center">
+					    				    		<span style="font-size:1.1em">{{ grupo.inscritos }}</span>
+					    				    	</td>
 					    				    	<td>
 					    				    		{% if grupo.documentoPdf1 != '' %}
+					    				    			{# <embed src="http://olimpiada.sie.gob.bo/uploads/olimpiadas/documentos/{{grupo.documentoPdf1}}" width="500px" height="600px"></embed> #}
 					    				    			<a class="btn btn-primary btn-xs" target="_blank" href="http://olimpiada.sie.gob.bo/uploads/olimpiadas/documentos/{{grupo.documentoPdf1}}"> <i class="fa fa-file-pdf-o fa-1x"></i> <b> Abrir archivo </b> </a>
 					    				    		{% else %}
 					    				    			<span class="text-danger">No subido !!!</span>
