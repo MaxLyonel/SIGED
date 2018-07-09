@@ -40,16 +40,18 @@ class OlimGestionArchivosController extends Controller {
 
 
 		$grupos = $em->createQueryBuilder()
-					->select('ie.id as sie, ie.institucioneducativa, ogp.nombre as grupo, ogp.nombreProyecto, ogp.documentoPdf1, p.paterno, p.materno, p.nombre, ot.telefono1, ot.telefono2, ot.correoElectronico')
+					->select('ie.id as sie, ie.institucioneducativa, ogp.nombre as grupo, ogp.nombreProyecto, ogp.documentoPdf1, p.paterno, p.materno, p.nombre, ot.telefono1, ot.telefono2, ot.correoElectronico, count(oigp.id) as inscritos')
 					->from('SieAppWebBundle:OlimGrupoProyecto','ogp')
 					->innerJoin('SieAppWebBundle:OlimMateriaTipo','omt','with','ogp.materiaTipo = omt.id')
 					->innerJoin('SieAppWebBundle:OlimTutor','ot','with','ogp.olimTutor = ot.id')
 					->innerJoin('SieAppWebBundle:Institucioneducativa','ie','with','ot.institucioneducativa = ie.id')
 					->innerJoin('SieAppWebBundle:Persona','p','with','ot.persona = p.id')
+					->leftJoin('SieAppWebBundle:OlimInscripcionGrupoProyecto','oigp','with','oigp.olimGrupoProyecto = ogp.id')
 					->where('ogp.gestionTipoId = :gestion')
 					->andWhere('omt.id = :id')
 					->setParameter('id', $id)
 					->setParameter('gestion', $gestion)
+					->groupBy('ie.id, ie.institucioneducativa, ogp.nombre, ogp.nombreProyecto, ogp.documentoPdf1, p.paterno, p.materno, p.nombre, ot.telefono1, ot.telefono2, ot.correoElectronico')
 					->orderBy('ie.id','ASC')
 					->getQuery()
 					->getResult();
