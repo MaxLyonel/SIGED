@@ -1,0 +1,109 @@
+Sie\AppWebBundle\Entity\OlimEstudianteNotaPrueba:
+    type: entity
+    table: olim_estudiante_nota_prueba
+    indexes:
+        IDX_76E0CB74C0B7E599:
+            columns:
+                - olim_nivel_matematica_tipo_id
+        IDX_76E0CB741B118DCE:
+            columns:
+                - olim_etapa_tipo_id
+        IDX_76E0CB7421643B16:
+            columns:
+                - olim_medallero_tipo_id
+        IDX_76E0CB742C80C63:
+            columns:
+                - olim_estudiante_inscripcion_id
+        IDX_76E0CB745B5336BD:
+            columns:
+                - olim_modalidad_prueba_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nota:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        estado:
+            type: boolean
+            nullable: true
+            comment: ''
+        observacionSubida:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: observacion_subida
+        estadoSubidaNota:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: estado_subida_nota
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificado:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificado
+    manyToOne:
+        olimNivelMatematicaTipo:
+            targetEntity: OlimNivelMatematicaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_nivel_matematica_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        olimEtapaTipo:
+            targetEntity: OlimEtapaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_etapa_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        olimMedalleroTipo:
+            targetEntity: OlimMedalleroTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_medallero_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        olimEstudianteInscripcion:
+            targetEntity: OlimEstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        olimModalidadPruebaTipo:
+            targetEntity: OlimModalidadPruebaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_modalidad_prueba_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,34 @@
+Sie\AppWebBundle\Entity\OlimModalidadPruebaTipo:
+    type: entity
+    table: olim_modalidad_prueba_tipo
+    indexes:
+        IDX_4EE23E2EAC1E7EA:
+            columns:
+                - olim_registro_olimpiada_id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        prueba:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+    manyToOne:
+        olimRegistroOlimpiada:
+            targetEntity: OlimRegistroOlimpiada
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_registro_olimpiada_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

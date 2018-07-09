@@ -1,0 +1,26 @@
+Sie\AppWebBundle\Entity\OlimEtapaTipo:
+    type: entity
+    table: olim_etapa_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        etapa:
+            type: string
+            nullable: false
+            length: 50
+            fixed: false
+            comment: ''
+        observacion:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

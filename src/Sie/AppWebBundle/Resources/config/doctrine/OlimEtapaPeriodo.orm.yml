@@ -1,0 +1,50 @@
+Sie\AppWebBundle\Entity\OlimEtapaPeriodo:
+    type: entity
+    table: olim_etapa_periodo
+    indexes:
+        IDX_C120274F1B118DCE:
+            columns:
+                - olim_etapa_tipo_id
+        IDX_C120274FAC1E7EA:
+            columns:
+                - olim_registro_olimpiada_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaInicio:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_inicio
+        fechaFin:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_fin
+    manyToOne:
+        olimEtapaTipo:
+            targetEntity: OlimEtapaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_etapa_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        olimRegistroOlimpiada:
+            targetEntity: OlimRegistroOlimpiada
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_registro_olimpiada_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
