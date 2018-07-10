@@ -8,6 +8,7 @@ use Sie\AppWebBundle\Entity\EstudianteInscripcion;
 use Sie\AppWebBundle\Form\EstudianteInscripcionType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
+// use Symfony\Component\Validator\Constraints\DateTime;
 use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Entity\Estudiante;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta;
@@ -636,6 +637,12 @@ class GestionUesprocesoAperturaController extends Controller {
         $student->setNombre(mb_strtoupper($newStudent['nombre'], 'UTF-8'));
         $student->setCarnetIdentidad($newStudent['carnetIdentidad']);
         $student->setComplemento($newStudent['complemento']);
+
+        $dategrepup = $newStudent['day'].'/'.$newStudent['month'].'/'.$newStudent['year'];
+        $newTime = strtotime($dategrepup);
+        $newFormatDay = date('Y-m-d', $newTime);
+
+        $student->setFechaNacimiento(new \DateTime($newFormatDay));
         //$student->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($newStudent['generoTipo']));
         $student->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($newStudent['generoTipo']));
         $student->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($newStudent['pais']));
