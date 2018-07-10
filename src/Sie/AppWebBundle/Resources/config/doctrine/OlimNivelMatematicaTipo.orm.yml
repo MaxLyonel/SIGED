@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\OlimNivelMatematicaTipo:
+    type: entity
+    table: olim_nivel_matematica_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nivelMatematica:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+            column: nivel_matematica
+        observacion:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

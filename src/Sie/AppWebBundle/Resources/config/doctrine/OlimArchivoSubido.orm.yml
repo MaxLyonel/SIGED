@@ -1,0 +1,47 @@
+Sie\AppWebBundle\Entity\OlimArchivoSubido:
+    type: entity
+    table: olim_archivo_subido
+    indexes:
+        IDX_4BED92411B118DCE:
+            columns:
+                - olim_etapa_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        pathArchivo:
+            type: string
+            nullable: false
+            length: 200
+            fixed: false
+            comment: ''
+            column: path_archivo
+        nombreArchivo:
+            type: string
+            nullable: false
+            length: 150
+            fixed: false
+            comment: ''
+            column: nombre_archivo
+        fechaSubida:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_subida
+    manyToOne:
+        olimEtapaTipo:
+            targetEntity: OlimEtapaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_etapa_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
