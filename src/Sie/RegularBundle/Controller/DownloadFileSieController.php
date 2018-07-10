@@ -108,45 +108,7 @@ class DownloadFileSieController extends Controller {
           * *
           \************************************/
           $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
-          $arrUeObservationUe = array(80730485,
-                                      81340079,
-                                      72210030,
-                                      61960012,
-                                      70890008,
-                                      80390032,
-                                      70970020,
-                                      80390014,
-                                      80860075,
-                                      81400043,
-                                      70890018,
-                                      81380145,
-                                      70450001
-                                    );
-          // temporaly validation
-          if(in_array($form['sie'], $arrUeObservationUe)){
-            $objObservados = array();
-            $errorValidation = array('ueobservation'=>false);
-            $objObservados = array();
-            $message = 'La Unidad Educativa no puede descarga el archivo debido a que se encuentra observada por el área de Física y Química';
-            $this->addFlash('observationInUe', $message);
-            return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:fileDownload.html.twig', array(
-                        'uEducativa' => $errorValidation,
-                        'objUe' => $objUe[0],
-                        'swvalidation' => '1',
-                        'flagValidation' => '0',
-                        'swObservados' => '0',
-                        'ueModular' => '0',
-                        'swinconsistencia'  => '0',
-                        'observaciones' => $objObservados,
-                        'validationPersonal' => '0',
-                        'validationRegistroConsolidado' => '0',
-                        'sistemaRegular' => '0'
-
-
-            ));
-          }
-          // end temporaly validation
-
+          
           if($objUe[0]['tipoUe']!=1){
             $objObservados = array();
             $errorValidation = array('ueobservation'=>false);
