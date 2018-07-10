@@ -791,8 +791,21 @@ class DownloadController extends Controller {
         return $response;
     }
 
+    public function repfinProcesoAperturaAction(Request $request) {
+        $idLugar = $request->get('idLugar');
+        // $em = $this->getDoctrine()->getManager();
+        // $operativoLog = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findBy(array(''));
 
-
-
-
+// dump($operativoLog);die;
+        $arch = 'REPORTE_Doc_'.$request->get('idInstitucion').'_' . date('YmdHis') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_lst_Docentes_v1_cc.rptdesign&institucioneducativa_id='.$request->get('idInstitucion').'&gestion_tipo_id='.$request->get('gestion').'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
 }

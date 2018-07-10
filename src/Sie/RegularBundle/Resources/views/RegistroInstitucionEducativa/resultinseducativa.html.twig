@@ -55,33 +55,29 @@
                                      <td data-title="Departamento" >{{ entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar }}</td>
                                      <td data-title="Distrito" >{{ entity.leJuridicciongeografica.distritoTipo.distrito }}</td>
                                      <td data-title="Acciones">
-                                       <small>
-                                        <ul id="" class="">
-                                          <lo >
-                                            <form action="{{path('bjp_rue_delete')}}" method="post" style="display: inline-block">
-                                               <input type="hidden" name="idInstitucion" value="{{entity.id}}">
-                                               <input type="hidden" name="idInstitucionLe" value="{{entity.leJuridicciongeografica.id}}">
-                                               <button type="submit" class="btn btn-link" onclick="return confirm('Se eliminará el registro!. ¿Desea continuar?');"><i class="fa fa-trash-o text-danger"></i> Eliminar</button>
-                                             </form>
-                                          </lo>
-                                          <lo>
-                                            <form action="{{path('bjp_rue_edit')}}" method="post" style="display: inline-block">
-                                              <input type="hidden" name="idInstitucion" value="{{entity.id}}">
-                                              <input type="hidden" name="idInstitucionLe" value="{{entity.leJuridicciongeografica.id}}">
-                                              <button type="submit" class="btn btn-link"><i class="fa fa-edit text-danger"></i> Editar</button>
-                                            </form>
-                                          </lo>
-                                          <lo>
-                                            <!-- next form to do the inscription by krlos-->
-                                            {{form_start(form)}}
-                                              <i class="fa fa-plus text-danger"></i>{{form_widget(form.open)}}
-                                              {% set datainfo = {'sie':entity.id, 'leJuridicciongeograficaId':entity.leJuridicciongeografica.id, 'dependencia':entity.dependenciaTipo.dependencia, 'tipo':entity.institucioneducativaTipo.descripcion, 'depto':entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar, 'distrito':entity.leJuridicciongeografica.distritoTipo.distrito,'unidadEducativa':entity.institucioneducativa  } %}
-                                              <input type="hidden" id="form_dataInfo" name="form[dataInfo]" required="required" value="{{datainfo|json_encode}}">
-                                            {{form_end(form)}}
-                                            <!-- end form to do the inscription by krlos-->
-                                          </lo>
-                                      </ul>
-                                    </small>
+                                        <form action="{{path('bjp_rue_delete')}}" method="post" style="display: inline-block">
+                                           <input type="hidden" name="idInstitucion" value="{{entity.id}}">
+                                           <input type="hidden" name="idInstitucionLe" value="{{entity.leJuridicciongeografica.id}}">
+                                           <button type="submit" class="btn btn-link" onclick="return confirm('Se eliminará el registro!. ¿Desea continuar?');"><i class="fa fa-trash-o text-danger"></i> Eliminar</button>
+                                         </form>
+                                        <form action="{{path('bjp_rue_edit')}}" method="post" style="display: inline-block">
+                                          <input type="hidden" name="idInstitucion" value="{{entity.id}}">
+                                          <input type="hidden" name="idInstitucionLe" value="{{entity.leJuridicciongeografica.id}}">
+                                          <button type="submit" class="btn btn-link"><i class="fa fa-edit text-danger"></i> Editar</button>
+                                        </form>
+                                        <!-- next form to do the inscription by krlos-->
+                                        {{form_start(form)}}
+                                          <i class="fa fa-plus text-danger"></i>{{form_widget(form.open)}}
+                                          {% set datainfo = {'sie':entity.id, 'leJuridicciongeograficaId':entity.leJuridicciongeografica.id, 'dependencia':entity.dependenciaTipo.dependencia, 'tipo':entity.institucioneducativaTipo.descripcion, 'depto':entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar, 'distrito':entity.leJuridicciongeografica.distritoTipo.distrito,'unidadEducativa':entity.institucioneducativa  } %}
+                                          <input type="hidden" id="form_dataInfo" name="form[dataInfo]" required="required" value="{{datainfo|json_encode}}">
+                                        {{form_end(form)}}
+                                        <form action="{{path('personaladministrativoinscripcion_find_persona')}}" method="post" style="display: inline-block">
+                                          <input type="hidden" name="idInstitucion" value="{{entity.id}}">
+                                          <input type="hidden" name="idInstitucionLe" value="{{entity.leJuridicciongeografica.id}}">
+                                          <input type="hidden" name="gestion" value="{{gestion}}">
+                                          <button type="submit" class="btn btn-link"><i class="fa fa-search text-danger"></i> Registrar Director/a</button>
+                                        </form>
+                                        <!-- end form to do the inscription by krlos-->
                                      </td>
                                   </tr>
                                   {% endfor %}

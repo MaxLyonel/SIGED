@@ -1,0 +1,155 @@
+{% extends app.session.get('layout') %}
+
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Registro Director(a) de UE y/o CEE
+                    <small>Buscar Persona</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-search"></i>  <a href="{{path('bjp_rue')}}"> Buscar</a></li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('newOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('newError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-warning"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('updateOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('updateError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-warning"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('eliminarOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('eliminarError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-warning"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+{% if maestroinscripcion %}
+{% set persona = maestroinscripcion.persona %}
+{% set cargo = maestroinscripcion.cargoTipo %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Director Registrado</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelinstitucion" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            <div id="no-more-tables">
+                                <table class="table table-bordered cf">
+                                    <thead class="cf">
+                                        <tr>
+                                            <th>Carnet</th>
+                                            <th>Complemento</th>
+                                            <th>Paterno</th>
+                                            <th>Materno</th>
+                                            <th>Nombre(s)</th>
+                                            <th>Fecha de Nacimiento</th>
+                                            <th>Cargo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <td >{{persona.carnet}}</td>
+                                    <td >{{persona.complemento}}</td>
+                                    <td >{{persona.paterno}}</td>
+                                    <td >{{persona.materno}}</td>
+                                    <td >{{persona.nombre}}</td>
+                                    <td >{{persona.fechaNacimiento|date('d-m-Y')}}</td>
+                                    <td >{{cargo.cargo}}</td>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p><a href="{{ path('bjp_rue') }}" class="btn btn-default">Cancelar</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+{% else %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="pull-left">
+                        <h4 class="portlet-title">Buscar Persona</h4>
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="portlet-body">
+                    <div class="panel-body panel-primary">
+                        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form'} } )}}
+                        <div class="row">
+                            <div class="form-group col-lg-3 col-md-6">
+                                {{ form_label(form.carnetIdentidad)}}
+                                {{form_widget(form.carnetIdentidad) }}
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="form-group col-lg-3 col-md-6">
+                                {{ form_label(form.complemento)}}
+                                <div class="input-group">
+                                    <div class="input-group-addon">-</div>
+                                    {{form_widget(form.complemento,{'attr':{'data-toggle':'tooltip','data-placement':'bottom','data-original-title':'El complemento del CI no es el lugar de expedicion, no coloque abreviaciones de departamentos'} }) }}
+                                </div>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="form-group col-lg-3 col-md-6">                                        
+                                <p>{{ form_widget(form.buscar ) }}</p>
+                                <p><a href="{{ path('bjp_rue') }}" class="btn btn-default">Cancelar</a></p>
+                            </div>
+                        </div>
+
+                        {{form_end(form)}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="datosPersonas"></div>
+        </div>
+    </div>
+
+
+{% endblock %}

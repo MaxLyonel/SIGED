@@ -33,6 +33,7 @@ class RegistroInstitucionEducativaController extends Controller {
     public function indexAction(Request $request) {
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
+        $id_lugar = $sesion->get('roluserlugarid');
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
@@ -47,7 +48,12 @@ class RegistroInstitucionEducativaController extends Controller {
         $formInstitucioneducativaId = $this->createSearchFormInstitucioneducativaId();
 
 
-        return $this->render('SieRegularBundle:RegistroInstitucionEducativa:search.html.twig', array('formInstitucioneducativa' => $formInstitucioneducativa->createView(), 'formInstitucioneducativaId' => $formInstitucioneducativaId->createView()));
+        return $this->render('SieRegularBundle:RegistroInstitucionEducativa:search.html.twig', array(
+                'formInstitucioneducativa' => $formInstitucioneducativa->createView(),
+                'formInstitucioneducativaId' => $formInstitucioneducativaId->createView(),
+                'gestion' => $this->session->get('currentyear'),
+                'roluserlugarid' => $id_lugar
+        ));
     }
 
     /**
@@ -117,12 +123,19 @@ class RegistroInstitucionEducativaController extends Controller {
 
             $formInstitucioneducativa = $this->createSearchFormInstitucioneducativa();
             $formInstitucioneducativaId = $this->createSearchFormInstitucioneducativaId();
-            return $this->render('SieRegularBundle:RegistroInstitucionEducativa:search.html.twig', array('formInstitucioneducativa' => $formInstitucioneducativa->createView(), 'formInstitucioneducativaId' => $formInstitucioneducativaId->createView()));
+            return $this->render('SieRegularBundle:RegistroInstitucionEducativa:search.html.twig', array(
+                    'formInstitucioneducativa' => $formInstitucioneducativa->createView(), 
+                    'formInstitucioneducativaId' => $formInstitucioneducativaId->createView(),
+                    'gestion' => $this->session->get('currentyear'),
+                    'roluserlugarid' => $this->session->get('roluserlugarid')
+            ));
         }
 
         return $this->render('SieRegularBundle:RegistroInstitucionEducativa:resultinseducativa.html.twig', array(
-          'entities' => $entities,
-          'form' => $this->formGestionUE($entities[0])->createView()
+                'entities' => $entities,
+                'form' => $this->formGestionUE($entities[0])->createView(),
+                'gestion' => $this->session->get('currentyear'),
+                'roluserlugarid' => $this->session->get('roluserlugarid')
         ));
     }
 
@@ -207,8 +220,8 @@ class RegistroInstitucionEducativaController extends Controller {
             }
         }
 
-        $query = $em->createQuery('SELECT iat FROM SieAppWebBundle:InstitucioneducativaAcreditacionTipo iat WHERE iat.id <> :tipo')
-                ->setParameter('tipo', 1);
+        $query = $em->createQuery('SELECT iat FROM SieAppWebBundle:InstitucioneducativaAcreditacionTipo iat WHERE iat.id = :tipo')
+                ->setParameter('tipo', 0);
         $tiposacreditacion = $query->getResult();
         $tiposacreditacionArray = array();
         foreach ($tiposacreditacion as $c) {
