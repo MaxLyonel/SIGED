@@ -1,0 +1,215 @@
+Sie\AppWebBundle\Entity\EstudianteBack:
+    type: entity
+    table: estudiante_back
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        codigoRude:
+            type: string
+            nullable: false
+            length: 18
+            fixed: false
+            comment: ''
+            column: codigo_rude
+        carnetIdentidad:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+            column: carnet_identidad
+        pasaporte:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        paterno:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        materno:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        nombre:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        generoTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: genero_tipo_id
+        estadoCivilId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: estado_civil_id
+        lugarNacTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: lugar_nac_tipo_id
+        oficialia:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        libro:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        partida:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        folio:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        sangreTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: sangre_tipo_id
+        idiomaMaternoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: idioma_materno_id
+        segipId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: segip_id
+        complemento:
+            type: string
+            nullable: false
+            length: 2
+            fixed: false
+            comment: ''
+            default: ''
+        bolean:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        fechaNacimiento:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_nacimiento
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        correo:
+            type: string
+            nullable: true
+            length: 40
+            fixed: false
+            comment: ''
+        paisTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: pais_tipo_id
+        localidadNac:
+            type: string
+            nullable: true
+            length: 125
+            fixed: false
+            comment: ''
+            column: localidad_nac
+        foto:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        celular:
+            type: string
+            nullable: true
+            length: 8
+            fixed: false
+            comment: ''
+        resolucionaprovatoria:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        carnetCodepedis:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+            column: carnet_codepedis
+        observacionadicional:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        carnetIbc:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+            column: carnet_ibc
+        lugarProvNacTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: lugar_prov_nac_tipo_id
+        libretaMilitar:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+            column: libreta_militar
+        esDobleNacionalidad:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_doble_nacionalidad
+        observacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }
