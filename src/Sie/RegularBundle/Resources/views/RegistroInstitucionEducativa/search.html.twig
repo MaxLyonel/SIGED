@@ -24,16 +24,33 @@
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     {{ flashMessage }}
                 </div>
-            {% endfor %}             
+            {% endfor %}    
+            {% for flashMessage in app.session.flashbag.get('newOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('newError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-warning"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}         
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-12 text-left">
             <ul class="dropdown">
-                <a href="{{path('bjp_rue')}}" class="dropdown-toggle btn btn-md btn-success" data-toggle="dropdown">
+                <a href="{{path('bjp_rue')}}" class="dropdown-toggle btn btn-md btn-success" data-toggle="dropdown" id="btnNew">
                     <i class="fa fa-plus-circle"></i>  <i class="fa fa-caret-down"> Nuevo Registro</i>
                 </a>
+                {#<form action="{{path('reporte_fin_proceso_apertura')}}" method="post" style="display:inline-block">
+                    <input type="hidden" name="idLugar" value="{{roluserlugarid}}">
+                    {#<input type="hidden" name="gestion" value="{{gestion}}">
+                    <button type="submit" class="btn btn-md btn-primary" onclick="hideButtonNew();"><i class="fa fa-save"></i> Finalizar Registro</button>
+                </form>#}
                 <ul class="dropdown-menu dropdown-user">
                     <li>
                         <form action="{{path('bjp_rue_new')}}" method="post">
@@ -110,4 +127,12 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var hideButtonNew = function (){
+            $('#btnNew').hide();
+        };
+    </script>
 {% endblock %}
