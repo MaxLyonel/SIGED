@@ -158,6 +158,13 @@
                                             <div class="panel transparent">
                                                  <a href="{{ path('olimtutor')}}" class="btn btn-primary btn-lg btn-expand">Inscripciones OCEPB</a>
                                             </div>
+                                            <div class="panel transparent">
+                                                 <button onclick="reporteOlimpiada()" class="btn btn-warning btn-lg btn-expand" id="buildBtn"><i class="fa fa-download"></i> Generar archivos</button>
+                                                 <a href="{{path('download_archs_olimpiadas_txt')}}" class="btn btn-danger btn-lg btn-expand" id="downloadBtn"><i class="fa fa-download"></i> Descargar archivos</a>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md12" id="build"></div>
+                                            </div>
                                         {% endif %}
 
                                     </div><!-- blog-sidebar -->
@@ -318,4 +325,32 @@
         </div>
 
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+    $("#downloadBtn").hide();
+    var reporteOlimpiada = function(){
+        $.ajax({
+            type: 'post',
+            url: Routing.generate('build_archs_olimpiadas_txt'),
+            beforeSend: function () {
+                $("#buildBtn").attr('disabled', true);
+                $("#build").empty();
+                $("#build").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');  
+            },
+            success: function (data) {
+                $("#buildBtn").removeAttr('disabled');
+                $("#buildBtn").hide();
+                $("#build").empty();
+                $("#downloadBtn").show();
+            },
+            error: function (data) {
+                $("#buildBtn").removeAttr('disabled');
+                $("#build").empty();
+                $("#build").append(data);
+            }
+        });
+    };
+    </script>
 {% endblock %}

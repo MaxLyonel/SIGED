@@ -103,3 +103,15 @@ download_reporte_gis:
 donwload_especial_libreta:
     path: /especialLibreta/{infoUe}/{gestion}/{estInsEspId}/{estInsId}/{codigoRude}
     defaults: { _controller: SieAppWebBundle:Download:especialLibreta }
+
+build_archs_olimpiadas_txt:
+    path: /buildArchsOlimpiadas
+    defaults: { _controller: SieAppWebBundle:Download:buildArchsOlimpiadasTxt }
+    options:
+        expose: true
+
+download_archs_olimpiadas_txt:
+    path: /downloadArchsOlimpiadas
+    defaults: { _controller: SieAppWebBundle:Download:downloadArchsOlimpiadasTxt }
+    options:
+        expose: true

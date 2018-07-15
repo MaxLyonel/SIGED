@@ -2,8 +2,10 @@
 
 namespace Sie\AppWebBundle\Controller;
 
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Sie\AppWebBundle\Modals\Login;
 use Sie\AppWebBundle\Entity\Usuario;
@@ -11,6 +13,8 @@ use Sie\AppWebBundle\Form\UsuarioType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\SecurityContext;
 use Doctrine\ORM\EntityRepository;
+use phpseclib\Net\SFTP;
+use phpseclib\Net\SSH2;
 
 class DownloadController extends Controller {
 
@@ -808,4 +812,46 @@ class DownloadController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
     }
+
+    public function buildArchsOlimpiadasTxtAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $gestion = 2018;
+        $directorio = "/archivos/descargas/";
+        $archivo = "archsOlimpiadasTxt.zip";
+        // Generamos Archivo
+        $query = $em->getConnection()->prepare("select * from sp_genera_archs_olimpiadas_txt('".$gestion."')");
+        $query->execute();
+        $result = $query->fetchAll();
+        $porciones = explode(";", $result[0]['sp_genera_archs_olimpiadas_txt']);
+
+        $ssh = new SSH2('172.20.0.103:1929');
+        
+        if (!$ssh->login('afiengo', 'ContraFieng0$')) {
+            throw new \Exception('¡No tienes acceso a este servidor!');
+        }
+
+        $ssh->exec('zip '.$directorio.$archivo.' /aplicacion_upload/'.$porciones[0].' /aplicacion_upload/'.$porciones[1].' /aplicacion_upload/'.$porciones[2]);
+
+        $response = new Response();
+        return $response;
+    }
+
+    public function downloadArchsOlimpiadasTxtAction(Request $request) {
+        $directorio = '/archivos/descargas/';
+        $archivo = "archsOlimpiadasTxt.zip";
+
+        //create response to donwload the file
+        $response = new Response();
+        //then send the headers to foce download the zip file
+        $response->headers->set('Content-Type', 'application/zip');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $archivo));
+        $response->setContent(file_get_contents($directorio) . $archivo);
+        $response->headers->set('Pragma', "no-cache");
+        $response->headers->set('Expires', "0");
+        $response->headers->set('Content-Transfer-Encoding', "binary");
+        $response->sendHeaders();
+        $response->setContent(readfile($directorio . $archivo));
+        return $response;
+    }
+
 }
