@@ -813,9 +813,9 @@ class DownloadController extends Controller {
         return $response;
     }
 
-    public function buildArchsOlimpiadasTxtAction(Request $request) {
+    public function buildArchsOlimpiadasTxtAction(Request $request, $gestion) {
         $em = $this->getDoctrine()->getManager();
-        $gestion = 2018;
+        $gestion = $gestion;
         $directorio = "/archivos/descargas/";
         $archivo = "archsOlimpiadasTxt.zip";
         // Generamos Archivo

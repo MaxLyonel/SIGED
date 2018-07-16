@@ -105,7 +105,7 @@ donwload_especial_libreta:
     defaults: { _controller: SieAppWebBundle:Download:especialLibreta }
 
 build_archs_olimpiadas_txt:
-    path: /buildArchsOlimpiadas
+    path: /buildArchsOlimpiadas/{gestion}
     defaults: { _controller: SieAppWebBundle:Download:buildArchsOlimpiadasTxt }
     options:
         expose: true
