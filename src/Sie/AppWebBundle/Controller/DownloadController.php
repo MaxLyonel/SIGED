@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Sie\AppWebBundle\Modals\Login;
 use Sie\AppWebBundle\Entity\Usuario;
+use Sie\AppWebBundle\Entity\BjpValidacionueProcesoApertura;
 use Sie\AppWebBundle\Form\UsuarioType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -795,17 +796,63 @@ class DownloadController extends Controller {
         return $response;
     }
 
-    public function repfinProcesoAperturaAction(Request $request) {
+    public function repFinProcesoAperturaAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
         $idLugar = $request->get('idLugar');
-        // $em = $this->getDoctrine()->getManager();
-        // $operativoLog = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findBy(array(''));
+        $gestion = $em->getRepository('SieAppWebBundle:GestionTipo')->find($request->get('gestion'));
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->find($idLugar);
 
-// dump($operativoLog);die;
-        $arch = 'REPORTE_Doc_'.$request->get('idInstitucion').'_' . date('YmdHis') . '.pdf';
+        $distrito = $em->getRepository('SieAppWebBundle:DistritoTipo')->find(intval($lugar->getCodigo()));
+
+        $bjpValidacion = $em->getRepository('SieAppWebBundle:BjpValidacionueProcesoApertura')->findBy(array('distritoTipo' => intval($lugar->getCodigo()), 'gestionTipo' => $gestion));
+
+        if(!$bjpValidacion){
+            $bjpValidacion = new BjpValidacionueProcesoApertura();
+            $bjpValidacion->setGestionTipo($gestion);
+            $bjpValidacion->setDistritoTipo($distrito);
+            $bjpValidacion->setEstado(1);
+            $bjpValidacion->setFechaRegistro(new \DateTime('now'));
+            $bjpValidacion->setFechaModificacion(new \DateTime('now'));
+            $em->persist($bjpValidacion);
+            $em->flush();
+        }
+
+        $arch = 'REPORTE_FinProcApertura_'.$lugar->getLugar().'_' . date('YmdHis') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_lst_Docentes_v1_cc.rptdesign&institucioneducativa_id='.$request->get('idInstitucion').'&gestion_tipo_id='.$request->get('gestion').'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_esp_lst_distrital_proc_insc_v1_ma.rptdesign&gestion='.$gestion.'&distritoid='.intval($lugar->getCodigo()).'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    public function repProcesoAperturaAction(Request $request) {
+        $idLugar = $request->get('idLugar');
+        $gestion = $request->get('gestion');
+        $roluser = $request->get('roluser');
+
+        $em = $this->getDoctrine()->getManager();
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->find($idLugar);
+
+        $arch = 'REPORTE_ProcApertura_'.$lugar->getLugar().'_' . date('YmdHis') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+
+        switch ($roluser) {
+            case 7:
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_esp_lst_departamental_proc_insc_v1_ma.rptdesign&gestion='.$gestion.'&dpto='.intval($lugar->getCodigo()).'&&__format=pdf&'));
+                break;
+            case 8:
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_esp_lst_nacional_proc_insc_v1_ma.rptdesign&gestion='.$gestion.'&&__format=pdf&'));
+                break;
+            case 10:
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_esp_lst_distrital_proc_insc_v1_ma.rptdesign&gestion='.$gestion.'&distritoid='.intval($lugar->getCodigo()).'&&__format=pdf&'));
+                break;
+        }
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');

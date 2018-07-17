@@ -88,3 +88,7 @@ bjp_rue_clistardistritos:
 reporte_fin_proceso_apertura:
     path:     /repFinProAp
     defaults: { _controller: SieAppWebBundle:Download:repfinProcesoApertura }
+
+reporte_proceso_apertura:
+    path:     /repProAp
+    defaults: { _controller: SieAppWebBundle:Download:repProcesoApertura }
