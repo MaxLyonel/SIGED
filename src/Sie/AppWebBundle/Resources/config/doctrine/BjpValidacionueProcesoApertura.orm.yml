@@ -1,0 +1,54 @@
+Sie\AppWebBundle\Entity\BjpValidacionueProcesoApertura:
+    type: entity
+    table: bjp_validacionue_proceso_apertura
+    indexes:
+        IDX_8CF8FFE2FE19D46C:
+            columns:
+                - distrito_tipo_id
+        IDX_8CF8FFE2179FF95:
+            columns:
+                - gestion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        estado:
+            type: boolean
+            nullable: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        distritoTipo:
+            targetEntity: DistritoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                distrito_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
