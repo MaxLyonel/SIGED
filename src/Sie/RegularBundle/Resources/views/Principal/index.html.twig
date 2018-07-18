@@ -176,12 +176,17 @@
                 <div class="well">
                     <h4>Reporte Unidades Educativas y/o Centros de Educación Especial en proceso de apertura</h4>
                     <p>
-
                         <form action="{{path('reporte_proceso_apertura')}}" method="post" style="display:inline-block">
                             <input type="hidden" name="roluser" value="{{app.session.get('roluser')}}">
                             <input type="hidden" name="idLugar" value="{{app.session.get('roluserlugarid')}}">
                             <input type="hidden" name="gestion" value="{{app.session.get('currentyear')}}">
-                            <button type="submit" class="btn btn-md btn-default"><i class="fa fa-download"></i> Descargar Reporte</button>
+                            <button type="submit" class="btn btn-md btn-default"><i class="fa fa-download"></i> Descargar lista de UEs / CEEs</button>
+                        </form>
+                        <form action="{{path('reporte_proceso_apertura_dde')}}" method="post" style="display:inline-block">
+                            <input type="hidden" name="roluser" value="{{app.session.get('roluser')}}">
+                            <input type="hidden" name="idLugar" value="{{app.session.get('roluserlugarid')}}">
+                            <input type="hidden" name="gestion" value="{{app.session.get('currentyear')}}">
+                            <button type="submit" class="btn btn-md btn-primary"><i class="fa fa-download"></i> Descargar lista de administrativos</button>
                         </form>
                     </p>
                 </div>

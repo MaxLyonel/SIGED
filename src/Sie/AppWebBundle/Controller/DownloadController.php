@@ -860,11 +860,42 @@ class DownloadController extends Controller {
         return $response;
     }
 
+    public function repProcesoAperturaDdeAction(Request $request) {
+        $idLugar = $request->get('idLugar');
+        $gestion = $request->get('gestion');
+        $roluser = $request->get('roluser');
+
+        $em = $this->getDoctrine()->getManager();
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->find($idLugar);
+
+        $arch = 'REPORTE_ListaPersonal_DDE_'.$lugar->getLugar().'_' . date('YmdHis') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+
+        switch ($roluser) {
+            case 7:
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_departamental_personal_dde_v1_ma.rptdesign&gestion='.$gestion.'&dpto='.intval($lugar->getCodigo()).'&&__format=pdf&'));
+                break;
+            case 8:
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_nacional_personal_dde_v1_ma.rptdesign&gestion='.$gestion.'&&__format=pdf&'));
+                break;
+        }
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
     public function buildArchsOlimpiadasTxtAction(Request $request, $gestion) {
+        set_time_limit(180);
+
         $em = $this->getDoctrine()->getManager();
         $gestion = $gestion;
         $directorio = "/archivos/descargas/";
         $archivo = "archsOlimpiadasTxt.zip";
+
         // Generamos Archivo
         $query = $em->getConnection()->prepare("select * from sp_genera_archs_olimpiadas_txt('".$gestion."')");
         $query->execute();
@@ -877,7 +908,18 @@ class DownloadController extends Controller {
             throw new \Exception('¡No tienes acceso a este servidor!');
         }
 
-        $ssh->exec('zip '.$directorio.$archivo.' /aplicacion_upload/'.$porciones[0].' /aplicacion_upload/'.$porciones[1].' /aplicacion_upload/'.$porciones[2]);
+        $sftp = new SFTP('172.20.0.103:1929');
+        
+        if (!$sftp->login('afiengo', 'ContraFieng0$')) {
+            throw new \Exception('¡No tienes acceso a este servidor!');
+        }
+
+        $sftp->rename($directorio.$archivo, $directorio.$archivo.'.backup');
+
+        $ssh->exec('zip '.$directorio.$archivo.' /aplicacion_upload/'.$porciones[0].' /aplicacion_upload/'.$porciones[1]);
+
+        $sftp->delete('/aplicacion_upload/'.$porciones[0]);
+        $sftp->delete('/aplicacion_upload/'.$porciones[1]);
 
         $response = new Response();
         return $response;

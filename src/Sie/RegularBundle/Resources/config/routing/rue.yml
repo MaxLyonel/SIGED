@@ -92,3 +92,7 @@ reporte_fin_proceso_apertura:
 reporte_proceso_apertura:
     path:     /repProAp
     defaults: { _controller: SieAppWebBundle:Download:repProcesoApertura }
+
+reporte_proceso_apertura_dde:
+    path:     /repProApDde
+    defaults: { _controller: SieAppWebBundle:Download:repProcesoAperturaDde }
