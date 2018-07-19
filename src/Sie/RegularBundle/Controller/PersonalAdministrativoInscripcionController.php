@@ -97,7 +97,6 @@ class PersonalAdministrativoInscripcionController extends Controller {
                 ->setParameter('gestion', $gestion);
         $personal = $query->getResult();
 
-        //dump($personal);die;
         return $this->render('SieRegularBundle:PersonalAdministrativoInscripcion:index.html.twig', array(
                     'personal' => $personal,
                     'institucion' => $institucioneducativa,
@@ -169,7 +168,6 @@ class PersonalAdministrativoInscripcionController extends Controller {
      */
 
     public function createAction(Request $request) {
-        dump($request);die;
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         try {
