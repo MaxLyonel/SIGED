@@ -332,4 +332,32 @@ class OlimEstudianteNotaPrueba
     {
         return $this->olimModalidadPruebaTipo;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\OlimModalidadTipo
+     */
+    private $olimModalidadTipo;
+
+
+    /**
+     * Set olimModalidadTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\OlimModalidadTipo $olimModalidadTipo
+     * @return OlimEstudianteNotaPrueba
+     */
+    public function setOlimModalidadTipo(\Sie\AppWebBundle\Entity\OlimModalidadTipo $olimModalidadTipo = null)
+    {
+        $this->olimModalidadTipo = $olimModalidadTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get olimModalidadTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\OlimModalidadTipo 
+     */
+    public function getOlimModalidadTipo()
+    {
+        return $this->olimModalidadTipo;
+    }
 }

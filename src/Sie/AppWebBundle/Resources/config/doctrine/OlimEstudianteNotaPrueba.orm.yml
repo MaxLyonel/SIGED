@@ -2,6 +2,9 @@ Sie\AppWebBundle\Entity\OlimEstudianteNotaPrueba:
     type: entity
     table: olim_estudiante_nota_prueba
     indexes:
+        IDX_76E0CB74C2368DDC:
+            columns:
+                - olim_modalidad_tipo_id
         IDX_76E0CB74C0B7E599:
             columns:
                 - olim_nivel_matematica_tipo_id
@@ -14,9 +17,6 @@ Sie\AppWebBundle\Entity\OlimEstudianteNotaPrueba:
         IDX_76E0CB742C80C63:
             columns:
                 - olim_estudiante_inscripcion_id
-        IDX_76E0CB745B5336BD:
-            columns:
-                - olim_modalidad_prueba_tipo_id
     id:
         id:
             type: integer
@@ -28,9 +28,10 @@ Sie\AppWebBundle\Entity\OlimEstudianteNotaPrueba:
                 strategy: SEQUENCE
     fields:
         nota:
-            type: smallint
+            type: decimal
             nullable: true
-            unsigned: false
+            precision: 5
+            scale: 2
             comment: ''
         estado:
             type: boolean
@@ -61,6 +62,15 @@ Sie\AppWebBundle\Entity\OlimEstudianteNotaPrueba:
             comment: ''
             column: fecha_modificado
     manyToOne:
+        olimModalidadTipo:
+            targetEntity: OlimModalidadTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_modalidad_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         olimNivelMatematicaTipo:
             targetEntity: OlimNivelMatematicaTipo
             cascade: {  }
@@ -95,15 +105,6 @@ Sie\AppWebBundle\Entity\OlimEstudianteNotaPrueba:
             inversedBy: null
             joinColumns:
                 olim_estudiante_inscripcion_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        olimModalidadPruebaTipo:
-            targetEntity: OlimModalidadPruebaTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                olim_modalidad_prueba_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
