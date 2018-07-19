@@ -943,4 +943,24 @@ class DownloadController extends Controller {
         return $response;
     }
 
+      /**
+     * get the studens per course
+     * @param Request $request
+     * @param type $ue
+     * @return Response pdf list with studens from OCEPB
+     */
+    public function listainscritosestudiantesolimAction(Request $request, $codges, $coddis) {
+// dump($codges);die;
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'list_est_' . $coddis . '_' . $codges . '.xls'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_lst_Estudiantes_Participaciones_Distrito_f1_v1.rptdesign&codges=' . $codges . '&coddis=' . $coddis . '&&__format=xls&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+
+    }
+
 }

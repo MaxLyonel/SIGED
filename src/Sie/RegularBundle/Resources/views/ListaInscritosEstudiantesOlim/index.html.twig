@@ -1,0 +1,161 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .higherWider {
+            width:800px;
+            margin-top:100px;
+        }
+    </style>
+
+{% endblock %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Descargar Lista de Estudiantes Inscritos en la OCEPB
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  Buscar</li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('notihistory') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>¡Advertencia!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('goodhistory') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Bien!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            <!-- Website Stats  Widget -->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 col-lg-12">
+                        <div class="panel panel-icon panel-primary">
+                            <div class="panel-heading">
+                                <i class="fa fa-search"></i> Inserte Código de Distrito
+                            </div>
+                            <div class="panel-body">
+
+                                {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", "id":"formRestart"} } )}}
+                                <div class="form-group">
+                                    <label for="form_codigoSie" class="col-sm-2 control-label">
+                                        {{form_label(form.codigoDistrito)}}
+                                    </label>
+                                    <div class="col-sm-10">
+                                    	  {% if modeview  %}                                  
+	                                            {{form_widget(form.codigoDistrito, {'attr': {'class':'form-control', } } )}}
+	                                        {% else %}
+	                                            {{form_widget(form.codigoDistrito, {'attr': {'class':'form-control', 'readonly':'true'} } )}}
+	                                        {% endif %}
+
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        {{ form_widget(form.buscar,{ 'attr':{'class':'btn btn-primary' } } ) }}
+                                    </div>
+                                </div>
+                                {{form_end(form)}}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- en of the result of search history -->
+        </div>
+
+
+    </div>
+
+
+    <div class="row">
+      <div class="col-md-12">
+        <div id="showdata">
+        </div>
+      </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var lookdistrito = function () {
+          formData = $('#formRestart').serialize();
+
+           $.ajax({
+               type: 'post',
+               data: formData,
+               url: Routing.generate('listainscritosestudiantesolim_lookdistrito'),
+               beforeSend: function () {
+                   $("#showdata").empty();
+                   $("#showdata").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+               },
+               success: function (data) {
+                   $("#showdata").empty();
+                   $("#showdata").append(data);
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+           });
+        };
+        var resetBjp = function(validacionId){
+          if(confirm('Esta segur@ de realizar la habilitacion para el registro BJP de esta Unidad Educativa!. ¿Desea continuar?')){
+            $.ajax({
+                type: 'post',
+                data: ({validacionId:validacionId}),
+                url: Routing.generate('sie_restartbjp_resetbjp'),
+                beforeSend: function () {
+                    $("#doneReset").empty();
+                    $("#doneReset").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#doneReset").empty();
+                    $("#doneReset").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+
+          }else {
+            return false;
+          }
+
+        }
+    </script>
+
+{% endblock %}
