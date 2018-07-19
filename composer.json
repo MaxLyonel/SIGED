@@ -29,7 +29,8 @@
         "guzzlehttp/guzzle": "~6.0",
         "fresh/doctrine-enum-bundle": "~4.8",
         "knplabs/knp-paginator-bundle": "^2.6",
-        "nelmio/security-bundle": "^2.4"
+        "nelmio/security-bundle": "^2.4",
+        "phpseclib/phpseclib": "^2.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"

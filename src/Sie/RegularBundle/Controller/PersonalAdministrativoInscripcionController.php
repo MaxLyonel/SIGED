@@ -169,11 +169,11 @@ class PersonalAdministrativoInscripcionController extends Controller {
      */
 
     public function createAction(Request $request) {
+        dump($request);die;
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         try {
             $form = $request->get('form');
-
 
             // Verificar si la persona ya esta registrada            
             $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($form['persona']);
@@ -581,12 +581,12 @@ class PersonalAdministrativoInscripcionController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($request->get('idInstitucion'));
 
-        $maestroinscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findoneBy(array('institucioneducativa' => $request->get('idInstitucion'), 'gestionTipo' => $request->getSession()->get('idGestion')));
+        $maestroinscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findoneBy(array('institucioneducativa' => $request->get('idInstitucion'), 'gestionTipo' => $request->get('gestion')));
 
         return $this->render('SieRegularBundle:PersonalAdministrativoInscripcion:search_persona_director.html.twig', array(
-                    'form' => $this->searchPersonaForm($institucion->getId(), $request->getSession()->get('idGestion'))->createView(),
+                    'form' => $this->searchPersonaForm($institucion->getId(), $request->get('gestion'))->createView(),
                     'institucion' => $institucion,
-                    'gestion' => $request->getSession()->get('idGestion'),
+                    'gestion' => $request->get('gestion'),
                     'maestroinscripcion' => $maestroinscripcion,
         ));
     }
@@ -618,7 +618,7 @@ class PersonalAdministrativoInscripcionController extends Controller {
         return $this->render('SieRegularBundle:PersonalAdministrativoInscripcion:result_persona.html.twig', array(
                     'personas' => $personas,
                     'institucion' => $institucion,
-                    'gestion' => $request->getSession()->get('idGestion')
+                    'gestion' => $form['gestion']
         ));
     }
 
