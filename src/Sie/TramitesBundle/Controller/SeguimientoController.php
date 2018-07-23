@@ -92,7 +92,6 @@ class SeguimientoController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-
         if ($request->isMethod('POST')) {
             $form = $request->get('form');
             if ($form) {
@@ -109,7 +108,6 @@ class SeguimientoController extends Controller {
                     if(count($entityDocumento)<=0){
                         $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información del número de serie ingresado'));
                     }
-
                     return $this->render($this->session->get('pathSystem') . ':Seguimiento:documentoSerieIndex.html.twig', array(
                         'formBusqueda' => $documentoController->creaFormBuscaDocumentoSerie('tramite_seguimiento_documento_lista',$serie)->createView(),
                         'titulo' => 'Seguimiento',
