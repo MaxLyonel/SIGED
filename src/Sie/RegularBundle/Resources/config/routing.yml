@@ -343,3 +343,7 @@ sie_regular_update_student:
 sie_app_web_info_bono:
     resource: "@SieRegularBundle/Resources/config/routing/infobono.yml"
     prefix:   /acceso/infoRequestStudent
+
+sie_app_web_listainscritosestudiantesolim:
+    resource: "@SieRegularBundle/Resources/config/routing/listainscritosestudiantesolim.yml"
+    prefix:   /sie/listainscritosestudiantesolim

@@ -14,8 +14,6 @@ use Sie\AppWebBundle\Form\UsuarioType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\SecurityContext;
 use Doctrine\ORM\EntityRepository;
-use phpseclib\Net\SFTP;
-use phpseclib\Net\SSH2;
 
 class DownloadController extends Controller {
 
@@ -860,31 +858,58 @@ class DownloadController extends Controller {
         return $response;
     }
 
+    public function repProcesoAperturaDdeAction(Request $request) {
+        $idLugar = $request->get('idLugar');
+        $gestion = $request->get('gestion');
+        $roluser = $request->get('roluser');
+
+        $em = $this->getDoctrine()->getManager();
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->find($idLugar);
+
+        $arch = 'REPORTE_ListaPersonal_DDE_'.$lugar->getLugar().'_' . date('YmdHis') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+
+        switch ($roluser) {
+            case 7:
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_departamental_personal_dde_v1_ma.rptdesign&gestion='.$gestion.'&dpto='.intval($lugar->getCodigo()).'&&__format=pdf&'));
+                break;
+            case 8:
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_nacional_personal_dde_v1_ma.rptdesign&gestion='.$gestion.'&&__format=pdf&'));
+                break;
+        }
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
     public function buildArchsOlimpiadasTxtAction(Request $request, $gestion) {
+        set_time_limit(180);
+
         $em = $this->getDoctrine()->getManager();
         $gestion = $gestion;
-        $directorio = "/archivos/descargas/";
+        $directorio = "/web/uploads/";
         $archivo = "archsOlimpiadasTxt.zip";
+
         // Generamos Archivo
         $query = $em->getConnection()->prepare("select * from sp_genera_archs_olimpiadas_txt('".$gestion."')");
         $query->execute();
         $result = $query->fetchAll();
         $porciones = explode(";", $result[0]['sp_genera_archs_olimpiadas_txt']);
 
-        $ssh = new SSH2('172.20.0.103:1929');
-        
-        if (!$ssh->login('afiengo', 'ContraFieng0$')) {
-            throw new \Exception('¡No tienes acceso a este servidor!');
-        }
+        system('zip '.$directorio.$archivo.' '.$directorio.$porciones[0].' '.$directorio.$porciones[1]);
 
-        $ssh->exec('zip '.$directorio.$archivo.' /aplicacion_upload/'.$porciones[0].' /aplicacion_upload/'.$porciones[1].' /aplicacion_upload/'.$porciones[2]);
-
-        $response = new Response();
-        return $response;
+        $response = new JsonResponse();
+        return $response->setData(array(
+            'archivo' => $archivo
+        ));
     }
 
     public function downloadArchsOlimpiadasTxtAction(Request $request) {
-        $directorio = '/archivos/descargas/';
+        $directorio = '/web/uploads/';
         $archivo = "archsOlimpiadasTxt.zip";
 
         //create response to donwload the file
@@ -899,6 +924,26 @@ class DownloadController extends Controller {
         $response->sendHeaders();
         $response->setContent(readfile($directorio . $archivo));
         return $response;
+    }
+
+      /**
+     * get the studens per course
+     * @param Request $request
+     * @param type $ue
+     * @return Response pdf list with studens from OCEPB
+     */
+    public function listainscritosestudiantesolimAction(Request $request, $codges, $coddis) {
+// dump($codges);die;
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'list_est_' . $coddis . '_' . $codges . '.xls'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_lst_Estudiantes_Participaciones_Distrito_f1_v1.rptdesign&codges=' . $codges . '&coddis=' . $coddis . '&&__format=xls&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+
     }
 
 }

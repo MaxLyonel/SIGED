@@ -115,3 +115,7 @@ download_archs_olimpiadas_txt:
     defaults: { _controller: SieAppWebBundle:Download:downloadArchsOlimpiadasTxt }
     options:
         expose: true
+
+donwload_listainscritosestudiantesolim:
+    path: /listainscritosestudiantesolim/{codges}/{coddis}
+    defaults: { _controller: SieAppWebBundle:Download:listainscritosestudiantesolim }

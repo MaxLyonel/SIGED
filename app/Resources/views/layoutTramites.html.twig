@@ -249,7 +249,7 @@
                 <div class="sidebar-content">
                     <div class="media">
                         <a class="pull-left has-notif avatar" href="{{path('tramite_homepage')}}">
-                            <img src="{{asset('juegos/img/avatar/50/1.png')}}" alt="admin">
+                            <img src="{{asset('user.png')}}" alt="admin">
                             <i class="online"></i>
                         </a>
                         <div class="media-body">
@@ -391,7 +391,7 @@
                         {% endif %}
                     {% endif %}
 
-                    {% if rol20 == true or rol8 == true or app.session.get('userId') == 92506172 %}
+                    {% if rol20 == true or rol8 == true or app.session.get('userId') == 92506172 or app.session.get('userId') == 13794031 %}
                         <!-- Start development - sub menu -->
                         {% for key,menu in app.session.get('aMenu') %}
                             <li class="submenu {% if app.session.get('pMenuId') == menu[0]['menuId'] %} active {% endif %}">
