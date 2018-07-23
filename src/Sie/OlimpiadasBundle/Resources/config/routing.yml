@@ -64,4 +64,9 @@ sie_app_web_oliminscriptions_depurations:
 
 sie_app_web_olimdiscapacidad:
     resource: "@SieOlimpiadasBundle/Resources/config/routing/olimdiscapacidad.yml"
+
+sie_app_web_olimmodalidadtipo:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimmodalidadtipo.yml"
+    prefix:   /olimmodalidadtipo
+
     
