@@ -2,9 +2,9 @@ olimmodalidadtipo:
     path:     /
     defaults: { _controller: "SieOlimpiadasBundle:OlimModalidadTipo:index" }
 
-#olimmodalidadtipo_show:
-#    path:     /{id}/show
-#    defaults: { _controller: "SieOlimpiadasBundle:OlimModalidadTipo:show" }
+olimmodalidadtipo_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieOlimpiadasBundle:OlimModalidadTipo:show" }
 
 olimmodalidadtipo_new:
     path:     /new
@@ -24,7 +24,7 @@ olimmodalidadtipo_update:
     defaults: { _controller: "SieOlimpiadasBundle:OlimModalidadTipo:update" }
     methods:  [POST, PUT]
 
-#olimmodalidadtipo_delete:
-#    path:     /{id}/delete
-#    defaults: { _controller: "SieOlimpiadasBundle:OlimModalidadTipo:delete" }
-#    methods:  [POST, DELETE]
+olimmodalidadtipo_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieOlimpiadasBundle:OlimModalidadTipo:delete" }
+    methods:  [POST, DELETE]
