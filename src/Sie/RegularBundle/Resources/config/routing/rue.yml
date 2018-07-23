@@ -84,3 +84,15 @@ bjp_rue_clistardistritos:
     defaults: { _controller: "SieRegularBundle:RegistroInstitucionEducativa:listardistritos" }
     options:
          expose: true
+
+reporte_fin_proceso_apertura:
+    path:     /repFinProAp
+    defaults: { _controller: SieAppWebBundle:Download:repfinProcesoApertura }
+
+reporte_proceso_apertura:
+    path:     /repProAp
+    defaults: { _controller: SieAppWebBundle:Download:repProcesoApertura }
+
+reporte_proceso_apertura_dde:
+    path:     /repProApDde
+    defaults: { _controller: SieAppWebBundle:Download:repProcesoAperturaDde }

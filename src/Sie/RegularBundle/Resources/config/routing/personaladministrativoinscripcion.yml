@@ -55,3 +55,20 @@ personaladministrativoinscripcion_persona_create:
     path:     /createPerson/
     defaults: { _controller: "SieRegularBundle:PersonalAdministrativoInscripcion:createpersona" }
     methods:  POST    
+
+personaladministrativoinscripcion_find_persona:
+    path:     /findPers/
+    defaults: { _controller: "SieRegularBundle:PersonalAdministrativoInscripcion:findPersona" }
+
+personaladministrativoinscripcion_result_persona:
+    path:     /resultPers/
+    defaults: { _controller: "SieRegularBundle:PersonalAdministrativoInscripcion:resultPersona" }    
+
+personaladministrativoinscripcion_director_new:
+    path:     /newPersonaDir/
+    defaults: { _controller: "SieRegularBundle:PersonalAdministrativoInscripcion:newdirector" }
+
+personaladministrativoinscripcion_director_create:
+    path:     /createPersonaDir/
+    defaults: { _controller: "SieRegularBundle:PersonalAdministrativoInscripcion:createdirector" }
+    methods:  POST

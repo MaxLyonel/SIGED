@@ -33,21 +33,36 @@ class RegistroInstitucionEducativaController extends Controller {
     public function indexAction(Request $request) {
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
+        $id_lugar = $sesion->get('roluserlugarid');
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-        // data es un array con claves 'name', 'email', y 'message'
 
-        /* return $this->render('SieAppWebBundle:Institucioneducativa:searchieducativa.html.twig', array(
-          'form' => $this->createSearchForm()->createView(),
-          )); */
+        $em = $this->getDoctrine()->getManager();
+        $gestion = $em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear'));
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->find($id_lugar);
+
+        $distrito = $em->getRepository('SieAppWebBundle:DistritoTipo')->find(intval($lugar->getCodigo()));
+
+
+        $bjpValidacion = $em->getRepository('SieAppWebBundle:BjpValidacionueProcesoApertura')->findBy(array('distritoTipo' => intval($lugar->getCodigo()), 'gestionTipo' => $gestion));
+
+        $finProcApertura = false;
+        if($bjpValidacion){
+            $finProcApertura = true;
+        }
 
         // Creacion de formularios de busqueda por codigo rue o nombre de institucion educativa
         $formInstitucioneducativa = $this->createSearchFormInstitucioneducativa();
         $formInstitucioneducativaId = $this->createSearchFormInstitucioneducativaId();
 
-
-        return $this->render('SieRegularBundle:RegistroInstitucionEducativa:search.html.twig', array('formInstitucioneducativa' => $formInstitucioneducativa->createView(), 'formInstitucioneducativaId' => $formInstitucioneducativaId->createView()));
+        return $this->render('SieRegularBundle:RegistroInstitucionEducativa:search.html.twig', array(
+                'formInstitucioneducativa' => $formInstitucioneducativa->createView(),
+                'formInstitucioneducativaId' => $formInstitucioneducativaId->createView(),
+                'gestion' => $this->session->get('currentyear'),
+                'roluserlugarid' => $id_lugar,
+                'finProcApertura' => $finProcApertura
+        ));
     }
 
     /**
@@ -83,6 +98,13 @@ class RegistroInstitucionEducativaController extends Controller {
      *
      */
     public function findieducativaAction(Request $request) {
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        $id_lugar = $sesion->get('roluserlugarid');
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
         $form = $request->get('form');
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery('SELECT iat FROM SieAppWebBundle:InstitucioneducativaAcreditacionTipo iat WHERE iat.id = :id')
@@ -110,19 +132,39 @@ class RegistroInstitucionEducativaController extends Controller {
         }
 
         $entities = $query->getResult();
+        $gestion = $em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear'));
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->find($id_lugar);
 
+        $distrito = $em->getRepository('SieAppWebBundle:DistritoTipo')->find(intval($lugar->getCodigo()));
+
+
+        $bjpValidacion = $em->getRepository('SieAppWebBundle:BjpValidacionueProcesoApertura')->findBy(array('distritoTipo' => intval($lugar->getCodigo()), 'gestionTipo' => $gestion));
+
+        $finProcApertura = false;
+        if($bjpValidacion){
+            $finProcApertura = true;
+        }
 
         if (!$entities) {
             $this->get('session')->getFlashBag()->add('mensaje', 'No se encontró la información...');
 
             $formInstitucioneducativa = $this->createSearchFormInstitucioneducativa();
             $formInstitucioneducativaId = $this->createSearchFormInstitucioneducativaId();
-            return $this->render('SieRegularBundle:RegistroInstitucionEducativa:search.html.twig', array('formInstitucioneducativa' => $formInstitucioneducativa->createView(), 'formInstitucioneducativaId' => $formInstitucioneducativaId->createView()));
+            return $this->render('SieRegularBundle:RegistroInstitucionEducativa:search.html.twig', array(
+                    'formInstitucioneducativa' => $formInstitucioneducativa->createView(), 
+                    'formInstitucioneducativaId' => $formInstitucioneducativaId->createView(),
+                    'gestion' => $this->session->get('currentyear'),
+                    'roluserlugarid' => $this->session->get('roluserlugarid'),
+                    'finProcApertura' => $finProcApertura
+            ));
         }
 
         return $this->render('SieRegularBundle:RegistroInstitucionEducativa:resultinseducativa.html.twig', array(
-          'entities' => $entities,
-          'form' => $this->formGestionUE($entities[0])->createView()
+                'entities' => $entities,
+                'form' => $this->formGestionUE($entities[0])->createView(),
+                'gestion' => $this->session->get('currentyear'),
+                'roluserlugarid' => $this->session->get('roluserlugarid'),
+                'finProcApertura' => $finProcApertura
         ));
     }
 
@@ -207,8 +249,8 @@ class RegistroInstitucionEducativaController extends Controller {
             }
         }
 
-        $query = $em->createQuery('SELECT iat FROM SieAppWebBundle:InstitucioneducativaAcreditacionTipo iat WHERE iat.id <> :tipo')
-                ->setParameter('tipo', 1);
+        $query = $em->createQuery('SELECT iat FROM SieAppWebBundle:InstitucioneducativaAcreditacionTipo iat WHERE iat.id = :tipo')
+                ->setParameter('tipo', 0);
         $tiposacreditacion = $query->getResult();
         $tiposacreditacionArray = array();
         foreach ($tiposacreditacion as $c) {
@@ -287,6 +329,8 @@ class RegistroInstitucionEducativaController extends Controller {
                 $this->get('session')->getFlashBag()->add('mensaje', 'La institución educativa ya existe en el sistema');
                 return $this->redirect($this->generateUrl('bjp_rue'));
             }*/
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_area_especial_autorizado');")->execute();
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_nivel_autorizado');")->execute();
 
             $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
 
@@ -372,12 +416,12 @@ class RegistroInstitucionEducativaController extends Controller {
             $em->flush();
 
             // Registramos los niveles
+
             if ($form['institucionEducativaTipo'] == 1 or $form['institucionEducativaTipo'] == 2) {
                 //adiciona niveles nuevos
                 $niveles = $form['nivelTipo'];
 
                 for ($i = 0; $i < count($niveles); $i++) {
-
                     $nivel = new InstitucioneducativaNivelAutorizado();
                     $nivel->setFechaRegistro(new \DateTime('now'));
                     //$nivel->setGestionTipoId($this->session->get('currentyear'));
@@ -391,7 +435,6 @@ class RegistroInstitucionEducativaController extends Controller {
                 $areas = $form['areaEspecialTipo'];
                 //     		dump($areas);die;
                 for ($i = 0; $i < count($areas); $i++) {
-                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_nivel_autorizado');")->execute();
                     $area = new InstitucioneducativaAreaEspecialAutorizado();
                     $area->setFechaRegistro(new \DateTime('now'));
                     $area->setEspecialAreaTipo($em->getRepository('SieAppWebBundle:EspecialAreaTipo')->findOneById($areas[$i]));
@@ -403,11 +446,9 @@ class RegistroInstitucionEducativaController extends Controller {
                 //adiciona niveles nuevos
                 $niveles = $form['nivelTipo'];
 
-                for ($i = 0; $i < count($niveles); $i++) {
-                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_nivel_autorizado');")->execute();
+                for ($i = 0; $i < count($niveles); $i++) {                    
                     $nivel = new InstitucioneducativaNivelAutorizado();
                     $nivel->setFechaRegistro(new \DateTime('now'));
-                    $nivel->setGestionTipoId($this->session->get('currentyear'));
                     $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($niveles[$i]));
                     $nivel->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($codigoue));
                     $em->persist($nivel);

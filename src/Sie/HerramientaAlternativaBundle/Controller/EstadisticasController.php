@@ -173,6 +173,30 @@ class EstadisticasController extends Controller
         $fechaActual = new \DateTime(date('Y-m-d H:i:s'));
         $fechaEstadistica = $fechaActual->format('d-m-Y H:i:s');
         //$gestionProcesada = $gestionActual;
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare('
+              
+              select sest.id, sest.especialidad
+              from
+                      superior_facultad_area_tipo sfat 
+	                 inner join superior_especialidad_tipo sest on sfat.id= sest.superior_facultad_area_tipo_id
+              where sfat.codigo in (18,19,20,21,22,23,24,25)    
+               
+        ');
+
+        //$query->bindValue(':idcurso', $idcurso);
+        $query->execute();
+        $objEspecialidades= $query->fetchAll();
+
+        //dump($objEspecialidades);die;
+        //$especialidades = $em->getRepository('SieAppWebBundle:SuperiorEspecialidadTipo')->findAll();
+        //dump($objEspecialidadesArray);die;
+//        $objEspecialidadesArray = array();
+//        foreach ($objEspecialidades as $value) {
+//            $objEspecialidadesArray[$value->getId()] = $value->getEspecialidad();
+//        }
+//
+//        dump($objEspecialidadesArray);die;
 
         $codigo = 0;
         $nivel = 0;
@@ -252,7 +276,8 @@ class EstadisticasController extends Controller
                 'gestion'=>$gestion,
                 'datoGraficoGenero'=>$chartGenero,
                 'datoGraficoDependencia'=>$chartDependencia,
-                'fechaEstadistica'=>$fechaEstadistica
+                'fechaEstadistica'=>$fechaEstadistica,
+                'especialidades'=>$objEspecialidades,
             ));
         } else {
             return $this->render('SieHerramientaAlternativaBundle:Reportes:matriculaEducativaAlternativa.html.twig', array(
@@ -260,7 +285,8 @@ class EstadisticasController extends Controller
                 'gestion'=>$gestion,
                 'datoGraficoGenero'=>$chartGenero,
                 'datoGraficoDependencia'=>$chartDependencia,
-                'fechaEstadistica'=>$fechaEstadistica
+                'fechaEstadistica'=>$fechaEstadistica,
+                'especialidades'=>$objEspecialidades,
 
             ));
         }
@@ -1444,7 +1470,7 @@ union all
             $rol = 0;
             $periodo = 2;
         }
-        
+
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1518,7 +1544,7 @@ union all
         $response = new Response();
         $response->headers->set('Content-type', 'application/vnd.ms-excel');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        //   dump($this->container->getParameter('urlreportweb') . 'alt_est_nacional_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo);die;
+        //   dump($this->container->getParameter('urlreportweb') . 'alt_esp_nacional_cant_centros_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo);die;
         // por defecto
         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_nacional_cant_centros_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo));
 
@@ -1551,6 +1577,113 @@ union all
         return $response;
     }
 
+
+    public function informacionCentroEspecialidadPrintPdfAction(Request $request) {
+       // dump($request);die;
+
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+        if ($request->isMethod('POST')) {
+            /*
+             * Recupera datos del formulario
+             */
+            $gestion = $request->get('gestion');
+            $periodo = $request->get('periodo');
+            $value = $request->get('idesp');
+         //   dump($value);
+            $codigoArea = base64_decode($request->get('codigo'));
+            $rol = $request->get('rol');
+
+        } else {
+            $gestion = $gestionActual;
+            $codigoArea = 0;
+            $rol = 0;
+            $periodo = $request->get('periodo');
+            $value = $request->get('idesp');
+        }
+
+
+        $em = $this->getDoctrine()->getManager();
+
+        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+
+        // por defecto
+         //   dump($this->container->getParameter('urlreportweb') . 'alt_est_nacional_por_especialidad_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion.'&Periodo='.$periodo.'&idespecialidad='.$value);die;
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_nacional_por_especialidad_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion.'&Periodo='.$periodo.'&idespecialidad='.$value));
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    /**
+     * Imprime reportes estadisticos segun el tipo de rol en formato EXCEL - Educación Especial
+     * Jurlan
+     * @param Request $request
+     * @return type
+     */
+    public function informacionCentroEspecialidadPrintXlsAction(Request $request) {
+       // dump($request);die;
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+
+        if ($request->isMethod('POST')) {
+            /*
+             * Recupera datos del formulario
+             */
+            $gestion = $request->get('gestion');
+            $periodo = $request->get('periodo');
+            $value = $request->get('idespx');
+            //   dump($value);
+            $codigoArea = base64_decode($request->get('codigo'));
+            $rol = $request->get('rol');
+
+        } else {
+            $gestion = $gestionActual;
+            $codigoArea = 0;
+            $rol = 0;
+            $periodo = $request->get('periodo');
+            $value = $request->get('idespx');
+        }
+
+
+        $em = $this->getDoctrine()->getManager();
+
+        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xls';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        //   dump($this->container->getParameter('urlreportweb') . 'alt_esp_nacional_cant_centros_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo);die;
+        // por defecto
+
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_nacional_por_especialidad_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo.'&idespecialidad='.$value));
+
+
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+
+// corteee
 
 
 

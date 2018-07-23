@@ -24,90 +24,139 @@
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     {{ flashMessage }}
                 </div>
-            {% endfor %}             
+            {% endfor %}    
+            {% for flashMessage in app.session.flashbag.get('newOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('newError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-warning"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}         
         </div>
     </div>
+        <div class="row">
+            <div class="col-md-12 text-left">
+                {% if not finProcApertura %}
+                    <ul class="dropdown">
+                        <a href="{{path('bjp_rue')}}" class="dropdown-toggle btn btn-md btn-success" data-toggle="dropdown" id="btnNew">
+                            <i class="fa fa-plus-circle"></i>  <i class="fa fa-caret-down"> Nuevo Registro</i>
+                        </a>
+                        {% if app.session.get('roluser') == 10 %}
+                            <form action="{{path('reporte_fin_proceso_apertura')}}" method="post" style="display:inline-block">
+                                <input type="hidden" name="idLugar" value="{{roluserlugarid}}">
+                                <input type="hidden" name="gestion" value="{{gestion}}">
+                                <button type="submit" class="btn btn-md btn-danger" onclick="return hideButtons();" id="btnFin"><i class="fa fa-save"></i> Finalizar Registro</button>
+                            </form>
+                        {% endif %}
+                        <ul class="dropdown-menu dropdown-user">
+                            <li>
+                                <form action="{{path('bjp_rue_new')}}" method="post">
+                                    <input type="hidden" name="institucioneducativaTipoId" value="1">
+                                    <button type="submit" class="btn-link"><i class="fa fa-edit"></i>Educación Regular</button>
+                                </form>
+                            </li>
+                            
+                            <li>
+                                <form action="{{path('bjp_rue_new')}}" method="post">
+                                    <input type="hidden" name="institucioneducativaTipoId" value="4">
+                                    <button type="submit" class="btn-link"><i class="fa fa-edit"></i>Educación Especial</button>
+                                </form>
+                            </li>
+                        </ul>
+                        <!-- /.dropdown-menu -->
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
 
-    <div class="row">
-        <div class="col-md-12 text-left">
-            <ul class="dropdown">
-                <a href="{{path('bjp_rue')}}" class="dropdown-toggle btn btn-md btn-success" data-toggle="dropdown">
-                    <i class="fa fa-plus-circle"></i>  <i class="fa fa-caret-down"> Nuevo Registro</i>
-                </a>
-                <ul class="dropdown-menu dropdown-user">
-                    <li>
-                        <form action="{{path('bjp_rue_new')}}" method="post">
-                            <input type="hidden" name="institucioneducativaTipoId" value="1">
-                            <button type="submit" class="btn-link"><i class="fa fa-edit"></i>Educación Regular</button>
-                        </form>
-                    </li>
-                    
-                    <li>
-                        <form action="{{path('bjp_rue_new')}}" method="post">
-                            <input type="hidden" name="institucioneducativaTipoId" value="4">
-                            <button type="submit" class="btn-link"><i class="fa fa-edit"></i>Educación Especial</button>
-                        </form>
-                    </li>
-                </ul>
-                <!-- /.dropdown-menu -->
-            </ul>
-        </div>
-    </div>
     <div class="row">
         <div class="col-xs-12 col-lg-12">
-            <div class="panel panel-icon panel-primary">
-                <div class="panel-heading">
-                    <i class="fa fa-search"></i> Buscar Institución Educativa
+            {% if finProcApertura %}
+                <div class="well">
+                    <h4>Reporte Unidades Educativas y/o Centros de Educación Especial en proceso de apertura</h4>
+                    <p>
+
+                        <form action="{{path('reporte_proceso_apertura')}}" method="post" style="display:inline-block">
+                            <input type="hidden" name="roluser" value="{{app.session.get('roluser')}}">
+                            <input type="hidden" name="idLugar" value="{{app.session.get('roluserlugarid')}}">
+                            <input type="hidden" name="gestion" value="{{app.session.get('currentyear')}}">
+                            <button type="submit" class="btn btn-md btn-default"><i class="fa fa-download"></i> Descargar Reporte</button>
+                        </form>
+                    </p>
                 </div>
+            {% else %}
+                <div class="panel panel-icon panel-primary">
+                    <div class="panel-heading">
+                        <i class="fa fa-search"></i> Buscar Institución Educativa
+                    </div>
 
-                <div class="panel-body">
-                    <ul id="myTab" class="nav nav-tabs">
-                        <li class="active"><a href="tabs-accordions.html#institucionId" data-toggle="tab">Por Código RUE</a>
-                        </li>
-                        <li><a href="tabs-accordions.html#institucion" data-toggle="tab">Por Nombre de la IE</a>
-                        </li>
-                    </ul>
-                    <div id="myTabContent" class="tab-content">
-                        <div class="tab-pane fade in active" id="institucionId">
-                            {{form_start(formInstitucioneducativaId, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
-                            <div class="panel-body">
-                                <div class="form-group">
-                                    <label  class="col-sm-2 control-label">Código SIE</label>
-                                    <div class="col-sm-10">
-                                        {{ form_widget(formInstitucioneducativaId.institucioneducativaId,{ 'attr':{'class': 'form-control','placeholder':'SIE Intitución Educativa','pattern':'[0-9]{8,18}'}  }) }}
-                                        <div class="help-block with-errors"></div>
+                    <div class="panel-body">
+                        <ul id="myTab" class="nav nav-tabs">
+                            <li class="active"><a href="tabs-accordions.html#institucionId" data-toggle="tab">Por Código RUE</a>
+                            </li>
+                            <li><a href="tabs-accordions.html#institucion" data-toggle="tab">Por Nombre de la IE</a>
+                            </li>
+                        </ul>
+                        <div id="myTabContent" class="tab-content">
+                            <div class="tab-pane fade in active" id="institucionId">
+                                {{form_start(formInstitucioneducativaId, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label  class="col-sm-2 control-label">Código SIE</label>
+                                        <div class="col-sm-10">
+                                            {{ form_widget(formInstitucioneducativaId.institucioneducativaId,{ 'attr':{'class': 'form-control','placeholder':'SIE Intitución Educativa','pattern':'[0-9]{8,18}'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-2 col-sm-10">
+                                            {{ form_widget(formInstitucioneducativaId.buscarId,{ 'attr':{'class':'btn btn-primary' } } ) }}
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-sm-offset-2 col-sm-10">
-                                        {{ form_widget(formInstitucioneducativaId.buscarId,{ 'attr':{'class':'btn btn-primary' } } ) }}
-                                    </div>
-                                </div>
+                                {{form_end(formInstitucioneducativaId)}}
                             </div>
-                            {{form_end(formInstitucioneducativaId)}}
-                        </div>
-                        <div class="tab-pane fade" id="institucion">
-                            {{form_start(formInstitucioneducativa, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
-                            <div class="panel-body">
-                                <div class="form-group">
-                                    <label  class="col-sm-2 control-label">Nombre de la Institución Educativa</label>
-                                    <div class="col-sm-10">
-                                        {{ form_widget(formInstitucioneducativa.institucioneducativa,{ 'attr':{'class': 'form-control','placeholder':'Nombre de la Institución Educativa'}  }) }}
-                                        <div class="help-block with-errors"></div>
+                            <div class="tab-pane fade" id="institucion">
+                                {{form_start(formInstitucioneducativa, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label  class="col-sm-2 control-label">Nombre de la Institución Educativa</label>
+                                        <div class="col-sm-10">
+                                            {{ form_widget(formInstitucioneducativa.institucioneducativa,{ 'attr':{'class': 'form-control','placeholder':'Nombre de la Institución Educativa'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-2 col-sm-10">
+                                            {{ form_widget(formInstitucioneducativa.buscar,{ 'attr':{'class':'btn btn-primary' } } ) }}
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-sm-offset-2 col-sm-10">
-                                        {{ form_widget(formInstitucioneducativa.buscar,{ 'attr':{'class':'btn btn-primary' } } ) }}
-                                    </div>
-                                </div>
-                            </div>
-                            {{form_end(formInstitucioneducativa)}}
+                                {{form_end(formInstitucioneducativa)}}
 
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
         </div>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var hideButtons = function (){
+            if (confirm('Finalizará el registro. ¿Está segura/o de continuar?')){
+                $('#btnNew').hide();
+                $('#btnFin').hide();
+                return true;
+            }
+            return false;
+        };
+    </script>
 {% endblock %}

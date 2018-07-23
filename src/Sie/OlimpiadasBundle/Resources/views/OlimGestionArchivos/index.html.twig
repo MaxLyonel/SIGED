@@ -40,6 +40,7 @@
 					    					<th>Tutor</th>
 					    					<th>Nombre del Grupo</th>
 					    					<th width="300px">Nombre del Proyecto</th>
+					    					<th>Cantidad Inscritos</th>
 					    					<th>Archivo</th>
 					    				</tr>
 					    			</thead>
@@ -53,12 +54,16 @@
 					    				    	<td>
 					    				    		<div> {{ grupo.nombre }} {{ grupo.paterno }} {{ grupo.materno }}</div>
 					    				    		<div> <i class="fa fa-phone text-primary"></i> {{ grupo.telefono1 }} {% if grupo.telefono2 != '' %} - {{ grupo.telefono2 }} {% endif %} </div>
-					    				    		<div> <i class="fa fa-envelope text-warning"></i> {{ grupo.correoElectronico }} </div>
+					    				    		<div> <i class="fa fa-envelope text-info"></i> {{ grupo.correoElectronico }} </div>
 					    				    	</td>
 					    				    	<td>{{ grupo.grupo }}</td>
 					    				    	<td>{{ grupo.nombreProyecto }}</td>
+					    				    	<td align="center">
+					    				    		<span style="font-size:1.1em">{{ grupo.inscritos }}</span>
+					    				    	</td>
 					    				    	<td>
 					    				    		{% if grupo.documentoPdf1 != '' %}
+					    				    			{# <embed src="http://olimpiada.sie.gob.bo/uploads/olimpiadas/documentos/{{grupo.documentoPdf1}}" width="500px" height="600px"></embed> #}
 					    				    			<a class="btn btn-primary btn-xs" target="_blank" href="http://olimpiada.sie.gob.bo/uploads/olimpiadas/documentos/{{grupo.documentoPdf1}}"> <i class="fa fa-file-pdf-o fa-1x"></i> <b> Abrir archivo </b> </a>
 					    				    		{% else %}
 					    				    			<span class="text-danger">No subido !!!</span>
@@ -71,7 +76,7 @@
 					    			</tbody>
 					    		</table>
 				    		</div>
-				    	</div>
+		 		    	</div>
 				    </div>
 	        </div>
 	    </div>

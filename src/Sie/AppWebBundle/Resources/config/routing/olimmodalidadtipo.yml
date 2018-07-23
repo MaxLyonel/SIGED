@@ -1,0 +1,30 @@
+olimmodalidadtipo:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:OlimModalidadTipo:index" }
+
+olimmodalidadtipo_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:OlimModalidadTipo:show" }
+
+olimmodalidadtipo_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:OlimModalidadTipo:new" }
+
+olimmodalidadtipo_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:OlimModalidadTipo:create" }
+    methods:  POST
+
+olimmodalidadtipo_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:OlimModalidadTipo:edit" }
+
+olimmodalidadtipo_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:OlimModalidadTipo:update" }
+    methods:  [POST, PUT]
+
+olimmodalidadtipo_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:OlimModalidadTipo:delete" }
+    methods:  [POST, DELETE]

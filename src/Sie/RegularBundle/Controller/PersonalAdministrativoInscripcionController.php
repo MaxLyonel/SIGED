@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Sie\AppWebBundle\Entity\PersonaAdministrativoInscripcion;
+use Sie\AppWebBundle\Entity\MaestroInscripcion;
 use Sie\AppWebBundle\Entity\Persona;
 
 /**
@@ -96,7 +97,6 @@ class PersonalAdministrativoInscripcionController extends Controller {
                 ->setParameter('gestion', $gestion);
         $personal = $query->getResult();
 
-        //dump($personal);die;
         return $this->render('SieRegularBundle:PersonalAdministrativoInscripcion:index.html.twig', array(
                     'personal' => $personal,
                     'institucion' => $institucioneducativa,
@@ -172,7 +172,6 @@ class PersonalAdministrativoInscripcionController extends Controller {
         $em->getConnection()->beginTransaction();
         try {
             $form = $request->get('form');
-
 
             // Verificar si la persona ya esta registrada            
             $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($form['persona']);
@@ -564,6 +563,195 @@ class PersonalAdministrativoInscripcionController extends Controller {
             $em->getConnection()->commit();
             $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron registrados correctamente');
             return $this->redirect($this->generateUrl('personaladministrativoinscripcion_list'));
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+        }
+    }
+
+
+    public function findPersonaAction(Request $request) {
+
+        // Verificamos si no ha caducado la session
+        if (!$this->session->get('userId')) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($request->get('idInstitucion'));
+
+        $maestroinscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findoneBy(array('institucioneducativa' => $request->get('idInstitucion'), 'gestionTipo' => $request->get('gestion')));
+
+        return $this->render('SieRegularBundle:PersonalAdministrativoInscripcion:search_persona_director.html.twig', array(
+                    'form' => $this->searchPersonaForm($institucion->getId(), $request->get('gestion'))->createView(),
+                    'institucion' => $institucion,
+                    'gestion' => $request->get('gestion'),
+                    'maestroinscripcion' => $maestroinscripcion,
+        ));
+    }
+
+    public function resultPersonaAction(Request $request) {
+
+        // Verificamos si no ha caducado la sesión
+        if (!$this->session->get('userId')) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $form = $request->get('form');
+
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $em->getRepository('SieAppWebBundle:Persona');
+
+        $query = $repository->createQueryBuilder('p')
+                ->select('p')
+                ->where('p.carnet = :carnet AND p.segipId > :valor')
+                ->setParameter('carnet', $form['carnetIdentidad'])
+                ->setParameter('valor', 0)
+                ->getQuery();
+
+        $personas = $query->getResult();
+
+        $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['idInstitucion']);
+
+        return $this->render('SieRegularBundle:PersonalAdministrativoInscripcion:result_persona.html.twig', array(
+                    'personas' => $personas,
+                    'institucion' => $institucion,
+                    'gestion' => $form['gestion']
+        ));
+    }
+
+    /**
+     * Crea el formulario para buscar una persona por C.I.
+     *
+     */
+    private function searchPersonaForm($idInstitucion, $gestion) {
+        $form = $this->createFormBuilder()
+                ->setAction($this->generateUrl('personaladministrativoinscripcion_result_persona'))
+                ->add('idInstitucion', 'hidden', array('data' => $idInstitucion))
+                ->add('gestion', 'hidden', array('data' => $gestion))
+                ->add('carnetIdentidad', 'text', array('label' => 'Carnet de Identidad', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbers', 'pattern' => '[0-9]{5,10}', 'maxlength' => '11')))
+                ->add('complemento', 'text', array('label' => 'Complemento', 'required' => false, 'attr' => array('class' => 'form-control jonlynumbersletters jupper', 'maxlength' => '2', 'autocomplete' => 'off')))
+                ->add('buscar', 'submit', array('label' => 'Buscar coincidencias por C.I.', 'attr' => array('class' => 'btn btn-primary')))
+                ->getForm();
+        return $form;
+    }
+
+    /*
+     * Llamamos al formulario para nuevo maestro
+     */
+
+    public function newdirectorAction(Request $request) {
+
+        // Verificamos si no ha caducado la session
+        if (!$this->session->get('userId')) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $form = $request->get('form');
+
+        $em = $this->getDoctrine()->getManager();
+        $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['idInstitucion']);
+        $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($form['idPersona']);
+
+        return $this->render('SieRegularBundle:PersonalAdministrativoInscripcion:newdirector.html.twig', array(
+                    'form' => $this->newdirectorForm($form['idInstitucion'], $form['gestion'], $form['idPersona'])->createView(),
+                    'institucion' => $institucion,
+                    'gestion' => $form['gestion'],
+                    'persona' => $persona
+        ));
+    }
+
+    /*
+     * formulario de nuevo maestro
+     */
+
+    private function newdirectorForm($idInstitucion, $gestion, $idPersona) {
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+
+        $query = $em->createQuery('SELECT ct FROM SieAppWebBundle:CargoTipo ct WHERE ct.id IN (1,12) ORDER BY ct.id');
+
+        $cargos = $query->getResult();
+        $cargosArray = array();
+        foreach ($cargos as $c) {
+            $cargosArray[$c->getId()] = $c->getCargo();
+        }
+
+        $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($idPersona);
+
+        $form = $this->createFormBuilder()
+                ->setAction($this->generateUrl('personaladministrativoinscripcion_director_create'))
+                ->add('idInstitucion', 'hidden', array('data' => $idInstitucion))
+                ->add('gestion', 'hidden', array('data' => $gestion))
+                ->add('idPersona', 'hidden', array('data' => $idPersona))
+                ->add('tipo', 'choice', array('label' => 'Cargo', 'required' => true, 'choices' => $cargosArray, 'attr' => array('class' => 'form-control')))
+                ->add('obs', 'text', array('label' => 'Observación', 'required' => false, 'attr' => array('class' => 'form-control jnumbersletters jupper', 'autocomplete' => 'off', 'maxlength' => '90')))
+                ->add('celular', 'text', array('label' => 'Nro de Celular', 'required' => false, 'data' => $persona->getCelular(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}')))
+                ->add('correo', 'text', array('label' => 'Correo Electrónico', 'required' => false, 'data' => $persona->getCorreo(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jemail')))
+                ->add('direccion', 'text', array('label' => 'Dirección de Domicilio', 'required' => false, 'data' => $persona->getDireccion(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbersletters jupper')))
+                ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
+                ->getForm();
+        $em->getConnection()->commit();
+        return $form;
+    }
+
+    /*
+     * registramos el nuevo maestro
+     */
+
+    public function createdirectorAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        try {
+            $form = $request->get('form');
+
+            // Verificar si la persona ya esta registrada            
+            $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($form['idPersona']);
+
+            // verificamos si el personal administrativo esta registrado ya en tabla maestro inscripcion
+            $queryIns = $em->createQuery(
+                            'SELECT mi FROM SieAppWebBundle:MaestroInscripcion mi
+                    WHERE mi.institucioneducativa = :idInstitucion
+                    AND mi.gestionTipo = :gestion
+                    AND mi.persona = :pers')
+                    ->setParameter('idInstitucion', $form['idInstitucion'])
+                    ->setParameter('gestion', $form['gestion'])
+                    ->setParameter('pers', $form['idPersona']);
+            $maestroInscripcion = $queryIns->getResult();
+
+            if ($maestroInscripcion) { // Si  el personalAdministrativo ya esta inscrito
+                $this->get('session')->getFlashBag()->add('newError', 'No se realizó el registro, la persona ya esta registrada');
+                return $this->redirect($this->generateUrl('bjp_rue'));
+            }
+
+            //$query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('persona_administrativo_inscripcion');")->execute();
+            //Actualizar datos persona
+            $persona->setDireccion(mb_strtoupper($form['direccion'], 'utf-8'));
+            $persona->setCorreo(mb_strtolower($form['correo'], 'utf-8'));
+            $persona->setCelular($form['celular']);
+            $em->persist($persona);
+            $em->flush();
+
+            // Registro Maestro inscripcion
+            $maestroinscripcion = new MaestroInscripcion();
+            $maestroinscripcion->setCargoTipo($em->getRepository('SieAppWebBundle:CargoTipo')->findOneById($form['tipo']));
+            $maestroinscripcion->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($form['gestion']));
+            $maestroinscripcion->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idInstitucion']));
+            $maestroinscripcion->setPersona($persona);
+            $maestroinscripcion->setEsVigenteAdministrativo(1);
+            $maestroinscripcion->setFormacionTipo($em->getRepository('SieAppWebBundle:FormacionTipo')->findOneById(0));
+            $maestroinscripcion->setRdaPlanillasId(0);
+            $maestroinscripcion->setEspecialidadTipo($em->getRepository('SieAppWebBundle:EspecialidadMaestroTipo')->findOneById(0));
+            $maestroinscripcion->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->findOneById(0));
+            $maestroinscripcion->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->findOneById(1));
+            $maestroinscripcion->setInstitucioneducativaSucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa' => $form['idInstitucion'], 'gestionTipo' => $form['gestion'])));
+
+            $em->persist($maestroinscripcion);
+            $em->flush();
+
+            $em->getConnection()->commit();
+            $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron registrados correctamente');
+            return $this->redirect($this->generateUrl('bjp_rue'));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
         }

@@ -71,36 +71,151 @@
                             <div class="pull-left">
                                 <h3 class="panel-title"><i class='fa fa-cloud-download' aria-hidden="true"></i></h3>
                             </div>  
-                            <div class="pull-right">
-                                Estadistica
-                                <button id="tour-13" onclick="document.forms['formEstadisticaEspecialPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+                            <div>
 
-                                    <i class="fa fa-file-pdf-o"></i>
-                                </button>
-                                <button id="tour-14" onclick="document.forms['formEstadisticaEspecialXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
 
-                                    <i class="fa fa-file-excel-o"></i>
-                                </button>
-                                Especialidades
-                                <button id="tour-13" onclick="document.forms['formEspEstadisticaEspecialPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                <table>
+                                    <tr>
+                                        <th>Reporte</th>
+                                        <th>Descarga</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Estadistica</td>
+                                        <td>
+                                            <button id="tour-13" onclick="document.forms['formEstadisticaEspecialPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
 
-                                    <i class="fa fa-file-pdf-o"></i>
-                                </button>
-                                <button id="tour-14" onclick="document.forms['formEspEstadisticaEspecialXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                                <i class="fa fa-file-pdf-o"></i>
+                                            </button>
+                                            <button id="tour-14" onclick="document.forms['formEstadisticaEspecialXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
 
-                                    <i class="fa fa-file-excel-o"></i>
-                                </button>
-                                <br>
-                                <br>
-                                Cant. CEAs
-                                <button id="tour-13" onclick="document.forms['formEspCentrosPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                                <i class="fa fa-file-excel-o"></i>
+                                            </button>
 
-                                    <i class="fa fa-file-pdf-o"></i>
-                                </button>
-                                <button id="tour-14" onclick="document.forms['formEspCentrosXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Especialidades</td>
+                                        <td>
 
-                                    <i class="fa fa-file-excel-o"></i>
-                                </button>
+                                            <button id="tour-13" onclick="document.forms['formEspEstadisticaEspecialPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+
+                                                <i class="fa fa-file-pdf-o"></i>
+                                            </button>
+                                            <button id="tour-14" onclick="document.forms['formEspEstadisticaEspecialXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+
+                                                <i class="fa fa-file-excel-o"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+
+
+                                    {% if (app.session.get('roluser') == 8) %} {#NACIONAL#}
+                                    <tr>
+                                        <td>Cant. CEAs</td>
+                                        <td>
+                                            <button id="tour-13" onclick="document.forms['formEspCentrosPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+
+                                                <i class="fa fa-file-pdf-o"></i>
+                                            </button>
+                                            <button id="tour-14" onclick="document.forms['formEspCentrosXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+
+                                                <i class="fa fa-file-excel-o"></i>
+                                            </button>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            <select width="100" style="width: 100px" id="listaesp" class="form-control btn-dpl" name="listaesp" onchange="this.form.submit();">
+                                                <option value="" disabled selected>Seleccionar Especialidad...</option>
+                                                {% for item in especialidades %}
+                                                    <option value="{{ item.id }}">{{ item.especialidad }}</option>
+                                                {% endfor %}
+                                            </select>
+
+                                        </td>
+                                        <td>
+
+                                            <button id="tour-13" onclick="document.forms['formEspecialidadPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                                <i class="fa fa-file-pdf-o"></i>
+                                            </button>
+                                            <button id="tour-13" onclick="document.forms['formEspecialidadXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                                <i class="fa fa-file-excel-o"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                    {% endif %}
+                                </table>
+
+
+
+
+
+                                {#<div class="pull-right">#}
+                                    {#Estadistica#}
+                                    {#<button id="tour-13" onclick="document.forms['formEstadisticaEspecialPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">#}
+
+                                        {#<i class="fa fa-file-pdf-o"></i>#}
+                                    {#</button>#}
+                                    {#<button id="tour-14" onclick="document.forms['formEstadisticaEspecialXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">#}
+
+                                        {#<i class="fa fa-file-excel-o"></i>#}
+                                    {#</button>#}
+                                {#</div>#}
+
+                               {#<div class="pull-right">#}
+                                   {#Especialidades#}
+                                   {#<button id="tour-13" onclick="document.forms['formEspEstadisticaEspecialPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">#}
+
+                                       {#<i class="fa fa-file-pdf-o"></i>#}
+                                   {#</button>#}
+                                   {#<button id="tour-14" onclick="document.forms['formEspEstadisticaEspecialXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">#}
+
+                                       {#<i class="fa fa-file-excel-o"></i>#}
+                                   {#</button>#}
+                               {#</div>#}
+
+                                {#<div class="pull-right">#}
+                                    {#Cant. CEAs#}
+                                    {#<button id="tour-13" onclick="document.forms['formEspCentrosPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">#}
+
+                                        {#<i class="fa fa-file-pdf-o"></i>#}
+                                    {#</button>#}
+                                    {#<button id="tour-14" onclick="document.forms['formEspCentrosXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">#}
+
+                                        {#<i class="fa fa-file-excel-o"></i>#}
+                                    {#</button>#}
+                                {#</div>#}
+
+                              <div>
+                                  {#<select width="100" style="width: 100px" id="listaesp" class="form-control btn-dpl" name="listaesp" onchange="this.form.submit();">#}
+                                      {#<option value="" disabled selected>Seleccionar Especialidad...</option>#}
+                                          {#{% for item in especialidades %}#}
+                                          {#<option value="{{ item.id }}">{{ item.especialidad }}</option>#}
+                                      {#{% endfor %}#}
+                                  {#</select>#}
+
+                                  {#<input type="hidden" name="gestion" value="{{infoSubEntidad[0]['gestion'] }}" />#}
+                                  {#<input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />#}
+
+                                  {#<button class="btn btn-danger btn-xs" onclick="repEsp({{ infoSubEntidad[0]['gestion'] }},{{infoSubEntidad[0]['periodo']}});" data-placement="top" data-original-title="Eliminar Facilitador">#}
+                                      {#<i class="fa fa-file-pdf-o"></i>#}
+                                  {#</button>#}
+
+                                    <div id="descarga">
+
+                                    </div>
+                                  {#<button id="tour-13" onclick="document.forms['formEspecialidadPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">#}
+                                      {#<i class="fa fa-file-pdf-o"></i>#}
+                                  {#</button>#}
+                                  {#<button id="tour-13" onclick="document.forms['formEspecialidadXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">#}
+                                      {#<i class="fa fa-file-excel-o"></i>#}
+                                  {#</button>#}
+                              </div>
+
+
                             </div>     
                             <div class="clearfix"></div>
                         </div>
@@ -191,6 +306,20 @@
                     <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
                     <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
                     <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
+                </form>
+                <form name="formEspecialidadPdf" id="formEspecialidadPdf" role="form" action="{{ path('estadistica_especialidad_centro_print_pdf') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
+                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
+                    <input type="hidden" id="idesp" name="idesp" />
+                </form>
+                <form name="formEspecialidadXls" id="formEspecialidadXls" role="form" action="{{ path('estadistica_especialidad_centro_print_xls') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
+                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
+                    <input type="hidden" id="idespx" name="idespx" />
                 </form>
 
             {% endif %}
@@ -420,6 +549,7 @@
     </div>
     <!--/ END ADDITIONAL ELEMENT -->
 {% endblock %}
+
 {% block javascripts %}
     {{parent()}}
     <script>
@@ -510,7 +640,32 @@
             }        
             google.maps.event.addDomListener(window, 'load', initialize);
         </script>
-    {% endif %}   
+    {% endif %}
+    <script>
+
+        $(function() {
+            $('#listaesp').change(function() {
+                var value= $(this).val();
+                $("#idesp").val(value);
+                $("#idespx").val(value);
+                var  a=$("#idesp").val();
+              //  alert(a);
+            })
+        });
+//var
+//    repEsp = function (gestion,periodo) {
+//        var value= $('#listaesp').val();
+//        alert(value);
+//        $("#idesp").val(value);
+//
+//    };
+
+
+
+
+    </script>
+
+
 {% endblock %}
 
 

@@ -1,0 +1,26 @@
+Sie\AppWebBundle\Entity\OlimModalidadTipo:
+    type: entity
+    table: olim_modalidad_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        modalidad:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+        observacion:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

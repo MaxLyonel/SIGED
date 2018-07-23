@@ -83,15 +83,15 @@
                         </div>
 
                         <div class="portlet-body">
-
-                            <div class='row'>
-                                <div class='col-md-4 col-md-offset-4'>
-                                    <a class="btn btn-block btn-default btn-pinterest" href="{{ path('donwload_listStudentPerUe', {'gestion':gestionSelected, 'ue':unidadEducativa.id} )}}">
-                                        <i class="fa fa-download"></i> Listado de Estudiantes
-                                    </a>
+                            {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 9 or app.session.get('roluser') == 10 %}
+                                <div class='row'>
+                                    <div class='col-md-4 col-md-offset-4'>
+                                        <a class="btn btn-block btn-default btn-pinterest" href="{{ path('donwload_listStudentPerUe', {'gestion':gestionSelected, 'ue':unidadEducativa.id} )}}">
+                                            <i class="fa fa-download"></i> Listado de Estudiantes
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-
+                            {% endif %}
                             <br/>
 
                             <div class="row">
@@ -130,9 +130,12 @@
                                                         </td>
 
                                                         <td class="text-center">
-                                                            <a href="{{path('donwload_listStudentPerCourse', {'ue': unidadEducativa.id, 'gestion': gestionSelected, 'nivel':entity.nivelId,'grado':entity.gradoId, 'paralelo':entity.paraleloId,'turno':entity.turnoId } )}}">
-                                                                <img src="{{asset('img/pdf.png') }}" data-1x="{{asset('img/pdf.png')}}" data-2x="{{asset('img/pdf.png')}}" height="40" width="40"   class="hisrc img-responsive" alt="">
-                                                            </a>
+                                                            {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 9 or app.session.get('roluser') == 10 %}
+                                                                <a href="{{path('donwload_listStudentPerCourse', {'ue': unidadEducativa.id, 'gestion': gestionSelected, 'nivel':entity.nivelId,'grado':entity.gradoId, 'paralelo':entity.paraleloId,'turno':entity.turnoId } )}}">
+                                                                <img src="{{asset('img/pdf.png') }}" data-1x="{{asset('img/pdf.png')}}" data-2x="{{asset('img/pdf.png')}}" height="40" width="40"   class="hisrc img-responsive" alt=
+                                                            {% else %}
+                                                                -
+                                                            {% endif %}
                                                         </td>
                                                     </tr>
                                                 {% endfor %}

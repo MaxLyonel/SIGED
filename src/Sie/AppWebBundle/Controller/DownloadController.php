@@ -2,15 +2,20 @@
 
 namespace Sie\AppWebBundle\Controller;
 
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Sie\AppWebBundle\Modals\Login;
 use Sie\AppWebBundle\Entity\Usuario;
+use Sie\AppWebBundle\Entity\BjpValidacionueProcesoApertura;
 use Sie\AppWebBundle\Form\UsuarioType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\SecurityContext;
 use Doctrine\ORM\EntityRepository;
+use phpseclib\Net\SFTP;
+use phpseclib\Net\SSH2;
 
 class DownloadController extends Controller {
 
@@ -791,8 +796,171 @@ class DownloadController extends Controller {
         return $response;
     }
 
+    public function repFinProcesoAperturaAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $idLugar = $request->get('idLugar');
+        $gestion = $em->getRepository('SieAppWebBundle:GestionTipo')->find($request->get('gestion'));
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->find($idLugar);
 
+        $distrito = $em->getRepository('SieAppWebBundle:DistritoTipo')->find(intval($lugar->getCodigo()));
 
+        $bjpValidacion = $em->getRepository('SieAppWebBundle:BjpValidacionueProcesoApertura')->findBy(array('distritoTipo' => intval($lugar->getCodigo()), 'gestionTipo' => $gestion));
 
+        if(!$bjpValidacion){
+            $bjpValidacion = new BjpValidacionueProcesoApertura();
+            $bjpValidacion->setGestionTipo($gestion);
+            $bjpValidacion->setDistritoTipo($distrito);
+            $bjpValidacion->setEstado(1);
+            $bjpValidacion->setFechaRegistro(new \DateTime('now'));
+            $bjpValidacion->setFechaModificacion(new \DateTime('now'));
+            $em->persist($bjpValidacion);
+            $em->flush();
+        }
+
+        $arch = 'REPORTE_FinProcApertura_'.$lugar->getLugar().'_' . date('YmdHis') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_esp_lst_distrital_proc_insc_v1_ma.rptdesign&gestion='.$gestion.'&distritoid='.intval($lugar->getCodigo()).'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    public function repProcesoAperturaAction(Request $request) {
+        $idLugar = $request->get('idLugar');
+        $gestion = $request->get('gestion');
+        $roluser = $request->get('roluser');
+
+        $em = $this->getDoctrine()->getManager();
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->find($idLugar);
+
+        $arch = 'REPORTE_ProcApertura_'.$lugar->getLugar().'_' . date('YmdHis') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+
+        switch ($roluser) {
+            case 7:
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_esp_lst_departamental_proc_insc_v1_ma.rptdesign&gestion='.$gestion.'&dpto='.intval($lugar->getCodigo()).'&&__format=pdf&'));
+                break;
+            case 8:
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_esp_lst_nacional_proc_insc_v1_ma.rptdesign&gestion='.$gestion.'&&__format=pdf&'));
+                break;
+            case 10:
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_esp_lst_distrital_proc_insc_v1_ma.rptdesign&gestion='.$gestion.'&distritoid='.intval($lugar->getCodigo()).'&&__format=pdf&'));
+                break;
+        }
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    public function repProcesoAperturaDdeAction(Request $request) {
+        $idLugar = $request->get('idLugar');
+        $gestion = $request->get('gestion');
+        $roluser = $request->get('roluser');
+
+        $em = $this->getDoctrine()->getManager();
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->find($idLugar);
+
+        $arch = 'REPORTE_ListaPersonal_DDE_'.$lugar->getLugar().'_' . date('YmdHis') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+
+        switch ($roluser) {
+            case 7:
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_departamental_personal_dde_v1_ma.rptdesign&gestion='.$gestion.'&dpto='.intval($lugar->getCodigo()).'&&__format=pdf&'));
+                break;
+            case 8:
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_nacional_personal_dde_v1_ma.rptdesign&gestion='.$gestion.'&&__format=pdf&'));
+                break;
+        }
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    public function buildArchsOlimpiadasTxtAction(Request $request, $gestion) {
+        set_time_limit(180);
+
+        $em = $this->getDoctrine()->getManager();
+        $gestion = $gestion;
+        $directorio = "/archivos/descargas/";
+        $archivo = "archsOlimpiadasTxt.zip";
+
+        // Generamos Archivo
+        $query = $em->getConnection()->prepare("select * from sp_genera_archs_olimpiadas_txt('".$gestion."')");
+        $query->execute();
+        $result = $query->fetchAll();
+        $porciones = explode(";", $result[0]['sp_genera_archs_olimpiadas_txt']);
+
+        $ssh = new SSH2('172.20.0.103:1929');
+        
+        if (!$ssh->login('afiengo', 'ContraFieng0$')) {
+            throw new \Exception('¡No tienes acceso a este servidor!');
+        }
+
+        $sftp = new SFTP('172.20.0.103:1929');
+        
+        if (!$sftp->login('afiengo', 'ContraFieng0$')) {
+            throw new \Exception('¡No tienes acceso a este servidor!');
+        }
+
+        $sftp->rename($directorio.$archivo, $directorio.$archivo.'.backup');
+
+        $ssh->exec('zip '.$directorio.$archivo.' /aplicacion_upload/'.$porciones[0].' /aplicacion_upload/'.$porciones[1]);
+
+        $sftp->delete('/aplicacion_upload/'.$porciones[0]);
+        $sftp->delete('/aplicacion_upload/'.$porciones[1]);
+
+        $response = new Response();
+        return $response;
+    }
+
+    public function downloadArchsOlimpiadasTxtAction(Request $request) {
+        $directorio = '/archivos/descargas/';
+        $archivo = "archsOlimpiadasTxt.zip";
+
+        //create response to donwload the file
+        $response = new Response();
+        //then send the headers to foce download the zip file
+        $response->headers->set('Content-Type', 'application/zip');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $archivo));
+        $response->setContent(file_get_contents($directorio) . $archivo);
+        $response->headers->set('Pragma', "no-cache");
+        $response->headers->set('Expires', "0");
+        $response->headers->set('Content-Transfer-Encoding', "binary");
+        $response->sendHeaders();
+        $response->setContent(readfile($directorio . $archivo));
+        return $response;
+    }
+
+      /**
+     * get the studens per course
+     * @param Request $request
+     * @param type $ue
+     * @return Response pdf list with studens from OCEPB
+     */
+    public function listainscritosestudiantesolimAction(Request $request, $codges, $coddis) {
+// dump($codges);die;
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'list_est_' . $coddis . '_' . $codges . '.xls'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_lst_Estudiantes_Participaciones_Distrito_f1_v1.rptdesign&codges=' . $codges . '&coddis=' . $coddis . '&&__format=xls&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+
+    }
 
 }
