@@ -891,7 +891,7 @@ class DownloadController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $gestion = $gestion;
-        $directorio = "/web/uploads/";
+        $directorio = $this->get('kernel')->getRootDir().'/../web/uploads/';
         $archivo = "archsOlimpiadasTxt.zip";
 
         // Generamos Archivo
@@ -902,14 +902,12 @@ class DownloadController extends Controller {
 
         system('zip '.$directorio.$archivo.' '.$directorio.$porciones[0].' '.$directorio.$porciones[1]);
 
-        $response = new JsonResponse();
-        return $response->setData(array(
-            'archivo' => $archivo
-        ));
+        $response = new Response();
+        return $response;
     }
 
     public function downloadArchsOlimpiadasTxtAction(Request $request) {
-        $directorio = '/web/uploads/';
+        $directorio = $this->get('kernel')->getRootDir().'/../web/uploads/';
         $archivo = "archsOlimpiadasTxt.zip";
 
         //create response to donwload the file
