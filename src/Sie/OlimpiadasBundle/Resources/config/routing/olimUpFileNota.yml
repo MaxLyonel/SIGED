@@ -1,0 +1,13 @@
+olim_upfilenota_index:
+    path:     /
+    defaults: { _controller: SieOlimpiadasBundle:UpFileNota:index }
+
+olim_upfilenota_upfileindb:
+    path:     /upfileInDB
+    defaults: { _controller: SieOlimpiadasBundle:UpFileNota:upfileInDB }
+    options:
+         expose: true
+
+olim_download_observation:
+    path:     /downloadObservation/{nameFile}
+    defaults: { _controller: SieOlimpiadasBundle:UpFileNota:downloadObservation }         
