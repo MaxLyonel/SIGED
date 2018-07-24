@@ -44,7 +44,7 @@ class ReporteController extends Controller {
                 inner join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
                 inner join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
                 inner join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
-                where d.documento_tipo_id in (6,7,8) and iec.gestion_tipo_id = ".$gestion."
+                where d.documento_tipo_id in (6,7,8) and iec.gestion_tipo_id = ".$gestion.":: double precision
                 group by lt4.id, lt4.codigo, lt4.lugar
             )
 

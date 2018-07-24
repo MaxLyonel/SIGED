@@ -14,8 +14,6 @@ use Sie\AppWebBundle\Form\UsuarioType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\SecurityContext;
 use Doctrine\ORM\EntityRepository;
-use phpseclib\Net\SFTP;
-use phpseclib\Net\SSH2;
 
 class DownloadController extends Controller {
 
@@ -893,7 +891,7 @@ class DownloadController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $gestion = $gestion;
-        $directorio = "/archivos/descargas/";
+        $directorio = $this->get('kernel')->getRootDir().'/../web/uploads/';
         $archivo = "archsOlimpiadasTxt.zip";
 
         // Generamos Archivo
@@ -902,31 +900,14 @@ class DownloadController extends Controller {
         $result = $query->fetchAll();
         $porciones = explode(";", $result[0]['sp_genera_archs_olimpiadas_txt']);
 
-        $ssh = new SSH2('172.20.0.103:1929');
-        
-        if (!$ssh->login('afiengo', 'ContraFieng0$')) {
-            throw new \Exception('¡No tienes acceso a este servidor!');
-        }
-
-        $sftp = new SFTP('172.20.0.103:1929');
-        
-        if (!$sftp->login('afiengo', 'ContraFieng0$')) {
-            throw new \Exception('¡No tienes acceso a este servidor!');
-        }
-
-        $sftp->rename($directorio.$archivo, $directorio.$archivo.'.backup');
-
-        $ssh->exec('zip '.$directorio.$archivo.' /aplicacion_upload/'.$porciones[0].' /aplicacion_upload/'.$porciones[1]);
-
-        $sftp->delete('/aplicacion_upload/'.$porciones[0]);
-        $sftp->delete('/aplicacion_upload/'.$porciones[1]);
+        system('zip '.$directorio.$archivo.' '.$directorio.$porciones[0].' '.$directorio.$porciones[1]);
 
         $response = new Response();
         return $response;
     }
 
     public function downloadArchsOlimpiadasTxtAction(Request $request) {
-        $directorio = '/archivos/descargas/';
+        $directorio = $this->get('kernel')->getRootDir().'/../web/uploads/';
         $archivo = "archsOlimpiadasTxt.zip";
 
         //create response to donwload the file

@@ -1,12 +1,13 @@
 <?php
 
-namespace Sie\AppWebBundle\Controller;
+namespace Sie\OlimpiadasBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sie\AppWebBundle\Entity\OlimModalidadTipo;
 use Sie\AppWebBundle\Form\OlimModalidadTipoType;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * OlimModalidadTipo controller.
@@ -15,6 +16,11 @@ use Sie\AppWebBundle\Form\OlimModalidadTipoType;
 class OlimModalidadTipoController extends Controller
 {
 
+    public $session;
+
+    public function __construct(){
+        $this->session = new Session();
+    }
     /**
      * Lists all OlimModalidadTipo entities.
      *
@@ -23,9 +29,13 @@ class OlimModalidadTipoController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('SieAppWebBundle:OlimModalidadTipo')->findAll();
-
-        return $this->render('SieAppWebBundle:OlimModalidadTipo:index.html.twig', array(
+        $entities = $em->getRepository('SieAppWebBundle:OlimModalidadTipo')->findBy( array(), array('id' => 'ASC') );
+        //$entities = $em->getRepository(OlimModalidadTipo::class)->findAllOrderedById();
+        //$entities = $em->getRepository('SieAppWebBundle:OlimModalidadTipo')
+        //->createQueryBuilder('o')
+        //->orderBy('o.id','ASC')
+        //->getQuery();
+        return $this->render('SieOlimpiadasBundle:OlimModalidadTipo:index.html.twig', array(
             'entities' => $entities,
         ));
     }
@@ -41,13 +51,17 @@ class OlimModalidadTipoController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_modalidad_tipo');")->execute();
             $em->persist($entity);
             $em->flush();
-
+            $mensaje = 'La modalidad ' . $entity->getModalidad() . ' se registró con éxito';
+            $request->getSession()
+                ->getFlashBag()
+                ->add('exito', $mensaje);
             return $this->redirect($this->generateUrl('olimmodalidadtipo_show', array('id' => $entity->getId())));
         }
 
-        return $this->render('SieAppWebBundle:OlimModalidadTipo:new.html.twig', array(
+        return $this->render('SieOlimpiadasBundle:OlimModalidadTipo:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
         ));
@@ -67,7 +81,7 @@ class OlimModalidadTipoController extends Controller
             'method' => 'POST',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
+        $form->add('submit', 'submit', array('label' => 'Guardar'));
 
         return $form;
     }
@@ -81,7 +95,7 @@ class OlimModalidadTipoController extends Controller
         $entity = new OlimModalidadTipo();
         $form   = $this->createCreateForm($entity);
 
-        return $this->render('SieAppWebBundle:OlimModalidadTipo:new.html.twig', array(
+        return $this->render('SieOlimpiadasBundle:OlimModalidadTipo:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
         ));
@@ -103,7 +117,7 @@ class OlimModalidadTipoController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('SieAppWebBundle:OlimModalidadTipo:show.html.twig', array(
+        return $this->render('SieOlimpiadasBundle:OlimModalidadTipo:show.html.twig', array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
         ));
@@ -126,7 +140,7 @@ class OlimModalidadTipoController extends Controller
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('SieAppWebBundle:OlimModalidadTipo:edit.html.twig', array(
+        return $this->render('SieOlimpiadasBundle:OlimModalidadTipo:edit.html.twig', array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -147,7 +161,7 @@ class OlimModalidadTipoController extends Controller
             'method' => 'PUT',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Update'));
+        $form->add('submit', 'submit', array('label' => 'Modificar'));
 
         return $form;
     }
@@ -171,11 +185,14 @@ class OlimModalidadTipoController extends Controller
 
         if ($editForm->isValid()) {
             $em->flush();
-
-            return $this->redirect($this->generateUrl('olimmodalidadtipo_edit', array('id' => $id)));
+            $mensaje = 'La modalidad se modificó con éxito';
+            $request->getSession()
+                ->getFlashBag()
+                ->add('exito', $mensaje);
+            return $this->redirect($this->generateUrl('olimmodalidadtipo'));
         }
 
-        return $this->render('SieAppWebBundle:OlimModalidadTipo:edit.html.twig', array(
+        return $this->render('SieOlimpiadasBundle:OlimModalidadTipo:edit.html.twig', array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -185,7 +202,7 @@ class OlimModalidadTipoController extends Controller
      * Deletes a OlimModalidadTipo entity.
      *
      */
-    public function deleteAction(Request $request, $id)
+    public function deleteAction(Request $request,$id)
     {
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
@@ -197,9 +214,12 @@ class OlimModalidadTipoController extends Controller
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find OlimModalidadTipo entity.');
             }
-
             $em->remove($entity);
             $em->flush();
+            $mensaje = 'La modalidad se eliminó con éxito';
+            $request->getSession()
+                ->getFlashBag()
+                ->add('exito', $mensaje);
         }
 
         return $this->redirect($this->generateUrl('olimmodalidadtipo'));
@@ -217,7 +237,7 @@ class OlimModalidadTipoController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('olimmodalidadtipo_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
+            ->add('submit', 'submit', array('label' => 'Eliminar'))
             ->getForm()
         ;
     }
