@@ -164,4 +164,32 @@ class InstitucioneducativaCursoDatos
     {
         return $this->esactivo;
     }
+    /**
+     * @var integer
+     */
+    private $plancurricularTipoId;
+
+
+    /**
+     * Set plancurricularTipoId
+     *
+     * @param integer $plancurricularTipoId
+     * @return InstitucioneducativaCursoDatos
+     */
+    public function setPlancurricularTipoId($plancurricularTipoId)
+    {
+        $this->plancurricularTipoId = $plancurricularTipoId;
+    
+        return $this;
+    }
+
+    /**
+     * Get plancurricularTipoId
+     *
+     * @return integer 
+     */
+    public function getPlancurricularTipoId()
+    {
+        return $this->plancurricularTipoId;
+    }
 }
