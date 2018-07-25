@@ -61,6 +61,33 @@ class ListaInscritosEstudiantesOlimController extends Controller{
         return $form;
     }
 
+    public function lookdistritoAction(Request $request){
+
+      //get the send values
+      $form = $request->get('form');
+      // create db conexion
+      $em =  $this->getDoctrine()->getManager();
+      //generate the report to distrito in csv format
+      $query = $em->getConnection()->prepare('select * from sp_genera_archivo_olimpiadas_distrito_csv(:distrito, :gestion)');
+      $query->bindValue(':distrito', $form['codigoDistrito']);
+      $query->bindValue(':gestion', $form['gestion']);
+      $query->execute();
+      $upFileResponsese = $query->fetchAll();
+
+      $sw = false;
+      $nameFile = '';
+      if(sizeof($upFileResponsese[0])>0){
+        $nameFile = $upFileResponsese[0]['sp_genera_archivo_olimpiadas_distrito_csv'];
+        $sw=true;
+      }
+      
+      return $this->render('SieRegularBundle:ListaInscritosEstudiantesOlim:lookdistrito.html.twig', array(
+         'data' => $form,
+         'sw' => $sw,
+         'nameFile' => $nameFile,
+      ));    
+    }
+
     public function lookdistritoinfoAction(Request $request){
 
     	//get the send values
@@ -71,7 +98,7 @@ class ListaInscritosEstudiantesOlimController extends Controller{
             $response = new StreamedResponse(function() use($conn, $form) {
             $handle = fopen('php://output', 'w+');
             // Add the header
-            fputcsv($handle, ['INSTITUCIONEDUCATIVA_ID', 'INSTITUCIONEDUCATIVA', 'PATERNO','MATERNO','NOMBRE','CEDULA','COMPLEMENTO','DISCAPACIDAD','MATERIA/ÁREA','CATEGORIA','GRADO_TIPO_ID','NIVEL_ABR','NOMBRE_PROYECTO'],';');
+            fputcsv($handle, ['INSTITUCIONEDUCATIVA_ID', 'INSTITUCIONEDUCATIVA', 'PATERNO','MATERNO','NOMBRE','CEDULA','COMPLEMENTO','DISCAPACIDAD','MATERIA','CATEGORIA','GRADO_TIPO_ID','NIVEL_ABR','NOMBRE_PROYECTO'],';');
 
         
             // Query data from database
@@ -141,7 +168,7 @@ class ListaInscritosEstudiantesOlimController extends Controller{
               order by institucioneducativa_id, institucioneducativa, materia, categoria, nivel_abr, nombre_proyecto, grado_tipo_id, paterno, materno, nombre");
             // $results = $conn->query("select id, etapa from olim_etapa_tipo");
             while($row = $results->fetch()) {
-                fputcsv($handle, array($row['institucioneducativa_id'], $row['institucioneducativa'], $row['paterno'],$row['materno'],$row['nombre'],$row['cedula'],$row['complemento'],$row['discapacidad'],$row['materia'],$row['categoria'],$row['grado_tipo_id'],$row['nivel_abr'],$row['nombre_proyecto']), ';');
+                fputcsv($handle, array($row['institucioneducativa_id'], utf8_decode($row['institucioneducativa']), utf8_decode($row['paterno']),utf8_decode($row['materno']),utf8_decode($row['nombre']),utf8_decode($row['cedula']),$row['complemento'],utf8_decode($row['discapacidad']),utf8_decode($row['materia']),utf8_decode($row['categoria']),$row['grado_tipo_id'],$row['nivel_abr'],utf8_decode($row['nombre_proyecto'])), ';');
             }
             fclose($handle);
 
@@ -152,9 +179,6 @@ class ListaInscritosEstudiantesOlimController extends Controller{
         $response->headers->set('Content-Disposition', 'attachment; filename='.$form['codigoDistrito'].'_'.$form['gestion'].'_'. date("d-m H:i:s").'.csv');
         return $response;
 
-/*    	 return $this->render('SieRegularBundle:ListaInscritosEstudiantesOlim:lookdistrito.html.twig', array(
-               'data' => $form,
-            ));    */
     }
 
 }
