@@ -16,6 +16,12 @@
         .card{
             box-shadow: 5px 5px #EEEEEE;
         }
+        .formulario{
+            background: #FFFFFF;
+            padding: 5px;
+            border: 1px solid #BEDCEC;
+            border-radius: 5px;
+        }
     </style>
     <div class="container">
         <br>
@@ -39,19 +45,20 @@
                         {# <li class="active"><a href="#">Link</a></li> #}
                         {# <li><a href="#">Link</a></li> #}
                     </ul>
-                    {{ form_start(form, {'attr':{'class':'navbar-form navbar-left', 'role':'search'} }) }}
+                    {{ form_start(form, {'attr':{'class':'navbar-form navbar-left', 'role':'search', 'onsubmit': 'return validar();'} }) }}
                         <div class="form-group">
                             {{ form_widget(form.carnet, {'attr':{'class':'form-control','placeholder':'Carnet o RUDE','autocomplete':'off'} }) }}
                             {{ form_widget(form.complemento, {'attr':{'class':'form-control','placeholder':'Complemento','autocomplete':'off','data-toggle':'tooltip','data-placement':'top', 'data-original-title':'Complemento'} }) }}
                             {{ form_widget(form.fechaNacimiento, {'attr':{'class':'form-control','placeholder':'Fecha Nac.','autocomplete':'off'} }) }}
-                            <button id="btnBuscar" type="submit" class="btn btn-primary" onclick="cargar()"> <i id="buscar" class="fa fa-search"></i> </button>
+                            <button id="btnBuscar" type="submit" class="btn btn-primary"> <i id="iconBuscar" class="fa fa-search"></i> <span id="textBuscar"></span> </button>
                         </div>
                     {{ form_end(form) }}
 
 
 
                     <ul class="nav navbar-nav navbar-right">
-                        <a href="{{ path('login') }}" class="btn btn-link" style="padding-top: 15px;">Ingresar al sistema</a>
+                        <li><a href="{{ path('login') }}" class="btn btn-link" style="padding-top: 15px;">Ingresar al sistema</a></li>
+                        {# <li><a href="{{ path('olimreporte_export') }}" class="btn btn-link" style="padding-top: 15px;">Descargar</a></li> #}
                     </ul>
 
                 </div><!-- /.navbar-collapse -->
@@ -118,155 +125,94 @@
                         <h3 class="panel-title"> <i class="fa fa-list"></i> Inscripción olimpiada</h3>
                     </div>
                     <div class="panel-body" style="background: #FFFFFF;">
+                        <div class="pantalla"></div>
                         {% if array|length > 0 %}
-                            <table class="table table-default">
-                                <thead>
-                                    <tr>
-                                        <th>Área</th>
-                                        <th>Año de escolaridad</th>
-                                        <th>Categoría</th>
-                                        <th>Equipo</th>
-                                        <th>Discapacidad del estudiante</th>
-                                        <th>Tutor</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for item in array %}
-
-                                        {# <div class="tarjeta" style="display: none">
-                                            <h4>{{ item.regla.olimMateriaTipo.olimRegistroOlimpiada.nombreOlimpiada }} - <span style="font-size: 0.9em" class="badge badge-success">{{ item.regla.olimMateriaTipo.materia }}</span></h4>
-                                            <div class="row">
-                                                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                                                    <div class="panel panel-success card">
-                                                        <div class="panel-body">
-                                                            <h4 class="titulo">Datos generales</h4>
-                                                            <label>Categoria: </label> {{ item.regla.categoria }}<br>
-                                                            <label>Modalidad: </label> <span class="badge badge-default">{{ item.regla.modalidadParticipacionTipo.modalidad }}</span><br>
-                                                            <label>Niveles: </label><br>
-                                                            {% if item.primaria|length > 0 %}
-                                                                Primaria: 
-                                                                {% for pri in item.primaria %}
-                                                                    <span class="badge badge-inverse">{{ pri.gradoTipo.id }}</span>
-                                                                {% endfor %}
-                                                                <br>
-                                                            {% endif %}
-                                                            {% if item.secundaria|length > 0 %}
-                                                                Secundaria: 
-                                                                {% for sec in item.secundaria %}
-                                                                    <span class="badge badge-inverse">{{ sec.gradoTipo.id }}</span>
-                                                                {% endfor %}
-                                                            {% endif %}
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                                                    <div class="panel panel-info card">
-                                                        <div class="panel-body">
-                                                            <h4 class="titulo">Nivel y grado actual</h4>
-
-                                                            {% if inscripcionActual[0].institucioneducativaCurso.nivelTipo.id == 12 %}
-                                                                Primaria 
-                                                            {% else %}
-                                                                Secundaria
-                                                            {% endif %}
-                                                            <span class="badge badge-inverse">{{ inscripcionActual[0].institucioneducativaCurso.gradoTipo.id }}</span>
-
-
-                                                            {% if item.superior != null %}
-                                                                <h4 class="titulo">Nivel y grado de participación</h4>
-                                                                {% if item.superior.nivelTipo.id == 12 %}
-                                                                    Primaria
-                                                                {% else %}
-                                                                    Secundaria
-                                                                {% endif %}
-                                                                <span class="badge badge-inverse">{{ item.superior.gradoTipo.id }}</span>
-                                                            {% endif %}
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                {% if item.tipo == 'Grupo' %}
-                                                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                                                        <div class="panel panel-info card">
-                                                            <div class="panel-body">
-                                                                <h4 class="titulo">Datos del equipo y tutor</h4>
-                                                                <label>Nombre equipo: </label> {{ item.grupo[0].nombre }}<br>
-                                                                <label>Tutor: </label>
-                                                                {% if item.grupo[0].olimTutor != null %}
-                                                                    {{ item.grupo[0].olimTutor.persona.nombre }} {{ item.grupo[0].olimTutor.persona.paterno }} {{ item.grupo[0].olimTutor.persona.materno }}
-                                                                {% else %}
-                                                                    No asignado
-                                                                {% endif %}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                {% else %}    
-                                                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                                                        <div class="panel panel-info card">
-                                                            <div class="panel-body">
-                                                                <h4 class="titulo">Datos del tutor</h4>
-                                                                <label>Tutor: </label> 
-                                                                {% if item.tutor != null %}
-                                                                    {{ item.tutor.persona.nombre }} {{ item.tutor.persona.paterno }} {{ item.tutor.persona.materno }}    
-                                                                {% else %}
-                                                                    No asignado
-                                                                {% endif %}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                {% endif %}
-                                            </div>
-                                        </div> #}
+                            <div class="table-responsive">
+                                <table class="table table-default">
+                                    <thead>
                                         <tr>
-                                            <td><strong>{{ item.regla.olimMateriaTipo.materia }}</strong></td>
-                                            <td>
-                                                {% if item.superior %}
-                                                    {{ item.superior.gradoTipo.id }}
-                                                    {% if item.superior.nivelTipo.id == 12 %}
-                                                        Primaria
-                                                    {% else %}
-                                                        Secundaria
-                                                    {% endif %}
-                                                {% else %}        
-                                                    {{ item.inscripcion.estudianteInscripcion.institucioneducativaCurso.gradoTipo.id }}  
-                                                    {% if item.inscripcion.estudianteInscripcion.institucioneducativaCurso.nivelTipo.id == 12 %}
-                                                        Primaria
-                                                    {% else %}
-                                                        Secundaria
-                                                    {% endif %}
-                                                {% endif %}
-                                                
-                                            </td>
-                                            <td>{{ item.regla.categoria }}</td>
-                                            <td>
-                                                {% if item.tipo == 'Grupo' %}
-                                                    {{ item.grupo[0].nombre }}
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                {% if item.inscripcion.discapacidadTipo %}
-                                                    {{ item.inscripcion.discapacidadTipo.discapacidad }}
-                                                {% else %}
-                                                    Ninguna
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                {% if item.tipo == 'Grupo' %}
-                                                    {% if item.grupo[0].olimTutor != null %}
-                                                        {{ item.grupo[0].olimTutor.persona.nombre }} {{ item.grupo[0].olimTutor.persona.paterno }} {{ item.grupo[0].olimTutor.persona.materno }}
-                                                    {% endif %}
-                                                {% else %}
-                                                    {% if item.tutor != null %}
-                                                        {{ item.tutor.persona.nombre }} {{ item.tutor.persona.paterno }} {{ item.tutor.persona.materno }}    
-                                                    {% endif %}
-                                                {% endif %}
-                                            </td>
+                                            <th>Área</th>
+                                            <th>Año de escolaridad</th>
+                                            <th>Categoría</th>
+                                            <th>Equipo</th>
+                                            <th>Discapacidad del estudiante</th>
+                                            <th>Tutor</th>
+                                            {# <th></th> #}
                                         </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in array %}
+                                            <tr>
+                                                <td><strong>{{ item.regla.olimMateriaTipo.materia }}</strong></td>
+                                                <td>
+                                                    {% if item.superior %}
+                                                        {{ item.superior.gradoTipo.id }}
+                                                        {% if item.superior.nivelTipo.id == 12 %}
+                                                            Primaria
+                                                        {% else %}
+                                                            Secundaria
+                                                        {% endif %}
+                                                    {% else %}        
+                                                        {{ item.inscripcion.estudianteInscripcion.institucioneducativaCurso.gradoTipo.id }}  
+                                                        {% if item.inscripcion.estudianteInscripcion.institucioneducativaCurso.nivelTipo.id == 12 %}
+                                                            Primaria
+                                                        {% else %}
+                                                            Secundaria
+                                                        {% endif %}
+                                                    {% endif %}
+
+                                                </td>
+                                                <td>{{ item.regla.categoria }}</td>
+                                                <td>
+                                                    {% if item.tipo == 'Grupo' %}
+                                                        {{ item.grupo[0].nombre }}
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if item.inscripcion.discapacidadTipo %}
+                                                        {{ item.inscripcion.discapacidadTipo.discapacidad }}
+                                                    {% else %}
+                                                        Ninguna
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if item.tipo == 'Grupo' %}
+                                                        {% if item.grupo[0].olimTutor != null %}
+                                                            {{ item.grupo[0].olimTutor.persona.nombre }} {{ item.grupo[0].olimTutor.persona.paterno }} {{ item.grupo[0].olimTutor.persona.materno }}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if item.tutor != null %}
+                                                            {{ item.tutor.persona.nombre }} {{ item.tutor.persona.paterno }} {{ item.tutor.persona.materno }}    
+                                                        {% endif %}
+                                                    {% endif %}
+                                                </td>
+                                                {# <td>
+                                                    {% if item.mostrar %}
+                                                        
+                                                        <div class="form-group formulario">
+                                                            <label for="">¿Como dará el examen de la {{ item.registroNota.olimEtapaTipo.id + 1 }}º etapa?</label>
+                                                            <select class="seleccionModalidad form-control" data-registro="{{ item.registroNota.id }}">
+                                                                {% for modalidad in item.modalidades %} 
+                                                                    {% set selected = '' %}            
+                                                                    {% if item.registroNota.olimModalidadTipo is not null %}
+                                                                        {% if modalidad.olimModalidadTipo.id == item.registroNota.olimModalidadTipo.id %}
+                                                                            {% set selected = 'selected' %}
+                                                                        {% endif %}
+                                                                    {% endif %}
+                                                                    
+                                                                    <option value="{{modalidad.olimModalidadTipo.id}}" {{ selected }} >{{ modalidad.olimModalidadTipo.modalidad }}</option>
+                                                                    
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                        
+                                                    {% endif %}
+                                                </td> #}
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                             
                         {% else %}
                             <div class="alert alert-info">
@@ -284,6 +230,10 @@
 {% endblock %}
 
 {% block javascripts %}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     <script type="text/javascript">
 
         $(function(){
@@ -297,10 +247,86 @@
         });
 
         function cargar(){
-            $('#buscar').removeClass('fa-search');
-            $('#buscar').addClass('fa-spinner fa-spin');
-            $('#btnBuscar').append('Buscando...');
+            var carnet = $('#form_carnet').val();
+            var fechaNacimiento = $('#form_fechaNacimiento').val();
+            if(carnet != '' && fechaNacimiento != ''){
+
+                $('#buscar').removeClass('fa-search');
+                $('#buscar').addClass('fa-spinner fa-spin');
+                $('#btnBuscar').append('Buscando...');
+
+                
+            }
+
         }
+
+        function validar(){
+            var carnet = $('#form_carnet').val();
+            var fechaNacimiento = $('#form_fechaNacimiento').val();
+            
+            if(carnet != '' && fechaNacimiento != '' && fechaNacimiento.indexOf('y') == -1){
+
+                if($('#textBuscar').text() != 'Buscando...'){
+                    $('#iconBuscar').removeClass('fa-search');
+                    $('#iconBuscar').addClass('fa-spinner fa-spin');
+                    $('#textBuscar').append('Buscando...');
+
+                    $('.pantalla').css('position','absolute');
+                    $('.pantalla').css('width','100%');
+                    $('.pantalla').css('height','100%');
+                    $('.pantalla').css('margin-left','-10px');
+                    $('.pantalla').css('margin-top','-10px');
+                    $('.pantalla').css('background','#26464B');
+                    $('.pantalla').css('opacity','0.3');
+                    $('.pantalla').css('color','#FFFFFF');
+                    $('.pantalla').css('text-align','center');
+                    $('.pantalla').css('vertical-align','middle');
+                    $('.pantalla').append('<img src="{{asset("img/loading96.gif")}}" style="margin-top:12px;">');
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        $('.seleccionModalidad').on('change', function(){
+
+            var registroId = $(this).attr('data-registro');
+            var modalidadId = $(this).val();
+
+            var imagen = '{{ asset("img/loading96.gif") }}';
+
+            // if(modalidadId != 1){
+                $.ajax({
+                    url: Routing.generate('olimreporte_actualizarModalidad', {registroId: registroId, modalidadId: modalidadId}),
+                    type: 'GET',
+                    beforeSend: function(){
+                        // swal("Actualizando!", "Espere un momento por favor!", "info");
+                        swal({
+                            title: "Actualizando...",
+                            text: "Espere un momento por favor",
+                            icon: imagen
+                        });
+                    },
+                    success: function(data){
+                        if(data.status == 200){
+                            swal("Registro actualizado!", "La modalidad ya fue actualizada!", "success");
+                        }else{
+                            swal("Error al actualizar!", "No se pudo actualizar la información!", "warning");
+                        }
+                    },
+                    error: function(data){
+                        swal("Error al actualizar", "La modalidad ya fue actualizada!", "danger");
+                    }
+                });
+            // }else{
+            //     swal("Seleccionar modalidad!", "Debe seleccionar una modalidad de prueba!", "warning");
+            // }
+
+            
+            
+        });
         
     </script>
 {% endblock %}

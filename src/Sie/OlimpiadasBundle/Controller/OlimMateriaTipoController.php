@@ -72,14 +72,28 @@ class OlimMateriaTipoController extends Controller
             $cont++;
         }
 
-        //dump($array);die;
+        /**
+         * Periodo de etapas y modalidades de examen
+         */
+        
 
-        // Listado de categorias
-        //$categorias = $em->getRepo
+        $periodoEtapas = $em->createQueryBuilder()
+                            ->select('oep')
+                            ->from('SieAppWebBundle:OlimEtapaPeriodo','oep')
+                            ->innerJoin('SieAppWebBundle:OlimEtapaTipo','oet','with','oep.olimEtapaTipo = oet.id')
+                            ->where('oep.olimRegistroOlimpiada = :id')
+                            ->setParameter('id', $id)
+                            ->orderBy('oet.id','ASC')
+                            ->getQuery()
+                            ->getResult();
+
+        $modalidadesPrueba = $em->getRepository('SieAppWebBundle:OlimModalidadPruebaTipo')->findBy(array('olimRegistroOlimpiada'=>$id));
 
         return $this->render('SieOlimpiadasBundle:OlimMateriaTipo:index.html.twig', array(
             'entities' => $array,
             'olimpiada' => $em->getRepository('SieAppWebBundle:OlimRegistroOlimpiada')->find($this->session->get('idOlimpiada')),
+            'periodoEtapas'=> $periodoEtapas,
+            'modalidadesPrueba'=>$modalidadesPrueba
         ));
     }
     /**
@@ -406,5 +420,7 @@ class OlimMateriaTipoController extends Controller
 
         return $response->setData($array);
     }
+
+
 
 }
