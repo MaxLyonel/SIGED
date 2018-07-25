@@ -1,9 +1,15 @@
 {% extends 'layoutOlimpiadas.html.twig' %}
 
 {% block contentoption %}
+
+    <style type="text/css">
+        .pointer{
+            cursor: pointer;
+        }
+    </style>
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-list-ul"></i> Materias <span></span></h2>
+        <h2><i class="fa fa-list-ul"></i> Opciones <span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aqui:</span>
             <ol class="breadcrumb">
@@ -21,102 +27,177 @@
     <!--/ End page header -->
 
     <div class="body-content animated fadeIn">
-
         <div class="row">
+
             <div class="col-12">
 
                 {% include 'SieOlimpiadasBundle:OlimRegistroOlimpiada:olimpiadaDatos.html.twig' %}
 
-                <div class="panel rounded shadow">
-                    <div class="panel-heading">
-                        <div class="pull-left">
-                            <h3 class="panel-title">Materias</h3>
-                        </div>
-                        <div class="pull-right">
-                            <a href="{{ path('olimmateriatipo_new') }}" class="btn btn-primary">
-                                <i class="fa fa-plus"></i> Crear
-                            </a>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div><!-- /.panel-heading -->
-                    <div class="panel-body">
-                        <table class="table records_list table-bordered">
-                            <thead>
-                                <tr>
-                                    {# <th>Id</th> #}
-                                    <th>Materia</th>
-                                    {# <th>Fecharegistro</th> #}
-                                    <th>Fecha inicio inscripción</th>
-                                    <th>Fecha final inscripción</th>
-                                    {# <th>Descripcion</th> #}
-                                    <th>Categoría - Modalidad</th>
-                                    {# <th>Reglas</th> #}
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {% for entity in entities %}
-                                <tr>
-                                    {# <td><a href="{{ path('olimmateriatipo_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td> #}
-                                    <td><strong style="font-size: 1.1em;">{{ entity.materia }}</strong></td>
-                                    {# <td>{% if entity.fechaRegistro %}{{ entity.fechaRegistro|date('Y-m-d H:i:s') }}{% endif %}</td> #}
-                                    <td>{% if entity.fechaInsIni %}{{ entity.fechaInsIni|date('d-m-Y') }}{% endif %}</td>
-                                    <td>{% if entity.fechaInsFin %}{{ entity.fechaInsFin|date('d-m-Y') }}{% endif %}</td>
-                                    {# <td>{{ entity.descripcion }}</td> #}
-                                    <td>
-                                        <div class="pull-right" style="display:none">
-                                            <div class="dropdown">
-                                                <button class="btn btn-sm" data-toggle="dropdown" aria-expanded="true">
-                                                    <i class="fa fa-ellipsis-v"></i>
-                                                </button>
-                                                <ul class="dropdown-menu pull-right">
-                                                    <li>
-                                                        <a href="#" onclick="openModal();">Agregar categoria</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#" onclick="openModal();">Agregar regla</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#" onclick="openModal();">Modificar regla(s)</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        {% for cate in entity.categorias %}
-                                            <div style="border-bottom: 1px solid #EEEEEE; padding: 2px">
-                                                {{ cate.categoria }} - <span class="badge badge-default">{{ cate.modalidad }}</span>
-                                            </div>
+                <div class="row">
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <div class="panel rounded shadow">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    Periodo de etapas
+                                    <div class="pull-right">
+                                        <a href="{{path('olimetapaperiodo_index')}}">
+                                            <i class="fa fa-cog text-info pointer" data-toggle="tooltip" data-placement="top" data-title="Ajustes"></i>
+                                        </a>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </h3>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <th>Etapa</th>
+                                        <th>Fecha inicio</th>
+                                        <th>Fecha final</th>
+                                    </tr>
+                                    <tbody>
+                                        {% for periodo in periodoEtapas %}
+                                            <tr>
+                                                <td>{{ periodo.olimEtapaTipo.etapa }}</td>
+                                                <td>{{ periodo.fechaInicio|date('d-m-Y') }}</td>
+                                                <td>{{ periodo.fechaFin|date('d-m-Y') }}</td>
+                                            </tr>
                                         {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 
-                                    </td>
-                                    {# <td></td> #}
-                                    <td>
-                                        <a href="{{ path('olimmateriatipo_edit', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Editar">
-                                            <i class="fa fa-pencil"></i> 
+                        <div class="panel rounded shadow">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    Modalidades de pruebas
+                                    <div class="pull-right">
+                                        <a href="{{path('olimmodalidadpruebatipo_index')}}">
+                                            <i class="fa fa-cog text-info pointer" data-toggle="tooltip" data-placement="top" data-title="Ajustes"></i>
                                         </a>
-                                        <form action="{{ path('olimmateriatipo_delete') }}" method="post" style="display:inline-block; margin-left:-5px;" onsubmit="return confirm('¿Realmente desea eliminar el registro?'); ">
-                                            <input type="hidden" name="id" value="{{ entity.id }}">
-                                            <button type="submit" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar">
-                                                <i class="fa fa-times"></i>    
-                                            </button>
-                                        </form>
-                                        <a href="{{ path('olimreglasolimpiadastipo', { 'idMateria': entity.id }) }}" class="btn btn-success btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Categorias y reglas">
-                                            <i class="fa fa-list"></i> 
-                                        </a>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </h3>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Modalidad</th>
+                                    </tr>
+                                    <tbody>
+                                        {% for modalidad in modalidadesPrueba %}
+                                            <tr>
+                                                <td>{{ loop.index }}</td>
+                                                <td>{{ modalidad.olimModalidadTipo.modalidad }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
 
-                                        {% if entity.id in [9] %}
-                                            <a href="{{ path('olimgestionarchivos_index', { 'idMateria': entity.id, 'gestion': olimpiada.gestionTipo.id }) }}" class="btn btn-info btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Archivos">
-                                                <i class="fa fa-file-pdf-o"></i> 
-                                            </a>
-                                        {% endif %}
+                    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                        <div class="panel rounded shadow">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title">Materias</h3>
+                                </div>
+                                <div class="pull-right">
+                                    <a href="{{ path('olimmateriatipo_new') }}" class="btn btn-primary">
+                                        <i class="fa fa-plus"></i> Crear
+                                    </a>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body">
+                                
+                                        <table class="table records_list table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    {# <th>Id</th> #}
+                                                    <th>Materia</th>
+                                                    {# <th>Fecharegistro</th> #}
+                                                    <th>Fecha inicio inscripción</th>
+                                                    <th>Fecha final inscripción</th>
+                                                    {# <th>Descripcion</th> #}
+                                                    <th>Categoría - Modalidad</th>
+                                                    {# <th>Reglas</th> #}
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for entity in entities %}
+                                                <tr>
+                                                    {# <td><a href="{{ path('olimmateriatipo_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td> #}
+                                                    <td><strong style="font-size: 1.1em;">{{ entity.materia }}</strong></td>
+                                                    {# <td>{% if entity.fechaRegistro %}{{ entity.fechaRegistro|date('Y-m-d H:i:s') }}{% endif %}</td> #}
+                                                    <td>{% if entity.fechaInsIni %}{{ entity.fechaInsIni|date('d-m-Y') }}{% endif %}</td>
+                                                    <td>{% if entity.fechaInsFin %}{{ entity.fechaInsFin|date('d-m-Y') }}{% endif %}</td>
+                                                    {# <td>{{ entity.descripcion }}</td> #}
+                                                    <td>
+                                                        <div class="pull-right" style="display:none">
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-sm" data-toggle="dropdown" aria-expanded="true">
+                                                                    <i class="fa fa-ellipsis-v"></i>
+                                                                </button>
+                                                                <ul class="dropdown-menu pull-right">
+                                                                    <li>
+                                                                        <a href="#" onclick="openModal();">Agregar categoria</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="#" onclick="openModal();">Agregar regla</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="#" onclick="openModal();">Modificar regla(s)</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        {% for cate in entity.categorias %}
+                                                            <div style="border-bottom: 1px solid #EEEEEE; padding: 2px">
+                                                                {{ cate.categoria }} - <span class="badge badge-default">{{ cate.modalidad }}</span>
+                                                            </div>
+                                                        {% endfor %}
 
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div><!-- /.panel-body -->
+                                                    </td>
+                                                    {# <td></td> #}
+                                                    <td>
+                                                        <a href="{{ path('olimmateriatipo_edit', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Editar">
+                                                            <i class="fa fa-pencil"></i> 
+                                                        </a>
+                                                        <form action="{{ path('olimmateriatipo_delete') }}" method="post" style="display:inline-block; margin-left:-5px;" onsubmit="return confirm('¿Realmente desea eliminar el registro?'); ">
+                                                            <input type="hidden" name="id" value="{{ entity.id }}">
+                                                            <button type="submit" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar">
+                                                                <i class="fa fa-times"></i>    
+                                                            </button>
+                                                        </form>
+                                                        <a href="{{ path('olimreglasolimpiadastipo', { 'idMateria': entity.id }) }}" class="btn btn-success btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Categorias y reglas">
+                                                            <i class="fa fa-list"></i> 
+                                                        </a>
+
+                                                        {% if entity.id in [9] %}
+                                                            <a href="{{ path('olimgestionarchivos_index', { 'idMateria': entity.id, 'gestion': olimpiada.gestionTipo.id }) }}" class="btn btn-info btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Archivos">
+                                                                <i class="fa fa-file-pdf-o"></i> 
+                                                            </a>
+                                                        {% endif %}
+
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+
+                                
+                            </div><!-- /.panel-body -->
+                        </div>
+                    </div>
+
+
                 </div>
+
+                
             </div>
         </div>
 

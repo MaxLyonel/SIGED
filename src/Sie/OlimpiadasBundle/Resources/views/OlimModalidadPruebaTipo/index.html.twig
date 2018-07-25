@@ -1,0 +1,151 @@
+{% extends 'layoutOlimpiadas.html.twig' %}
+
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-list-ul"></i> Modalidades <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-file-text-o"></i>
+                    <a href="{{ path('olimregistroolimpiada')}}"> Olimpiadas</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">
+                    Modalidades
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+
+            <div class="col-12">
+
+                {% include 'SieOlimpiadasBundle:OlimRegistroOlimpiada:olimpiadaDatos.html.twig' %}
+
+                <div class="alert alert-info">
+                	<strong> Nota: </strong>  Para poder agregar o eliminar los registros debe arrastrar los elementos de una lista a otra
+                </div>
+
+                <div class="row" id="contenido">
+
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" ondrop="registrar()" ondragover="dragover(event)">
+                        <div class="panel rounded shadow panel-success">
+                        	<div class="panel-heading">
+                        		<h3 class="panel-title">
+                        			Modalidad activas para la olimpiada
+                        			<div class="pull-right">
+
+                        			</div>
+                        			<div class="clearfix"></div>
+                        		</h3>
+                        	</div>
+                            <div class="panel-body">
+                            	<ul class="list-group">
+                            		{% for activo in activos %}
+                            		    <li class="list-group-item" draggable="true" ondragstart="beforeEliminar({{ activo.id }})" style="cursor:move">{{ activo.olimModalidadTipo.modalidad }}</li>
+                            		{% endfor %}
+                            	</ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" ondrop="eliminar()" ondragover="dragover(event)">
+                		<div class="panel panel-default">
+                			<div class="panel-heading">
+                				<h3 class="panel-title">Modalidades <small>Disponibles</small> </h3>
+                			</div>
+                			<div class="panel-body">
+                				<ul class="list-group">
+                					{% for faltante in faltantes %}
+                					    <li ondragstart="beforeRegistrar({{faltante.id}})" class="list-group-item" style="cursor:move" draggable="true">{{ faltante.modalidad }}</li>
+                					{% endfor %}
+                				</ul>
+                			</div>
+                		</div>
+                	</div>
+
+                	<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" id="mensaje">
+                		
+                	</div>
+
+                </div>
+
+                <div class="row">
+                	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                		<a href="{{ path('olimmateriatipo') }}" class="btn btn-danger"> <i class="fa fa-angle-left"></i> Volver atras</a>
+                	</div>
+                </div>
+
+            </div>
+        </div>
+
+		
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript">
+    	var idRegistrar = null;
+    	var idEliminar = null;
+
+    	function dragover(event){
+    		event.preventDefault();
+    	}
+
+    	function beforeRegistrar(id){
+    		idRegistrar = id;
+    	}
+
+    	function registrar(){
+    		if(idRegistrar != null){
+    			$.ajax({
+    				url: Routing.generate('olimmodalidadpruebatipo_new', {id: idRegistrar}),
+    				type: 'GET',
+    				beforeSend: function(){
+
+    				},
+    				success: function(data){
+    					$('#contenido').empty();
+    					$('#contenido').append(data);
+    					idRegistrar = null;
+    				},
+    				error: function(data){
+
+    				}
+    			});
+    		}
+    	}
+
+    	function beforeEliminar(id){
+    		idEliminar = id;
+    	}
+
+    	function eliminar(){
+    		if(idEliminar != null){
+    			$.ajax({
+    				url: Routing.generate('olimmodalidadpruebatipo_delete', {id: idEliminar}),
+    				type: 'GET',
+    				beforeSend: function(){
+
+    				},
+    				success: function(data){
+    					$('#contenido').empty();
+    					$('#contenido').append(data);
+    					idEliminar = null;
+    				},
+    				error: function(data){
+    					$('#mensaje').empty();
+    					$('#mensaje').append('<div class="alert alert-danger alert-dismissible"> <i class="fa fa-times"></i> No se puede eliminar el registro porque esta siendo utilizado en la aplicación !!! </div>');    					
+    				}
+    			});
+    		}
+    	}
+
+    </script>
+{% endblock %}
