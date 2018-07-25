@@ -277,7 +277,7 @@ class TramiteController extends Controller {
 
                     if ($verTuicionUnidadEducativa != ''){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
-                        return $this->redirect($this->generateUrl('tramite_diploma_humanistico_regular_registro_busca'));
+                        return $this->redirect($this->generateUrl('tramite_certificado_tecnico_registro_busca'));
                     }
 
                     $entityAutorizacionCentro = $this->getAutorizacionCentroEducativoTecnica($sie);
@@ -601,7 +601,7 @@ class TramiteController extends Controller {
 
                     if ($verTuicionUnidadEducativa != ''){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
-                        return $this->redirect($this->generateUrl('tramite_diploma_humanistico_regular_registro_busca '));
+                        return $this->redirect($this->generateUrl('tramite_diploma_humanistico_regular_registro_busca'));
                     }
 
                     $entityAutorizacionUnidadEducativa = $this->getAutorizacionUnidadEducativa($sie);
@@ -667,7 +667,7 @@ class TramiteController extends Controller {
 
                     if ($verTuicionUnidadEducativa != ''){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
-                        return $this->redirect($this->generateUrl('tramite_diploma_humanistico_alternativa_registro_busca '));
+                        return $this->redirect($this->generateUrl('tramite_diploma_humanistico_alternativa_registro_busca'));
                     }
 
                     $entityAutorizacionUnidadEducativa = $this->getAutorizacionUnidadEducativa($sie);
@@ -1868,10 +1868,102 @@ class TramiteController extends Controller {
     public function getCertTecTramiteEspecialidadNivelEstudiante($estudianteId, $especialidadId, $nivelId) {
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
-            select distinct on (sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, e.codigo_rude)
-            ei.id as estudiante_inscripcion_id,ei.estudiante_id as estudiante_id, sat.codigo as nivel, ies.periodo_tipo_id as periodo, iec.periodo_tipo_id as per, siea.institucioneducativa_id as institucioneducativa
-            , sest.id as especialidad_id, ies.gestion_tipo_id,ies.periodo_tipo_id,siea.institucioneducativa_id, sfat.codigo as nivel_id, sfat.facultad_area, sest.codigo as ciclo_id
-            ,sest.especialidad,sat.codigo as grado_id,sat.acreditacion,ei.id as estudiante_inscripcion,e.codigo_rude, e.nombre, e.paterno, e.materno, to_char(e.fecha_nacimiento,'DD/MM/YYYY') as fecha_nacimiento
+            select distinct on (sfat.codigo, sfat.facultadselect estudiante_id, codigo_rude, participante, especialidad_id, especialidad, nivel_id, acreditacion, string_agg(distinct modulo, ',') as modulos, sum(horas_modulo) as carga_horaria from (
+                        select e.id as estudiante_id, e.codigo_rude, e.paterno||' '||e.materno||' '||e.nombre as participante, sest.id as especialidad_id, sest.especialidad, sat.codigo as nivel_id, sat.acreditacion
+                        , smp.horas_modulo, smt.modulo
+                        from superior_facultad_area_tipo as sfat
+                        inner join superior_especialidad_tipo as sest on sfat.id = sest.superior_facultad_area_tipo_id
+                        inner join superior_acreditacion_especialidad as sae on sest.id = sae.superior_especialidad_tipo_id
+                        inner join superior_acreditacion_tipo as sat on sae.superior_acreditacion_tipo_id=sat.id
+                        inner join superior_institucioneducativa_acreditacion as siea on siea.acreditacion_especialidad_id = sae.id
+                        inner join institucioneducativa_sucursal as ies on siea.institucioneducativa_sucursal_id = ies.id
+                        inner join superior_institucioneducativa_periodo as siep on siep.superior_institucioneducativa_acreditacion_id = siea.id
+                        inner join institucioneducativa_curso as iec on iec.superior_institucioneducativa_periodo_id = siep.id
+                        inner join estudiante_inscripcion as ei on iec.id=ei.institucioneducativa_curso_id
+                        inner join (select * from estudiante where id = ".$participanteId.") as e on ei.estudiante_id=e.id
+                        inner join superior_modulo_periodo as smp ON smp.institucioneducativa_periodo_id = siep.id
+                        inner join superior_modulo_tipo smt ON smt.id = smp.superior_modulo_tipo_id
+                        inner join institucioneducativa_curso_oferta as ieco on ieco.superior_modulo_periodo_id = smp.id and ieco.insitucioneducativa_curso_id = iec.id
+                        inner join estudiante_asignatura as ea on ea.institucioneducativa_curso_oferta_id = ieco.id and ea.estudiante_inscripcion_id = ei.id
+                        inner join estudiante_nota as en on en.estudiante_asignatura_id = ea.id
+                        where sest.id = ".$especialidadId." and sat.codigo = ".$nivelId."
+                        and en.nota_tipo_id::integer = 22 AND CASE WHEN ies.gestion_tipo_id <= 2015::double precision THEN en.nota_cuantitativa >=36 ELSE en.nota_cuantitativa >=51 END
+                    group by e.id, e.codigo_rude, e.paterno, e.materno, e.nombre, sest.id, sest.especialidad, sat.codigo, sat.acreditacion
+                    , smp.horas_modulo, smt.modulo having count(*) < 2
+                ) as v
+                group by estudiante_id, codigo_rude, participante, especialidad_id, especialidad, nivel_id, acreditacion_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, e.codigo_rude)
+            ei.id as estudiante_inscripcion_id,ei.estudianselect estudiante_id, codigo_rude, participante, especialidad_id, especialidad, nivel_id, acreditacion, string_agg(distinct modulo, ',') as modulos, sum(horas_modulo) as carga_horaria from (
+                        select e.id as estudiante_id, e.codigo_rude, e.paterno||' '||e.materno||' '||e.nombre as participante, sest.id as especialidad_id, sest.especialidad, sat.codigo as nivel_id, sat.acreditacion
+                        , smp.horas_modulo, smt.modulo
+                        from superior_facultad_area_tipo as sfat
+                        inner join superior_especialidad_tipo as sest on sfat.id = sest.superior_facultad_area_tipo_id
+                        inner join superior_acreditacion_especialidad as sae on sest.id = sae.superior_especialidad_tipo_id
+                        inner join superior_acreditacion_tipo as sat on sae.superior_acreditacion_tipo_id=sat.id
+                        inner join superior_institucioneducativa_acreditacion as siea on siea.acreditacion_especialidad_id = sae.id
+                        inner join institucioneducativa_sucursal as ies on siea.institucioneducativa_sucursal_id = ies.id
+                        inner join superior_institucioneducativa_periodo as siep on siep.superior_institucioneducativa_acreditacion_id = siea.id
+                        inner join institucioneducativa_curso as iec on iec.superior_institucioneducativa_periodo_id = siep.id
+                        inner join estudiante_inscripcion as ei on iec.id=ei.institucioneducativa_curso_id
+                        inner join (select * from estudiante where id = ".$participanteId.") as e on ei.estudiante_id=e.id
+                        inner join superior_modulo_periodo as smp ON smp.institucioneducativa_periodo_id = siep.id
+                        inner join superior_modulo_tipo smt ON smt.id = smp.superior_modulo_tipo_id
+                        inner join institucioneducativa_curso_oferta as ieco on ieco.superior_modulo_periodo_id = smp.id and ieco.insitucioneducativa_curso_id = iec.id
+                        inner join estudiante_asignatura as ea on ea.institucioneducativa_curso_oferta_id = ieco.id and ea.estudiante_inscripcion_id = ei.id
+                        inner join estudiante_nota as en on en.estudiante_asignatura_id = ea.id
+                        where sest.id = ".$especialidadId." and sat.codigo = ".$nivelId."
+                        and en.nota_tipo_id::integer = 22 AND CASE WHEN ies.gestion_tipo_id <= 2015::double precision THEN en.nota_cuantitativa >=36 ELSE en.nota_cuantitativa >=51 END
+                    group by e.id, e.codigo_rude, e.paterno, e.materno, e.nombre, sest.id, sest.especialidad, sat.codigo, sat.acreditacion
+                    , smp.horas_modulo, smt.modulo having count(*) < 2
+                ) as v
+                group by estudiante_id, codigo_rude, participante, especialidad_id, especialidad, nivel_id, acreditacionte_id as estudiante_id, sat.codigo as nivel, ies.periodo_tipo_id as periodo, iec.periodo_tipo_id as per, siea.institucioneducativa_id as institucioneducativa
+            , sest.id as especialidad_id, ies.gestion_tiposelect estudiante_id, codigo_rude, participante, especialidad_id, especialidad, nivel_id, acreditacion, string_agg(distinct modulo, ',') as modulos, sum(horas_modulo) as carga_horaria from (
+                        select e.id as estudiante_id, e.codigo_rude, e.paterno||' '||e.materno||' '||e.nombre as participante, sest.id as especialidad_id, sest.especialidad, sat.codigo as nivel_id, sat.acreditacion
+                        , smp.horas_modulo, smt.modulo
+                        from superior_facultad_area_tipo as sfat
+                        inner join superior_especialidad_tipo as sest on sfat.id = sest.superior_facultad_area_tipo_id
+                        inner join superior_acreditacion_especialidad as sae on sest.id = sae.superior_especialidad_tipo_id
+                        inner join superior_acreditacion_tipo as sat on sae.superior_acreditacion_tipo_id=sat.id
+                        inner join superior_institucioneducativa_acreditacion as siea on siea.acreditacion_especialidad_id = sae.id
+                        inner join institucioneducativa_sucursal as ies on siea.institucioneducativa_sucursal_id = ies.id
+                        inner join superior_institucioneducativa_periodo as siep on siep.superior_institucioneducativa_acreditacion_id = siea.id
+                        inner join institucioneducativa_curso as iec on iec.superior_institucioneducativa_periodo_id = siep.id
+                        inner join estudiante_inscripcion as ei on iec.id=ei.institucioneducativa_curso_id
+                        inner join (select * from estudiante where id = ".$participanteId.") as e on ei.estudiante_id=e.id
+                        inner join superior_modulo_periodo as smp ON smp.institucioneducativa_periodo_id = siep.id
+                        inner join superior_modulo_tipo smt ON smt.id = smp.superior_modulo_tipo_id
+                        inner join institucioneducativa_curso_oferta as ieco on ieco.superior_modulo_periodo_id = smp.id and ieco.insitucioneducativa_curso_id = iec.id
+                        inner join estudiante_asignatura as ea on ea.institucioneducativa_curso_oferta_id = ieco.id and ea.estudiante_inscripcion_id = ei.id
+                        inner join estudiante_nota as en on en.estudiante_asignatura_id = ea.id
+                        where sest.id = ".$especialidadId." and sat.codigo = ".$nivelId."
+                        and en.nota_tipo_id::integer = 22 AND CASE WHEN ies.gestion_tipo_id <= 2015::double precision THEN en.nota_cuantitativa >=36 ELSE en.nota_cuantitativa >=51 END
+                    group by e.id, e.codigo_rude, e.paterno, e.materno, e.nombre, sest.id, sest.especialidad, sat.codigo, sat.acreditacion
+                    , smp.horas_modulo, smt.modulo having count(*) < 2
+                ) as v
+                group by estudiante_id, codigo_rude, participante, especialidad_id, especialidad, nivel_id, acreditacion_id,ies.periodo_tipo_id,siea.institucioneducativa_id, sfat.codigo as nivel_id, sfat.facultad_area, sest.codigo as ciclo_id
+            ,sest.especialidad,sat.codigo as grado_id,sat.select estudiante_id, codigo_rude, participante, especialidad_id, especialidad, nivel_id, acreditacion, string_agg(distinct modulo, ',') as modulos, sum(horas_modulo) as carga_horaria from (
+                        select e.id as estudiante_id, e.codigo_rude, e.paterno||' '||e.materno||' '||e.nombre as participante, sest.id as especialidad_id, sest.especialidad, sat.codigo as nivel_id, sat.acreditacion
+                        , smp.horas_modulo, smt.modulo
+                        from superior_facultad_area_tipo as sfat
+                        inner join superior_especialidad_tipo as sest on sfat.id = sest.superior_facultad_area_tipo_id
+                        inner join superior_acreditacion_especialidad as sae on sest.id = sae.superior_especialidad_tipo_id
+                        inner join superior_acreditacion_tipo as sat on sae.superior_acreditacion_tipo_id=sat.id
+                        inner join superior_institucioneducativa_acreditacion as siea on siea.acreditacion_especialidad_id = sae.id
+                        inner join institucioneducativa_sucursal as ies on siea.institucioneducativa_sucursal_id = ies.id
+                        inner join superior_institucioneducativa_periodo as siep on siep.superior_institucioneducativa_acreditacion_id = siea.id
+                        inner join institucioneducativa_curso as iec on iec.superior_institucioneducativa_periodo_id = siep.id
+                        inner join estudiante_inscripcion as ei on iec.id=ei.institucioneducativa_curso_id
+                        inner join (select * from estudiante where id = ".$participanteId.") as e on ei.estudiante_id=e.id
+                        inner join superior_modulo_periodo as smp ON smp.institucioneducativa_periodo_id = siep.id
+                        inner join superior_modulo_tipo smt ON smt.id = smp.superior_modulo_tipo_id
+                        inner join institucioneducativa_curso_oferta as ieco on ieco.superior_modulo_periodo_id = smp.id and ieco.insitucioneducativa_curso_id = iec.id
+                        inner join estudiante_asignatura as ea on ea.institucioneducativa_curso_oferta_id = ieco.id and ea.estudiante_inscripcion_id = ei.id
+                        inner join estudiante_nota as en on en.estudiante_asignatura_id = ea.id
+                        where sest.id = ".$especialidadId." and sat.codigo = ".$nivelId."
+                        and en.nota_tipo_id::integer = 22 AND CASE WHEN ies.gestion_tipo_id <= 2015::double precision THEN en.nota_cuantitativa >=36 ELSE en.nota_cuantitativa >=51 END
+                    group by e.id, e.codigo_rude, e.paterno, e.materno, e.nombre, sest.id, sest.especialidad, sat.codigo, sat.acreditacion
+                    , smp.horas_modulo, smt.modulo having count(*) < 2
+                ) as v
+                group by estudiante_id, codigo_rude, participante, especialidad_id, especialidad, nivel_id, acreditacionacreditacion,ei.id as estudiante_inscripcion,e.codigo_rude, e.nombre, e.paterno, e.materno, to_char(e.fecha_nacimiento,'DD/MM/YYYY') as fecha_nacimiento
             , cast(e.carnet_identidad as varchar)||(case when e.complemento is null then '' when e.complemento = '' then '' else '-'||e.complemento end) as carnet_identidad
             , case pt.id when 1 then lt2.lugar when 0 then '' else pt.pais end as lugar_nacimiento
             , t.id as tramite_id,ei.estadomatricula_tipo_id/*, d.id as documento_id, d.documento_serie_id as documento_serie_id*/, segip_id
@@ -2637,7 +2729,7 @@ class TramiteController extends Controller {
         $entitySubsistemaInstitucionEducativa = $this->getSubSistemaInstitucionEducativa($institucionEducativaId);
         if($entitySubsistemaInstitucionEducativa['msg'] != ''){
             $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => $entitySubsistemaInstitucionEducativa['msg']));
-            return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_regular_autorizacion_busca '));
+            return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_regular_autorizacion_busca'));
         }
 
         if($entitySubsistemaInstitucionEducativa['id']==1){
