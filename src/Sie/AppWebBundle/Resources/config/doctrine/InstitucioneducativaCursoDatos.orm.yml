@@ -35,6 +35,12 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoDatos:
             type: boolean
             nullable: true
             comment: ''
+        plancurricularTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: plancurricular_tipo_id
     manyToOne:
         lugarTipoSeccion:
             targetEntity: LugarTipo

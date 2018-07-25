@@ -189,7 +189,7 @@
 
                                 {# ESTA PARTE DEL CODIGO DEENDE DEL ANTERIOR, SI EL OTRO CODIGO SE HABILITA ESTE DEBE ELIMINARSE#}
                                 
-                                <td><a href="#" role="button" onclick="FechaNacEdit('{{estudiante.estudiante_id}}','{{estudiante.fecha_nacimiento|date("d/m/Y")}}','{{ estudiante.id_genero }}','{{estudiante.observacionadicional}}')" class="btn btn-success btn-large glyphicon glyphicon-calendar "> Editar</a></td>
+                                <td><a href="#" role="button" onclick="FechaNacEdit('{{estudiante.estudiante_id}}','{{estudiante.fecha_nacimiento|date("d/m/Y")}}','{{ estudiante.id_genero }}','{{estudiante.observacionadicional}}',{{estudiante.pnp}})" class="btn btn-success btn-large glyphicon glyphicon-calendar "> Editar</a></td>
                                 {#  fin del coldigo #}
 
                             {% else %}
@@ -290,9 +290,9 @@
                             <div align="center"><input type="hidden" id="estudiante_id" name="estudiante_id" value="" required="required" style="display:" />
                             <input type="text" id="fecha_nac" name="fecha_nac" placeholder="Digite Fecha de Nacimiento" required="required" value=""/>
                             <input type="radio" name="genero" id="genero_m" value="1">
-                            Masculino
+                            <label for="" id="genero_lm">Masculino</label>
                             <input type="radio" name="genero" id="genero_f" value="2">
-                            Femenino
+                            <label for="" id="genero_lf">Femenino</label>
                             <div class="col-lg-4 col-md-3" align="center">
                                 <h5>Alfabetizado</h5>
                                 <select name="alfabetizado" class="form-control" id="alfabetizado">
@@ -510,10 +510,24 @@
         $('#ModalUser').modal('show');
     }
 
-    function FechaNacEdit(id,fecha_nac,id_genero,obs){
+    function FechaNacEdit(id,fecha_nac,id_genero,obs,pnp){
         $('#Modal_fecha').modal('show');
         $('#estudiante_id').val(id);
         $('#fecha_nac').val(fecha_nac);
+        if(pnp==0) {
+            document.getElementById('fecha_nac').style.visibility='hidden';
+            document.getElementById('genero_m').style.visibility='hidden';
+            document.getElementById('genero_f').style.visibility='hidden';
+            document.getElementById('genero_lm').style.visibility='hidden';
+            document.getElementById('genero_lf').style.visibility='hidden';
+        }
+        else {
+            document.getElementById('fecha_nac').style.visibility='';
+            document.getElementById('genero_m').style.visibility='';
+            document.getElementById('genero_f').style.visibility='';
+            document.getElementById('genero_lm').style.visibility='';
+            document.getElementById('genero_lf').style.visibility='';
+        }
         var res = obs.split("|");
         $('#alfabetizado').val(res[0]);
         $('#idioma').val(res[1]);

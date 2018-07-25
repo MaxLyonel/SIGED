@@ -16,7 +16,7 @@
           <th class="text-center">Fecha Inicio</th>
           <th class="text-center">Fecha Fin</th>
           <th class="text-center">Paralelo</th>
-          <th class="text-center">Turno</th>
+          <th class="text-center">Id Curso</th>
           <th class="text-center">Estado Matrícula</th>
           <th class="text-center">Acciones</th>
         </tr>
@@ -33,12 +33,9 @@
             <td>{{data.fech_ini_p}}</td>
             <td>{{data.fech_fin_p}}</td>
             <td>{{data.paralelo_raep}} </td>
-            <td>{{data.turno_raep}} </td>
+            <td>{{data.institucioneducativa_curso_id_raep}} </td>
             <td>{{data.estadomatricula_p}}</td>
-            <td class="text-center">
-              {#<a href="#" onclick="seeNotaNew('{{data.eiid}}', '{{data.eid}}', '{{data.nivel_tipo_id}}', '{{data.grado_tipo_id}}', '{{data.pid}}', '{{data.turno_tipo_id}}', '{{data.gestion_tipo_id}}', '{{data.institucioneducativa_id}}','{{data.estadomatricula_tipo_id}}')" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>#}
-              Calificaciones
-            </td>
+             <td><a role="button" class="btn btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id': data.institucioneducativa_curso_id_raep~data.bloque_p~data.parte_p,'esactivo':0}) }}" >&nbsp;</a></td>
           </tr>
         {% endfor %}
       </tbody>
