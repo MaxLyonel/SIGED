@@ -246,10 +246,18 @@ class DocumentoController extends Controller {
                     $entityNumeroSerieActivo = $this->validaNumeroSerieActivo($numeroSerieSupletorio);                    
                     $entityNumeroSerieTuicion = $this->validaNumeroSerieTuicion($numeroSerieSupletorio,$usuarioLugarId);
                     $entityCertificadoSupletorioAsignadoPorSerie = $this->buscaCertificadoSupletorioAsignadoPorSerie($numeroSerieSupletorio);
-                    $idDocumento = $this->generaDocumento($codTramite, $id_usuario, 9, $numeroSerieSupletorio, '', $entityNumeroSerie->getGestion()->getId(), $fechaActual);
-                    
-                    $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'El certificado supletorio con numero de serie "'.$numeroSerieSupletorio.'" fue generado'));
-                    $em->getConnection()->commit();     
+
+                    $entityDocumentoSupletorio = $this->buscaCertificadoSupletorioPorTramite($codTramite); 
+
+                    if (count($entityDocumentoSupletorio)>0){
+                        $em->getConnection()->rollback();
+                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'El trámite '.$codTramite.' ya cuenta con un documento supletorio')); 
+                    } else {
+                        $idDocumento = $this->generaDocumento($codTramite, $id_usuario, 9, $numeroSerieSupletorio, '', $entityNumeroSerie->getGestion()->getId(), $fechaActual);
+                        
+                        $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'El certificado supletorio con numero de serie "'.$numeroSerieSupletorio.'" fue generado'));
+                        $em->getConnection()->commit();     
+                    }
                 } catch (Exception $ex) {
                     $em->getConnection()->rollback();
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $ex->getMessage()));                    

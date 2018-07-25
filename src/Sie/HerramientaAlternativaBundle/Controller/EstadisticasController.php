@@ -1683,6 +1683,224 @@ union all
     }
 
 
+
+    public function  centroAltEspecialidadPrintPdfAction(Request $request) {
+        // dump($request);die;
+
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+        if ($request->isMethod('POST')) {
+            /*
+             * Recupera datos del formulario
+             */
+            $gestion = $request->get('gestion');
+            $periodo = $request->get('periodo');
+            $sie = $request->get('siecentrop');
+            //   dump($value);
+            $codigoArea = base64_decode($request->get('codigo'));
+            $rol = $request->get('rol');
+
+        } else {
+            $gestion = $gestionActual;
+            $codigoArea = 0;
+            $rol = 0;
+            $periodo = $request->get('periodo');
+            $sie = $request->get('siecentrop');
+        }
+
+
+        $em = $this->getDoctrine()->getManager();
+
+        $arch = 'CEA_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+
+        // por defecto
+        //   dump($this->container->getParameter('urlreportweb') . 'alt_est_nacional_por_especialidad_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion.'&Periodo='.$periodo.'&idespecialidad='.$value);die;
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_cea_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion.'&Periodo='.$periodo.'&CEA='.$sie));
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    /**
+     * Imprime reportes estadisticos segun el tipo de rol en formato EXCEL - Educación Especial
+     * Jurlan
+     * @param Request $request
+     * @return type
+     */
+    public function centroAltEspecialidadPrintXlsAction(Request $request) {
+        // dump($request);die;
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+
+        if ($request->isMethod('POST')) {
+            /*
+             * Recupera datos del formulario
+             */
+            $gestion = $request->get('gestion');
+            $periodo = $request->get('periodo');
+            $sie = $request->get('siecentrop');
+            //   dump($value);
+            $codigoArea = base64_decode($request->get('codigo'));
+            $rol = $request->get('rol');
+
+        } else {
+            $gestion = $gestionActual;
+            $codigoArea = 0;
+            $rol = 0;
+            $periodo = $request->get('periodo');
+            $sie = $request->get('siecentrop');
+        }
+
+
+        $em = $this->getDoctrine()->getManager();
+
+        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xls';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        //   dump($this->container->getParameter('urlreportweb') . 'alt_esp_nacional_cant_centros_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo);die;
+        // por defecto
+
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_cea_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo.'&CEA='.$sie));
+
+
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+
+//reportes por estadisticas de centro
+
+    public function  centroAltEstPrintPdfAction(Request $request) {
+        // dump($request);die;
+
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+        if ($request->isMethod('POST')) {
+            /*
+             * Recupera datos del formulario
+             */
+            $gestion = $request->get('gestion');
+            $periodo = $request->get('periodo');
+            $sie = $request->get('siecentroestp');
+            //   dump($value);
+            $codigoArea = base64_decode($request->get('codigo'));
+            $rol = $request->get('rol');
+
+        } else {
+            $gestion = $gestionActual;
+            $codigoArea = 0;
+            $rol = 0;
+            $periodo = $request->get('periodo');
+            $sie = $request->get('siecentroestp');
+        }
+
+
+        $em = $this->getDoctrine()->getManager();
+
+        $arch = 'CEA_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+
+        // por defecto
+        //   dump($this->container->getParameter('urlreportweb') . 'alt_est_nacional_por_especialidad_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion.'&Periodo='.$periodo.'&idespecialidad='.$value);die;
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_cea_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion.'&Periodo='.$periodo.'&CEA='.$sie));
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    /**
+     * Imprime reportes estadisticos segun el tipo de rol en formato EXCEL - Educación Especial
+     * Jurlan
+     * @param Request $request
+     * @return type
+     */
+    public function centroAltEstPrintXlsAction(Request $request) {
+        // dump($request);die;
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+
+        if ($request->isMethod('POST')) {
+            /*
+             * Recupera datos del formulario
+             */
+            $gestion = $request->get('gestion');
+            $periodo = $request->get('periodo');
+            $sie = $request->get('siecentroestx');
+            //   dump($value);
+            $codigoArea = base64_decode($request->get('codigo'));
+            $rol = $request->get('rol');
+
+        } else {
+            $gestion = $gestionActual;
+            $codigoArea = 0;
+            $rol = 0;
+            $periodo = $request->get('periodo');
+            $sie = $request->get('siecentroestx');
+        }
+
+
+        $em = $this->getDoctrine()->getManager();
+
+        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xls';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        //   dump($this->container->getParameter('urlreportweb') . 'alt_esp_nacional_cant_centros_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo);die;
+        // por defecto
+
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_cea_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo.'&CEA='.$sie));
+
+
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+
+
+
+
+
+
 // corteee
 
 

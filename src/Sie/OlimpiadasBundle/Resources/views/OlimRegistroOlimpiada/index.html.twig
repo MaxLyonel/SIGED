@@ -101,15 +101,18 @@
                 $("#buildBtn").hide();
                 $("#build").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:25px;" /></div>');  
             },
-            success: function (data) {
+            success: function () {
                 $("#build").empty();
+                $("#build").append('<span class="text-success">¡Correcto!</span>');
                 $("#buildBtn").removeAttr('disabled');
                 $("#buildBtn").hide();
                 $("#downloadBtn").show();
             },
-            error: function (data) {
+            error: function () {
+                $("#build").empty();
+                $("#build").append('<span class="text-danger">¡Error!</span>');
                 $("#buildBtn").removeAttr('disabled');
-                $("#build").append(data);
+                $("#buildBtn").show();
             }
         });
     };

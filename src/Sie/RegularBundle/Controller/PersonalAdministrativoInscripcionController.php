@@ -401,30 +401,20 @@ class PersonalAdministrativoInscripcionController extends Controller {
 
     public function resultAction(Request $request) {
 
-        // Verificamos si no ha caducado la sesión
+        // Verificamos si no ha caducado la session
         if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
         }
 
+        $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
 
-        $em = $this->getDoctrine()->getManager();
-
-        $repository = $em->getRepository('SieAppWebBundle:Persona');
-
-        $query = $repository->createQueryBuilder('p')
-                ->select('p')
-                ->where('p.carnet = :carnet AND p.segipId > :valor')
-                ->setParameter('carnet', $form['carnetIdentidad'])
-                ->setParameter('valor', 0)
-                ->getQuery();
-
-        $personas = $query->getResult();
+        $persona = $this->get('sie_app_web.persona')->buscarPersonaPorCarnetComplemento($form);
 
         $institucion = $em->getRepository('SieAppWebBundle:DistritoTipo')->find($request->getSession()->get('idInstitucion'));
 
         return $this->render('SieRegularBundle:PersonalAdministrativoInscripcion:result.html.twig', array(
-                    'personas' => $personas,
+                    'persona' => $persona,
                     'institucion' => $institucion,
                     'gestion' => $request->getSession()->get('idGestion')
         ));
@@ -437,7 +427,7 @@ class PersonalAdministrativoInscripcionController extends Controller {
     private function searchForm() {
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('personaladministrativoinscripcion_result'))
-                ->add('carnetIdentidad', 'text', array('label' => 'Carnet de Identidad', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbers', 'pattern' => '[0-9]{5,10}', 'maxlength' => '11')))
+                ->add('carnet', 'text', array('label' => 'Carnet de Identidad', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbers', 'pattern' => '[0-9]{5,10}', 'maxlength' => '11')))
                 ->add('complemento', 'text', array('label' => 'Complemento', 'required' => false, 'attr' => array('class' => 'form-control jonlynumbersletters jupper', 'maxlength' => '2', 'autocomplete' => 'off')))
                 ->add('buscar', 'submit', array('label' => 'Buscar coincidencias por C.I.', 'attr' => array('class' => 'btn btn-primary')))
                 ->getForm();
@@ -591,30 +581,21 @@ class PersonalAdministrativoInscripcionController extends Controller {
 
     public function resultPersonaAction(Request $request) {
 
-        // Verificamos si no ha caducado la sesión
+        // Verificamos si no ha caducado la session
         if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
         }
 
+        $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
 
-        $em = $this->getDoctrine()->getManager();
+        $persona = $this->get('sie_app_web.persona')->buscarPersonaPorCarnetComplemento($form);
 
-        $repository = $em->getRepository('SieAppWebBundle:Persona');
-
-        $query = $repository->createQueryBuilder('p')
-                ->select('p')
-                ->where('p.carnet = :carnet AND p.segipId > :valor')
-                ->setParameter('carnet', $form['carnetIdentidad'])
-                ->setParameter('valor', 0)
-                ->getQuery();
-
-        $personas = $query->getResult();
 
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['idInstitucion']);
 
         return $this->render('SieRegularBundle:PersonalAdministrativoInscripcion:result_persona.html.twig', array(
-                    'personas' => $personas,
+                    'persona' => $persona,
                     'institucion' => $institucion,
                     'gestion' => $form['gestion']
         ));
@@ -629,7 +610,7 @@ class PersonalAdministrativoInscripcionController extends Controller {
                 ->setAction($this->generateUrl('personaladministrativoinscripcion_result_persona'))
                 ->add('idInstitucion', 'hidden', array('data' => $idInstitucion))
                 ->add('gestion', 'hidden', array('data' => $gestion))
-                ->add('carnetIdentidad', 'text', array('label' => 'Carnet de Identidad', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbers', 'pattern' => '[0-9]{5,10}', 'maxlength' => '11')))
+                ->add('carnet', 'text', array('label' => 'Carnet de Identidad', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbers', 'pattern' => '[0-9]{5,10}', 'maxlength' => '11')))
                 ->add('complemento', 'text', array('label' => 'Complemento', 'required' => false, 'attr' => array('class' => 'form-control jonlynumbersletters jupper', 'maxlength' => '2', 'autocomplete' => 'off')))
                 ->add('buscar', 'submit', array('label' => 'Buscar coincidencias por C.I.', 'attr' => array('class' => 'btn btn-primary')))
                 ->getForm();

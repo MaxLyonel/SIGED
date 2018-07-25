@@ -4528,6 +4528,18 @@ ciclo_tipo_id, grado_tipo_id
             if($d_n==1 and $m_n==1 and $g_n >= 2008 and $g_n <= 2015)
                 $datos_filas["fecha_b"]=0; else $datos_filas["fecha_b"]=1;
             $datos_filas["codigo_rude"] = $p["codigo_rude"];
+            switch (substr($p["codigo_rude"], 0, 8)) {
+                case '80480300': $datos_filas["pnp"]=1;break; 
+                case '80730794': $datos_filas["pnp"]=1;break;
+                case '80980569': $datos_filas["pnp"]=1;break;
+                case '81230297': $datos_filas["pnp"]=1;break;
+                case '81480201': $datos_filas["pnp"]=1;break;
+                case '81730264': $datos_filas["pnp"]=1;break;
+                case '81981501': $datos_filas["pnp"]=1;break;
+                case '82230130': $datos_filas["pnp"]=1;break;
+                case '82480050': $datos_filas["pnp"]=1;break;
+                default: $datos_filas["pnp"]=0;break;
+            }
             $datos_filas["carnet_identidad"] = $p["carnet_identidad"];
             $datos_filas["complemento"] = $p["complemento"];
             $datos_filas["paterno"] = $p["paterno"];
@@ -5716,6 +5728,7 @@ public function registrar_cursoAction(Request $request){
             $nuevo_curso_datos->setLocalidad($form['localidad']);
             $nuevo_curso_datos->setEsactivo(false);
             $nuevo_curso_datos->setObs($userId);
+            $nuevo_curso_datos->setPlancurricularTipoId(1);
             $nuevo_curso_datos->setInstitucioneducativaCurso($nuevo_curso);
             $em->persist($nuevo_curso_datos);
             $em->flush(); 
@@ -6257,6 +6270,7 @@ public function crear_curso_automaticoAction(Request $request){
             $nuevo_curso_datos->setLocalidad($localidad);
             $nuevo_curso_datos->setEsactivo(false);
             $nuevo_curso_datos->setObs($userId);
+            $nuevo_curso_datos->setPlancurricularTipoId(1);
             $nuevo_curso_datos->setInstitucioneducativaCurso($nuevo_curso);
             $em->persist($nuevo_curso_datos);
             $em->flush(); 
@@ -6270,6 +6284,7 @@ public function crear_curso_automaticoAction(Request $request){
                 $nuevo_curso_datos->setLocalidad($localidad);
                 $nuevo_curso_datos->setEsactivo(true);
                 $nuevo_curso_datos->setInstitucioneducativaCurso($id_curso);
+                $nuevo_curso_datos->setPlancurricularTipoId(1);
                 $em->persist($nuevo_curso_datos);
                 $em->flush();
             }
@@ -6767,4 +6782,3 @@ public function cambiar_facilitador_encontradoAction(Request $request,$ci,$compl
     }
     //buscar archivos de 2015 para adelante
 }
-

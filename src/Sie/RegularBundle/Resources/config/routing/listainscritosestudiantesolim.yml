@@ -7,3 +7,9 @@ listainscritosestudiantesolim_lookdistrito:
     defaults: { _controller: SieRegularBundle:ListaInscritosEstudiantesOlim:lookdistrito }
     options:
          expose: true
+
+listainscritosestudiantesolim_lookdistritoinfo:
+    path:     /lookdistritoinfo
+    defaults: { _controller: SieRegularBundle:ListaInscritosEstudiantesOlim:lookdistritoinfo }
+
+

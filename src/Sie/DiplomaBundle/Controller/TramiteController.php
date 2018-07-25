@@ -2315,20 +2315,17 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                     WHEN iec.nivel_tipo_id = 15 THEN 'ALTERNATIVA HUMANISTICA'
                     WHEN iec.nivel_tipo_id > 17 THEN 'ALTERNATIVA TÉCNICA'
                 END AS subsistema, pet.id as periodo_id, pet.periodo as periodo, iec.nivel_tipo_id as nivel_id, d.documento_serie_id as titulo
-                from (select * from tramite where gestion_id = :gestion::INT) as t
-                inner join (select * from tramite_detalle where id in (select max(td2.id) as id from tramite_detalle as td2 inner join tramite as t2 on t2.id = td2.tramite_id where td2.tramite_estado_id <> 4 and td2.flujo_proceso_id = :flujo::INT and t2.gestion_id = :gestion group by td2.tramite_id)) as td on td.tramite_id = t.id
-                inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
+                from (select * from institucioneducativa_curso where institucioneducativa_id = :sie::INT and gestion_tipo_id = :gestion::double precision) as iec
+                inner join estudiante_inscripcion as ei on ei.institucioneducativa_curso_id = iec.id
                 inner join estudiante as e on e.id = ei.estudiante_id
+                inner join tramite as t on t.estudiante_inscripcion_id = ei.id
+                inner join (select * from tramite_detalle where id in (select max(td2.id) as id from tramite_detalle as td2 inner join tramite as t2 on t2.id = td2.tramite_id where td2.tramite_estado_id <> 4 and td2.flujo_proceso_id = :flujo::INT group by td2.tramite_id)) as td on td.tramite_id = t.id
                 inner join estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id
-                inner join (select * from institucioneducativa_curso where institucioneducativa_id = :sie) as iec on iec.id = ei.institucioneducativa_curso_id
                 inner join periodo_tipo as pet on pet.id = iec.periodo_tipo_id
-                left join (select * from documento where id in (select max(id) from documento where documento_estado_id = 1 and documento_tipo_id in (1,3,4,5) group by tramite_id)) as d on d.tramite_id = t.id
+                left join documento as d on d.tramite_id = t.id and documento_estado_id = 1 and documento_tipo_id in (1,3,4,5)
                 left join lugar_tipo as lt on lt.id = e.lugar_prov_nac_tipo_id
                 left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
                 left join pais_tipo as pt on pt.id = e.pais_tipo_id
-                where iec.gestion_tipo_id = :gestion::INT and iec.institucioneducativa_id = :sie ::INT
-                order by e.paterno, e.materno, e.nombre
-
             ");
         }
 

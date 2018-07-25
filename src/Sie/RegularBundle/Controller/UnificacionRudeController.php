@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Sie\AppWebBundle\Entity\UnificacionRude;
+use Sie\AppWebBundle\Entity\EstudianteBack;
 use Sie\AppWebBundle\Controller\DefaultController as DefaultCont;
 
 /**
@@ -236,6 +237,7 @@ class UnificacionRudeController extends Controller {
         try {
             $sesion = $request->getSession();
             //ESTUDIANTE INSCRIPCION
+            
             if (($inscripinco) && ($studentcor)) {
                 foreach ($inscripinco as $inscrip) { // A LAS INSCRIPCIONES INCORRECTAS SE LE ASIGNA EL ESTUDIANTE CORRECTO
                     //REGISTRANDO ESTADO ANTES DE LOS CAMBIOS EN EL LOG DE TRANBASCCIONES
@@ -273,11 +275,7 @@ class UnificacionRudeController extends Controller {
 //                }
 
             //AÑADIENDO CON 9- Y REGISTRO DE LOG DE RUDE INCORRECTO          
-            if ($studentinc) {                
-                /*$studentinc->setCodigoRude("9-".$rudeinc);
-                $em->persist($studentinc);
-                $em->flush();*/
-
+            if ($studentinc) {
                 //REGISTRANDO CAMBIO DE ESTADO EN CONTROL DE CALIDAD
                 $antes = $studentinc->getId(); 
                 $arrResult = $this->getDataLogEstudiante($antes);                
@@ -294,7 +292,7 @@ class UnificacionRudeController extends Controller {
                             'SIGED', json_encode(array('file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__))//controlador
                     );
             }
-
+            
             //guardaro de log antiguo de datos de unificacion
             $cursoinco = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($inscripinco[0]->getInstitucioneducativaCurso()->getId());
             $cursocorr = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($inscripcorr[0]->getInstitucioneducativaCurso()->getId());
@@ -311,6 +309,88 @@ class UnificacionRudeController extends Controller {
             $ur->setFechaRegistro(new \DateTime('now'));
             $em->persist($ur);
             $em->flush();
+
+            $estudianteback = new EstudianteBack();                        
+            $estudianteback->setCodigoRude( $studentinc->getCodigoRude() );
+            $estudianteback->setCarnetIdentidad( $studentinc->getCarnetIdentidad() );            
+            $estudianteback->setPasaporte( $studentinc->getPasaporte() );            
+            $estudianteback->setPaterno($studentinc->getPaterno());
+            $estudianteback->setMaterno($studentinc->getMaterno());
+            $estudianteback->setNombre($studentinc->getNombre());
+            
+            //$estudianteback->setGeneroTipoId( $studentinc->getGeneroTipo()->getId() );
+            if (!$studentinc->getGeneroTipo() == null ){
+                $estudianteback->setGeneroTipoId( $studentinc->getGeneroTipo()->getId() );
+            } else {
+                $estudianteback->setGeneroTipoId('3');
+            }
+
+            //$estudianteback->setEstadoCivilId($studentinc->getEstadoCivil()->getId());                        
+            if (!$studentinc->getEstadoCivil() == null ){
+                $estudianteback->setEstadoCivilId( $studentinc->getEstadoCivil()->getId() );
+            } else {
+                $estudianteback->setEstadoCivilId('0');
+            }
+
+            //$estudianteback->setLugarNacTipoId($studentinc->getLugarNacTipo()->getId());
+            if (!$studentinc->getLugarNacTipo() == null ){
+                $estudianteback->setLugarNacTipoId($studentinc->getLugarNacTipo()->getId());
+            } else {
+                $estudianteback->setLugarNacTipoId('0');
+            }
+
+            $estudianteback->setOficialia($studentinc->getOficialia());                        
+            $estudianteback->setLibro($studentinc->getLibro());                        
+            $estudianteback->setPartida($studentinc->getPartida());                        
+            $estudianteback->setFolio($studentinc->getFolio());
+
+            //$estudianteback->setSangreTipoId($studentinc->getSangreTipo()->getId());
+            if (!$studentinc->getSangreTipo() == null ){
+                $estudianteback->setSangreTipoId( $studentinc->getSangreTipo()->getId() );
+            } else {
+                $estudianteback->setSangreTipoId('0');
+            }
+            
+            //$estudianteback->setIdiomaMaternoId($studentinc->getIdiomaMaternoId());
+            if (!$studentinc->getIdiomaMaternoId() == null ){
+                $estudianteback->setIdiomaMaternoId( $studentinc->getIdiomaMaternoId()->getId() );
+            } else {
+                $estudianteback->setIdiomaMaternoId('0');
+            }
+
+            $estudianteback->setSegipId($studentinc->getSegipId());
+            $estudianteback->setComplemento($studentinc->getComplemento());
+            $estudianteback->setFechaNacimiento($studentinc->getFechaNacimiento());            
+            $estudianteback->setFechaModificacion($studentinc->getFechaModificacion());            
+            $estudianteback->setCorreo($studentinc->getCorreo());
+
+            //$estudianteback->setPaisTipoId($studentinc->getPaisTipo()->getId());
+            if (!$studentinc->getPaisTipo() == null ){
+                $estudianteback->setPaisTipoId( $studentinc->getPaisTipo()->getId() );
+            } else {
+                $estudianteback->setPaisTipoId('0');
+            }
+            
+            $estudianteback->setLocalidadNac($studentinc->getLocalidadNac());
+            $estudianteback->setFoto($studentinc->getFoto());
+            $estudianteback->setCelular($studentinc->getCelular());
+            $estudianteback->setResolucionaprovatoria($studentinc->getResolucionaprovatoria());
+            $estudianteback->setCarnetCodepedis($studentinc->getCarnetCodepedis());
+            $estudianteback->setObservacionadicional($studentinc->getObservacionadicional());
+            $estudianteback->setCarnetIbc($studentinc->getCarnetIbc());
+
+            //$estudianteback->setLugarProvNacTipoId($studentinc->getLugarProvNacTipo()->getId());
+            if (!$studentinc->getLugarProvNacTipo() == null ){
+                $estudianteback->setLugarProvNacTipoId( $studentinc->getLugarProvNacTipo()->getId() );
+            } else {
+                $estudianteback->setLugarProvNacTipoId('0');
+            }
+
+            $estudianteback->setLibretaMilitar($studentinc->getLibretaMilitar());
+            $estudianteback->setEsDobleNacionalidad($studentinc->getEsDobleNacionalidad());
+            //$estudianteback->setObservacion($studentinc->getObservacion());
+            $em->persist($estudianteback);
+            $em->flush();
             
             if ($sesion->get('procesocalidadid') != '0' ){
                 $valproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($sesion->get('procesocalidadid'));
@@ -319,6 +399,10 @@ class UnificacionRudeController extends Controller {
                 $em->flush();
             }
             
+            //ELIMINANDO RUDE ANTIGUO            
+            $em->remove($studentinc);
+            $em->flush();
+
             //COMMIT DE TODA LA TRANSACCION
             $em->getConnection()->commit();
             

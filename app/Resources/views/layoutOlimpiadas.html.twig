@@ -278,6 +278,7 @@
                         </a>
                     </li>
 
+                    {#{% if app.session.get('roluser') in [35,8,7,10,9,2] %}#}
                     {% if app.session.get('roluser') in [35] %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
@@ -289,6 +290,8 @@
                                 <li><a href="{{ path('olimregistroolimpiada')}}">Olimpiada</a></li>
                                 <li><a href="{{ path('olimindepurations_index')}}">Depuraci&oacute;n</a> </li>
                                 <li><a href="{{ path('olimdiscapacidad_index')}}">Discapacidad</a> </li>
+                                <li><a href="{{ path('olimmodalidadtipo')}}">Modalidad</a> </li>
+                                <li><a href="{{ path('olim_upfilenota_index')}}">Subida Archivos/Notas</a> </li>
                             </ul>
                         </li>
                     {% endif %}

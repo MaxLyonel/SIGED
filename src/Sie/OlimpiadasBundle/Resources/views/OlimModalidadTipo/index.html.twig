@@ -1,0 +1,88 @@
+{% extends 'layoutOlimpiadas.html.twig' %}
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-file-text-o"></i> Modalidad <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-file-text-o"></i>
+                    <a href="{{ path('olimmodalidadtipo')}}">Modalidad</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+      <div class="body-content animated fadeIn">
+
+        <div class="row">
+            <div class="col-12">
+                <div class="panel rounded shadow">
+                    <div class="panel-heading">
+                        {% if app.session.flashBag.has('exito') %}
+                            <div class="alert alert-success">
+                                {% for msg in app.session.flashBag.get('exito') %}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    {{ msg }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        {% if app.session.flashBag.has('error') %}
+                            <div class="alert alert-danger">
+                                {% for msg in app.session.flashBag.get('error') %}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    {{ msg }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}    
+                        <div class="pull-left">
+                            <h3 class="panel-title"></h3>
+                        </div>
+                        <div class="pull-right">
+                            <a href="{{ path('olimmodalidadtipo_new') }}" class="btn btn-primary">
+                                <i class="fa fa-plus"></i> Nuevo
+                            </a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <table class="table records_list">
+                            <thead>
+                                <tr>
+                                    {# <th>Id</th> #}
+                                    <th>Nro.</th>
+                                    <th>Modalidad</th>
+                                    <th>Observacion</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for entity in entities %}
+                                <tr>
+                                    <td>{{ entity.id }}</td>
+                                    <td>{{ entity.modalidad }}</td>
+                                    <td>{{ entity.observacion }}</td>
+                                    <td>
+                                        <a href="{{ path('olimmodalidadtipo_edit', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Editar">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
+                                        {#<a href="{{ path('olimmodalidadtipo_show', { 'id': entity.id }) }}" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar">
+                                            <i class="fa fa-times"></i>
+                                        </a>#}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    {% endblock %}

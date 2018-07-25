@@ -1,0 +1,174 @@
+{% extends 'layoutOlimpiadas.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-pencil"></i> Subida de archivo - OCEPB <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-pencil"></i>
+                    <a href="#">
+                       Subida de Archivo
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                {% for flashMessage in app.session.flashbag.get('novalido') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Alerta!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+    <div class="row">
+          <div class="col-md-6 col-md-offset-3">
+           
+            <div class="panel rounded shadow">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title"></h3>
+                                    </div>
+                                    <div class="pull-right">
+                                      
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body no-padding" id="mensajeArchivo">
+
+                           {# <form onsubmit="upfilecsv(); return false;" id="formArchivo" enctype="multipart/form-data"> #}
+                           	{{form_start(form, { 'attr':{'onsubmit':'upfilecsv(); return false;','id':'formArchivo', 'enctype':'multipart/form-data' } } )}}
+							<div class="modal-body">
+								<div class="row" id="plantillaArchivo">
+										
+										<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+											<div class="panel panel-default">
+												<div class="panel-heading">
+													<h3 class="panel-title">Subir archivo CSV</h3>
+												</div>
+												<div class="panel-body">
+
+												<div class="row">
+													{# <div class="form-group">
+		                                                <label class="control-label">{{form_label(form.etapa)}} </label>
+		                                                {{form_widget(form.etapa)}}
+													</div> #}
+
+													<div class="form-group">
+		                                                <label class="control-label">Seleccionar archivo .CSV</label>
+		                                                <div class="fileinput fileinput-new" data-provides="fileinput">
+		                                                    <span class="btn btn-warning btn-file"><span class="fileinput-new">Seleccionar Archivo</span>
+		                                                    		<span class="fileinput-exists">Cambiar</span>
+		                                                    		{{form_widget(form.upfile)}}
+		                                                    		{# <input type="file" name="fileNota" id="fileNota"> #}
+		                                                	</span>
+		                                                    <span class="fileinput-filename"></span>
+		                                                    <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">×</a>
+		                                                </div>
+		                                            </div>
+
+
+													{# <div class="form-group col-lg-6 col-md-6">
+																											
+														<input type="file" id="archivo1" name="archivo1" class="fileupload form-control">
+													</div> #}
+												</div>
+
+											
+												
+												
+											</div>
+										</div>
+									
+								</div>
+								
+							</div>
+							<div class="modal-footer">
+								{{form_widget(form.enviar)}}									
+							{# 	<button type="submit" class="btn btn-primary" id="btnGuardar">
+									Subir archivo
+								</button> #}
+							</div>
+							{{form_end(form) }}
+						</div>
+						{# </form> #}
+
+                                 <div id="">
+
+								</div>  
+
+                                </div><!-- /.panel-body -->
+                            </div>
+
+          </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div id="idResult">
+            
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script type="text/javascript" charset="utf-8" >
+    var upfilecsv = function(){
+
+	var formData = new FormData(document.getElementById("formArchivo"));
+			$.ajax({
+				type: 'post',
+				data: formData,
+				dataType: 'html',
+				cache: false,
+				contentType: false,
+				processData: false,
+				url: Routing.generate('olim_upfilenota_upfileindb'),
+				beforeSend: function () {
+					$('#mensajeArchivo').removeClass('alert');
+					$('#mensajeArchivo').removeClass('alert-success');
+					$('#mensajeArchivo').removeClass('alert-info');
+					$('#mensajeArchivo').removeClass('alert-danger');
+					$('#mensajeArchivo').empty();
+					$("#mensajeArchivo").append('<div class="text-center"><img src="{{asset('img/loading-sm.gif')}}" class="" /> procesando...</div>');
+
+					$('#btnGuardar').hide();
+				},
+				success: function(data){
+						$('#mensajeArchivo').empty();
+						$('#mensajeArchivo').append(data);
+					
+				},
+				error: function(data){
+					$('#mensajeArchivo').empty();
+					$('#mensajeArchivo').addClass('alert alert-danger');
+					$('#mensajeArchivo').append('<p> <i class="fa fa-ban"></i> Debe seleccionar un archivo válido</p>');
+				}
+			});
+		
+	}
+
+
+
+
+    </script>
+
+    
+    
+{% endblock %}

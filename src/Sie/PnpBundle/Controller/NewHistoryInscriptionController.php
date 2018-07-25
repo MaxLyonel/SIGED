@@ -44,12 +44,19 @@ class NewHistoryInscriptionController extends Controller {
             //get the form to send
             $form = $request->get('form_est');
             $rude = trim($form['codigoRudeHistory']);
-            //get the result of search
+            //get the result of search 
             $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rude));
+            if (!$student){
+              $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('carnetIdentidad' => $rude));
+              if($student){
+                $rude=$student->getCodigoRude();
+              }
+            }
             //verificamos si existe el estudiante
             if ($student) {
                 $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $rude . "') order by gestion_tipo_id_raep desc;");
                 $query->execute();
+                
                 $dataInscription = $query->fetchAll();
 
                 foreach ($dataInscription as $key => $inscription) {
@@ -117,7 +124,15 @@ class NewHistoryInscriptionController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
         //set the student and inscriptions data
+
         $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rude));
+        if (!$student){
+              $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('carnetIdentidad' => $rude));
+              if($student){
+                $rude=$student->getCodigoRude();
+              }
+            }
+
         //verificamos si existe el estudiante
         if ($student) {
             $dataInscription = $em->getRepository('SieAppWebBundle:Estudiante')->getInscriptionHistoryEstudenWhitObservation($rude);
