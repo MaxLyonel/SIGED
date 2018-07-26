@@ -58,7 +58,7 @@ class UpFileNotaController extends Controller{
         // create db conexion
         $em = $this->getDoctrine()->getManager();
         // $em->getConnection()->beginTransaction();
-        $dirFile = $this->get('kernel')->getRootDir() . '/../web/uploads/';
+        $dirFile = $this->get('kernel')->getRootDir() . '/../web/uploads/olimpiadas/archivos/';
         // $dirFile = $this->get('kernel')->getRootDir() . '/../web/uploads/olimpiadas/upfileNota/';
         // move_uploaded_file($_FILES['fileNota']['tmp_name'], $dirFile.$_FILES['fileNota']['name']);
         move_uploaded_file($arrFile['tmp_name']['upfile'], $dirFile.$arrFile['name']['upfile']);
