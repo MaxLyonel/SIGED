@@ -68,7 +68,7 @@ class Olimfunctions {
 // dump($arrDataInscription);die;
     $query = $this->em->getConnection()->prepare(
       
-      "select p.id as personaid,ot.id as olimtutorid, oro.id as olimregistroolimpiadaid, ot.institucioneducativa_id, oro.gestion_tipo_id, p.nombre, p.paterno, p.materno, ot.telefono1, ot.telefono2, ot.correo_electronico 
+      "select p.id as personaid,ot.id as olimtutorid, oro.id as olimregistroolimpiadaid, ot.institucioneducativa_id, oro.gestion_tipo_id, p.nombre, p.paterno, p.materno, p.carnet, ot.telefono1, ot.telefono2, ot.correo_electronico 
         from olim_tutor ot
         left join olim_registro_olimpiada oro on ot.olim_registro_olimpiada_id = oro.id
         left join persona p on ot.persona_id = p.id
