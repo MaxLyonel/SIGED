@@ -294,7 +294,7 @@
                         {% endif %}
                     {% endfor %}
 
-                    {% if rol20 == false and rol8 == false and app.session.get('userId') != 92506172 and app.session.get('userId') != 13794031 %}
+                    {% if rol20 == false and rol8 == false and app.session.get('userId') != 92506172 and app.session.get('userId') != 13794031 and app.session.get('userId') != 92506479 %}
 
                         {% if (rol8 or rol16 or rol13) %}
                             <li class="submenu">
@@ -391,7 +391,7 @@
                         {% endif %}
                     {% endif %}
 
-                    {% if rol20 == true or rol8 == true or app.session.get('userId') == 92506172 or app.session.get('userId') == 13794031 %}
+                    {% if rol20 == true or rol8 == true or app.session.get('userId') == 92506172 or app.session.get('userId') == 13794031  or app.session.get('userId') == 92506479 %}
                         <!-- Start development - sub menu -->
                         {% for key,menu in app.session.get('aMenu') %}
                             <li class="submenu {% if app.session.get('pMenuId') == menu[0]['menuId'] %} active {% endif %}">

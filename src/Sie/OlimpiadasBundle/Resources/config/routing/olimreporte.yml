@@ -1,3 +1,13 @@
 olimreporte:
     path:     /
     defaults: { _controller: "SieOlimpiadasBundle:OlimReporte:index" }
+
+olimreporte_actualizarModalidad:
+    path:     /actualizarModalidad/{registroId}/{modalidadId}
+    defaults: { _controller: "SieOlimpiadasBundle:OlimReporte:actualizarModalidad" }
+    options:
+        expose: true
+
+olimreporte_export:
+    path:     /export
+    defaults: { _controller: "SieOlimpiadasBundle:OlimReporte:export" }
