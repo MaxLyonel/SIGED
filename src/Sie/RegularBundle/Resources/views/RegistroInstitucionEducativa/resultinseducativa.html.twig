@@ -68,7 +68,7 @@
                                         <!-- next form to do the inscription by krlos-->
                                         {{form_start(form)}}
                                           <i class="fa fa-plus text-danger"></i>{{form_widget(form.open)}}
-                                          {% set datainfo = {'sie':entity.id, 'leJuridicciongeograficaId':entity.leJuridicciongeografica.id, 'dependencia':entity.dependenciaTipo.dependencia, 'tipo':entity.institucioneducativaTipo.descripcion, 'depto':entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar, 'distrito':entity.leJuridicciongeografica.distritoTipo.distrito,'unidadEducativa':entity.institucioneducativa  } %}
+                                          {% set datainfo = {'sie':entity.id, 'leJuridicciongeograficaId':entity.leJuridicciongeografica.id, 'dependencia':entity.dependenciaTipo.dependencia, 'tipo':entity.institucioneducativaTipo.descripcion, 'depto':entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar, 'distrito':entity.leJuridicciongeografica.distritoTipo.distrito,'unidadEducativa':entity.institucioneducativa, 'institucionEducativaTipoId':entity.institucioneducativaTipo.id  } %}
                                           <input type="hidden" id="form_dataInfo" name="form[dataInfo]" required="required" value="{{datainfo|json_encode}}">
                                         {{form_end(form)}}
                                         <form action="{{path('personaladministrativoinscripcion_find_persona')}}" method="post" style="display: inline-block">

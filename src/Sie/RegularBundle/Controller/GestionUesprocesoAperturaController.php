@@ -146,7 +146,7 @@ class GestionUesprocesoAperturaController extends Controller {
               ->andwhere('iec.nivelTipo IN (:niveles)')
               ->setParameter('idInstitucion', $data['sie'])
               ->setParameter('gestion', $this->session->get('currentyear'))
-              ->setParameter('niveles',array(11,12,13))
+              ->setParameter('niveles',array(11,12,13,999,401))
               ->orderBy('iec.turnoTipo')
               ->orderBy('iec.nivelTipo')
               ->orderBy('iec.gradoTipo')
@@ -164,7 +164,7 @@ class GestionUesprocesoAperturaController extends Controller {
 
       try{
           $em = $this->getDoctrine()->getManager();
-          $em->getConnection()->beginTransaction();
+          // $em->getConnection()->beginTransaction();
           $this->session = new Session();
           /*
            * opciones para los usuarios no nacionales
@@ -254,33 +254,56 @@ class GestionUesprocesoAperturaController extends Controller {
               $paralelos[$p->getId()] = $p->getParalelo();
           }
 
-          if($this->session->get('roluser') != 8 && $this->session->get('roluser') != 10){
+          
+          if($arrDataInfo['institucionEducativaTipoId']==4){
+            $arrNiveles = array('999'=>'Indirecta', '401'=>'Directa');
+            $arrGrados = array('99'=>'Sin dato');
+            
               $form = $this->createFormBuilder()
-                      //->setAction($this->generateUrl('creacioncursos_create'))
-                      ->add('idInstitucion','hidden',array('data'=>$arrDataInfo['sie']))
-                      ->add('idGestion','hidden',array('data'=>$this->session->get('currentyear')))
-                      ->add('dataInfo','hidden',array('data'=>$dataInfo))
-                      ->add('turno','choice',array('label'=>'Turno','choices'=>$turnosArray,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control','onchange'=>'listarNiveles(this.value)')))
-                      ->add('nivel','choice',array('label'=>'Nivel','choices'=>$niveles,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control','onchange'=>'listarGrados(this.value)')))
-                      ->add('grado','choice',array('label'=>'Grado','choices'=>$grados,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
-                      ->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
-                      ->add('guardar','button',array('label'=>'Crear Curso','attr'=>array('class'=>'btn btn-primary', 'onclick'=>'saveCurso()')))
-                      ->getForm();
+                        //->setAction($this->generateUrl('creacioncursos_create'))
+                        ->add('idInstitucion','hidden',array('data'=>$arrDataInfo['sie']))
+                        ->add('idGestion','hidden',array('data'=>$this->session->get('currentyear')))
+                        ->add('dataInfo','hidden',array('data'=>$dataInfo))
+                        ->add('turno','choice',array('label'=>'Turno','choices'=>$turnosArray,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control','onchange'=>'')))
+                        ->add('nivel','choice',array('label'=>'Modalidad','choices'=>$arrNiveles,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control','onchange'=>'')))
+                        ->add('grado','choice',array('label'=>'Grado','choices'=>$arrGrados,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
+                        ->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
+                        ->add('guardar','button',array('label'=>'Crear Curso','attr'=>array('class'=>'btn btn-primary', 'onclick'=>'saveCurso()')))
+                        ->getForm();
+
           }else{
-              $form = $this->createFormBuilder()
-                      //->setAction($this->generateUrl('creacioncursos_create'))
-                      ->add('idInstitucion','hidden',array('data'=>$arrDataInfo['sie']))
-                      ->add('idGestion','hidden',array('data'=>$this->session->get('currentyear')))
-                      ->add('dataInfo','hidden',array('data'=>$dataInfo))
-                      ->add('turno','choice',array('label'=>'Turno','choices'=>$turnosArray,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
-                      ->add('nivel','choice',array('label'=>'Nivel','choices'=>$niveles,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control','onchange'=>'listarGrados(this.value)')))
-                      ->add('grado','choice',array('label'=>'Grado','choices'=>$grados,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
-                      ->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
-                      ->add('guardar','button',array('label'=>'Crear Curso','attr'=>array('class'=>'btn btn-primary', 'onclick'=>'saveCurso()')))
-                      ->getForm();
+
+              if($this->session->get('roluser') != 8 && $this->session->get('roluser') != 10){
+                $form = $this->createFormBuilder()
+                        //->setAction($this->generateUrl('creacioncursos_create'))
+                        ->add('idInstitucion','hidden',array('data'=>$arrDataInfo['sie']))
+                        ->add('idGestion','hidden',array('data'=>$this->session->get('currentyear')))
+                        ->add('dataInfo','hidden',array('data'=>$dataInfo))
+                        ->add('turno','choice',array('label'=>'Turno','choices'=>$turnosArray,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control','onchange'=>'listarNiveles(this.value)')))
+                        ->add('nivel','choice',array('label'=>'Nivel','choices'=>$niveles,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control','onchange'=>'listarGrados(this.value)')))
+                        ->add('grado','choice',array('label'=>'Grado','choices'=>$grados,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
+                        ->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
+                        ->add('guardar','button',array('label'=>'Crear Curso','attr'=>array('class'=>'btn btn-primary', 'onclick'=>'saveCurso()')))
+                        ->getForm();
+            }else{
+                $form = $this->createFormBuilder()
+                        //->setAction($this->generateUrl('creacioncursos_create'))
+                        ->add('idInstitucion','hidden',array('data'=>$arrDataInfo['sie']))
+                        ->add('idGestion','hidden',array('data'=>$this->session->get('currentyear')))
+                        ->add('dataInfo','hidden',array('data'=>$dataInfo))
+                        ->add('turno','choice',array('label'=>'Turno','choices'=>$turnosArray,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
+                        ->add('nivel','choice',array('label'=>'Nivel','choices'=>$niveles,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control','onchange'=>'listarGrados(this.value)')))
+                        ->add('grado','choice',array('label'=>'Grado','choices'=>$grados,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
+                        ->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
+                        ->add('guardar','button',array('label'=>'Crear Curso','attr'=>array('class'=>'btn btn-primary', 'onclick'=>'saveCurso()')))
+                        ->getForm();
+            }
+
           }
+
+          
           $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($arrDataInfo['sie']);
-          $em->getConnection()->commit();
+          // $em->getConnection()->commit();
           return $this->render('SieRegularBundle:GestionUesprocesoApertura:newcurso.html.twig',array(
             'form'        => $form->createView(),
             'institucion' => $institucion,
@@ -288,7 +311,7 @@ class GestionUesprocesoAperturaController extends Controller {
             //'dataInfo'    => $dataInfo
           ));
       }catch(Exception $ex){
-          $em->getConnection()->rollback();
+          // $em->getConnection()->rollback();
       }
       //return $this->render('SieRegularBundle:GestionUesprocesoApertura:newcurso.html.twig');
     }
@@ -313,9 +336,8 @@ class GestionUesprocesoAperturaController extends Controller {
                                                                                                       'paraleloTipo'=>$form['paralelo']));
 
 
-
           if($curso){
-              $em->getConnection()->rollback();
+              
               $this->get('session')->getFlashBag()->add('newCursoError', 'No se pudo crear el curso, ya existe un curso con las mismas características.');
               //return $this->redirect($this->generateUrl('creacioncursos',array('op'=>'result')));
           }else{
@@ -331,7 +353,7 @@ class GestionUesprocesoAperturaController extends Controller {
               $nuevo_curso->setSucursalTipo($em->getRepository('SieAppWebBundle:SucursalTipo')->find(0));
               $nuevo_curso->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
               switch($form['nivel']){
-                  case 11: $ciclo=1;break;
+                  case 11:$ciclo=1;break;
                   case 12:
                           switch($form['grado']){
                               case 1:
@@ -352,6 +374,14 @@ class GestionUesprocesoAperturaController extends Controller {
                               case 6: $ciclo = 3;break;
                           }
                           break;
+                  case 999:
+                  $ciclo = 0;
+                  break;
+                  case 401:
+                  $ciclo = 0;
+                  $form['grado']=1;
+                  break;
+                  default:$ciclo = 0;break;       
               }
 
               $nuevo_curso->setCicloTipo($em->getRepository('SieAppWebBundle:CicloTipo')->find($ciclo));
@@ -359,41 +389,45 @@ class GestionUesprocesoAperturaController extends Controller {
               $nuevo_curso->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find($form['grado']));
               $nuevo_curso->setParaleloTipo($em->getRepository('SieAppWebBundle:ParaleloTipo')->find($form['paralelo']));
               $nuevo_curso->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->find($form['turno']));
-              $nuevo_curso->setMultigrado(0);
-              $nuevo_curso->setDesayunoEscolar(1);
-              $nuevo_curso->setModalidadEnsenanza(1);
-              $nuevo_curso->setIdiomaMasHabladoTipoId(48);
-              $nuevo_curso->setIdiomaRegHabladoTipoId(0);
-              $nuevo_curso->setIdiomaMenHabladoTipoId(0);
-              $nuevo_curso->setPriLenEnsenanzaTipoId(48);
-              $nuevo_curso->setSegLenEnsenanzaTipoId(0);
-              $nuevo_curso->setTerLenEnsenanzaTipoId(1);
-              $nuevo_curso->setFinDesEscolarTipoId(4);
-              switch ($form['nivel']) {
-                  case '11': $nroMaterias = 4;break;
-                  case '12': $nroMaterias = 9;break;
-                  case '13': $nroMaterias = 11;break;
-
-                  default:
-                      $nroMaterias = 4;
-                      break;
-              }
-              $nuevo_curso->setNroMaterias($nroMaterias);
-              $nuevo_curso->setConsolidado(1);
-              $nuevo_curso->setPeriodicidadTipoId(1111100);
-              $nuevo_curso->setNotaPeriodoTipo($em->getRepository('SieAppWebBundle:NotaPeriodoTipo')->find(4));
-
               $em->persist($nuevo_curso);
               $em->flush();
 
-
-
               $em->getConnection()->commit();
               $this->get('session')->getFlashBag()->add('newCursocreated', 'Curso creado correctamente');
+              // $nuevo_curso->setMultigrado(0);
+              // $nuevo_curso->setDesayunoEscolar(1);
+              // $nuevo_curso->setModalidadEnsenanza(1);
+              // $nuevo_curso->setIdiomaMasHabladoTipoId(48);
+              // $nuevo_curso->setIdiomaRegHabladoTipoId(0);
+              // $nuevo_curso->setIdiomaMenHabladoTipoId(0);
+              // $nuevo_curso->setPriLenEnsenanzaTipoId(48);
+              // $nuevo_curso->setSegLenEnsenanzaTipoId(0);
+              // $nuevo_curso->setTerLenEnsenanzaTipoId(1);
+              // $nuevo_curso->setFinDesEscolarTipoId(4);
+              // switch ($form['nivel']) {
+              //     case '11': $nroMaterias = 4;break;
+              //     case '12': $nroMaterias = 9;break;
+              //     case '13': $nroMaterias = 11;break;
+
+              //     default:
+              //         $nroMaterias = 4;
+              //         break;
+              // }
+              // $nuevo_curso->setNroMaterias($nroMaterias);
+              // $nuevo_curso->setConsolidado(1);
+              // $nuevo_curso->setPeriodicidadTipoId(1111100);
+              // $nuevo_curso->setNotaPeriodoTipo($em->getRepository('SieAppWebBundle:NotaPeriodoTipo')->find(4));
+
+              
               //return $this->redirect($this->generateUrl('creacioncursos',array('op'=>'result')));
 
           }
-          //get sw on ddjj to the ue
+        
+      }catch(Exception $ex){
+          $em->getConnection()->rollback();
+      }
+
+        //get sw on ddjj to the ue
           $objInstitucioneducativaNoacreditadosDdjj = $em->getRepository('SieAppWebBundle:InstitucioneducativaNoacreditadosDdjj')->findOneBy(array(
             'institucioneducativa'   => $form['idInstitucion'],
             'gestionTipoId'          => $form['idGestion']
@@ -409,9 +443,6 @@ class GestionUesprocesoAperturaController extends Controller {
                                 'dataInfo'       => $form['dataInfo'],
                                 'swShowlinkDdjj' => ($objInstitucioneducativaNoacreditadosDdjj)?true:false
                               ));
-      }catch(Exception $ex){
-          $em->getConnection()->rollback();
-      }
 
     }
 
@@ -443,6 +474,7 @@ class GestionUesprocesoAperturaController extends Controller {
               $em->flush();
               //to do the transaction on DB
               $em->getConnection()->commit();
+                $this->get('session')->getFlashBag()->add('newCursocreated', 'Curso eliminado correctamente');
             }
             //get sw on ddjj to the ue
             $objInstitucioneducativaNoacreditadosDdjj = $em->getRepository('SieAppWebBundle:InstitucioneducativaNoacreditadosDdjj')->findOneBy(array(
