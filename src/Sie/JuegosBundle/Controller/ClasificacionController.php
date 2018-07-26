@@ -2109,13 +2109,13 @@ class ClasificacionController extends Controller {
         $response->headers->set('Content-type', 'application/vnd.ms-excel');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
         if($fase == 1){
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Aspirantes_f1_v1.rptdesign&__format=xls&coddis='.$codigoEntidad.'&codges='.$gestionActual));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesAcompañantesJuegos_Aspirantes_f1_v1.rptdesign&__format=xls&coddis='.$codigoEntidad.'&codges='.$gestionActual));
         }
         if($fase == 2){
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Aspirantes_f2_v1.rptdesign&__format=xls&codcir='.$codigoEntidad.'&codges='.$gestionActual));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesAcompañantesJuegos_Aspirantes_f2_v1.rptdesign&__format=xls&codcir='.$codigoEntidad.'&codges='.$gestionActual));
         }
         if($fase == 3){
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Aspirantes_f3_v1.rptdesign&__format=xls&coddep='.$codigoEntidad.'&codges='.$gestionActual));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesAcompañantesJuegos_Aspirantes_f3_v1.rptdesign&__format=xls&coddep='.$codigoEntidad.'&codges='.$gestionActual));
         }
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');

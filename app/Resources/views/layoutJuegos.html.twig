@@ -299,6 +299,9 @@
                                     {% if app.session.get('roluser') == 10 %}
                                         <li><a href="{{ path('sie_juegos_clasificacion_lista_deportistas_inscritos_fase',{'fase':1,'usuario':app.session.get('userId')}) }}">Estadística Primera Fase</a></li>
                                     {% endif %}
+                                    {% if  app.session.get('roluser') in [7,28] %}
+                                        <li><a href="{{path('sie_juegos_clasificacion_lista_deportistas_aspirantes_fase',{'fase':3,'usuario':app.session.get('userId')})}}">Registrados Segunda Fase</a></li>
+                                    {% endif %}
                                 </ul>
                             </li>
                         {% endif %}
