@@ -3270,7 +3270,7 @@ class TramiteDetalleController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $rolPermitido = array(8,16);
+        $rolPermitido = 16;
 
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
@@ -3290,7 +3290,7 @@ class TramiteDetalleController extends Controller {
 
         $info = $request->get('_info');
         $form = unserialize(base64_decode($info));
-
+        
         if ($request->isMethod('POST')) {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
@@ -3325,6 +3325,7 @@ class TramiteDetalleController extends Controller {
 
                 $messageCorrecto = "";
                 $messageError = "";
+                
                 foreach ($tramites as $tramite) {
                     $tramiteId = (Int) base64_decode($tramite);
                     $entidadTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $tramiteId));
@@ -3352,13 +3353,14 @@ class TramiteDetalleController extends Controller {
                             $documentoController->setContainer($this->container);
 
                             if ($serieCarton == 'A' or $serieCarton == 'A1' or $serieCarton == 'B' or $serieCarton == 'C' or $serieCarton == 'C1' or $serieCarton == 'D'){
-                              $numCarton = str_pad($numeroCarton, 6, "0", STR_PAD_LEFT);
+                                $numCarton =$numeroCarton;
                             } else {
-                              $numCarton =$numeroCarton;
+                                $numCarton = str_pad($numeroCarton, 6, "0", STR_PAD_LEFT);
                             }
                             $serCarton = $serieCarton;
-
+                            
                             $msgContenidoDocumento = $documentoController->getDocumentoValidación($numCarton, $serCarton, $fechaCarton, $id_usuario, $rolPermitido, $documentoTipoId);
+                            
                         }
 
                         if($msgContenido != ""){
