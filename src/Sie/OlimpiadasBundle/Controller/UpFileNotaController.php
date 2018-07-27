@@ -110,7 +110,7 @@ class UpFileNotaController extends Controller{
      public function downloadObservationAction(Request $request){
         
            //get path of the file
-        $dir = $this->get('kernel')->getRootDir() . '/../web/uploads/';
+        $dir = $this->get('kernel')->getRootDir() . '/../web/uploads/olimpiadas/archivos/';
         $file = $request->get('nameFile');
 
         //create response to donwload the file
