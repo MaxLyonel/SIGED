@@ -178,7 +178,7 @@ class DownloadFileSieController extends Controller {
           * return type of UE *
           * *
           \************************************/
-          $form['reglasUE'] = '1,2,3,4,5';
+          $form['reglasUE'] = '1,2,3,5';
           $objAllowUE = $this->getObservationAllowUE($form);
 
           if ($objAllowUE) {
