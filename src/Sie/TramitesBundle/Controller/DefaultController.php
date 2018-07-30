@@ -173,15 +173,19 @@ class DefaultController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SieAppWebBundle:Usuario');
         $query = $entity->createQueryBuilder('u')
-                ->select('rt.id, rt.rol, lt.id as rollugarid')
+                ->select('rt.id, rt.rol, lt.id as rollugarid, lnt.orden')
                 ->leftJoin('SieAppWebBundle:UsuarioRol', 'ur', 'WITH', 'u.id=ur.usuario')
                 ->leftJoin('SieAppWebBundle:RolTipo', 'rt', 'WITH', 'ur.rolTipo=rt.id')
                 ->innerJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'ur.lugarTipo=lt.id')
+                ->innerJoin('SieAppWebBundle:LugarNivelTipo', 'lnt', 'WITH', 'lnt.id = lt.lugarNivel')
                 ->where('u.id = :id')
                 ->andwhere('ur.esactivo = true')
+                ->andwhere('u.esactivo = true')
+                ->orderBy('lnt.orden', 'ASC')
                 ->setParameter('id', $id)
                 ->getQuery();
         //print_r($query);die;
+
         try {
             return $query->getResult();
         } catch (\Doctrine\ORM\NoResultException $exc) {
@@ -3151,13 +3155,21 @@ class DefaultController extends Controller {
         //$query->bindValue(':sistema_tipo_id', '{3,10}');
         $query->execute();
         $aMenuUser = $query->fetchAll();
-        $menu = $aMenuUser[0]['get_objeto_menu_path'];
-        $menu = str_replace(array('(', ')', '"'), '', $menu);
-        $aMenu = explode(',', $menu);
-
-        $this->session->set('pMenuId', $aMenu[2]);
-        $this->session->set('pSubMenuId', $aMenu[5]);
-
-        return array('pMenuId' => $aMenu[2], 'pSubMenuId' => $aMenu[5]);
+        if (count($aMenuUser)>0){
+            $menu = $aMenuUser[0]['get_objeto_menu_path'];
+            $menu = str_replace(array('(', ')', '"'), '', $menu);
+            $aMenu = explode(',', $menu);
+            if($aMenu[11]){
+                $this->session->set('pMenuId', $aMenu[2]);
+                $this->session->set('pSubMenuId', $aMenu[5]);
+                return array('pMenuId' => $aMenu[2], 'pSubMenuId' => $aMenu[5]);
+            } else {
+                return array();
+            }
+        } else {
+            return array();
+        }        
     }
+
+    
 }

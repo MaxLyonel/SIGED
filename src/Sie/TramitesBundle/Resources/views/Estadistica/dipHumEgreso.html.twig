@@ -1,0 +1,100 @@
+{% extends "::layoutTramites.html.twig"%}
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block contentBread %}
+    <ol class="breadcrumb">
+        <li>
+            <!-- <i class="fa fa-user"></i> -->
+            <a href="{{path('tramite_homepage')}}">Perfil</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+    </ol>
+{% endblock %}
+
+{% block contentoption %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-sx-12">
+                <div class="panel shadow">
+                        <div class="panel-heading">
+                            <div id="tour-12" class="pull-left">
+                                <h3 class="panel-title"><i class="fa fa-tasks"></i> Diplomas impresos</h3>
+                            </div>
+                            <div class="pull-right">
+                                <div class="btn-green date-picker">
+                                    <form name="formtable" role="form" action="{{ path('tramite_homepage') }}" action="" method="POST" >
+                                        <select class="form-control btn-dpl" name="gestion" onchange="this.form.submit();">
+                                            {% for ges in gestiones %}
+                                                {% if ges.id == gestion %}
+                                                    <option value="{{ ges.id }}" selected>{{ ges.id }}</option>
+                                                {% else %}
+                                                    <option value="{{ ges.id }}">{{ ges.id }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div id="tour-15" style="display: block; min-height: 500px;" class="panel-body">
+                        {% if infoEntidad is defined  %}
+                            {% set count = 0 %}
+                            {% set cantidadTotalGeneral = 0 %}
+                            {% for data in infoEntidad %}
+                                {% set count = count + 1 %}
+                                {% set cantidadReg = data.cantidad_reg %}
+                                {% set cantidadAlt = data.cantidad_alt %}
+                                {% set cantidadTotal = data.cantidad %}
+                                {% if count == 1 %}
+                                    {% set cantidadTotalGeneral = data.cantidad %}
+                                    {% if cantidadTotalGeneral == 0 %}
+                                        {% set cantidadTotalGeneral = 1 %}
+                                    {% endif %}
+                                {% endif %}
+                                {% set porcentajeReg = (cantidadReg * 100 )/ cantidadTotalGeneral %}
+                                {% set porcentajeAlt = (cantidadAlt * 100) / cantidadTotalGeneral %}
+                                {% set id = data.id %}
+                                {% set codigo = data.codigo %}
+                                {% set nombre = data.nombre %}
+                                {% if count == 1 %}
+                                    <span class="text-primary pull-right"><b>{{ cantidadTotal }}</b></span><span class="text-primary"><b>{{ nombre }}</b></span>
+                                    {% if data.cantidad == 0 %}
+                                        <div class="progress progress-xs">
+                                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="0" style="width: 0%">
+                                            </div>
+                                        </div><!-- /.progress -->
+                                    {% else %}
+                                        <div class="progress progress-xs">
+                                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">{{cantidadTotalGeneral}}
+                                            </div>
+                                        </div><!-- /.progress -->
+                                    {% endif %}
+                                {% else %}
+                                    <span class="pull-right" style="width:50px; text-align:right"><b>{{ cantidadTotal }}</b></span><span class="">{{ nombre }}</span>
+                                    <div class="progress progress-xs">
+                                        <div class="progress-bar progress-bar-lilac" style="width: {{ porcentajeReg }}%" title="Técnico Básico - {{ cantidadReg }}">
+                                            <span class="sr-only">{{ porcentajeReg }}%</span>
+                                        </div><!-- /.progress -->
+                                        <div class="progress-bar progress-bar-danger" style="width: {{ porcentajeAlt }}%" title="Técnico Auxiliar - {{ cantidadAlt }}">
+                                            <span class="sr-only">{{ porcentajeAlt }}%</span>
+                                        </div><!-- /.progress -->
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        </div><!-- /.panel-body -->
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+            </div>
+
+        </div><!-- /.row -->
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+    </script>
+{%endblock%}

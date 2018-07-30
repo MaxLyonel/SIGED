@@ -1,0 +1,4 @@
+tramite_estadistica_diploma_humanistico_egreso:
+    path:     /diploma/humanistico/egreso
+    defaults: { _controller: SieTramitesBundle:TramiteEstadistica:dipHumEgreso }
+
