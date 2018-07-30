@@ -589,9 +589,9 @@ class DocumentoController extends Controller {
         if($valSerieAsigando != "" and $msgContenido == ""){
             $msgContenido = ($msgContenido=="") ? $valSerieAsigando : $msgContenido.", ".$valSerieAsigando;
         }
-
+        
         $departamentoCodigo = $this->getCodigoLugarRol($usuarioId,$rolId);
-
+        
         if ($departamentoCodigo == 0 and $msgContenido == ""){
             $msgContenido = ($msgContenido=="") ? "el usuario no cuenta con autorizacion para los documentos" : $msgContenido.", "."el usuario no cuenta con autorizacion para los el documentos ";
         } else {
@@ -1291,6 +1291,7 @@ class DocumentoController extends Controller {
                 try {
                     
                     $msgContenidoDocumento = $this->getDocumentoValidación($numeroSerieSupletorio, '', $fechaActual, $id_usuario, $rolPermitido, 9);
+                    
                     if($msgContenidoDocumento == ""){
                         $idDocumento = $this->setDocumento($codTramite, $id_usuario, 9, $numeroSerieSupletorio, '', $fechaActual); 
                         $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'El certificado supletorio con numero de serie "'.$numeroSerieSupletorio.'" fue generado'));

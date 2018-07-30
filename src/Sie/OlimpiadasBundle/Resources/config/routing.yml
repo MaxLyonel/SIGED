@@ -81,4 +81,6 @@ sie_app_web_olimupfilenota:
     resource: "@SieOlimpiadasBundle/Resources/config/routing/olimUpFileNota.yml"
     prefix:   /upfilenota    
 
-    
+sie_app_web_olimrobotica:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimrobotica.yml"
+    prefix:   /olimRobotica

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<title>Reporte</title>
+	<link href="{{asset('webolimpiadas/assets/global/plugins/bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+	<link href="{{asset('webolimpiadas/assets/global/plugins/bower_components/fontawesome/css/font-awesome.min.css')}}" rel="stylesheet">
+	<link href="{{asset('webolimpiadas/assets/global/plugins/bower_components/animate.css/animate.min.css')}}" rel="stylesheet">
+
+	<link href="{{asset('webolimpiadas/assets/admin/css/reset.css')}}" rel="stylesheet">
+	<link href="{{asset('webolimpiadas/assets/admin/css/components.css')}}" rel="stylesheet">
+</head>
+<body>
+	
+	{% block body %}
+	    
+	{% endblock %}
+
+	<script src="{{asset('webolimpiadas/assets/global/plugins/bower_components/jquery/dist/jquery.min.js')}}"></script>
+	<script src="{{asset('webolimpiadas/assets/global/plugins/bower_components/jquery-cookie/jquery.cookie.js')}}"></script>
+	<script src="{{asset('webolimpiadas/assets/global/plugins/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+	<script src="{{asset('webolimpiadas/assets/global/plugins/bower_components/jquery.inputmask/dist/jquery.inputmask.bundle.min.js')}}"></script>
+	<script src="{{ asset('js/jquery.alphanum.js') }}"></script>
+
+	{% block javascripts %}
+	    
+	{% endblock %}
+</body>
+</html>
