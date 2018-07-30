@@ -58,7 +58,8 @@ class OlimGestionArchivosController extends Controller {
 		
 		return $this->render('SieOlimpiadasBundle:OlimGestionArchivos:index.html.twig', array(
 			'grupos'=>$grupos,
-			'materia'=>$materia
+			'materia'=>$materia,
+			'gestion'=>$gestion
 		));
 	}
 

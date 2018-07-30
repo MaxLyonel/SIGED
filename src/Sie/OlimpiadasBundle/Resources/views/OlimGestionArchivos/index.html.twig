@@ -64,7 +64,7 @@
 					    				    	<td>
 					    				    		{% if grupo.documentoPdf1 != '' %}
 					    				    			{# <embed src="http://olimpiada.sie.gob.bo/uploads/olimpiadas/documentos/{{grupo.documentoPdf1}}" width="500px" height="600px"></embed> #}
-					    				    			<a class="btn btn-primary btn-xs" target="_blank" href="http://olimpiada.sie.gob.bo/uploads/olimpiadas/documentos/{{grupo.documentoPdf1}}"> <i class="fa fa-file-pdf-o fa-1x"></i> <b> Abrir archivo </b> </a>
+					    				    			<a class="btn btn-primary btn-xs" target="_blank" href="http://olimpiada.sie.gob.bo/uploads/olimpiadas/documentos/{{gestion}}/{{grupo.sie}}/{{grupo.documentoPdf1}}"> <i class="fa fa-file-pdf-o fa-1x"></i> <b> Abrir archivo </b> </a>
 					    				    		{% else %}
 					    				    			<span class="text-danger">No subido !!!</span>
 					    				    			{# <button class="btn btn-default" type="button" onclick="abrir()">Subir</button> #}
