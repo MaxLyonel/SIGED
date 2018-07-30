@@ -1,0 +1,9 @@
+olimrobotica_index:
+    path:     /
+    defaults: { _controller: "SieOlimpiadasBundle:OlimRobotica:index" }
+
+olimrobotica_findGrupo:
+    path:     /findGrupo
+    defaults: { _controller: "SieOlimpiadasBundle:OlimRobotica:findEstudiante" }
+    options:
+        expose: true

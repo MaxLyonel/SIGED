@@ -21,12 +21,16 @@ class OlimArchivoController extends Controller {
 
 		$em = $this->getDoctrine()->getManager();
 		$grupo = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->find($id);
+		$sie = $grupo->getOlimTutor()->getInstitucioneducativa()->getId();
+		$gestion = $grupo->getGestionTipoId();
 
 		return $this->render('SieOlimpiadasBundle:OlimArchivo:index.html.twig', array(
 			'id'=>$id,
 			// 'path'=> $this->get('kernel')->getRootDir() . '/../web/manual_olimpiadas.pdf'
 			'path'=> $loader,
-			'grupo'=> $grupo
+			'grupo'=> $grupo,
+			'sie'=> $sie,
+			'gestion' => $gestion
 		));
 	}
 
@@ -48,22 +52,26 @@ class OlimArchivoController extends Controller {
 		    $gestion = $grupo->getGestionTipoId();
 		    $grupoId = $grupo->getId();
 
-		    $ruta = $this->get('kernel')->getRootDir() . '/../web/uploads/olimpiadas/documentos';
-
 		    /**
 		     * Verificamos si existe el archivo para eliminarlo
 		     */
-		    if ($grupo->getDocumentoPdf1() != "" and $grupo->getDocumentoPdf1() != null) {
-		    	$nombreAnterior = $ruta.'/'.$grupo->getDocumentoPdf1();
-		    	unlink($nombreAnterior);	
-		    }
+		    // if ($grupo->getDocumentoPdf1() != "" and $grupo->getDocumentoPdf1() != null) {
+		    // 	$nombreAnterior = $ruta.'/'.$grupo->getDocumentoPdf1();
+		    // 	unlink($nombreAnterior);
+		    // }
 
 
 		    $tipo = explode('/',$_FILES['archivo']['type']);
 
+		    $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/olimpiadas/documentos/'. $gestion. '/' . $sie;
+		    if (!file_exists($directorio)) {
+		        mkdir($directorio, 0777, true);
+		    }
+
+		    $ruta = $directorio; //$this->get('kernel')->getRootDir() . '/../web/uploads/olimpiadas/documentos';
 
 		    // $nombre_archivo = md5(uniqid()).'.'.$tipo[1];
-		    $nombre_archivo = $sie.'_'.$gestion.'_'.$grupoId.'.pdf';
+		    $nombre_archivo = $sie.'_'.$grupoId.'_'.date('Y_m_d_H_i_s').'.pdf';
 		    $archivador = $ruta.'/'.$nombre_archivo;
 		    //unlink($archivador);
 		    if(move_uploaded_file($_FILES['archivo']['tmp_name'], $archivador)){
@@ -105,7 +113,13 @@ class OlimArchivoController extends Controller {
 		$id = $request->get('id');
 		$em = $this->getDoctrine()->getManager();
 		$grupo = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->find($id);
+		$sie = $grupo->getOlimTutor()->getInstitucioneducativa()->getId();
+		$gestion = $grupo->getGestionTipoId();
 
-		return $this->render('SieOlimpiadasBundle:OlimArchivo:actualizar.html.twig', array('grupo'=>$grupo));
+		return $this->render('SieOlimpiadasBundle:OlimArchivo:actualizar.html.twig', array(
+			'grupo'=>$grupo,
+			'sie'=>$sie,
+			'gestion'=>$gestion
+		));
 	}
 }
