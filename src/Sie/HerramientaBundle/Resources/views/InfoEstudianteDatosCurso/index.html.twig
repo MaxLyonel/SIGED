@@ -19,6 +19,9 @@
 		font-weight: bold;
 		font-size: 1.2em;
 	}
+	.tarjeta .row{
+		margin: 0px;
+	}
 
 </style>
 <div class="modal-dialog">
@@ -77,7 +80,7 @@
 							</div>
 							<div class="row">
 								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-									<p>3. Lengua menos hablada (pocp frecuente)</p>
+									<p>3. Lengua menos hablada (poco frecuente)</p>
 								</div>
 								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 									{{ form_widget(form.idiomaMenHabladoTipo, {'attr':{'class':'form-control chosen-select'} }) }}
@@ -115,7 +118,7 @@
 							<h5>3. DESAYUNO ESCOLAR</h5>
 							<div class="row">
 								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-									<p>¿Se porporciona desayuno escolar al curso?</p>
+									<p>¿Se proporciona desayuno escolar al curso?</p>
 								</div>
 								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 									{{ form_widget(form.desayunoEscolar, {'attr':{'class':''} }) }}
