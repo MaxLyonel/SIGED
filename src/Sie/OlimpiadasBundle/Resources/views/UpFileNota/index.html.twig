@@ -130,7 +130,11 @@
     {{parent()}}
     <script type="text/javascript" charset="utf-8" >
     var upfilecsv = function(){
-
+	if($('#upfile').val==''){
+		alert('Debe seleccionar un archivo para subir...');
+		return false;
+	}
+	
 	var formData = new FormData(document.getElementById("formArchivo"));
 			$.ajax({
 				type: 'post',
