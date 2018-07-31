@@ -1,0 +1,20 @@
+Sie\AppWebBundle\Entity\WfCompuerta:
+    type: entity
+    table: wf_compuerta
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nombre:
+            type: string
+            nullable: false
+            length: 50
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

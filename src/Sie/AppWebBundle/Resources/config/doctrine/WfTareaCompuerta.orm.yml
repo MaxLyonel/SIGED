@@ -1,0 +1,52 @@
+Sie\AppWebBundle\Entity\WfTareaCompuerta:
+    type: entity
+    table: wf_tarea_compuerta
+    indexes:
+        IDX_65EE9F5D352DFAAE:
+            columns:
+                - wf_compuerta_id
+        IDX_65EE9F5DEDC78DDF:
+            columns:
+                - flujo_proceso_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        condicion:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        condicionTareaSiguiente:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: condicion_tarea_siguiente
+    manyToOne:
+        wfCompuerta:
+            targetEntity: WfCompuerta
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                wf_compuerta_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        flujoProceso:
+            targetEntity: FlujoProceso
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                flujo_proceso_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
