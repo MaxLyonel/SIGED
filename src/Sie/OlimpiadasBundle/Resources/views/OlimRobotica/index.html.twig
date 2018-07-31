@@ -25,7 +25,7 @@
     </style>
     <div class="container">
         <br>
-        <h3 class="text-primary"> <i class="fa fa-file-o"></i> Verificar inscripción</h3>
+        <h3 class="text-primary"> <i class="fa fa-file-o"></i> Robótica: Actualizar categoría</h3>
         <nav class="navbar navbar-default" role="navigation">
             <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
@@ -50,6 +50,7 @@
                             {{ form_widget(form.carnetEstudiante, {'attr':{'class':'form-control','placeholder':'Carnet o RUDE Estudiante','autocomplete':'off'} }) }}
                             {{ form_widget(form.complementoEstudiante, {'attr':{'class':'form-control','placeholder':'Complemento Estudiante','autocomplete':'off','data-toggle':'tooltip','data-placement':'top', 'data-original-title':'Complemento Estudiante'} }) }}
                             {{ form_widget(form.fechaNacimientoEstudiante, {'attr':{'class':'form-control','placeholder':'Fecha Nac. Estudiante','autocomplete':'off'} }) }}
+                            <br />
                             {{ form_widget(form.carnetTutor, {'attr':{'class':'form-control','placeholder':'Carnet Tutor','autocomplete':'off'} }) }}
                             {{ form_widget(form.complementoTutor, {'attr':{'class':'form-control','placeholder':'Complemento Tutor','autocomplete':'off','data-toggle':'tooltip','data-placement':'top', 'data-original-title':'Complemento Tutor'} }) }}
                             {{ form_widget(form.fechaNacimientoTutor, {'attr':{'class':'form-control','placeholder':'Fecha Nac. Tutor','autocomplete':'off'} }) }}
@@ -130,36 +131,16 @@
                                     <thead>
                                         <tr>
                                             <th>Área</th>
-                                            <th>Año de escolaridad</th>
                                             <th>Categoría</th>
                                             <th>Equipo</th>
-                                            <th>Discapacidad del estudiante</th>
-                                            <th>Tutor</th>
-                                            {# <th></th> #}
+                                            <th>Proyecto</th>
+                                            <th>Nombre Estudiante</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {% for item in array %}
                                             <tr>
                                                 <td><strong>{{ item.regla.olimMateriaTipo.materia }}</strong></td>
-                                                <td>
-                                                    {% if item.superior %}
-                                                        {{ item.superior.gradoTipo.id }}
-                                                        {% if item.superior.nivelTipo.id == 12 %}
-                                                            Primaria
-                                                        {% else %}
-                                                            Secundaria
-                                                        {% endif %}
-                                                    {% else %}        
-                                                        {{ item.inscripcion.estudianteInscripcion.institucioneducativaCurso.gradoTipo.id }}  
-                                                        {% if item.inscripcion.estudianteInscripcion.institucioneducativaCurso.nivelTipo.id == 12 %}
-                                                            Primaria
-                                                        {% else %}
-                                                            Secundaria
-                                                        {% endif %}
-                                                    {% endif %}
-
-                                                </td>
                                                 <td>{{ item.regla.categoria }}</td>
                                                 <td>
                                                     {% if item.tipo == 'Grupo' %}
@@ -167,45 +148,17 @@
                                                     {% endif %}
                                                 </td>
                                                 <td>
-                                                    {% if item.inscripcion.discapacidadTipo %}
-                                                        {{ item.inscripcion.discapacidadTipo.discapacidad }}
-                                                    {% else %}
-                                                        Ninguna
+                                                    {% if item.tipo == 'Grupo' %}
+                                                        {% if item.grupo[0].nombreProyecto %}
+                                                            {{ item.grupo[0].nombreProyecto }}
+                                                        {% else %}
+                                                            ---
+                                                        {% endif %}
                                                     {% endif %}
                                                 </td>
                                                 <td>
-                                                    {% if item.tipo == 'Grupo' %}
-                                                        {% if item.grupo[0].olimTutor != null %}
-                                                            {{ item.grupo[0].olimTutor.persona.nombre }} {{ item.grupo[0].olimTutor.persona.paterno }} {{ item.grupo[0].olimTutor.persona.materno }}
-                                                        {% endif %}
-                                                    {% else %}
-                                                        {% if item.tutor != null %}
-                                                            {{ item.tutor.persona.nombre }} {{ item.tutor.persona.paterno }} {{ item.tutor.persona.materno }}    
-                                                        {% endif %}
-                                                    {% endif %}
+                                                    {{item.estudiante.nombre}}
                                                 </td>
-                                                {# <td>
-                                                    {% if item.mostrar %}
-                                                        
-                                                        <div class="form-group formulario">
-                                                            <label for="">¿Como dará el examen de la {{ item.registroNota.olimEtapaTipo.id + 1 }}º etapa?</label>
-                                                            <select class="seleccionModalidad form-control" data-registro="{{ item.registroNota.id }}">
-                                                                {% for modalidad in item.modalidades %} 
-                                                                    {% set selected = '' %}            
-                                                                    {% if item.registroNota.olimModalidadTipo is not null %}
-                                                                        {% if modalidad.olimModalidadTipo.id == item.registroNota.olimModalidadTipo.id %}
-                                                                            {% set selected = 'selected' %}
-                                                                        {% endif %}
-                                                                    {% endif %}
-                                                                    
-                                                                    <option value="{{modalidad.olimModalidadTipo.id}}" {{ selected }} >{{ modalidad.olimModalidadTipo.modalidad }}</option>
-                                                                    
-                                                                {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                        
-                                                    {% endif %}
-                                                </td> #}
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -213,12 +166,12 @@
                             </div>
                             <br>
                             <div class="row">
-                                <div class="col-lg-12 text-center form-group formulario">
-                                    {{ form_start(formCategoria, {'attr':{'style':'display:inline-block;', 'role':'save', 'onsubmit': 'return actualizarCategoria();'} })}}
+                                <div class="form-group formulario text-center">
+                                    {{form_start(formCategoria)}}
                                         {{form_label(formCategoria.reglasTipo)}}
-                                        {{form_widget(formCategoria.reglasTipo, {'attr':{'class':'seleccionModalidad'} })}}
-                                    {{ form_end(formCategoria)}}
-                                    <button id="btnGuardar" type="submit" class="btn btn-success" style="display:inline-block;"> <i id="iconGuardar" class="fa fa-save"></i> <span id="textGuardar"></span> </button>
+                                        {{form_widget(formCategoria.reglasTipo, {'attr':{'class':'seleccionCategoria'} })}}
+                                        <button id="btnGuardar" type="button" class="btn btn-success"> <i id="iconGuardar" class="fa fa-save"></i> <span id="textGuardar"></span> </button>
+                                    {{form_end(formCategoria)}}
                                 </div>
                             </div>
                             
@@ -305,14 +258,14 @@
             return false;
         }
 
-        $('#btnGuardar').on('click', function(grupoProyectoId){
-
-            var categoriaId = $(this).attr('data-registro');
+        $('#btnGuardar').on('click', function(){
+            var grupoProyectoId = $('#form_grupoProyectoId').val();
+            var categoriaId = document.getElementById("form_reglasTipo").value;
 
             var imagen = '{{ asset("img/loading96.gif") }}';
 
             $.ajax({
-                url: Routing.generate('olimreporte_actualizarCategoria', {grupoProyectoId: grupoProyectoId, categoriaId: categoriaId}),
+                url: Routing.generate('olimrobotica_actualizarCategoria', {grupoProyectoId: grupoProyectoId, categoriaId: categoriaId}),
                 type: 'GET',
                 beforeSend: function(){
                     swal({
@@ -323,13 +276,17 @@
                 },
                 success: function(data){
                     if(data.status == 200){
-                        swal("Registro actualizado!", "La modalidad ya fue actualizada!", "success");
+                        swal("¡Registro actualizado!", data.mensaje, "success").then(okay => {
+                            if(okay){
+                                location.reload();
+                            }
+                        });
                     }else{
-                        swal("Error al actualizar!", "No se pudo actualizar la información!", "warning");
+                        swal("¡Error al actualizar!", data.mensaje, "warning");
                     }
                 },
                 error: function(data){
-                    swal("Error al actualizar", "La modalidad ya fue actualizada!", "danger");
+                    swal("¡Error al actualizar!", data.mensaje, "danger");
                 }
             });
         });

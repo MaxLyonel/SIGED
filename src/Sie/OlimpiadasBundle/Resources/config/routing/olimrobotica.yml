@@ -7,3 +7,9 @@ olimrobotica_findGrupo:
     defaults: { _controller: "SieOlimpiadasBundle:OlimRobotica:findEstudiante" }
     options:
         expose: true
+
+olimrobotica_actualizarCategoria:
+    path:     /actualizarCategoria/{grupoProyectoId}/{categoriaId}
+    defaults: { _controller: "SieOlimpiadasBundle:OlimRobotica:actualizarCategoria" }
+    options:
+        expose: true
