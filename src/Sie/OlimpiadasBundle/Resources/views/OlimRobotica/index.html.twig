@@ -70,8 +70,8 @@
         </nav>
 
 
-	    {% if estudiante is defined %}
-			{% if estudiante is null %}
+	    {% if estudiante is defined and tutor is defined %}
+			{% if estudiante is null or tutor is null%}
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                         <h3 class="panel-title"> <i class="fa fa-search"></i> Resultado de la busqueda</h3>
