@@ -72,11 +72,10 @@ class TramiteEstadisticaController extends Controller {
 
 		if ($request->isMethod('POST')) {
 			$gestion = $request->get('gestion');
-			$lugarNivel = $request->get('lugarNivel');
-			$lugar = $request->get('lugar');	
+			$lugarNivel = base64_decode($request->get('nivel'));
+			$lugar = base64_decode($request->get('codigo'));	
 		} else {
-			$gestion = $request->get('gestion');
-
+			$gestion = $gestionActual;
 			$entidadUsuarioRol = $defaultTramiteController->getUserRoles($id_usuario);	
 			if(!empty($entidadUsuarioRol)){
 				$em = $this->getDoctrine()->getManager();
@@ -89,23 +88,41 @@ class TramiteEstadisticaController extends Controller {
 			}	
 		}
 		
-		$entidad = $this->buscaDipHumGestionEgreso($lugarNivel,$lugar,$gestionActual);
+		$entidad = $this->buscaDipHumGestionEgreso($lugarNivel,$lugar,$gestion);
 		
-		$entityGestion = $defaultTramiteController->getGestiones($gestionActual);
-		
-    		return $this->render($this->session->get('pathSystem') . ':Estadistica:dipHumEgreso.html.twig', array(
+		$entityGestion = $defaultTramiteController->getGestiones(2009);
+
+		$total_general = 0;
+		foreach ($entidad as $key => $dato) {
+			$total_general = $total_general + $dato['cantidad'];
+		}
+
+		if(count($entidad)>0 and isset($entidad)){
+            foreach ($entidad as $key => $dato) {
+                $entidad[$key]['total_general'] = $total_general;
+            }
+		} 
+
+		if(count($entidad)>0){
+			return $this->render($this->session->get('pathSystem') . ':Estadistica:dipHumEgreso.html.twig', array(
 				'infoEntidad'=>$entidad,
-                'gestiones'=>$entityGestion,
-                'gestion'=>$gestionActual,
-    		)); 
+				'gestiones'=>$entityGestion,
+				'gestion'=>$gestion,
+			)); 
+		} else {
+			return $this->render($this->session->get('pathSystem') . ':Estadistica:dipHumEgreso.html.twig', array(
+				'gestiones'=>$entityGestion,
+				'gestion'=>$gestion,
+			)); 
+		}		
 	}
 	
 	public function buscaDipHumGestionEgreso($lugarNivel,$lugar,$gestion) {
-		$em = $this->getDoctrine()->getManager();		
-		
+		$em = $this->getDoctrine()->getManager();	
 		if ($lugarNivel == 1) {
 			$queryEntidad = $em->getConnection()->prepare("
 				select 'Departamentos' as nombre_nivel, ie.departamento_id as id, ie.departamento_codigo as codigo, ie.departamento as nombre
+				, ".$lugarNivel." as nivel_id, 2 as siguiente_nivel_id, '".$lugar."' as lugar_codigo
 				, sum(case iec.nivel_tipo_id when 3 then 1 when 13 then 1 else 0 end) cantidad_reg
 				, sum(case iec.nivel_tipo_id when 5 then 1 when 15 then 1 else 0 end) cantidad_alt
 				, count(d.id) as cantidad
@@ -126,13 +143,14 @@ class TramiteEstadisticaController extends Controller {
 				inner join (SELECT id, codigo, lugar, lugar_tipo_id FROM lugar_tipo WHERE lugar_nivel_id = 1) dep ON dep.id = pro.lugar_tipo_id		
 				inner join (SELECT id, codigo, lugar, lugar_tipo_id FROM lugar_tipo WHERE lugar_nivel_id = 7) dis ON dis.id = jg.lugar_tipo_id_distrito
 				) as ie on ie.institucioneducativa_id = iec.institucioneducativa_id
-				where iec.gestion_tipo_id = 2017::double precision and iec.nivel_tipo_id in (3,13,5,15) and d.documento_tipo_id in (1,6,7,8) and d.documento_estado_id = 1 -- and ie.departamento_codigo = '1'
+				where iec.gestion_tipo_id = ".$gestion."::double precision and iec.nivel_tipo_id in (3,13,5,15) and d.documento_tipo_id in (1,3,4,5) and d.documento_estado_id = 1 -- and ie.departamento_codigo = '1'
 				group by ie.departamento_id, ie.departamento_codigo, ie.departamento 
 				order by ie.departamento_id
             ");
 		} elseif ($lugarNivel == 2) {
 			$queryEntidad = $em->getConnection()->prepare("
 				select 'Distritos Educativos' as nombre_nivel, ie.distrito_id as id, ie.distrito_codigo as codigo, ie.distrito as nombre
+				, ".$lugarNivel." as nivel_id, 7 as siguiente_nivel_id, '".$lugar."' as lugar_codigo
 				, sum(case iec.nivel_tipo_id when 3 then 1 when 13 then 1 else 0 end) cantidad_reg
 				, sum(case iec.nivel_tipo_id when 5 then 1 when 15 then 1 else 0 end) cantidad_alt
 				, count(d.id) as cantidad
@@ -153,14 +171,15 @@ class TramiteEstadisticaController extends Controller {
 				inner join (SELECT id, codigo, lugar, lugar_tipo_id FROM lugar_tipo WHERE lugar_nivel_id = 1) dep ON dep.id = pro.lugar_tipo_id		
 				inner join (SELECT id, codigo, lugar, lugar_tipo_id FROM lugar_tipo WHERE lugar_nivel_id = 7) dis ON dis.id = jg.lugar_tipo_id_distrito
 				) as ie on ie.institucioneducativa_id = iec.institucioneducativa_id
-				where iec.gestion_tipo_id = ".$gestion."::double precision and iec.nivel_tipo_id in (3,13,5,15) and ie.departamento_codigo = '".$lugar."' and d.documento_tipo_id in (1,6,7,8) and d.documento_estado_id = 1
+				where iec.gestion_tipo_id = ".$gestion."::double precision and iec.nivel_tipo_id in (3,13,5,15) and ie.departamento_codigo = '".$lugar."' and d.documento_tipo_id in (1,3,4,5) and d.documento_estado_id = 1
 				group by ie.distrito_id, ie.distrito_codigo, ie.distrito 
 				order by ie.distrito_id 
             ");
 				
 		} elseif ($lugarNivel == 7) {
 			$queryEntidad = $em->getConnection()->prepare("
-				select 'U.E./C.E.A.' as nombre_nivel, ie.id as id, ie.id as codigo, ie.institucioneducativa as nombre
+				select 'U.E./C.E.A.' as nombre_nivel, ie.id as id, ie.id as codigo, ie.institucioneducativa as nombre, ".$lugarNivel." as nivel_id
+				, 0 as siguiente_nivel_id, '".$lugar."' as lugar_codigo
 				, sum(case iec.nivel_tipo_id when 3 then 1 when 13 then 1 else 0 end) cantidad_reg
 				, sum(case iec.nivel_tipo_id when 5 then 1 when 15 then 1 else 0 end) cantidad_alt
 				, count(d.id) as cantidad
@@ -171,13 +190,14 @@ class TramiteEstadisticaController extends Controller {
 				inner join institucioneducativa as ie on ie.id = iec.institucioneducativa_id
 				inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
 				inner join (SELECT id, codigo, lugar, lugar_tipo_id FROM lugar_tipo WHERE lugar_nivel_id = 7) dis ON dis.id = jg.lugar_tipo_id_distrito
-				where iec.gestion_tipo_id = ".$gestion."::double precision and iec.nivel_tipo_id in (3,13,5,15) and dis.codigo = '".$lugar."' and d.documento_tipo_id in (1,6,7,8) and d.documento_estado_id = 1
+				where iec.gestion_tipo_id = ".$gestion."::double precision and iec.nivel_tipo_id in (3,13,5,15) and dis.codigo = '".$lugar."' and d.documento_tipo_id in (1,3,4,5) and d.documento_estado_id = 1
 				group by ie.id, ie.institucioneducativa
 				order by ie.id
             ");
 		} else {
 			$queryEntidad = $em->getConnection()->prepare("
 				select 'Departamentos' as nombre_nivel, ie.departamento_id as id, ie.departamento_codigo as codigo, ie.departamento as nombre
+				, ".$lugarNivel." as nivel_id, 2 as siguiente_nivel_id, '".$lugar."' as lugar_codigo
 				, sum(case iec.nivel_tipo_id when 3 then 1 when 13 then 1 else 0 end) cantidad_reg
 				, sum(case iec.nivel_tipo_id when 5 then 1 when 15 then 1 else 0 end) cantidad_alt
 				, count(d.id) as cantidad
@@ -198,7 +218,7 @@ class TramiteEstadisticaController extends Controller {
 				inner join (SELECT id, codigo, lugar, lugar_tipo_id FROM lugar_tipo WHERE lugar_nivel_id = 1) dep ON dep.id = pro.lugar_tipo_id		
 				inner join (SELECT id, codigo, lugar, lugar_tipo_id FROM lugar_tipo WHERE lugar_nivel_id = 7) dis ON dis.id = jg.lugar_tipo_id_distrito
 				) as ie on ie.institucioneducativa_id = iec.institucioneducativa_id
-				where iec.gestion_tipo_id = 2017::double precision and iec.nivel_tipo_id in (3,13,5,15) and d.documento_tipo_id in (1,6,7,8) and d.documento_estado_id = 1 -- and ie.departamento_codigo = '1'
+				where iec.gestion_tipo_id = ".$gestion."::double precision and iec.nivel_tipo_id in (3,13,5,15) and d.documento_tipo_id in (1,3,4,5) and d.documento_estado_id = 1 -- and ie.departamento_codigo = '1'
 				group by ie.departamento_id, ie.departamento_codigo, ie.departamento 
 				order by ie.departamento_id
             ");		

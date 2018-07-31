@@ -144,7 +144,7 @@ class DefaultController extends Controller {
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
-    // Funcion que muestra los roles del usuario
+    // Funcion que muestra las gestion mayores e iguales al parametro enviado
     // PARAMETROS: gestionId (gestion cuando se inicio el sistema)
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
@@ -181,7 +181,8 @@ class DefaultController extends Controller {
                 ->where('u.id = :id')
                 ->andwhere('ur.esactivo = true')
                 ->andwhere('u.esactivo = true')
-                ->orderBy('lnt.orden', 'ASC')
+                ->addOrderBy('lnt.orden', 'ASC')
+                ->addOrderBy('rt.id', 'DESC')
                 ->setParameter('id', $id)
                 ->getQuery();
         //print_r($query);die;

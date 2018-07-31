@@ -1193,7 +1193,7 @@ class DocumentoController extends Controller {
             }
 
             // $msgContenido = "";
-            if($msgContenido == ""){
+            if($msgContenido != ""){
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msgContenido));
                 return $this->redirectToRoute('tramite_documento_supletorio');
             }
@@ -1205,7 +1205,7 @@ class DocumentoController extends Controller {
             if ($msgvalidaNumeroSerieTipoDocumento != ""){
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msgvalidaNumeroSerieTipoDocumento));
                 return $this->redirectToRoute('tramite_documento_supletorio');
-            }  
+            } 
 
             $entityDocumentoDetalle = $this->getDocumentoSupletorioDetalle($entityDocumento['tramite']);
             

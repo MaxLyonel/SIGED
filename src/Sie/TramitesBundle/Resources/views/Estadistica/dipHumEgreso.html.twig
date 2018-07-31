@@ -15,7 +15,7 @@
 
 {% block contentoption %}
     <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-sx-12">
+        <div class="col-lg-8 col-md-8 col-sm-12 col-sx-12 col-lg-offset-2 col-md-offset-2">
                 <div class="panel shadow">
                         <div class="panel-heading">
                             <div id="tour-12" class="pull-left">
@@ -23,17 +23,21 @@
                             </div>
                             <div class="pull-right">
                                 <div class="btn-green date-picker">
-                                    <form name="formtable" role="form" action="{{ path('tramite_homepage') }}" action="" method="POST" >
-                                        <select class="form-control btn-dpl" name="gestion" onchange="this.form.submit();">
-                                            {% for ges in gestiones %}
-                                                {% if ges.id == gestion %}
-                                                    <option value="{{ ges.id }}" selected>{{ ges.id }}</option>
-                                                {% else %}
-                                                    <option value="{{ ges.id }}">{{ ges.id }}</option>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </select>
-                                    </form>
+                                    {% if infoEntidad is defined  %}
+                                        <form name="form" role="form" action="{{ path('tramite_estadistica_diploma_humanistico_egreso') }}" action="" method="POST" >
+                                            <input type="hidden" name="codigo" id="codigo" value="{{infoEntidad[0]['lugar_codigo']|base64_encode }}" />
+                                            <input type="hidden" name="nivel" id="nivel" value="{{infoEntidad[0]['nivel_id']|base64_encode}}" />
+                                            <select class="form-control btn-dpl" name="gestion" onchange="this.form.submit();">
+                                                {% for ges in gestiones %}
+                                                    {% if ges.id == gestion %}
+                                                        <option value="{{ ges.id }}" selected>{{ ges.id }}</option>
+                                                    {% else %}
+                                                        <option value="{{ ges.id }}">{{ ges.id }}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </form>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="clearfix"></div>
@@ -48,39 +52,44 @@
                                 {% set cantidadAlt = data.cantidad_alt %}
                                 {% set cantidadTotal = data.cantidad %}
                                 {% if count == 1 %}
-                                    {% set cantidadTotalGeneral = data.cantidad %}
+                                    {% set cantidadTotalGeneral = data.total_general %}
                                     {% if cantidadTotalGeneral == 0 %}
                                         {% set cantidadTotalGeneral = 1 %}
                                     {% endif %}
                                 {% endif %}
-                                {% set porcentajeReg = (cantidadReg * 100 )/ cantidadTotalGeneral %}
-                                {% set porcentajeAlt = (cantidadAlt * 100) / cantidadTotalGeneral %}
+                                {% set porcentajeReg = (cantidadReg * 100 )/ cantidadTotal %}
+                                {% set porcentajeAlt = (cantidadAlt * 100) / cantidadTotal %}
                                 {% set id = data.id %}
                                 {% set codigo = data.codigo %}
-                                {% set nombre = data.nombre %}
-                                {% if count == 1 %}
-                                    <span class="text-primary pull-right"><b>{{ cantidadTotal }}</b></span><span class="text-primary"><b>{{ nombre }}</b></span>
-                                    {% if data.cantidad == 0 %}
-                                        <div class="progress progress-xs">
-                                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="0" style="width: 0%">
-                                            </div>
-                                        </div><!-- /.progress -->
-                                    {% else %}
-                                        <div class="progress progress-xs">
-                                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">{{cantidadTotalGeneral}}
-                                            </div>
-                                        </div><!-- /.progress -->
-                                    {% endif %}
-                                {% else %}
-                                    <span class="pull-right" style="width:50px; text-align:right"><b>{{ cantidadTotal }}</b></span><span class="">{{ nombre }}</span>
-                                    <div class="progress progress-xs">
-                                        <div class="progress-bar progress-bar-lilac" style="width: {{ porcentajeReg }}%" title="Técnico Básico - {{ cantidadReg }}">
+                                {% set nombre = data.nombre %} 
+                                {% if infoEntidad[0]['siguiente_nivel_id'] == 0  %}                                
+                                    <span class="pull-right" style="width:50px; text-align:right"><b>{{ cantidadTotal }}</b></span><span class="">{{ id }} - {{ nombre }}</span>                                          
+                                    <div class="progress progress-md">
+                                        <div class="progress-bar progress-bar-lilac" style="width: {{ porcentajeReg }}%" title="Educación Regular - {{ cantidadReg }}">
                                             <span class="sr-only">{{ porcentajeReg }}%</span>
                                         </div><!-- /.progress -->
-                                        <div class="progress-bar progress-bar-danger" style="width: {{ porcentajeAlt }}%" title="Técnico Auxiliar - {{ cantidadAlt }}">
+                                        <div class="progress-bar progress-bar-danger" style="width: {{ porcentajeAlt }}%" title="Educación Alternativa  - {{ cantidadAlt }}">
                                             <span class="sr-only">{{ porcentajeAlt }}%</span>
                                         </div><!-- /.progress -->
                                     </div>
+                                {% else %}                                
+                                    <form role="form" action="{{ path('tramite_estadistica_diploma_humanistico_egreso') }}" method="POST"> 
+                                        <input type="hidden" name="codigo" id="codigo" value="{{data.codigo|base64_encode }}" />
+                                        <input type="hidden" name="nivel" id="nivel" value="{{(data.siguiente_nivel_id)|base64_encode}}" />
+                                        <input type="hidden" name="gestion" id="gestion" value="{{gestion}}" />
+                                        <button type="submit" id="submit{{id}}" style="display:none;"></button>
+                                        <a href="javascript:;" class="text-inverse" style="text-decoration:none;" onclick="$('#submit{{id}}').click();">
+                                                <span class="pull-right" style="width:50px; text-align:right"><b>{{ cantidadTotal }}</b></span><span class="">{{ nombre }}</span>
+                                        </a>                                             
+                                        <div class="progress progress-md">
+                                            <div class="progress-bar progress-bar-lilac" style="width: {{ porcentajeReg }}%" title="Educación Regular - {{ cantidadReg }}">
+                                                <span class="sr-only">{{ porcentajeReg }}%</span>
+                                            </div><!-- /.progress -->
+                                            <div class="progress-bar progress-bar-danger" style="width: {{ porcentajeAlt }}%" title="Educación Alternativa  - {{ cantidadAlt }}">
+                                                <span class="sr-only">{{ porcentajeAlt }}%</span>
+                                            </div><!-- /.progress -->
+                                        </div>
+                                    </form>                                    
                                 {% endif %}
                             {% endfor %}
                         {% endif %}
