@@ -102,6 +102,17 @@ class OlimRoboticaController extends Controller{
                     foreach ($inscripcionesOlim as $io) {
                         $array[$cont]['inscripcion'] = $io;
                         $array[$cont]['regla'] = $io->getOlimReglasOlimpiadasTipo();
+                        // ESTUDIANTES
+                        $estudianteOlim = $em->createQueryBuilder()
+                            ->select('e')
+                            ->from('SieAppWebBundle:Estudiante','e')
+                            ->leftJoin('SieAppWebBundle:EstudianteInscripcion','ei','with','ei.estudiante = e.id')
+                            ->leftJoin('SieAppWebBundle:OlimEstudianteInscripcion','oei','with','oei.estudianteInscripcion = ei.id')
+                            ->where('oei.id = :oeinscrip')
+                            ->setParameter('oeinscrip', $io)
+                            ->getQuery()
+                            ->getResult();
+                        $array[$cont]['estudiante'] = $estudianteOlim[0];
                         // NIVELES
                         $primaria = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasNivelGradoTipo')->findBy(array(
                             'olimReglasOlimpiadasTipo'=>$io->getOlimReglasOlimpiadasTipo()->getId(), 'nivelTipo'=>12
@@ -207,7 +218,7 @@ class OlimRoboticaController extends Controller{
                 $categorias[$value->getId()] = $value->getCategoria();
             }
 
-            $formCategoria = $this->createFormularioCategoria($categorias,$grupoProyecto);
+            $formCategoria = $this->createFormularioCategoria($categorias,$grupoProyecto,$array[0]['regla']->getId());
 
             return $this->render('SieOlimpiadasBundle:OlimRobotica:index.html.twig', array(
                 'form'=>$form->createView(),
@@ -235,31 +246,66 @@ class OlimRoboticaController extends Controller{
         return $form;
     }
 
-    private function createFormularioCategoria($categorias,$grupoProyecto){
+    private function createFormularioCategoria($categorias,$grupoProyecto,$categoriaActual){
         $form = $this->createFormBuilder()
                     ->add('grupoProyectoId', 'hidden', array('data' => $grupoProyecto[0]['id']))
-                    ->add('reglasTipo', 'choice', array('label' => 'Seleccionar categoría:', 'required' => true, 'choices' => $categorias))
+                    ->add('reglasTipo', 'choice', array('label' => 'Modificar categoría:', 'required' => true, 'choices' => $categorias, 'data' => $categoriaActual))
                     ->getForm();
 
         return $form;
     }
 
-    public function actualizarCategoriaAction($registroId, $modalidadId){
+    public function actualizarCategoriaAction($grupoProyectoId, $categoriaId){
         $em = $this->getDoctrine()->getManager();
-        $registro = $em->getRepository('SieAppWebBundle:OlimEstudianteNotaPrueba')->find($registroId);
-        if($registro){
-            $registro->setOlimModalidadTipo($em->getRepository('SieAppWebBundle:OlimModalidadTipo')->find($modalidadId));
-            $em->persist($registro);
-            $em->flush();
-            $status = 200;
+        $grupoProyecto = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->find($grupoProyectoId);
+
+        $reglaTipo = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->find($categoriaId);
+        $fechaComparacion = $reglaTipo->getFechaComparacion()->format('d-m-Y');
+        $edadInicial = $reglaTipo->getEdadInicial();
+        $edadFinal = $reglaTipo->getEdadFinal();
+
+        $grupoProyectoInscr = $em->getRepository('SieAppWebBundle:OlimInscripcionGrupoProyecto')->findBy(array('olimGrupoProyecto' => $grupoProyecto));
+
+        if($grupoProyectoInscr){
+            $cont = 1;
+            $estudianteValido = array();
+            foreach ($grupoProyectoInscr as $key => $value) {
+                $estudianteInscr = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->find($value->getOlimEstudianteInscripcion());
+
+                $fechaNacimientoEstudiante = $estudianteInscr->getEstudianteInscripcion()->getEstudiante()->getFechaNacimiento();
+
+                $edadEstudiante = $this->get('olimfunctions')->getYearsOldsStudent($fechaNacimientoEstudiante->format('d-m-Y'), $fechaComparacion);
+
+                $aniosEstudiante = $edadEstudiante[0];
+
+                if($aniosEstudiante >= $edadInicial && $aniosEstudiante <= $edadFinal){
+                    $estudianteValido[$cont]=$value;
+                }
+                $cont++;
+            }
+            if(count($grupoProyectoInscr) == count($estudianteValido)){
+                $estudianteInscr->setOlimReglasOlimpiadasTipo($reglaTipo);
+                $em->persist($estudianteInscr);
+                $em->flush();
+                $grupoProyecto->setFechaConfirmacion(new \DateTime(date('d-m-Y H:i:s')));
+                $em->persist($grupoProyecto);
+                $em->flush();
+                $status = 200;
+                $mensaje = "La categoría fue actualizada.";
+            } else {
+                $status = 500;
+                $mensaje = "No cumple con las reglas establecidas para la categoría.";
+            }
         }else{
             $status = 500;
+            $mensaje = "Ocurrió un error interno, intente nuevamente.";
         }
 
         $response = new JsonResponse();
 
         return $response->setData([
-            'status'=> $status
+            'status'=> $status,
+            'mensaje' => $mensaje
         ]);
     }
 }

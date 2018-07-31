@@ -2737,7 +2737,7 @@ class TramiteDetalleController extends Controller {
                 }
 
                 $token = $request->get('_token');
-                if (!$this->isCsrfTokenValid('autorizar', $token)) {
+                if (!$this->isCsrfTokenValid('recepcionar', $token)) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
                     return $this->redirectToRoute('tramite_detalle_diploma_humanistico_recepcion_lista');
                 }
@@ -3735,7 +3735,7 @@ class TramiteDetalleController extends Controller {
                 }
 
                 $token = $request->get('_token');
-                if (!$this->isCsrfTokenValid('autorizar', $token)) {
+                if (!$this->isCsrfTokenValid('enviar', $token)) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
                     return $this->redirectToRoute('tramite_detalle_diploma_humanistico_envio_lista');
                 }

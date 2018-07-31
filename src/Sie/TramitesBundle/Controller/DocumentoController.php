@@ -464,7 +464,7 @@ class DocumentoController extends Controller {
         $entityUsuarioRol = $em->getRepository('SieAppWebBundle:UsuarioRol');
         if($rolId == 15 or $rolId == 16 or $rolId == 17){
             $query = $entityUsuarioRol->createQueryBuilder('ur')
-                    ->select('u.id as codusuario, rt.id as codrol, lt.lugar as lugar, lt.codigo as codlugar')
+                    ->select('u.id as codusuario, rt.id as codrol, lt.lugar as lugar, lt.codigo as codlugar, lt.codigo as codigoLugar')
                     ->innerJoin('SieAppWebBundle:Usuario', 'u', 'WITH', 'u.id = ur.usuario')
                     ->innerJoin('SieAppWebBundle:RolTipo', 'rt', 'WITH', 'rt.id = ur.rolTipo')
                     ->innerJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'lt.id = ur.lugarTipo')
@@ -475,7 +475,7 @@ class DocumentoController extends Controller {
                     ->orderBy('ur.id', 'DESC');
         } else {
             $query = $entityUsuarioRol->createQueryBuilder('ur')
-                    ->select('u.id as codusuario, rt.id as codrol, lt.lugar as lugar, lt.id as codlugar')
+                    ->select('u.id as codusuario, rt.id as codrol, lt.lugar as lugar, lt.id as codlugar, lt.codigo as codigoLugar')
                     ->innerJoin('SieAppWebBundle:Usuario', 'u', 'WITH', 'u.id = ur.usuario')
                     ->innerJoin('SieAppWebBundle:RolTipo', 'rt', 'WITH', 'rt.id = ur.rolTipo')
                     ->innerJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'lt.id = ur.lugarTipo')
@@ -1193,7 +1193,7 @@ class DocumentoController extends Controller {
             }
 
             // $msgContenido = "";
-            if($msgContenido == ""){
+            if($msgContenido != ""){
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msgContenido));
                 return $this->redirectToRoute('tramite_documento_supletorio');
             }
@@ -1205,7 +1205,7 @@ class DocumentoController extends Controller {
             if ($msgvalidaNumeroSerieTipoDocumento != ""){
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msgvalidaNumeroSerieTipoDocumento));
                 return $this->redirectToRoute('tramite_documento_supletorio');
-            }  
+            } 
 
             $entityDocumentoDetalle = $this->getDocumentoSupletorioDetalle($entityDocumento['tramite']);
             
