@@ -2,6 +2,15 @@ Sie\AppWebBundle\Entity\OlimGrupoProyecto:
     type: entity
     table: olim_grupo_proyecto
     indexes:
+        idx_olim_grupo_proyecto:
+            columns:
+                - id
+                - olim_grupo_proyecto_tipo_id
+                - periodo_tipo_id
+                - materia_tipo_id
+                - gestion_tipo_id
+                - olim_reglas_olimpiadas_tipo_id
+                - olim_tutor_id
         IDX_7E40BDEEC697A22:
             columns:
                 - olim_tutor_id
@@ -97,6 +106,11 @@ Sie\AppWebBundle\Entity\OlimGrupoProyecto:
             fixed: false
             comment: ''
             column: nombre_proyecto
+        fechaConfirmacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_confirmacion
     manyToOne:
         olimTutor:
             targetEntity: OlimTutor
