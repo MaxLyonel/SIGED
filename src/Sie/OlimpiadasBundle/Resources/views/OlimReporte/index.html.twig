@@ -24,23 +24,17 @@
         }
     </style>
     <div class="container">
-        <br>
         <h3 class="text-primary"> <i class="fa fa-file-o"></i> Verificar inscripción</h3>
         <nav class="navbar navbar-default" role="navigation">
             <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                        <span class="sr-only">Buscar...</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
+                    
                     <a class="navbar-brand" href="#">Buscar estudiante</a>
                 </div>
         
                 <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <div class=" navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav">
                         {# <li class="active"><a href="#">Link</a></li> #}
                         {# <li><a href="#">Link</a></li> #}
@@ -57,7 +51,7 @@
 
 
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="{{ path('login') }}" class="btn btn-link" style="padding-top: 15px;">Ingresar al sistema</a></li>
+                        
                         {# <li><a href="{{ path('olimreporte_export') }}" class="btn btn-link" style="padding-top: 15px;">Descargar</a></li> #}
                     </ul>
 
@@ -137,7 +131,7 @@
                                             <th>Equipo</th>
                                             <th>Discapacidad del estudiante</th>
                                             <th>Tutor</th>
-                                            {# <th></th> #}
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -186,7 +180,7 @@
                                                         {% endif %}
                                                     {% endif %}
                                                 </td>
-                                                {# <td>
+                                                <td>
                                                     {% if item.mostrar %}
                                                         
                                                         <div class="form-group formulario">
@@ -207,7 +201,7 @@
                                                         </div>
                                                         
                                                     {% endif %}
-                                                </td> #}
+                                                </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
