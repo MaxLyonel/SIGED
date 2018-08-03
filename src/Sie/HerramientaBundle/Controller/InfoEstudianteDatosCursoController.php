@@ -64,7 +64,7 @@ class InfoEstudianteDatosCursoController extends Controller {
     	            		return $er->createQueryBuilder('it')
     	            				->select('it')
     	            				->where('it.id NOT IN (:ids)')
-    	            				->setParameter('ids', array(97,98,99,0));
+    	            				->setParameter('ids', array(97,99,0));
     	            	},
     	            	'required' => true
     	            ))
@@ -74,7 +74,7 @@ class InfoEstudianteDatosCursoController extends Controller {
     	            		return $er->createQueryBuilder('it')
     	            				->select('it')
     	            				->where('it.id NOT IN (:ids)')
-    	            				->setParameter('ids', array(97,98,99,0));
+    	            				->setParameter('ids', array(97,99,0));
     	            	},
     	            	'required' => true
     	            ))
@@ -94,7 +94,7 @@ class InfoEstudianteDatosCursoController extends Controller {
     	            		return $er->createQueryBuilder('it')
     	            				->select('it')
     	            				->where('it.id NOT IN (:ids)')
-    	            				->setParameter('ids', array(97,98,99,0));
+    	            				->setParameter('ids', array(97,99,0));
     	            	},
     	            	'required' => true))
     	            ->add('terLenEnsenanzaTipo', null, array(
@@ -103,7 +103,7 @@ class InfoEstudianteDatosCursoController extends Controller {
     	            		return $er->createQueryBuilder('it')
     	            				->select('it')
     	            				->where('it.id NOT IN (:ids)')
-    	            				->setParameter('ids', array(97,98,99,0));
+    	            				->setParameter('ids', array(97,99,0));
     	            	},
     	            	'required' => true))
 
@@ -139,7 +139,11 @@ class InfoEstudianteDatosCursoController extends Controller {
     		$curso->setSegLenEnsenanzaTipo($em->getRepository('SieAppWebBundle:IdiomaTipo')->find($form['segLenEnsenanzaTipo']));
     		$curso->setTerLenEnsenanzaTipo($em->getRepository('SieAppWebBundle:IdiomaTipo')->find($form['terLenEnsenanzaTipo']));
     		$curso->setDesayunoEscolar($form['desayunoEscolar']);
-    		$curso->setFinDesEscolarTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->find($form['finDesEscolarTipo']));
+            if($form['desayunoEscolar'] == 1){
+                $curso->setFinDesEscolarTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->find($form['finDesEscolarTipo']));
+            }else{
+                $curso->setFinDesEscolarTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->find(0));
+            }
     		$em->persist($curso);
     		$em->flush();
 
@@ -149,7 +153,7 @@ class InfoEstudianteDatosCursoController extends Controller {
     		);
     	}else{
     		$data = array(
-    			'msg' => 'Los datos ingrsados son incorrectos',
+    			'msg' => 'Los datos ingresados son incorrectos',
     			'status' => 500
     		);
     	}

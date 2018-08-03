@@ -416,7 +416,7 @@ class InscriptionIniPriTrueController extends Controller {
          //dump($arrayNotas);die;
          // Try and commit the transaction
          // Registro de materia curso oferta en el log
-         /*$this->get('funciones')->setLogTransaccion(
+         $this->get('funciones')->setLogTransaccion(
              $newArea->getId(),
              'estudiante_inscripcion',
              'C',
@@ -425,7 +425,7 @@ class InscriptionIniPriTrueController extends Controller {
              '',
              'SIGED',
              json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-         );*/
+         );
          $em->getConnection()->commit();
          $message = 'Datos Registrados Correctamente, a continuacion registre las NOTAS';
          $this->addFlash('saveGoodInscription', $message);

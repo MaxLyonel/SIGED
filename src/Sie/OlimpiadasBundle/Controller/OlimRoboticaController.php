@@ -209,24 +209,31 @@ class OlimRoboticaController extends Controller{
                     }
                 }
 
+                $reglasTipo = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->findBy(array('olimMateriaTipo' => 8));
+
+                $categorias = array();
+                foreach ($reglasTipo as $key => $value) {
+                    $categorias[$value->getId()] = $value->getCategoria();
+                }
+
+                $formCategoria = $this->createFormularioCategoria($categorias,$grupoProyecto,$array[0]['regla']->getId());
+
+                return $this->render('SieOlimpiadasBundle:OlimRobotica:index.html.twig', array(
+                    'form'=>$form->createView(),
+                    'estudiante'=>$estudiante,
+                    'tutor'=>$tutor,
+                    'array'=>$array,
+                    'formCategoria'=>$formCategoria->createView()
+                ));
             }
-
-            $reglasTipo = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->findBy(array('olimMateriaTipo' => 8));
-
-            $categorias = array();
-            foreach ($reglasTipo as $key => $value) {
-                $categorias[$value->getId()] = $value->getCategoria();
-            }
-
-            $formCategoria = $this->createFormularioCategoria($categorias,$grupoProyecto,$array[0]['regla']->getId());
 
             return $this->render('SieOlimpiadasBundle:OlimRobotica:index.html.twig', array(
                 'form'=>$form->createView(),
                 'estudiante'=>$estudiante,
                 'tutor'=>$tutor,
-                'array'=>$array,
-                'formCategoria'=>$formCategoria->createView()
+                'array'=>$array
             ));
+            
         }
 
         return $this->render('SieOlimpiadasBundle:OlimRobotica:index.html.twig', array('form'=>$form->createView()));
@@ -291,7 +298,7 @@ class OlimRoboticaController extends Controller{
                 $em->persist($grupoProyecto);
                 $em->flush();
                 $status = 200;
-                $mensaje = "La categoría fue actualizada.";
+                $mensaje = "Confirmación realizada exitosamente.";
             } else {
                 $status = 500;
                 $mensaje = "No cumple con las reglas establecidas para la categoría.";

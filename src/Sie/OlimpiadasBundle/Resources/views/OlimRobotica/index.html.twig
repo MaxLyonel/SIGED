@@ -24,8 +24,7 @@
         }
     </style>
     <div class="container">
-        <br>
-        <h3 class="text-primary"> <i class="fa fa-file-o"></i> Robótica: Actualizar categoría</h3>
+        <h3 class="text-primary"> <i class="fa fa-file-o"></i> Robótica: Confirma tu participación en la etapa departamental <small><a href="http://olimpiadas.educabolivia.bo/public/files/8va/confirmacion_robotica.pdf" target="_blank" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-file-pdf-o"></i> Manual</a></small></h3>
         <nav class="navbar navbar-default" role="navigation">
             <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
@@ -36,7 +35,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">Buscar estudiante</a>
+                    <a class="navbar-brand" href="#">Busca tu equipo</a>
                 </div>
         
                 <!-- Collect the nav links, forms, and other content for toggling -->
@@ -61,8 +60,8 @@
 
 
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="{{ path('login') }}" class="btn btn-link" style="padding-top: 15px;">Ingresar al sistema</a></li>
-                        {# <li><a href="{{ path('olimreporte_export') }}" class="btn btn-link" style="padding-top: 15px;">Descargar</a></li> #}
+                        <li><a href="{{ path('olimreporte') }}" class="btn btn-link" style="padding-top: 15px;">Volver</a></li>
+                        {# <li><a href="{{ path('login') }}" class="btn btn-link" style="padding-top: 15px;">Ingresar al sistema</a></li> #}
                     </ul>
 
                 </div><!-- /.navbar-collapse -->
@@ -70,8 +69,8 @@
         </nav>
 
 
-	    {% if estudiante is defined %}
-			{% if estudiante is null %}
+	    {% if estudiante is defined and tutor is defined %}
+			{% if estudiante is null or tutor is null%}
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                         <h3 class="panel-title"> <i class="fa fa-search"></i> Resultado de la busqueda</h3>
@@ -105,8 +104,7 @@
                                         <div class="pull-left"><img src="{{asset('/webolimpiadas/img/avatar/50/24.png')}}" class="media-object img-circle" alt="..."></div>
                                         <div class="media-body">
                                             <b>Carnet: </b> {{ tutor.carnet }} {{ tutor.complemento }}</span><br>
-                                            <b>Nombre(s) y Apellido(s): </b> {{ tutor.paterno }} {{ tutor.materno }} {{ tutor.nombre }}</span><br>
-                                            <span> <b>Fecha de Nacimiento: </b> {{ tutor.fechaNacimiento|date('d-m-Y') }}</span><br>
+                                            <b>Nombre(s) y Apellido(s): </b> {{ tutor.paterno }} {{ tutor.materno }} {{ tutor.nombre }}</span>
                                             <!-- Start meta icon -->
                                             <span class="media-meta pull-right"></span>
                                             <!--/ End meta icon -->
@@ -170,7 +168,7 @@
                                     {{form_start(formCategoria)}}
                                         {{form_label(formCategoria.reglasTipo)}}
                                         {{form_widget(formCategoria.reglasTipo, {'attr':{'class':'seleccionCategoria'} })}}
-                                        <button id="btnGuardar" type="button" class="btn btn-success"> <i id="iconGuardar" class="fa fa-save"></i> <span id="textGuardar"></span> </button>
+                                        <button id="btnGuardar" type="button" class="btn btn-success"> <i id="iconGuardar" class="fa fa-save"></i> <span id="textGuardar">Confirmar participación</span> </button>
                                     {{form_end(formCategoria)}}
                                 </div>
                             </div>
