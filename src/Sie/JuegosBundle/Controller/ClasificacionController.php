@@ -1060,6 +1060,9 @@ class ClasificacionController extends Controller {
             if ($entidadUsuarioId == 31640  ){
                 $xCupo = 2;
             }
+            if ($entidadUsuarioId == 31552  ){
+                $xCupo = 3;
+            }
             if ($entidadUsuarioId == 31553  ){
                 $xCupo = 3;
             }

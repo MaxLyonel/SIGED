@@ -1,0 +1,82 @@
+{% extends "::layoutTramites.html.twig"%}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+    </style>
+{% endblock %}
+
+{% block contentBread %}
+    <ol class="breadcrumb">
+        <li>
+            <i class="fa fa-home"></i>
+            <a href="{{path('tramite_homepage')}}">Perfil</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        {% block contentSearchBread %}
+        {% endblock %}
+    </ol>
+{% endblock %}
+
+{% block contentoption %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="panel shadow">
+                <div id="tour-15" style="display: block;" class="panel-body">
+                    {% if formBusqueda is defined  %}
+                        {{form_start(formBusqueda, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                            <form class="form-horizontal">
+                                <div class="form-body">
+                                    <div class="form-group no-margin">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                {{ form_widget(formBusqueda.sie) }}
+                                            </div>
+                                            <div class="col-md-4">
+                                                {{ form_widget(formBusqueda.gestion) }}
+                                            </div>
+                                            <div class="col-md-4">
+                                                {{ form_widget(formBusqueda.search,{ 'attr':{'class':'btn btn-primary mb-15 btn-block' } } ) }}
+                                            </div>
+                                        </div>
+                                    </div><!-- /.form-group -->
+                                </div><!-- /.form-body -->
+                            </form>
+                        {{form_end(formBusqueda)}}
+                    {% endif %}
+                </div><!-- /.panel-body -->
+            </div>
+        </div>
+    </div><!-- /.row -->
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        // funcion que valida la cantidad de caracteres del campo sie
+        function valSie(){
+            if($('#form_sie').length){
+                if($('#form_sie').val().length>=8){
+                    $('#form_gestion').removeAttr('disabled');
+                    habilitarSubmit();
+                } else {
+                    $('#form_gestion').attr("disabled", "disabled");
+                    $('#form_search').attr("disabled", "disabled");
+                }
+            }
+        }
+
+        // funcion que selecciona la primera opcion del campo gestion al momento de ingresar o modificar un nuevo sie
+        function valSieFocusOut(){
+            $("#form_gestion").prop("selectedIndex", 0);
+        }
+
+        $(window).load(function(){
+            // ..
+            document.getElementById("form_sie").focus();
+            // ..
+
+            if($('#form_serie option').length !== 0) {
+                $('#form_serie').removeAttr('disabled');
+            }
+        });
+    </script>
+{%endblock%}
