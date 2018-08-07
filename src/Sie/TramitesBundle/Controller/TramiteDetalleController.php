@@ -3492,9 +3492,11 @@ class TramiteDetalleController extends Controller {
         try {
             $form = $request->get('form');
             if ($form) {
+                $tipoImp = 2;
                 $sie = $form['sie'];
                 $ges = $form['gestion'];
             } else {
+                $tipoImp = 1;
                 $info = $request->get('info');
                 $form = unserialize(base64_decode($info));
                 $sie = $form['sie'];
@@ -3517,7 +3519,7 @@ class TramiteDetalleController extends Controller {
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo=1&&__format=pdf&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&'));
             $response->setStatusCode(200);
             $response->headers->set('Content-Transfer-Encoding', 'binary');
             $response->headers->set('Pragma', 'no-cache');
@@ -3565,7 +3567,7 @@ class TramiteDetalleController extends Controller {
         $documentoController->setContainer($this->container);
 
         $rolPermitido = array(8,16);
-
+        
         return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:dipHumImpresionCartonIndex.html.twig', array(
             'formBusqueda' => $documentoController->creaFormBuscaInstitucionEducativaSerie('tramite_detalle_diploma_humanistico_impresion_carton_pdf','','','1')->createView(),
             'titulo' => 'Impresión Cartón',
@@ -3622,6 +3624,7 @@ class TramiteDetalleController extends Controller {
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
     public function dipHumImpresionActaListaAction(Request $request) {
+
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
@@ -3665,6 +3668,7 @@ class TramiteDetalleController extends Controller {
                     $documentoController = new documentoController();
                     $documentoController->setContainer($this->container);
 
+
                     $documentoTipoId = '1,3,4,5';
 
                     $entityParticipantes = $documentoController->getDocumentoInstitucionEducativaGestion($sie,$gestion,$documentoTipoId);
@@ -3672,14 +3676,13 @@ class TramiteDetalleController extends Controller {
                     $datosBusqueda = base64_encode(serialize($form));
 
                     return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:dipHumImpresionActaIndex.html.twig', array(
-                        'formBusqueda' => $documentoController->creaFormBuscaInstitucionEducativaSerie('tramite_detalle_diploma_humanistico_impresion_acta_lista',$sie,$gestion,'1,3,4,5')->createView(),
+                        'formBusqueda' => $tramiteController->creaFormBuscaUnidadEducativaHumanistica('tramite_detalle_diploma_humanistico_impresion_acta_lista',$sie,$gestion,'1,3,4,5')->createView(),
                         'titulo' => 'Impresión Acta',
                         'subtitulo' => 'Diploma Humanístico',
                         'listaParticipante' => $entityParticipantes,
                         'datosBusqueda' => $datosBusqueda,
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
-                    die("asd");
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
                     return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_impresion_acta_busca'));
                 }
