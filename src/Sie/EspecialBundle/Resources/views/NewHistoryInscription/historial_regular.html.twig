@@ -10,11 +10,9 @@
       <th class="text-center">SIE</th>
       <th class="text-center">Unidad Educativa</th>
       <th class="text-center">Nivel</th>
-      <th class="text-center">Ciclo</th>
       <th class="text-center">Grado</th>
       <th class="text-center">Paralelo</th>
       <th class="text-center">Turno</th>
-      <th class="text-center">Inscripción</th>
       <th class="text-center">Estado Matrícula</th>
       <th class="text-center">Acciones</th>
     </tr>
@@ -26,11 +24,9 @@
         <td>{{data.institucioneducativa_id_raep}}</td>
         <td>{{data.institucioneducativa_raep}}</td>
         <td>{{data.nivel_r }} </td>
-        <td>{{data.ciclo_r }} </td>
         <td>{{data.grado_r}}</td>
         <td>{{data.paralelo_raep}}</td>
         <td>{{data.turno_raep}} </td>
-        <td class="text-center">{{data.estadomatricula_inicio_r}}</td>
         <td class="text-center">{{data.estadomatricula_fin_r}}</td>
         <td class="text-center">
           <a href="#" onclick="seeNotaNew('{{data.estudiante_inscripcion_id_raep}}', '{{data.estudiante_id_raep}}', '{{data.nivel_tipo_id_r}}', '{{data.grado_tipo_id_r}}', '{{data.paralelo_tipo_id_raep}}', '{{data.turno_tipo_id_raep}}', '{{data.gestion_tipo_id_raep}}', '{{data.institucioneducativa_id_raep}}','{{data.estadomatricula_tipo_id_fin_r}}')" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>
