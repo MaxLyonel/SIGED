@@ -260,7 +260,8 @@ class DocumentoController extends Controller {
             left join lugar_tipo as lt1 on lt1.id = e.lugar_prov_nac_tipo_id
             left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
             left join pais_tipo as pat on pat.id = e.pais_tipo_id
-            where td.tramite_estado_id = 1 and ds.gestion_id = ".$gestionId."::INT and iec.institucioneducativa_id = ".$institucionEducativaId."::INT
+            where iec.gestion_tipo_id = ".$gestionId."::double precision and iec.institucioneducativa_id = ".$institucionEducativaId."::INT
+            and td.tramite_estado_id <> 4 and td.flujo_proceso_id = 5
             order by e.paterno, e.materno, e.nombre
         ");
         $queryEntidad->execute();
@@ -269,7 +270,7 @@ class DocumentoController extends Controller {
         if(count($entityDocumento)>0){
             return $entityDocumento;
         } else {
-            return $entityDocumento;
+            return array();
         }
     }
 
@@ -849,7 +850,7 @@ class DocumentoController extends Controller {
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl($routing))
             ->add('sie', 'text', array('label' => 'Código S.I.E.', 'attr' => array('value' => $sie, 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '8', 'autocomplete' => 'on', 'placeholder' => 'Código de institución educativa', 'style' => 'text-transform:uppercase')))
-            ->add('serie',
+            ->add('gestion',
                       'choice',  
                       array('label' => 'Serie',
                             'choices' => $serieEntity,
