@@ -147,7 +147,9 @@ class OlimReporteController extends Controller{
 											->from('SieAppWebBundle:OlimEstudianteNotaPrueba','oenp')
 											->innerJoin('SieAppWebBundle:OlimEtapaTipo','oet','with','oenp.olimEtapaTipo = oet.id')
 											->where('oenp.olimEstudianteInscripcion = :idInscripcion')
+											->andWhere('oenp.estado = :estado')
 											->setParameter('idInscripcion', $io->getId())
+											->setParameter('estado', true)
 											->orderBy('oet.id','DESC')
 											->setMaxResults(1)
 											->getQuery()
@@ -218,6 +220,8 @@ class OlimReporteController extends Controller{
 				// 				->getQuery()
 				// 				->getResult();
 			}
+
+			// dump($array);die;
 
 			return $this->render('SieOlimpiadasBundle:OlimReporte:index.html.twig', array(
 				'form'=>$form->createView(),

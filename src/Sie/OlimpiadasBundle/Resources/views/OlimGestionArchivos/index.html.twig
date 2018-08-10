@@ -33,38 +33,58 @@
 				    	</div>
 				    	<div class="panel-body">
 				    		<div class="table-responsive">
-					    		<table class="table table-hover dataTable">
+					    		<table class="table dataTable table-hover">
 					    			<thead>
 					    				<tr>
-					    					<th>Institución educativa</th>
+					    					<th class="primeraFila">Fecha registro</th>
+					    					<th>&nbsp;Institución&nbsp;&nbsp;educativa&nbsp; </th>
 					    					<th>Tutor</th>
-					    					<th>Nombre del Grupo</th>
-					    					<th width="300px">Nombre del Proyecto</th>
+					    					<th>Nombre del Grupo <br> <strong> <em> Nombre del Proyecto </em></strong> </th>
+					    					<th>Curso</th>
 					    					<th>Cantidad Inscritos</th>
 					    					<th>Archivo</th>
 					    				</tr>
 					    			</thead>
 					    			<tbody>
-					    				{% for grupo in grupos %}
+					    				{% for g in grupos %}
 					    				    <tr>
+					    				    	<td> {{ g.grupo.fechaRegistro|date('d-m-Y') }} </td>
 					    				    	<td>
-					    				    		<div> {{ grupo.sie }} </div>
-					    				    		<div> {{ grupo.institucioneducativa }}</div>
+					    				    		<div> {{ g.grupo.sie }} </div>
+					    				    		<div> {{ g.grupo.institucioneducativa }}</div>
 					    				    	</td>
 					    				    	<td>
-					    				    		<div> {{ grupo.nombre }} {{ grupo.paterno }} {{ grupo.materno }}</div>
-					    				    		<div> <i class="fa fa-phone text-primary"></i> {{ grupo.telefono1 }} {% if grupo.telefono2 != '' %} - {{ grupo.telefono2 }} {% endif %} </div>
-					    				    		<div> <i class="fa fa-envelope text-info"></i> {{ grupo.correoElectronico }} </div>
+					    				    		<div> {{ g.grupo.nombre }} {{ g.grupo.paterno }} {{ g.grupo.materno }}</div>
+					    				    		<div> <i class="fa fa-phone text-primary"></i> {{ g.grupo.telefono1 }} {% if g.grupo.telefono2 != '' %} - {{ g.grupo.telefono2 }} {% endif %} </div>
+					    				    		<div> <i class="fa fa-envelope text-info"></i> {{ g.grupo.correoElectronico }} </div>
 					    				    	</td>
-					    				    	<td>{{ grupo.grupo }}</td>
-					    				    	<td>{{ grupo.nombreProyecto }}</td>
+					    				    	<td>
+					    				    		{{ g.grupo.grupo }} <br>
+					    				    		<strong><em>" {{ g.grupo.nombreProyecto }} "</em></strong>
+					    				    	</td>
 					    				    	<td align="center">
-					    				    		<span style="font-size:1.1em">{{ grupo.inscritos }}</span>
+					    				    		{% for curso in g.niveles %}
+					    				    			<div>
+					    				    				{{ curso.gradoTipo.id }}
+					    				    				{% if curso.nivelTipo.id == 12 %}
+																Pri.
+					    				    				{% else %}
+					    				    					Sec.
+					    				    				{% endif %}					    				    				
+					    				    			</div>
+					    				    		{% endfor %}
+					    				    	</td>
+					    				    	
+					    				    	<td align="center">
+					    				    		<span style="font-size:1.1em">{{ g.grupo.inscritos }}</span>
 					    				    	</td>
 					    				    	<td>
-					    				    		{% if grupo.documentoPdf1 != '' %}
-					    				    			{# <embed src="http://olimpiada.sie.gob.bo/uploads/olimpiadas/documentos/{{grupo.documentoPdf1}}" width="500px" height="600px"></embed> #}
-					    				    			<a class="btn btn-primary btn-xs" target="_blank" href="http://olimpiada.sie.gob.bo/uploads/olimpiadas/documentos/{{gestion}}/{{grupo.sie}}/{{grupo.documentoPdf1}}"> <i class="fa fa-file-pdf-o fa-1x"></i> <b> Abrir archivo </b> </a>
+					    				    		{% if g.grupo.documentoPdf1 != '' %}
+					    				    			{# <embed src="http://olimpiada.sie.gob.bo/uploads/olimpiadas/documentos/{{gestion}}/{{g.grupo.sie}}/{{g.grupo.documentoPdf1}}" width="150px" height="160px"></embed> #}
+					    				    			
+					    				    			{# <a class="btn btn-primary btn-xs" target="_blank" href="{{ asset('uploads/olimpiadas/documentos/' ~ gestion ~ '/' ~ '/' ~ g.grupo.sie ~ '/' ~ g.grupo.documentoPdf1 )}}"> <i class="fa fa-file-pdf-o fa-1x"></i> <b> Abrir archivo </b> </a> #}
+					    				    				
+					    				    			<a class="btn btn-primary btn-xs" target="_blank" href="http://olimpiada.sie.gob.bo/uploads/olimpiadas/documentos/{{gestion}}/{{g.grupo.sie}}/{{g.grupo.documentoPdf1}}"> <i class="fa fa-file-pdf-o fa-1x"></i> <b> Abrir archivo </b> </a>
 					    				    		{% else %}
 					    				    			<span class="text-danger">No subido !!!</span>
 					    				    			{# <button class="btn btn-default" type="button" onclick="abrir()">Subir</button> #}
@@ -109,5 +129,11 @@
     	function abrir(){
     		$('#modal').modal('show');
     	}
+
+    	$(function(){
+    		$('.primeraFila').css('width','100px !important');
+    	});
+
+
     </script>
 {% endblock %}

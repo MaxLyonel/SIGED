@@ -1177,7 +1177,7 @@ class TramiteController extends Controller {
           from institucioneducativa as ie
           inner join orgcurricular_tipo as oct ON oct.id = ie.orgcurricular_tipo_id
           left join (select distinct institucioneducativa_id, nivel_tipo_id from institucioneducativa_nivel_autorizado where nivel_tipo_id = 6) as iena on iena.institucioneducativa_id = ie.id
-          where ie.institucioneducativa_acreditacion_tipo_id = 1 and ie.id = ".$institucionEducativaId." and ie.estadoinstitucion_tipo_id = 10
+          where ie.institucioneducativa_acreditacion_tipo_id = 1 and ie.id = ".$institucionEducativaId." -- and ie.estadoinstitucion_tipo_id = 10
       ");
       $queryEntidad->execute();
       $objEntidad = $queryEntidad->fetchAll();
@@ -2369,6 +2369,7 @@ class TramiteController extends Controller {
 
                     $entityTramiteDetalle = $tramiteProcesoController->getTramiteDetalle($entityDocumento['tramite']);
 
+                    $entityDocumentoDetalle = $documentoController->getDocumentoDetalle($entityDocumento['tramite']);
 
                     return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
                         'formBusqueda' => $documentoController->creaFormAnulaDocumentoSerie('tramite_reactiva_lista','','')->createView(),
@@ -2377,6 +2378,7 @@ class TramiteController extends Controller {
                         'msgReactivaTramite' => $valUltimoProcesoFlujoTramite,
                         'listaDocumento' => $entityDocumento,
                         'listaTramiteDetalle' => $entityTramiteDetalle,
+                        'listaDocumentoDetalle' => $entityDocumentoDetalle,
                         'arrayForm' => array('serie'=>$serie, 'obs'=>$obs),
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
@@ -2419,6 +2421,7 @@ class TramiteController extends Controller {
         if ($request->isMethod('POST')) {
             $serie = $request->get('serie');
             $obs = $request->get('obs');
+            $formBusqueda = array('serie'=>$serie,'obs'=>$obs);
             if ($serie != "" and $obs != ""){
                 try {
                     $documentoController = new documentoController();
@@ -2437,6 +2440,14 @@ class TramiteController extends Controller {
                     $tramiteId = $entityDocumento['tramite'];
                     $documentoId = $entityDocumento['documento'];
 
+                    $entityDocumentoTramite = $documentoController->getDocumentoTramite($tramiteId,9);
+
+                    if(count($entityDocumentoTramite)>0){
+                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'El documento '.$serie.' cuenta con un Documento Supletorio activo, no es posible reactivar el trámite'));
+                        // return $this->redirect($this->generateUrl('tramite_reactiva_busca'));
+                        return $this->redirectToRoute('tramite_reactiva_lista', ['form' => $formBusqueda], 307);
+                    }
+
                     $em = $this->getDoctrine()->getManager();
                     $entityTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $tramiteId));
 
@@ -2445,11 +2456,16 @@ class TramiteController extends Controller {
 
                     $valProcesaTramite = $tramiteProcesoController->setProcesaTramite($tramiteId,$entityFlujoProcesoDetalle->getFlujoProcesoAnt()->getId(),$id_usuario,$obs);
 
-                    $documentoId = $documentoController->setDocumentoEstado($documentoId, 2);
+                    // $documentoId = $documentoController->setDocumentoEstado($documentoId, 2);
+                    $msg = $documentoController->setTramiteDocumentoEstado($tramiteId, 2);
+
+                    if($msg != ""){
+                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msg));
+                        return $this->redirectToRoute('tramite_reactiva_lista', ['form' => $formBusqueda], 307);
+                    }
 
                     $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'Trámite '.$tramiteId.' con documento nro. '.$serie.' reactivado, el trámite se encuentra en la BANDEJA DE IMPRESIÓN'));
 
-                    $formBusqueda = array('serie'=>$serie,'obs'=>$obs);
                     //return $this->redirectToRoute('sie_tramite_reactiva_lista', ['form' => $formBusqueda], 307);
                     return $this->redirect($this->generateUrl('tramite_reactiva_busca'));
 

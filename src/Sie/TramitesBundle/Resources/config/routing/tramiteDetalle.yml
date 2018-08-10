@@ -134,9 +134,21 @@ tramite_detalle_diploma_humanistico_impresion_lista:
     path:     /diploma/humanistico/impresion/lista
     defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumImpresionLista }
 
-tramite_detalle_diploma_humanistico_impresion_lista_pdf:
-    path:     /diploma/humanistico/impresion/lista/pdf
-    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumImpresionListaPdf }
+tramite_detalle_diploma_humanistico_impresion_acta_busca:
+    path:     /diploma/humanistico/impresion/acta/busca
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumImpresionActaBusca }
+
+tramite_detalle_diploma_humanistico_impresion_acta_lista:
+    path:     /diploma/humanistico/impresion/acta/lista
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumImpresionActaLista }
+
+tramite_detalle_diploma_humanistico_impresion_acta_pdf:
+    path:     /diploma/humanistico/impresion/acta/pdf
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumImpresionActaPdf }
+
+tramite_detalle_diploma_humanistico_impresion_carton_busca:
+    path:     /diploma/humanistico/impresion/carton/busca
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumImpresionCartonBusca }
 
 tramite_detalle_diploma_humanistico_impresion_carton_pdf:
     path:     /diploma/humanistico/impresion/carton/pdf

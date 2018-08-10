@@ -17,7 +17,7 @@
                             <button class="btn btn-danger" id="botonModalDevolver" name="botonModalDevolver" data-action="search" data-toggle="tooltip" data-placement="top" data-title="Devolver" data-original-title="" title="Devolver" disabled="true" >Devolver</button>
                             <input type="submit" name="botonAnular" id="botonAnular" class="btn btn-youtube" value="Anular" disabled="true" />
                             <input type="submit" name="botonAceptar" id="botonAceptar" class="btn btn-primary" value="Asignar Cartón" disabled="true" />
-                            <a class="btn btn-lilac" href="{{ path('tramite_detalle_diploma_humanistico_impresion_lista_pdf', {'info': datosBusqueda}) }}" target="_blank">Acta</a>
+                            <a class="btn btn-lilac" href="{{ path('tramite_detalle_diploma_humanistico_impresion_acta_pdf', {'info': datosBusqueda}) }}" target="_blank">Acta</a>
                             <a class="btn btn-lilac" href="{{ path('tramite_detalle_diploma_humanistico_impresion_carton_pdf', {'info': datosBusqueda}) }}" target="_blank">Imp. Diplomas</a>
                         </div>
                         <div class="clearfix"></div>
@@ -40,7 +40,7 @@
                             <div class="clearfix">
                                 <div class="row">
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                        Nro. Serie Inicial: <input type="number" name="numeroSerie" id="numeroSerie" min="1" max="999999" class="form-control" onKeyDown="validarFormImpresion(this)" onKeyUp="validarFormImpresion(this) onchange="validarFormImpresion(this)"/>
+                                        Nro. Serie Inicial: <input type="number" name="numeroSerie" id="numeroSerie" min="1" max="999999" class="form-control" onKeyDown="validarFormImpresion(this)" onKeyUp="validarFormImpresion(this)" onchange="validarFormImpresion(this)"/>
                                     </div>
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                         Serie:

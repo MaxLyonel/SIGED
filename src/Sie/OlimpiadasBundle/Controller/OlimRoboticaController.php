@@ -298,7 +298,7 @@ class OlimRoboticaController extends Controller{
                 $em->persist($grupoProyecto);
                 $em->flush();
                 $status = 200;
-                $mensaje = "La categoría fue actualizada.";
+                $mensaje = "Confirmación realizada exitosamente.";
             } else {
                 $status = 500;
                 $mensaje = "No cumple con las reglas establecidas para la categoría.";
