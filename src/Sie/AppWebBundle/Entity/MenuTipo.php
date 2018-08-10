@@ -224,4 +224,144 @@ class MenuTipo
     public function __toString() {
         return $this->nombre;
     }
+    /**
+     * @var string
+     */
+    private $detalleMenu;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaCreacion;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaModificacion;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\MenuTipo
+     */
+    private $menuTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\MenuNivelTipo
+     */
+    private $menuNivelTipo;
+
+
+    /**
+     * Set detalleMenu
+     *
+     * @param string $detalleMenu
+     * @return MenuTipo
+     */
+    public function setDetalleMenu($detalleMenu)
+    {
+        $this->detalleMenu = $detalleMenu;
+    
+        return $this;
+    }
+
+    /**
+     * Get detalleMenu
+     *
+     * @return string 
+     */
+    public function getDetalleMenu()
+    {
+        return $this->detalleMenu;
+    }
+
+    /**
+     * Set fechaCreacion
+     *
+     * @param \DateTime $fechaCreacion
+     * @return MenuTipo
+     */
+    public function setFechaCreacion($fechaCreacion)
+    {
+        $this->fechaCreacion = $fechaCreacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaCreacion
+     *
+     * @return \DateTime 
+     */
+    public function getFechaCreacion()
+    {
+        return $this->fechaCreacion;
+    }
+
+    /**
+     * Set fechaModificacion
+     *
+     * @param \DateTime $fechaModificacion
+     * @return MenuTipo
+     */
+    public function setFechaModificacion($fechaModificacion)
+    {
+        $this->fechaModificacion = $fechaModificacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaModificacion
+     *
+     * @return \DateTime 
+     */
+    public function getFechaModificacion()
+    {
+        return $this->fechaModificacion;
+    }
+
+    /**
+     * Set menuTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\MenuTipo $menuTipo
+     * @return MenuTipo
+     */
+    public function setMenuTipo(\Sie\AppWebBundle\Entity\MenuTipo $menuTipo = null)
+    {
+        $this->menuTipo = $menuTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get menuTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\MenuTipo 
+     */
+    public function getMenuTipo()
+    {
+        return $this->menuTipo;
+    }
+
+    /**
+     * Set menuNivelTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\MenuNivelTipo $menuNivelTipo
+     * @return MenuTipo
+     */
+    public function setMenuNivelTipo(\Sie\AppWebBundle\Entity\MenuNivelTipo $menuNivelTipo = null)
+    {
+        $this->menuNivelTipo = $menuNivelTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get menuNivelTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\MenuNivelTipo 
+     */
+    public function getMenuNivelTipo()
+    {
+        return $this->menuNivelTipo;
+    }
 }

@@ -1,13 +1,13 @@
-Sie\AppWebBundle\Entity\MenuTipo:
+Sie\AppWebBundle\Entity\MenuSistema:
     type: entity
-    table: menu_tipo
+    table: menu_sistema
     indexes:
-        IDX_B862ED0921FC73D2:
+        IDX_1919B6DF21FC73D2:
             columns:
                 - menu_tipo_id
-        IDX_B862ED09CB1AE62F:
+        IDX_1919B6DF34C419BF:
             columns:
-                - menu_nivel_tipo_id
+                - sistema_tipo_id
     id:
         id:
             type: integer
@@ -20,17 +20,11 @@ Sie\AppWebBundle\Entity\MenuTipo:
     fields:
         detalleMenu:
             type: string
-            nullable: false
+            nullable: true
             length: 100
             fixed: false
             comment: ''
             column: detalle_menu
-        ruta:
-            type: string
-            nullable: false
-            length: 100
-            fixed: false
-            comment: ''
         icono:
             type: string
             nullable: true
@@ -42,12 +36,16 @@ Sie\AppWebBundle\Entity\MenuTipo:
             nullable: true
             unsigned: false
             comment: ''
-        obs:
-            type: string
+        fechaInicio:
+            type: datetime
             nullable: true
-            length: 150
-            fixed: false
             comment: ''
+            column: fecha_inicio
+        fechaFin:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_fin
         fechaCreacion:
             type: datetime
             nullable: true
@@ -68,13 +66,13 @@ Sie\AppWebBundle\Entity\MenuTipo:
                 menu_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
-        menuNivelTipo:
-            targetEntity: MenuNivelTipo
+        sistemaTipo:
+            targetEntity: SistemaTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                menu_nivel_tipo_id:
+                sistema_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

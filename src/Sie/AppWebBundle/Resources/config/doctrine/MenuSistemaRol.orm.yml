@@ -1,0 +1,54 @@
+Sie\AppWebBundle\Entity\MenuSistemaRol:
+    type: entity
+    table: menu_sistema_rol
+    indexes:
+        IDX_3B10C78EF3F27EB:
+            columns:
+                - rol_tipo_id
+        IDX_3B10C78366016DA:
+            columns:
+                - menu_sistema_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaInicio:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_inicio
+        fechaFin:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_fin
+        esactivo:
+            type: boolean
+            nullable: true
+            comment: ''
+    manyToOne:
+        rolTipo:
+            targetEntity: RolTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rol_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        menuSistema:
+            targetEntity: MenuSistema
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                menu_sistema_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
