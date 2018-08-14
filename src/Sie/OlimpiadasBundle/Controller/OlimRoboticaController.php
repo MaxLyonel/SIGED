@@ -324,20 +324,27 @@ class OlimRoboticaController extends Controller{
                 }
                 $cont++;
             }
-            if(count($grupoProyectoInscr) == count($estudianteValido)){
-                $estudianteInscr->setOlimReglasOlimpiadasTipo($reglaTipo);
-                $em->persist($estudianteInscr);
-                $em->flush();
-                $grupoProyecto->setFechaConfirmacion(new \DateTime(date('d-m-Y H:i:s')));
-                $em->persist($grupoProyecto);
-                $em->flush();
-                $status = 200;
-                $mensaje = "Confirmación realizada exitosamente.";
+            
+            $a = intval(count($grupoProyectoInscr));
+            $b = intval(count($estudianteValido));
+            
+            if($a == $b){
+                foreach ($grupoProyectoInscr as $key => $value) {
+                    $estudianteInscr = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->find($value->getOlimEstudianteInscripcion());
+                    $estudianteInscr->setOlimReglasOlimpiadasTipo($reglaTipo);
+                    $em->persist($estudianteInscr);
+                    $em->flush();
+                    $grupoProyecto->setFechaConfirmacion(new \DateTime(date('d-m-Y H:i:s')));
+                    $em->persist($grupoProyecto);
+                    $em->flush();
+                    $status = 200;
+                    $mensaje = "Confirmación realizada exitosamente.";
+                }
             } else {
                 $status = 500;
                 $mensaje = "No cumple con las reglas establecidas para la categoría.";
             }
-        }else{
+        } else {
             $status = 500;
             $mensaje = "Ocurrió un error interno, intente nuevamente.";
         }
