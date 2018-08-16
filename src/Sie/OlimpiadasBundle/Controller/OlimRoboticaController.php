@@ -51,8 +51,7 @@ class OlimRoboticaController extends Controller{
                     ));
                 } else {
                     $estudiante = $estudiante[0];
-                }
-                
+                }                
 
             $tutor = $em->createQueryBuilder()
                 ->select('p')
@@ -75,11 +74,8 @@ class OlimRoboticaController extends Controller{
                     ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
                     ->where('ei.estudiante = :idEstudiante')
                     ->andWhere('iec.gestionTipo = :gestion')
-                    ->andWhere('ei.estadomatriculaTipo IN (:estados)')
                     ->setParameter('idEstudiante', $estudiante->getId())
                     ->setParameter('gestion', date('Y'))
-                    ->setParameter('estados', array(4,5,11,55))
-                    ->setMaxResults(1)
                     ->getQuery()
                     ->getResult();
 
@@ -93,10 +89,12 @@ class OlimRoboticaController extends Controller{
                     ->innerJoin('SieAppWebBundle:OlimEstudianteInscripcion','oei','with','oigp.olimEstudianteInscripcion = oei.id')
                     ->where('ot.persona = :idPersona')
                     ->andWhere('ot.gestionTipoId = :gestion')
-                    ->andWhere('oei.estudianteInscripcion = :inscripcion')
+                    ->andWhere('oei.estudianteInscripcion in (:inscripcion)')
+                    ->andWhere('ogp.materiaTipo = :materia')
                     ->setParameter('idPersona', $tutor->getId())
                     ->setParameter('gestion', date('Y'))
-                    ->setParameter('inscripcion', $inscripcionActual[0])
+                    ->setParameter('inscripcion', $inscripcionActual)
+                    ->setParameter('materia', 8)
                     ->setMaxResults(1)
                     ->getQuery()
                     ->getResult();
@@ -109,7 +107,9 @@ class OlimRoboticaController extends Controller{
                             ->leftJoin('SieAppWebBundle:OlimInscripcionGrupoProyecto','oigp','with','oigp.olimEstudianteInscripcion = oei.id')
                             ->leftJoin('SieAppWebBundle:OlimGrupoProyecto','ogp','with','oigp.olimGrupoProyecto = ogp.id')
                             ->where('ogp.id = :grupoProyecto')
+                            ->andWhere('ogp.materiaTipo = :materia')
                             ->setParameter('grupoProyecto', $grupoProyecto[0]['id'])
+                            ->setParameter('materia', 8)
                             ->getQuery()
                             ->getResult();
                     } else {
