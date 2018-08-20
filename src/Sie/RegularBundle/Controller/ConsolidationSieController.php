@@ -249,7 +249,7 @@ class ConsolidationSieController extends Controller {
         //new new by krlos
         if ($request->getMethod() == 'POST') {
 
-            $connection = ssh2_connect('172.20.0.103', 1929);
+            $connection = ssh2_connect('172.20.0.106', 1929);
             ssh2_auth_password($connection, 'carlospacha', 'carlospacha');
             $sftp = ssh2_sftp($connection);
             try {
