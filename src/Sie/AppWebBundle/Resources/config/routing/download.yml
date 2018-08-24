@@ -117,13 +117,13 @@ download_archs_olimpiadas_txt:
         expose: true
 
 build_archs_olimpiadas_robotica_txt:
-    path: /buildArchsOlimpiadas/{gestion}
+    path: /buildArchsOlimpiadasRobotica/{gestion}
     defaults: { _controller: SieAppWebBundle:Download:buildArchsOlimpiadasRoboticaTxt }
     options:
         expose: true
 
 download_archs_olimpiadas_robotica_txt:
-    path: /downloadArchsOlimpiadas
+    path: /downloadArchsOlimpiadasRobotica
     defaults: { _controller: SieAppWebBundle:Download:downloadArchsOlimpiadasRoboticaTxt }
     options:
         expose: true
