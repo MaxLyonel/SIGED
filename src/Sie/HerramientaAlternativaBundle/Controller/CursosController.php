@@ -332,14 +332,16 @@ class CursosController extends Controller {
             reset($dataStudents);
             while ($valStudents = current($dataStudents)) {
               if(isset($valStudents['student'])){
+
+                   $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion');");
+                    $query->execute();
                 
                 $altersocio = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findByEstudianteInscripcion($valStudents['eInsId']);
                 
                 if (count($altersocio) == 1){
                     $altsocioaux = clone $altersocio[0];
 
-                    $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion');");
-                    $query->execute();
+                 
 
                     $studentInscription = new EstudianteInscripcion();
                     $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
