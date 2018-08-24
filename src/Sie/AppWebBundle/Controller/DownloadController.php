@@ -887,11 +887,11 @@ class DownloadController extends Controller {
     }
 
     public function buildArchsOlimpiadasTxtAction(Request $request, $gestion) {
-        set_time_limit(180);
+        set_time_limit(200);
 
         $em = $this->getDoctrine()->getManager();
         $gestion = $gestion;
-        $directorio = $this->get('kernel')->getRootDir().'/../web/uploads/';
+        $directorio = $this->get('kernel')->getRootDir().'/../web/uploads/olimpiadas/archivos/';
         $archivo = "archsOlimpiadasTxt.zip";
 
         // Generamos Archivo
@@ -901,13 +901,15 @@ class DownloadController extends Controller {
         $porciones = explode(";", $result[0]['sp_genera_archs_olimpiadas_txt']);
 
         system('zip '.$directorio.$archivo.' '.$directorio.$porciones[0].' '.$directorio.$porciones[1]);
+        system('rm '.$directorio.$porciones[0]);
+        system('rm '.$directorio.$porciones[1]);
 
         $response = new Response();
         return $response;
     }
 
     public function downloadArchsOlimpiadasTxtAction(Request $request) {
-        $directorio = $this->get('kernel')->getRootDir().'/../web/uploads/';
+        $directorio = $this->get('kernel')->getRootDir().'/../web/uploads/olimpiadas/archivos/';
         $archivo = "archsOlimpiadasTxt.zip";
 
         //create response to donwload the file
@@ -921,6 +923,9 @@ class DownloadController extends Controller {
         $response->headers->set('Content-Transfer-Encoding', "binary");
         $response->sendHeaders();
         $response->setContent(readfile($directorio . $archivo));
+
+        system('rm '.$directorio.$archivo);
+
         return $response;
     }
 

@@ -31,7 +31,7 @@ class AppKernel extends Kernel {
             new Sie\PnpBundle\SiePnpBundle(),
             new Sie\HerramientaBundle\SieHerramientaBundle(),
             new Sie\RueBundle\SieRueBundle(),
-            new Sie\RieBundle\SieRieBundle(),
+            // new Sie\RieBundle\SieRieBundle(),
             new Fresh\DoctrineEnumBundle\FreshDoctrineEnumBundle(),
             new Sie\JuegosBundle\SieJuegosBundle(),
             new Sie\HerramientaAlternativaBundle\SieHerramientaAlternativaBundle(),
