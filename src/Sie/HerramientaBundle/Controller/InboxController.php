@@ -675,6 +675,7 @@ class InboxController extends Controller {
            ($this->session->get('ue_humanistica_web') && $this->session->get('ue_humanistica')) ||
            ($this->session->get('ue_sol_regularizar') && $this->session->get('ue_humanistica')) ||
            ($this->session->get('ue_plena')  ) ||
+           ($this->session->get('ue_humanistica_web')  ) ||
            ($this->session->get('ue_modular')  ) ||
            ($this->session->get('ue_caldiff')  ) ||
            ($this->session->get('ue_sol_regularizar')  ) ||
