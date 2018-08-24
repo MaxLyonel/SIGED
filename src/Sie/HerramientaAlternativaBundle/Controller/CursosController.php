@@ -332,10 +332,14 @@ class CursosController extends Controller {
             reset($dataStudents);
             while ($valStudents = current($dataStudents)) {
               if(isset($valStudents['student'])){
+                
                 $altersocio = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findByEstudianteInscripcion($valStudents['eInsId']);
-
+                
                 if (count($altersocio) == 1){
                     $altsocioaux = clone $altersocio[0];
+
+                    $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion');");
+                    $query->execute();
 
                     $studentInscription = new EstudianteInscripcion();
                     $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
@@ -361,25 +365,33 @@ class CursosController extends Controller {
                     $altersocioOcupacion = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltOcupacion')->findByEstudianteInscripcionSocioeconomicoAlternativa($altersocio[0]->getId());
                     $altersocioTransporte = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltTransporte')->findByEstudianteInscripcionSocioeconomicoAlternativa($altersocio[0]->getId());
 
-                    $altersocioAccessoAux = clone $altersocioAccesso[0];
-                    $altersocioAccessoAux->setEstudianteInscripcionSocioeconomicoAlternativa($altsocioaux);
-                    $em->persist($altsocioaux);
-                    $em->flush();
+                    
+                    if($altersocioAccesso){
+                        $altersocioAccessoAux = clone $altersocioAccesso[0];
+                        $altersocioAccessoAux->setEstudianteInscripcionSocioeconomicoAlternativa($altsocioaux);
+                        $em->persist($altsocioaux);
+                        $em->flush();
+                    }
+                    
+                    if($altersocioHabla){
+                        $altersocioHablaAux = clone $altersocioHabla[0];
+                        $altersocioHablaAux->setEstudianteInscripcionSocioeconomicoAlternativa($altsocioaux);
+                        $em->persist($altersocioHablaAux);
+                        $em->flush();
+                    }
 
-                    $altersocioHablaAux = clone $altersocioHabla[0];
-                    $altersocioHablaAux->setEstudianteInscripcionSocioeconomicoAlternativa($altsocioaux);
-                    $em->persist($altersocioHablaAux);
-                    $em->flush();
-
-                    $altersocioOcupacionAux = clone $altersocioOcupacion[0];
-                    $altersocioOcupacionAux->setEstudianteInscripcionSocioeconomicoAlternativa($altsocioaux);
-                    $em->persist($altersocioOcupacionAux);
-                    $em->flush();
-
-                    $altersocioTransporteAux = clone $altersocioTransporte[0];
-                    $altersocioTransporteAux->setEstudianteInscripcionSocioeconomicoAlternativa($altsocioaux);
-                    $em->persist($altersocioTransporteAux);
-                    $em->flush();
+                    if($altersocioOcupacion){
+                        $altersocioOcupacionAux = clone $altersocioOcupacion[0];
+                        $altersocioOcupacionAux->setEstudianteInscripcionSocioeconomicoAlternativa($altsocioaux);
+                        $em->persist($altersocioOcupacionAux);
+                        $em->flush();
+                    }
+                    if($altersocioTransporte){
+                        $altersocioTransporteAux = clone $altersocioTransporte[0];
+                        $altersocioTransporteAux->setEstudianteInscripcionSocioeconomicoAlternativa($altsocioaux);
+                        $em->persist($altersocioTransporteAux);
+                        $em->flush();
+                    }
                     //add the areas to the student
                     //$responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objNextCurso->getId(), $dataInscription['gestion']);
                 }
