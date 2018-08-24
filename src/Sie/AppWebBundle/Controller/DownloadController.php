@@ -929,6 +929,49 @@ class DownloadController extends Controller {
         return $response;
     }
 
+    //ROBÓTICA
+    public function buildArchsOlimpiadasRoboticaTxtAction(Request $request, $gestion) {
+        set_time_limit(200);
+
+        $em = $this->getDoctrine()->getManager();
+        $gestion = $gestion;
+        $directorio = $this->get('kernel')->getRootDir().'/../web/uploads/olimpiadas/archivos/';
+        $archivo = "archsOlimpiadasRoboticaTxt.zip";
+
+        // Generamos Archivo
+        $query = $em->getConnection()->prepare("select * from sp_genera_archs_olimpiadas_robotica_txt('".$gestion."')");
+        $query->execute();
+        $result = $query->fetchAll();
+        $porciones = explode(";", $result[0]['sp_genera_archs_olimpiadas_robotica_txt']);
+
+        system('zip '.$directorio.$archivo.' '.$directorio.$porciones[0]);
+        system('rm '.$directorio.$porciones[0]);
+
+        $response = new Response();
+        return $response;
+    }
+
+    public function downloadArchsOlimpiadasRoboticaTxtAction(Request $request) {
+        $directorio = $this->get('kernel')->getRootDir().'/../web/uploads/olimpiadas/archivos/';
+        $archivo = "archsOlimpiadasRoboticaTxt.zip";
+
+        //create response to donwload the file
+        $response = new Response();
+        //then send the headers to foce download the zip file
+        $response->headers->set('Content-Type', 'application/zip');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $archivo));
+        $response->setContent(file_get_contents($directorio) . $archivo);
+        $response->headers->set('Pragma', "no-cache");
+        $response->headers->set('Expires', "0");
+        $response->headers->set('Content-Transfer-Encoding', "binary");
+        $response->sendHeaders();
+        $response->setContent(readfile($directorio . $archivo));
+
+        system('rm '.$directorio.$archivo);
+
+        return $response;
+    }
+
       /**
      * get the studens per course
      * @param Request $request
