@@ -2,9 +2,9 @@ Sie\AppWebBundle\Entity\MenuSistemaRol:
     type: entity
     table: menu_sistema_rol
     indexes:
-        IDX_3B10C78EF3F27EB:
+        IDX_3B10C7835BAC5E9:
             columns:
-                - rol_tipo_id
+                - sistema_rol_id
         IDX_3B10C78366016DA:
             columns:
                 - menu_sistema_id
@@ -33,13 +33,13 @@ Sie\AppWebBundle\Entity\MenuSistemaRol:
             nullable: true
             comment: ''
     manyToOne:
-        rolTipo:
-            targetEntity: RolTipo
+        sistemaRol:
+            targetEntity: SistemaRol
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                rol_tipo_id:
+                sistema_rol_id:
                     referencedColumnName: id
             orphanRemoval: false
         menuSistema:

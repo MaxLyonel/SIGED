@@ -164,4 +164,32 @@ class MenuSistemaRol
     {
         return $this->menuSistema;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\SistemaRol
+     */
+    private $sistemaRol;
+
+
+    /**
+     * Set sistemaRol
+     *
+     * @param \Sie\AppWebBundle\Entity\SistemaRol $sistemaRol
+     * @return MenuSistemaRol
+     */
+    public function setSistemaRol(\Sie\AppWebBundle\Entity\SistemaRol $sistemaRol = null)
+    {
+        $this->sistemaRol = $sistemaRol;
+    
+        return $this;
+    }
+
+    /**
+     * Get sistemaRol
+     *
+     * @return \Sie\AppWebBundle\Entity\SistemaRol 
+     */
+    public function getSistemaRol()
+    {
+        return $this->sistemaRol;
+    }
 }
