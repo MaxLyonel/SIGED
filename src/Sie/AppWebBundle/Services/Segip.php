@@ -108,7 +108,7 @@ class Segip {
             $token = $this->sistemas_dev;
         } else {
             switch ($sistema) {
-                case 'value':
+                case 'academico':
                     $token = $this->sieacademico;
                     break;
                 
