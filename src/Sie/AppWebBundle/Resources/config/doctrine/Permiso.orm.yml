@@ -49,7 +49,7 @@ Sie\AppWebBundle\Entity\Permiso:
             comment: ''
     manyToOne:
         menuSistemaRol:
-            targetEntity: MenuSistema
+            targetEntity: MenuSistemaRol
             cascade: {  }
             mappedBy: null
             inversedBy: null
