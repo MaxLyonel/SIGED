@@ -50,12 +50,12 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td data-title="Rude" id="rudeinc">{{datastudentcor[0].codigo_rude}}</td>
-                                        <td data-title="Nombre">{{ datastudentcor[0].nombre|e }} </td>
-                                        <td data-title="Paterno">{{datastudentcor[0].paterno|e}}</td>
-                                        <td data-title="Materno">{{datastudentcor[0].materno|e}}</td>                                        
-                                        <td data-title="Genero" class="text-center">{{datastudentcor[0].genero}} </td>
-                                        <td data-title="F. Nacimiento" class="text-center">{{datastudentcor[0].fecha_nacimiento|date('d-m-Y')}}</td>                                        
+                                        <td data-title="Rude" id="rudeinc">{{studentCorr.codigoRude}}</td>
+                                        <td data-title="Nombre">{{ studentCorr.nombre|e }} </td>
+                                        <td data-title="Paterno">{{studentCorr.paterno|e}}</td>
+                                        <td data-title="Materno">{{studentCorr.materno|e}}</td>                                        
+                                        <td data-title="Genero" class="text-center">{{studentCorr.generoTipo}} </td>
+                                        <td data-title="F. Nacimiento" class="text-center">{{studentCorr.fechaNacimiento|date('d-m-Y')}}</td>                                        
                                     </tr>
                                 </tbody>
                             </table>
@@ -72,34 +72,18 @@
                     </div>    
                 <div class="panel-body">
                     <div class="row">                    
-                        <table class="table table-bordered table-hover cf">
-                                <thead class="cf">
-                                    <tr class="info">
-                                        <th class="text-center">Gestión</th>
-                                        <th class="text-center">SIE</th>
-                                        <th class="text-center">Unidad Educativa</th>
-                                        <th class="text-center">Nivel</th>
-                                        <th class="text-center">Grado</th>
-                                        <th class="text-center">Paralelo</th>
-                                        <th class="text-center">Turno</th>
-                                        <th class="text-center">Estado Matricula</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for data in datastudentcor%}
-                                        <tr>
-                                            <td>{{data.gestion_tipo_id}}</td>
-                                            <td>{{data.institucioneducativa_titulo}}</td>
-                                            <td>{{data.institucioneducativa}}</td>
-                                            <td>{{data.nivel|e }} </td>
-                                            <td>{{data.grado|e}}</td>
-                                            <td>{{data.turno}} </td>
-                                            <td>{{data.paralelo|e}}</td>
-                                            <td class="text-center">{{data.em}}</td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                        {% if dataInscriptionCorrR %}
+                            {% include 'SieRegularBundle:NewHistoryInscription:historial_regular.html.twig' with {'dataInscription': dataInscriptionCorrR} %}
+                        {% endif %}
+                        {% if dataInscriptionCorrA %}
+                            {% include 'SieRegularBundle:NewHistoryInscription:historial_alternativa.html.twig' with {'dataInscription': dataInscriptionCorrA} %}
+                        {% endif %}
+                        {% if dataInscriptionCorrE %}
+                            {% include 'SieRegularBundle:NewHistoryInscription:historial_especial.html.twig' with {'dataInscription': dataInscriptionCorrE} %}
+                        {% endif %}
+                        {% if dataInscriptionCorrP %}
+                            {% include 'SieRegularBundle:NewHistoryInscription:historial_pnp.html.twig' with {'dataInscription': dataInscriptionCorrP} %}
+                        {% endif %}
                     </div>
                 </div>
             </div>
