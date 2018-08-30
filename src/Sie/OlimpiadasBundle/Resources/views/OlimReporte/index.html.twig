@@ -181,9 +181,9 @@
                                                     {% endif %}
                                                 </td>
                                                 <td>
-                                                    {% if item.mostrar %}
+                                                    {% if item.mostrar and 1 == 2 %}
                                                         
-                                                        <div class="form-group formulario">
+                                                        <div class="form-group formulario" style="display:none">
                                                             <label for="">¿Como dará el examen de la {{ item.registroNota.olimEtapaTipo.id + 1 }}º etapa?</label>
                                                             <select class="seleccionModalidad form-control" data-registro="{{ item.registroNota.id }}">
                                                                 {% for modalidad in item.modalidades %} 

@@ -39,7 +39,19 @@ class OlimRoboticaController extends Controller{
                 ->setParameter('complemento', $formulario['complementoEstudiante'])
                 ->setParameter('fechaNacimiento', new \DateTime($formulario['fechaNacimientoEstudiante']))
                 ->getQuery()
-                ->getOneOrNullResult();
+                ->getResult();
+
+                if(count($estudiante) > 1){
+                    return $this->render('SieOlimpiadasBundle:OlimRobotica:index.html.twig', array(
+                        'form'=>$form->createView(),
+                        'estudiante'=>null,
+                        'tutor'=>null,
+                        'array'=>null,
+                        'mensaje'=>'La/el estudiante cuenta con más de un código RUDE, intente la búsqueda ingresando el código RUDE correcto en lugar del número de Carnet de Identidad.'
+                    ));
+                } else {
+                    $estudiante = $estudiante[0];
+                }                
 
             $tutor = $em->createQueryBuilder()
                 ->select('p')
@@ -62,15 +74,14 @@ class OlimRoboticaController extends Controller{
                     ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
                     ->where('ei.estudiante = :idEstudiante')
                     ->andWhere('iec.gestionTipo = :gestion')
-                    ->andWhere('ei.estadomatriculaTipo IN (:estados)')
                     ->setParameter('idEstudiante', $estudiante->getId())
                     ->setParameter('gestion', date('Y'))
-                    ->setParameter('estados', array(4,5,11,55))
-                    ->setMaxResults(1)
                     ->getQuery()
                     ->getResult();
 
-                $grupoProyecto = $em->createQueryBuilder()
+                if($inscripcionActual){
+                    // OBTENEMOS EL GRUPO DE INSCRIPCIÓN
+                    $grupoProyecto = $em->createQueryBuilder()
                     ->select('ogp.id')
                     ->from('SieAppWebBundle:OlimTutor','ot')
                     ->innerJoin('SieAppWebBundle:OlimGrupoProyecto','ogp','with','ogp.olimTutor = ot.id')
@@ -78,25 +89,38 @@ class OlimRoboticaController extends Controller{
                     ->innerJoin('SieAppWebBundle:OlimEstudianteInscripcion','oei','with','oigp.olimEstudianteInscripcion = oei.id')
                     ->where('ot.persona = :idPersona')
                     ->andWhere('ot.gestionTipoId = :gestion')
-                    ->andWhere('oei.estudianteInscripcion = :inscripcion')
+                    ->andWhere('oei.estudianteInscripcion in (:inscripcion)')
+                    ->andWhere('ogp.materiaTipo = :materia')
                     ->setParameter('idPersona', $tutor->getId())
                     ->setParameter('gestion', date('Y'))
-                    ->setParameter('inscripcion', $inscripcionActual[0])
+                    ->setParameter('inscripcion', $inscripcionActual)
+                    ->setParameter('materia', 8)
                     ->setMaxResults(1)
                     ->getQuery()
                     ->getResult();
 
-                if($inscripcionActual && $grupoProyecto){
-                    // OBTENEMOS LAS INSCRIPCIONES EN OLIMPIADAS
-                    $inscripcionesOlim = $em->createQueryBuilder()
-                        ->select('oei')
-                        ->from('SieAppWebBundle:OlimEstudianteInscripcion','oei')
-                        ->leftJoin('SieAppWebBundle:OlimInscripcionGrupoProyecto','oigp','with','oigp.olimEstudianteInscripcion = oei.id')
-                        ->leftJoin('SieAppWebBundle:OlimGrupoProyecto','ogp','with','oigp.olimGrupoProyecto = ogp.id')
-                        ->where('ogp.id = :grupoProyecto')
-                        ->setParameter('grupoProyecto', $grupoProyecto[0]['id'])
-                        ->getQuery()
-                        ->getResult();
+                    if($grupoProyecto){
+                        // OBTENEMOS LAS INSCRIPCIONES EN OLIMPIADAS
+                        $inscripcionesOlim = $em->createQueryBuilder()
+                            ->select('oei')
+                            ->from('SieAppWebBundle:OlimEstudianteInscripcion','oei')
+                            ->leftJoin('SieAppWebBundle:OlimInscripcionGrupoProyecto','oigp','with','oigp.olimEstudianteInscripcion = oei.id')
+                            ->leftJoin('SieAppWebBundle:OlimGrupoProyecto','ogp','with','oigp.olimGrupoProyecto = ogp.id')
+                            ->where('ogp.id = :grupoProyecto')
+                            ->andWhere('ogp.materiaTipo = :materia')
+                            ->setParameter('grupoProyecto', $grupoProyecto[0]['id'])
+                            ->setParameter('materia', 8)
+                            ->getQuery()
+                            ->getResult();
+                    } else {
+                        return $this->render('SieOlimpiadasBundle:OlimRobotica:index.html.twig', array(
+                            'form'=>$form->createView(),
+                            'estudiante'=>null,
+                            'tutor'=>null,
+                            'array'=>null,
+                            'mensaje'=>'Los datos ingresados son incorrectos, verifique la información e intente nuevamente.'
+                        ));
+                    }
 
                     $cont = 0;
                     foreach ($inscripcionesOlim as $io) {
@@ -207,6 +231,14 @@ class OlimRoboticaController extends Controller{
 
                         $cont++;
                     }
+                } else {
+                    return $this->render('SieOlimpiadasBundle:OlimRobotica:index.html.twig', array(
+                        'form'=>$form->createView(),
+                        'estudiante'=>null,
+                        'tutor'=>null,
+                        'array'=>null,
+                        'mensaje'=>'Los datos ingresados son incorrectos, verifique la información e intente nuevamente.'
+                    ));
                 }
 
                 $reglasTipo = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->findBy(array('olimMateriaTipo' => 8));
@@ -223,7 +255,8 @@ class OlimRoboticaController extends Controller{
                     'estudiante'=>$estudiante,
                     'tutor'=>$tutor,
                     'array'=>$array,
-                    'formCategoria'=>$formCategoria->createView()
+                    'formCategoria'=>$formCategoria->createView(),
+                    'mensaje'=>'La búsqueda se ha completado con éxito.'
                 ));
             }
 
@@ -231,7 +264,8 @@ class OlimRoboticaController extends Controller{
                 'form'=>$form->createView(),
                 'estudiante'=>$estudiante,
                 'tutor'=>$tutor,
-                'array'=>$array
+                'array'=>$array,
+                'mensaje'=>'Los datos ingresados son incorrectos, verifique la información e intente nuevamente.'
             ));
             
         }
@@ -290,20 +324,27 @@ class OlimRoboticaController extends Controller{
                 }
                 $cont++;
             }
-            if(count($grupoProyectoInscr) == count($estudianteValido)){
-                $estudianteInscr->setOlimReglasOlimpiadasTipo($reglaTipo);
-                $em->persist($estudianteInscr);
-                $em->flush();
-                $grupoProyecto->setFechaConfirmacion(new \DateTime(date('d-m-Y H:i:s')));
-                $em->persist($grupoProyecto);
-                $em->flush();
-                $status = 200;
-                $mensaje = "Confirmación realizada exitosamente.";
+            
+            $a = intval(count($grupoProyectoInscr));
+            $b = intval(count($estudianteValido));
+            
+            if($a == $b){
+                foreach ($grupoProyectoInscr as $key => $value) {
+                    $estudianteInscr = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->find($value->getOlimEstudianteInscripcion());
+                    $estudianteInscr->setOlimReglasOlimpiadasTipo($reglaTipo);
+                    $em->persist($estudianteInscr);
+                    $em->flush();
+                    $grupoProyecto->setFechaConfirmacion(new \DateTime(date('d-m-Y H:i:s')));
+                    $em->persist($grupoProyecto);
+                    $em->flush();
+                    $status = 200;
+                    $mensaje = "Confirmación realizada exitosamente.";
+                }
             } else {
                 $status = 500;
                 $mensaje = "No cumple con las reglas establecidas para la categoría.";
             }
-        }else{
+        } else {
             $status = 500;
             $mensaje = "Ocurrió un error interno, intente nuevamente.";
         }

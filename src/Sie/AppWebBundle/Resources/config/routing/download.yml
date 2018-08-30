@@ -116,6 +116,18 @@ download_archs_olimpiadas_txt:
     options:
         expose: true
 
+build_archs_olimpiadas_robotica_txt:
+    path: /buildArchsOlimpiadasRobotica/{gestion}
+    defaults: { _controller: SieAppWebBundle:Download:buildArchsOlimpiadasRoboticaTxt }
+    options:
+        expose: true
+
+download_archs_olimpiadas_robotica_txt:
+    path: /downloadArchsOlimpiadasRobotica
+    defaults: { _controller: SieAppWebBundle:Download:downloadArchsOlimpiadasRoboticaTxt }
+    options:
+        expose: true
+
 donwload_listainscritosestudiantesolim:
     path: /listainscritosestudiantesolim/{codges}/{coddis}
     defaults: { _controller: SieAppWebBundle:Download:listainscritosestudiantesolim }
