@@ -1,10 +1,12 @@
             <div class="row">
                 <row>
-                    {% if (app.session.get('roluser') == 8) %}
-                        <div class="alert alert-danger alert-dismissible" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <strong> ¡SEÑORA/O TÉCNICO SIE NACIONAL! </strong> Dado su rol se le han desabilitado las validaciones para este módulo, tenga todos los cuidados correspondientes al momento de realizar la Unificación.
-                        </div>   
+                    {% if validado == 0 %}                   
+                        {% for flashMessage in app.session.flashbag.get('validacionerror') %}
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <strong>¡Proceso detenido!</strong> {{ flashMessage }}
+                            </div>
+                        {% endfor %}
                     {% endif %}
                 </row>
                 <row>
@@ -12,7 +14,7 @@
                         <div class="portlet portlet-blue">
                             <div class="portlet-heading">
                                 <div class="portlet-title">
-                                    <h3 class="fa fa-thumbs-o-down"> Información de Rude :{{datastudenta[0].codigo_rude}}</h3>
+                                    <h3 class="fa fa-info"> Información de Rude :{{studenta.codigoRude}}</h3>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
@@ -30,25 +32,26 @@
                                                         <th class="text-center">Nombre(s)</th>
                                                         <th class="text-center">Paterno</th>
                                                         <th class="text-center">Materno</th>
+                                                        <th class="text-center">Carnet-Comp.</th>
                                                         <th class="text-center">Genero</th>
                                                         <th class="text-center">F. Nacimiento</th>
+                                                        <th class="text-center">L. Nacimiento</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td data-title="Rude" id="rudea">{{datastudenta[0].codigo_rude}}</td>
-                                                        <td data-title="Nombre">{{ datastudenta[0].nombre|e }} </td>
-                                                        <td data-title="Paterno">{{datastudenta[0].paterno|e}}</td>
-                                                        <td data-title="Materno">{{datastudenta[0].materno|e}}</td>                                                            
-                                                        <td data-title="Genero" class="text-center">{{datastudenta[0].genero}} </td>
-                                                        <td data-title="F. Nacimiento" class="text-center">{{datastudenta[0].fecha_nacimiento|date('d-m-Y')}}</td>
+                                                        <td data-title="Rude" id="rudea">{{studenta.codigoRude}}</td>
+                                                        <td data-title="Nombre">{{ studenta.nombre|e }} </td>
+                                                        <td data-title="Paterno">{{studenta.paterno|e}}</td>
+                                                        <td data-title="Materno">{{studenta.materno|e}}</td>
+                                                        <td data-title="Carnet">{{studenta.carnetIdentidad|e}}{% if studenta.complemento != null %}-{{studenta.complemento|e}} {% endif %}</td>
+                                                        <td data-title="Genero" class="text-center">{{studenta.generoTipo}} </td>
+                                                        <td data-title="F. Nacimiento" class="text-center">{{studenta.fechaNacimiento|date('d-m-Y')}}</td>
+                                                        <td data-title="L. Nacimiento" class="text-center">{{studenta.localidadNac}} </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                        </div>
-                                        <div class="row"> 
-
-                                        </div>    
+                                        </div>                                           
                                     </div>
                                 </div>
 
@@ -57,35 +60,19 @@
                                         <h4 class="fa fa-list"> Historial de Inscripciones</h4>
                                     </div>    
                                     <div class="panel-body">
-                                        <div class="row">                    
-                                            <table class="table table-bordered table-hover cf">
-                                                <thead class="cf">
-                                                    <tr class="info">
-                                                        <th class="text-center">Gestión</th>
-                                                        <th class="text-center">SIE</th>
-                                                        <th class="text-center">Unidad Educativa</th>
-                                                        <th class="text-center">Nivel</th>
-                                                        <th class="text-center">Grado</th>
-                                                        <th class="text-center">Turno</th>
-                                                        <th class="text-center">Paralelo</th>
-                                                        <th class="text-center">Estado Matricula</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {% for data in datastudenta%}
-                                                        <tr>
-                                                            <td>{{data.gestion_tipo_id}}</td>
-                                                            <td>{{data.institucioneducativa_titulo}}</td>
-                                                            <td>{{data.institucioneducativa}}</td>
-                                                            <td>{{data.nivel|e }} </td>
-                                                            <td>{{data.grado|e}}</td>
-                                                            <td>{{data.turno}} </td>
-                                                            <td>{{data.paralelo|e}}</td>
-                                                            <td class="text-center">{{data.em}}</td>                                                            
-                                                        </tr>
-                                                    {% endfor %}
-                                                </tbody>
-                                            </table>
+                                        <div class="row">
+                                            {% if dataInscriptionaR %}
+                                                {% include 'SieRegularBundle:NewHistoryInscription:historial_regular.html.twig' with {'dataInscription': dataInscriptionaR} %}
+                                            {% endif %}
+                                            {% if dataInscriptionaA %}
+                                                {% include 'SieRegularBundle:NewHistoryInscription:historial_alternativa.html.twig' with {'dataInscription': dataInscriptionaA} %}
+                                            {% endif %}
+                                            {% if dataInscriptionaE %}
+                                                {% include 'SieRegularBundle:NewHistoryInscription:historial_especial.html.twig' with {'dataInscription': dataInscriptionaE} %}
+                                            {% endif %}
+                                            {% if dataInscriptionaP %}
+                                                {% include 'SieRegularBundle:NewHistoryInscription:historial_pnp.html.twig' with {'dataInscription': dataInscriptionaP} %}
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>
@@ -94,8 +81,10 @@
                         <div class="panel panel-default">
                             <div class="panel-body">
                                 <div class="row">   
-                                    <div class="col-ms-12">                                     
-                                        <a role="button" class="btn btn-success btn-large glyphicon glyphicon-ok" href="#" onclick="unificarrudesvercorinc('{{datastudenta[0].codigo_rude}}', '{{datastudentb[0].codigo_rude}}')" > SELECCIONAR COMO RUDE CORRECTO</a>
+                                    <div class="col-ms-12">
+                                        {% if validado == 1 %}                              
+                                            <a role="button" class="btn btn-success btn-large glyphicon glyphicon-ok" href="#" onclick="unificarrudesvercorinc('{{studenta.codigoRude}}', '{{studentb.codigoRude}}')" > SELECCIONAR COMO RUDE CORRECTO</a>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -110,7 +99,7 @@
                         <div class="portlet portlet-blue">
                             <div class="portlet-heading">
                                 <div class="portlet-title">
-                                    <h3><i class="fa fa-thumbs-o-up"> Información de Rude :{{datastudentb[0].codigo_rude}}</i></h3>
+                                    <h3><i class="fa fa-info"> Información de Rude :{{studentb.codigoRude}}</i></h3>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
@@ -128,25 +117,26 @@
                                                         <th class="text-center">Nombre(s)</th>
                                                         <th class="text-center">Paterno</th>
                                                         <th class="text-center">Materno</th>
+                                                        <th class="text-center">Carnet-Comp.</th>
                                                         <th class="text-center">Genero</th>
                                                         <th class="text-center">F. Nacimiento</th>
+                                                        <th class="text-center">L. Nacimiento</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td data-title="Rude" id="rudecor">{{datastudentb[0].codigo_rude}}</td>
-                                                        <td data-title="Nombre">{{ datastudentb[0].nombre|e }} </td>
-                                                        <td data-title="Paterno">{{datastudentb[0].paterno|e}}</td>
-                                                        <td data-title="Materno">{{datastudentb[0].materno|e}}</td>
-                                                        <td data-title="Genero" class="text-center">{{datastudentb[0].genero}} </td>
-                                                        <td data-title="F. Nacimiento" class="text-center">{{datastudentb[0].fecha_nacimiento|date('d-m-Y')}}</td>                                                                                                                    
+                                                        <td data-title="Rude" id="rudecor">{{studentb.codigoRude}}</td>
+                                                        <td data-title="Nombre">{{ studentb.nombre|e }} </td>
+                                                        <td data-title="Paterno">{{studentb.paterno|e}}</td>
+                                                        <td data-title="Materno">{{studentb.materno|e}}</td>
+                                                        <td data-title="Carnet">{{studentb.carnetIdentidad|e}}{% if studentb.complemento != null %}-{{studentb.complemento|e}} {% endif %}</td>
+                                                        <td data-title="Genero" class="text-center">{{studentb.generoTipo}} </td>
+                                                        <td data-title="F. Nacimiento" class="text-center">{{studentb.fechaNacimiento|date('d-m-Y')}}</td>                                                                                                                    
+                                                        <td data-title="L. Nacimiento" class="text-center">{{studentb.localidadNac}} </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                        </div>
-                                        <div class="row"> 
-
-                                        </div>    
+                                        </div>                                            
                                     </div>
                                 </div>
 
@@ -155,35 +145,19 @@
                                         <h4 class="fa fa-list"> Historial de Inscripciones</h4>
                                     </div>    
                                     <div class="panel-body">
-                                        <div class="row">                    
-                                            <table class="table table-bordered table-hover cf">
-                                                <thead class="cf">
-                                                    <tr class="info">
-                                                        <th class="text-center">Gestión</th>
-                                                        <th class="text-center">SIE</th>
-                                                        <th class="text-center">Unidad Educativa</th>
-                                                        <th class="text-center">Nivel</th>
-                                                        <th class="text-center">Grado</th>
-                                                        <th class="text-center">Turno</th>
-                                                        <th class="text-center">Paralelo</th>                                                        
-                                                        <th class="text-center">Estado Matricula</th>                                                        
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {% for data in datastudentb%}
-                                                        <tr>
-                                                            <td>{{data.gestion_tipo_id}}</td>
-                                                            <td>{{data.institucioneducativa_titulo}}</td>
-                                                            <td>{{data.institucioneducativa}}</td>
-                                                            <td>{{data.nivel|e }} </td>
-                                                            <td>{{data.grado|e}}</td>
-                                                            <td>{{data.turno}} </td>
-                                                            <td>{{data.paralelo|e}}</td>
-                                                            <td class="text-center">{{data.em}}</td>                                                            
-                                                        </tr>                                                        
-                                                    {% endfor %}
-                                                </tbody>
-                                            </table>
+                                        <div class="row">  
+                                            {% if dataInscriptionbR %}
+                                                {% include 'SieRegularBundle:NewHistoryInscription:historial_regular.html.twig' with {'dataInscription': dataInscriptionbR} %}
+                                            {% endif %}
+                                            {% if dataInscriptionbA %}
+                                                {% include 'SieRegularBundle:NewHistoryInscription:historial_alternativa.html.twig' with {'dataInscription': dataInscriptionbA} %}
+                                            {% endif %}
+                                            {% if dataInscriptionbE %}
+                                                {% include 'SieRegularBundle:NewHistoryInscription:historial_especial.html.twig' with {'dataInscription': dataInscriptionbE} %}
+                                            {% endif %}
+                                            {% if dataInscriptionbP %}
+                                                {% include 'SieRegularBundle:NewHistoryInscription:historial_pnp.html.twig' with {'dataInscription': dataInscriptionbP} %}
+                                            {% endif %}                                            
                                         </div>
                                     </div>
                                 </div>
@@ -191,8 +165,10 @@
                         <div class="panel panel-default">
                             <div class="panel-body">
                                 <div class="row">    
-                                    <div class="col-ms-12">                                     
-                                        <a role="button" class="btn btn-success btn-large glyphicon glyphicon-ok" href="#" onclick="unificarrudesvercorinc('{{datastudentb[0].codigo_rude}}', '{{datastudenta[0].codigo_rude}}')" > SELECCIONAR COMO RUDE CORRECTO</a>
+                                    <div class="col-ms-12">
+                                        {% if validado == 1 %}                              
+                                            <a role="button" class="btn btn-success btn-large glyphicon glyphicon-ok" href="#" onclick="unificarrudesvercorinc('{{studentb.codigoRude}}', '{{studenta.codigoRude}}')" > SELECCIONAR COMO RUDE CORRECTO</a>
+                                        {% endif %}                                             
                                     </div>
                                 </div>
                             </div>
