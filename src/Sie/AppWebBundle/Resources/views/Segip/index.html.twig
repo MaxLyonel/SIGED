@@ -41,6 +41,13 @@
                                 <label>{{form_label(form1.fechaNac)}} (*):</label>
                                 {{form_widget(form1.fechaNac, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca la fecha de nacimiento (dd-mm-yyyy)'}})}}
                             </div>
+                            <div class="form-group">
+                                <label>Entorno:</label>
+                                <select name="sie_buscar_persona_segip[entorno]" id="sie_buscar_persona_segip_entorno" class="form-control">
+                                    <option value="dev">Desarrollo</option>
+                                    <option value="prod">Producción</option>
+                                </select>
+                            </div>
                             <div class="form-group text-right">
                                 <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> Buscar</button>
                             </div>
@@ -92,6 +99,13 @@
                             <div class="form-group">
                                 <label>{{form_label(form2.fechaNac)}} (*):</label>
                                 {{form_widget(form2.fechaNac, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca la fecha de nacimiento (dd-mm-yyyy)'}})}}
+                            </div>
+                            <div class="form-group">
+                                <label>Entorno:</label>
+                                <select name="sie_verificar_persona_segip[entorno]" id="sie_verificar_persona_segip_entorno" class="form-control">
+                                    <option value="dev">Desarrollo</option>
+                                    <option value="prod">Producción</option>
+                                </select>
                             </div>
                             <div class="form-group text-right">
                                 <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> Buscar</button>
