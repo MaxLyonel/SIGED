@@ -1175,10 +1175,16 @@ class ClasificacionController extends Controller {
                 $xCupo = 2;
             }
         }
+
+        $entidadPruebaTipo = $em->getRepository('SieAppWebBundle:PruebaTipo')->findOneBy(array('id' => $prueba));
+        $disciplinaId = $entidadPruebaTipo->getDisciplinaTipo()->getId();
+
         if ($nivel == 12){
             $xCupo = $xCupo * 1;
         } else {
-            $xCupo = $xCupo * 2;
+            if ($disciplinaId != 2){
+                $xCupo = $xCupo * 2;
+            }
         }
 
         $tipoDisciplinaPrueba = $this->verificaTipoDisciplinaPrueba($prueba,$xCupo);
@@ -1186,7 +1192,6 @@ class ClasificacionController extends Controller {
         $inscripcionEstudianteGestionDisciplinaFase = $this->verificaInscripcionEstudianteGestionDisciplinaFase($inscripcionEstudiante,$gestion,$prueba,$fase);
         $estudiante = $this->verificaInscripcionEstudiante($inscripcionEstudiante);
         $cantidadIncritosGestionPruebaFase = $this->validaCantidadGestionPruebaFaseUe($gestion,$prueba,$fase,$entidadUsuarioId,$posicion);
-
 
         $registroValido = true;
         $msg = array('0'=>true, '1'=>$estudiante["nombre"]);

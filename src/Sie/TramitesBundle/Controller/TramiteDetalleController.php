@@ -3943,8 +3943,8 @@ class TramiteDetalleController extends Controller {
 
                         $msg = array('0'=>true, '1'=>$participante);
 
-                        $tramiteController = new tramiteController();
-                        $tramiteController->setContainer($this->container);
+                        $documentoController = new documentoController();
+                        $documentoController->setContainer($this->container);
 
                         if ($flujoSeleccionado == 'Adelante'){
                             // VALIDACION DE SOLO UN DIPLOMA BACHILLER HUMANISTICO POR ESTUDIANTE (RUDE)
@@ -3967,6 +3967,7 @@ class TramiteDetalleController extends Controller {
                         }
 
                         if ($flujoSeleccionado == 'Atras'){
+                            $documentoId = $documentoController->setTramiteDocumentoEstado($tramiteId, 2);
                             $tramiteDetalleId = $this->setProcesaTramiteAnterior($tramiteId, $id_usuario, $obs, $em);
                         }
 

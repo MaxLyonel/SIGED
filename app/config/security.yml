@@ -34,21 +34,21 @@ security:
         - { path: ^/ususie/usuarios/roladmin/asignacionroles/roladmin, roles: [ROLE_TECSS_*] }
         - { path: ^/ususie/usuarios/listas/roladmin/listasgenerales, roles: [ROLE_TECSS_*] }
         - { path: ^/ususie/usuarios/persona/apropiacionpersona, roles: [ROLE_TECSS_*] }
-        - { path: ^/unificacionrude, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSN_ALT,ROLE_TECSN_ESP,ROLE_TECSN_PNP,ROLE_TECSDE_SIG,ROLE_TECSDE_ALT,ROLE_TECSDE_ESP,ROLE_TECSDI_SIG] }
-        - { path: ^/desunification, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSN_ALT,ROLE_TECSN_ESP,ROLE_TECSN_PNP,ROLE_TECSDE_SIG,ROLE_TECSDE_ALT,ROLE_TECSDE_ESP,ROLE_TECSDI_SIG] }
-        - { path: ^/modificaciondatos, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSN_ALT,ROLE_TECSN_ESP,ROLE_TECSDE_SIG,ROLE_TECSDE_ALT,ROLE_TECSDE_ESP,ROLE_TECSDI_SIG,ROLE_IMPD_DIP] }
+        # - { path: ^/unificacionrude, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSN_ALT,ROLE_TECSN_ESP,ROLE_TECSN_PNP,ROLE_TECSDE_SIG,ROLE_TECSDE_ALT,ROLE_TECSDE_ESP,ROLE_TECSDI_SIG] }
+        # - { path: ^/desunification, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSN_ALT,ROLE_TECSN_ESP,ROLE_TECSN_PNP,ROLE_TECSDE_SIG,ROLE_TECSDE_ALT,ROLE_TECSDE_ESP,ROLE_TECSDI_SIG] }
+        # - { path: ^/modificaciondatos, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSN_ALT,ROLE_TECSN_ESP,ROLE_TECSDE_SIG,ROLE_TECSDE_ALT,ROLE_TECSDE_ESP,ROLE_TECSDI_SIG,ROLE_IMPD_DIP] }
         - { path: ^/datosapoderado, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSN_ALT,ROLE_TECSN_ESP,ROLE_TECSDE_SIG,ROLE_TECSDE_ALT,ROLE_TECSDE_ESP,ROLE_TECSDI_SIG,ROLE_IMPD_DIP,ROLE_IMPD_DIP] }
         - { path: ^/estudianteinformacion, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_INT_SIG] }
         - { path: ^/homologaciones, roles: [ROLE_TECSS_*,ROLE_IMPD_DIP] }        
-        - { path: ^/removeIns, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG] }
-        - { path: ^/inscriptionExtranjeros, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG,ROLE_TECSDI_SIG] }
-        - { path: ^/inicialPrimaria, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }        
-        - { path: ^/inscriptiongral, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
-        - { path: ^/postBachillerato, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
-        - { path: ^/rezago, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
-        - { path: ^/talento, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
-        - { path: ^/moveinscription, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
-        - { path: ^/removeInscriptionfree, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG,ROLE_TECSDI_SIG] }
+        # - { path: ^/removeIns, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG] }
+        # - { path: ^/inscriptionExtranjeros, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG,ROLE_TECSDI_SIG] }
+        # - { path: ^/inicialPrimaria, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }        
+        # - { path: ^/inscriptiongral, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
+        # - { path: ^/postBachillerato, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
+        # - { path: ^/rezago, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
+        # - { path: ^/talento, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
+        # - { path: ^/moveinscription, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
+        # - { path: ^/removeInscriptionfree, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG,ROLE_TECSDI_SIG] }
         - { path: ^/consolidationsie, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
         - { path: ^/sie, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSN_REG,ROLE_TECSDE_SIG,ROLE_TECSDI_SIG,ROLE_DIR_*,ROLE_CONN_SIG,ROLE_INT_SIG, ROLE_CONN_] }
         - { path: ^/ususie, roles: [ROLE_TECSS_*,ROLE_TECSN_USU,ROLE_TECSDE_USU,ROLE_TECSDI_USU,ROLE_DIR_*,ROLE_MAE_*,ROLE_PNPP_USU,ROLE_PNPC_USU] }
