@@ -34,13 +34,13 @@
                   <i class="fa fa-download"></i> Boletin Centralizador
                 </a>
           </div>#}
-          <div class="col-md-12 text-center">
+          {#<div class="col-md-12 text-center">
             {% if onlyview == false %}
               <button type="button" class="btn btn-md btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}');" >
                   <i class="fa fa-user"></i> Inscripción
               </button>
             {% endif %}
-          </div>
+          </div>#}
           <!--div class="col-md-3" >
             {% if app.session.get('ue_modular') and nivel >= 13 %}
             {% else %}
@@ -108,13 +108,13 @@
                                     </div>
                                     { endif }
                                     #}
-                                    {% if gestion >= 2013 and gestion <= 2016 or onlyview == false %}
+                                    {#% if gestion >= 2013 and gestion <= 2016 or onlyview == false %}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
                                         <button type="button" class="btn btn-circle btn-warning " data-toggle="" data-target="" onclick="removeInscriptionSpecial('{{infoUe}}',{{data.estInsEspId}},{{data.estInsId}});" >
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </div>
-                                    {% endif %}
+                                    {% endif %#}
 
                                     {% if  1 == 2 %}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
