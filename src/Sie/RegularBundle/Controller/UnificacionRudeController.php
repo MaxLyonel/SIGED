@@ -431,19 +431,27 @@ class UnificacionRudeController extends Controller {
             }
         }
         
-        $validado = 0;
+        $validado = 1;
         
         //********** SE VERIFICA QUE LOS HISTORIALES NO CUENTEN CON ESTADOS SIMILARES EN LA MISMA GESTION
-        $sqlb = "select cast('Regular' as varchar) as subsistema, cast('Mismo estado en la misma gestión' as varchar) as observacion, gestion_tipo_id_raepb as gestion, estadomatricula_tipo_id_fin_rb as estadomatricula from (
-            select * from (
-            select gestion_tipo_id_raep as gestion_tipo_id_raepb, estadomatricula_tipo_id_fin_r as estadomatricula_tipo_id_fin_rb
+        $sqlb = "select cast('Regular' as varchar) as subsistema, cast('Mismo estado en la misma gestión' as varchar) as observacion, gestion_rude_b as gestion, estadomatricula_rude_b as estadomatricula from (
+            select * from (            
+            select gestion_tipo_id_raep as gestion_rude_b, estadomatricula_tipo_id_fin_r as estadomatricula_rude_b
             from sp_genera_estudiante_historial('".$rudeinc."') 
-            where institucioneducativa_tipo_id_raep = 1) b 
-            INNER JOIN
-            (select gestion_tipo_id_raep as gestion_tipo_id_raepc, estadomatricula_tipo_id_fin_r as estadomatricula_tipo_id_fin_rc
+            where institucioneducativa_tipo_id_raep = 1
+            and estadomatricula_tipo_id_fin_r not in ('6','9')
+            ) b 
+        INNER JOIN
+            (
+            select gestion_tipo_id_raep as gestion_rude_c, estadomatricula_tipo_id_fin_r as estadomatricula_rude_c
             from sp_genera_estudiante_historial('".$rudecor."') 
-            where institucioneducativa_tipo_id_raep = 1) c 
-            ON b.gestion_tipo_id_raepb = c.gestion_tipo_id_raepc AND b.gestion_tipo_id_raepb = c.gestion_tipo_id_raepc) regular";
+            where institucioneducativa_tipo_id_raep = 1
+            and estadomatricula_tipo_id_fin_r not in ('6','9')
+            ) c 
+            ON b.gestion_rude_b = c.gestion_rude_c
+            AND b.estadomatricula_rude_b = c.estadomatricula_rude_c) regular";
+        
+        
         $queryverdipb = $em->getConnection()->prepare($sqlb);
         $queryverdipb->execute();
         $dataInscriptionJsonVerDipb = $queryverdipb->fetchAll();
