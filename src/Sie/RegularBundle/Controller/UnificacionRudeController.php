@@ -320,6 +320,7 @@ class UnificacionRudeController extends Controller {
 
         return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulthistoriales.html.twig', array(
                     'validado' => $validado,
+
                     'studenta' => $studenta,
                     'dataInscriptionaR' => $dataInscriptionaR,
                     'dataInscriptionaA' => $dataInscriptionaA,
@@ -429,7 +430,9 @@ class UnificacionRudeController extends Controller {
                 break;
             }
         }
-
+        
+        $validado = 0;
+        
         //********** SE VERIFICA QUE LOS HISTORIALES NO CUENTEN CON ESTADOS SIMILARES EN LA MISMA GESTION
         $sqlb = "select cast('Regular' as varchar) as subsistema, cast('Mismo estado en la misma gestión' as varchar) as observacion, gestion_tipo_id_raepb as gestion, estadomatricula_tipo_id_fin_rb as estadomatricula from (
             select * from (
@@ -445,14 +448,18 @@ class UnificacionRudeController extends Controller {
         $queryverdipb->execute();
         $dataInscriptionJsonVerDipb = $queryverdipb->fetchAll();
         //********** SE VERIFICA QUE LOS HISTORIALES NO CUENTEN CON ESTADOS SIMILARES EN LA MISMA GESTION
-        
+        $validado = 0;
         if (count($dataInscriptionJsonVerDipb) > 0) {
             $message = "¡Proceso de dentenido! se ha detectado inconsistencia de datos :".$dataInscriptionJsonVerDipb[0]['subsistema']." ".$dataInscriptionJsonVerDipb[0]['observacion']." ".$dataInscriptionJsonVerDipb[0]['gestion'];
-            $this->addFlash('notihistory', $message);            
-            return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulterror.html.twig' );
+            $this->addFlash('notihistory', $message);
+            //return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulterror.html.twig' );
+        } else {
+            $validado = 1;
         }
 
         return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulthistorialescorinc.html.twig', array(                   
+                    'validado' => $validado,
+
                     'studentCorr' => $studentCorr,
                     'dataInscriptionCorrR' => $dataInscriptionCorrR,
                     'dataInscriptionCorrA' => $dataInscriptionCorrA,
