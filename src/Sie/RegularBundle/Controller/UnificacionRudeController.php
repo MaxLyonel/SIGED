@@ -119,11 +119,11 @@ class UnificacionRudeController extends Controller {
         
         $validado = 0;        
         //*******VERIFICANDO QUE LOS DATOS NOMBRES APELLIDOS SEAN IGUALES        
-        if  (      ($studenta->getNombre() == $studentb->getNombre())
-                && ($studenta->getPaterno() == $studentb->getPaterno())
-                && ($studenta->getMaterno() == $studentb->getMaterno())
-                && ($studenta->getgeneroTipo() == $studentb->getgeneroTipo())
-                && ($studenta->getfechaNacimiento() == $studentb->getfechaNacimiento())
+        if  (      (trim($studenta->getNombre()) == trim($studentb->getNombre()))
+                && (trim($studenta->getPaterno()) == trim($studentb->getPaterno()))
+                && (trim($studenta->getMaterno()) == trim($studentb->getMaterno()))
+                && (trim($studenta->getgeneroTipo()) == trim($studentb->getgeneroTipo()))
+                && (trim($studenta->getfechaNacimiento()->format('Y-m-d')) == trim($studentb->getfechaNacimiento()->format('Y-m-d')))
             ) {
             $validado = 1;
         } else {
@@ -347,33 +347,6 @@ class UnificacionRudeController extends Controller {
         }
         $rudecor = trim($rudecor);
         $rudeinc = trim($rudeinc);
-
-        //*******VERIFICANDO QUE LOS RUDE NO TENGA TRAMITES EN DIPLOMAS
-        /*$sqla = "select * from tramite a 
-        inner join estudiante_inscripcion b on a.estudiante_inscripcion_id = b.id
-        inner join estudiante c on b.estudiante_id = c.id
-        where c.codigo_rude = '$rudecor'
-        and a.esactivo is true";
-        $queryverdipa = $em->getConnection()->prepare($sqla);
-        $queryverdipa->execute();
-        $dataInscriptionJsonVerDipa = $queryverdipa->fetchAll();
-
-        $sqlb = "select * from tramite a 
-        inner join estudiante_inscripcion b on a.estudiante_inscripcion_id = b.id
-        inner join estudiante c on b.estudiante_id = c.id
-        where c.codigo_rude = '$rudecor'
-        and a.esactivo is true";
-        $queryverdipb = $em->getConnection()->prepare($sqlb);
-        $queryverdipb->execute();
-        $dataInscriptionJsonVerDipb = $queryverdipb->fetchAll();
-        
-        if (((count($dataInscriptionJsonVerDipa) > 0) || (count($dataInscriptionJsonVerDipb) > 0)) && ($val == 1)) {
-            $message = 'No se podra realizar la unificación por que ya se inicio tramite de Diplomas.';
-            $this->addFlash('notihistory', $message);            
-            return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulterror.html.twig' );
-        }*/
-        //*******VERIFICANDO QUE LOS RUDE NO TENGA TRAMITES EN DIPLOMAS
-
 
         $studentCorr = array();
         $studentIncc = array();
