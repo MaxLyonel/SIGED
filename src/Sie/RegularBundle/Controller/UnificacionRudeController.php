@@ -167,6 +167,7 @@ class UnificacionRudeController extends Controller {
             inner join estudiante c on b.estudiante_id = c.id
             where c.codigo_rude = '$rudea'
             and a.esactivo is true";
+            
             $queryverdipa = $em->getConnection()->prepare($sqla);
             $queryverdipa->execute();
             $dataInscriptionJsonVerDipa = $queryverdipa->fetchAll();
@@ -197,6 +198,76 @@ class UnificacionRudeController extends Controller {
                 }
             }
             //*******VERIFICANDO QUE ALGUNO DE LOS RUDE NO TENGA TRAMITES EN DIPLOMAS
+
+            //*******VERIFICANDO QUE ALGUNO DE LOS RUDE NO TENGA DATOS EN JUEGOS
+            $sqla = "select * from estudiante_inscripcion_juegos a 
+            inner join estudiante_inscripcion b on a.estudiante_inscripcion_id = b.id
+            inner join estudiante c on b.estudiante_id = c.id
+            where c.codigo_rude = '$rudea'";
+            $queryverJuea = $em->getConnection()->prepare($sqla);
+            $queryverJuea->execute();
+            $dataInscriptionJsonJuea = $queryverJuea->fetchAll();
+            $countJuea = count($dataInscriptionJsonJuea);
+            
+            $sqlb = "select * from estudiante_inscripcion_juegos a 
+            inner join estudiante_inscripcion b on a.estudiante_inscripcion_id = b.id
+            inner join estudiante c on b.estudiante_id = c.id
+            where c.codigo_rude = '$rudeb'";
+            $queryverJueb = $em->getConnection()->prepare($sqlb);
+            $queryverJueb->execute();
+            $dataInscriptionJsonJueb = $queryverJueb->fetchAll();
+            $countJueb = count($dataInscriptionJsonJueb);           
+
+            if (($countJuea > 0) && ($countJueb > 0)) {
+                $message = 'Ambos rudes cuentan con historial en juegos.';
+                $this->addFlash('notihistory', $message);            
+                return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulterror.html.twig' );
+            } else {
+                if (($countJuea == 0) && ($countJueb > 0)) {
+                    $this->addFlash('autoselcorr', 'Se ha seleccionado el rude con historial en juegos como el rude correcto.'); 
+                    return $this->redirectToRoute('unificacion_ver_cor_inc', array('rudecor' => $rudeb,'rudeinc' => $rudea));
+                }
+                if (($countJuea == 0) && ($countJueb > 0)) {
+                    $this->addFlash('autoselcorr', 'Se ha seleccionado el rude con historial en juegos como el rude correcto.'); 
+                    return $this->redirectToRoute('unificacion_ver_cor_inc', array('rudecor' => $rudea,'rudeinc' => $rudeb));
+                }
+            }
+            //*******VERIFICANDO QUE ALGUNO DE LOS RUDE NO TENGA DATOS EN JUEGOS
+
+            //*******VERIFICANDO QUE ALGUNO DE LOS RUDE NO TENGA DATOS EN OLIMPIADAS
+            $sqla = "select * from olim_estudiante_inscripcion a 
+            inner join estudiante_inscripcion b on a.estudiante_inscripcion_id = b.id
+            inner join estudiante c on b.estudiante_id = c.id
+            where c.codigo_rude = '$rudea' ";
+            $queryverOlma = $em->getConnection()->prepare($sqla);
+            $queryverOlma->execute();
+            $dataInscriptionJsonOlma = $queryverOlma->fetchAll();
+            $countOlma = count($dataInscriptionJsonOlma);
+
+            $sqlb = "select * from olim_estudiante_inscripcion a 
+            inner join estudiante_inscripcion b on a.estudiante_inscripcion_id = b.id
+            inner join estudiante c on b.estudiante_id = c.id
+            where c.codigo_rude = '$rudeb' ";
+            $queryverOlmb = $em->getConnection()->prepare($sqlb);
+            $queryverOlmb->execute();
+            $dataInscriptionJsonOlmb = $queryverOlmb->fetchAll();
+            $countOlmb = count($dataInscriptionJsonOlmb);
+
+            if (($countOlma > 0) && ($countOlmb > 0)) {
+                $message = 'Ambos rudes cuentan con historial en olimpiadas.';
+                $this->addFlash('notihistory', $message);            
+                return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulterror.html.twig' );
+            } else {
+                if (($countOlma == 0) && ($countOlmb > 0)) {
+                    $this->addFlash('autoselcorr', 'Se ha seleccionado el rude con historial en olimpiadas como el rude correcto.'); 
+                    return $this->redirectToRoute('unificacion_ver_cor_inc', array('rudecor' => $rudeb,'rudeinc' => $rudea));
+                }
+                if (($countOlma == 0) && ($countOlmb > 0)) {
+                    $this->addFlash('autoselcorr', 'Se ha seleccionado el rude con historial en olimpiadas como el rude correcto.'); 
+                    return $this->redirectToRoute('unificacion_ver_cor_inc', array('rudecor' => $rudea,'rudeinc' => $rudeb));
+                }
+            }
+            //*******VERIFICANDO QUE ALGUNO DE LOS RUDE NO TENGA DATOS EN OLIMPIADAS
         }
 
         $dataInscriptionaR = array();
@@ -249,6 +320,7 @@ class UnificacionRudeController extends Controller {
 
         return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulthistoriales.html.twig', array(
                     'validado' => $validado,
+
                     'studenta' => $studenta,
                     'dataInscriptionaR' => $dataInscriptionaR,
                     'dataInscriptionaA' => $dataInscriptionaA,
@@ -358,30 +430,44 @@ class UnificacionRudeController extends Controller {
                 break;
             }
         }
-
+        
+        $validado = 1;
+        
         //********** SE VERIFICA QUE LOS HISTORIALES NO CUENTEN CON ESTADOS SIMILARES EN LA MISMA GESTION
-        $sqlb = "select cast('Regular' as varchar) as subsistema, cast('Mismo estado en la misma gestión' as varchar) as observacion, gestion_tipo_id_raepb as gestion, estadomatricula_tipo_id_fin_rb as estadomatricula from (
-            select * from (
-            select gestion_tipo_id_raep as gestion_tipo_id_raepb, estadomatricula_tipo_id_fin_r as estadomatricula_tipo_id_fin_rb
+        $sqlb = "select cast('Regular' as varchar) as subsistema, cast('Mismo estado en la misma gestión' as varchar) as observacion, gestion_rude_b as gestion, estadomatricula_rude_b as estadomatricula from (
+            select * from (            
+            select gestion_tipo_id_raep as gestion_rude_b, estadomatricula_tipo_id_fin_r as estadomatricula_rude_b
             from sp_genera_estudiante_historial('".$rudeinc."') 
-            where institucioneducativa_tipo_id_raep = 1) b 
-            INNER JOIN
-            (select gestion_tipo_id_raep as gestion_tipo_id_raepc, estadomatricula_tipo_id_fin_r as estadomatricula_tipo_id_fin_rc
+            where institucioneducativa_tipo_id_raep = 1
+            and estadomatricula_tipo_id_fin_r not in ('6','9')
+            ) b 
+        INNER JOIN
+            (
+            select gestion_tipo_id_raep as gestion_rude_c, estadomatricula_tipo_id_fin_r as estadomatricula_rude_c
             from sp_genera_estudiante_historial('".$rudecor."') 
-            where institucioneducativa_tipo_id_raep = 1) c 
-            ON b.gestion_tipo_id_raepb = c.gestion_tipo_id_raepc AND b.gestion_tipo_id_raepb = c.gestion_tipo_id_raepc) regular";
+            where institucioneducativa_tipo_id_raep = 1
+            and estadomatricula_tipo_id_fin_r not in ('6','9')
+            ) c 
+            ON b.gestion_rude_b = c.gestion_rude_c
+            AND b.estadomatricula_rude_b = c.estadomatricula_rude_c) regular";
+        
+        
         $queryverdipb = $em->getConnection()->prepare($sqlb);
         $queryverdipb->execute();
         $dataInscriptionJsonVerDipb = $queryverdipb->fetchAll();
         //********** SE VERIFICA QUE LOS HISTORIALES NO CUENTEN CON ESTADOS SIMILARES EN LA MISMA GESTION
-        
+        $validado = 0;
         if (count($dataInscriptionJsonVerDipb) > 0) {
             $message = "¡Proceso de dentenido! se ha detectado inconsistencia de datos :".$dataInscriptionJsonVerDipb[0]['subsistema']." ".$dataInscriptionJsonVerDipb[0]['observacion']." ".$dataInscriptionJsonVerDipb[0]['gestion'];
-            $this->addFlash('notihistory', $message);            
-            return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulterror.html.twig' );
+            $this->addFlash('notihistory', $message);
+            //return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulterror.html.twig' );
+        } else {
+            $validado = 1;
         }
 
-        return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulthistorialescorinc.html.twig', array(                    
+        return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulthistorialescorinc.html.twig', array(                   
+                    'validado' => $validado,
+
                     'studentCorr' => $studentCorr,
                     'dataInscriptionCorrR' => $dataInscriptionCorrR,
                     'dataInscriptionCorrA' => $dataInscriptionCorrA,
@@ -489,7 +575,7 @@ class UnificacionRudeController extends Controller {
             $em->flush();
 
             //COMMIT DE TODA LA TRANSACCION
-            $em->getConnection()->rollback();
+            $em->getConnection()->commit();
             
             //******PARA EL PROCESO DE CALIDAD
             /*if ($sesion->get('procesocalidadid') != '0' ){

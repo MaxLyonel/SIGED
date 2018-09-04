@@ -157,8 +157,12 @@
                         <div class="row">
                             <div class="col-xs-3">                        
                             </div>                                                
-                            <div class="col-xs-3">                        
-                                <a role="button" class="btn btn-success btn-large glyphicon glyphicon-ok" href="#" onclick="unificarrudes('{{studentIncc.codigoRude}}', '{{studentCorr.codigoRude}}')" > UNIFICAR RUDES</a>
+                            <div class="col-xs-3">
+                                {% if validado == 1 %}                       
+                                    <a role="button" class="btn btn-success btn-large glyphicon glyphicon-ok" href="#" onclick="unificarrudes('{{studentIncc.codigoRude}}', '{{studentCorr.codigoRude}}')" > UNIFICAR RUDES</a>
+                                {% else %}     
+                                    <a role="button" class="btn btn-success btn-large glyphicon glyphicon-ok" href="#" > UNIFICAR RUDES</a>
+                                {% endif %}     
                             </div>                                                
                             <div class="col-xs-3">
                                 <a role="button" class="btn btn-warning btn-large glyphicon glyphicon-remove-sign" href="{{ path('unificacion_index') }}"> VOLVER INICIAR</a> 
