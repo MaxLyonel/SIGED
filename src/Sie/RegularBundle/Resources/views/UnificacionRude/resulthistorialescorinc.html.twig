@@ -1,18 +1,18 @@
             <div class="row">
                 <row>
-                    {% if (app.session.get('roluser') == 8) %}
-                        <div class="alert alert-danger alert-dismissible" role="alert">
+                    {% for flashMessage in app.session.flashbag.get('autoselcorr') %}
+                        <div class="alert alert-warning alert-dismissible" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <strong> ¡SEÑORA/O TÉCNICO SIE NACIONAL! </strong> Dado su rol se le han desabilitado las validaciones para este módulo, tenga todos los cuidados correspondientes al momento de realizar la Unificación.
-                        </div>   
-                    {% endif %}
+                            <strong>Proceso automatico</strong> {{ flashMessage }}
+                        </div>
+                    {% endfor %}
                 </row>  
                 <row>
                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                         <div class="portlet portlet-blue">
                             <div class="portlet-heading">
                                 <div class="portlet-title">
-                                    <h3 class="fa fa-thumbs-o-down"> Información de Rude Incorrecto :{{datastudentinc[0].codigo_rude}}</h3>
+                                    <h3 class="fa fa-thumbs-o-down"> Información de Rude Incorrecto :{{studentIncc.codigoRude}}</h3>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
@@ -30,25 +30,26 @@
                                                         <th class="text-center">Nombre(s)</th>
                                                         <th class="text-center">Paterno</th>
                                                         <th class="text-center">Materno</th>
+                                                        <th class="text-center">Carnet-Comp.</th>
                                                         <th class="text-center">Genero</th>
                                                         <th class="text-center">F. Nacimiento</th>
+                                                        <th class="text-center">L. Nacimiento</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td data-title="Rude" id="rudea">{{datastudentinc[0].codigo_rude}}</td>
-                                                        <td data-title="Nombre">{{ datastudentinc[0].nombre|e }} </td>
-                                                        <td data-title="Paterno">{{datastudentinc[0].paterno|e}}</td>
-                                                        <td data-title="Materno">{{datastudentinc[0].materno|e}}</td>                                                            
-                                                        <td data-title="Genero" class="text-center">{{datastudentinc[0].genero}} </td>
-                                                        <td data-title="F. Nacimiento" class="text-center">{{datastudentinc[0].fecha_nacimiento|date('d-m-Y')}}</td>
+                                                        <td data-title="Rude" id="rudea">{{studentIncc.codigoRude}}</td>
+                                                        <td data-title="Nombre">{{ studentIncc.nombre|e }} </td>
+                                                        <td data-title="Paterno">{{studentIncc.paterno|e}}</td>
+                                                        <td data-title="Materno">{{studentIncc.materno|e}}</td>
+                                                        <td data-title="Carnet">{{studentIncc.carnetIdentidad|e}}{% if studentIncc.complemento != null %}-{{studentIncc.complemento|e}} {% endif %}</td>                                                           
+                                                        <td data-title="Genero" class="text-center">{{studentIncc.generoTipo}} </td>
+                                                        <td data-title="F. Nacimiento" class="text-center">{{studentIncc.fechaNacimiento|date('d-m-Y')}}</td>
+                                                        <td data-title="L. Nacimiento" class="text-center">{{studentIncc.localidadNac}} </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                        </div>
-                                        <div class="row"> 
-
-                                        </div>    
+                                        </div>                                            
                                     </div>
                                 </div>
 
@@ -58,35 +59,18 @@
                                     </div>    
                                     <div class="panel-body">
                                         <div class="row">                    
-                                            <table class="table table-bordered table-hover cf">
-                                                <thead class="cf">
-                                                    <tr class="info">
-                                                        <th class="text-center">Gestión</th>
-                                                        <th class="text-center">SIE</th>
-                                                        <th class="text-center">Unidad Educativa</th>
-                                                        <th class="text-center">Nivel</th>
-                                                        <th class="text-center">Grado</th>
-                                                        <th class="text-center">Turno</th>
-                                                        <th class="text-center">Paralelo</th>
-                                                        <th class="text-center">Estado Matricula</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-
-                                                    {% for data in datastudentinc%}
-                                                        <tr>
-                                                            <td>{{data.gestion_tipo_id}}</td>
-                                                            <td>{{data.institucioneducativa_titulo}}</td>
-                                                            <td>{{data.institucioneducativa}}</td>
-                                                            <td>{{data.nivel|e }} </td>
-                                                            <td>{{data.grado|e}}</td>
-                                                            <td>{{data.turno}} </td>
-                                                            <td>{{data.paralelo|e}}</td>
-                                                            <td class="text-center">{{data.em}}</td>                                                            
-                                                        </tr>
-                                                    {% endfor %}
-                                                </tbody>
-                                            </table>
+                                            {% if dataInscriptionInccR %}
+                                                {% include 'SieRegularBundle:NewHistoryInscription:historial_regular.html.twig' with {'dataInscription': dataInscriptionInccR} %}
+                                            {% endif %}
+                                            {% if dataInscriptionInccA %}
+                                                {% include 'SieRegularBundle:NewHistoryInscription:historial_alternativa.html.twig' with {'dataInscription': dataInscriptionInccA} %}
+                                            {% endif %}
+                                            {% if dataInscriptionInccE %}
+                                                {% include 'SieRegularBundle:NewHistoryInscription:historial_especial.html.twig' with {'dataInscription': dataInscriptionInccE} %}
+                                            {% endif %}
+                                            {% if dataInscriptionInccP %}
+                                                {% include 'SieRegularBundle:NewHistoryInscription:historial_pnp.html.twig' with {'dataInscription': dataInscriptionInccP} %}
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>
@@ -99,7 +83,7 @@
                         <div class="portlet portlet-blue">
                             <div class="portlet-heading">
                                 <div class="portlet-title">
-                                    <h3><i class="fa fa-thumbs-o-up"> Información de Rude Correcto:{{datastudentcor[0].codigo_rude}}</i></h3>
+                                    <h3><i class="fa fa-thumbs-o-up"> Información de Rude Correcto:{{studentCorr.codigoRude}}</i></h3>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
@@ -117,25 +101,26 @@
                                                         <th class="text-center">Nombre(s)</th>
                                                         <th class="text-center">Paterno</th>
                                                         <th class="text-center">Materno</th>
+                                                        <th class="text-center">Carnet-Comp.</th>
                                                         <th class="text-center">Genero</th>
                                                         <th class="text-center">F. Nacimiento</th>
+                                                        <th class="text-center">L. Nacimiento</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td data-title="Rude" id="rudecor">{{datastudentcor[0].codigo_rude}}</td>
-                                                        <td data-title="Nombre">{{ datastudentcor[0].nombre|e }} </td>
-                                                        <td data-title="Paterno">{{datastudentcor[0].paterno|e}}</td>
-                                                        <td data-title="Materno">{{datastudentcor[0].materno|e}}</td>
-                                                        <td data-title="Genero" class="text-center">{{datastudentcor[0].genero}} </td>
-                                                        <td data-title="F. Nacimiento" class="text-center">{{datastudentcor[0].fecha_nacimiento|date('d-m-Y')}}</td>                                                                                                                    
+                                                        <td data-title="Rude" id="rudecor">{{studentCorr.codigoRude}}</td>
+                                                        <td data-title="Nombre">{{ studentCorr.nombre|e }} </td>
+                                                        <td data-title="Paterno">{{studentCorr.paterno|e}}</td>
+                                                        <td data-title="Materno">{{studentCorr.materno|e}}</td>
+                                                        <td data-title="Carnet">{{studentCorr.carnetIdentidad|e}}{% if studentCorr.complemento != null %}-{{studentCorr.complemento|e}} {% endif %}</td>                                                           
+                                                        <td data-title="Genero" class="text-center">{{studentCorr.generoTipo}} </td>
+                                                        <td data-title="F. Nacimiento" class="text-center">{{studentCorr.fechaNacimiento|date('d-m-Y')}}</td>                                                                                                                    
+                                                        <td data-title="L. Nacimiento" class="text-center">{{studentCorr.localidadNac}} </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <div class="row"> 
-
-                                        </div>    
                                     </div>
                                 </div>
 
@@ -145,35 +130,19 @@
                                     </div>    
                                     <div class="panel-body">
                                         <div class="row">                    
-                                            <table class="table table-bordered table-hover cf">
-                                                <thead class="cf">
-                                                    <tr class="info">
-                                                        <th class="text-center">Gestión</th>
-                                                        <th class="text-center">SIE</th>
-                                                        <th class="text-center">Unidad Educativa</th>
-                                                        <th class="text-center">Nivel</th>
-                                                        <th class="text-center">Grado</th>
-                                                        <th class="text-center">Turno</th>
-                                                        <th class="text-center">Paralelo</th>                                                        
-                                                        <th class="text-center">Estado Matricula</th>                                                        
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {% for data in datastudentcor%}
-                                                        <tr>
-                                                            <td>{{data.gestion_tipo_id}}</td>
-                                                            <td>{{data.institucioneducativa_titulo}}</td>
-                                                            <td>{{data.institucioneducativa}}</td>
-                                                            <td>{{data.nivel|e }} </td>
-                                                            <td>{{data.grado|e}}</td>
-                                                            <td>{{data.turno}} </td>
-                                                            <td>{{data.paralelo|e}}</td>
-                                                            <td class="text-center">{{data.em}}</td>                                                            
-                                                        </tr>                                                        
-                                                    {% endfor %}
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                            {% if dataInscriptionCorrR %}
+                                                {% include 'SieRegularBundle:NewHistoryInscription:historial_regular.html.twig' with {'dataInscription': dataInscriptionCorrR} %}
+                                            {% endif %}
+                                            {% if dataInscriptionCorrA %}
+                                                {% include 'SieRegularBundle:NewHistoryInscription:historial_alternativa.html.twig' with {'dataInscription': dataInscriptionCorrA} %}
+                                            {% endif %}
+                                            {% if dataInscriptionCorrE %}
+                                                {% include 'SieRegularBundle:NewHistoryInscription:historial_especial.html.twig' with {'dataInscription': dataInscriptionCorrE} %}
+                                            {% endif %}
+                                            {% if dataInscriptionCorrP %}
+                                                {% include 'SieRegularBundle:NewHistoryInscription:historial_pnp.html.twig' with {'dataInscription': dataInscriptionCorrP} %}
+                                            {% endif %}
+                                        </div>    
                                     </div>
                                 </div>
                             </div>
@@ -188,8 +157,12 @@
                         <div class="row">
                             <div class="col-xs-3">                        
                             </div>                                                
-                            <div class="col-xs-3">                        
-                                <a role="button" class="btn btn-success btn-large glyphicon glyphicon-ok" href="#" onclick="unificarrudes('{{datastudentinc[0].codigo_rude}}', '{{datastudentcor[0].codigo_rude}}')" > UNIFICAR RUDES</a>
+                            <div class="col-xs-3">
+                                {% if validado == 1 %}                       
+                                    <a role="button" class="btn btn-success btn-large glyphicon glyphicon-ok" href="#" onclick="unificarrudes('{{studentIncc.codigoRude}}', '{{studentCorr.codigoRude}}')" > UNIFICAR RUDES</a>
+                                {% else %}     
+                                    <a role="button" class="btn btn-success btn-large glyphicon glyphicon-ok" href="#" > UNIFICAR RUDES</a>
+                                {% endif %}     
                             </div>                                                
                             <div class="col-xs-3">
                                 <a role="button" class="btn btn-warning btn-large glyphicon glyphicon-remove-sign" href="{{ path('unificacion_index') }}"> VOLVER INICIAR</a> 

@@ -22,7 +22,7 @@ class Segip {
         /*TOKEN DE CONEXIÓN*/
         $this->sistemas_dev = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI0M2t2ZVlDUmRxWGpFMW5QRHZYVWs1MW05OWEyOTJvQSIsInVzZXIiOiJzaXN0ZW1hc19kZXYiLCJleHAiOjE2MjUzNTAwMjB9.GmV5nakrvPSdrQq3TUAVwATtr4icHGE2Y2bj7w4qwSc';
 
-        $this->sieacademico = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJXREdHc3VvQ1dVS1VFdDgxWFdnRk9NSnlBdzVRZDBxQyIsInVzZXIiOiJzaWVhY2FkZW1pY28iLCJleHAiOjE2MjUyMzg0MjB9.mZAIX3k76FkMxLKH8BlJ5CiGPlKEyKAFrsLTYG21Bqs'
+        $this->sieacademico = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJXREdHc3VvQ1dVS1VFdDgxWFdnRk9NSnlBdzVRZDBxQyIsInVzZXIiOiJzaWVhY2FkZW1pY28iLCJleHAiOjE2MjUyMzg0MjB9.mZAIX3k76FkMxLKH8BlJ5CiGPlKEyKAFrsLTYG21Bqs';
         /*TOKEN DE CONEXIÓN*/
     }
     
@@ -52,10 +52,10 @@ class Segip {
         $token = $this->getToken($env,$sistema);
         $fechaNac = date('d/m/Y', strtotime($fechaNac));
 
-        $url = $this->getUrlBase($env).'/personas/'.$carnet.'?fecha_nacimiento='.$fechaNac;
+        $url = $this->getUrlBase($env).'personas/'.$carnet.'?fecha_nacimiento='.$fechaNac;
 
         if($complemento != ''){
-            $url = 'segip/v2/personas/'.$carnet.'?fecha_nacimiento='.$fechaNac.'&complemento='.$complemento;
+            $url = $this->getUrlBase($env).'personas/'.$carnet.'?fecha_nacimiento='.$fechaNac.'&complemento='.$complemento;
         }
 
         $response = $this->client->request(
@@ -74,10 +74,10 @@ class Segip {
         $token = $this->getToken($env,$sistema);
         $fechaNac = date('d/m/Y', strtotime($fechaNac));
 
-        $url = $this->getUrlBase($env).'/personas/'.$carnet.'?fecha_nacimiento='.$fechaNac.'&primer_apellido='.$paterno.'&segundo_apellido='.$materno.'&nombre='.$nombre;
+        $url = $this->getUrlBase($env).'personas/'.$carnet.'?fecha_nacimiento='.$fechaNac.'&primer_apellido='.$paterno.'&segundo_apellido='.$materno.'&nombre='.$nombre;
 
         if($complemento != ''){
-            $url = 'segip/v2/personas/'.$carnet.'?fecha_nacimiento='.$fechaNac.'&primer_apellido='.$paterno.'&segundo_apellido='.$materno.'&nombre='.$nombre.'&complemento='.$complemento;
+            $url = $this->getUrlBase($env).'personas/'.$carnet.'?fecha_nacimiento='.$fechaNac.'&primer_apellido='.$paterno.'&segundo_apellido='.$materno.'&nombre='.$nombre.'&complemento='.$complemento;
         }
 
         $response = $this->client->request(
@@ -104,7 +104,7 @@ class Segip {
     }
 
     private function getToken($env, $sistema){
-        if ($env === 'dev') {
+        if ($env == 'dev') {
             $token = $this->sistemas_dev;
         } else {
             switch ($sistema) {
@@ -117,13 +117,15 @@ class Segip {
                     break;
             }
         }
+        return $token;
     }
 
     private function getUrlBase($env){
-        if ($env === 'dev') {
+        if ($env == 'dev') {
             $url = 'desarrollo/segip/v2/';
         } else {
             $url = 'segip/v2/';
         }
+        return $url;
     }
 }
