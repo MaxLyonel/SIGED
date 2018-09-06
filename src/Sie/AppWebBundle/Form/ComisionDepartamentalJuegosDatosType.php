@@ -27,14 +27,15 @@ class ComisionDepartamentalJuegosDatosType extends AbstractType
             ->add('comisionTipoId',
                       'choice',  
                       array('label' => 'Comisión Tipo',
-                            'choices' => array( '146' => 'Jefe de Misión (Director Departamental)'
-                                              ,'154' => 'Resposable Departamental de Juegos'
-                                              ,'150' => 'Técnico de Acreditación'
-                                              ,'156' => 'Técnico Encargado de Juegos'
-                                              ,'152' => 'Equipo Médico'
-                                              ,'153' => 'Equipo de Seguridad Patrulla'
-                                              ,'122' => 'Acompañante - Danza'
-                                                ),
+                            'choices' => array( '103' => 'Jefe de Misión (Director Departamental)'
+                                                ,'107' => 'Técnico de Acreditación'
+                                                ,'108' => 'Chofer'
+                                                ,'106' => 'Responsable Varones'
+                                                ,'105' => 'Responsable Damas'
+                                                ,'104' => 'Director Servicio Departamental Deporte'
+                                                ,'109' => 'Equipo Médico'
+                                                ,'110' => 'Equipo de Seguridad Patrulla'
+                                            ),
                             )
                 )
             ->add('foto', 'file', array('label' => 'Fotografía (.bmp)', 'required' => true, 'data_class' => null)) 
