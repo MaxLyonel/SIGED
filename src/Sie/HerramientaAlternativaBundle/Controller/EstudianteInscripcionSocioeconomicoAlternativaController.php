@@ -861,14 +861,14 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
 
             }elseif ($edid==3)
             {
-                $socioinscripcion->setSeccioniiEsserviciomilitarCea(true);
+                $socioinscripcion->setSeccioniiEsserviciomilitarCea(false);
                 $socioinscripcion->setSeccioniiEsserviciomilitar(false);
                 $socioinscripcion->setSeccioniiRecintoPenitenciarioTipo($em->getRepository('SieAppWebBundle:RecintoPenitenciarioTipo')->find($form['seccioniiRecintoPenitenciarioTipo']));
                 $socioinscripcion->setSeccioniiUnidadMilitarTipo($em->getRepository('SieAppWebBundle:UnidadMilitarTipo')->find(0));
 
             }elseif($edid==1 || $edid==4 )
             {
-                $socioinscripcion->setSeccioniiEsserviciomilitarCea(true);
+                $socioinscripcion->setSeccioniiEsserviciomilitarCea(false);
                 $socioinscripcion->setSeccioniiEsserviciomilitar(false);
                 $socioinscripcion->setSeccioniiRecintoPenitenciarioTipo($em->getRepository('SieAppWebBundle:RecintoPenitenciarioTipo')->find(0));
                 $socioinscripcion->setSeccioniiUnidadMilitarTipo($em->getRepository('SieAppWebBundle:UnidadMilitarTipo')->find(0));
