@@ -548,6 +548,7 @@ class TramiteDetalleController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -560,7 +561,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -875,6 +876,7 @@ class TramiteDetalleController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -887,7 +889,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -1202,6 +1204,7 @@ class TramiteDetalleController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -1214,7 +1217,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -1721,6 +1724,7 @@ class TramiteDetalleController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -1733,7 +1737,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -2058,6 +2062,7 @@ class TramiteDetalleController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -2070,7 +2075,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -2525,6 +2530,7 @@ class TramiteDetalleController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -2537,7 +2543,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -2828,6 +2834,7 @@ class TramiteDetalleController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -2840,7 +2847,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -3131,6 +3138,7 @@ class TramiteDetalleController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -3143,7 +3151,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -3544,6 +3552,7 @@ class TramiteDetalleController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -3556,7 +3565,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 		
 		if(empty($activeMenu)){
 			$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Módulo inhabilitado por el administrador, comuniquese con su Técnico SIE'));
@@ -3588,6 +3597,7 @@ class TramiteDetalleController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -3600,7 +3610,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 		
 		if(empty($activeMenu)){
 			$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Módulo inhabilitado por el administrador, comuniquese con su Técnico SIE'));
@@ -3709,6 +3719,7 @@ class TramiteDetalleController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -3721,7 +3732,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -4013,6 +4024,7 @@ class TramiteDetalleController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -4025,7 +4037,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);

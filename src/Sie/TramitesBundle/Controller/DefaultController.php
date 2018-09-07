@@ -3146,8 +3146,9 @@ class DefaultController extends Controller {
     // PARAMETROS: request
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function setActiveMenu() {
-        $path = str_replace('/','_',substr($_SERVER['PATH_INFO'],1));
+    public function setActiveMenu($path) {
+        //dump(); die;
+        //$path = str_replace('/','_',substr($_SERVER['PATH_INFO'],1));
  
         $em = $this->getDoctrine()->getManager();
         //****SE GENERAN LOS MENUS PARA EL SIGEN EN BASE AL ID DEL ROL DEL USUARIO
