@@ -290,7 +290,8 @@ class InfoCentroController extends Controller {
      * Formulario de búsqueda de institucion educativa
      */
     private function formHabilitarSearch($gestionactual) {
-        $gestiones = array($gestionactual => $gestionactual, $gestionactual - 1 => $gestionactual - 1, $gestionactual - 2 => $gestionactual - 2, $gestionactual - 3 => $gestionactual - 3);
+        $gestiones = array($gestionactual => $gestionactual, $gestionactual - 1 => $gestionactual - 1, $gestionactual - 2 => $gestionactual - 2, $gestionactual - 3 => $gestionactual - 3, $gestionactual - 4 => $gestionactual - 4, $gestionactual - 5 => $gestionactual - 5);
+
         $form = $this->createFormBuilder()
                 //->setAction($this->generateUrl('info_especial_index'))
                 ->add('sie', 'text', array('required' => true, 'attr' => array('autocomplete' => 'off', 'maxlength' => 8)))

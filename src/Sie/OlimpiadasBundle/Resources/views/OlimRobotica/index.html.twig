@@ -73,17 +73,23 @@
 			{% if estudiante is null or tutor is null%}
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        <h3 class="panel-title"> <i class="fa fa-search"></i> Resultado de la busqueda</h3>
+                        <h3 class="panel-title"> <i class="fa fa-search"></i> Resultado de la búsqueda</h3>
                     </div>
                     <div class="panel-body">
                         <div class="alert alert-warning">
-                            <i class="fa fa-warning"></i> Los datos ingresados son incorrectos, verifique la información e intente nuevamente.
+                            <i class="fa fa-warning"></i> {{mensaje}}
                         </div>
                     </div>
                 </div>
 				
 			{% else %}
-                
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-success">
+                            <i class="fa fa-success"></i> {{mensaje}}
+                        </div>
+                    </div>
+                </div>
 				<div class="row">
 					<div class="col-md-12">
                         <div class="panel panel-primary shadow">
@@ -163,7 +169,7 @@
                                 </table>
                             </div>
                             <br>
-                            <div class="row">
+                            {#<div class="row">
                                 <div class="form-group formulario text-center">
                                     {{form_start(formCategoria)}}
                                         {{form_label(formCategoria.reglasTipo)}}
@@ -171,7 +177,7 @@
                                         <button id="btnGuardar" type="button" class="btn btn-success"> <i id="iconGuardar" class="fa fa-save"></i> <span id="textGuardar">Confirmar participación</span> </button>
                                     {{form_end(formCategoria)}}
                                 </div>
-                            </div>
+                            </div>#}
                             
                         {% else %}
                             <div class="alert alert-info">

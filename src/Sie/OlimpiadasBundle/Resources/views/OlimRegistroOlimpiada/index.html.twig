@@ -70,9 +70,12 @@
                                         <a href="{{ path('olimmateriatipo', { 'id': entity.id }) }}" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" title="Configuración de opciones">
                                             <i class="fa fa-list"></i>
                                         </a>
-                                        <div style="display:inline-block;" id="build"></div>
                                         <button onclick="reporteOlimpiada({{entity.gestionTipo.id}})" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="top" title="Generar archivos para descargar" id="buildBtn"><i class="fa fa-cog"></i></button>
                                         <a href="{{path('download_archs_olimpiadas_txt')}}" style="display:none;" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" title="Descargar archivos generados" id="downloadBtn"><i class="fa fa-download"></i></a>
+                                        <!--ROBÓTICA-->
+                                        <button onclick="reporteOlimpiadaRobotica({{entity.gestionTipo.id}})" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Robótica: Generar archivos para descargar" id="buildBtnR"><i class="fa fa-cog"></i></button>
+                                        <a href="{{path('download_archs_olimpiadas_robotica_txt')}}" style="display:none;" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" title="Robótica: Descargar archivos generados" id="downloadBtnR"><i class="fa fa-download"></i></a>
+                                        <div style="display:inline-block;" id="build"></div>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -113,6 +116,34 @@
                 $("#build").append('<span class="text-danger">¡Error!</span>');
                 $("#buildBtn").removeAttr('disabled');
                 $("#buildBtn").show();
+            }
+        });
+    };
+
+    //ROBÓTICA
+    var reporteOlimpiadaRobotica = function(gestion){
+        $.ajax({
+            type: 'post',
+            url: Routing.generate('build_archs_olimpiadas_robotica_txt', {'gestion': gestion}),
+
+            beforeSend: function () {
+                $("#buildBtnR").blur();
+                $("#buildBtnR").attr('disabled', true);
+                $("#buildBtnR").hide();
+                $("#build").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:25px;" /></div>');  
+            },
+            success: function () {
+                $("#build").empty();
+                $("#build").append('<span class="text-success">¡Correcto!</span>');
+                $("#buildBtnR").removeAttr('disabled');
+                $("#buildBtnR").hide();
+                $("#downloadBtnR").show();
+            },
+            error: function () {
+                $("#build").empty();
+                $("#build").append('<span class="text-danger">¡Error!</span>');
+                $("#buildBtnR").removeAttr('disabled');
+                $("#buildBtnR").show();
             }
         });
     };

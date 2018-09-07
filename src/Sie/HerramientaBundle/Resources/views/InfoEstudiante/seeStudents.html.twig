@@ -46,9 +46,11 @@
                   {% else %}
 
                     {% if app.session.get('currentyear') < date('Y') %}
+                      {#  commented to BJP by krlos
                         <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}');" >
                             <i class="fa fa-user"></i> Inscrip. con Rude
                         </button>
+                      #}
                     {% endif %}
                     {# 
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick=" getCargaHorariaPlenaFinalizarRegistro('{{infoUe}}');" >
@@ -212,13 +214,17 @@
                                       <div class="btn-group tooltips" >
                                       </div>
                                     {% else %}
+
+                                      {# commented to BJP by krlos
                                       {% if  app.session.get('removeInscriptionAllowed')  or app.session.get('ie_id') == '81981478' %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
                                             <button type="button" class="btn btn-circle btn-warning " data-toggle="" data-target="" onclick="removeInscriptionAca('{{infoUe}}','{{jsnInfoStudent}}');" >
                                                 <i class="fa fa-trash"></i>
                                             </button>
                                         </div>
-                                      {% endif %}
+                                      {% endif %} 
+                                      #}
+
                                     {% endif %}
 
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" data-placement="top" title data-original-title="Imprimir Libreta">

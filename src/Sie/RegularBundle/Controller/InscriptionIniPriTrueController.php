@@ -422,7 +422,7 @@ class InscriptionIniPriTrueController extends Controller {
              'estudiante_inscripcion',
              'C',
              '',
-             $studentInscription,
+             '',
              '',
              'SIGED',
              json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))

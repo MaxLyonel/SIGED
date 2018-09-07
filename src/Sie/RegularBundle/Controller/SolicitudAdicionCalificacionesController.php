@@ -135,6 +135,7 @@ class SolicitudAdicionCalificacionesController extends Controller {
                                 ->getResult();
                 }
             }
+
             $em->getConnection()->commit();
 
             $paginator = $this->get('knp_paginator');
@@ -217,7 +218,14 @@ class SolicitudAdicionCalificacionesController extends Controller {
             }
         }
 
-        return $this->render('SieRegularBundle:SolicitudAdicionCalificaciones:index.html.twig',array('solicitudes'=>$solicitudes));
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $solicitudes,
+            $request->query->getInt('page',1),
+            10
+        );
+
+        return $this->render('SieRegularBundle:SolicitudAdicionCalificaciones:index.html.twig',array('solicitudes'=>$pagination));
 
     }
 
@@ -1479,6 +1487,7 @@ class SolicitudAdicionCalificacionesController extends Controller {
                                             case 2015:
                                             case 2016:
                                             case 2017:
+                                            case 2018:
                                                 $idInscripcion = $solicitud->getEstudianteInscripcionId();
                                                 /*
                                                  * Listamos las asignaturas del estudiante
