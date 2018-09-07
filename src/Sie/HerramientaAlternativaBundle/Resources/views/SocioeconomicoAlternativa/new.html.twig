@@ -223,7 +223,7 @@
                                         -->
                                         <tr>
                                             <td><strong>
-                                                    2.9. APARTADO DE EDUCACION DIVERSA
+                                                    2.9. APARTADO DE EDUCACION DIVERSA<br /><span class="asterisk">* (Este campo es obligatorio)</span>
 
                                                 </strong></td>
                                             <td><div class="col-md-8 form-group">{{ form_widget(form.seccioniiEducacionDiversaTipo) }}</div></td>
@@ -251,8 +251,29 @@
                                 <div class="clearfix"></div>
                             </div>
                             <div class="panel-body">
-                                <div class="table-responsive">
+                                
+                            {% if institucion.ieducativaId == 80730796 %}
+                                {{ form_widget(form.seccioniiiInmigrante) }}{{ form_label(form.seccioniiiInmigrante) }}
+                                {{ form_widget(form.inmigrante) }}
+                                <div class="table-responsive" id= "inmigrante"   style= "display:none">
                                     <table class="table table-striped table-hover">
+                                        <tr>
+                                            <td>
+                                                Pais<br /><span class="asterisk">* (Este campo es obligatorio)</span>
+                                            </td>
+                                            <td><div class="col-md-12 form-group">{{ form_widget(form.seccioniiiPaisInmigrante) }}</div></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Ciudad / Zona / Barrio<br /><span class="asterisk">* (Este campo es obligatorio)</span>
+                                            </td>
+                                            <td><div class="col-md-12 form-group">{{ form_widget(form.seccioniiiZonaInmigrante) }}</div></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            {% endif %}
+                            <div class="table-responsive" id= "inmigranteNo" style= "display:block">
+                            <table class="table table-striped table-hover" >
                             <tr>
                                 <td>
                                     Departamento<br /><span class="asterisk">* (Este campo es obligatorio)</span>
@@ -289,6 +310,11 @@
                                 </td>
                                 <td><div class="col-md-12 form-group">{{ form_widget(form.seccioniiiZona) }}</div></td>
                             </tr>
+                            </table>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                            
                             <tr>
                                 <td>
                                     Avenida / Calle<br /><span class="asterisk">* (Este campo es obligatorio)</span>
@@ -310,10 +336,10 @@
                                 <td><div class="col-md-4">{{ form_widget(form.seccioniiiTelefonocelular) }}</div></td>
                             </tr>
                         </table>
-                                </div>
-                            </div>
                         </div>
                     </div>
+                </div>
+            </div>
                     <div class="tab-pane fade" id="tab2-4">
                         <div class="panel panel-theme">
                             <div class="panel-heading">
@@ -524,6 +550,47 @@
         $("#form_seccionvEstudianteDemoraLlegarCentroHoras").numeric("positiveInteger");
         $("#form_seccionvEstudianteDemoraLlegarCentroMinutos").numeric("positiveInteger");
 
+        $('#form_seccioniiiInmigrante').click(function(){
+             //alert('hola');
+             var estaSeleccionado = $('#form_seccioniiiInmigrante').is(":checked");
+            if(  estaSeleccionado == true )
+            {
+                //alert($('#form_seccioniiiInmigrante').val());
+                $('#inmigranteNo').css('display', 'none');
+                $('#inmigrante').css('display', 'block');
+                $('#form_seccioniiiZonaInmigrante').prop("required", true);
+                $('#form_seccioniiiPaisInmigrante').prop("required", true);
+                $('#form_seccioniiiZona').removeAttr("required");
+                $('#form_departamento').removeAttr("required");
+                $('#form_provincia').removeAttr("required");
+                $('#form_municipio').removeAttr("required");
+                $('#form_canton').removeAttr("required");
+                $('#form_localidad').removeAttr("required");
+                $('#form_seccioniiiZona').removeAttr("required");
+                $('#form_seccioniiiAvenida').removeAttr("required");
+                $('#form_seccioniiiNumero').removeAttr("required");
+                $('#form_inmigrante').val('SI');
+            }else{
+                
+                $('#inmigranteNo').css('display', 'block');
+                $('#inmigrante').css('display', 'none');
+                $('#form_seccioniiiZonaInmigrante').removeAttr("required");
+                $('#form_seccioniiiPaisInmigrante').removeAttr("required");
+                $('#form_departamento').prop("required", true);
+                $('#form_provincia').prop("required", true);
+                $('#form_municipio').prop("required", true);
+                $('#form_canton').prop("required", true);
+                $('#form_localidad').prop("required", true);
+                $('#form_seccioniiiZona').prop("required", true);
+                $('#form_seccioniiiAvenida').prop("required", true);
+                $('#form_seccioniiiNumero').prop("required", true);
+                $('#form_inmigrante').val('NO');
+               
+            }
+        
+        });
+        
+            
         var peticion1;
         //$('#form_turno').on('change',function(){
         function listarProvincias(idDpto) {
