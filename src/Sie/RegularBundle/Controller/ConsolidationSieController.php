@@ -249,7 +249,7 @@ class ConsolidationSieController extends Controller {
         //new new by krlos
         if ($request->getMethod() == 'POST') {
 
-            $connection = ssh2_connect('172.20.0.103', 1929);
+            $connection = ssh2_connect('172.20.0.106', 22);
             ssh2_auth_password($connection, 'carlospacha', 'carlospacha');
             $sftp = ssh2_sftp($connection);
             try {
@@ -326,7 +326,7 @@ class ConsolidationSieController extends Controller {
                   return $this->redirect($this->generateUrl('consolidation_sie_web'));
                 }
 
-                $objAllowUE = $this->getObservationAllowUE(array('sie'=>$aFileInfoSie[2], 'gestion'=>$aFileInfoSie[1],'reglasUE'=>'1,2,3,4,5'));
+                $objAllowUE = $this->getObservationAllowUE(array('sie'=>$aFileInfoSie[2], 'gestion'=>$aFileInfoSie[1],'reglasUE'=>'1,2,3,5'));
                 if($objAllowUE){
                   $session->getFlashBag()->add('warningcons', 'El archivo con código Sie ' . $aDataExtractFileUE[1] . ' no se puede subir,favor de trabajar directamente con el academico.sie.gob.bo');
                   system('rm -fr ' . $dirtmp);

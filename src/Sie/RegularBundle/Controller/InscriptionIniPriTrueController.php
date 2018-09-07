@@ -289,6 +289,7 @@ class InscriptionIniPriTrueController extends Controller {
 //dump(((str_replace('-','',$newLevelStudent)) ));
 //dump(str_replace('-','',$currentLevelStudent) );die;
     //if doesnt have next curso info is new or extranjero do the inscription
+      
     if( (str_replace('-','',$currentLevelStudent) )!=''){
       if(($currentLevelStudent == '11-1-1') || ($currentLevelStudent == '11-1-2')){
         //|| ($currentLevelStudent == '12-1-1')
@@ -416,16 +417,16 @@ class InscriptionIniPriTrueController extends Controller {
          //dump($arrayNotas);die;
          // Try and commit the transaction
          // Registro de materia curso oferta en el log
-         /*$this->get('funciones')->setLogTransaccion(
-             $newArea->getId(),
+         $this->get('funciones')->setLogTransaccion(
+             $studentInscription->getId(),
              'estudiante_inscripcion',
              'C',
              '',
-             $studentInscription,
+             '',
              '',
              'SIGED',
              json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-         );*/
+         );
          $em->getConnection()->commit();
          $message = 'Datos Registrados Correctamente, a continuacion registre las NOTAS';
          $this->addFlash('saveGoodInscription', $message);

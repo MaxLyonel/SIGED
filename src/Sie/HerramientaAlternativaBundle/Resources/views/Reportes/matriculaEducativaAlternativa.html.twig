@@ -145,6 +145,29 @@
                                             </button>
                                         </td>
                                     </tr>
+                                        
+                                        <tr>
+                                            <td>
+
+                                                <input type="text" id="sie" name="sie" required="required" class="form-control" placeholder="Inserte SIE" pattern="[0-9]{6,8}"  onchange="this.form.submit();" />
+
+                                            </td>
+                                            <td>
+
+                                                <button id="tour-13" onclick="document.forms['formCentroPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                                    <i class="fa fa-file-pdf-o"></i>
+                                                </button>
+                                                <button id="tour-13" onclick="document.forms['formCentroXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                                    <i class="fa fa-file-excel-o"></i>
+                                                </button>
+                                                <button id="tour-13" onclick="document.forms['formCentroEstPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                                    <i class="fa fa-file-pdf-o"></i>
+                                                </button>
+                                                <button id="tour-13" onclick="document.forms['formCentroEstXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                                    <i class="fa fa-file-excel-o"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
 
                                     {% endif %}
                                 </table>
@@ -321,6 +344,36 @@
                     <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
                     <input type="hidden" id="idespx" name="idespx" />
                 </form>
+                <form name="formCentroPdf" id="formCentroPdf" role="form" action="{{ path('estadistica_busqueda_especialidad_centro_print_pdf') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
+                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
+                    <input type="hidden" id="siecentrop" name="siecentrop" />
+                </form>
+                <form name="formCentroXls" id="formCentroXls" role="form" action="{{ path('estadistica_busqueda_especialidad_centro_print_xls') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
+                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
+                    <input type="hidden" id="siecentrox" name="siecentrox" />
+                </form>
+
+                <form name="formCentroEstPdf" id="formCentroEstPdf" role="form" action="{{ path('estadistica_busqueda_est_centro_print_pdf') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
+                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
+                    <input type="hidden" id="siecentroestp" name="siecentroestp" />
+                </form>
+                <form name="formCentroEstXls" id="formCentroEstXls" role="form" action="{{ path('estadistica_busqueda_est_centro_print_xls') }}" method="POST">
+                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
+                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
+                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
+                    <input type="hidden" id="siecentroestx" name="siecentroestx" />
+                </form>
+
 
             {% endif %}
             {% if infoEntidad is defined %}
@@ -650,6 +703,20 @@
                 $("#idespx").val(value);
                 var  a=$("#idesp").val();
               //  alert(a);
+            })
+        });
+
+        $(function() {
+            $('#sie').change(function() {
+                var sie= $(this).val();
+                 // alert(sie);
+                $("#siecentrop").val(sie);
+                $("#siecentrox").val(sie);
+                $("#siecentroestx").val(sie);
+                $("#siecentroestp").val(sie);
+
+ //               var  a=$("#siecentrop").val();
+  //               alert(a);
             })
         });
 //var

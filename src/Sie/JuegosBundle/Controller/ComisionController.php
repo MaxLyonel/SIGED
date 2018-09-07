@@ -1586,10 +1586,10 @@ class ComisionController extends Controller {
                 $cupoTotal = 1;
                 break;
             case 109:               
-                $cupoTotal = 3;
+                $cupoTotal = 1;
                 break;
             case 110:              
-                $cupoTotal = 9;
+                $cupoTotal = 3;
                 break;
             case 122:              
                 $cupoTotal = 2;
@@ -1785,164 +1785,140 @@ class ComisionController extends Controller {
      * @param type $request, $departamento, $gestion, $fase, $nivel, $disciplina, $prueba, $genero 
      * return list of students
      */
-    public function verificaCupoDelegadosPrimariaPorEntidadPruebaPosicion($codigoEntidad, $gestion, $fase, $nivelId, $disciplinaId, $pruebaId, $generoId, $comisionId) {
+    public function verificaCupoDelegadosEntidadPruebaPosicion($codigoEntidad, $gestion, $fase, $nivelId, $disciplinaId, $pruebaId, $generoId, $comisionId, $posicion) {
         switch ($disciplinaId) {
-            case 12:
-                $cupoMaxMaestro = 1;
-                $cupoMaxDelegado = 0;
-                $cupoMaxApoderado = 1;            
-                $cupoTotal = 1;
-                break;
-            case 13:
+            case 3:
+                $cupoMaxEntrenador = 1;
                 $cupoMaxMaestro = 1;
                 $cupoMaxDelegado = 1;
-                $cupoMaxApoderado = 1;                
+                $cupoMaxApoderado = 1;            
+                $cupoTotal = 3;
+                break;
+            case 4:
+                $cupoMaxEntrenador = 1;
+                $cupoMaxMaestro = 1;
+                $cupoMaxDelegado = 1;
+                $cupoMaxApoderado = 1;            
+                $cupoTotal = 3;
+                break;
+            case 5:
+                $cupoMaxEntrenador = 1;
+                $cupoMaxMaestro = 1;
+                $cupoMaxDelegado = 1;
+                $cupoMaxApoderado = 1;            
+                $cupoTotal = 3;
+                break;
+            case 7:
+                $cupoMaxEntrenador = 1;
+                $cupoMaxMaestro = 1;
+                $cupoMaxDelegado = 1;
+                $cupoMaxApoderado = 1;            
                 $cupoTotal = 3;
                 break;
             case 14:
+                $cupoMaxEntrenador = 1;
                 $cupoMaxMaestro = 1;
                 $cupoMaxDelegado = 1;
-                $cupoMaxApoderado = 1;                
+                $cupoMaxApoderado = 1;               
                 $cupoTotal = 3;
                 break;
             case 15:
+                $cupoMaxEntrenador = 1;
                 $cupoMaxMaestro = 1;
                 $cupoMaxDelegado = 1;
                 $cupoMaxApoderado = 1;                
                 $cupoTotal = 3;
                 break;
             case 16:
+                $cupoMaxEntrenador = 1;
                 $cupoMaxMaestro = 1;
                 $cupoMaxDelegado = 1;
-                $cupoMaxApoderado = 1;                
+                $cupoMaxApoderado = 1;                 
                 $cupoTotal = 3;
                 break;
             case 17:
+                $cupoMaxEntrenador = 1;
                 $cupoMaxMaestro = 1;
                 $cupoMaxDelegado = 1;
-                $cupoMaxApoderado = 1;                
+                $cupoMaxApoderado = 1;              
                 $cupoTotal = 3;
-                break;
-            case 18:
-                $cupoMaxMaestro = 2;
-                $cupoMaxDelegado = 0;
-                $cupoMaxApoderado = 2;                
-                $cupoTotal = 2;
-                break;
-            case 19:
-                $cupoMaxMaestro = 3;
-                $cupoMaxDelegado = 0;
-                $cupoMaxApoderado = 3;                
-                $cupoTotal = 3;
-                break;
-            case 20:
-                $cupoMaxMaestro = 1;
-                $cupoMaxDelegado = 0;
-                $cupoMaxApoderado = 1;                
-                $cupoTotal = 1;
-                break;
+                break;            
             default:
-                $cupoMaxMaestro = 0;
-                $cupoMaxDelegado = 0;
-                $cupoMaxApoderado = 0;               
-                $cupoTotal = 0;
+                $cupoMaxEntrenador = 1;
+                $cupoMaxMaestro = 1;
+                $cupoMaxDelegado = 1;
+                $cupoMaxApoderado = 1;             
+                $cupoTotal = 1;
                 break;
         }
         //get db connexion
+
+
         $em = $this->getDoctrine()->getManager();
-        if ($disciplinaId == 13 and $comisionId == 12){
-            $queryEntidadPrueba = $em->getConnection()->prepare("
-                    select disciplina_id as prueba_id, disciplina as prueba, 'Masculino/Femenino' as genero
-                    , SUM(case comision_id when 12 then 1 else 0 end) as cantidad_maestro 
-                    , SUM(case comision_id when 13 then 1 else 0 end) as cantidad_apoderado 
-                    , SUM(case comision_id when 102 then 1 else 0 end) as cantidad_delegado
-                    , SUM(cantidad) as cantidad_total
-                    from (
-                    select dt.id as disciplina_id, dt.disciplina, ct.id as comision_id, ct.comision, count(ct.id) as cantidad from comision_juegos_datos as cjd
-                    inner join prueba_tipo as pt on pt.id = cjd.prueba_tipo_id
-                    inner join comision_tipo as ct on ct.id = cjd.comision_tipo_id
-                    inner join genero_tipo as gt on gt.id = pt.genero_tipo_id
-                    inner join disciplina_tipo as dt on dt.id = pt.disciplina_tipo_id
-                    where pt.disciplina_tipo_id = ".$disciplinaId." and cjd.gestion_tipo_id = ".$gestion." and cjd.departamento_tipo = ".$codigoEntidad."
-                    group by dt.id, dt.disciplina, ct.id, ct.comision
-                    ) as v
-                    group by disciplina_id, disciplina
-                ");            
-        } else {
-            $queryEntidadPrueba = $em->getConnection()->prepare("
-                    select prueba_id, prueba, genero_id, genero
-                    , SUM(case comision_id when 12 then 1 else 0 end) as cantidad_maestro 
-                    , SUM(case comision_id when 13 then 1 else 0 end) as cantidad_apoderado 
-                    , SUM(case comision_id when 102 then 1 else 0 end) as cantidad_delegado
-                    , SUM(cantidad) as cantidad_total
-                    from (
-                    select pt.id as prueba_id, pt.prueba, gt.id as genero_id, gt.genero, ct.id as comision_id, ct.comision, count(ct.id) as cantidad from comision_juegos_datos as cjd
-                    inner join prueba_tipo as pt on pt.id = cjd.prueba_tipo_id
-                    inner join comision_tipo as ct on ct.id = cjd.comision_tipo_id
-                    inner join genero_tipo as gt on gt.id = pt.genero_tipo_id
-                    where cjd.prueba_tipo_id = ".$pruebaId." and cjd.gestion_tipo_id = ".$gestion." and cjd.departamento_tipo = ".$codigoEntidad."
-                    group by pt.id, pt.prueba, gt.id, gt.genero, ct.id, ct.comision
-                    ) as v
-                    group by prueba_id, prueba, genero_id, genero
-                ");
-        }
+        $queryEntidadPrueba = $em->getConnection()->prepare("
+            select disciplina_id as prueba_id, disciplina as prueba, 'Masculino/Femenino' as genero
+            , SUM(case comision_id when 12 then 1 else 0 end) as cantidad_primaria_maestro 
+            , SUM(case comision_id when 13 then 1 else 0 end) as cantidad_primaria_apoderado 
+            , SUM(case comision_id when 102 then 1 else 0 end) as cantidad_primaria_delegado
+            , SUM(case comision_id when 139 then 1 else 0 end) as cantidad_primaria_entrenador
+            , SUM(case comision_id when 141 then 1 else 0 end) as cantidad_secundaria_maestro 
+            , SUM(case comision_id when 142 then 1 else 0 end) as cantidad_secundaria_apoderado 
+            , SUM(case comision_id when 143 then 1 else 0 end) as cantidad_secundaria_delegado
+            , SUM(case comision_id when 140 then 1 else 0 end) as cantidad_secundaria_entrenador
+            , SUM(case comision_id when 12 then 1 when 13 then 1 when 102 then 1 when 139 then 1 else 0 end) as cantidad_primaria
+            , SUM(case comision_id when 140 then 1 when 141 then 1 when 142 then 1 when 143 then 1 else 0 end) as cantidad_secundaria
+            , SUM(cantidad) as cantidad_total
+            from (
+            select dt.id as disciplina_id, dt.disciplina, pt.id as prueba_id, pt.prueba, gt.id as genero_id, gt.genero, ct.id as comision_id, ct.comision, count(ct.id) as cantidad 
+            from comision_juegos_datos as cjd
+            inner join prueba_tipo as pt on pt.id = cjd.prueba_tipo_id
+            inner join comision_tipo as ct on ct.id = cjd.comision_tipo_id
+            inner join genero_tipo as gt on gt.id = pt.genero_tipo_id
+            inner join disciplina_tipo as dt on dt.id = pt.disciplina_tipo_id
+            where pt.id = ".$pruebaId." and cjd.gestion_tipo_id = ".$gestion." and cjd.departamento_tipo = ".$codigoEntidad." and cjd.posicion = ".$posicion." and cjd.fase_tipo_id = 4
+            group by dt.id, dt.disciplina, pt.id, pt.prueba, gt.id, gt.genero, ct.id, ct.comision
+            ) as v
+            group by disciplina_id, disciplina
+        ");    
         $queryEntidadPrueba->execute();
-        $objEntidadPrueba = $queryEntidadPrueba->fetchAll();
-
-        $em = $this->getDoctrine()->getManager();
-        $queryEntidadDisciplina= $em->getConnection()->prepare("
-                select disciplina_id as prueba_id, disciplina as prueba, 'Masculino/Femenino' as genero
-                , SUM(case comision_id when 12 then 1 else 0 end) as cantidad_maestro 
-                , SUM(case comision_id when 13 then 1 else 0 end) as cantidad_apoderado 
-                , SUM(case comision_id when 102 then 1 else 0 end) as cantidad_delegado
-                , SUM(cantidad) as cantidad_total
-                from (
-                select dt.id as disciplina_id, dt.disciplina, ct.id as comision_id, ct.comision, count(ct.id) as cantidad from comision_juegos_datos as cjd
-                inner join prueba_tipo as pt on pt.id = cjd.prueba_tipo_id
-                inner join comision_tipo as ct on ct.id = cjd.comision_tipo_id
-                inner join genero_tipo as gt on gt.id = pt.genero_tipo_id
-                inner join disciplina_tipo as dt on dt.id = pt.disciplina_tipo_id
-                where pt.disciplina_tipo_id = ".$disciplinaId." and cjd.gestion_tipo_id = ".$gestion." and cjd.departamento_tipo = ".$codigoEntidad."
-                group by dt.id, dt.disciplina, ct.id, ct.comision
-                ) as v
-                group by disciplina_id, disciplina
-            ");            
+        $objEntidadPrueba = $queryEntidadPrueba->fetchAll();      
         
-        $queryEntidadDisciplina->execute();
-        $objEntidaDisciplina = $queryEntidadDisciplina->fetchAll();
-
-        //print_r($objEntidadPrueba);
         $mensaje = "";
         if(count($objEntidadPrueba) > 0){
-            if ($objEntidadPrueba[0]["cantidad_maestro"]>=$cupoMaxMaestro and $comisionId == 12){
-                $mensaje = "No es posible incluir mas maestros(as) para la prueba de ".$objEntidadPrueba[0]["prueba"]." - ".$objEntidadPrueba[0]["genero"].", ya registro ".$objEntidadPrueba[0]["cantidad_maestro"]." maestros(as)";
-            }   
-            if ($objEntidadPrueba[0]["cantidad_delegado"]>=$cupoMaxDelegado and $comisionId == 102){
-                $mensaje = "No es posible incluir mas delegados(as) para la prueba de ".$objEntidadPrueba[0]["prueba"]." - ".$objEntidadPrueba[0]["genero"].", ya registro ".$objEntidadPrueba[0]["cantidad_delegado"]." delegados";
-            }         
-            if ($objEntidadPrueba[0]["cantidad_apoderado"]>=$cupoMaxApoderado and $comisionId == 13){
-                $mensaje = "No es posible incluir mas padres/madres de familia para la prueba de ".$objEntidadPrueba[0]["prueba"]." - ".$objEntidadPrueba[0]["genero"].", ya registro ".$objEntidadPrueba[0]["cantidad_apoderado"]." padres/madres de familia";
-            }        
-            if ($disciplinaId == 13) {
-                if ($objEntidaDisciplina[0]["cantidad_total"]>=$cupoTotal){
-                    $mensaje = "No es posible incluir mas acompañantes en la prueba de ".$objEntidadPrueba[0]["prueba"];
+            if ($nivelId = 12){
+                if ($objEntidadPrueba[0]["cantidad_primaria_maestro"]>=$cupoMaxMaestro and $comisionId == 12){
+                    $mensaje = "No es posible incluir mas maestros(as) para la prueba de ".$objEntidadPrueba[0]["prueba"]." - ".$objEntidadPrueba[0]["genero"].", ya registro ".$objEntidadPrueba[0]["cantidad_primaria_maestro"]." maestros(as)";
+                }   
+                if ($objEntidadPrueba[0]["cantidad_primaria_delegado"]>=$cupoMaxDelegado and $comisionId == 102){
+                    $mensaje = "No es posible incluir mas delegados(as) para la prueba de ".$objEntidadPrueba[0]["prueba"]." - ".$objEntidadPrueba[0]["genero"].", ya registro ".$objEntidadPrueba[0]["cantidad_primaria_delegado"]." delegados";
+                }         
+                if ($objEntidadPrueba[0]["cantidad_primaria_apoderado"]>=$cupoMaxApoderado and $comisionId == 13){
+                    $mensaje = "No es posible incluir mas padres/madres de familia para la prueba de ".$objEntidadPrueba[0]["prueba"]." - ".$objEntidadPrueba[0]["genero"].", ya registro ".$objEntidadPrueba[0]["cantidad_primaria_apoderado"]." padres/madres de familia";
+                }       
+                if ($objEntidadPrueba[0]["cantidad_primaria_entrenador"]>=$cupoMaxEntrenador and $comisionId == 139){
+                    $mensaje = "No es posible incluir mas entrenadores para la prueba de ".$objEntidadPrueba[0]["prueba"]." - ".$objEntidadPrueba[0]["genero"].", ya registro ".$objEntidadPrueba[0]["cantidad_primaria_entrenador"]." entrenadores";
+                }   
+                if ($objEntidadPrueba[0]["cantidad_primaria"]>=$cupoTotal){
+                    $mensaje = "No es posible incluir mas acompañantes para la prueba de ".$objEntidadPrueba[0]["prueba"]." - ".$objEntidadPrueba[0]["genero"].", ya registro ".$objEntidadPrueba[0]["cantidad_primaria"]." acompañantes";
                 }  
-            } else {
-                if ($objEntidadPrueba[0]["cantidad_total"]>=$cupoTotal){
-                    $mensaje = "No es posible incluir mas acompañantes en la prueba de ".$objEntidadPrueba[0]["prueba"];
-                } 
-            }    
-        } else {
-            if (0>=$cupoMaxMaestro and $comisionId == 12){
-                $mensaje = "No es posible incluir mas maestros(as) para la prueba seleccionada";
+            }  else { 
+                if ($objEntidadPrueba[0]["cantidad_secundaria_maestro"]>=$cupoMaxMaestro and $comisionId == 141){
+                    $mensaje = "No es posible incluir mas maestros(as) para la prueba de ".$objEntidadPrueba[0]["prueba"]." - ".$objEntidadPrueba[0]["genero"].", ya registro ".$objEntidadPrueba[0]["cantidad__secundariamaestro"]." maestros(as)";
+                }   
+                if ($objEntidadPrueba[0]["cantidad_secundaria_delegado"]>=$cupoMaxDelegado and $comisionId == 143){
+                    $mensaje = "No es posible incluir mas delegados(as) para la prueba de ".$objEntidadPrueba[0]["prueba"]." - ".$objEntidadPrueba[0]["genero"].", ya registro ".$objEntidadPrueba[0]["cantidad_secundaria_delegado"]." delegados";
+                }         
+                if ($objEntidadPrueba[0]["cantidad_secundaria_apoderado"]>=$cupoMaxApoderado and $comisionId == 142){
+                    $mensaje = "No es posible incluir mas padres/madres de familia para la prueba de ".$objEntidadPrueba[0]["prueba"]." - ".$objEntidadPrueba[0]["genero"].", ya registro ".$objEntidadPrueba[0]["cantidad_secundaria_apoderado"]." padres/madres de familia";
+                }       
+                if ($objEntidadPrueba[0]["cantidad_secundaria_entrenador"]>=$cupoMaxEntrenador and $comisionId == 140){
+                    $mensaje = "No es posible incluir mas entrenadores para la prueba de ".$objEntidadPrueba[0]["prueba"]." - ".$objEntidadPrueba[0]["genero"].", ya registro ".$objEntidadPrueba[0]["cantidad_secundaria_entrenador"]." entrenadores";
+                }   
+                if ($objEntidadPrueba[0]["cantidad_secundaria"]>=$cupoTotal){
+                    $mensaje = "No es posible incluir mas acompañantes para la prueba de ".$objEntidadPrueba[0]["prueba"]." - ".$objEntidadPrueba[0]["genero"].", ya registro ".$objEntidadPrueba[0]["cantidad_secundaria"]." acompañantes";
+                }  
             }   
-            if (0>=$cupoMaxDelegado and $comisionId == 102){
-                $mensaje = "No es posible incluir mas delegados(as) para la prueba seleccionada";
-            }         
-            if (0>=$cupoMaxApoderado and $comisionId == 13){
-                $mensaje = "No es posible incluir mas padres/madres de familia para la prueba seleccionada";
-            }  
-        }
+        } 
         return $mensaje;
     }
     
@@ -2668,8 +2644,12 @@ class ComisionController extends Controller {
 
             $ue = $estudianteJuegosEntity[0]["institucioneducativa_id"];
             $depto = $estudianteJuegosEntity[0]["departamento_codigo"];
-
-            $confirmaRegistro = $this->verificaCupoEntrenadorPorEntidadPruebaPosicion($ue, $gestion, ($fase+1), $nivelId, $disciplinaId, $pruebaId, $generoId, $comisionId, $posicion, $id_usuario);
+                      
+            if ($fase == 3){
+                $confirmaRegistro = $this->verificaCupoDelegadosEntidadPruebaPosicion($codigoEntidad, $gestion, ($fase+1), $nivelId, $disciplinaId, $pruebaId, $generoId, $comisionId, $posicion);
+            } else {
+                $confirmaRegistro = $this->verificaCupoEntrenadorPorEntidadPruebaPosicion($ue, $gestion, ($fase+1), $nivelId, $disciplinaId, $pruebaId, $generoId, $comisionId, $posicion, $id_usuario);
+            }
 
             if ($confirmaRegistro != ""){            
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $confirmaRegistro));  
@@ -2907,6 +2887,9 @@ class ComisionController extends Controller {
               }
               if ($entidadUsuarioId == 31640  ){
                   $xCupo = 2;
+              }
+              if ($entidadUsuarioId == 31552  ){
+                  $xCupo = 3;
               }
               if ($entidadUsuarioId == 31553  ){
                   $xCupo = 3;

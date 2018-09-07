@@ -24,7 +24,7 @@
                         <th>Teléfono</th>
                         <th>Correo Electrónico</th>
                         <th>Discapacidad</th>
-                        <th>Acción</th>
+                        <!-- <th>Acción</th> -->
                     </tr>
                 </thead>
                 {% for inscrito in inscritos %}
@@ -47,7 +47,7 @@
                                 <input type="hidden" name="form[gradoId]" id="form_gradoId" value="{{gradoId}}">
                                 <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{olimtutorid}}">
                                 <input type="hidden" name="form[olimestudianteid]" id="form_olimestudianteid" value="{{inscrito.olimestudianteid}}">
-                                <button type="button" class="btn btn-teal btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="deleteInscriptionStudent({{inscrito.olimestudianteid}});"><i class="fa fa-trash"></i> Eliminar</button>
+                                {#<button type="button" class="btn btn-teal btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="deleteInscriptionStudent({{inscrito.olimestudianteid}});"><i class="fa fa-trash"></i> Eliminar</button>#}
                             </form>
                         </td>
                     </tr>

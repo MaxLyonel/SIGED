@@ -1,0 +1,19 @@
+olimetapaperiodo_index:
+    path:     /
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEtapaPeriodo:index" }
+
+olimetapaperiodo_new:
+    path:     /new/{idEtapa}
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEtapaPeriodo:new" }
+    options:
+        expose: true
+
+olimetapaperiodo_delete:
+    path:     /delete/{idEtapaPeriodo}
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEtapaPeriodo:delete" }
+    options:
+        expose: true
+
+olimetapaperiodo_saveFechas:
+    path:     /savefechas
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEtapaPeriodo:saveFechas" }

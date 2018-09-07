@@ -548,6 +548,7 @@ class TramiteDetalleController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -560,7 +561,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -875,6 +876,7 @@ class TramiteDetalleController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -887,7 +889,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -1202,6 +1204,7 @@ class TramiteDetalleController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -1214,7 +1217,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -1721,6 +1724,7 @@ class TramiteDetalleController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -1733,7 +1737,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -2058,6 +2062,7 @@ class TramiteDetalleController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -2070,7 +2075,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -2525,6 +2530,7 @@ class TramiteDetalleController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -2537,7 +2543,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -2594,13 +2600,13 @@ class TramiteDetalleController extends Controller {
 
                     if ($verTuicionUnidadEducativa != ''){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
-                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_recepcion_busca '));
+                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_recepcion_busca'));
                     }
 
                     $entitySubsistemaInstitucionEducativa = $tramiteController->getSubSistemaInstitucionEducativa($sie);
                     if($entitySubsistemaInstitucionEducativa['msg'] != ''){
                         $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => $entitySubsistemaInstitucionEducativa['msg']));
-                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_recepcion_busca '));
+                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_recepcion_busca'));
                     }
 
                     $entityAutorizacionInstitucionEducativa = $tramiteController->getAutorizacionUnidadEducativa($sie);
@@ -2737,7 +2743,7 @@ class TramiteDetalleController extends Controller {
                 }
 
                 $token = $request->get('_token');
-                if (!$this->isCsrfTokenValid('autorizar', $token)) {
+                if (!$this->isCsrfTokenValid('recepcionar', $token)) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
                     return $this->redirectToRoute('tramite_detalle_diploma_humanistico_recepcion_lista');
                 }
@@ -2828,6 +2834,7 @@ class TramiteDetalleController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -2840,7 +2847,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -2897,13 +2904,13 @@ class TramiteDetalleController extends Controller {
 
                     if ($verTuicionUnidadEducativa != ''){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
-                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_autorizacion_busca '));
+                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_autorizacion_busca'));
                     }
 
                     $entitySubsistemaInstitucionEducativa = $tramiteController->getSubSistemaInstitucionEducativa($sie);
                     if($entitySubsistemaInstitucionEducativa['msg'] != ''){
                         $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => $entitySubsistemaInstitucionEducativa['msg']));
-                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_autorizacion_busca '));
+                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_autorizacion_busca'));
                     }
 
                     $entityAutorizacionInstitucionEducativa = $tramiteController->getAutorizacionUnidadEducativa($sie);
@@ -3131,6 +3138,7 @@ class TramiteDetalleController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -3143,7 +3151,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -3200,13 +3208,13 @@ class TramiteDetalleController extends Controller {
 
                     if ($verTuicionUnidadEducativa != ''){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
-                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_regular_impresion_busca '));
+                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_impresion_busca'));
                     }
 
                     $entitySubsistemaInstitucionEducativa = $tramiteController->getSubSistemaInstitucionEducativa($sie);
                     if($entitySubsistemaInstitucionEducativa['msg'] != ''){
                         $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => $entitySubsistemaInstitucionEducativa['msg']));
-                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_regular_impresion_busca '));
+                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_impresion_busca'));
                     }
 
                     $entityAutorizacionInstitucionEducativa = $tramiteController->getAutorizacionUnidadEducativa($sie);
@@ -3270,7 +3278,7 @@ class TramiteDetalleController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $rolPermitido = array(8,16);
+        $rolPermitido = 16;
 
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
@@ -3290,7 +3298,7 @@ class TramiteDetalleController extends Controller {
 
         $info = $request->get('_info');
         $form = unserialize(base64_decode($info));
-
+        
         if ($request->isMethod('POST')) {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
@@ -3325,6 +3333,7 @@ class TramiteDetalleController extends Controller {
 
                 $messageCorrecto = "";
                 $messageError = "";
+                
                 foreach ($tramites as $tramite) {
                     $tramiteId = (Int) base64_decode($tramite);
                     $entidadTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $tramiteId));
@@ -3352,13 +3361,14 @@ class TramiteDetalleController extends Controller {
                             $documentoController->setContainer($this->container);
 
                             if ($serieCarton == 'A' or $serieCarton == 'A1' or $serieCarton == 'B' or $serieCarton == 'C' or $serieCarton == 'C1' or $serieCarton == 'D'){
-                              $numCarton = str_pad($numeroCarton, 6, "0", STR_PAD_LEFT);
+                                $numCarton =$numeroCarton;
                             } else {
-                              $numCarton =$numeroCarton;
+                                $numCarton = str_pad($numeroCarton, 6, "0", STR_PAD_LEFT);
                             }
                             $serCarton = $serieCarton;
-
+                            
                             $msgContenidoDocumento = $documentoController->getDocumentoValidación($numCarton, $serCarton, $fechaCarton, $id_usuario, $rolPermitido, $documentoTipoId);
+                            
                         }
 
                         if($msgContenido != ""){
@@ -3424,11 +3434,12 @@ class TramiteDetalleController extends Controller {
     // PARAMETROS: sie, gestion
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function dipHumImpresionListaPdfAction(Request $request) {
+    public function dipHumImpresionActaPdfAction(Request $request) {
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
         $gestionActual = new \DateTime("Y");
         $this->session->set('save', false);
+        
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -3437,16 +3448,28 @@ class TramiteDetalleController extends Controller {
         try {
             $info = $request->get('info');
             $form = unserialize(base64_decode($info));
+
             $sie = $form['sie'];
             $ges = $form['gestion'];
             $tipLis = 5;
-            $ids = "";
-
-            $arch = 'AUTORIZACION_'.$sie.'_'.$ges.'_'.date('YmdHis').'.pdf';
+            $participantes = $request->get('participantes');
+            
+            $listaParticipantes = "";
+            if ($participantes != ''){
+                foreach($participantes as $estudiante){
+                    if ($listaParticipantes == ""){
+                        $listaParticipantes = base64_decode($estudiante);
+                    } else {
+                        $listaParticipantes = $listaParticipantes.",".base64_decode($estudiante)."";
+                    }
+                }
+            }
+            
+            $arch = 'ACTA_'.$sie.'_'.$ges.'_'.date('YmdHis').'.pdf';
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'tram_lst_diplomaBachiller_humanistico_acta_v1_rcm.rptdesign&sie='.$sie.'&gestion='.$ges.'&tipoLista='.$tipLis.'&ids='.$ids.'&&__format=pdf&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'tram_lst_diplomaBachiller_humanistico_acta_v1_rcm.rptdesign&sie='.$sie.'&gestion='.$ges.'&tipoLista='.$tipLis.'&ids='.$listaParticipantes.'&&__format=pdf&'));
             $response->setStatusCode(200);
             $response->headers->set('Content-Transfer-Encoding', 'binary');
             $response->headers->set('Pragma', 'no-cache');
@@ -3475,10 +3498,19 @@ class TramiteDetalleController extends Controller {
         }
 
         try {
-            $info = $request->get('info');
-            $form = unserialize(base64_decode($info));
-            $sie = $form['sie'];
-            $ges = $form['gestion'];
+            $form = $request->get('form');
+            if ($form) {
+                $tipoImp = 2;
+                $sie = $form['sie'];
+                $ges = $form['gestion'];
+            } else {
+                $tipoImp = 1;
+                $info = $request->get('info');
+                $form = unserialize(base64_decode($info));
+                $sie = $form['sie'];
+                $ges = $form['gestion'];
+            }
+            
             $tipLis = 5;
             $ids = "";
             $rolPermitido = 16;
@@ -3491,12 +3523,11 @@ class TramiteDetalleController extends Controller {
             $entidadDepartamento = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneBy(array('id' => $departamentoCodigo));
 
             $dep = $entidadDepartamento->getSigla();
-
-            $arch = 'AUTORIZACION_'.$sie.'_'.$ges.'_'.date('YmdHis').'.pdf';
+            $arch = 'CARTON_'.$sie.'_'.$ges.'_'.date('YmdHis').'.pdf';
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_v3_'.strtolower($dep).'.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo=1&&__format=pdf&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&'));
             $response->setStatusCode(200);
             $response->headers->set('Content-Transfer-Encoding', 'binary');
             $response->headers->set('Pragma', 'no-cache');
@@ -3505,6 +3536,173 @@ class TramiteDetalleController extends Controller {
         } catch (\Doctrine\ORM\NoResultException $exc) {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al generar el listado, intente nuevamente'));
             return $this->redirectToRoute('tramite_detalle_diploma_humanistico_impresion_lista', ['form' => $form], 307);
+        }
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que busca una institucion educativa segun tipo serie para imprimir el contenido del diploma humanistico (Regular o Alternativa) en la direccion departamental - legalizaciones
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function dipHumImpresionCartonBuscaAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+        $route = $request->get('_route');
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $defaultTramiteController = new defaultTramiteController();
+        $defaultTramiteController->setContainer($this->container);
+
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+		
+		if(empty($activeMenu)){
+			$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Módulo inhabilitado por el administrador, comuniquese con su Técnico SIE'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
+		} 
+
+        $documentoController = new documentoController();
+        $documentoController->setContainer($this->container);
+
+        $rolPermitido = array(8,16);
+        
+        return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:dipHumImpresionCartonIndex.html.twig', array(
+            'formBusqueda' => $documentoController->creaFormBuscaInstitucionEducativaSerie('tramite_detalle_diploma_humanistico_impresion_carton_pdf','','','1')->createView(),
+            'titulo' => 'Impresión Cartón',
+            'subtitulo' => 'Diploma Humanísico',
+        ));
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que busca una institucion educativa segun tipo serie para imprimir el acta del diploma humanistico (Regular o Alternativa) en la direccion departamental - legalizaciones
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function dipHumImpresionActaBuscaAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+        $route = $request->get('_route');
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $defaultTramiteController = new defaultTramiteController();
+        $defaultTramiteController->setContainer($this->container);
+
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+		
+		if(empty($activeMenu)){
+			$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Módulo inhabilitado por el administrador, comuniquese con su Técnico SIE'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
+		} 
+
+        $tramiteController = new tramiteController();
+        $tramiteController->setContainer($this->container);
+
+        return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:dipHumImpresionActaIndex.html.twig', array(
+            'formBusqueda' => $tramiteController->creaFormBuscaUnidadEducativaHumanistica('tramite_detalle_diploma_humanistico_impresion_acta_lista',0,0)->createView(),
+            'titulo' => 'Impresión Acta',
+            'subtitulo' => 'Diploma Humanísico',
+        ));
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que muestra el listado de participantes con diplomas de bachiller humanistico para imprimir el acta correspondiente (Regular o Alternativa)
+    // PARAMETROS: institucionEducativaId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function dipHumImpresionActaListaAction(Request $request) {
+
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        if ($request->isMethod('POST')) {
+            $form = $request->get('form');
+            if ($form) {
+                $sie = $form['sie'];
+                $gestion = $form['gestion'];
+                                
+                $tramiteController = new tramiteController();
+                $tramiteController->setContainer($this->container);
+
+                try {
+                    $usuarioRol = $this->session->get('roluser');
+                    $verTuicionUnidadEducativa = $tramiteController->verTuicionUnidadEducativa($id_usuario, $sie, $usuarioRol, 'TRAMITES');
+
+                    if ($verTuicionUnidadEducativa != ''){
+                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
+                        return $this->redirect($this->generateUrl('tramite_homepage'));
+                    }
+
+                    $entitySubsistemaInstitucionEducativa = $tramiteController->getSubSistemaInstitucionEducativa($sie);
+                    if($entitySubsistemaInstitucionEducativa['msg'] != ''){
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => $entitySubsistemaInstitucionEducativa['msg']));
+                        return $this->redirect($this->generateUrl('tramite_homepage'));
+                    }
+
+                    // Funcion que lista los trámites registrados de participantes para su autorizacion según el centro de educacion alternativa, gestión, especialidad y nivel
+                    // PARAMETROS: estudianteInscripcionId, especialidadId, nivelId
+                    $flujoProcesoId = 5; //codigo del flujo y proceso de los tramites impresos
+
+                    $documentoController = new documentoController();
+                    $documentoController->setContainer($this->container);
+
+
+                    $documentoTipoId = '1,3,4,5';
+
+                    $entityParticipantes = $documentoController->getDocumentoInstitucionEducativaGestion($sie,$gestion,$documentoTipoId);
+
+                    $datosBusqueda = base64_encode(serialize($form));
+
+                    return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:dipHumImpresionActaIndex.html.twig', array(
+                        'formBusqueda' => $tramiteController->creaFormBuscaUnidadEducativaHumanistica('tramite_detalle_diploma_humanistico_impresion_acta_lista',$sie,$gestion,'1,3,4,5')->createView(),
+                        'titulo' => 'Impresión Acta',
+                        'subtitulo' => 'Diploma Humanístico',
+                        'listaParticipante' => $entityParticipantes,
+                        'datosBusqueda' => $datosBusqueda,
+                    ));
+                } catch (\Doctrine\ORM\NoResultException $exc) {
+                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
+                    return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_impresion_acta_busca'));
+                }
+            }  else {
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+                return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_impresion_acta_busca'));
+            }
+        } else {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+            return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_impresion_acta_busca'));
         }
     }
 
@@ -3521,6 +3719,7 @@ class TramiteDetalleController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -3533,7 +3732,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -3590,13 +3789,13 @@ class TramiteDetalleController extends Controller {
 
                     if ($verTuicionUnidadEducativa != ''){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
-                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_envio_busca '));
+                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_envio_busca'));
                     }
 
                     $entitySubsistemaInstitucionEducativa = $tramiteController->getSubSistemaInstitucionEducativa($sie);
                     if($entitySubsistemaInstitucionEducativa['msg'] != ''){
                         $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => $entitySubsistemaInstitucionEducativa['msg']));
-                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_envio_busca '));
+                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_envio_busca'));
                     }
 
                     $entityAutorizacionInstitucionEducativa = $tramiteController->getAutorizacionUnidadEducativa($sie);
@@ -3606,7 +3805,7 @@ class TramiteDetalleController extends Controller {
 
                     // Funcion que lista los trámites registrados de participantes para su autorizacion según el centro de educacion alternativa, gestión, especialidad y nivel
                     // PARAMETROS: estudianteInscripcionId, especialidadId, nivelId
-                    $flujoProcesoId = 6; //codigo del flujo y proceso de los tramites registrados
+                    $flujoProcesoId = 5; //codigo del flujo y proceso de los tramites que fueron asignados su carton
                     $entityParticipantes = $this->getDipHumTramiteProceso($sie,$gestion,$flujoProcesoId);
 
                     $datosBusqueda = base64_encode(serialize($form));
@@ -3621,11 +3820,11 @@ class TramiteDetalleController extends Controller {
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
-                    return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_recepcion_lista'));
+                    return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_envio_lista'));
                 }
             }  else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_recepcion_lista'));
+                return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_envio_lista'));
             }
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
@@ -3733,7 +3932,7 @@ class TramiteDetalleController extends Controller {
                 }
 
                 $token = $request->get('_token');
-                if (!$this->isCsrfTokenValid('autorizar', $token)) {
+                if (!$this->isCsrfTokenValid('enviar', $token)) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
                     return $this->redirectToRoute('tramite_detalle_diploma_humanistico_envio_lista');
                 }
@@ -3755,13 +3954,13 @@ class TramiteDetalleController extends Controller {
 
                         $msg = array('0'=>true, '1'=>$participante);
 
-                        $tramiteController = new tramiteController();
-                        $tramiteController->setContainer($this->container);
+                        $documentoController = new documentoController();
+                        $documentoController->setContainer($this->container);
 
                         if ($flujoSeleccionado == 'Adelante'){
                             // VALIDACION DE SOLO UN DIPLOMA BACHILLER HUMANISTICO POR ESTUDIANTE (RUDE)
                             $valDocumentoEstudiante = $tramiteController->getDipHumDocumentoEstudiante($participanteId);
-                            if(count($valDocumentoEstudiante) > 0){
+                            if(count($valDocumentoEstudiante) > 1){
                                 $msgContenido = 'ya cuenta con el Diploma de Bachiller Humanístico '.$valDocumentoEstudiante[0]['documento_serie_id'];
                             }
                         }
@@ -3779,6 +3978,7 @@ class TramiteDetalleController extends Controller {
                         }
 
                         if ($flujoSeleccionado == 'Atras'){
+                            $documentoId = $documentoController->setTramiteDocumentoEstado($tramiteId, 2);
                             $tramiteDetalleId = $this->setProcesaTramiteAnterior($tramiteId, $id_usuario, $obs, $em);
                         }
 
@@ -3804,7 +4004,7 @@ class TramiteDetalleController extends Controller {
             }
 
             $formBusqueda = array('sie'=>$institucionEducativaId,'gestion'=>$gestionId);
-            return $this->redirectToRoute('tramite_detalle_diploma_humanistico_recepcion_lista', ['form' => $formBusqueda], 307);
+            return $this->redirectToRoute('tramite_detalle_diploma_humanistico_envio_lista', ['form' => $formBusqueda], 307);
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
             return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_envio_busca'));
@@ -3824,6 +4024,7 @@ class TramiteDetalleController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -3836,7 +4037,7 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -3893,13 +4094,13 @@ class TramiteDetalleController extends Controller {
 
                     if ($verTuicionUnidadEducativa != ''){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
-                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_regular_entrega_busca '));
+                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_regular_entrega_busca'));
                     }
 
                     $entitySubsistemaInstitucionEducativa = $tramiteController->getSubSistemaInstitucionEducativa($sie);
                     if($entitySubsistemaInstitucionEducativa['msg'] != ''){
                         $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => $entitySubsistemaInstitucionEducativa['msg']));
-                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_regular_entrega_busca '));
+                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_regular_entrega_busca'));
                     }
 
                     $entityAutorizacionInstitucionEducativa = $tramiteController->getAutorizacionUnidadEducativa($sie);
@@ -3909,7 +4110,7 @@ class TramiteDetalleController extends Controller {
 
                     // Funcion que lista los trámites registrados de participantes para su autorizacion según el centro de educacion alternativa, gestión, especialidad y nivel
                     // PARAMETROS: estudianteInscripcionId, especialidadId, nivelId
-                    $flujoProcesoId = 5; //codigo del flujo y proceso de los tramites con cartones asignados
+                    $flujoProcesoId = 6; //codigo del flujo y proceso de los tramites con cartones asignados
                     $entityParticipantes = $this->getDipHumTramiteProceso($sie,$gestion,$flujoProcesoId);
 
                     $datosBusqueda = base64_encode(serialize($form));

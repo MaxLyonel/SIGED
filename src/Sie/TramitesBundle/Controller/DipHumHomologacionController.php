@@ -66,11 +66,12 @@ class DipHumHomologacionController extends Controller {
      * Lists all Estudiante entities.
      *
      */
-    public function indexAction() {
+    public function indexAction(Request $request) {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
+        $route = $request->get('_route');
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $em = $this->getDoctrine()->getManager();
 

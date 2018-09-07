@@ -38,6 +38,7 @@ class SeguimientoController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -50,7 +51,7 @@ class SeguimientoController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $documentoController = new documentoController();
         $documentoController->setContainer($this->container);
@@ -206,6 +207,7 @@ class SeguimientoController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -218,7 +220,7 @@ class SeguimientoController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -373,6 +375,7 @@ class SeguimientoController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -385,7 +388,7 @@ class SeguimientoController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -541,6 +544,7 @@ class SeguimientoController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -553,7 +557,7 @@ class SeguimientoController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);

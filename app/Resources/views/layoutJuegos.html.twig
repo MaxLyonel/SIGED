@@ -284,6 +284,13 @@
                                         <li><a href="{{path('sie_juegos_comision_entrenador_f2_lista_index')}}">Clasificacion Entrenadores</a></li>
                                         <li><a href="{{path('estudiantedatopersonal_juegos_deportistas_fase2')}}">Deportistas Datos Personales</a></li>
                                     {% endif %}
+                                    {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 28 %}
+                                        <li><a href="{{path('sie_juegos_clasificacion_f3_index')}}">Tercera Fase</a></li>
+                                        <li><a href="{{path('estudiantedatopersonal_juegos_deportistas_fase3')}}">Deportistas Datos Personales</a></li>
+                                        <li><a href="{{path('sie_juegos_comision_entrenador_f3_lista_index')}}">Registro Acompañante</a></li>
+                                        <li><a href="{{path('sie_juegos_comision_departamental_lista_index')}}">Registro Delegados</a></li>
+                                        <!--<li><a href="{{path('sie_juegos_representacion_cultural_index')}}">Registro Rep. Cultural</a></li>-->
+                                    {% endif %}
                                 </ul>
                             </li>
                         {% endif %}                        
@@ -298,6 +305,9 @@
                                 <ul>
                                     {% if app.session.get('roluser') == 10 %}
                                         <li><a href="{{ path('sie_juegos_clasificacion_lista_deportistas_inscritos_fase',{'fase':1,'usuario':app.session.get('userId')}) }}">Estadística Primera Fase</a></li>
+                                    {% endif %}
+                                    {% if  app.session.get('roluser') in [7,28] %}
+                                        <li><a href="{{path('sie_juegos_clasificacion_lista_deportistas_aspirantes_fase',{'fase':3,'usuario':app.session.get('userId')})}}">Registrados Segunda Fase</a></li>
                                     {% endif %}
                                 </ul>
                             </li>

@@ -59,14 +59,14 @@
                                                         {% if group.documentoPdf1 %} 
                                                             <a href="#" onclick="doInscriptionGroup('{{jsonDataInscription}}', {{group.id}});" class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones"><i class="fa fa-edit"></i></a>
                                                         {% else %} 
-                                                            <a  class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones deshabilitada" ><i style="  color:#ccc;" class="fa fa-edit"></i></a>
+                                                            <a  class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Primero debe subir su proyecto" ><i style="  color:#ccc;" class="fa fa-edit"></i></a>
                                                         {% endif %}
                                                     {% else %}
                                                         <a href="#" onclick="doInscriptionGroup('{{jsonDataInscription}}', {{group.id}});" class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones"><i class="fa fa-edit"></i></a>     
                                                     {% endif %}
                                                 {% endif %}
                                                 {% if regla.siSubirDocumento %}
-                                                    <a href="#" onclick="olimArchivo({{group.id}});" class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Subir Documento"><i class="fa fa-upload"></i></a>
+                                                    <a href="#" onclick="olimArchivo({{group.id}});" class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Subir Proyecto"><i class="fa fa-upload"></i></a>
                                                 {% endif %}
                                             </td>
                                         </tr>

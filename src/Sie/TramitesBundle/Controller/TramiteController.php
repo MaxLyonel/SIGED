@@ -130,6 +130,7 @@ class TramiteController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -142,7 +143,7 @@ class TramiteController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $rolPermitido = array(8,10,13);
 
@@ -277,7 +278,7 @@ class TramiteController extends Controller {
 
                     if ($verTuicionUnidadEducativa != ''){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
-                        return $this->redirect($this->generateUrl('tramite_diploma_humanistico_regular_registro_busca'));
+                        return $this->redirect($this->generateUrl('tramite_certificado_tecnico_registro_busca'));
                     }
 
                     $entityAutorizacionCentro = $this->getAutorizacionCentroEducativoTecnica($sie);
@@ -466,6 +467,7 @@ class TramiteController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -478,7 +480,7 @@ class TramiteController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $rolPermitido = array(8,10,13);
 
@@ -511,6 +513,7 @@ class TramiteController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -523,7 +526,7 @@ class TramiteController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $rolPermitido = array(8,10,13);
 
@@ -601,7 +604,7 @@ class TramiteController extends Controller {
 
                     if ($verTuicionUnidadEducativa != ''){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
-                        return $this->redirect($this->generateUrl('tramite_diploma_humanistico_regular_registro_busca '));
+                        return $this->redirect($this->generateUrl('tramite_diploma_humanistico_regular_registro_busca'));
                     }
 
                     $entityAutorizacionUnidadEducativa = $this->getAutorizacionUnidadEducativa($sie);
@@ -667,7 +670,7 @@ class TramiteController extends Controller {
 
                     if ($verTuicionUnidadEducativa != ''){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
-                        return $this->redirect($this->generateUrl('tramite_diploma_humanistico_alternativa_registro_busca '));
+                        return $this->redirect($this->generateUrl('tramite_diploma_humanistico_alternativa_registro_busca'));
                     }
 
                     $entityAutorizacionUnidadEducativa = $this->getAutorizacionUnidadEducativa($sie);
@@ -1177,7 +1180,7 @@ class TramiteController extends Controller {
           from institucioneducativa as ie
           inner join orgcurricular_tipo as oct ON oct.id = ie.orgcurricular_tipo_id
           left join (select distinct institucioneducativa_id, nivel_tipo_id from institucioneducativa_nivel_autorizado where nivel_tipo_id = 6) as iena on iena.institucioneducativa_id = ie.id
-          where ie.institucioneducativa_acreditacion_tipo_id = 1 and ie.id = ".$institucionEducativaId." and ie.estadoinstitucion_tipo_id = 10
+          where ie.institucioneducativa_acreditacion_tipo_id = 1 and ie.id = ".$institucionEducativaId." -- and ie.estadoinstitucion_tipo_id = 10
       ");
       $queryEntidad->execute();
       $objEntidad = $queryEntidad->fetchAll();
@@ -1867,12 +1870,12 @@ class TramiteController extends Controller {
     //****************************************************************************************************
     public function getCertTecTramiteEspecialidadNivelEstudiante($estudianteId, $especialidadId, $nivelId) {
         $em = $this->getDoctrine()->getManager();
-        $queryEntidad = $em->getConnection()->prepare("
-            select distinct on (sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, e.codigo_rude)
+        $queryEntidad = $em->getConnection()->prepare("            
+            select distinct on (sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre)
             ei.id as estudiante_inscripcion_id,ei.estudiante_id as estudiante_id, sat.codigo as nivel, ies.periodo_tipo_id as periodo, iec.periodo_tipo_id as per, siea.institucioneducativa_id as institucioneducativa
             , sest.id as especialidad_id, ies.gestion_tipo_id,ies.periodo_tipo_id,siea.institucioneducativa_id, sfat.codigo as nivel_id, sfat.facultad_area, sest.codigo as ciclo_id
             ,sest.especialidad,sat.codigo as grado_id,sat.acreditacion,ei.id as estudiante_inscripcion,e.codigo_rude, e.nombre, e.paterno, e.materno, to_char(e.fecha_nacimiento,'DD/MM/YYYY') as fecha_nacimiento
-            , cast(e.carnet_identidad as varchar)||(case when e.complemento is null then '' when e.complemento = '' then '' else '-'||e.complemento end) as carnet_identidad
+            , cast(e.carnet_identidad as varchar)||(case when complemento is null then '' when complemento = '' then '' else '-'||complemento end) as carnet_identidad
             , case pt.id when 1 then lt2.lugar when 0 then '' else pt.pais end as lugar_nacimiento
             , t.id as tramite_id,ei.estadomatricula_tipo_id/*, d.id as documento_id, d.documento_serie_id as documento_serie_id*/, segip_id
             from superior_facultad_area_tipo as sfat
@@ -2262,6 +2265,7 @@ class TramiteController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -2276,7 +2280,7 @@ class TramiteController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $documentoController = new documentoController();
         $documentoController->setContainer($this->container);
@@ -2369,6 +2373,7 @@ class TramiteController extends Controller {
 
                     $entityTramiteDetalle = $tramiteProcesoController->getTramiteDetalle($entityDocumento['tramite']);
 
+                    $entityDocumentoDetalle = $documentoController->getDocumentoDetalle($entityDocumento['tramite']);
 
                     return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
                         'formBusqueda' => $documentoController->creaFormAnulaDocumentoSerie('tramite_reactiva_lista','','')->createView(),
@@ -2377,6 +2382,7 @@ class TramiteController extends Controller {
                         'msgReactivaTramite' => $valUltimoProcesoFlujoTramite,
                         'listaDocumento' => $entityDocumento,
                         'listaTramiteDetalle' => $entityTramiteDetalle,
+                        'listaDocumentoDetalle' => $entityDocumentoDetalle,
                         'arrayForm' => array('serie'=>$serie, 'obs'=>$obs),
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
@@ -2419,6 +2425,7 @@ class TramiteController extends Controller {
         if ($request->isMethod('POST')) {
             $serie = $request->get('serie');
             $obs = $request->get('obs');
+            $formBusqueda = array('serie'=>$serie,'obs'=>$obs);
             if ($serie != "" and $obs != ""){
                 try {
                     $documentoController = new documentoController();
@@ -2437,6 +2444,14 @@ class TramiteController extends Controller {
                     $tramiteId = $entityDocumento['tramite'];
                     $documentoId = $entityDocumento['documento'];
 
+                    $entityDocumentoTramite = $documentoController->getDocumentoTramite($tramiteId,9);
+
+                    if(count($entityDocumentoTramite)>0){
+                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'El documento '.$serie.' cuenta con un Documento Supletorio activo, no es posible reactivar el trámite'));
+                        // return $this->redirect($this->generateUrl('tramite_reactiva_busca'));
+                        return $this->redirectToRoute('tramite_reactiva_lista', ['form' => $formBusqueda], 307);
+                    }
+
                     $em = $this->getDoctrine()->getManager();
                     $entityTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $tramiteId));
 
@@ -2445,11 +2460,16 @@ class TramiteController extends Controller {
 
                     $valProcesaTramite = $tramiteProcesoController->setProcesaTramite($tramiteId,$entityFlujoProcesoDetalle->getFlujoProcesoAnt()->getId(),$id_usuario,$obs);
 
-                    $documentoId = $documentoController->setDocumentoEstado($documentoId, 2);
+                    // $documentoId = $documentoController->setDocumentoEstado($documentoId, 2);
+                    $msg = $documentoController->setTramiteDocumentoEstado($tramiteId, 2);
+
+                    if($msg != ""){
+                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msg));
+                        return $this->redirectToRoute('tramite_reactiva_lista', ['form' => $formBusqueda], 307);
+                    }
 
                     $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'Trámite '.$tramiteId.' con documento nro. '.$serie.' reactivado, el trámite se encuentra en la BANDEJA DE IMPRESIÓN'));
 
-                    $formBusqueda = array('serie'=>$serie,'obs'=>$obs);
                     //return $this->redirectToRoute('sie_tramite_reactiva_lista', ['form' => $formBusqueda], 307);
                     return $this->redirect($this->generateUrl('tramite_reactiva_busca'));
 
@@ -2637,7 +2657,7 @@ class TramiteController extends Controller {
         $entitySubsistemaInstitucionEducativa = $this->getSubSistemaInstitucionEducativa($institucionEducativaId);
         if($entitySubsistemaInstitucionEducativa['msg'] != ''){
             $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => $entitySubsistemaInstitucionEducativa['msg']));
-            return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_regular_autorizacion_busca '));
+            return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_regular_autorizacion_busca'));
         }
 
         if($entitySubsistemaInstitucionEducativa['id']==1){
@@ -2837,6 +2857,7 @@ class TramiteController extends Controller {
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
         $gestionActual = new \DateTime("Y");
+        $route = $request->get('_route');
         $this->session->set('save', false);
         //validation if the user is logged
         if (!isset($id_usuario)) {
@@ -2846,7 +2867,7 @@ class TramiteController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $rolPermitido = array(16);
 

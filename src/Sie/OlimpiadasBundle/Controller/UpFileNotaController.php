@@ -58,7 +58,7 @@ class UpFileNotaController extends Controller{
         // create db conexion
         $em = $this->getDoctrine()->getManager();
         // $em->getConnection()->beginTransaction();
-        $dirFile = $this->get('kernel')->getRootDir() . '/../web/uploads/';
+        $dirFile = $this->get('kernel')->getRootDir() . '/../web/uploads/olimpiadas/archivos/';
         // $dirFile = $this->get('kernel')->getRootDir() . '/../web/uploads/olimpiadas/upfileNota/';
         // move_uploaded_file($_FILES['fileNota']['tmp_name'], $dirFile.$_FILES['fileNota']['name']);
         move_uploaded_file($arrFile['tmp_name']['upfile'], $dirFile.$arrFile['name']['upfile']);
@@ -75,15 +75,17 @@ class UpFileNotaController extends Controller{
         $query->bindValue(':gestion', $this->session->get('currentyear'));
         $query->execute();
         $upFileResponse = $query->fetchAll();
+
         // validate if the upload has been some error
         $sw = false;
         $nameFile = false;
-        if(sizeof($upFileResponse[0])>0){
+        if($upFileResponse[0]['sp_consolida_archivo_olimpiadas_cvs']){
             $sw = true;
             $arrDataFile = explode(':',$upFileResponse[0]['sp_consolida_archivo_olimpiadas_cvs']);
             $nameFile = trim(substr($arrDataFile[1], 0, strlen($arrDataFile[1])-1));
             
         }
+
         // return the view values
         return $this->render('SieOlimpiadasBundle:UpFileNota:upfileInDB.html.twig', array(
             'dataFile' =>$upFileResponse[0],
@@ -92,8 +94,8 @@ class UpFileNotaController extends Controller{
         ));    
             
         } catch (Exception $e) {
-            dump($e);
-            // $em->getConnection()->rollback();
+            dump($e);die;
+            // $em->getConnection()->rollback();    
         }
 
       
@@ -110,7 +112,7 @@ class UpFileNotaController extends Controller{
      public function downloadObservationAction(Request $request){
         
            //get path of the file
-        $dir = $this->get('kernel')->getRootDir() . '/../web/uploads/';
+        $dir = $this->get('kernel')->getRootDir() . '/../web/uploads/olimpiadas/archivos/';
         $file = $request->get('nameFile');
 
         //create response to donwload the file

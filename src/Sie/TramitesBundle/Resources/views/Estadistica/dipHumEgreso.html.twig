@@ -1,0 +1,109 @@
+{% extends "::layoutTramites.html.twig"%}
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block contentBread %}
+    <ol class="breadcrumb">
+        <li>
+            <!-- <i class="fa fa-user"></i> -->
+            <a href="{{path('tramite_homepage')}}">Perfil</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+    </ol>
+{% endblock %}
+
+{% block contentoption %}
+    <div class="row">
+        <div class="col-lg-8 col-md-8 col-sm-12 col-sx-12 col-lg-offset-2 col-md-offset-2">
+                <div class="panel shadow">
+                        <div class="panel-heading">
+                            <div id="tour-12" class="pull-left">
+                                <h3 class="panel-title"><i class="fa fa-tasks"></i> Diplomas impresos</h3>
+                            </div>
+                            <div class="pull-right">
+                                <div class="btn-green date-picker">
+                                    {% if infoEntidad is defined  %}
+                                        <form name="form" role="form" action="{{ path('tramite_estadistica_diploma_humanistico_egreso') }}" action="" method="POST" >
+                                            <input type="hidden" name="codigo" id="codigo" value="{{infoEntidad[0]['lugar_codigo']|base64_encode }}" />
+                                            <input type="hidden" name="nivel" id="nivel" value="{{infoEntidad[0]['nivel_id']|base64_encode}}" />
+                                            <select class="form-control btn-dpl" name="gestion" onchange="this.form.submit();">
+                                                {% for ges in gestiones %}
+                                                    {% if ges.id == gestion %}
+                                                        <option value="{{ ges.id }}" selected>{{ ges.id }}</option>
+                                                    {% else %}
+                                                        <option value="{{ ges.id }}">{{ ges.id }}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div id="tour-15" style="display: block; min-height: 500px;" class="panel-body">
+                        {% if infoEntidad is defined  %}
+                            {% set count = 0 %}
+                            {% set cantidadTotalGeneral = 0 %}
+                            {% for data in infoEntidad %}
+                                {% set count = count + 1 %}
+                                {% set cantidadReg = data.cantidad_reg %}
+                                {% set cantidadAlt = data.cantidad_alt %}
+                                {% set cantidadTotal = data.cantidad %}
+                                {% if count == 1 %}
+                                    {% set cantidadTotalGeneral = data.total_general %}
+                                    {% if cantidadTotalGeneral == 0 %}
+                                        {% set cantidadTotalGeneral = 1 %}
+                                    {% endif %}
+                                {% endif %}
+                                {% set porcentajeReg = (cantidadReg * 100 )/ cantidadTotal %}
+                                {% set porcentajeAlt = (cantidadAlt * 100) / cantidadTotal %}
+                                {% set id = data.id %}
+                                {% set codigo = data.codigo %}
+                                {% set nombre = data.nombre %} 
+                                {% if infoEntidad[0]['siguiente_nivel_id'] == 0  %}                                
+                                    <span class="pull-right" style="width:50px; text-align:right"><b>{{ cantidadTotal }}</b></span><span class="">{{ id }} - {{ nombre }}</span>                                          
+                                    <div class="progress progress-md">
+                                        <div class="progress-bar progress-bar-lilac" style="width: {{ porcentajeReg }}%" title="Educación Regular - {{ cantidadReg }}">
+                                            <span class="sr-only">{{ porcentajeReg }}%</span>
+                                        </div><!-- /.progress -->
+                                        <div class="progress-bar progress-bar-danger" style="width: {{ porcentajeAlt }}%" title="Educación Alternativa  - {{ cantidadAlt }}">
+                                            <span class="sr-only">{{ porcentajeAlt }}%</span>
+                                        </div><!-- /.progress -->
+                                    </div>
+                                {% else %}                                
+                                    <form role="form" action="{{ path('tramite_estadistica_diploma_humanistico_egreso') }}" method="POST"> 
+                                        <input type="hidden" name="codigo" id="codigo" value="{{data.codigo|base64_encode }}" />
+                                        <input type="hidden" name="nivel" id="nivel" value="{{(data.siguiente_nivel_id)|base64_encode}}" />
+                                        <input type="hidden" name="gestion" id="gestion" value="{{gestion}}" />
+                                        <button type="submit" id="submit{{id}}" style="display:none;"></button>
+                                        <a href="javascript:;" class="text-inverse" style="text-decoration:none;" onclick="$('#submit{{id}}').click();">
+                                                <span class="pull-right" style="width:50px; text-align:right"><b>{{ cantidadTotal }}</b></span><span class="">{{ nombre }}</span>
+                                        </a>                                             
+                                        <div class="progress progress-md">
+                                            <div class="progress-bar progress-bar-lilac" style="width: {{ porcentajeReg }}%" title="Educación Regular - {{ cantidadReg }}">
+                                                <span class="sr-only">{{ porcentajeReg }}%</span>
+                                            </div><!-- /.progress -->
+                                            <div class="progress-bar progress-bar-danger" style="width: {{ porcentajeAlt }}%" title="Educación Alternativa  - {{ cantidadAlt }}">
+                                                <span class="sr-only">{{ porcentajeAlt }}%</span>
+                                            </div><!-- /.progress -->
+                                        </div>
+                                    </form>                                    
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        </div><!-- /.panel-body -->
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+            </div>
+
+        </div><!-- /.row -->
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+    </script>
+{%endblock%}

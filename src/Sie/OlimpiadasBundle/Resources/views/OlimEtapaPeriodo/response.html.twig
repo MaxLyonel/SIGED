@@ -1,0 +1,81 @@
+<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" ondrop="drop(event)" ondragover="allowDrop(event)">
+    <div class="panel rounded shadow panel-success">
+    	<div class="panel-heading">
+    		<h3 class="panel-title">
+    			Etapas (periodos) de la olimpiada
+    			<div class="pull-right">
+
+    			</div>
+    			<div class="clearfix"></div>
+    		</h3>
+    	</div>
+        <div class="panel-body">
+            <form action="{{path('olimetapaperiodo_saveFechas')}}" method="post" id="formFechas">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Etapa</th>
+                            <th>Fecha inicio</th>
+                            <th>Fecha final</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for activo in activos %}
+                            <tr id="fila_{{activo.id}}" >
+                                <td ondragstart="seleccionar('fila_{{activo.id}}')" draggable="true" style="cursor:move">
+                                    <input type="hidden" name="etapaId[]" value="{{activo.id}}">
+
+                                    {{ activo.olimEtapaTipo.etapa }}
+                                </td>
+                                <td>
+                                    <input type="text" name="fechaInicio[]"  class="form-control fecha" value="{{ activo.fechaInicio|date('d-m-Y') }}" required="required">
+                                </td>
+                                <td>
+                                    <input type="text" name="fechaFin[]" class="form-control fecha" value="{{ activo.fechaFin|date('d-m-Y') }}" required="required">
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% if activos|length > 0 %}
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <br>
+                            <button type="submit" class="btn btn-primary"> <i class="fa fa-save"></i> Actualizar fechas</button>
+                            <a href="{{ path('olimmateriatipo') }}" class="btn btn-danger">Volver atras</a>
+                        </div>
+                    </div>
+                {% endif %}
+            </form>
+
+            {# <div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)" style="width:400px; height:400px; border:1px solid #000000"></div> #}
+
+            {# <img id="drag1" src="{{asset('img/1.jpg')}}" draggable="true" ondragstart="drag(event)" width="336" height="69"> #}
+
+        </div>
+    </div>
+</div>
+
+<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" ondrop="eliminarEtapa()" ondragover="allowDrop(event)">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Etapas <small>Disponibles</small></h3>
+        </div>
+        <div class="panel-body">
+            <ul class="list-group">
+               {% for faltante in faltantes %}
+                   <li id="{{faltante.id}}" ondragstart="drag({{faltante.id}})" class="list-group-item" style="cursor:move" draggable="true">{{ faltante.etapa }}</li>
+               {% endfor %}
+           </ul>
+        </div>
+    </div>
+</div>
+
+<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" id="mensaje">
+    {% if status == 200 %} <div class="alert alert-success alert-dismissible"> <i class="fa fa-check"></i> {% endif %}
+    {% if status == 300 %} <div class="alert alert-warning alert-dismissible">  <i class="fa fa-warning"></i>{% endif %}
+    {% if status == 500 %} <div class="alert alert-danger alert-dismissible"> <i class="fa fa-times"></i> {% endif %}
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        {{ mensaje }}
+    </div>
+</div>

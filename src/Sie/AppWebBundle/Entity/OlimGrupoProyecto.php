@@ -502,4 +502,32 @@ class OlimGrupoProyecto
     {
         return $this->nombreProyecto;
     }
+    /**
+     * @var \DateTime
+     */
+    private $fechaConfirmacion;
+
+
+    /**
+     * Set fechaConfirmacion
+     *
+     * @param \DateTime $fechaConfirmacion
+     * @return OlimGrupoProyecto
+     */
+    public function setFechaConfirmacion($fechaConfirmacion)
+    {
+        $this->fechaConfirmacion = $fechaConfirmacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaConfirmacion
+     *
+     * @return \DateTime 
+     */
+    public function getFechaConfirmacion()
+    {
+        return $this->fechaConfirmacion;
+    }
 }

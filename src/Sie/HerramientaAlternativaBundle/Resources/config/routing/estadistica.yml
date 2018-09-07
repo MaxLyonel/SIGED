@@ -34,4 +34,18 @@ estadistica_especialidad_centro_print_xls:
     path:     /informacion/centro/alternativaespec/print/xls
     defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:informacionCentroEspecialidadPrintXls }
 
+estadistica_busqueda_especialidad_centro_print_pdf:
+    path:     /informacion/centro/busquedaesp/print/pdf
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:centroAltEspecialidadPrintPdf }
 
+estadistica_busqueda_especialidad_centro_print_xls:
+    path:     /informacion/centro/busquedaesp/print/xls
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:centroAltEspecialidadPrintXls }
+
+estadistica_busqueda_est_centro_print_pdf:
+    path:     /informacion/centro/busquedaest/print/pdf
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:centroAltEstPrintPdf }
+
+estadistica_busqueda_est_centro_print_xls:
+    path:     /informacion/centro/busquedaest/print/xls
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:centroAltEstPrintXls }

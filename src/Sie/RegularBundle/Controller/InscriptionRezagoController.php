@@ -120,15 +120,15 @@ class InscriptionRezagoController extends Controller {
         $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude']));
         //verificamos si existe el estudiante y si es menor a 15
         if ($student) {
-            $yearsStudent = $this->get('seguimiento')->getYearsOldsStudentByFecha($student->getFechaNacimiento()->format('d-m-Y'), "30-06-2018");
+            // $yearsStudent = $this->get('seguimiento')->getYearsOldsStudentByFecha($student->getFechaNacimiento()->format('d-m-Y'), "30-06-".$this->session->get('currentyear'));
 
-            if($yearsStudent[0]<=15){
-                // no thing to do
-            }else{
-                $message = 'Estudiante no cumple con la edad requerida';
-                $this->addFlash('warningrezago', $message);
-                return $this->redirectToRoute('inscription_rezago_index');
-            }
+            // if($yearsStudent[0]<=15){
+            //     // no thing to do
+            // }else{
+            //     $message = 'Estudiante no cumple con la edad requerida';
+            //     $this->addFlash('warningrezago', $message);
+            //     return $this->redirectToRoute('inscription_rezago_index');
+            // }
 
             //validate 2 times on rezago
             $conditionRezago = array('estudiante' => $student->getId(), 'estadomatriculaTipo' => '57');
@@ -593,6 +593,29 @@ class InscriptionRezagoController extends Controller {
     public function regNotasAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
+        // validate if the ue is MODULAR
+        $objUeModular = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array(
+            'institucioneducativa'                   => $form['institucionEducativa'], 
+            'institucioneducativaHumanisticoTecnicoTipo' => 3, 
+            'gestionTipoId'                            => $this->session->get('currentyear'),
+
+        ));
+        
+        if(!$objUeModular){
+
+            //validate the students yaer old 
+            $student = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['idStudent']);
+            $yearsStudent = $this->get('seguimiento')->getYearsOldsStudentByFecha($student->getFechaNacimiento()->format('d-m-Y'), "30-06-".$this->session->get('currentyear'));
+
+            if($yearsStudent[0]<=15){
+                // no thing to do
+            }else{
+                $message = 'Estudiante no cumple con la edad requerida';
+                $this->addFlash('warningrezago', $message);
+                return $this->redirectToRoute('inscription_rezago_index');
+            }
+
+        }
 
             //validate allow access
         $arrAllowAccessOption = array(7,8);

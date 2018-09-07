@@ -1,0 +1,299 @@
+{% extends 'SieOlimpiadasBundle:OlimReporte:template.html.twig' %}
+{% block body %}
+    <style type="text/css">
+        label{
+            font-weight: bold;
+            color: #3A6FA3;
+        }
+        .titulo{
+            color: #5299E1;
+        }
+        .tarjeta{
+            padding: 15px;
+            border: 2px solid #EEEEEE;
+            margin-bottom: 15px;
+        }
+        .card{
+            box-shadow: 5px 5px #EEEEEE;
+        }
+        .formulario{
+            background: #FFFFFF;
+            padding: 5px;
+            border: 1px solid #BEDCEC;
+            border-radius: 5px;
+        }
+    </style>
+    <div class="container">
+        <h3 class="text-primary"> <i class="fa fa-file-o"></i> Robótica: Confirma tu participación en la etapa departamental <small><a href="http://olimpiadas.educabolivia.bo/public/files/8va/confirmacion_robotica.pdf" target="_blank" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-file-pdf-o"></i> Manual</a></small></h3>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                        <span class="sr-only">Buscar...</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Busca tu equipo</a>
+                </div>
+        
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse navbar-ex1-collapse">
+                    <ul class="nav navbar-nav">
+                        {# <li class="active"><a href="#">Link</a></li> #}
+                        {# <li><a href="#">Link</a></li> #}
+                    </ul>
+                    {{ form_start(form, {'attr':{'class':'navbar-form navbar-left', 'role':'search', 'onsubmit': 'return validar();'} }) }}
+                        <div class="form-group">
+                            {{ form_widget(form.carnetEstudiante, {'attr':{'class':'form-control','placeholder':'Carnet o RUDE Estudiante','autocomplete':'off'} }) }}
+                            {{ form_widget(form.complementoEstudiante, {'attr':{'class':'form-control','placeholder':'Complemento Estudiante','autocomplete':'off','data-toggle':'tooltip','data-placement':'top', 'data-original-title':'Complemento Estudiante'} }) }}
+                            {{ form_widget(form.fechaNacimientoEstudiante, {'attr':{'class':'form-control','placeholder':'Fecha Nac. Estudiante','autocomplete':'off'} }) }}
+                            <br />
+                            {{ form_widget(form.carnetTutor, {'attr':{'class':'form-control','placeholder':'Carnet Tutor','autocomplete':'off'} }) }}
+                            {{ form_widget(form.complementoTutor, {'attr':{'class':'form-control','placeholder':'Complemento Tutor','autocomplete':'off','data-toggle':'tooltip','data-placement':'top', 'data-original-title':'Complemento Tutor'} }) }}
+                            {{ form_widget(form.fechaNacimientoTutor, {'attr':{'class':'form-control','placeholder':'Fecha Nac. Tutor','autocomplete':'off'} }) }}
+                            <button id="btnBuscar" type="submit" class="btn btn-primary"> <i id="iconBuscar" class="fa fa-search"></i> <span id="textBuscar"></span> </button>
+                        </div>
+                    {{ form_end(form) }}
+
+
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="{{ path('olimreporte') }}" class="btn btn-link" style="padding-top: 15px;">Volver</a></li>
+                        {# <li><a href="{{ path('login') }}" class="btn btn-link" style="padding-top: 15px;">Ingresar al sistema</a></li> #}
+                    </ul>
+
+                </div><!-- /.navbar-collapse -->
+            </div>
+        </nav>
+
+
+	    {% if estudiante is defined and tutor is defined %}
+			{% if estudiante is null or tutor is null%}
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"> <i class="fa fa-search"></i> Resultado de la búsqueda</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="alert alert-warning">
+                            <i class="fa fa-warning"></i> {{mensaje}}
+                        </div>
+                    </div>
+                </div>
+				
+			{% else %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-success">
+                            <i class="fa fa-success"></i> {{mensaje}}
+                        </div>
+                    </div>
+                </div>
+				<div class="row">
+					<div class="col-md-12">
+                        <div class="panel panel-primary shadow">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title"> <i class="fa fa-user"></i> Datos Tutor</h3>
+                                </div>
+                                <div class="pull-right">
+                                    <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <!-- Start list message -->
+                                <div class="media-list">
+
+                                    <a class="media">
+                                        <div class="pull-left"><img src="{{asset('/webolimpiadas/img/avatar/50/24.png')}}" class="media-object img-circle" alt="..."></div>
+                                        <div class="media-body">
+                                            <b>Carnet: </b> {{ tutor.carnet }} {{ tutor.complemento }}</span><br>
+                                            <b>Nombre(s) y Apellido(s): </b> {{ tutor.paterno }} {{ tutor.materno }} {{ tutor.nombre }}</span>
+                                            <!-- Start meta icon -->
+                                            <span class="media-meta pull-right"></span>
+                                            <!--/ End meta icon -->
+                                        </div><!-- /.media-body -->
+                                    </a><!-- /.media -->
+
+                                </div>
+                            </div><!-- /.panel-body -->
+                        </div>
+                    </div>
+				</div>
+
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"> <i class="fa fa-list"></i> Inscripción olimpiada</h3>
+                    </div>
+                    <div class="panel-body" style="background: #FFFFFF;">
+                        <div class="pantalla"></div>
+                        {% if array|length > 0 %}
+                            <div class="table-responsive">
+                                <table class="table table-default">
+                                    <thead>
+                                        <tr>
+                                            <th>Área</th>
+                                            <th>Categoría</th>
+                                            <th>Equipo</th>
+                                            <th>Proyecto</th>
+                                            <th>Nombre Estudiante</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in array %}
+                                            <tr>
+                                                <td><strong>{{ item.regla.olimMateriaTipo.materia }}</strong></td>
+                                                <td>{{ item.regla.categoria }}</td>
+                                                <td>
+                                                    {% if item.tipo == 'Grupo' %}
+                                                        {{ item.grupo[0].nombre }}
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if item.tipo == 'Grupo' %}
+                                                        {% if item.grupo[0].nombreProyecto %}
+                                                            {{ item.grupo[0].nombreProyecto }}
+                                                        {% else %}
+                                                            ---
+                                                        {% endif %}
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {{item.estudiante.nombre}}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <br>
+                            {#<div class="row">
+                                <div class="form-group formulario text-center">
+                                    {{form_start(formCategoria)}}
+                                        {{form_label(formCategoria.reglasTipo)}}
+                                        {{form_widget(formCategoria.reglasTipo, {'attr':{'class':'seleccionCategoria'} })}}
+                                        <button id="btnGuardar" type="button" class="btn btn-success"> <i id="iconGuardar" class="fa fa-save"></i> <span id="textGuardar">Confirmar participación</span> </button>
+                                    {{form_end(formCategoria)}}
+                                </div>
+                            </div>#}
+                            
+                        {% else %}
+                            <div class="alert alert-info">
+                                <i class="fa fa-info-circle"></i> El estudiante no cuenta con inscripciones, en la gestión actual
+                            </div>
+                        {% endif %}  
+                    </div>
+                </div>
+			{% endif %}
+			
+	    {% endif %}
+
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(function(){
+            $("#form_carnetEstudiante").attr("maxlength",'20');
+
+            // aplicamos las mascaras para las fechas
+            $("#form_fechaNacimientoEstudiante").inputmask({ "alias": "dd-mm-yyyy" });
+            $("#form_complementoEstudiante").inputmask({mask: "**"});
+
+            $("#form_carnetTutor").attr("maxlength",'20');
+
+            // aplicamos las mascaras para las fechas
+            $("#form_fechaNacimientoTutor").inputmask({ "alias": "dd-mm-yyyy" });
+            $("#form_complementoTutor").inputmask({mask: "**"});
+
+        });
+
+        function cargar(){
+            var carnet = $('#form_carnetEstudiante').val();
+            var fechaNacimiento = $('#form_fechaNacimientoEstudiante').val();
+            var carnett = $('#form_carnetTutor').val();
+            if(carnet != '' && fechaNacimiento != '' && carnett != ''){
+
+                $('#buscar').removeClass('fa-search');
+                $('#buscar').addClass('fa-spinner fa-spin');
+                $('#btnBuscar').append('Buscando...');
+
+                
+            }
+
+        }
+
+        function validar(){
+            var carnet = $('#form_carnetEstudiante').val();
+            var fechaNacimiento = $('#form_fechaNacimientoEstudiante').val();
+            var carnett = $('#form_carnetTutor').val();
+            
+            if(carnet != '' && fechaNacimiento != '' && fechaNacimiento.indexOf('y') == -1 && carnett != ''){
+
+                if($('#textBuscar').text() != 'Buscando...'){
+                    $('#iconBuscar').removeClass('fa-search');
+                    $('#iconBuscar').addClass('fa-spinner fa-spin');
+                    $('#textBuscar').append('Buscando...');
+
+                    $('.pantalla').css('position','absolute');
+                    $('.pantalla').css('width','100%');
+                    $('.pantalla').css('height','100%');
+                    $('.pantalla').css('margin-left','-10px');
+                    $('.pantalla').css('margin-top','-10px');
+                    $('.pantalla').css('background','#26464B');
+                    $('.pantalla').css('opacity','0.3');
+                    $('.pantalla').css('color','#FFFFFF');
+                    $('.pantalla').css('text-align','center');
+                    $('.pantalla').css('vertical-align','middle');
+                    $('.pantalla').append('<img src="{{asset("img/loading96.gif")}}" style="margin-top:12px;">');
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        $('#btnGuardar').on('click', function(){
+            var grupoProyectoId = $('#form_grupoProyectoId').val();
+            var categoriaId = document.getElementById("form_reglasTipo").value;
+
+            var imagen = '{{ asset("img/loading96.gif") }}';
+
+            $.ajax({
+                url: Routing.generate('olimrobotica_actualizarCategoria', {grupoProyectoId: grupoProyectoId, categoriaId: categoriaId}),
+                type: 'GET',
+                beforeSend: function(){
+                    swal({
+                        title: "Actualizando...",
+                        text: "Espere un momento por favor",
+                        icon: imagen
+                    });
+                },
+                success: function(data){
+                    if(data.status == 200){
+                        swal("¡Registro actualizado!", data.mensaje, "success").then(okay => {
+                            if(okay){
+                                location.reload();
+                            }
+                        });
+                    }else{
+                        swal("¡Error al actualizar!", data.mensaje, "warning");
+                    }
+                },
+                error: function(data){
+                    swal("¡Error al actualizar!", data.mensaje, "danger");
+                }
+            });
+        });
+        
+    </script>
+{% endblock %}

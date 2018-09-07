@@ -1,3 +1,11 @@
+sie_app_web_olimetapaperiodo:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimetapaperiodo.yml"
+    prefix:   /olimetapaperiodo
+
+sie_app_web_olimmodalidadpruebatipo:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimmodalidadpruebatipo.yml"
+    prefix:   /olimmodalidadpruebatipo
+
 sie_app_web_olimgestionarchivos:
     resource: "@SieOlimpiadasBundle/Resources/config/routing/olimgestionarchivos.yml"
     prefix:   /olimgestionarchivos
@@ -73,4 +81,6 @@ sie_app_web_olimupfilenota:
     resource: "@SieOlimpiadasBundle/Resources/config/routing/olimUpFileNota.yml"
     prefix:   /upfilenota    
 
-    
+sie_app_web_olimrobotica:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimrobotica.yml"
+    prefix:   /olimRobotica

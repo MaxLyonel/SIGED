@@ -222,32 +222,40 @@ class ChangeParaleloController extends Controller {
             //get the new paralelo info
             $objCourse = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy($newCondition);
 
-            $query = $em->getConnection()->prepare('SELECT sp_cambio_paralelo_estudiante(:igestion_tipo_id::INT, :iinstitucioneducativa::INT, :icodigorude::VARCHAR, :inivel_tipo_id::INT, :igrado_tipo::INT, :iturno_tipo::INT, :iturno_tiponuevo::INT, :iparalelo_tipoNuevo::VARCHAR, :iparalelo_tipoAnte::VARCHAR )');
+            $query = $em->getConnection()->prepare('SELECT sp_cambio_paralelo_estudiante_2018(:igestion, :icodue, :irude, :inivel, :igrado, :iturno, :iparalelo, :iturnonuevo, :iparalelonuevo )');
 
-            $query->bindValue(':igestion_tipo_id', $this->session->get('currentyear'));
-            $query->bindValue(':iinstitucioneducativa', $form['ueid']);
-            $query->bindValue(':icodigorude', $form['rude']);
-            $query->bindValue(':inivel_tipo_id', $form['nivelid']);
-            $query->bindValue(':igrado_tipo', $form['gradoid']);
-            $query->bindValue(':iturno_tipo', $form['turnoOld']);
-            $query->bindValue(':iturno_tiponuevo', $form['turno']);
-            $query->bindValue(':iparalelo_tipoNuevo', $form['paralelo']);
-            $query->bindValue(':iparalelo_tipoAnte', $form['paraleloOld']);
+            $query->bindValue(':igestion', $this->session->get('currentyear'));
+            $query->bindValue(':icodue', $form['ueid']);
+            $query->bindValue(':irude', $form['rude']);
+            $query->bindValue(':inivel', $form['nivelid']);
+            $query->bindValue(':igrado', $form['gradoid']);
+            $query->bindValue(':iturno', $form['turnoOld']);
+            $query->bindValue(':iparalelo', $form['paraleloOld']);
+            $query->bindValue(':iturnonuevo', $form['turno']);
+            $query->bindValue(':iparalelonuevo', $form['paralelo']);
 
             $query->execute();
 
-            //get old areas
-            //$objAreasOld = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->getAsignaturasPerCourse
-            //check if is possible to do the change
-            //get the last inscription to modify
-            $objInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($form['eiId']);
-            //to do the update with the new paralelo
-            $objInscription->setInstitucioneducativaCurso($objCourse);
-            $em->flush();
-            // Try and commit the transaction
-            $em->getConnection()->commit();
-            //get the success message
-            $message = "Cambio de paralelo realizado...";
+            $sqlResponse = $query->fetchAll();
+
+            if($sqlResponse[0]['sp_cambio_paralelo_estudiante_2018']=='true'){
+                //get old areas
+                //$objAreasOld = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->getAsignaturasPerCourse
+                //check if is possible to do the change
+                //get the last inscription to modify
+                $objInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($form['eiId']);
+                //to do the update with the new paralelo
+                $objInscription->setInstitucioneducativaCurso($objCourse);
+                $em->flush();
+                // Try and commit the transaction
+                $em->getConnection()->commit();
+                //get the success message
+                $message = "Cambio de paralelo realizado...";
+                
+            } else{
+                $message = "Cambio de paralelo NO realizado...";
+            }
+
             $this->addFlash('successchangeparalelo', $message);
             //go the index page
             return $this->redirectToRoute('change_paralelo_sie_index');

@@ -48,7 +48,7 @@ class DocumentoController extends Controller {
                 ->innerJoin('SieAppWebBundle:PaisTipo', 'pt', 'WITH', 'pt.id = e.paisTipo')
                 ->innerJoin('SieAppWebBundle:DepartamentoTipo', 'dept', 'WITH', 'dept.id = ds.departamentoTipo')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
-                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp    .lugarTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp.lugarTipo')
                 ->where('d.id = :codDocumento')
                 ->andWhere('dt.id in (1,3,4,5,6,7,8,9)')
                 ->andWhere('de.id in (1)')
@@ -85,7 +85,7 @@ class DocumentoController extends Controller {
                 ->innerJoin('SieAppWebBundle:PaisTipo', 'pt', 'WITH', 'pt.id = e.paisTipo')
                 ->innerJoin('SieAppWebBundle:DepartamentoTipo', 'dept', 'WITH', 'dept.id = ds.departamentoTipo')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
-                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp    .lugarTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp.lugarTipo')
                 ->where('d.id = :codDocumento')
                 ->andWhere('dt.id in (2)')
                 ->andWhere('de.id in (1)')
@@ -123,7 +123,7 @@ class DocumentoController extends Controller {
                 ->innerJoin('SieAppWebBundle:PaisTipo', 'pt', 'WITH', 'pt.id = e.paisTipo')
                 ->innerJoin('SieAppWebBundle:DepartamentoTipo', 'dept', 'WITH', 'dept.id = ds.departamentoTipo')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
-                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp    .lugarTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp.lugarTipo')
                 ->where('ds.id = :serie')
                 ->andWhere('dt.id in (1,3,4,5,6,7,8,9)')
                 ->andWhere('de.id in (1)')
@@ -160,7 +160,7 @@ class DocumentoController extends Controller {
                 ->innerJoin('SieAppWebBundle:PaisTipo', 'pt', 'WITH', 'pt.id = e.paisTipo')
                 ->innerJoin('SieAppWebBundle:DepartamentoTipo', 'dept', 'WITH', 'dept.id = ds.departamentoTipo')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
-                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp    .lugarTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp.lugarTipo')
                 ->where('t.id = :codTramite')
                 ->setParameter('codTramite', $tramite)
                 ->orderBy('d.fechaImpresion', 'DESC');
@@ -196,7 +196,7 @@ class DocumentoController extends Controller {
                 ->innerJoin('SieAppWebBundle:PaisTipo', 'pt', 'WITH', 'pt.id = e.paisTipo')
                 ->innerJoin('SieAppWebBundle:DepartamentoTipo', 'dept', 'WITH', 'dept.id = ds.departamentoTipo')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
-                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp    .lugarTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp.lugarTipo')
                 ->where('t.id = :codTramite')
                 ->andWhere('de.id = :codDocumentoEstado')
                 ->andWhere('dt.id = :codDocumentoTipo')
@@ -209,6 +209,68 @@ class DocumentoController extends Controller {
             return $entityDocumento;
         } else {
             return $entityDocumento;
+        }
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que lista los documentos generados segun la institucion educativa y gestion de la serie
+    // PARAMETROS: id
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getDocumentoInstitucionEducativaGestion($institucionEducativaId, $gestionId, $documentoTipoIds) {     
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+            select
+            ie.id as institucioneducativa_id, ie.institucioneducativa, iec.gestion_tipo_id,
+            nt.id as nivel_tipo_id, nt.nivel,
+            pt.id as paralelo_tipo_id, pt.paralelo,
+            tt.id as turno_tipo_id, tt.turno,
+            e.id as estudiante_id, e.codigo_rude, e.pasaporte,
+            e.carnet_identidad as carnet,  e.complemento,
+            cast(e.carnet_identidad as varchar)||(case when complemento is null then '' when complemento = '' then '' else '-'||complemento end) as carnet_identidad,
+            e.paterno, e.materno, e.nombre, e.segip_id,
+            to_char(e.fecha_nacimiento,'DD/MM/YYYY') as fecha_nacimiento,
+            emt.id as estadomatricula_tipo_id, emt.estadomatricula,
+            ei.id as estudiante_inscripcion_id,
+            e.localidad_nac, case pat.id when 1 then lt2.lugar when 0 then '' else pat.pais end as lugar_nacimiento,
+            e.lugar_prov_nac_tipo_id as lugar_nacimiento_id, lt2.codigo as depto_nacimiento_id, lt2.lugar as depto_nacimiento,
+            CASE
+            	WHEN iec.nivel_tipo_id = 13 THEN
+            	'Regular Humanística'
+            	WHEN iec.nivel_tipo_id = 15 THEN
+            	'Alternativa Humanística'
+            	WHEN iec.nivel_tipo_id > 17 THEN
+            	'Alternativa Técnica'
+            END AS subsistema,
+            t.id as tramite_id, d.id as documento_id, d.documento_serie_id as documento_serie_id
+            from tramite as t
+            inner join tramite_detalle as td on td.tramite_id = t.id
+            inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
+            inner join estudiante as e on e.id = ei.estudiante_id
+            inner join estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id
+            inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
+            inner join institucioneducativa as ie on ie.id = iec.institucioneducativa_id
+            inner join nivel_tipo as nt on nt.id = iec.nivel_tipo_id
+            inner join paralelo_tipo as pt on pt.id = iec.paralelo_tipo_id
+            inner join turno_tipo as tt on tt.id = iec.turno_tipo_id
+            inner join estadomatricula_tipo as emt on emt.id = ei.estadomatricula_tipo_id
+            inner join documento as d on d.tramite_id = t.id and documento_tipo_id in (".$documentoTipoIds.") and d.documento_estado_id = 1
+            inner join documento_serie as ds on ds.id = d.documento_serie_id
+            left join lugar_tipo as lt1 on lt1.id = e.lugar_prov_nac_tipo_id
+            left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+            left join pais_tipo as pat on pat.id = e.pais_tipo_id
+            where iec.gestion_tipo_id = ".$gestionId."::double precision and iec.institucioneducativa_id = ".$institucionEducativaId."::INT
+            and td.tramite_estado_id <> 4 and td.flujo_proceso_id = 5
+            order by e.paterno, e.materno, e.nombre
+        ");
+        $queryEntidad->execute();
+        $entityDocumento = $queryEntidad->fetchAll();
+
+        if(count($entityDocumento)>0){
+            return $entityDocumento;
+        } else {
+            return array();
         }
     }
 
@@ -227,7 +289,7 @@ class DocumentoController extends Controller {
           when ds.documento_tipo_id in (6,7,8) then left(right(ds.id,4),3)
           when ds.documento_tipo_id in (9) then right(ds.id,2)
           else right(ds.id,1)
-          end as serie
+          end as serie, gestion_id
           from documento_serie as ds where ds.documento_tipo_id in (".$tipos.") order by serie desc
         ");
         $queryEntidad->execute();
@@ -464,7 +526,7 @@ class DocumentoController extends Controller {
         $entityUsuarioRol = $em->getRepository('SieAppWebBundle:UsuarioRol');
         if($rolId == 15 or $rolId == 16 or $rolId == 17){
             $query = $entityUsuarioRol->createQueryBuilder('ur')
-                    ->select('u.id as codusuario, rt.id as codrol, lt.lugar as lugar, lt.codigo as codlugar')
+                    ->select('u.id as codusuario, rt.id as codrol, lt.lugar as lugar, lt.codigo as codlugar, lt.codigo as codigoLugar')
                     ->innerJoin('SieAppWebBundle:Usuario', 'u', 'WITH', 'u.id = ur.usuario')
                     ->innerJoin('SieAppWebBundle:RolTipo', 'rt', 'WITH', 'rt.id = ur.rolTipo')
                     ->innerJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'lt.id = ur.lugarTipo')
@@ -475,7 +537,7 @@ class DocumentoController extends Controller {
                     ->orderBy('ur.id', 'DESC');
         } else {
             $query = $entityUsuarioRol->createQueryBuilder('ur')
-                    ->select('u.id as codusuario, rt.id as codrol, lt.lugar as lugar, lt.id as codlugar')
+                    ->select('u.id as codusuario, rt.id as codrol, lt.lugar as lugar, lt.id as codlugar, lt.codigo as codigoLugar')
                     ->innerJoin('SieAppWebBundle:Usuario', 'u', 'WITH', 'u.id = ur.usuario')
                     ->innerJoin('SieAppWebBundle:RolTipo', 'rt', 'WITH', 'rt.id = ur.rolTipo')
                     ->innerJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'lt.id = ur.lugarTipo')
@@ -558,6 +620,48 @@ class DocumentoController extends Controller {
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
+    // Funcion cambia estado de los documentos de un trámite
+    // PARAMETROS: serie
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function setTramiteDocumentoEstado($tramiteId, $estadoId) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        //$fechaManual = new \DateTime($fecha);
+        $em = $this->getDoctrine()->getManager();
+
+        $entityDocumento = $em->getRepository('SieAppWebBundle:Documento')->findBy(array('tramite' => $tramiteId));
+        /*
+         * Define el conjunto de valores a ingresar - Documento
+         */
+
+        $entityDocumentoEstado = $em->getRepository('SieAppWebBundle:DocumentoEstado')->findOneBy(array('id' => $estadoId));
+        
+        $msg = "";
+        $em->getConnection()->beginTransaction();
+        try {
+            foreach ($entityDocumento as $registro)
+            {
+                $id = $registro->getId();
+                $entity = $em->getRepository('SieAppWebBundle:Documento')->findOneBy(array('id' => $id));
+                $entity->setDocumentoEstado($entityDocumentoEstado);
+                $em->persist($entity);
+                $em->flush();
+            }
+            $em->getConnection()->commit();
+        } catch (\Doctrine\ORM\NoResultException $exc) {
+            $msg = "Error al anular los documentos, intente nuevamente por favor";
+            $em->getConnection()->rollback();
+        }
+
+        return $msg;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
     // Funcion que valida la truision de un determinado numero de serie segun el lugar geográfico
     // PARAMETROS: serie, departamento
     // AUTOR: RCANAVIRI
@@ -589,9 +693,9 @@ class DocumentoController extends Controller {
         if($valSerieAsigando != "" and $msgContenido == ""){
             $msgContenido = ($msgContenido=="") ? $valSerieAsigando : $msgContenido.", ".$valSerieAsigando;
         }
-
+        
         $departamentoCodigo = $this->getCodigoLugarRol($usuarioId,$rolId);
-
+        
         if ($departamentoCodigo == 0 and $msgContenido == ""){
             $msgContenido = ($msgContenido=="") ? "el usuario no cuenta con autorizacion para los documentos" : $msgContenido.", "."el usuario no cuenta con autorizacion para los el documentos ";
         } else {
@@ -729,7 +833,36 @@ class DocumentoController extends Controller {
         return $form;
     }
 
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que genera un formulario paraa la busqueda de documentos por numero de serie
+    // PARAMETROS: institucionEducativaId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function creaFormBuscaInstitucionEducativaSerie($routing, $sie, $serie, $documentoTipoArrayId) {
+        $entityDocumentoSerie = $this->getSerieTipo($documentoTipoArrayId);
 
+        $serieEntity = array();
+        foreach ($entityDocumentoSerie as $key => $dato) {
+            $serieEntity[$dato['gestion_id']] = $dato['serie'];
+        }
+
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl($routing))
+            ->add('sie', 'text', array('label' => 'Código S.I.E.', 'attr' => array('value' => $sie, 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '8', 'autocomplete' => 'on', 'placeholder' => 'Código de institución educativa', 'style' => 'text-transform:uppercase')))
+            ->add('gestion',
+                      'choice',  
+                      array('label' => 'Serie',
+                            'choices' => $serieEntity,
+                            'data' => $serie,
+                            'attr' => array('class' => 'form-control'),
+                            )
+                )
+            ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary')))
+            ->getForm();
+        return $form;
+    }
+  
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
     // Controlador que genera el formulario para la busqueda de documentos por numero de serie
@@ -740,6 +873,7 @@ class DocumentoController extends Controller {
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
         $gestionActual = new \DateTime("Y");
+        $route = $request->get('_route');
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -748,7 +882,7 @@ class DocumentoController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $rolPermitido = array(8,17);
 
@@ -997,6 +1131,7 @@ class DocumentoController extends Controller {
         $id_usuario = $sesion->get('userId');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = $fechaActual->format('Y');
+        $route = $request->get('_route');
 
         //validation if the user is logged
         if (!isset($id_usuario)) {
@@ -1006,7 +1141,7 @@ class DocumentoController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $rolPermitido = array(8,17);
 
@@ -1119,6 +1254,7 @@ class DocumentoController extends Controller {
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
         $gestionActual = new \DateTime("Y");
+        $route = $request->get('_route');
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -1127,7 +1263,7 @@ class DocumentoController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $rolPermitido = array(8,17);
 
@@ -1193,7 +1329,7 @@ class DocumentoController extends Controller {
             }
 
             // $msgContenido = "";
-            if($msgContenido == ""){
+            if($msgContenido != ""){
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msgContenido));
                 return $this->redirectToRoute('tramite_documento_supletorio');
             }
@@ -1205,7 +1341,7 @@ class DocumentoController extends Controller {
             if ($msgvalidaNumeroSerieTipoDocumento != ""){
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msgvalidaNumeroSerieTipoDocumento));
                 return $this->redirectToRoute('tramite_documento_supletorio');
-            }  
+            } 
 
             $entityDocumentoDetalle = $this->getDocumentoSupletorioDetalle($entityDocumento['tramite']);
             
@@ -1291,6 +1427,7 @@ class DocumentoController extends Controller {
                 try {
                     
                     $msgContenidoDocumento = $this->getDocumentoValidación($numeroSerieSupletorio, '', $fechaActual, $id_usuario, $rolPermitido, 9);
+                    
                     if($msgContenidoDocumento == ""){
                         $idDocumento = $this->setDocumento($codTramite, $id_usuario, 9, $numeroSerieSupletorio, '', $fechaActual); 
                         $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'El certificado supletorio con numero de serie "'.$numeroSerieSupletorio.'" fue generado'));
@@ -1419,4 +1556,33 @@ class DocumentoController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
     }   
+
+
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que genera un formulario par ala busqueda de instituciones educativas por gestion
+    // PARAMETROS: institucionEducativaId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function creaFormBuscaInstitucionEducativaHumanisticaSerie($routing, $institucionEducativaId, $serieId) {
+        $em = $this->getDoctrine()->getManager();
+        $entidadGestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id' => $gestionId));
+        if($institucionEducativaId==0){
+            $institucionEducativaId = "";
+        }
+        $form = $this->createFormBuilder()
+                ->setAction($this->generateUrl($routing))
+                ->add('sie', 'number', array('label' => 'SIE', 'attr' => array('value' => $institucionEducativaId, 'class' => 'form-control', 'placeholder' => 'Código de institución educativa', 'onInput' => 'valSie()', ' onchange' => 'valSieFocusOut()', 'pattern' => '[0-9]{6,8}', 'maxlength' => '8', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
+                ->add('gestion', 'entity', array('data' => $entidadGestionTipo, 'empty_value' => 'Seleccione Gestión', 'attr' => array('class' => 'form-control'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
+                    'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('gt')
+                                ->where('gt.id > 2008')
+                                ->orderBy('gt.id', 'DESC');
+                    },
+                ))
+                ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-blue')))
+                ->getForm();
+        return $form;
+    }
 }
