@@ -1,0 +1,25 @@
+<thead>
+    <tr>
+    	<th>#</th>
+        <th>Departamento</th>
+        <th class="text-right">Total</th>
+    </tr>
+</thead>
+<tfoot>
+    <tr>
+    	<th>#</th>
+        <th>Departamento</th>
+        <th class="text-right">Total</th>
+    </tr>
+</tfoot>
+<tbody>
+	{% set cant = 0 %}
+    {% for registro in centrosEspecial %}
+    	{% set cant = cant + registro.total %}
+    	<tr>
+    		<td>{{loop.index}}</td>
+    		<td>{{registro.departamento}}</td>
+    		<td class="text-right">{{registro.total}}</td>
+    	</tr>
+    {% endfor %}
+</tbody>
