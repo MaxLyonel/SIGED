@@ -51,6 +51,7 @@ class TramiteEstadisticaController extends Controller {
     	date_default_timezone_set('America/La_Paz');
     	$fechaActual = new \DateTime(date('Y-m-d'));
     	$gestionActual = date_format($fechaActual,'Y');
+        $route = $request->get('_route');
 		// dump($gestionActual);die;
 		$sesion = $request->getSession();
 		$id_usuario = $sesion->get('userId');	
@@ -63,7 +64,7 @@ class TramiteEstadisticaController extends Controller {
 		$defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-		$activeMenu = $defaultTramiteController->setActiveMenu();
+		$activeMenu = $defaultTramiteController->setActiveMenu($route);
 		
 		if(empty($activeMenu)){
 			$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Módulo inhabilitado por el administrador, comuniquese con su Técnico SIE'));
