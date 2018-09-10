@@ -13,6 +13,7 @@ use Sie\AppWebBundle\Form\EstudianteInscripcionSocioeconomicoAlternativaType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sie\AppWebBundle\Entity\Estudiante;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 /**
  * SocioeconomicoAlternativa controller.
@@ -86,6 +87,7 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
         //
         //Datos Socioeconómicos
         $socioeconomico = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findOneBy(array('estudianteInscripcion' => $aInfoStudent['eInsId']));
+        //dump($socioeconomico);die;
 
         if ($socioeconomico) {
 
@@ -258,7 +260,7 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
         $locald = array();
 
 
-
+        $institucion = $this->session->get('ie_id');
 
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl('socioeconomicoalt_create'))
@@ -289,7 +291,16 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
 
             ->add('seccioniiHijos', 'text', array('data' => 0, 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,2}', 'maxlength' => '2')))
             ->add('seccioniiEsserviciomilitar', 'choice', array('required' => false, 'label' => false, 'empty_value' => false, 'choices' => array(false => 'NO', true => 'SI')))
-           ->add('seccioniiEsserviciomilitarCea', 'choice', array('required' => false, 'label' => false, 'empty_value' => false, 'choices' => array(true => 'El CEA', false => 'El Cuartel')))
+           ->add('seccioniiEsserviciomilitarCea', 'choice', array('required' => false, 'label' => false, 'empty_value' => false, 'choices' => array(true => 'El CEA', false => 'El Cuartel')));
+           if($institucion == 80730796)
+           {
+               $form=$form
+               ->add('inmigrante', 'hidden', array('data'=>"NO" ) )
+               ->add('seccioniiiInmigrante', CheckboxType::class, array('label'=>'Inmigrante','required' => false))
+               ->add('seccioniiiPaisInmigrante', 'choice', array('data' => $paisNac ? $paisNac->getId() : 0, 'label' => 'Pais', 'required' => true, 'choices' => $paisNacArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+               ->add('seccioniiiZonaInmigrante', 'text', array('required' => false, 'attr' => array('class' => 'form-control')));
+           }
+           $form=$form
             ->add('departamento', 'entity', array('label' => 'Departamento', 'required' => true, 'class' => 'SieAppWebBundle:DepartamentoTipo', 'property' => 'departamento', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarProvincias(this.value);')))
             ->add('provincia', 'choice', array('label' => 'Provincia', 'required' => true, 'choices' => $prov, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarMunicipios(this.value)')))
             ->add('municipio', 'choice', array('label' => 'Municipio', 'required' => true, 'choices' => $muni, 'empty_value' => 'Seleccionar...','attr' => array('class' => 'form-control', 'onchange' => 'listarCantones(this.value)')))
@@ -298,8 +309,8 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             ->add('seccioniiiZona', 'text', array('required' => true, 'attr' => array('class' => 'form-control')))
             ->add('seccioniiiAvenida', 'text', array('required' => true, 'attr' => array('class' => 'form-control')))
             ->add('seccioniiiNumero', 'text', array('data' => 0, 'required' => true, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{0,5}', 'maxlength' => '5')))
-            ->add('seccioniiiTelefonofijo', 'text', array('required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{0,7}', 'maxlength' => '7')))
-            ->add('seccioniiiTelefonocelular', 'text', array('required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{0,8}', 'maxlength' => '8')))
+            ->add('seccioniiiTelefonofijo', 'text', array('required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{0,13}', 'maxlength' => '13')))
+            ->add('seccioniiiTelefonocelular', 'text', array('required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{0,13}', 'maxlength' => '13')))
             ->add('seccionivEscarnetDiscapacidad', 'choice', array('required' => false, 'label' => false, 'empty_value' => false, 'choices' => array(false => 'NO', true => 'SI')))
             ->add('seccionivNumeroCarnetDiscapacidad', 'text', array('required' => false, 'attr' => array('class' => 'form-control', 'maxlength' => '15')))
             ->add('seccionivDiscapacitadTipo', 'entity', array('label' => false, 'required' => false, 'class' => 'SieAppWebBundle:DiscapacidadTipo', 'property' => 'origendiscapacidad', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
@@ -352,18 +363,28 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             $paisNac =  $em->getRepository('SieAppWebBundle:PaisTipo')->findOneBy(array('id' => 1));
         }
 
-        $lt5_id = $socioeconomico->getSeccioniiiLocalidadTipo()->getLugarTipo();
-        $lt4_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getLugarTipo();
-        $lt3_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getLugarTipo();
-        $lt2_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt3_id)->getLugarTipo();
-        $lt1_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt2_id)->getLugarTipo();
+        ////dump($socioeconomico->getSeccioniiiLocalidadTipo()->getId());die;
+        if ($socioeconomico->getSeccioniiiLocalidadTipo()->getId() == 0)
+        {
+            $trozos = explode(",", $socioeconomico->getSeccioniiiZona());
+            //dump($trozos);die;
+            $paisInmigrante = $em->getRepository('SieAppWebBundle:PaisTipo')->findOneBy(array('id' => (int)$trozos[0]));
+            //dump($paisInmigrante);die;
+            $zonaiiiInmigrante = $trozos[2];
+        }else{
+            $lt5_id = $socioeconomico->getSeccioniiiLocalidadTipo()->getLugarTipo();
+            $lt4_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getLugarTipo();
+            $lt3_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getLugarTipo();
+            $lt2_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt3_id)->getLugarTipo();
+            $lt1_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt2_id)->getLugarTipo();
 
-        $l_id = $socioeconomico->getSeccioniiiLocalidadTipo()->getId();
-        $c_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getId();
-        $m_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getId();
-        $p_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt3_id)->getId();
-        $d_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt2_id)->getId();
-
+            $l_id = $socioeconomico->getSeccioniiiLocalidadTipo()->getId();
+            $c_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getId();
+            $m_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getId();
+            $p_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt3_id)->getId();
+            $d_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt2_id)->getId();
+        }
+        //dump($trozos);die;
         //Pertenece a una unidadMilitar devuelve el id
         if((  $unidad = $socioeconomico->getSeccioniiUnidadMilitarTipo())!= null)
         {
@@ -522,7 +543,8 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
         foreach($genero as $value){
             $generoArray[$value->getId()] = $value->getGenero();
         }
-
+        if ($socioeconomico->getSeccioniiiLocalidadTipo()->getId() != 0)
+        {
 
         $query = $em->createQuery(
             'SELECT lt
@@ -538,39 +560,6 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
         foreach ($prov as $value) {
             $provArray[$value->getId()] = $value->getLugar();
         }
-
-        //Lugar de Nacimiento
-        $query = $em->createQuery(
-            'SELECT lt
-                FROM SieAppWebBundle:LugarTipo lt
-                WHERE lt.lugarNivel = :nivel
-                AND lt.lugarTipo = :lt1
-                ORDER BY lt.id')
-            ->setParameter('nivel', 1)
-            ->setParameter('lt1', $paisNac);
-        $dptoNacE = $query->getResult();
-
-        $dptoNacArray = array();
-        foreach ($dptoNacE as $value) {
-            $dptoNacArray[$value->getId()] = $value->getLugar();
-        }
-
-        $query = $em->createQuery(
-            'SELECT lt
-                FROM SieAppWebBundle:LugarTipo lt
-                WHERE lt.lugarNivel = :nivel
-                AND lt.lugarTipo = :lt1
-                ORDER BY lt.id')
-            ->setParameter('nivel', 2)
-            ->setParameter('lt1', $dptoNac);
-        $provNacE = $query->getResult();
-
-        $provNacArray = array();
-        foreach ($provNacE as $value) {
-            $provNacArray[$value->getId()] = $value->getLugar();
-        }
-        //dump($provNacArray);die;
-
         $query = $em->createQuery(
             'SELECT lt
                 FROM SieAppWebBundle:LugarTipo lt
@@ -616,11 +605,45 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             $localdArray[$value->getId()] = $value->getLugar();
         }
 
+        } else{
+            $prov = array();
+            $muni = array();
+            $cantn = array();
+            $locald = array();
+        }  
+        //dump($prov);die;
+        //Lugar de Nacimiento
+        $query = $em->createQuery(
+            'SELECT lt
+                FROM SieAppWebBundle:LugarTipo lt
+                WHERE lt.lugarNivel = :nivel
+                AND lt.lugarTipo = :lt1
+                ORDER BY lt.id')
+            ->setParameter('nivel', 1)
+            ->setParameter('lt1', $paisNac);
+        $dptoNacE = $query->getResult();
 
+        $dptoNacArray = array();
+        foreach ($dptoNacE as $value) {
+            $dptoNacArray[$value->getId()] = $value->getLugar();
+        }
 
+        $query = $em->createQuery(
+            'SELECT lt
+                FROM SieAppWebBundle:LugarTipo lt
+                WHERE lt.lugarNivel = :nivel
+                AND lt.lugarTipo = :lt1
+                ORDER BY lt.id')
+            ->setParameter('nivel', 2)
+            ->setParameter('lt1', $dptoNac);
+        $provNacE = $query->getResult();
 
-
-        /*idiomas*/
+        $provNacArray = array();
+        foreach ($provNacE as $value) {
+            $provNacArray[$value->getId()] = $value->getLugar();
+        }
+        //dump($provNacArray);die;
+ /*idiomas*/
         $idiomas = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltHabla')->findBy(array('estudianteInscripcionSocioeconomicoAlternativa' => $socioeconomico));
 
         $idiomasArray = array();
@@ -697,7 +720,8 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
         {
             $modalidad = $socioeconomico->getSeccionviModalidadTipo()->getId();
         }
-
+        //dump($modalidad);die;
+        $institucion = $this->session->get('ie_id');
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl('socioeconomicoalt_update'))
             ->add('estudianteInscripcion', 'hidden', array('data' => $idInscripcion))
@@ -729,17 +753,55 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             //end
             ->add('seccioniiHijos', 'text', array('data' => $socioeconomico->getSeccioniiHijos(), 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,2}', 'maxlength' => '2')))
             ->add('seccioniiEsserviciomilitar', 'choice', array('data' => $socioeconomico->getSeccioniiEsserviciomilitar(),'required' => false, 'label' => false, 'empty_value' => false, 'choices' => array(false => 'NO', true => 'SI')))
-            ->add('seccioniiEsserviciomilitarCea', 'choice', array('data' => $socioeconomico->getSeccioniiEsserviciomilitarCea(),'required' => false, 'label' => false, 'empty_value' => false, 'choices' => array(true => 'El CEA', false => 'El Cuartel')))
-            ->add('departamento', 'choice', array('data' => $d_id - 1, 'label' => 'Departamento', 'required' => true, 'choices' => $dptoArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarProvincias(this.value);')))
-            ->add('provincia', 'choice', array('data' => $p_id, 'label' => 'Provincia', 'required' => true, 'choices' => $provArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarMunicipios(this.value)')))
-            ->add('municipio', 'choice', array('data' => $m_id, 'label' => 'Municipio', 'required' => true, 'choices' => $muniArray, 'empty_value' => 'Seleccionar...','attr' => array('class' => 'form-control', 'onchange' => 'listarCantones(this.value)')))
-            ->add('canton', 'choice', array('data' => $c_id, 'label' => 'Cantón', 'required' => true, 'choices' => $cantnArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarLocalidades(this.value)')))
-            ->add('localidad', 'choice', array('data' => $l_id, 'label' => 'Localidad', 'required' => true, 'choices' => $localdArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
-            ->add('seccioniiiZona', 'text', array('data' => $socioeconomico->getSeccioniiiZona(), 'required' => true, 'attr' => array('class' => 'form-control')))
+            ->add('seccioniiEsserviciomilitarCea', 'choice', array('data' => $socioeconomico->getSeccioniiEsserviciomilitarCea(),'required' => false, 'label' => false, 'empty_value' => false, 'choices' => array(true => 'El CEA', false => 'El Cuartel')));
+            if ($institucion == 80730796)
+            {  
+                //dump($socioeconomico);die;    
+                if ($socioeconomico->getSeccioniiiLocalidadTipo()->getId() == 0)
+                {
+                    //dump($trozos[2]);die;    
+                    $form=$form
+                    ->add('inmigrante', 'hidden', array('data'=>"SI" ))
+                    ->add('seccioniiiInmigrante', CheckboxType::class, array('label'=>'Inmigrante','required' => false, 'attr' => array('onclick' => 'verInmigrante(this.value)','checked'   => 'checked')))
+                    ->add('seccioniiiPaisInmigrante', 'choice', array('data' => $paisInmigrante->getId(), 'label' => 'Pais', 'required' => true, 'choices' => $paisNacArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+                    ->add('seccioniiiZonaInmigrante', 'text', array('data' => $trozos[2], 'required' => true, 'attr' => array('class' => 'form-control')))
+                    ->add('departamento', 'entity', array('label' => 'Departamento', 'required' => false, 'class' => 'SieAppWebBundle:DepartamentoTipo', 'property' => 'departamento', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarProvincias(this.value);')))
+                    ->add('provincia', 'choice', array('label' => 'Provincia', 'required' => false, 'choices' => $prov, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarMunicipios(this.value)')))
+                    ->add('municipio', 'choice', array('label' => 'Municipio', 'required' => false, 'choices' => $muni, 'empty_value' => 'Seleccionar...','attr' => array('class' => 'form-control', 'onchange' => 'listarCantones(this.value)')))
+                    ->add('canton', 'choice', array('label' => 'Cantón', 'required' => false, 'choices' => $cantn, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarLocalidades(this.value)')))
+                    ->add('localidad', 'choice', array('label' => 'Localidad', 'required' => false, 'choices' => $locald, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+                    ->add('seccioniiiZona', 'text', array('required' => false, 'attr' => array('class' => 'form-control')));
+                }else{
+                    $form=$form
+                    ->add('inmigrante', 'hidden', array('data'=>"NO" ) )
+                    ->add('seccioniiiInmigrante', CheckboxType::class, array('label'=>'Inmigrante','required' => false, 'attr' => array('onclick' => 'verInmigrante(this.value)')))
+                    ->add('seccioniiiPaisInmigrante', 'choice', array('data' => $paisNac ? $paisNac->getId() : 0, 'label' => 'Pais', 'required' => true, 'choices' => $paisNacArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+                    ->add('seccioniiiZonaInmigrante', 'text', array('required' => false, 'attr' => array('class' => 'form-control')))
+                    ->add('departamento', 'choice', array('data' => $d_id - 1, 'label' => 'Departamento', 'required' => true, 'choices' => $dptoArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarProvincias(this.value);')))
+                    ->add('provincia', 'choice', array('data' => $p_id, 'label' => 'Provincia', 'required' => true, 'choices' => $provArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarMunicipios(this.value)')))
+                    ->add('municipio', 'choice', array('data' => $m_id, 'label' => 'Municipio', 'required' => true, 'choices' => $muniArray, 'empty_value' => 'Seleccionar...','attr' => array('class' => 'form-control', 'onchange' => 'listarCantones(this.value)')))
+                    ->add('canton', 'choice', array('data' => $c_id, 'label' => 'Cantón', 'required' => true, 'choices' => $cantnArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarLocalidades(this.value)')))
+                    ->add('localidad', 'choice', array('data' => $l_id, 'label' => 'Localidad', 'required' => true, 'choices' => $localdArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+                    ->add('seccioniiiZona', 'text', array('data' => $socioeconomico->getSeccioniiiZona(), 'required' => true, 'attr' => array('class' => 'form-control')));
+
+                }
+                
+            
+            }else{
+                $form=$form
+                ->add('departamento', 'choice', array('data' => $d_id - 1, 'label' => 'Departamento', 'required' => true, 'choices' => $dptoArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarProvincias(this.value);')))
+                ->add('provincia', 'choice', array('data' => $p_id, 'label' => 'Provincia', 'required' => true, 'choices' => $provArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarMunicipios(this.value)')))
+                ->add('municipio', 'choice', array('data' => $m_id, 'label' => 'Municipio', 'required' => true, 'choices' => $muniArray, 'empty_value' => 'Seleccionar...','attr' => array('class' => 'form-control', 'onchange' => 'listarCantones(this.value)')))
+                ->add('canton', 'choice', array('data' => $c_id, 'label' => 'Cantón', 'required' => true, 'choices' => $cantnArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarLocalidades(this.value)')))
+                ->add('localidad', 'choice', array('data' => $l_id, 'label' => 'Localidad', 'required' => true, 'choices' => $localdArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+                ->add('seccioniiiZona', 'text', array('data' => $socioeconomico->getSeccioniiiZona(), 'required' => true, 'attr' => array('class' => 'form-control')));
+                
+            }
+            $form=$form
             ->add('seccioniiiAvenida', 'text', array('data' => $socioeconomico->getSeccioniiiAvenida(),'required' => true, 'attr' => array('class' => 'form-control')))
             ->add('seccioniiiNumero', 'text', array('data' => $socioeconomico->getSeccioniiiNumero(), 'required' => true, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{0,5}', 'maxlength' => '5')))
-            ->add('seccioniiiTelefonofijo', 'text', array('data' => $socioeconomico->getSeccioniiiTelefonofijo(), 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{0,7}', 'maxlength' => '7')))
-            ->add('seccioniiiTelefonocelular', 'text', array('data' => $socioeconomico->getSeccioniiiTelefonocelular(), 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{0,8}', 'maxlength' => '8')))
+            ->add('seccioniiiTelefonofijo', 'text', array('data' => $socioeconomico->getSeccioniiiTelefonofijo(), 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{0,13}', 'maxlength' => '13')))
+            ->add('seccioniiiTelefonocelular', 'text', array('data' => $socioeconomico->getSeccioniiiTelefonocelular(), 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{0,13}', 'maxlength' => '13')))
             ->add('seccionivEscarnetDiscapacidad', 'choice', array('data' => $socioeconomico->getSeccionivEscarnetDiscapacidad(), 'required' => false, 'label' => false, 'empty_value' => false, 'choices' => array(false => 'NO', true => 'SI')))
             ->add('seccionivNumeroCarnetDiscapacidad', 'text', array('data' => $socioeconomico->getSeccionivNumeroCarnetDiscapacidad(), 'required' => false, 'attr' => array('class' => 'form-control', 'maxlength' => '15')))
             ->add('seccionivDiscapacitadTipo', 'entity', array('data' => $em->getReference('SieAppWebBundle:DiscapacidadTipo', $socioeconomico->getSeccionivDiscapacitadTipo()->getId()), 'label' => false, 'required' => false, 'class' => 'SieAppWebBundle:DiscapacidadTipo', 'property' => 'origendiscapacidad', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
@@ -782,11 +844,6 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
     public function createAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
-
-
-
-
-
         $institucion = $this->session->get('ie_id');
         $gestion = $this->session->get('ie_gestion');
         $sucursal = $this->session->get('ie_suc_id');
@@ -794,6 +851,7 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
 
         try {
             $form = $request->get('form');
+            //dump($form);die;
             $edid=$form['seccioniiEducacionDiversaTipo'];
             $estudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $form['estudianteInscripcion']));
             $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('id' => $estudianteInscripcion->getEstudiante()));
@@ -819,8 +877,16 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             $socioinscripcion->setSeccioniiHijos($form['seccioniiHijos'] ? $form['seccioniiHijos'] : 0);
          //   $socioinscripcion->setSeccioniiEsserviciomilitar($form['seccioniiEsserviciomilitar'] ? $form['seccioniiEsserviciomilitar'] : 0);
            // $socioinscripcion->setSeccioniiEsserviciomilitarCea($form['seccioniiEsserviciomilitarCea'] ? $form['seccioniiEsserviciomilitarCea'] : 0);
-            $socioinscripcion->setSeccioniiiLocalidadTipo($em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($form['localidad']));
-            $socioinscripcion->setSeccioniiiZona($form['seccioniiiZona'] ? mb_strtoupper($form['seccioniiiZona'], 'utf-8') : '');
+           if (($institucion == 80730796) and ($form['inmigrante'] == "SI")) 
+            {
+                $socioinscripcion->setSeccioniiiLocalidadTipo($em->getRepository('SieAppWebBundle:LugarTipo')->findOneById(0));
+                $socioinscripcion->setSeccioniiiZona(mb_strtoupper($form['seccioniiiPaisInmigrante'].',INMIGRANTE,'.$form['seccioniiiZonaInmigrante'], 'utf-8'));    
+                
+            } else{
+                $socioinscripcion->setSeccioniiiLocalidadTipo($em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($form['localidad']));
+                $socioinscripcion->setSeccioniiiZona($form['seccioniiiZona'] ? mb_strtoupper($form['seccioniiiZona'], 'utf-8') : '');
+
+            }
             $socioinscripcion->setSeccioniiiAvenida($form['seccioniiiAvenida'] ? mb_strtoupper($form['seccioniiiAvenida'], 'utf-8') : '');
             $socioinscripcion->setSeccioniiiNumero($form['seccioniiiNumero'] ? $form['seccioniiiNumero'] : 0);
             $socioinscripcion->setSeccioniiiTelefonofijo($form['seccioniiiTelefonofijo'] ? $form['seccioniiiTelefonofijo'] : 0);
@@ -1041,10 +1107,16 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             $socioinscripcion->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($form['estudianteInscripcion']));
             $socioinscripcion->setSeccioniiHijos($form['seccioniiHijos'] ? $form['seccioniiHijos'] : 0);
 
-
-
-            $socioinscripcion->setSeccioniiiLocalidadTipo($em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($form['localidad']));
-            $socioinscripcion->setSeccioniiiZona($form['seccioniiiZona'] ? mb_strtoupper($form['seccioniiiZona'], 'utf-8') : '');
+            if(($institucion != 80730796) or  (($institucion == 80730796) and ($form['inmigrante'] == "NO")))
+            {
+                $socioinscripcion->setSeccioniiiLocalidadTipo($em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($form['localidad']));
+                $socioinscripcion->setSeccioniiiZona($form['seccioniiiZona'] ? mb_strtoupper($form['seccioniiiZona'], 'utf-8') : '');
+                
+            }else{
+                $socioinscripcion->setSeccioniiiLocalidadTipo($em->getRepository('SieAppWebBundle:LugarTipo')->findOneById(0));
+                $socioinscripcion->setSeccioniiiZona(mb_strtoupper($form['seccioniiiPaisInmigrante'].',INMIGRANTE,'.$form['seccioniiiZonaInmigrante'], 'utf-8'));    
+                
+            }
             $socioinscripcion->setSeccioniiiAvenida($form['seccioniiiAvenida'] ? mb_strtoupper($form['seccioniiiAvenida'], 'utf-8') : '');
             $socioinscripcion->setSeccioniiiNumero($form['seccioniiiNumero'] ? $form['seccioniiiNumero'] : 0);
             $socioinscripcion->setSeccioniiiTelefonofijo($form['seccioniiiTelefonofijo'] ? $form['seccioniiiTelefonofijo'] : 0);

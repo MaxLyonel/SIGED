@@ -792,7 +792,7 @@ class TramiteController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
 
-        if ($this->session->get('save')) {
+        if (!$form and $this->session->get('save')) {
             $form['sie'] = $this->session->get('datosBusqueda')['sie'];
             $form['gestion'] = $this->session->get('datosBusqueda')['gestion'];
             $form['sucursal'] = $this->session->get('datosBusqueda')['sucursal'];
@@ -802,7 +802,6 @@ class TramiteController extends Controller {
                 $form['lista'] = $this->session->get('datosBusqueda')['lista'];
             }
         }
-        //die("ghj");
 
         if ($form) {
             $sie = $form['sie'];
@@ -1122,6 +1121,7 @@ class TramiteController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
 
+        $estudiantes = array();
 
         try {
             /*
@@ -1225,65 +1225,66 @@ class TramiteController extends Controller {
                  */
                 $mensajeerror = "";
                 $countSerieArray = 0;
-                foreach ($estudiantes as $estudiante) {
-                    $tramiteId = (Int) $estudiante;
-                    //$verificaEstudianteRude = $this->verificaEstudianteConDobleTramite($tramiteId,2);
-                    $verificaEstudianteDiploma = "";
-
-                    if ($flujoSeleccionado == 'Adelante' and $identificador < 17) {
-
-                        $entityTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $tramiteId));
-
-                        $verificaEstudianteDiploma = $this->verificaEstudianteConDiplomaActivo($entityTramite->getEstudianteInscripcion()->getEstudiante()->getId(),1);
-//                        /*
-//                         * Verifica si el estudiante ya cuenta con un tramite o documento en funcion a su codigo rude
-//                         */
-//    //                    if ($verificaEstudianteRude == 1){
-//    //                        $em->getConnection()->rollback();
-//    //                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'El estudiante con código '.$rude.' ya cuenta con un trámite en diplomas de bachiller'));
-//    //                        return $this->redirectToRoute($retorna);
-//    //                    }
-
-                        if ($verificaEstudianteDiploma != ""){
+                if(count($estudiantes)>0){
+                    foreach ($estudiantes as $estudiante) {
+                        $tramiteId = (Int) $estudiante;
+                        //$verificaEstudianteRude = $this->verificaEstudianteConDobleTramite($tramiteId,2);
+                        $verificaEstudianteDiploma = "";
+    
+                        if ($flujoSeleccionado == 'Adelante' and $identificador < 17) {
+    
+                            $entityTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $tramiteId));
+    
+                            $verificaEstudianteDiploma = $this->verificaEstudianteConDiplomaActivo($entityTramite->getEstudianteInscripcion()->getEstudiante()->getId(),1);
+    //                        /*
+    //                         * Verifica si el estudiante ya cuenta con un tramite o documento en funcion a su codigo rude
+    //                         */
+    //    //                    if ($verificaEstudianteRude == 1){
+    //    //                        $em->getConnection()->rollback();
+    //    //                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'El estudiante con código '.$rude.' ya cuenta con un trámite en diplomas de bachiller'));
+    //    //                        return $this->redirectToRoute($retorna);
+    //    //                    }
+    
+                            if ($verificaEstudianteDiploma != ""){
+                                /*
+                                 * Verifica si el estudiante ya tiene un diploma impreso
+                                 */
+                                //$mensaje = '';
+                                //$mensaje = $this->verificaEstudianteConDiplomaActivo($tramiteId,2);
+                                if ($mensajeerror == ""){
+                                    $mensajeerror = $verificaEstudianteDiploma;
+                                } else {
+                                    $mensajeerror = $mensajeerror.", ".$verificaEstudianteDiploma;
+                                }
+                            }
+    //
+    //                        if ($verificaEstudianteRude == 3){
+    //                            $em->getConnection()->rollback();
+    //                            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'El estudiante con código '.$rude.' no se encuentra registrado en el sistema'));
+    //                            return $this->redirectToRoute($retorna);
+    //                        }
+                        }
+    
+                        if ($verificaEstudianteDiploma == ""){
+                            $error = $this->procesaTramite($tramiteId, $id_usuario, $flujoSeleccionado,$obs);
+    
                             /*
-                             * Verifica si el estudiante ya tiene un diploma impreso
+                             * Genera documento diploma
                              */
-                            //$mensaje = '';
-                            //$mensaje = $this->verificaEstudianteConDiplomaActivo($tramiteId,2);
-                            if ($mensajeerror == ""){
-                                $mensajeerror = $verificaEstudianteDiploma;
-                            } else {
-                                $mensajeerror = $mensajeerror.", ".$verificaEstudianteDiploma;
+                            if ($identificador == 16 and $flujoSeleccionado == 'Adelante') {
+                                $documentosGenerados[$countSerieArray] = $this->generaDocumento($tramiteId, $id_usuario, 1, $seriesArray[$countSerieArray], $tipoSerie, $gestion, $fecha);
+                                $countSerieArray = $countSerieArray + 1;
                             }
                         }
-//
-//                        if ($verificaEstudianteRude == 3){
-//                            $em->getConnection()->rollback();
-//                            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'El estudiante con código '.$rude.' no se encuentra registrado en el sistema'));
-//                            return $this->redirectToRoute($retorna);
-//                        }
-                    }
-
-                    if ($verificaEstudianteDiploma == ""){
-                        $error = $this->procesaTramite($tramiteId, $id_usuario, $flujoSeleccionado,$obs);
-
+    
                         /*
-                         * Genera documento diploma
+                         * Anula documento diploma
                          */
-                        if ($identificador == 16 and $flujoSeleccionado == 'Adelante') {
-                            $documentosGenerados[$countSerieArray] = $this->generaDocumento($tramiteId, $id_usuario, 1, $seriesArray[$countSerieArray], $tipoSerie, $gestion, $fecha);
-                            $countSerieArray = $countSerieArray + 1;
+                        if ($identificador == 17 and $flujoSeleccionado == 'Atras') {
+                            $error = $this->anulaDocumento($tramiteId,$obs);
                         }
                     }
-
-                    /*
-                     * Anula documento diploma
-                     */
-                    if ($identificador == 17 and $flujoSeleccionado == 'Atras') {
-                        $error = $this->anulaDocumento($tramiteId,$obs);
-                    }
                 }
-
 
                 $em->getConnection()->commit();
                 $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => sizeof($estudiantes).' Trámite(s) procesado(s)'));

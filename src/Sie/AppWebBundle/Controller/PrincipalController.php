@@ -152,10 +152,40 @@ class PrincipalController extends Controller {
             return $this->redirectToRoute('sie_gis_homepage');
         }
 
+        $gestionactual = $this->sesion->get('currentyear');
+        $roluser = $this->sesion->get('roluser');
+        $roluserlugarid = $this->sesion->get('roluserlugarid');
+        
+        $consolEspecial = $this->get('sie_app_web.funciones')->reporteConsolEspecial($gestionactual, $roluser, $roluserlugarid);
+
+        switch ($roluser) {
+            case 8:
+                $centrosEspecial = $this->get('sie_app_web.funciones')->estadisticaConsolEspecialNal($gestionactual);
+                break;
+
+            case 7:
+                $centrosEspecial = $this->get('sie_app_web.funciones')->estadisticaConsolEspecialDptal($gestionactual, $roluserlugarid);
+                break;
+
+            case 10:
+                $centrosEspecial = $this->get('sie_app_web.funciones')->estadisticaConsolEspecialDtal($gestionactual, $roluserlugarid);
+                break;
+
+            default:
+                $centrosEspecial = null;
+                break;
+        }
+
+        $gestiones = array($gestionactual - 1 => $gestionactual - 1, $gestionactual - 2 => $gestionactual - 2, $gestionactual - 3 => $gestionactual - 3, $gestionactual - 4 => $gestionactual - 4, $gestionactual - 5 => $gestionactual - 5);
+
         return $this->render($this->sesion->get('pathSystem') . ':Principal:index.html.twig', array(
           'userData' => $userData,
           'entities' => $entities,
           'faea' => $faea,
+          'consolEspecial' => $consolEspecial,
+          'centrosEspecial' => $centrosEspecial,
+          'gestiones' => $gestiones,
+          'gestionactual' => $gestionactual,
           'notification' => $not,
           'entitiestot' => $nacional,
           'entitiesdpto' => $departamental,
