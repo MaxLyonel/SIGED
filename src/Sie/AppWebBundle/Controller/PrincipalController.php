@@ -450,7 +450,188 @@ class PrincipalController extends Controller {
         return $po[0]['cantidad'];                  
     }
 
+    public function dashboardperdiodoAction(Request $request) {
+        $iesubsea = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getAllSucursalTipo($this->sesion->get('ie_id'));        
+        return $this->render('SieHerramientaAlternativaBundle:Centroeducativo:selgessubsem.html.twig', array('iesubsea' => $iesubsea));
+    }
+
+    public function dashboardnotfAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $query = "  SELECT * FROM notificacion a 
+                            INNER JOIN notificacion_sistema b ON a.id = b.notif_id
+                            INNER JOIN notificacion_usuario c ON a.id = c.notif_id
+                            INNER JOIN sistema_tipo d ON d.id = b.sistema_tipo_id
+                    WHERE d.bundle = '".$this->sesion->get('pathSystem')."' AND rol_tipo_id = ".$this->sesion->get('roluser')." AND a.estado = false";
+                                       
+        $totales = $db->prepare($query);
+        $params = array();
+        $totales->execute($params);
+        $notificaciones = $totales->fetchAll();
+        return $this->render('SieAppWebBundle:Dashboard:notificaciones.html.twig', array('notificaciones' => $notificaciones));
+    }
+
+    public function dashboardestadisticasAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $query = "  SELECT b.gestion_tipo_id, (count(c.id) +0.0) as count
+                        FROM estudiante_inscripcion a
+                    INNER JOIN estudiante c ON c.id = a.estudiante_id
+                    INNER JOIN institucioneducativa_curso b ON a.institucioneducativa_curso_id = b.id                    
+                        WHERE b.institucioneducativa_id = ".$this->sesion->get('ie_id')."
+                    GROUP BY b.gestion_tipo_id
+                    ORDER BY gestion_tipo_id";
+        $totales = $db->prepare($query);
+        $params = array();
+        $totales->execute($params);
+        $estadisticas = $totales->fetchAll();
+
+        $dat = '';
+        if (count($estadisticas) > 0 ) {
+            $dat = true;
+        } else {
+            $dat = false;
+        }
+
+        $gestion = '';
+        $val = '';
+
+        foreach ($estadisticas as $dat){
+            $gestion = $gestion ."'".$dat['gestion_tipo_id']."',";
+            $val = $val ." ".$dat['count'].",";
+        }
+
+        $grafest = "var title = {
+            text: 'Matricula por gestión'
+         };
+         var subtitle = {
+            text: '...'
+         };
+         var xAxis = {
+            categories: [".trim($gestion)."]
+         };
+         var yAxis = {
+            title: {
+               text: 'Matricula'
+            },
+            plotLines: [{
+               value: 0,
+               width: 1,
+               color: '#E98E25'
+            }]
+         };   
+         var tooltip = {
+            valueSuffix: '\xB0C'
+         }
+         var legend = {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0
+         };
+         var series =  [ {
+         name: 'Matricula',
+         data: [".trim($val)."]
+         }
+         ];
+
+         var json = {};
+         json.title = title;
+         json.subtitle = subtitle;
+         json.xAxis = xAxis;
+         json.yAxis = yAxis;
+         json.tooltip = tooltip;
+         json.legend = legend;
+         json.series = series;
+         
+         $('#chartContainerEstadisticas').highcharts(json);";
+
+        return $this->render('SieAppWebBundle:Dashboard:estadisticas.html.twig', array('grafest' => $grafest, 'dat' => $dat));
+    }
 
 
+    public function dashboardcalidadAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $query = "  select a.gestion_tipo_id, count(*) as cantidad
+                        from validacion_proceso a 
+                        where a. institucion_educativa_id = ".$this->sesion->get('ie_id')."
+                    group by a.gestion_tipo_id
+                    order by gestion_tipo_id";
+        $totales = $db->prepare($query);
+        $params = array();
+        $totales->execute($params);
+        $estadisticas = $totales->fetchAll();
+
+        $dat = '';
+        if (count($estadisticas) > 0 ) {
+            $dat = true;
+        } else {
+            $dat = false;
+        }
+
+        $gestion = '';
+        $val = '';
+
+        foreach ($estadisticas as $dat){
+            $gestion = $gestion ."'".$dat['gestion_tipo_id']."',";
+            $val = $val ." ".$dat['cantidad'].",";
+        }
+
+        $grafest = "var title = {
+            text: 'Casos pendientes'
+         };
+         var subtitle = {
+            text: '...'
+         };
+         var xAxis = {
+            categories: [".trim($gestion)."]
+         };
+         var yAxis = {
+            title: {
+               text: 'Casos'
+            },
+            plotLines: [{
+               value: 0,
+               width: 1,
+               color: '#E98E25'
+            }]
+         };   
+         var tooltip = {
+            valueSuffix: '\xB0C'
+         }
+         var legend = {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0
+         };
+         var series =  [ {
+         name: 'Cant. Casos',
+         data: [".trim($val)."]
+         }
+         ];
+
+         var json = {};
+         json.title = title;
+         json.subtitle = subtitle;
+         json.xAxis = xAxis;
+         json.yAxis = yAxis;
+         json.tooltip = tooltip;
+         json.legend = legend;
+         json.series = series;
+         
+         $('#chartContainerCalidad').highcharts(json);";
+
+        return $this->render('SieAppWebBundle:Dashboard:calidad.html.twig', array('grafest' => $grafest, 'dat' => $dat));        
+    }
+
+    public function dashboardconsolidacionAction(Request $request) {        
+        return $this->render('SieAppWebBundle:Dashboard:consolidacion.html.twig');
+    }
+
+    public function dashboarddescargasAction(Request $request) {        
+        return $this->render('SieAppWebBundle:Dashboard:descargas.html.twig');
+    }
 
 }
