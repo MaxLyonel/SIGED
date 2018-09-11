@@ -108,10 +108,9 @@
                                                     <th>Materno</th>                            
                                                     <th>Fecha Inicio</th>                            
                                                     <th>Fecha Fin</th>                            
-                                                    <th>Bloque</th>                            
-                                                    <th>Parte</th>
-                                                    <th>Cant Est.</th>
-                                                    <th>Estudiantes Aprob.</th>                           
+                                                    <th>Ciclo</th>                            
+                                                    <th>Grado</th>
+                                                    <th>Estudiantes Aprob.</th>  
                                                     <th>Departamento</th>  
                                                     <th>Provincia</th>
                                                     <th>Municipio</th>
@@ -126,24 +125,23 @@
                                                     {% if fila.esactivo != 1 %} {% set op=0 %} {% else %} {% set op=1 %} {% endif %}
                                                     <tr>
                                                        <td>{{ fila.id }}</td>
-                                                       <td><a role="button" class="btn btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id': fila.id~fila.ciclo_tipo_id~fila.grado_tipo_id,'esactivo':op}) }}" > Imprimir Consolidado</a></td>
+                                                       <td><a role="button" class="btn btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id': fila.id~"|"~fila.ciclo_tipo_id~"|"~fila.grado_tipo_id,'esactivo':op}) }}" > Imprimir Consolidado</a></td>
                                                         <td><a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado_editnew', { 'id': fila.id,'val':0 }) }}" > Ver participantes</a></td>
                                                         <td>{{ fila.carnet }}{% if fila.complemento != '' %}-{{fila.complemento}}{% endif %}</td>
-                                                        <td>{{ fila.nombre }}</td>                            
+                                                        <td>{{ fila.nombre }}</td>        
                                                         <td>{{ fila.paterno }}</td>
                                                         <td>{{ fila.materno }}</td> 
                                                         <td>{{ fila.fecha_inicio|date('d-m-Y') }}</td>
                                                         <td>{{ fila.fecha_fin|date('d-m-Y') }}</td>
-                                                        <td>{{ fila.ciclo_tipo_id }}</td>
-                                                        <td>{{ fila.grado_tipo_id }}</td>
-                                                        <td>{{ fila.est }}</td>
+                                                        <td>{% if fila.plan == 1 %}Bloque: {% endif %}{{ fila.nciclo }}</td>
+                                                        <td>{% if fila.plan == 1 %}Parte: {{ fila.ngrado }}{% else %} {% if fila.grado_tipo_id == 14 or fila.grado_tipo_id == 16 %} Semestre 1 {% else %} Semestre 2 {% endif %}{% endif %}</td>
                                                         <td>{{ fila.est_aprob }}</td>
                                                         <td>{{ fila.depto }}</td>
                                                         <td>{{ fila.provincia }}</td>
                                                         <td>{{ fila.lugar }}</td>
                                                         <td>{{ fila.localidad }}</td>
                                                         {% if fila.esactivo != 1 %}
-                                                            <td><a role="button" class="btn btn-info btn-xs" href="#" onclick="ver_fecha_fin({{ fila.id }},'{{ fila.fecha_fin|date("d/m/Y") }}','{{ fila.fecha_inicio|date("d/m/Y") }}');" > Editar Fecha</a></td>
+                                                            <td><a role="button" class="btn btn-info btn-xs" href="#" onclick="ver_fecha_fin({{ fila.id }},'{{ fila.fecha_fin|date("d/m/Y") }}','{{ fila.fecha_inicio|date("d/m/Y") }}','{{ fila.plan }}','{{ fila.ciclo_tipo_id}}','{{ fila.grado_tipo_id }}');" > Editar Fecha</a></td>
                                                         {% else %}
                                                             <td>Finalizado</td>
                                                         {% endif %}
@@ -177,12 +175,17 @@
                 <div class="modal-body">
                     <div id="editar-Modal">
                         <form role="form" method="post" action="{{path('sie_pnp_listar_archivos_editnew')}}">
-                            <div align="center"><input type="text" id="curso_id" name="curso_id" value="" required="required" style="display:none" />Fecha Inicio:
-                            <input type="text" id="fecha_inicio" name="fecha_inicio" placeholder="Digite Fecha Inicio" required="required" value=""/>&nbsp;&nbsp;Fecha Fin:
+                            <div align="center">
+                            <input type="text" id="curso_id" name="curso_id" value="" required="required" style="display:none" />
+                            <input type="text" id="plan" name="plan" value="" required="required" style="display:none" />
+                            <input type="text" id="ciclo_tipo_id" name="ciclo_tipo_id" value="" required="required" style="display:none" />
+                            <input type="text" id="grado_tipo_id" name="grado_tipo_id" value="" required="required" style="display:none" />
+                            <input type="text" id="planes" name="planes" value="" required="required" style="display:none" />
+                            Fecha Inicio:
+                            <input type="text" id="fecha_inicio" name="fecha_inicio" placeholder="Digite Fecha Inicio" required="required" value=""/>&nbsp;&nbsp;<br>
+                            Fecha Fin:
                             <input type="text" id="fecha_fin" name="fecha_fin" placeholder="Digite Fecha Final" required="required" value=""/>
-                            <div>
-                                &nbsp;
-                            </div>
+                            <br><br>
                             <button type="submit" class="btn btn-success btn-large glyphicon glyphicon-pencil" onclick="return validar_fecha()"> Guardar Cambios</button>
                         </form>
                     </div>
@@ -341,29 +344,91 @@
         });#}
         
     });
-    function ver_fecha_fin(id,fecha_fin,fecha_inicio){
+    function ver_fecha_fin(id,fecha_fin,fecha_inicio,plan,ciclo_tipo_id,grado_tipo_id){
          $('#Modal_fecha').modal('show');
          $('#curso_id').val(id);
          $('#fecha_fin').val(fecha_fin);
          $('#fecha_inicio').val(fecha_inicio);
+         $('#planes').val(plan);
+         $('#ciclo_tipo_id').val(ciclo_tipo_id);
+         $('#grado_tipo_id').val(grado_tipo_id);
     }
 
     function validar_fecha(){
-    var f1 = document.getElementById("fecha_inicio").value;
-    var f2 = document.getElementById("fecha_fin").value;
-    var aFecha1 = f1.split('/'); 
-    var aFecha2 = f2.split('/'); 
-    var fFecha1 = Date.UTC(aFecha1[2],aFecha1[1]-1,aFecha1[0]); 
-    var fFecha2 = Date.UTC(aFecha2[2],aFecha2[1]-1,aFecha2[0]); 
-    var dif = fFecha2 - fFecha1;
-    var dias = Math.floor(dif / (1000 * 60 * 60 * 24)); 
-    if(dias>=90 && dias<240){
-        return true;
-    }
-    else{
-        alert("La fecha final debe ser mínimo 90 días mayor que la fecha inicial pero no mayor a 240 días (3 meses a 8 meses)");
-        return false;
-    }
+        var f1 = document.getElementById("fecha_inicio").value;
+        var f2 = document.getElementById("fecha_fin").value;
+        var plan = document.getElementById("plan").value;
+        var b = document.getElementById("ciclo_tipo_id").value;
+        var p = document.getElementById("grado_tipo_id").value;
+        var aFecha1 = f1.split('/'); 
+        var aFecha2 = f2.split('/'); 
+        var fFecha1 = Date.UTC(aFecha1[2],aFecha1[1]-1,aFecha1[0]); 
+        var fFecha2 = Date.UTC(aFecha2[2],aFecha2[1]-1,aFecha2[0]); 
+        var dif = fFecha2 - fFecha1;
+        var dias = Math.floor(dif / (1000 * 60 * 60 * 24));
+
+        //Contar dias entre fechas fecha inicial y fecha actual
+        var aFecha1a = f1.split('/'); 
+        var fecha_actual = moment().format("DD/MM/YYYY"); //fecha actual
+        var aFecha2a = fecha_actual.split('/'); 
+        var fFecha1a = Date.UTC(aFecha1a[2],aFecha1a[1]-1,aFecha1a[0]);
+        var fFecha2a = Date.UTC(aFecha2a[2],aFecha2a[1]-1,aFecha2a[0]); 
+        var difa = fFecha1a - fFecha2a;
+        var dias_a = Math.floor(difa / (1000 * 60 * 60 * 24));
+        
+        //FECHAS EN LOS PLANES SACAR LA GESTIÓN
+        var array_fechasol = f1.split("/");
+        var anio = parseInt(array_fechasol[2]);
+
+        //--VER Q GRADO TIENE PARA CONOCER LA GESTION 
+        //PLAN ANTIGUO B1P1 MAX 2017, B1P2, B2P1 MAX 2018,B2P2 MAX 2019
+        var gpa=0;//grado plan antiguo
+        if(b==1 && p==1)gpa=1;if(b==1 && p==2)gpa=2;if(b==2 && p==1)gpa=3;if(b==2 && p==2)gpa=4;
+
+        //plan 1
+        if (plan == 1){
+            if(gpa==1 && (anio > 2017 || anio < 2009)){
+                alert("Error!!!. Bloque 1 Parte 1: La gestión de la fecha inicial debe estar entre 2009-2017");
+                return false;
+            }
+            if((gpa==2 || gpa==3) && (anio > 2018 || anio < 2009)){
+                alert("Error!!!. Bloque 1 (Parte 1 o Parte 2) : La gestión de la fecha inicial debe estar entre 2009-2018");
+                return false;
+            }
+            if(gpa==4 && (anio > 2019 || anio < 2009)){
+                alert("Error!!!. Bloque 2 Parte 2: La gestión de la fecha inicial debe estar entre 2010-2019");
+                return false;
+            }
+        }
+        else{//plan 2 nuevo 20018 pero no antes q hoy
+            if(anio < 2018 || dias_a > 0){
+                alert("Error!!!. La gestión de la fecha inicial debe ser mínimo 2018 y no mayor a la fecha de hoy");
+                return false;   
+            }
+        }
+        //CANTIDAD DE DIAS EN LOS PLANES
+        if(plan==1){
+            if(dias>=90 && dias<=240){
+                return true;
+            }
+            else{
+                if((anio<=2015 && roluser == 21)||(roluser == 8))
+                    return true;
+                else {
+                alert("La fecha final debe ser mínimo 90 días mayor que la fecha inicial pero no mayor a 240 días (3 meses a 8 meses)");
+                return false;
+                }
+            }    
+        }
+        else{//PLAN NUEVO
+            if(dias>=140 && dias<=180){
+                return true;
+            }
+            else{
+                alert("La fecha final debe ser mínimo 140 días mayor que la fecha inicial pero no mayor a 180 días (5 meses a 6 meses)");
+                return false;
+            }
+        }
     }
     
     </script>

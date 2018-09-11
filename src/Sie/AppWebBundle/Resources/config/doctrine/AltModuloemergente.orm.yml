@@ -1,14 +1,13 @@
-Sie\AppWebBundle\Entity\InstitucioneducativaCursoDatos:
+Sie\AppWebBundle\Entity\AltModuloemergente:
     type: entity
-    table: institucioneducativa_curso_datos
+    table: alt_moduloemergente
     indexes:
-        IDX_46C54F4560B0812:
-            columns:
-                - lugar_tipo_id_seccion
-    uniqueConstraints:
-        uk_institucioneducativa_curso_id:
+        IDX_71F5E8C79E4EDBFE:
             columns:
                 - institucioneducativa_curso_id
+        IDX_71F5E8C7DB38439E:
+            columns:
+                - usuario_id
     id:
         id:
             type: integer
@@ -19,34 +18,24 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoDatos:
             generator:
                 strategy: SEQUENCE
     fields:
-        localidad:
+        moduloEmergente:
             type: string
-            nullable: true
-            length: 255
+            nullable: false
+            length: null
             fixed: false
             comment: ''
-        obs:
-            type: string
-            nullable: true
-            length: 255
-            fixed: false
-            comment: ''
-        esactivo:
-            type: boolean
-            nullable: true
-            comment: ''
-        plancurricularTipoId:
-            type: integer
-            nullable: true
-            unsigned: false
-            comment: ''
-            column: plancurricular_tipo_id
-        fechaCerrar:
+            column: modulo_emergente
+        fechaModificacion:
             type: datetime
             nullable: true
             comment: ''
             default: now()
-            column: fecha_cerrar
+            column: fecha_modificacion
+        fechaRegistro:
+            type: time
+            nullable: true
+            comment: ''
+            column: fecha_registro
     manyToOne:
         institucioneducativaCurso:
             targetEntity: InstitucioneducativaCurso
@@ -57,13 +46,13 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoDatos:
                 institucioneducativa_curso_id:
                     referencedColumnName: id
             orphanRemoval: false
-        lugarTipoSeccion:
-            targetEntity: LugarTipo
+        usuario:
+            targetEntity: Usuario
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                lugar_tipo_id_seccion:
+                usuario_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

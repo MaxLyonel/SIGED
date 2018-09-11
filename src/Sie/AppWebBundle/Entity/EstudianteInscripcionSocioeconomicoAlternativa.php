@@ -1005,4 +1005,32 @@ class EstudianteInscripcionSocioeconomicoAlternativa
     {
         return $this->seccionvOtroTrabajo;
     }
+    /**
+     * @var integer
+     */
+    private $seccionvEstudianteNacionoriginariaTipoId;
+
+
+    /**
+     * Set seccionvEstudianteNacionoriginariaTipoId
+     *
+     * @param integer $seccionvEstudianteNacionoriginariaTipoId
+     * @return EstudianteInscripcionSocioeconomicoAlternativa
+     */
+    public function setSeccionvEstudianteNacionoriginariaTipoId($seccionvEstudianteNacionoriginariaTipoId)
+    {
+        $this->seccionvEstudianteNacionoriginariaTipoId = $seccionvEstudianteNacionoriginariaTipoId;
+    
+        return $this;
+    }
+
+    /**
+     * Get seccionvEstudianteNacionoriginariaTipoId
+     *
+     * @return integer 
+     */
+    public function getSeccionvEstudianteNacionoriginariaTipoId()
+    {
+        return $this->seccionvEstudianteNacionoriginariaTipoId;
+    }
 }

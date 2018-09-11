@@ -2,36 +2,30 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAlternativa:
     type: entity
     table: estudiante_inscripcion_socioeconomico_alternativa
     indexes:
-        idx_seccionii_unidad_militar_tipo_id:
-            columns:
-                - seccionii_unidad_militar_tipo_id
-        idx_seccionii_educacion_diversa_tipo_id:
+        IDX_7749FE9D839C95C6:
             columns:
                 - seccionii_educacion_diversa_tipo_id
-        idx_seccionii_recinto_penitenciario_tipo_id:
-            columns:
-                - seccionii_recinto_penitenciario_tipo_id
-        IDX_7749FE9DB6A3572D:
-            columns:
-                - seccionvi_modalidad_tipo_id
-        IDX_7749FE9D16853EBF:
-            columns:
-                - seccionv_estudiante_grupo_sanguineo_tipo_id
-        IDX_7749FE9D8AB39CFD:
-            columns:
-                - seccionv_estudiante_nacionoriginaria_tipo_id
         IDX_7749FE9DA1104027:
             columns:
                 - estudiante_inscripcion_id
-        IDX_7749FE9D7D5399FB:
+        IDX_7749FE9D77AD269A:
             columns:
-                - seccioniv_grado_tipo_id
-        IDX_7749FE9D691D9D38:
-            columns:
-                - seccioniv_discapacitad_tipo_id
+                - seccionii_recinto_penitenciario_tipo_id
         IDX_7749FE9DABD6144D:
             columns:
                 - seccioniii_localidad_tipo_id
+        IDX_7749FE9D691D9D38:
+            columns:
+                - seccioniv_discapacitad_tipo_id
+        IDX_7749FE9D7D5399FB:
+            columns:
+                - seccioniv_grado_tipo_id
+        IDX_7749FE9D16853EBF:
+            columns:
+                - seccionv_estudiante_grupo_sanguineo_tipo_id
+        IDX_7749FE9DA4AD68B2:
+            columns:
+                - seccionii_unidad_militar_tipo_id
     id:
         id:
             type: integer
@@ -182,32 +176,20 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAlternativa:
             nullable: true
             comment: ''
             column: fecha_modificacion
+        seccionvEstudianteNacionoriginariaTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: seccionv_estudiante_nacionoriginaria_tipo_id
         seccionvOtroTrabajo:
             type: string
             nullable: true
-            length: 200
+            length: null
             fixed: false
             comment: ''
             column: seccionv_otro_trabajo
     manyToOne:
-        seccionviModalidadTipo:
-            targetEntity: EstudianteInscripcionSocioeconomicoAltModalidadTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                seccionvi_modalidad_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        seccioniiUnidadMilitarTipo:
-            targetEntity: UnidadMilitarTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                seccionii_unidad_militar_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
         seccioniiEducacionDiversaTipo:
             targetEntity: EducacionDiversaTipo
             cascade: {  }
@@ -215,33 +197,6 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAlternativa:
             inversedBy: null
             joinColumns:
                 seccionii_educacion_diversa_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        seccioniiRecintoPenitenciarioTipo:
-            targetEntity: RecintoPenitenciarioTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                seccionii_recinto_penitenciario_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        seccionvEstudianteGrupoSanguineoTipo:
-            targetEntity: SangreTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                seccionv_estudiante_grupo_sanguineo_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        seccionvEstudianteNacionoriginariaTipo:
-            targetEntity: NacionOriginariaTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                seccionv_estudiante_nacionoriginaria_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         estudianteInscripcion:
@@ -253,13 +208,22 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAlternativa:
                 estudiante_inscripcion_id:
                     referencedColumnName: id
             orphanRemoval: false
-        seccionivGradoTipo:
-            targetEntity: GradoDiscapacidadTipo
+        seccioniiRecintoPenitenciarioTipo:
+            targetEntity: RecintoPenitenciarioTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                seccioniv_grado_tipo_id:
+                seccionii_recinto_penitenciario_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        seccioniiiLocalidadTipo:
+            targetEntity: LugarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                seccioniii_localidad_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         seccionivDiscapacitadTipo:
@@ -271,13 +235,31 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAlternativa:
                 seccioniv_discapacitad_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
-        seccioniiiLocalidadTipo:
-            targetEntity: LugarTipo
+        seccionivGradoTipo:
+            targetEntity: GradoDiscapacidadTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                seccioniii_localidad_tipo_id:
+                seccioniv_grado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        seccionvEstudianteGrupoSanguineoTipo:
+            targetEntity: SangreTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                seccionv_estudiante_grupo_sanguineo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        seccioniiUnidadMilitarTipo:
+            targetEntity: UnidadMilitarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                seccionii_unidad_militar_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
