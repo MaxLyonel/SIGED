@@ -79,15 +79,17 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAlternativa:
             comment: ''
             column: seccioniii_numero
         seccioniiiTelefonofijo:
-            type: integer
+            type: string
             nullable: true
-            unsigned: false
+            length: 13
+            fixed: false
             comment: ''
             column: seccioniii_telefonofijo
         seccioniiiTelefonocelular:
-            type: integer
+            type: string
             nullable: true
-            unsigned: false
+            length: 13
+            fixed: false
             comment: ''
             column: seccioniii_telefonocelular
         seccionivEscarnetDiscapacidad:
