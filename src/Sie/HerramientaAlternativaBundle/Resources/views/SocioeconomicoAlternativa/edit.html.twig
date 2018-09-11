@@ -2,6 +2,7 @@
     <div class="modal-content">
         <div class="panel panel-tab panel-tab-double">
             <div class="panel-heading no-padding">
+                <div id="msg"></div> 
                 <!-- tabs -->
                 <ul class="nav nav-tabs">
                     <li class="active">
@@ -62,8 +63,8 @@
                 <!-- contenido tabs -->
             </div>
             <div class="panel-body no-padding" id="modal-body">
-
-                {{form_start(form, { 'attr': {'role': 'form','onsubmit':'return (validaLista()&&validaSeleccion())'} } )}}
+                {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'id':'form_edit'} } )}}
+                {#{{form_start(form, { 'attr': {'role': 'form','onsubmit':'return (validaLista()&&validaSeleccion())','id': 'form'} } )}}#}
                 <div class="form-body">
                 <div class="alert alert-info">
                     <span class="alert-icon"><i class="fa fa-info"></i></span>
@@ -574,8 +575,10 @@
                 {{form_end(form)}}
             </div>
         </div>
+
         <div class="modal-footer">
             <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+            
         </div>
     </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->
@@ -664,7 +667,62 @@
             }
         
         });
-        
+        function editarRudeal(){
+            if(conta == 0 || conta == ""){
+                alert('Asegurese de completar el apartado 2.9 de Educacion Diversa');
+                return false;
+            }
+            if(conta ==2)
+            {
+                if((contb == 0 || contb == "")){
+                    alert('Debe seleccionar la Unidad Militar a la que pertenece');
+                    return false;
+                }
+
+            } else if(conta ==3)
+            {
+                if((contc == 0 || contc == "")){
+                    alert('Debe seleccionar el Penal al que pertenece');
+                    return false;
+                }
+
+            }
+            var formData = $('#form_edit').serialize();
+            //alert(formData);
+            $.ajax({
+                type: 'post',
+                url: "{{path('socioeconomicoalt_update')}}",
+                data: formData,
+                beforeSend: function (){
+                    $('#msg').empty();
+                },
+                success: function (data) {
+                    $('#modal').modal('hide');
+                    //$("#modal").on('hidden.bs.modal', function () {
+                        //confirm(data.msg);
+                        if(data.tipo=='exito'){
+                            $('#msg').append('<div class="alert alert-success alert-dismissible" role="alert">'+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+                        '<strong><i class="fa fa-linux"></i></strong>'+ data.msg +'</div>');    
+                        }else{
+                            $('#msg').append('<div class="alert alert-danger alert-dismissible" role="alert">'+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+                        '<strong><i class="fa fa-linux"></i></strong>'+ data.msg +'</div>');
+                        }
+                        
+                    
+                    //});
+                    //confirm(data.msg);
+                    
+                },
+                statusCode: {
+                    500: function () {
+                    },
+                    404: function () {
+                    }
+                }
+            });
+        }
         function listarProvincias(idDpto) {
             if (peticion1 && peticion1.readyState != 4) {
                 peticion1.abort();
