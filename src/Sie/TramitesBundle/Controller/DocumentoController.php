@@ -873,6 +873,7 @@ class DocumentoController extends Controller {
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
         $gestionActual = new \DateTime("Y");
+        $route = $request->get('_route');
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -881,7 +882,7 @@ class DocumentoController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $rolPermitido = array(8,17);
 
@@ -1130,6 +1131,7 @@ class DocumentoController extends Controller {
         $id_usuario = $sesion->get('userId');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = $fechaActual->format('Y');
+        $route = $request->get('_route');
 
         //validation if the user is logged
         if (!isset($id_usuario)) {
@@ -1139,7 +1141,7 @@ class DocumentoController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $rolPermitido = array(8,17);
 
@@ -1252,6 +1254,7 @@ class DocumentoController extends Controller {
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
         $gestionActual = new \DateTime("Y");
+        $route = $request->get('_route');
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -1260,7 +1263,7 @@ class DocumentoController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $rolPermitido = array(8,17);
 

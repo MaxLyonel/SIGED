@@ -130,6 +130,7 @@ class TramiteController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -142,7 +143,7 @@ class TramiteController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $rolPermitido = array(8,10,13);
 
@@ -466,6 +467,7 @@ class TramiteController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -478,7 +480,7 @@ class TramiteController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $rolPermitido = array(8,10,13);
 
@@ -511,6 +513,7 @@ class TramiteController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -523,7 +526,7 @@ class TramiteController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $rolPermitido = array(8,10,13);
 
@@ -2262,6 +2265,7 @@ class TramiteController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
+        $route = $request->get('_route');
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -2276,7 +2280,7 @@ class TramiteController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $documentoController = new documentoController();
         $documentoController->setContainer($this->container);
@@ -2853,6 +2857,7 @@ class TramiteController extends Controller {
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
         $gestionActual = new \DateTime("Y");
+        $route = $request->get('_route');
         $this->session->set('save', false);
         //validation if the user is logged
         if (!isset($id_usuario)) {
@@ -2862,7 +2867,7 @@ class TramiteController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu();
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $rolPermitido = array(16);
 
