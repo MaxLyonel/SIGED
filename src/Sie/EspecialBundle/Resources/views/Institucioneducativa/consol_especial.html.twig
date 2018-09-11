@@ -1,0 +1,119 @@
+{% if consolEspecial is not empty %}
+    <div class="table-responsive col-md-9">
+        <table class="table table-bordered table-striped" id="listaConsol">
+            <thead>
+                <tr>
+                	<th>#</th>
+                    <th>Departamento</th>
+                    <th>Distrito</th>
+                    <th>SIE</th>
+                    <th>Centro</th>
+                    <th>Bim. 1</th>
+                    <th>Bim. 2</th>
+                    <th>Bim. 3</th>
+                    <th>Bim. 4</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                	<th>#</th>
+                    <th>Departamento</th>
+                    <th>Distrito</th>
+                    <th>SIE</th>
+                    <th>Centro</th>
+                    <th>Bim. 1</th>
+                    <th>Bim. 2</th>
+                    <th>Bim. 3</th>
+                    <th>Bim. 4</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                {% for registro in consolEspecial %}
+                	<tr>
+                		<td>{{loop.index}}</td>
+                		<td>{{registro.departamento}}</td>
+                		<td>{{registro.distrito}}</td>
+                		<td>{{registro.codigo_sie}}</td>
+                		<td>{{registro.institucioneducativa}}</td>
+                		<td><span class="label label-{% if registro.bim1 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim1}}</span></td>
+                		<td><span class="label label-{% if registro.bim2 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim2}}</span></td>
+                		<td><span class="label label-{% if registro.bim3 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim3}}</span></td>
+                		<td><span class="label label-{% if registro.bim4 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim4}}</span></td>
+                	</tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    No se encontraron registros.
+{% endif %}
+{% if centrosEspecial is not empty %}
+	<div class="col-md-3">
+		{% if app.session.get('roluser') != 10 %}
+		    <div class="panel panel-teal">
+		        <div class="panel-heading">
+		            <h3 class="panel-title">Cantidad de Centros</h3>
+		        </div><!-- /.panel-heading -->
+		        <div class="panel-body">
+		            <div class="table-responsive col-md-12">
+				        <table class="table table-bordered table-striped" id="listaCentros">
+				            <thead>
+				                <tr>
+				                	<th>#</th>
+				                	{% if app.session.get('roluser') == 8 %}
+				                    	<th>Departamento</th>
+				                    {% elseif app.session.get('roluser') == 7 %}
+				                    	<th>Distrito</th>
+				                    {% endif %}
+				                    <th class="text-right">Total</th>
+				                </tr>
+				            </thead>
+				            <tfoot>
+				                <tr>
+				                	<th>#</th>
+				                    {% if app.session.get('roluser') == 8 %}
+				                    	<th>Departamento</th>
+				                    {% elseif app.session.get('roluser') == 7 %}
+				                    	<th>Distrito</th>
+				                    {% endif %}
+				                    <th class="text-right">Total</th>
+				                </tr>
+				            </tfoot>
+				            <tbody>
+				            	{% set cant = 0 %}
+				                {% for registro in centrosEspecial %}
+				                	{% set cant = cant + registro.total %}
+				                	<tr>
+				                		<td>{{loop.index}}</td>
+				                		{% if app.session.get('roluser') == 8 %}
+				                			<td>{{registro.departamento}}</td>
+				                		{% elseif app.session.get('roluser') == 7 %}
+				                			<td>{{registro.distrito}}</td>
+				                		{% endif %}
+				                		<td class="text-right">{{registro.total}}</td>
+				                	</tr>
+				                {% endfor %}
+				            </tbody>
+				        </table>
+				    </div>
+				    <div class="well col-md-12">
+				    	<h4>Cantidad de Centros: <span class="label label-primary">{{cant}}</span></h4>
+				    </div>
+		        </div><!-- /.panel-body -->
+		    </div><!-- /.panel -->
+		{% else %}
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	            <div class="mini-stat-type-4 bg-teal shadow">
+	                <h3>Cantidad de Centros en el distrito</h3>
+	                {% set cant = 0 %}
+	                {% for registro in centrosEspecial %}
+	                	{% set cant = cant + registro.total %}
+	                {% endfor %}
+	                <h1 class="count">{{cant}}</h1>
+	            </div>
+	        </div>
+		{% endif %}
+	</div>
+{% else %}
+    No se encontraron registros.
+{% endif %}

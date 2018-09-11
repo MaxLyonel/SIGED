@@ -24,4 +24,10 @@ herramienta_especial_gestion_hab:
     path:     /gestionHab
     defaults: { _controller: SieEspecialBundle:InfoCentro:gestionHab }
     options:
-        expose: true        
+        expose: true
+
+herramienta_especial_registro_consol:
+    path:     /{gestionid}/registroConsolEsp/
+    defaults: { _controller: SieEspecialBundle:InfoCentro:registroConsol }
+    options:
+        expose: true

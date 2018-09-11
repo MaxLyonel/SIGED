@@ -176,4 +176,196 @@ class Funciones {
 
         return $response;
     }
+
+    public function reporteConsolEspecial($gestionid, $roluser, $roluserlugarid){
+
+        $lugar = $this->em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
+        
+        switch ($roluser) {
+            case '7':
+                $where = "lt4.codigo = '".$lugar->getCodigo()."'";
+                break;
+
+            case '8':
+                $where = '1 = 1';
+                break;
+
+            case '10':
+                $where = "dt.id = '".$lugar->getCodigo()."'";
+                break;
+
+            default:
+                $where = '1 = 0';
+                break;
+        }
+
+        $query = $this->em->getConnection()->prepare("
+            SELECT
+            lt4.codigo AS codigo_departamento,
+            lt4.lugar AS departamento,
+            dt.id codigo_distrito,
+            dt.distrito,
+            inst.id codigo_sie,
+            inst.institucioneducativa,
+            case when rc.bim1 = 0 then 'NO' else 'SI' end AS bim1,
+            case when rc.bim2 = 0 then 'NO' else 'SI' end AS bim2,
+            case when rc.bim3 = 0 then 'NO' else 'SI' end AS bim3,
+            case when rc.bim4 = 0 then 'NO' else 'SI' end AS bim4
+            FROM registro_consolidacion rc
+            INNER JOIN institucioneducativa inst ON rc.unidad_educativa = inst.id
+            INNER JOIN jurisdiccion_geografica jg on jg.id = inst.le_juridicciongeografica_id
+            LEFT JOIN lugar_tipo lt ON lt.id = jg.lugar_tipo_id_localidad
+            LEFT JOIN lugar_tipo lt1 ON lt1.id = lt.lugar_tipo_id
+            LEFT JOIN lugar_tipo lt2 ON lt2.id = lt1.lugar_tipo_id
+            LEFT JOIN lugar_tipo lt3 ON lt3.id = lt2.lugar_tipo_id
+            LEFT JOIN lugar_tipo lt4 ON lt4.id = lt3.lugar_tipo_id
+            INNER JOIN distrito_tipo dt ON jg.distrito_tipo_id = dt.id
+            WHERE ".$where." AND rc.gestion = ".$gestionid." AND
+            rc.institucioneducativa_tipo_id = 4
+            ORDER BY
+            codigo_departamento,
+            codigo_distrito,
+            codigo_sie;
+        ");
+        $query->execute();
+        $registro_consolidacion = $query->fetchAll();
+        return $registro_consolidacion;
+    }
+
+
+    public function estadisticaConsolEspecialNal($gestionid){
+        $query = $this->em->getConnection()->prepare("
+            SELECT
+            lt4.codigo as codigo_departamento,
+            lt4.lugar as departamento,
+            count(*) as total,
+            sum(case when rc.bim1 > 0 then 1 else 0 end) as si_bim1,
+            (count(*)-sum(case when rc.bim1 > 0 then 1 else 0 end)) as no_bim1,
+            sum(case when rc.bim2 > 0 then 1 else 0 end) as si_bim2,
+            (count(*)-sum(case when rc.bim2 > 0 then 1 else 0 end)) as no_bim2,
+            sum(case when rc.bim3 > 0 then 1 else 0 end) as si_bim3,
+            (count(*)-sum(case when rc.bim3 > 0 then 1 else 0 end)) as no_bim3,
+            sum(case when rc.bim4 > 0 then 1 else 0 end) as si_bim4,
+            (count(*)-sum(case when rc.bim4 > 0 then 1 else 0 end)) as no_bim4,
+            round((sum(case when rc.bim1 > 0 then 1 else 0 end) * 100 / cast(count(*) as numeric)), 2) as porc_si_bim1,
+            round(((count(*)-sum(case when rc.bim1 > 0 then 1 else 0 end)) * 100 / cast(count(*) as numeric)), 2) as porc_no_bim1,
+            round((sum(case when rc.bim2 > 0 then 1 else 0 end) * 100 / cast(count(*) as numeric)), 2) as porc_si_bim2,
+            round(((count(*)-sum(case when rc.bim2 > 0 then 1 else 0 end)) * 100 / cast(count(*) as numeric)), 2) as porc_no_bim2,
+            round((sum(case when rc.bim3 > 0 then 1 else 0 end) * 100 / cast(count(*) as numeric)), 2) as porc_si_bim3,
+            round(((count(*)-sum(case when rc.bim3 > 0 then 1 else 0 end)) * 100 / cast(count(*) as numeric)), 2) as porc_no_bim3,
+            round((sum(case when rc.bim4 > 0 then 1 else 0 end) * 100 / cast(count(*) as numeric)), 2) as porc_si_bim4,
+            round(((count(*)-sum(case when rc.bim4 > 0 then 1 else 0 end)) * 100 / cast(count(*) as numeric)), 2) as porc_no_bim4
+            FROM registro_consolidacion rc
+            INNER JOIN institucioneducativa inst ON rc.unidad_educativa = inst.id
+            INNER JOIN jurisdiccion_geografica jg on jg.id = inst.le_juridicciongeografica_id
+            LEFT JOIN lugar_tipo lt ON lt.id = jg.lugar_tipo_id_localidad
+            LEFT JOIN lugar_tipo lt1 ON lt1.id = lt.lugar_tipo_id
+            LEFT JOIN lugar_tipo lt2 ON lt2.id = lt1.lugar_tipo_id
+            LEFT JOIN lugar_tipo lt3 ON lt3.id = lt2.lugar_tipo_id
+            LEFT JOIN lugar_tipo lt4 ON lt4.id = lt3.lugar_tipo_id
+            INNER JOIN distrito_tipo dt ON jg.distrito_tipo_id = dt.id
+            WHERE rc.gestion = ".$gestionid." AND
+            rc.institucioneducativa_tipo_id = 4
+            GROUP BY
+            codigo_departamento,
+            departamento
+            ORDER BY
+            codigo_departamento;
+        ");
+        $query->execute();
+        $registro_consolidacion = $query->fetchAll();
+        return $registro_consolidacion;
+    }
+
+    public function estadisticaConsolEspecialDptal($gestionid, $roluserlugarid){
+
+        $lugar = $this->em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
+
+        $query = $this->em->getConnection()->prepare("
+            SELECT
+            lt4.codigo as codigo_departamento,
+            lt4.lugar as departamento,
+            dt.id as codigo_distrito,
+            dt.distrito as distrito,
+            count(*) as total,
+            sum(case when rc.bim1 > 0 then 1 else 0 end) as si_bim1,
+            (count(*)-sum(case when rc.bim1 > 0 then 1 else 0 end)) as no_bim1,
+            sum(case when rc.bim2 > 0 then 1 else 0 end) as si_bim2,
+            (count(*)-sum(case when rc.bim2 > 0 then 1 else 0 end)) as no_bim2,
+            sum(case when rc.bim3 > 0 then 1 else 0 end) as si_bim3,
+            (count(*)-sum(case when rc.bim3 > 0 then 1 else 0 end)) as no_bim3,
+            sum(case when rc.bim4 > 0 then 1 else 0 end) as si_bim4,
+            (count(*)-sum(case when rc.bim4 > 0 then 1 else 0 end)) as no_bim4,
+            round((sum(case when rc.bim1 > 0 then 1 else 0 end) * 100 / cast(count(*) as numeric)), 2) as porc_si_bim1,
+            round(((count(*)-sum(case when rc.bim1 > 0 then 1 else 0 end)) * 100 / cast(count(*) as numeric)), 2) as porc_no_bim1,
+            round((sum(case when rc.bim2 > 0 then 1 else 0 end) * 100 / cast(count(*) as numeric)), 2) as porc_si_bim2,
+            round(((count(*)-sum(case when rc.bim2 > 0 then 1 else 0 end)) * 100 / cast(count(*) as numeric)), 2) as porc_no_bim2,
+            round((sum(case when rc.bim3 > 0 then 1 else 0 end) * 100 / cast(count(*) as numeric)), 2) as porc_si_bim3,
+            round(((count(*)-sum(case when rc.bim3 > 0 then 1 else 0 end)) * 100 / cast(count(*) as numeric)), 2) as porc_no_bim3,
+            round((sum(case when rc.bim4 > 0 then 1 else 0 end) * 100 / cast(count(*) as numeric)), 2) as porc_si_bim4,
+            round(((count(*)-sum(case when rc.bim4 > 0 then 1 else 0 end)) * 100 / cast(count(*) as numeric)), 2) as porc_no_bim4
+            FROM registro_consolidacion rc
+            INNER JOIN institucioneducativa inst ON rc.unidad_educativa = inst.id
+            INNER JOIN jurisdiccion_geografica jg on jg.id = inst.le_juridicciongeografica_id
+            LEFT JOIN lugar_tipo lt ON lt.id = jg.lugar_tipo_id_localidad
+            LEFT JOIN lugar_tipo lt1 ON lt1.id = lt.lugar_tipo_id
+            LEFT JOIN lugar_tipo lt2 ON lt2.id = lt1.lugar_tipo_id
+            LEFT JOIN lugar_tipo lt3 ON lt3.id = lt2.lugar_tipo_id
+            LEFT JOIN lugar_tipo lt4 ON lt4.id = lt3.lugar_tipo_id
+            INNER JOIN distrito_tipo dt ON jg.distrito_tipo_id = dt.id
+            WHERE lt4.codigo = '".$lugar->getCodigo()."' AND rc.gestion = ".$gestionid." AND
+            rc.institucioneducativa_tipo_id = 4
+            GROUP BY
+            codigo_departamento,
+            departamento,
+            codigo_distrito,
+            distrito
+            ORDER BY
+            codigo_departamento,
+            codigo_distrito;
+        ");
+        $query->execute();
+        $registro_consolidacion = $query->fetchAll();
+        return $registro_consolidacion;
+    }
+
+    public function estadisticaConsolEspecialDtal($gestionid, $roluserlugarid){
+
+        $lugar = $this->em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
+
+        $query = $this->em->getConnection()->prepare("
+            SELECT
+            count(*) as total,
+            sum(case when rc.bim1 > 0 then 1 else 0 end) as si_bim1,
+            (count(*)-sum(case when rc.bim1 > 0 then 1 else 0 end)) as no_bim1,
+            sum(case when rc.bim2 > 0 then 1 else 0 end) as si_bim2,
+            (count(*)-sum(case when rc.bim2 > 0 then 1 else 0 end)) as no_bim2,
+            sum(case when rc.bim3 > 0 then 1 else 0 end) as si_bim3,
+            (count(*)-sum(case when rc.bim3 > 0 then 1 else 0 end)) as no_bim3,
+            sum(case when rc.bim4 > 0 then 1 else 0 end) as si_bim4,
+            (count(*)-sum(case when rc.bim4 > 0 then 1 else 0 end)) as no_bim4,
+            round((sum(case when rc.bim1 > 0 then 1 else 0 end) * 100 / cast(count(*) as numeric)), 2) as porc_si_bim1,
+            round(((count(*)-sum(case when rc.bim1 > 0 then 1 else 0 end)) * 100 / cast(count(*) as numeric)), 2) as porc_no_bim1,
+            round((sum(case when rc.bim2 > 0 then 1 else 0 end) * 100 / cast(count(*) as numeric)), 2) as porc_si_bim2,
+            round(((count(*)-sum(case when rc.bim2 > 0 then 1 else 0 end)) * 100 / cast(count(*) as numeric)), 2) as porc_no_bim2,
+            round((sum(case when rc.bim3 > 0 then 1 else 0 end) * 100 / cast(count(*) as numeric)), 2) as porc_si_bim3,
+            round(((count(*)-sum(case when rc.bim3 > 0 then 1 else 0 end)) * 100 / cast(count(*) as numeric)), 2) as porc_no_bim3,
+            round((sum(case when rc.bim4 > 0 then 1 else 0 end) * 100 / cast(count(*) as numeric)), 2) as porc_si_bim4,
+            round(((count(*)-sum(case when rc.bim4 > 0 then 1 else 0 end)) * 100 / cast(count(*) as numeric)), 2) as porc_no_bim4
+            FROM registro_consolidacion rc
+            INNER JOIN institucioneducativa inst ON rc.unidad_educativa = inst.id
+            INNER JOIN jurisdiccion_geografica jg on jg.id = inst.le_juridicciongeografica_id
+            LEFT JOIN lugar_tipo lt ON lt.id = jg.lugar_tipo_id_localidad
+            LEFT JOIN lugar_tipo lt1 ON lt1.id = lt.lugar_tipo_id
+            LEFT JOIN lugar_tipo lt2 ON lt2.id = lt1.lugar_tipo_id
+            LEFT JOIN lugar_tipo lt3 ON lt3.id = lt2.lugar_tipo_id
+            LEFT JOIN lugar_tipo lt4 ON lt4.id = lt3.lugar_tipo_id
+            INNER JOIN distrito_tipo dt ON jg.distrito_tipo_id = dt.id
+            WHERE dt.id = '".$lugar->getCodigo()."' AND rc.gestion = ".$gestionid." AND
+            rc.institucioneducativa_tipo_id = 4;
+        ");
+        $query->execute();
+        $registro_consolidacion = $query->fetchAll();
+        return $registro_consolidacion;
+    }
 }
