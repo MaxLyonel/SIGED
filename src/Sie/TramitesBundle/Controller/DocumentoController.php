@@ -454,7 +454,7 @@ class DocumentoController extends Controller {
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp    .lugarTipo')
                 ->where('ds.id = :serie')
-                ->andWhere('dt.id in (1,3,4,5,6,7,8)')
+                ->andWhere('dt.id in (1,3,4,5,6,7,8,9)')
                 ->andWhere('de.id in (1)')
                 ->setParameter('serie', $serie);
         $entityDocumento = $query->getQuery()->getResult();
@@ -462,7 +462,7 @@ class DocumentoController extends Controller {
         if(count($entityDocumento)>0){
             return "";
         } else {
-            return "El documento con número de serie ".$serie." no es válido para generar un certificado supletorio.";
+            return "El documento con número de serie ".$serie." no es válido para generar el documento legalizado.";
         }
     }
 
