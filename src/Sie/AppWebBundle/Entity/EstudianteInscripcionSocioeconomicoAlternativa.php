@@ -45,12 +45,12 @@ class EstudianteInscripcionSocioeconomicoAlternativa
     private $seccioniiiNumero;
 
     /**
-     * @var integer
+     * @var string
      */
     private $seccioniiiTelefonofijo;
 
     /**
-     * @var integer
+     * @var string
      */
     private $seccioniiiTelefonocelular;
 
@@ -133,6 +133,31 @@ class EstudianteInscripcionSocioeconomicoAlternativa
      * @var \DateTime
      */
     private $fechaModificacion;
+
+    /**
+     * @var string
+     */
+    private $seccionvOtroTrabajo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAltModalidadTipo
+     */
+    private $seccionviModalidadTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\UnidadMilitarTipo
+     */
+    private $seccioniiUnidadMilitarTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\EducacionDiversaTipo
+     */
+    private $seccioniiEducacionDiversaTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\RecintoPenitenciarioTipo
+     */
+    private $seccioniiRecintoPenitenciarioTipo;
 
     /**
      * @var \Sie\AppWebBundle\Entity\SangreTipo
@@ -316,7 +341,7 @@ class EstudianteInscripcionSocioeconomicoAlternativa
     /**
      * Set seccioniiiTelefonofijo
      *
-     * @param integer $seccioniiiTelefonofijo
+     * @param string $seccioniiiTelefonofijo
      * @return EstudianteInscripcionSocioeconomicoAlternativa
      */
     public function setSeccioniiiTelefonofijo($seccioniiiTelefonofijo)
@@ -329,7 +354,7 @@ class EstudianteInscripcionSocioeconomicoAlternativa
     /**
      * Get seccioniiiTelefonofijo
      *
-     * @return integer 
+     * @return string 
      */
     public function getSeccioniiiTelefonofijo()
     {
@@ -339,7 +364,7 @@ class EstudianteInscripcionSocioeconomicoAlternativa
     /**
      * Set seccioniiiTelefonocelular
      *
-     * @param integer $seccioniiiTelefonocelular
+     * @param string $seccioniiiTelefonocelular
      * @return EstudianteInscripcionSocioeconomicoAlternativa
      */
     public function setSeccioniiiTelefonocelular($seccioniiiTelefonocelular)
@@ -352,7 +377,7 @@ class EstudianteInscripcionSocioeconomicoAlternativa
     /**
      * Get seccioniiiTelefonocelular
      *
-     * @return integer 
+     * @return string 
      */
     public function getSeccioniiiTelefonocelular()
     {
@@ -728,6 +753,121 @@ class EstudianteInscripcionSocioeconomicoAlternativa
     }
 
     /**
+     * Set seccionvOtroTrabajo
+     *
+     * @param string $seccionvOtroTrabajo
+     * @return EstudianteInscripcionSocioeconomicoAlternativa
+     */
+    public function setSeccionvOtroTrabajo($seccionvOtroTrabajo)
+    {
+        $this->seccionvOtroTrabajo = $seccionvOtroTrabajo;
+    
+        return $this;
+    }
+
+    /**
+     * Get seccionvOtroTrabajo
+     *
+     * @return string 
+     */
+    public function getSeccionvOtroTrabajo()
+    {
+        return $this->seccionvOtroTrabajo;
+    }
+
+    /**
+     * Set seccionviModalidadTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAltModalidadTipo $seccionviModalidadTipo
+     * @return EstudianteInscripcionSocioeconomicoAlternativa
+     */
+    public function setSeccionviModalidadTipo(\Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAltModalidadTipo $seccionviModalidadTipo = null)
+    {
+        $this->seccionviModalidadTipo = $seccionviModalidadTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get seccionviModalidadTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAltModalidadTipo 
+     */
+    public function getSeccionviModalidadTipo()
+    {
+        return $this->seccionviModalidadTipo;
+    }
+
+    /**
+     * Set seccioniiUnidadMilitarTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\UnidadMilitarTipo $seccioniiUnidadMilitarTipo
+     * @return EstudianteInscripcionSocioeconomicoAlternativa
+     */
+    public function setSeccioniiUnidadMilitarTipo(\Sie\AppWebBundle\Entity\UnidadMilitarTipo $seccioniiUnidadMilitarTipo = null)
+    {
+        $this->seccioniiUnidadMilitarTipo = $seccioniiUnidadMilitarTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get seccioniiUnidadMilitarTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\UnidadMilitarTipo 
+     */
+    public function getSeccioniiUnidadMilitarTipo()
+    {
+        return $this->seccioniiUnidadMilitarTipo;
+    }
+
+    /**
+     * Set seccioniiEducacionDiversaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\EducacionDiversaTipo $seccioniiEducacionDiversaTipo
+     * @return EstudianteInscripcionSocioeconomicoAlternativa
+     */
+    public function setSeccioniiEducacionDiversaTipo(\Sie\AppWebBundle\Entity\EducacionDiversaTipo $seccioniiEducacionDiversaTipo = null)
+    {
+        $this->seccioniiEducacionDiversaTipo = $seccioniiEducacionDiversaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get seccioniiEducacionDiversaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\EducacionDiversaTipo 
+     */
+    public function getSeccioniiEducacionDiversaTipo()
+    {
+        return $this->seccioniiEducacionDiversaTipo;
+    }
+
+    /**
+     * Set seccioniiRecintoPenitenciarioTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\RecintoPenitenciarioTipo $seccioniiRecintoPenitenciarioTipo
+     * @return EstudianteInscripcionSocioeconomicoAlternativa
+     */
+    public function setSeccioniiRecintoPenitenciarioTipo(\Sie\AppWebBundle\Entity\RecintoPenitenciarioTipo $seccioniiRecintoPenitenciarioTipo = null)
+    {
+        $this->seccioniiRecintoPenitenciarioTipo = $seccioniiRecintoPenitenciarioTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get seccioniiRecintoPenitenciarioTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\RecintoPenitenciarioTipo 
+     */
+    public function getSeccioniiRecintoPenitenciarioTipo()
+    {
+        return $this->seccioniiRecintoPenitenciarioTipo;
+    }
+
+    /**
      * Set seccionvEstudianteGrupoSanguineoTipo
      *
      * @param \Sie\AppWebBundle\Entity\SangreTipo $seccionvEstudianteGrupoSanguineoTipo
@@ -863,174 +1003,5 @@ class EstudianteInscripcionSocioeconomicoAlternativa
     public function getSeccioniiiLocalidadTipo()
     {
         return $this->seccioniiiLocalidadTipo;
-    }
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\UnidadMilitarTipo
-     */
-    private $seccioniiUnidadMilitarTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\RecintoPenitenciarioTipo
-     */
-    private $seccioniiRecintoPenitenciarioTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\EducacionDiversaTipo
-     */
-    private $seccioniiEducacionDiversaTipo;
-
-
-    /**
-     * Set seccioniiUnidadMilitarTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\UnidadMilitarTipo $seccioniiUnidadMilitarTipo
-     * @return EstudianteInscripcionSocioeconomicoAlternativa
-     */
-    public function setSeccioniiUnidadMilitarTipo(\Sie\AppWebBundle\Entity\UnidadMilitarTipo $seccioniiUnidadMilitarTipo = null)
-    {
-        $this->seccioniiUnidadMilitarTipo = $seccioniiUnidadMilitarTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get seccioniiUnidadMilitarTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\UnidadMilitarTipo 
-     */
-    public function getSeccioniiUnidadMilitarTipo()
-    {
-        return $this->seccioniiUnidadMilitarTipo;
-    }
-
-    /**
-     * Set seccioniiRecintoPenitenciarioTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\RecintoPenitenciarioTipo $seccioniiRecintoPenitenciarioTipo
-     * @return EstudianteInscripcionSocioeconomicoAlternativa
-     */
-    public function setSeccioniiRecintoPenitenciarioTipo(\Sie\AppWebBundle\Entity\RecintoPenitenciarioTipo $seccioniiRecintoPenitenciarioTipo = null)
-    {
-        $this->seccioniiRecintoPenitenciarioTipo = $seccioniiRecintoPenitenciarioTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get seccioniiRecintoPenitenciarioTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\RecintoPenitenciarioTipo 
-     */
-    public function getSeccioniiRecintoPenitenciarioTipo()
-    {
-        return $this->seccioniiRecintoPenitenciarioTipo;
-    }
-
-    /**
-     * Set seccioniiEducacionDiversaTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\EducacionDiversaTipo $seccioniiEducacionDiversaTipo
-     * @return EstudianteInscripcionSocioeconomicoAlternativa
-     */
-    public function setSeccioniiEducacionDiversaTipo(\Sie\AppWebBundle\Entity\EducacionDiversaTipo $seccioniiEducacionDiversaTipo = null)
-    {
-        $this->seccioniiEducacionDiversaTipo = $seccioniiEducacionDiversaTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get seccioniiEducacionDiversaTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\EducacionDiversaTipo 
-     */
-    public function getSeccioniiEducacionDiversaTipo()
-    {
-        return $this->seccioniiEducacionDiversaTipo;
-    }
-    /**
-     * @var \Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAltModalidadTipo
-     */
-    private $seccionviModalidadTipo;
-
-
-    /**
-     * Set seccionviModalidadTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAltModalidadTipo $seccionviModalidadTipo
-     * @return EstudianteInscripcionSocioeconomicoAlternativa
-     */
-    public function setSeccionviModalidadTipo(\Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAltModalidadTipo $seccionviModalidadTipo = null)
-    {
-        $this->seccionviModalidadTipo = $seccionviModalidadTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get seccionviModalidadTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAltModalidadTipo 
-     */
-    public function getSeccionviModalidadTipo()
-    {
-        return $this->seccionviModalidadTipo;
-    }
-    /**
-     * @var string
-     */
-    private $seccionvOtroTrabajo;
-
-
-    /**
-     * Set seccionvOtroTrabajo
-     *
-     * @param string $seccionvOtroTrabajo
-     * @return EstudianteInscripcionSocioeconomicoAlternativa
-     */
-    public function setSeccionvOtroTrabajo($seccionvOtroTrabajo)
-    {
-        $this->seccionvOtroTrabajo = $seccionvOtroTrabajo;
-    
-        return $this;
-    }
-
-    /**
-     * Get seccionvOtroTrabajo
-     *
-     * @return string 
-     */
-    public function getSeccionvOtroTrabajo()
-    {
-        return $this->seccionvOtroTrabajo;
-    }
-    /**
-     * @var integer
-     */
-    private $seccionvEstudianteNacionoriginariaTipoId;
-
-
-    /**
-     * Set seccionvEstudianteNacionoriginariaTipoId
-     *
-     * @param integer $seccionvEstudianteNacionoriginariaTipoId
-     * @return EstudianteInscripcionSocioeconomicoAlternativa
-     */
-    public function setSeccionvEstudianteNacionoriginariaTipoId($seccionvEstudianteNacionoriginariaTipoId)
-    {
-        $this->seccionvEstudianteNacionoriginariaTipoId = $seccionvEstudianteNacionoriginariaTipoId;
-    
-        return $this;
-    }
-
-    /**
-     * Get seccionvEstudianteNacionoriginariaTipoId
-     *
-     * @return integer 
-     */
-    public function getSeccionvEstudianteNacionoriginariaTipoId()
-    {
-        return $this->seccionvEstudianteNacionoriginariaTipoId;
     }
 }
