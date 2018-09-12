@@ -1267,12 +1267,14 @@ class ComisionController extends Controller {
                 select ejd.id, 3 as fase, ejd.carnet_identidad, ejd.nombre, ejd.paterno, ejd.materno, ct.comision, dt.disciplina, pt.prueba, gtp.genero as genero_prueba, ejd.foto, ejd.posicion
                 from comision_juegos_datos as ejd
                 inner join comision_tipo as ct on ct.id = ejd.comision_tipo_id
+                inner join fase_tipo as ft on ft.id = ejd.fase_tipo_id
                 inner join genero_tipo as gt on gt.id = ejd.genero_tipo
                 inner join departamento_tipo as det on det.id = departamento_tipo
                 inner join prueba_tipo as pt on pt.id = ejd.prueba_tipo_id
                 inner join disciplina_tipo as dt on dt.id =  pt.disciplina_tipo_id
                 inner join genero_tipo as gtp on gtp.id = pt.genero_tipo_id
-                where det.id = ".$codigoEntidad." and ejd.gestion_tipo_id = ".$gestion." and ct.id in (146,147,148,149,150,151,152,153,154,156,122,123)
+                where det.id = ".$codigoEntidad." and ejd.gestion_tipo_id = ".$gestion." and ejd.fase_tipo_id = 4 and (ejd.prueba_tipo_id is null or ejd.prueba_tipo_id = 0)
+                and dt.nivel_tipo_id = (case ft.esactivo_primaria when 't' then 12 else 13 end)
                 order by dt.disciplina, pt.prueba, gtp.genero, nombre, paterno, materno
 
             ");
