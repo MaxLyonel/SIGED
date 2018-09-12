@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\MenuNivelTipo:
+    type: entity
+    table: menu_nivel_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        menuNivelTipo:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+            column: menu_nivel_tipo
+        observacion:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

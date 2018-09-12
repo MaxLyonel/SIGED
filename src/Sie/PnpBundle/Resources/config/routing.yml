@@ -17,7 +17,7 @@ sie_pnp_curso_listado:
     defaults: { _controller: SiePnpBundle:Default:cursolistar }
     
 sie_pnp_see_notas:
-    path:     /ver_notas/{idinscripcion}
+    path:     /ver_notas/{idinscripcion}/{id_curso}
     defaults: { _controller: SiePnpBundle:Default:vernotas }
     options:
          expose: true
@@ -150,14 +150,14 @@ sie_pnp_eliminarregistro_estudiante_curso:
          expose: true    
 
 sie_pnp_registrar_curso:
-    path:     /pnp/registrar_curso
-    defaults: { _controller: SiePnpBundle:Default:registrar_curso }
+    path:     /pnp/registrar_curso/{plan}
+    defaults: { _controller: SiePnpBundle:Default:registrar_curso , plan:2 }
     options:
          expose: true 
 
 sie_pnp_buscar_facilitador:
-    path:     /pnp/buscar_facilitador/{ci}/{complemento}/{extranjero}
-    defaults: { _controller: SiePnpBundle:Default:buscar_facilitador, extranjero:1 }
+    path:     /pnp/buscar_facilitador/{ci}/{complemento}/{extranjero}/{plan}
+    defaults: { _controller: SiePnpBundle:Default:buscar_facilitador, extranjero:1, plan:0 }
     options:
          expose: true 
 

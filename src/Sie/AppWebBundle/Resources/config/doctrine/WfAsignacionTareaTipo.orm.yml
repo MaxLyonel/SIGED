@@ -1,0 +1,20 @@
+Sie\AppWebBundle\Entity\WfAsignacionTareaTipo:
+    type: entity
+    table: wf_asignacion_tarea_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nombre:
+            type: string
+            nullable: false
+            length: null
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

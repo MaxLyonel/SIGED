@@ -2,9 +2,9 @@ Sie\AppWebBundle\Entity\Permiso:
     type: entity
     table: permiso
     indexes:
-        IDX_FD7AAB9E6FB5AA13:
+        IDX_FD7AAB9E2C7030CD:
             columns:
-                - menu_objeto_id
+                - menu_sistema_rol_id
     id:
         id:
             type: integer
@@ -48,13 +48,13 @@ Sie\AppWebBundle\Entity\Permiso:
             fixed: false
             comment: ''
     manyToOne:
-        menuObjeto:
-            targetEntity: MenuObjeto
+        menuSistemaRol:
+            targetEntity: MenuSistemaRol
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                menu_objeto_id:
+                menu_sistema_rol_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

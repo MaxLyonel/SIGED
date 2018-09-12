@@ -355,4 +355,35 @@ class InfoCentroController extends Controller {
         ));
     }
 
+    public function registroConsolAction(Request $request, $gestionid){
+        
+        $roluser = $this->session->get('roluser');
+        $roluserlugarid = $this->session->get('roluserlugarid');
+        
+        $consolEspecial = $this->get('sie_app_web.funciones')->reporteConsolEspecial($gestionid, $roluser, $roluserlugarid);
+
+        switch ($roluser) {
+            case 8:
+                $centrosEspecial = $this->get('sie_app_web.funciones')->estadisticaConsolEspecialNal($gestionid);
+                break;
+
+            case 7:
+                $centrosEspecial = $this->get('sie_app_web.funciones')->estadisticaConsolEspecialDptal($gestionid, $roluserlugarid);
+                break;
+
+            case 10:
+                $centrosEspecial = $this->get('sie_app_web.funciones')->estadisticaConsolEspecialDtal($gestionid, $roluserlugarid);
+                break;
+
+            default:
+                $centrosEspecial = null;
+                break;
+        }
+
+        return $this->render('SieEspecialBundle:Institucioneducativa:consol_especial.html.twig', array(
+          'consolEspecial' => $consolEspecial,
+          'centrosEspecial' => $centrosEspecial,
+        ));
+    }
+
 }

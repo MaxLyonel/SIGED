@@ -1,0 +1,167 @@
+<?php
+
+namespace Sie\AppWebBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * AltModuloemergente
+ */
+class AltModuloemergente
+{
+    /**
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @var string
+     */
+    private $moduloEmergente;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaModificacion;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\InstitucioneducativaCurso
+     */
+    private $institucioneducativaCurso;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\Usuario
+     */
+    private $usuario;
+
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set moduloEmergente
+     *
+     * @param string $moduloEmergente
+     * @return AltModuloemergente
+     */
+    public function setModuloEmergente($moduloEmergente)
+    {
+        $this->moduloEmergente = $moduloEmergente;
+    
+        return $this;
+    }
+
+    /**
+     * Get moduloEmergente
+     *
+     * @return string 
+     */
+    public function getModuloEmergente()
+    {
+        return $this->moduloEmergente;
+    }
+
+    /**
+     * Set fechaModificacion
+     *
+     * @param \DateTime $fechaModificacion
+     * @return AltModuloemergente
+     */
+    public function setFechaModificacion($fechaModificacion)
+    {
+        $this->fechaModificacion = $fechaModificacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaModificacion
+     *
+     * @return \DateTime 
+     */
+    public function getFechaModificacion()
+    {
+        return $this->fechaModificacion;
+    }
+
+    /**
+     * Set institucioneducativaCurso
+     *
+     * @param \Sie\AppWebBundle\Entity\InstitucioneducativaCurso $institucioneducativaCurso
+     * @return AltModuloemergente
+     */
+    public function setInstitucioneducativaCurso(\Sie\AppWebBundle\Entity\InstitucioneducativaCurso $institucioneducativaCurso = null)
+    {
+        $this->institucioneducativaCurso = $institucioneducativaCurso;
+    
+        return $this;
+    }
+
+    /**
+     * Get institucioneducativaCurso
+     *
+     * @return \Sie\AppWebBundle\Entity\InstitucioneducativaCurso 
+     */
+    public function getInstitucioneducativaCurso()
+    {
+        return $this->institucioneducativaCurso;
+    }
+
+    /**
+     * Set usuario
+     *
+     * @param \Sie\AppWebBundle\Entity\Usuario $usuario
+     * @return AltModuloemergente
+     */
+    public function setUsuario(\Sie\AppWebBundle\Entity\Usuario $usuario = null)
+    {
+        $this->usuario = $usuario;
+    
+        return $this;
+    }
+
+    /**
+     * Get usuario
+     *
+     * @return \Sie\AppWebBundle\Entity\Usuario 
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+    /**
+     * @var \DateTime
+     */
+    private $fechaRegistro;
+
+
+    /**
+     * Set fechaRegistro
+     *
+     * @param \DateTime $fechaRegistro
+     * @return AltModuloemergente
+     */
+    public function setFechaRegistro($fechaRegistro)
+    {
+        $this->fechaRegistro = $fechaRegistro;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaRegistro
+     *
+     * @return \DateTime 
+     */
+    public function getFechaRegistro()
+    {
+        return $this->fechaRegistro;
+    }
+}

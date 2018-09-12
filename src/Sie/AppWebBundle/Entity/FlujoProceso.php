@@ -20,6 +20,11 @@ class FlujoProceso
     private $obs;
 
     /**
+     * @var integer
+     */
+    private $orden;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\ProcesoTipo
      */
     private $proceso;
@@ -28,6 +33,11 @@ class FlujoProceso
      * @var \Sie\AppWebBundle\Entity\FlujoTipo
      */
     private $flujoTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\RolTipo
+     */
+    private $rolTipo;
 
 
     /**
@@ -61,6 +71,29 @@ class FlujoProceso
     public function getObs()
     {
         return $this->obs;
+    }
+
+    /**
+     * Set orden
+     *
+     * @param integer $orden
+     * @return FlujoProceso
+     */
+    public function setOrden($orden)
+    {
+        $this->orden = $orden;
+    
+        return $this;
+    }
+
+    /**
+     * Get orden
+     *
+     * @return integer 
+     */
+    public function getOrden()
+    {
+        return $this->orden;
     }
 
     /**
@@ -107,39 +140,6 @@ class FlujoProceso
     public function getFlujoTipo()
     {
         return $this->flujoTipo;
-    }
-    /**
-     * @var integer
-     */
-    private $orden;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\RolTipo
-     */
-    private $rolTipo;
-
-
-    /**
-     * Set orden
-     *
-     * @param integer $orden
-     * @return FlujoProceso
-     */
-    public function setOrden($orden)
-    {
-        $this->orden = $orden;
-    
-        return $this;
-    }
-
-    /**
-     * Get orden
-     *
-     * @return integer 
-     */
-    public function getOrden()
-    {
-        return $this->orden;
     }
 
     /**

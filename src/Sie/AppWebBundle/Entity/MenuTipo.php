@@ -32,12 +32,17 @@ class MenuTipo
     /**
      * @var integer
      */
-    private $orden;
+    private $menuTipoId;
 
     /**
-     * @var integer
+     * @var string
      */
-    private $menuTipoId;
+    private $obs;
+
+    /**
+     * @var string
+     */
+    private $control;
 
 
     /**
@@ -59,7 +64,7 @@ class MenuTipo
     public function setNombre($nombre)
     {
         $this->nombre = $nombre;
-
+    
         return $this;
     }
 
@@ -82,7 +87,7 @@ class MenuTipo
     public function setRuta($ruta)
     {
         $this->ruta = $ruta;
-
+    
         return $this;
     }
 
@@ -105,7 +110,7 @@ class MenuTipo
     public function setIcono($icono)
     {
         $this->icono = $icono;
-
+    
         return $this;
     }
 
@@ -120,29 +125,6 @@ class MenuTipo
     }
 
     /**
-     * Set orden
-     *
-     * @param integer $orden
-     * @return MenuTipo
-     */
-    public function setOrden($orden)
-    {
-        $this->orden = $orden;
-
-        return $this;
-    }
-
-    /**
-     * Get orden
-     *
-     * @return integer 
-     */
-    public function getOrden()
-    {
-        return $this->orden;
-    }
-
-    /**
      * Set menuTipoId
      *
      * @param integer $menuTipoId
@@ -151,7 +133,7 @@ class MenuTipo
     public function setMenuTipoId($menuTipoId)
     {
         $this->menuTipoId = $menuTipoId;
-
+    
         return $this;
     }
 
@@ -164,16 +146,6 @@ class MenuTipo
     {
         return $this->menuTipoId;
     }
-    /**
-     * @var string
-     */
-    private $obs;
-
-    /**
-     * @var string
-     */
-    private $control;
-
 
     /**
      * Set obs
@@ -219,9 +191,5 @@ class MenuTipo
     public function getControl()
     {
         return $this->control;
-    }
-    
-    public function __toString() {
-        return $this->nombre;
     }
 }
