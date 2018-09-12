@@ -1,16 +1,9 @@
 Sie\AppWebBundle\Entity\MenuTipo:
     type: entity
     table: menu_tipo
-    indexes:
-        IDX_B862ED0921FC73D2:
-            columns:
-                - menu_tipo_id
-        IDX_B862ED09CB1AE62F:
-            columns:
-                - menu_nivel_tipo_id
     id:
         id:
-            type: integer
+            type: smallint
             nullable: false
             unsigned: false
             comment: ''
@@ -18,13 +11,12 @@ Sie\AppWebBundle\Entity\MenuTipo:
             generator:
                 strategy: SEQUENCE
     fields:
-        detalleMenu:
+        nombre:
             type: string
             nullable: false
-            length: 100
+            length: 48
             fixed: false
             comment: ''
-            column: detalle_menu
         ruta:
             type: string
             nullable: false
@@ -37,44 +29,22 @@ Sie\AppWebBundle\Entity\MenuTipo:
             length: 50
             fixed: false
             comment: ''
-        orden:
+        menuTipoId:
             type: smallint
             nullable: true
             unsigned: false
             comment: ''
+            column: menu_tipo_id
         obs:
             type: string
             nullable: true
-            length: 150
+            length: 255
             fixed: false
             comment: ''
-        fechaCreacion:
-            type: datetime
+        control:
+            type: string
             nullable: true
+            length: 50
+            fixed: false
             comment: ''
-            column: fecha_creacion
-        fechaModificacion:
-            type: datetime
-            nullable: true
-            comment: ''
-            column: fecha_modificacion
-    manyToOne:
-        menuTipo:
-            targetEntity: MenuTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                menu_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        menuNivelTipo:
-            targetEntity: MenuNivelTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                menu_nivel_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
     lifecycleCallbacks: {  }

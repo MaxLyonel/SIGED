@@ -1,10 +1,6 @@
 Sie\AppWebBundle\Entity\SistemaTipo:
     type: entity
     table: sistema_tipo
-    indexes:
-        IDX_E94154D083203530:
-            columns:
-                - nivel_sistema_tipo_id
     id:
         id:
             type: smallint
@@ -33,14 +29,4 @@ Sie\AppWebBundle\Entity\SistemaTipo:
             length: 5
             fixed: true
             comment: ''
-    manyToOne:
-        nivelSistemaTipo:
-            targetEntity: MenuNivelTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                nivel_sistema_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
     lifecycleCallbacks: {  }
