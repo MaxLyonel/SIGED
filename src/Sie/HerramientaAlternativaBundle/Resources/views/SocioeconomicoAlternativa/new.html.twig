@@ -62,8 +62,8 @@
                 <!-- contenido tabs -->
             </div>
             <div class="panel-body no-padding" id="modal-body">
-
-                {{form_start(form, { 'attr': {'role': 'form','onsubmit':'return (validaLista()&&validaSeleccion())'} } )}}
+                {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'id':'form_new'} } )}}                    
+                {#{{form_start(form, { 'attr': {'role': 'form','onsubmit':'return (validaLista()&&validaSeleccion())'} } )}}#}
                 <div class="form-body">
                 <div class="alert alert-info">
                     <span class="alert-icon"><i class="fa fa-info"></i></span>
@@ -223,7 +223,7 @@
                                         -->
                                         <tr>
                                             <td><strong>
-                                                    2.9. APARTADO DE EDUCACION DIVERSA
+                                                    2.9. APARTADO DE EDUCACION DIVERSA<br /><span class="asterisk">* (Este campo es obligatorio)</span>
 
                                                 </strong></td>
                                             <td><div class="col-md-8 form-group">{{ form_widget(form.seccioniiEducacionDiversaTipo) }}</div></td>
@@ -251,8 +251,29 @@
                                 <div class="clearfix"></div>
                             </div>
                             <div class="panel-body">
-                                <div class="table-responsive">
+                                
+                            {% if institucion.ieducativaId == 80730796 %}
+                                {{ form_widget(form.seccioniiiInmigrante) }}{{ form_label(form.seccioniiiInmigrante) }}
+                                {{ form_widget(form.inmigrante) }}
+                                <div class="table-responsive" id= "inmigrante"   style= "display:none">
                                     <table class="table table-striped table-hover">
+                                        <tr>
+                                            <td>
+                                                Pais<br /><span class="asterisk">* (Este campo es obligatorio)</span>
+                                            </td>
+                                            <td><div class="col-md-12 form-group">{{ form_widget(form.seccioniiiPaisInmigrante) }}</div></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Ciudad / Zona / Barrio<br /><span class="asterisk">* (Este campo es obligatorio)</span>
+                                            </td>
+                                            <td><div class="col-md-12 form-group">{{ form_widget(form.seccioniiiZonaInmigrante) }}</div></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            {% endif %}
+                            <div class="table-responsive" id= "inmigranteNo" style= "display:block">
+                            <table class="table table-striped table-hover" >
                             <tr>
                                 <td>
                                     Departamento<br /><span class="asterisk">* (Este campo es obligatorio)</span>
@@ -289,6 +310,11 @@
                                 </td>
                                 <td><div class="col-md-12 form-group">{{ form_widget(form.seccioniiiZona) }}</div></td>
                             </tr>
+                            </table>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                            
                             <tr>
                                 <td>
                                     Avenida / Calle<br /><span class="asterisk">* (Este campo es obligatorio)</span>
@@ -310,10 +336,10 @@
                                 <td><div class="col-md-4">{{ form_widget(form.seccioniiiTelefonocelular) }}</div></td>
                             </tr>
                         </table>
-                                </div>
-                            </div>
                         </div>
                     </div>
+                </div>
+            </div>
                     <div class="tab-pane fade" id="tab2-4">
                         <div class="panel panel-theme">
                             <div class="panel-heading">
@@ -524,8 +550,99 @@
         $("#form_seccionvEstudianteDemoraLlegarCentroHoras").numeric("positiveInteger");
         $("#form_seccionvEstudianteDemoraLlegarCentroMinutos").numeric("positiveInteger");
 
+        $('#form_seccioniiiInmigrante').click(function(){
+             //alert('hola');
+             var estaSeleccionado = $('#form_seccioniiiInmigrante').is(":checked");
+            if(  estaSeleccionado == true )
+            {
+                //alert($('#form_seccioniiiInmigrante').val());
+                $('#inmigranteNo').css('display', 'none');
+                $('#inmigrante').css('display', 'block');
+                $('#form_seccioniiiZonaInmigrante').prop("required", true);
+                $('#form_seccioniiiPaisInmigrante').prop("required", true);
+                $('#form_seccioniiiZona').removeAttr("required");
+                $('#form_departamento').removeAttr("required");
+                $('#form_provincia').removeAttr("required");
+                $('#form_municipio').removeAttr("required");
+                $('#form_canton').removeAttr("required");
+                $('#form_localidad').removeAttr("required");
+                $('#form_seccioniiiZona').removeAttr("required");
+                $('#form_seccioniiiAvenida').removeAttr("required");
+                $('#form_seccioniiiNumero').removeAttr("required");
+                $('#form_inmigrante').val('SI');
+            }else{
+                
+                $('#inmigranteNo').css('display', 'block');
+                $('#inmigrante').css('display', 'none');
+                $('#form_seccioniiiZonaInmigrante').removeAttr("required");
+                $('#form_seccioniiiPaisInmigrante').removeAttr("required");
+                $('#form_departamento').prop("required", true);
+                $('#form_provincia').prop("required", true);
+                $('#form_municipio').prop("required", true);
+                $('#form_canton').prop("required", true);
+                $('#form_localidad').prop("required", true);
+                $('#form_seccioniiiZona').prop("required", true);
+                $('#form_seccioniiiAvenida').prop("required", true);
+                $('#form_seccioniiiNumero').prop("required", true);
+                $('#form_inmigrante').val('NO');
+               
+            }
+        
+        });
+        
+            
         var peticion1;
         //$('#form_turno').on('change',function(){
+        function guardarRudeal(){
+            if(conta == 0 || conta == ""){
+                alert('Asegurese de completar el apartado 2.9 de Educacion Diversa');
+                return false;
+             }
+            if(conta ==2)
+            {
+                if((contb == 0 || contb == "")){
+                    alert('Debe seleccionar la Unidad Militar a la que pertenece');
+                    return false;
+                }
+
+            } else if(conta ==3)
+            {
+                if((contc == 0 || contc == "")){
+                    alert('Debe seleccionar el Penal al que pertenece');
+                    return false;
+                }
+
+            }
+            var formData = $('#form_new').serialize();
+            //alert(formData);
+            $.ajax({
+                type: 'post',
+                url: "{{path('socioeconomicoalt_create')}}",
+                data: formData,
+                beforeSend: function (){
+                    $('#msg').empty();
+                },
+                success: function (data) {
+                    //confirm(data.msg);
+                    $('#modal').modal('hide');
+                    if(data.tipo=='exito'){
+                            $('#msg').append('<div class="alert alert-success alert-dismissible" role="alert">'+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+                        '<strong><i class="fa fa-linux"></i></strong>'+ data.msg +'</div>');    
+                        }else{
+                            $('#msg').append('<div class="alert alert-danger alert-dismissible" role="alert">'+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+                        '<strong><i class="fa fa-linux"></i></strong>'+ data.msg +'</div>');
+                    }
+                },
+                statusCode: {
+                    500: function () {
+                    },
+                    404: function () {
+                    }
+                }
+            });
+        }
         function listarProvincias(idDpto) {
             if (peticion1 && peticion1.readyState != 4) {
                 peticion1.abort();

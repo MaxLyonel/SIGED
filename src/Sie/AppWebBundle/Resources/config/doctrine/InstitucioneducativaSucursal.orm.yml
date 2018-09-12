@@ -1,20 +1,25 @@
 Sie\AppWebBundle\Entity\InstitucioneducativaSucursal:
     type: entity
     table: institucioneducativa_sucursal
-    repositoryClass: Sie\AppWebBundle\Entity\InstitucioneducativaSucursalRepository
     indexes:
-        fk_institucioneducativa_sucurs2:
+        fk_institucioneducativa_sucurs3:
             columns:
-                - le_juridicciongeografica_id
-        fk_institucioneducativa_detall2:
-            columns:
+                - gestion_tipo_id
+                - institucioneducativa_id
                 - sucursal_tipo_id
+                - periodo_tipo_id
         fk_institucioneducativa_sucurs1:
             columns:
                 - gestion_tipo_id
+        fk_institucioneducativa_detall2:
+            columns:
+                - sucursal_tipo_id
         fk_institucioneducativa_detall1:
             columns:
                 - institucioneducativa_id
+        fk_institucioneducativa_sucurs2:
+            columns:
+                - le_juridicciongeografica_id
         IDX_F019FCB79B276788:
             columns:
                 - turno_tipo_id
@@ -37,7 +42,9 @@ Sie\AppWebBundle\Entity\InstitucioneducativaSucursal:
             nullable: false
             unsigned: false
             comment: ''
-            id: true            
+            id: true
+            generator:
+                strategy: SEQUENCE
     fields:
         nombreSubcea:
             type: string

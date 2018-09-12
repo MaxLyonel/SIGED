@@ -977,4 +977,32 @@ class EstudianteInscripcionSocioeconomicoAlternativa
     {
         return $this->seccionviModalidadTipo;
     }
+    /**
+     * @var string
+     */
+    private $seccionvOtroTrabajo;
+
+
+    /**
+     * Set seccionvOtroTrabajo
+     *
+     * @param string $seccionvOtroTrabajo
+     * @return EstudianteInscripcionSocioeconomicoAlternativa
+     */
+    public function setSeccionvOtroTrabajo($seccionvOtroTrabajo)
+    {
+        $this->seccionvOtroTrabajo = $seccionvOtroTrabajo;
+    
+        return $this;
+    }
+
+    /**
+     * Get seccionvOtroTrabajo
+     *
+     * @return string 
+     */
+    public function getSeccionvOtroTrabajo()
+    {
+        return $this->seccionvOtroTrabajo;
+    }
 }

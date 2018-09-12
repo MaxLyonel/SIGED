@@ -1,0 +1,51 @@
+Sie\AppWebBundle\Entity\WfPasosFlujoProceso:
+    type: entity
+    table: wf_pasos_flujo_proceso
+    indexes:
+        IDX_465D77D1EDC78DDF:
+            columns:
+                - flujo_proceso_id
+        IDX_465D77D1E03376C7:
+            columns:
+                - wf_pasos_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nombre:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        posicion:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+    manyToOne:
+        flujoProceso:
+            targetEntity: FlujoProceso
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                flujo_proceso_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        wfPasosTipo:
+            targetEntity: WfPasosTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                wf_pasos_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

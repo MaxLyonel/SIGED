@@ -70,7 +70,7 @@
                     <h4><small>FECHA DE INICIO :</small></small><br>{% if datos.fecha_inicio %}{{ datos.fecha_inicio|date('d/m/Y') }}{% endif %}</h4>
                 </div>
                 <div class="col-md-4">
-                    <h4><small>BLOQUE :</small><br>{{ datos.ciclo_tipo_id }}</h4>
+                    <h4><small>CICLO :</small><br>{% if plan == 1 %}BLOQUE {% endif %}{{ datos.nciclo }}</h4>
                     <input hidden="true" id="bloque" value="{{ datos.ciclo_tipo_id }}"></input>                   
                 </div>
             </div>
@@ -82,7 +82,7 @@
                     <h4><small>FECHA DE FIN :</small><br>{% if datos.fecha_fin %}{{ datos.fecha_fin|date('d/m/Y') }}{% endif %}</h4>
                 </div>
                 <div class="col-xs-4">
-                    <h4><small>PARTE :</small><br>{{ datos.grado_tipo_id }}</h4>
+                    <h4><small>GRADO:{% if plan == 2 %} ÁMBITO DE APRENDIZAJE:{% endif %}</small><br>{% if plan == 1 %}PARTE {% endif %}{{ datos.ngrado }} {% if datos.grado_tipo_id == 14 or datos.grado_tipo_id == 16 %} (Semestre 1) {% elseif datos.grado_tipo_id == 15 or datos.grado_tipo_id == 17 %} (Semestre 2) {% endif %}</h4>
                     <input hidden="true" id="parte" value="{{ datos.grado_tipo_id }}"></input>
                 </div>
             </div>
@@ -105,6 +105,11 @@
                     <h4><small>ID DEL ARCHIVO CONSOLIDADO :</small><br>{{ datos.id }}</h4>
                     <input hidden="true" id="curso_id" value="{{ datos.id }}"></input>        
                 </div>
+                {% if plan == 2 %}
+                    <div class="col-xs-4">
+                        <h4><small>Módulo Emergente:</small><br>{{modulo_emergente.moduloEmergente}}</h4>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -144,15 +149,16 @@
                             <th>Fecha de Nacimiento</th>
                             <th>Genero</th>
                             <th>Alfabetizado|Idioma|Cultura</th>
+                            {% if plan == 2 %}<th>Discapacidad</th>{% endif %}
                             <th>Eliminar Inscipción</th>
-                            <th>Editar Fecha Nacimiento y/o Género</th>
+                            <th>Editar Fecha Nac, Genero y Otros.</th>
                         </tr>
                     </thead>
                     <tbody>
                     {% for estudiante in estudiantes %}
                         <tr>
                             {% if esactivo == 1 %}
-                                <td><a role="button" class="btn btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_boletaelectronica', { 'id': estudiante.inscripcion_id~datos.ciclo_tipo_id~datos.grado_tipo_id}) }}" > Imprimir</a></td>
+                                <td><a role="button" class="btn btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_boletaelectronica', { 'id': estudiante.inscripcion_id~"|"~datos.ciclo_tipo_id~"|"~datos.grado_tipo_id}) }}" > Imprimir</a></td>
                             {% endif %}
                             <td data-title="VerNota" class="text-center">
                                 {% if esactivo == 0 %}
@@ -167,14 +173,15 @@
                             <td>{{ estudiante.materno }}</td> 
                             <td>{{ estudiante.nombre }}</td>
                             {% if estudiante.estadomatricula == 62 %}
-                                <td>Aprobado</td>
+                                <td>Promovida/o</td>
                             {% else %}
-                                <td>Desincorporado</td>
+                                <td>Postergada/o</td>
                             {% endif %}
                             
                             <td>{% if estudiante.fecha_nacimiento %}{{ estudiante.fecha_nacimiento|date('d/m/Y') }}{% endif %}</td>
                             <td>{{ estudiante.genero }}</td>
                             <td>{{ estudiante.observacionadicional }}</td>
+                            {% if plan == 2 %}<td>{{ estudiante.discapacidad_nombre }}</td>{% endif %}
                             {% if esactivo == 0 %}
                                 <td> <a role="button" class="btn btn-danger btn-large glyphicon glyphicon-remove" onclick="return confirm('¿Está seguro de elminar este registro?, Si ELIMINA el registro, se perderá todos los datos, como la INSCRIPCIÓN y las NOTAS del estudiante y no podrá recuperar!!!')" href="{{ path('sie_pnp_eliminarregistro_estudiante_curso', { 'estudiante_inscripcion_id': estudiante.inscripcion_id,'curso_id':datos.id }) }}"> Eliminar</a></td>
                                 
@@ -189,7 +196,7 @@
 
                                 {# ESTA PARTE DEL CODIGO DEENDE DEL ANTERIOR, SI EL OTRO CODIGO SE HABILITA ESTE DEBE ELIMINARSE#}
                                 
-                                <td><a href="#" role="button" onclick="FechaNacEdit('{{estudiante.estudiante_id}}','{{estudiante.fecha_nacimiento|date("d/m/Y")}}','{{ estudiante.id_genero }}','{{estudiante.observacionadicional}}',{{estudiante.pnp}})" class="btn btn-success btn-large glyphicon glyphicon-calendar "> Editar</a></td>
+                                <td><a href="#" role="button" onclick="FechaNacEdit('{{estudiante.estudiante_id}}','{{estudiante.fecha_nacimiento|date("d/m/Y")}}','{{ estudiante.id_genero }}','{{estudiante.observacionadicional}}',{{estudiante.pnp}},'{{estudiante.discapacidad_id}}')" class="btn btn-success btn-large glyphicon glyphicon-calendar "> Editar</a></td>
                                 {#  fin del coldigo #}
 
                             {% else %}
@@ -203,7 +210,19 @@
                 {% endfor %}
                 <hr/>
                     {% if esactivo == 0 %}
-                        <a role="button" onclick="SeeBuscarEstudiante()" class="btn btn-primary glyphicon glyphicon-plus-sign" href="#" > Agregar Estudiante</a><br/><br/>
+                        <table> 
+                            <tr>
+                                <td><a role="button" onclick="SeeBuscarEstudiante()" class="btn btn-primary" href="#" >Agregar Estudiante</a><br/><br/></td>
+                                {% if plan == 2 %}
+                                    <td>
+                                        <a role="button" onclick="SeeModuloEmergente()" class="btn btn-warning" href="#" > Módulo Emergente</a><br/><br/>
+                                    </td>
+                                    {% endif %}
+                                <td VALIGN="TOP">
+                                    <a role="button" class="btn btn-success" href="{{ path('sie_pnp_curso_listado_editnew', { 'id': id_archivo , 'val':6 }) }}" onclick="return confirm('Está seguro de CERRAR EL CURSO?, si cierra el curso POR TEMAS DE SEGURIDAD SE GUARDARÁ SU NOMBRE, ya no tendrá las opciones de editar; Pero podrá imprimir el PDF original para sus firmas respectivas. No olvide que 10 estudiantes mínimo para áreas concentradas y 8 para desconcentradas.');" >Cerrar Curso</a>
+                                </td>
+                            </tr>
+                        </table>
                     {% else %}
                         <div class="alert alert-success" role="alert" align="center"><strong>Curso Cerrado</strong></div>
                     {% endif %}
@@ -214,6 +233,40 @@
 </div>
 </div>
   
+    <div class="modal modal-flex fade" id="Modalmoduloemergente" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="flexModalLabel">MÓDULO EMERGENTE.</h4>             
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <form role="form" method="post" action="{{path('sie_pnp_curso_listado_editnew', { 'id': id_archivo,'val':5 }) }}">
+                            <div align="center">
+                            <h4>Nombre del Módulo Emergente:</h4>
+                            <input type="hidden" id="modulo_emergente_id" name="modulo_emergente_id" required="required" {% if plan == 2%}value="{{modulo_emergente.id}}" {% endif %}/>
+                            <input style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" id="modulo_emergente" maxlength="20" name="modulo_emergente" placeholder="Digite Nombre del Módulo Emergente" required="required"  {% if plan == 2%}value="{{modulo_emergente.moduloEmergente}}" {% endif %}/>
+                            </div>
+                            <hr>
+                            <div align="center"><button type="submit" class="btn btn-success btn-large glyphicon glyphicon-pencil"> Guardar Cambios</button></div>
+                        </form>     
+                    </div>
+                </div>
+                <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+                    <HR>
+
+                </div>                    
+            </div>                
+        </div>
+    </div>     
+</div>
+
     <div class="modal modal-flex fade" id="ModalUser" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -282,12 +335,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title" id="flexModalLabel">EDITAR FECHA NACIMIENTO, GÉNERO (Sin Dato) Y COMPLEMENTO.</h4>             
+                    <h4 class="modal-title" id="flexModalLabel">EDITAR FECHA NACIMIENTO, GÉNERO (Sin Dato), Y OTROS.</h4>             
                 </div>
                 <div class="modal-body">
                     <div id="editar-Modal">
                         <form role="form" method="post" action="{{path('sie_pnp_curso_listado_editnew', { 'id': id_archivo,'val':1 }) }}">
-                            <div align="center"><input type="hidden" id="estudiante_id" name="estudiante_id" value="" required="required" style="display:" />
+                            <div align="center">
+                            <input type="hidden" id="estudiante_id" name="estudiante_id" value="" required="required" style="display:" />
+                            <input type="hidden" id="plan" name="plan" value="{{plan}}" required="required" style="display:" />
                             <input type="text" id="fecha_nac" name="fecha_nac" placeholder="Digite Fecha de Nacimiento" required="required" value=""/>
                             <input type="radio" name="genero" id="genero_m" value="1">
                             <label for="" id="genero_lm">Masculino</label>
@@ -359,7 +414,21 @@
                                     <option value="OTRO">OTRO</option>
                                 </select> 
                             </div></br>
-                            <button type="submit" class="btn btn-success btn-large glyphicon glyphicon-pencil"> Guardar Cambios</button>
+
+                            {% if plan == 2%}
+                                <div class="col-lg-3 col-md-12">&nbsp;</div>
+                                <div class="col-lg-6 col-md-12" align="center">
+                                    <h5>Tiene Discapacidad</h5> 
+                                    <select name="discapacidad" class="form-control" id="discapacidad">
+                                        {% for discapacidad in discapacidades %}
+                                            <option value="{{discapacidad.id}}">{{discapacidad.origendiscapacidad}}</option>
+                                        {% endfor %}
+                                    </select> 
+                                </div>
+                                <div class="col-lg-3 col-md-12">&nbsp;</div>
+                            {% endif %}
+                            <div class="col-lg-12 col-md-12" align="center">&nbsp;</div>
+                            <div><button type="submit" class="btn btn-success btn-large glyphicon glyphicon-pencil"> Guardar Cambios</button></div>
                         </form>
                     </div>
                 </div>
@@ -510,7 +579,7 @@
         $('#ModalUser').modal('show');
     }
 
-    function FechaNacEdit(id,fecha_nac,id_genero,obs,pnp){
+    function FechaNacEdit(id,fecha_nac,id_genero,obs,pnp,discapacidad_id){
         $('#Modal_fecha').modal('show');
         $('#estudiante_id').val(id);
         $('#fecha_nac').val(fecha_nac);
@@ -532,6 +601,7 @@
         $('#alfabetizado').val(res[0]);
         $('#idioma').val(res[1]);
         $('#ocupacion').val(res[2]);
+        $('#discapacidad').val(discapacidad_id);
         if(id_genero==1){
             document.getElementById("genero_m").checked = true;
             //document.getElementById("genero_m").readonly = true;
@@ -560,6 +630,11 @@
         $('#ModalEstudiante').modal('show');
     }
 
+    function SeeModuloEmergente(){
+            $('#modulo_emergente').val("{{modulo_emergente.moduloEmergente}}");
+            $('#Modalmoduloemergente').modal('show');    
+    }
+
     function BuscarEstudiante(){
         $("#ResultCI").show();
         var ci=$("#ci_buscar").val();
@@ -569,6 +644,10 @@
         var bloque=$("#bloque").val();
         var parte=$("#parte").val();
         var curso_id=$("#curso_id").val();
+        if(parte==14){bloque=1;parte=1;}
+        if(parte==15){bloque=1;parte=2;}
+        if(parte==16){bloque=2;parte=1;}
+        if(parte==17){bloque=2;parte=2;}
         ci=ci+bloque+parte;
         $("#ResultCI").val(ci);
         var formData = $('#formxls').serialize();

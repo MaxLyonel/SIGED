@@ -1,0 +1,175 @@
+<p>
+<form role="form" method="post" action="{{path('sie_pnp_curso_listado_editnew', { 'id': id_curso })}}">
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h4>NOTAS DEL PARTICIPANTE. (EDITAR) </br> {{ nombre }} &nbsp;&nbsp;&nbsp; CI: {{ carnet }}{% if complemento != '' %}-{{complemento}}{% endif %} </h4>
+    </div>
+    {% set cualitativa = 0 %}{% set aprobados = 0 %}{% set contar = 0 %}
+    <div class="panel-body">
+        <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+            <table  id="tablaListadoPersonas" class="display" cellspacing="0" border="0" width="100%">    <input type="text" style="display: none;" name="idinscripcion" value="{{idinscripcion}}"/>
+                <input type="text" style="display: none;" name="plan" value="2"/>
+              
+                <tr>
+                    <th>ASIGNATURA</th>
+                    <th align="center">NOTA FINAL</th>
+                    <th colspan="4" align="center">NOTA CUALITATIVA</th></div>
+                </tr>
+                {% for nota in notas %}
+                    <tr>{% set contar = contar + 1 %}
+
+                        <td>{{nota.asignatura|capitalize}} {% if contar == 5 %}({{modulo_emergente.moduloEmergente|capitalize}}){% endif %}</td>
+                        <td align="center">
+                            <input style="display: none;" id="idd" name="idd[]" size="2px" type="text" value={{ nota.id }} />
+                            <input type="number" required="required" id="nota" name="nota[]" style="width: 80px;" size="5px" min="0"  max="100" maxlength="3" onchange="calcular();" value="{{ nota.nota_cuantitativa }}">
+                            {% if nota.nota_cuantitativa >= 51 %}{% set aprobados = aprobados + 1 %}{% endif %}
+                        </td>
+                        {% if cualitativa == 0 %}
+                            <td rowspan="5">
+                               <textarea required="required" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();" name="nota_cualitativa" id="nota_cualitativa" maxlength="180" cols="16" rows="8">{{ nota.nota_cualitativa }}</textarea>
+                            </td>
+                            {% set cualitativa = 1 %}
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="3"> <strong>Estado: </strong>
+                        <div id="estado_elegir">
+                            <select class="form-control" required="required" name="estado">
+                                {% if aprobados >= 5 %}
+                                    <option value="62" selected>Promovida/o</option>
+                                {% else %}
+                                    <option value="61" selected>Postergada/o</option>
+                                {%  endif %}
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+                      
+                
+                    {#}<tbody>
+                    {% set i=0 %}
+                        <tr>
+                            <td>Matemáticas</td>{% set m=1 %}
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'MATEMATICAS' %}
+                                    <input style="display: none;" id="idd" name="idd[]" size="2px" type="text" value={{ nota.id }} />
+                                    <td align="center"><input type="number" {% if nota.nota_tipo == 'Nota Final' %} readonly="readonly" required="required" {% endif %} id="nota{{ i }}" name="nota[]" style="width: 50px;" size="3px" min="0" {% if m == 1 or m == 4 %} max="14" {% else %} max="21" {% endif %} maxlength="2" onchange="calcular();" value="{{ nota.nota_cuantitativa }}" /></td>
+                                    {% set i=i+1 %}{% set m=m+1 %}
+                                {% endif %}  
+                            {% endfor %}
+                        </tr>
+                        
+                        <tr>
+                            <td>Lengua Castellano</td>{% set m=1 %}
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'LENGUA CASTELLANO' %}
+                                    <input style="display: none;" id="idd" name="idd[]" size="2px" type="text" value={{ nota.id }} />
+                                    <td align="center"><input type="number" {% if nota.nota_tipo == 'Nota Final' %} readonly="readonly" {% endif %} id="nota{{ i }}" required="required"; name="nota[]" style="width: 50px;" size="3px" min="0" {% if m == 1 or m == 4 %} max="14" {% else %} max="21" {% endif %} maxlength="2" onchange="calcular();" value="{{ nota.nota_cuantitativa }}" /></td>
+                                    {% set i=i+1 %}{% set m=m+1 %}
+                                {% endif %}    
+                            {% endfor %}
+                        </tr>
+                        
+                        <tr>
+                            <td>Lenguas Originarias</td>{% set m=1 %}
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'LENGUAS ORIGINARIAS' %}
+                                    <input style="display: none;" id="idd" name="idd[]" size="2px" type="text" value={{ nota.id }} />
+                                    <td align="center"><input type="number" {% if nota.nota_tipo == 'Nota Final' %} readonly="readonly" {% endif %} id="nota{{ i }}" required="required" name="nota[]" style="width: 50px;" size="3px" min="0" {% if m == 1 or m == 4 %} max="14" {% else %} max="21" {% endif %} maxlength="2" onchange="calcular();" value="{{ nota.nota_cuantitativa }}" /></td>
+                                    {% set i=i+1 %}{% set m=m+1 %}
+                                {% endif %}    
+                            {% endfor %}
+                        </tr>
+                        
+                        <tr>
+                            <td>Ciencias Naturales</td>{% set m=1 %}
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'CIENCIAS NATURALES' %}
+                                    <input style="display: none;" id="idd" name="idd[]" size="2px" type="text" value={{ nota.id }} />
+                                    <td align="center"><input type="number" {% if nota.nota_tipo == 'Nota Final' %} readonly="readonly" {% endif %} id="nota{{ i }}" name="nota[]" required="required" style="width: 50px;" size="3px" min="0" {% if m == 1 or m == 4 %} max="14" {% else %} max="21" {% endif %} maxlength="2" onchange="calcular();" value="{{ nota.nota_cuantitativa }}" /></td>
+                                    {% set i=i+1 %}{% set m=m+1 %}
+                                {% endif %}   
+                            {% endfor %}
+                        </tr> 
+                       
+                        <tr><td colspan="6"><hr></td></tr>
+                        <tr>
+                            <td><strong>Promedio Final</strong></td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'PROMEDIO FINAL' %}
+                                    <td align="center"><strong><div id="nt">{{ nota.nota_cuantitativa }}</div></strong></td>
+                                    <input style="display: none;" id="idd" name="idd[]" size="2px" type="text" value={{ nota.id }} />
+                                    <td align="center"><input readonly="readonly" style="display: none;" type="number" id="nota{{ i }}" required="required" name="nota[]" style="width: 50px;" size="3px" min="0" max="70" maxlength="2" value="{{ nota.nota_cuantitativa }}" /></td>
+                                    <td colspan="3"> <strong>Estado: </strong>
+                                         <div id="estado_elegir"><select class="form-control" required="required" name="estado">
+                                            {% if nota.nota_cuantitativa > 35 %}
+                                                <option value="62" {% if nota.estadomatricula_tipo_id == 62 %} selected="selected" {% endif %}>C: En Clase</option>
+                                            {% else %}
+                                                <option value="61" {% if nota.estadomatricula_tipo_id == 61 %} selected="selected" {% endif %}>D: Desincorporado</option>
+                                            {% endif %}
+                                        </select></div>
+                                    </td>
+                                {% set i=i+1 %}
+                                {% endif %}   
+                            {% endfor %}
+                        </tr> 
+                    </tbody>
+                {% endif %}
+
+              
+                        <tr><td colspan="6"><hr></td></tr>
+                        <tr>
+                            <td><strong>Promedio Final</strong></td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'PROMEDIO FINAL' %}
+                                   <td align="center"><strong><div id="nt">{{ nota.nota_cuantitativa }}</div></strong></td>
+                                    <input style="display: none;" id="idd" name="idd[]" size="2px" type="text" value={{ nota.id }} />
+                                    <td align="center"><input readonly="readonly" style="display: none;" type="number" id="nota{{ i }}" required="required" name="nota[]" style="width: 50px;" size="3px" min="0" max="70" maxlength="2" value="{{ nota.nota_cuantitativa }}" /></td>
+                                    <td colspan="3"> <strong>Estado: </strong>
+                                       <div id="estado_elegir"><select class="form-control" required="required" name="estado">
+                                            {% if nota.nota_cuantitativa > 35 %}
+                                                <option value="62" {% if nota.estadomatricula_tipo_id == 62 %} selected="selected" {% endif %}>C: En Clase</option>
+                                            {% else %}
+                                                <option value="61" {% if nota.estadomatricula_tipo_id == 61 %} selected="selected" {% endif %}>D: Desincorporado</option>
+                                            {% endif %}
+                                        </select></div>
+                                    </td>
+                                {% set i=i+1 %}
+                                {% endif %}    
+                            {% endfor %}
+                        </tr>
+                    </tbody>
+                {% endif %}{#}
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <button type="submit" class="btn btn-success btn-large glyphicon glyphicon-pencil"> Guardar Cambios</button>
+        <button type="" class="btn btn-default btn-large glyphicon glyphicon-remove-sign" onclick="modaluserclose();"> Cerrar</button>
+    </div>
+</div>
+</form>
+
+<script type="text/javascript">
+    
+    function calcular(){
+        var elementos = document.getElementsByName("nota[]");
+        var res=0,aprobados=0;
+            if(elementos.length==21)div=4;
+            else if(elementos.length==31)div=6;
+            else if(elementos.length==26)div=5;
+            else div=3;
+            for(x=1;x<=elementos.length;x++)
+            {
+                res=parseInt(elementos[x-1].value); 
+                if (res >= 51)aprobados++;
+            }
+            if(aprobados>=5)
+                document.getElementById("estado_elegir").innerHTML = "<select class='form-control' required='required' name='estado'><option value='62'>Promovida/o</option>";
+            else
+                 document.getElementById("estado_elegir").innerHTML = "<select class='form-control' required='required' name='estado'><option value='61'>Postergada/o</option></selected>";
+}
+</script>

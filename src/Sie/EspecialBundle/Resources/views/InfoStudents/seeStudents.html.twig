@@ -108,13 +108,13 @@
                                     </div>
                                     { endif }
                                     #}
-                                    {#% if gestion >= 2013 and gestion <= 2016 or onlyview == false %}
+                                    {% if gestion >= 2013 and gestion <= 2016 and onlyview == false %}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
                                         <button type="button" class="btn btn-circle btn-warning " data-toggle="" data-target="" onclick="removeInscriptionSpecial('{{infoUe}}',{{data.estInsEspId}},{{data.estInsId}});" >
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </div>
-                                    {% endif %#}
+                                    {% endif %}
 
                                     {% if  1 == 2 %}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
