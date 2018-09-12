@@ -108,4 +108,32 @@ class SistemaTipo
     {
         return $this->abreviatura;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\MenuNivelTipo
+     */
+    private $nivelSistemaTipo;
+
+
+    /**
+     * Set nivelSistemaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\MenuNivelTipo $nivelSistemaTipo
+     * @return SistemaTipo
+     */
+    public function setNivelSistemaTipo(\Sie\AppWebBundle\Entity\MenuNivelTipo $nivelSistemaTipo = null)
+    {
+        $this->nivelSistemaTipo = $nivelSistemaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get nivelSistemaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\MenuNivelTipo 
+     */
+    public function getNivelSistemaTipo()
+    {
+        return $this->nivelSistemaTipo;
+    }
 }

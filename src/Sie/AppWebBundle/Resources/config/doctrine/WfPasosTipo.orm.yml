@@ -1,0 +1,20 @@
+Sie\AppWebBundle\Entity\WfPasosTipo:
+    type: entity
+    table: wf_pasos_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nombre:
+            type: string
+            nullable: false
+            length: 20
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

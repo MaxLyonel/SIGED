@@ -445,4 +445,32 @@ class TramiteDetalle
     {
         return $this->usuarioDestinatario;
     }
+    /**
+     * @var string
+     */
+    private $valorEvaluacion;
+
+
+    /**
+     * Set valorEvaluacion
+     *
+     * @param string $valorEvaluacion
+     * @return TramiteDetalle
+     */
+    public function setValorEvaluacion($valorEvaluacion)
+    {
+        $this->valorEvaluacion = $valorEvaluacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get valorEvaluacion
+     *
+     * @return string 
+     */
+    public function getValorEvaluacion()
+    {
+        return $this->valorEvaluacion;
+    }
 }

@@ -1,0 +1,78 @@
+Sie\AppWebBundle\Entity\MenuSistema:
+    type: entity
+    table: menu_sistema
+    indexes:
+        IDX_1919B6DF21FC73D2:
+            columns:
+                - menu_tipo_id
+        IDX_1919B6DF34C419BF:
+            columns:
+                - sistema_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        detalleMenu:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: detalle_menu
+        icono:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        orden:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        fechaInicio:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_inicio
+        fechaFin:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_fin
+        fechaCreacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_creacion
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        menuTipo:
+            targetEntity: MenuTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                menu_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        sistemaTipo:
+            targetEntity: SistemaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                sistema_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

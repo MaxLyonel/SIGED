@@ -41,16 +41,13 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoDatos:
             unsigned: false
             comment: ''
             column: plancurricular_tipo_id
+        fechaCerrar:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+            column: fecha_cerrar
     manyToOne:
-        lugarTipoSeccion:
-            targetEntity: LugarTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                lugar_tipo_id_seccion:
-                    referencedColumnName: id
-            orphanRemoval: false
         institucioneducativaCurso:
             targetEntity: InstitucioneducativaCurso
             cascade: {  }
@@ -58,6 +55,15 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoDatos:
             inversedBy: null
             joinColumns:
                 institucioneducativa_curso_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        lugarTipoSeccion:
+            targetEntity: LugarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                lugar_tipo_id_seccion:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

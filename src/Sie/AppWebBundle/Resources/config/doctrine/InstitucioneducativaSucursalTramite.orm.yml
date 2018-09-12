@@ -2,9 +2,6 @@ Sie\AppWebBundle\Entity\InstitucioneducativaSucursalTramite:
     type: entity
     table: institucioneducativa_sucursal_tramite
     indexes:
-        IDX_F87A42457A322B24:
-            columns:
-                - institucioneducativa_sucursal_id
         IDX_F87A424592A5C389:
             columns:
                 - periodo_estado_id
@@ -14,6 +11,10 @@ Sie\AppWebBundle\Entity\InstitucioneducativaSucursalTramite:
         IDX_F87A42454FE8BC31:
             columns:
                 - tramite_tipo_id
+    uniqueConstraints:
+        institucioneducativa_sucursal_institucioneducativa_sucursal_key:
+            columns:
+                - institucioneducativa_sucursal_id
     id:
         id:
             type: integer

@@ -192,4 +192,32 @@ class InstitucioneducativaCursoDatos
     {
         return $this->plancurricularTipoId;
     }
+    /**
+     * @var \DateTime
+     */
+    private $fechaCerrar;
+
+
+    /**
+     * Set fechaCerrar
+     *
+     * @param \DateTime $fechaCerrar
+     * @return InstitucioneducativaCursoDatos
+     */
+    public function setFechaCerrar($fechaCerrar)
+    {
+        $this->fechaCerrar = $fechaCerrar;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaCerrar
+     *
+     * @return \DateTime 
+     */
+    public function getFechaCerrar()
+    {
+        return $this->fechaCerrar;
+    }
 }

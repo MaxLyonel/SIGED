@@ -35,7 +35,7 @@
             <div class="portlet portlet-blue">
                 <div class="portlet-heading">
                     <div class="portlet-title">
-                        <h4>Cursos Vacios Gestión 2016 hasta la fecha</h4>
+                        <h4>Cursos Vacios</h4>
                     </div>
                     <div class="portlet-widgets">
                         <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation"><i class="fa fa-chevron-down"></i></a>
@@ -60,8 +60,8 @@
                             <th>Materno</th>                            
                             <th>Fecha Inicio</th>                            
                             <th>Fecha Fin</th>                            
-                            <th>Parte</th>                            
-                            <th>Bloque</th>                            
+                            <th>Ciclo</th>                            
+                            <th>Grado</th>                            
                             <th>Departamento</th>  
                             <th>Lugar</th>
                             <th>Eliminar</th>
@@ -78,8 +78,8 @@
                             <td>{{ fila.materno }}</td> 
                             <td>{{ fila.fecha_inicio }}</td>
                             <td>{{ fila.fecha_fin }}</td>                            
-                            <td>{{ fila.ciclo_tipo_id }}</td>
-                            <td>{{ fila.grado_tipo_id }}</td>
+                            <td>{% if fila.plan == 1 %}BLOQUE {% endif %}{{ fila.nciclo }}</td>
+                            <td>{% if fila.plan == 1 %}PARTE {% endif %}{{ fila.ngrado }}</td>
                             <td>{{ fila.dep }}</td>
                             <td>{{ fila.lugar }}</td>
                             {% if (fila.dep|upper == lugar_usuario|upper) or ('8' == app.session.get('roluser')) %}

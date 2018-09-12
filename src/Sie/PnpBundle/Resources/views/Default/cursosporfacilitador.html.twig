@@ -61,8 +61,8 @@
                             <th>Materno</th>                            
                             <th>Fecha Inicio</th>                            
                             <th>Fecha Fin</th>                            
-                            <th>Parte</th>                            
-                            <th>Bloque</th>                            
+                            <th>Ciclo</th>                            
+                            <th>Grado</th>                            
                             <th>Departamento</th>  
                             <th>Lugar</th>
                         </tr>
@@ -78,8 +78,8 @@
                             <td>{{ fila.materno }}</td> 
                             <td>{{ fila.fecha_inicio }}</td>
                             <td>{{ fila.fecha_fin }}</td>                            
-                            <td>{{ fila.ciclo_tipo_id }}</td>
-                            <td>{{ fila.grado_tipo_id }}</td>
+                            <td>{% if fila.plan == 1 %}BLOQUE {% endif %}{{ fila.nciclo }}</td>
+                            <td>{% if fila.plan == 1 %}PARTE {% endif %}{{ fila.ngrado }}</td>
                             <td>{{ fila.depto }}</td>
                             <td>{{ fila.lugar }}</td>
                         </tr>

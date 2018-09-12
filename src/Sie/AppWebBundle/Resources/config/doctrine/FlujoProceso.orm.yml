@@ -2,9 +2,9 @@ Sie\AppWebBundle\Entity\FlujoProceso:
     type: entity
     table: flujo_proceso
     indexes:
-        IDX_C5263C38640D1D53:
+        IDX_C5263C38655835A3:
             columns:
-                - proceso_id
+                - wf_asignacion_tarea_tipo_id
         IDX_C5263C38FE1D168D:
             columns:
                 - flujo_tipo_id
@@ -21,6 +21,12 @@ Sie\AppWebBundle\Entity\FlujoProceso:
             generator:
                 strategy: SEQUENCE
     fields:
+        procesoId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: proceso_id
         obs:
             type: string
             nullable: true
@@ -32,14 +38,43 @@ Sie\AppWebBundle\Entity\FlujoProceso:
             nullable: true
             unsigned: false
             comment: ''
+        esEvaluacion:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_evaluacion
+        plazo:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        tareaAntId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: tarea_ant_id
+        tareaSigId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: tarea_sig_id
+        variableEvaluacion:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+            column: variable_evaluacion
     manyToOne:
-        proceso:
-            targetEntity: ProcesoTipo
+        wfAsignacionTareaTipo:
+            targetEntity: WfAsignacionTareaTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                proceso_id:
+                wf_asignacion_tarea_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         flujoTipo:

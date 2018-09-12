@@ -33,8 +33,8 @@
                                                 <th>Nombre</th>
                                                 <th>Paterno</th>
                                                 <th>Materno</th> 
-                                                <th>Bloque</th>                            
-                                                <th>Parte</th>                           
+                                                <th>Ciclo</th>                            
+                                                <th>Grado</th>                           
                                                 <th>Fecha Inicio</th>                            
                                                 <th>Fecha Fin</th>                                                     
                                             </tr>
@@ -54,8 +54,8 @@
                                                 <td>{{curso.nombre}}</td>
                                                 <td>{{curso.paterno}}</td>
                                                 <td>{{curso.materno}}</td>
-                                                <td>{{curso.bloque}}</td>
-                                                <td>{{curso.parte}}</td>
+                                                <td>{% if curso.plan == 1 %}BLOQUE {% endif %}{{ curso.nciclo }}</td>
+                                                <td>{% if curso.plan == 1 %}PARTE {% endif %}{{ curso.ngrado }}</td>
                                                 <td>{{curso.fecha_inicio}}</td>
                                                 <td>{{curso.fecha_fin}}</td>
                                             </tr>

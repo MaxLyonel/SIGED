@@ -1,9 +1,9 @@
-Sie\AppWebBundle\Entity\PermanenteProgramaTipo:
+Sie\AppWebBundle\Entity\WfCompuerta:
     type: entity
-    table: permanente_programa_tipo
+    table: wf_compuerta
     id:
         id:
-            type: smallint
+            type: integer
             nullable: false
             unsigned: false
             comment: ''
@@ -11,16 +11,10 @@ Sie\AppWebBundle\Entity\PermanenteProgramaTipo:
             generator:
                 strategy: SEQUENCE
     fields:
-        programa:
+        nombre:
             type: string
             nullable: false
-            length: 80
-            fixed: false
-            comment: ''
-        obs:
-            type: string
-            nullable: true
-            length: 100
+            length: 50
             fixed: false
             comment: ''
     lifecycleCallbacks: {  }
