@@ -170,6 +170,7 @@ class EstadisticasController extends Controller
          * Define la zona horaria y halla la fecha actual
          */
         date_default_timezone_set('America/La_Paz');
+        // $gestionActual = new \DateTime("Y");
         $fechaActual = new \DateTime(date('Y-m-d H:i:s'));
         $fechaEstadistica = $fechaActual->format('d-m-Y H:i:s');
         //$gestionProcesada = $gestionActual;
@@ -218,6 +219,8 @@ class EstadisticasController extends Controller
             }
            // dump($codigo);dump($rol);die;
         } else {
+            $gestion= $fechaActual->format('Y');;
+            $periodo= 2;
             $codigo = 0;
             $rol = 0;
         }
@@ -270,7 +273,7 @@ class EstadisticasController extends Controller
 
 
         if(count($subEntidades)>0 and isset($subEntidades)){
-            return $this->render('SieHerramientaAlternativaBundle:Reportes:matriculaEducativaAlternativa.html.twig', array(
+            return $this->render($this->session->get('pathSystem') . ':Reporte:matriculaEducativaAlternativa.html.twig', array(
                 'infoEntidad'=>$entidad,
                 'infoSubEntidad'=>$subEntidades,
                 'gestion'=>$gestion,
@@ -280,7 +283,7 @@ class EstadisticasController extends Controller
                 'especialidades'=>$objEspecialidades,
             ));
         } else {
-            return $this->render('SieHerramientaAlternativaBundle:Reportes:matriculaEducativaAlternativa.html.twig', array(
+            return $this->render($this->session->get('pathSystem') . ':Reporte:matriculaEducativaAlternativa.html.twig', array(
                 'infoEntidad'=>$entidad,
                 'gestion'=>$gestion,
                 'datoGraficoGenero'=>$chartGenero,
@@ -1985,7 +1988,7 @@ union all
 
 
 
-        return $this->render($this->session->get('pathSystem') . ':Reportes:index.html.twig', array(
+        return $this->render($this->session->get('pathSystem') . ':Reporte:index.html.twig', array(
             'dataReport' => $arrDataReport,
             'dataInfo' => serialize($arrDataReport),
             'form' => $form->createView()
@@ -2198,7 +2201,7 @@ union all
             ->add('crear', 'submit', array('label' => 'Generar Reportes', 'attr' => array('class' => 'btn btn-primary')))
             ->getForm();
 
-        return $this->render($this->session->get('pathSystem') . ':Reportes:index.html.twig', array(
+        return $this->render($this->session->get('pathSystem') . ':Reporte:index.html.twig', array(
             'form' => $form->createView()
         ));
 
