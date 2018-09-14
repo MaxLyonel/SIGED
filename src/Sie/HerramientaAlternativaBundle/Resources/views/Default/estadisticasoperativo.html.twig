@@ -1,7 +1,7 @@
 {% extends 'layoutHerramientaAlternativa.html.twig' %}
 
 {% block contentoption %}
-                <div class="row">                                                
+                {#<div class="row">                                                
                     <div class="col-lg-3">
                         <form action="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}" method="post" class="navbar-form">
                             <div class="form-group has-feedback">                                
@@ -59,10 +59,12 @@
                             </div>
                         </form>
                     </div>
-                </div>
+                </div>#}
+    
+           
                 <!-- Start page header -->
                 <div class="header-content">
-                    <h2><i class="fa fa-tachometer"></i>Estadisticas : {{titulo}}<span>Cantidad de Ceas concluidos y pendientes en el operativo seleccionado.</span></h2>
+                    <h2><i class="fa fa-tachometer"></i>Estadisticas</h2>
                     <div class="breadcrumb-wrapper hidden-xs">
                         <span class="label">Usted esta aquí:</span>
                         <ol class="breadcrumb">
@@ -74,6 +76,69 @@
 
                 <!-- Start body content -->
                 <div class="body-content animated fadeIn">
+                     <div class="row">
+            <div class="col-lg-12">
+                <div class="panel rounded shadow panel-primary">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title"><span>Cantidad de Ceas concluidos y pendientes en el operativo seleccionado.</span></h3>
+                        </div>
+                        <div class="pull-right">
+
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="row">
+                            {% for flashMessage in app.session.flashbag.get('errorMsg') %}
+                                        <div class="alert alert-danger alert-dismissible" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                                        </div>
+                            {% endfor %}
+                            {% for flashMessage in app.session.flashbag.get('successMsg') %}
+                                        <div class="alert alert-success alert-dismissible" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                                        </div>
+                            {% endfor %}
+                        </div>
+                        <div class="panel-body panel-primary">
+                        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form'} } )}}
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="form-group col-lg-3 col-md-3">
+                                    {{ form_label(form.gestion)}}
+                                    {{form_widget(form.gestion) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="form-group col-lg-3 col-md-3">
+                                    {{ form_label(form.semestre)}}
+                                    {{form_widget(form.semestre) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="form-group col-lg-3 col-md-3">
+                                    {{ form_label(form.operativo)}}
+                                    {{form_widget(form.operativo) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-6 col-md-6">                                        
+                                    {{ form_widget(form.buscar ) }}
+                                    <a href="" class="btn btn-default">Cancelar</a>
+                                </div>
+                            </div>
+                        </div>
+                        {{form_end(form)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+       <div class="panel-heading">
+            <h2 class="panel-title text-left">{{titulo}}</h3>
+        </div>
                     <div class="row">                                                
                         <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
                             <div class="mini-stat clearfix bg-bitbucket">

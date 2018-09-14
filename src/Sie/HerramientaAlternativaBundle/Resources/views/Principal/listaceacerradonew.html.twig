@@ -1,0 +1,208 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+
+{% block contentoption%}
+
+    <div class="header-content">
+        <h2><i class="fa fa-th-large"></i> Lista de Centros de Educación Alternativa en su jurisdicción. <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="glyphicon glyphicon-leaf"></i>
+                    <a href="{{path('principal_web')}}">Bienvenida/o</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-th-large"></i>
+                    Menu Principal
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>
+
+
+    <div class="panel panel-success rounded shadow">
+        <div class="panel-heading">
+            <h3>Panel de control de operativos por CEA.</h3>
+
+        </div><!-- /.panel-heading -->
+        <div class="panel-sub-heading">
+
+        </div><!-- /.panel-sub-heading -->
+        <div class="panel-body">
+
+            <div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="lead">Por esta interfaz los tecnicos <code>SIE</code> pueden dar continuidad al siguiente operativo o habilitar al centro una ultima edición de datos en modo regularización.</p>
+
+                        <div class="table-responsive col-md-12">
+                            <table class="table table-bordered table-striped" id="listaConsol">
+                                <thead>
+                                <tr>
+                                    <th class="text-center border-right">No.</th>
+                                    <th>Departamento</th>
+                                    <th>Código de distrito</th>
+                                    <th>Cod. Cea</th>
+                                    <th>CEA</th>
+                                    <th>Sub Cea</th>
+                                    <th>Gestión</th>
+                                    <th>Periodo</th>
+                                    <th>Estado</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tfoot>
+                                <tr>
+                                    <th class="text-center border-right">No.</th>
+                                    <th>Departamento</th>
+                                    <th>Código de distrito</th>
+                                    <th>Cod. Cea</th>
+                                    <th>CEA</th>
+                                    <th>Sub Cea</th>
+                                    <th>Gestión</th>
+                                    <th>Periodo</th>
+                                    <th>Estado</th>
+                                    <th></th>
+                                </tr>
+                                </tfoot>
+                                <tbody>
+
+                                {% for reg in entities %}
+                                    <tr>
+                                        <td class="text-center border-right">{{ loop.index }}</td>
+                                        <td>
+                                            {#<img class="img-circle img-bordered-theme" alt="..." src="../../../img/avatar/35/2.png">#}
+                                            <span>{{ reg.lugar }}</span>
+                                        </td>
+                                        <td>{{ reg.distrito_cod }}</td>
+                                        <td>{{ reg.ieid }}</td>
+                                        <td>{{ reg.institucioneducativa }}</td>
+                                        <td>{{ reg.nombre_subcea }}</td>
+                                        <td>{{ reg.gestion_tipo_id }}</td>
+                                        <td>{{ reg.semestre }}</td>
+                                        {#<td>{{ reg.nombre }} {{ reg.paterno }} {{ reg.materno }}</td>#}
+                                        <td>{{ reg.tramite_estado }}</td>
+                                        <td class="text-center">
+                                            {% if ((reg.teid == '6') or (reg.teid == '7') or (reg.teid == '11') or (reg.teid == '13') or (reg.teid == '5')) %}
+                                                <button type="submit" class="btn btn-circle btn-danger btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{reg.obs}}">
+                                                    <i class="fa fa-hand-paper-o"></i>
+                                                </button>
+                                            {% elseif (reg.teid == '14') %}     {#¡Fin de Semestre - Cerrado! #}
+                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_solicitud_cambiar_estado_a_regularizado', {'iestid': reg.iestid})}}" method="post" style="display:inline-block" onsubmit="return verificarRegularizacion();">
+                                                    <button type="submit" class="btn btn-circle btn-warning btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Autorización para regularizar operativo Fin de Semestre">
+                                                        <i class="fa fa-edit"></i>
+                                                    </button>
+                                                </form>
+                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_continuar_sig_operativo', {'iestid': reg.iestid})}}" method="post" style="display:inline-block">
+                                                    <button type="submit" class="btn btn-circle btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Continuar con operativo Inicio de Semestre">
+                                                        <i class="fa fa-arrow-circle-right"></i>
+                                                    </button>
+                                                </form>
+                                            {% elseif (reg.teid == '12') %}      {#¡Inicio de Semestre - Cerrado!  #}
+                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_solicitud_cambiar_estado_a_regularizado', {'iestid': reg.iestid})}}" method="post" style="display:inline-block" onsubmit="return verificarRegularizacion();">
+                                                    <button type="submit" class="btn btn-circle btn-warning btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Autorización para regularizar operativo Inicio de Semestre">
+                                                        <i class="fa fa-edit"></i>
+                                                    </button>
+                                                </form>
+                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_continuar_sig_operativo', {'iestid': reg.iestid})}}" method="post" style="display:inline-block" onsubmit="return verificarSiguienteOperativo();">
+                                                    <button type="submit" class="btn btn-circle btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Continuar con operativo Fin de Semestre">
+                                                        <i class="fa fa-arrow-circle-right"></i>
+                                                    </button>
+                                                </form>
+                                            {% elseif (reg.teid == '8') %}    {#Fin de Semestre Regularizado - Cerrado#}
+                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_continuar_sig_operativo', {'iestid': reg.iestid})}}" method="post" style="display:inline-block">
+                                                    <button type="submit" class="btn btn-circle btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Continuar con operativo Inicio de Semestre">
+                                                        <i class="fa fa-arrow-circle-right"></i>
+                                                    </button>
+                                                </form>
+                                            {% elseif (reg.teid == '9') %}    {#Inicio de Semestre  Regularizado - Cerrado#}
+                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_continuar_sig_operativo', {'iestid': reg.iestid})}}" method="post" style="display:inline-block" onsubmit="return verificarSiguienteOperativo();">
+                                                    <button type="submit" class="btn btn-circle btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Continuar con operativo Fin de Semestre">
+                                                        <i class="fa fa-arrow-circle-right"></i>
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /.panel-body -->
+    </div>
+
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+<script>
+            $(document).ready( function(){
+                $(".tooltips").tooltip();
+            });
+
+            function verificarRegularizacion(){
+                var myText = '¡AVISO IMPORTANTE! ¡LEA CON ATENCIÓN!\nLa habilitación de regularización permitira al director modificar datos del ultimo operativo realizado por el CEA,\nSe le comunica que se registrara el usuario y fecha de esta autorización.\n¿Esta seguro de conceder este acceso?\nSi no esta seguro de este mensaje presione CANCELAR.';
+                if(!confirm(myText)){
+                    return false;
+                }
+            };
+
+            function verificarSiguienteOperativo(){
+                var myText = '¡AVISO IMPORTANTE! !LEA CON ATENCIÓN!\nLa habilitación del siguiente operativo cerrara toda regularización para el CEA,\ny solo los tec SIE podran realizar ediciones futuras segun normativa vigente.\nSe le comunica que se registrara el usuario y fecha de esta autorización.\n¿Esta seguro de habilitar el siguiente operativo para este centro?\nSi no esta seguro de este mensaje presione CANCELAR.';
+                if(!confirm(myText)){
+                    return false;
+                }
+            };
+
+
+
+
+            $( document ).ready(function() {
+                cargatablas();
+            });
+
+            var cargatablas = function (identif){
+                // Setup - add a text input to each footer cell
+                $('#listaConsol tfoot th').each( function () {
+                    var title = $(this).text();
+                    if(title.trim() === "" || title === "No."){
+                        $(this).html('');
+                    } else {
+                        $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+                    }
+                } );
+
+                // DataTable
+                var table = $('#listaConsol').DataTable( {
+                        "order": [[ 0, "asc" ]],
+                        "columnDefs": [
+                            { "orderable": false, "targets": [9] }
+                        ],
+                    }
+                );
+
+                // Apply the search
+                table.columns().every( function () {
+                    var that = this;
+
+                    $( 'input', this.footer() ).on( 'keyup change', function () {
+                        if ( that.search() !== this.value ) {
+                            that
+                                .search( this.value )
+                                .draw();
+                        }
+                    } );
+                } );
+            };
+
+
+        </script>
+
+{% endblock %}
