@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Sie\AppWebBundle\Entity\InstitucioneducativaSucursalTramite;
+use Doctrine\ORM\EntityRepository;
 
 
 /**
@@ -1433,15 +1434,36 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
         
         $id_usuario = $this->session->get('userId');
         if (!isset($id_usuario)) {
+
             return $this->redirect($this->generateUrl('login'));
         }
-        $gestionparam = '2018';
-        
+        //$gestionparam = '2018';
+        //dump($request->get('form'));die;
         if ($request->get('form')) {
-            $form = $request->get('form');            
+            $form = $request->get('form');
+            $gestion = $form['gestion'];            
+            $periodo = $form['semestre'];
+            $operativo = $form['operativo'];
+            $em = $this->getDoctrine()->getManager();
+            $semestre = $em->getRepository('SieAppWebBundle:PeriodoTipo')->find($periodo);
+            if($gestion<(new \DateTime())->format('Y'))
+            {
+                $estadostramite = '5';
+                //$periodo ='2,3';
+                $titulo = 'Gestiones Pasadas-'. $semestre->getPeriodo() . ' ' . $gestion;    
+            }else{
+                if($operativo == 9)
+                {
+                    $estadostramite = '9,12';
+                    $titulo = $gestion. ' ' . $semestre->getPeriodo() . '-Inscripciones';    
+                }else{
+                    $estadostramite = '8,14';
+                    $titulo = $gestion. ' ' . $semestre->getPeriodo() . '-Notas';    
+                }
+            }
             //INSCRIPCIONES 7,11
             //NOTAS 6,13
-            if ($form['val'] === '1'){
+            /*if ($form['val'] === '1'){
                     //INSCRIPCIONES 1ER BIM
                     $periodotecho = '3';
                     $gestion = $gestionparam;
@@ -1484,13 +1506,14 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                         }       
                     }
                 }
-            }            
+            } */           
         }else{
             $periodotecho = '3';
-            $gestion = $gestionparam;
+            $gestion = (new \DateTime())->format('Y');
+            //dump($gestion);die;
             $periodo = '2';                    
             $estadostramite = '9,12';
-            $titulo = '1er Semestre 2018-Inscripciones';
+            $titulo = 'Primer Semestre 2018-Inscripciones';
         }        
 
         //$sesion = $request->getSession();
@@ -1630,8 +1653,23 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
         return $this->render($this->session->get('pathSystem') . ':Default:estadisticasoperativo.html.twig', array(
                 'entities' => $po,
                 'entitiestot' => $potot,
-                'titulo' => $titulo,                
+                'titulo' => $titulo,
+                'form' => $this->estadisticaForm()->createView(),
             ));
+    }
+    public function estadisticaForm()
+    {
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl('herramientalt_ceducativa_estadistiscas_cierre'))
+            ->add('gestion','entity',array('label'=>'Gestión','required'=>true,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
+               return $g->createQueryBuilder('g')->where('g.id >= 2006')->orderBy('g.id','DESC');},'property'=>'gestion','empty_value' => 'Seleccione gestión'))
+            ->add('semestre','entity',array('label'=>'Semestre','required'=>true,'class'=>'SieAppWebBundle:PeriodoTipo','query_builder'=>function(EntityRepository $p){
+              return $p->createQueryBuilder('p')->where('p.id in (2,3)');},'property'=>'periodo','empty_value' => 'Seleccione semestre'))
+            ->add('operativo','choice',array('label'=>'Operativo','required'=>true,'choices'=>array('9' => 'Inscripciones','8' => 'Notas'),'empty_value' => 'Seleccione operativo'))
+            ->add('buscar', 'submit', array('label'=> 'Buscar', 'attr'=>array('class'=>'btn btn-primary')))
+            ->getForm();
+
+        return $form;
     }
 
     public function reporteDiversaAction(Request $request){

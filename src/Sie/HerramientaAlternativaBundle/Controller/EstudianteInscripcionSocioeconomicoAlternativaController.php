@@ -79,7 +79,7 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
 
         $institucion = $query->getOneOrNullResult();
         //$institucion = $query->getResult();
-        //dump($institucion['direccion']);die;
+        //dump($institucion);die;
 
         //Información de la/el estudiante
         $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $aInfoStudent['codigoRude']));
@@ -820,6 +820,7 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             ->add('seccionvEstudianteNacionoriginariaTipo', 'entity', array('data' => $em->getReference('SieAppWebBundle:NacionOriginariaTipo', $socioeconomico->getSeccionvEstudianteNacionoriginariaTipo()->getId()), 'label' => false, 'required' => false, 'class' => 'SieAppWebBundle:NacionOriginariaTipo', 'property' => 'nacion_originaria', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
             ->add('seccionvEstudianteEsocupacion', 'choice', array('data' => $socioeconomico->getSeccionvEstudianteEsocupacion(), 'required' => false, 'label' => false, 'empty_value' => false, 'choices' => array(false => 'NO', true => 'SI')))
             ->add('seccionvTrabaja', 'entity', array('data' => $ocupacionArray, 'multiple' => true, 'required' => false, 'label' => false, 'class' => 'SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltOcupacionTipo', 'property' => 'ocupacion', 'attr' => array('class' => 'form-control js-example-basic-multiple', 'style'=>'width: 100%')))
+            
             ->add('seccionvOtroTrabajo', 'text', array('data' => $socioeconomico->getSeccionvOtroTrabajo(), 'required' => false, 'attr' => array('class' => 'form-control', 'maxlength' => '50')))
             ->add('seccionvEstudianteEsseguroSalud', 'choice', array('data' => $socioeconomico->getSeccionvEstudianteEsseguroSalud(), 'required' => false, 'label' => false, 'empty_value' => false, 'choices' => array(false => 'NO', true => 'SI')))
             ->add('seccionvEstudianteSeguroSaludDonde', 'text', array('data' => $socioeconomico->getSeccionvEstudianteSeguroSaludDonde(), 'required' => false, 'attr' => array('class' => 'form-control')))
