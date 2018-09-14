@@ -51,7 +51,7 @@ class SegipController extends Controller {
         
         $form = $request->get('sie_buscar_persona_segip');
         
-        $resultado = $this->get('sie_app_web.segip')->buscarPersona($form['carnet'], $form['complemento'], $form['fechaNac'], $form['entorno'], 'academico');
+        $resultado = $this->get('sie_app_web.segip')->buscarPersonaPorCarnet($form['carnet'], $form, $form['entorno'], 'academico');
 
         return $this->render('SieAppWebBundle:Segip:resultado1.html.twig',array(
             'resultado'=>$resultado
@@ -61,8 +61,8 @@ class SegipController extends Controller {
     public function verifyAction(Request $request){
         
         $form = $request->get('sie_verificar_persona_segip');
-        
-        $resultado = $this->get('sie_app_web.segip')->verificarPersona($form['carnet'], $form['complemento'], $form['paterno'], $form['materno'], $form['nombre'], $form['fechaNac'], $form['entorno'], 'academico');
+
+        $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form['carnet'], $form, $form['entorno'], 'academico');
 
         return $this->render('SieAppWebBundle:Segip:resultado2.html.twig',array(
             'resultado'=>$resultado

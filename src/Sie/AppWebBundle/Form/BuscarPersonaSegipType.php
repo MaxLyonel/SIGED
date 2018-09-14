@@ -16,7 +16,7 @@ class BuscarPersonaSegipType extends AbstractType {
         $builder  
             ->add('carnet', 'text', array('label' => 'Carnet de Identidad', 'required' => true, 'attr' => array('autocomplete' => 'off', 'maxlength' => '10')))
             ->add('complemento', 'text', array('label' => 'Complemento', 'required' => false, 'attr' => array('maxlength' => '2', 'autocomplete' => 'off')))
-            ->add('fechaNac', 'text', array('label' => 'Fecha de Nacimiento', 'required' => true, 'attr' => array('autocomplete' => 'off', 'maxlength' => '10')))
+            ->add('fecha_nacimiento', 'text', array('label' => 'Fecha de Nacimiento', 'required' => false, 'attr' => array('autocomplete' => 'off', 'maxlength' => '10')))
         ;
     }
 
