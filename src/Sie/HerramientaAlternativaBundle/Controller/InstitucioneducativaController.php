@@ -598,7 +598,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
     $po = $stmt->fetchAll();
 //        dump($po);
 //        die;
-    return $this->render($this->session->get('pathSystem') . ':Principal:listaceacerrado.html.twig', array(
+    return $this->render($this->session->get('pathSystem') . ':Principal:listaceacerradonew.html.twig', array(
             'entities' => $po,
         ));
     }
@@ -1420,7 +1420,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
         $stmt->execute($params);
         $po = $stmt->fetchAll();
 //        dump($po); die;
-        return $this->render($this->session->get('pathSystem') . ':Principal:listaceapendientes.html.twig', array(
+        return $this->render($this->session->get('pathSystem') . ':Principal:listaceapendientesnew.html.twig', array(
                 'entities' => $po,
             ));
     }  
