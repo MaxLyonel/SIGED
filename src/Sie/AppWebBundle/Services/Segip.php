@@ -105,8 +105,6 @@ class Segip {
 
     public function verificarPersona($carnet, $opcional, $env, $sistema) {
 
-        dump($opcional);
-
         $c = 0;
         $query = '';
 
@@ -123,10 +121,6 @@ class Segip {
         }
 
         $token = $this->getToken($env,$sistema);
-
-        foreach ($opcional as $key => $value) {
-            
-        }
 
         $url = $this->getUrlBase($env).'personas/'.$carnet.$query;
 
