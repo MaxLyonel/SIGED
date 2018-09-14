@@ -69,41 +69,81 @@ class Segip {
 		return $responseDecode;
 	}
 
-    // public function verificarPersona($carnet, $complemento, $paterno, $materno, $nombre, $fechaNac, $env, $sistema) {
+    public function verificarPersona($carnet, $complemento, $paterno, $materno, $nombre, $fechaNac, $env, $sistema) {
 
-    //     $token = $this->getToken($env,$sistema);
-    //     $fechaNac = date('d/m/Y', strtotime($fechaNac));
+        $token = $this->getToken($env,$sistema);
+        $fechaNac = date('d/m/Y', strtotime($fechaNac));
 
-    //     $url = $this->getUrlBase($env).'personas/'.$carnet.'?fecha_nacimiento='.$fechaNac.'&primer_apellido='.$paterno.'&segundo_apellido='.$materno.'&nombre='.$nombre;
+        $url = $this->getUrlBase($env).'personas/'.$carnet.'?fecha_nacimiento='.$fechaNac.'&primer_apellido='.$paterno.'&segundo_apellido='.$materno.'&nombre='.$nombre;
 
-    //     if($complemento != ''){
-    //         $url = $this->getUrlBase($env).'personas/'.$carnet.'?fecha_nacimiento='.$fechaNac.'&primer_apellido='.$paterno.'&segundo_apellido='.$materno.'&nombre='.$nombre.'&complemento='.$complemento;
-    //     }
+        if($complemento != ''){
+            $url = $this->getUrlBase($env).'personas/'.$carnet.'?fecha_nacimiento='.$fechaNac.'&primer_apellido='.$paterno.'&segundo_apellido='.$materno.'&nombre='.$nombre.'&complemento='.$complemento;
+        }
 
-    //     $response = $this->client->request(
-    //         'GET', 
-    //         $url, 
-    //         ['headers' => ['Accept' => 'application/json', 'Authorization' => $token], 
-    //         ['debug' => true]])->getBody()->getContents();
+        $response = $this->client->request(
+            'GET', 
+            $url, 
+            ['headers' => ['Accept' => 'application/json', 'Authorization' => $token], 
+            ['debug' => true]])->getBody()->getContents();
 
-    //     $responseDecode = json_decode($response, true);
+        $responseDecode = json_decode($response, true);
 
-    //     if ($responseDecode['ConsultaDatoPersonaEnJsonResult']['EsValido'] === "true") {
-    //         $persona = $responseDecode['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson'];
-    //         $resultado = true;
-    //     } else {
-    //         $persona = 'null';
-    //         $resultado = false;
-    //     }
+        if ($responseDecode['ConsultaDatoPersonaEnJsonResult']['EsValido'] === "true") {
+            $persona = $responseDecode['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson'];
+            $resultado = true;
+        } else {
+            $persona = 'null';
+            $resultado = false;
+        }
 
-    //     if($persona == 'null') {
-    //         $resultado = false;
-    //     }
+        if($persona == 'null') {
+            $resultado = false;
+        }
 
-    //     return $resultado;
-    // }
+        return $resultado;
+    }
 
-    public function verificarPersona($carnet, $opcional, $env, $sistema) {
+    public function buscarPersonaPorCarnet($carnet, $opcional, $env, $sistema) {
+
+        $c = 0;
+        $query = '';
+
+        $parametros = array();
+        foreach ($opcional as $key => $value) {
+            if($value && $key != 'entorno' && $key != '_token' && $key != 'carnet'){
+                $parametros[$key] = $value;
+            }
+            
+        }
+
+        foreach ($parametros as $key => $value) {
+            if ($key == 'fecha_nacimiento') {
+                $value = date('d/m/Y', strtotime($value));
+            }
+            if ($c == 0) {
+                $query = '?'.$key.'='.$value;
+            } else{
+                $query = $query.'&'.$key.'='.$value;
+            }
+            $c++;
+        }
+
+        $token = $this->getToken($env,$sistema);
+
+        $url = $this->getUrlBase($env).'personas/'.$carnet.$query;
+
+        $response = $this->client->request(
+            'GET', 
+            $url, 
+            ['headers' => ['Accept' => 'application/json', 'Authorization' => $token], 
+            ['debug' => true]])->getBody()->getContents();
+
+        $responseDecode = json_decode($response, true);
+
+        return $responseDecode;
+    }
+
+    public function verificarPersonaPorCarnet($carnet, $opcional, $env, $sistema) {
 
         $c = 0;
         $query = '';
