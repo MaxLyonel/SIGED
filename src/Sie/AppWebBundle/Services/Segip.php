@@ -108,7 +108,15 @@ class Segip {
         $c = 0;
         $query = '';
 
+        $parametros = array();
         foreach ($opcional as $key => $value) {
+            if($value && $key != 'entorno' && $key != '_token' && $key != 'carnet'){
+                $parametros[$key] = $value;
+            }
+            
+        }
+
+        foreach ($parametros as $key => $value) {
             if ($key == 'fecha_nacimiento') {
                 $value = date('d/m/Y', strtotime($value));
             }

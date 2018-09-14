@@ -61,15 +61,8 @@ class SegipController extends Controller {
     public function verifyAction(Request $request){
         
         $form = $request->get('sie_verificar_persona_segip');
-        
-        $opcional = array();
-        foreach ($form as $key => $value) {
-            if($value && $key != 'entorno' && $key != '_token' && $key != 'carnet'){
-                $opcional[$key] = $value;
-            }
-        }
 
-        $resultado = $this->get('sie_app_web.segip')->verificarPersona($form['carnet'], $opcional, $form['entorno'], 'academico');
+        $resultado = $this->get('sie_app_web.segip')->verificarPersona($form['carnet'], $form, $form['entorno'], 'academico');
 
         return $this->render('SieAppWebBundle:Segip:resultado2.html.twig',array(
             'resultado'=>$resultado
