@@ -89,3 +89,9 @@ reporte_especial_centro_educativo_pdf:
 reporte_especial_centro_educativo_xls:
     path:     /especial/centro/educativo/xls
     defaults: { _controller: SieAppWebBundle:Reporte:especialInstitucionEducativaXls }
+
+reporte_adultos_index:
+    path:     /adultos
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:alternativaIndex }
+
+

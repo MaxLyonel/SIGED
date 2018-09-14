@@ -15,6 +15,10 @@ class ComisionNacionalJuegosDatosType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $comisionPri = array('10' => 'Comite Organizador','20' => 'Comite Técnico','70' => 'Invitado Especial','30' => 'Juez','40' => 'Prensa','50' => 'Salud','60' => 'Seguridad','126' => 'Apoyo','12' => 'Acompañante Maestro','13' => 'Acompañante Padre de Familia','102' => 'Acompañante Delegado','139' => 'Acompañante Entrenador','11' => 'Reponsable Departamental de Juegos','103' => 'Jefe de Misión (Director Departamental)','107' => 'Técnico de Acreditación','109' => 'Equipo Médico','110' => 'Equipo de Seguridad Patrulla','145' => 'Hospedaje - Padres de Familia');
+
+        $comisionSec = array('115' => 'Comite Organizador','117' => 'Comite Técnico','121' => 'Invitado Especial','144' => 'Juez','118' => 'Prensa','119' => 'Salud','120' => 'Seguridad','131' => 'Apoyo','143' => 'Acompañante Maestro','141' => 'Acompañante Padre de Familia','142' => 'Acompañante Delegado','140' => 'Acompañante Entrenador','154' => 'Reponsable Departamental de Juegos','146' => 'Jefe de Misión (Director Departamental)','156' => 'Técnico Encargado de Juegos','150' => 'Técnico de Acreditación','152' => 'Equipo Médico','153' => 'Equipo de Seguridad Patrulla','155' => 'Hospedaje - Padres de Familia');
+
         $builder
             ->add('carnetIdentidad','text', array('label' => 'Carnet de Identidad','required' => true))
             ->add('nombre','text', array('label' => 'Nombre','required' => true))
@@ -27,26 +31,7 @@ class ComisionNacionalJuegosDatosType extends AbstractType
             ->add('comisionTipoId',
                       'choice',  
                       array('label' => 'Comisión Tipo',
-                            'choices' => array( '115' => 'Comite Organizador'
-                                              ,'117' => 'Comite Técnico'
-                                              ,'121' => 'Invitado Especial'
-                                              ,'144' => 'Juez'
-                                              ,'118' => 'Prensa'
-                                              ,'119' => 'Salud'
-                                              ,'120' => 'Seguridad'
-                                              ,'131' => 'Apoyo'                                           
-                                              ,'143' => 'Acompañante Maestro'
-                                              ,'141' => 'Acompañante Padre de Familia'
-                                              ,'142' => 'Acompañante Delegado'
-                                              ,'140' => 'Acompañante Entrenador'
-                                              ,'154' => 'Reponsable Departamental de Juegos'
-                                              ,'146' => 'Jefe de Misión (Director Departamental)'
-                                              ,'156' => 'Técnico Encargado de Juegos'
-                                              ,'150' => 'Técnico de Acreditación'                                              
-                                              ,'152' => 'Equipo Médico'
-                                              ,'153' => 'Equipo de Seguridad Patrulla'
-                                              ,'155' => 'Hospedaje - Padres de Familia'
-                                                ),
+                            'choices' => $comisionPri,
                             )
                 )
             ->add('foto', 'file', array('label' => 'Fotografía (.bmp)', 'required' => false, 'data_class' => null)) 
@@ -66,7 +51,7 @@ class ComisionNacionalJuegosDatosType extends AbstractType
                         ->innerJoin('SieAppWebBundle:NivelTipo', 'nt', 'WITH', 'nt.id = dt.nivelTipo')
                         ->where('nt.id = :nivel')
                         ->orderBy('pt.id', 'ASC')
-                        ->setParameter('nivel', 13);
+                        ->setParameter('nivel', 12);
                 },
                 'label' => 'Prueba',
             ))          

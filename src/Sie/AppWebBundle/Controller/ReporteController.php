@@ -5804,7 +5804,7 @@ class ReporteController extends Controller {
 
         if($rol == 7) // Tecnico Departamental
         { 
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_institucionEducativa_departamental_v1_rcm.rptdesign&__format=pdf&codigo='.$codigoArea));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_institucionEducativa_Departamental_v1_rcm.rptdesign&__format=pdf&codigo='.$codigoArea));
         } 
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
@@ -5867,7 +5867,7 @@ class ReporteController extends Controller {
 
         if($rol == 7) // Tecnico Departamental
         { 
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_institucionEducativa_departamental_v1_rcm.rptdesign&__format=xls&codigo='.$codigoArea));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_institucionEducativa_Departamental_v1_rcm.rptdesign&__format=xls&codigo='.$codigoArea));
         } 
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
