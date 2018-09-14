@@ -69,16 +69,66 @@ class Segip {
 		return $responseDecode;
 	}
 
-    public function verificarPersona($carnet, $complemento, $paterno, $materno, $nombre, $fechaNac, $env, $sistema) {
+    // public function verificarPersona($carnet, $complemento, $paterno, $materno, $nombre, $fechaNac, $env, $sistema) {
+
+    //     $token = $this->getToken($env,$sistema);
+    //     $fechaNac = date('d/m/Y', strtotime($fechaNac));
+
+    //     $url = $this->getUrlBase($env).'personas/'.$carnet.'?fecha_nacimiento='.$fechaNac.'&primer_apellido='.$paterno.'&segundo_apellido='.$materno.'&nombre='.$nombre;
+
+    //     if($complemento != ''){
+    //         $url = $this->getUrlBase($env).'personas/'.$carnet.'?fecha_nacimiento='.$fechaNac.'&primer_apellido='.$paterno.'&segundo_apellido='.$materno.'&nombre='.$nombre.'&complemento='.$complemento;
+    //     }
+
+    //     $response = $this->client->request(
+    //         'GET', 
+    //         $url, 
+    //         ['headers' => ['Accept' => 'application/json', 'Authorization' => $token], 
+    //         ['debug' => true]])->getBody()->getContents();
+
+    //     $responseDecode = json_decode($response, true);
+
+    //     if ($responseDecode['ConsultaDatoPersonaEnJsonResult']['EsValido'] === "true") {
+    //         $persona = $responseDecode['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson'];
+    //         $resultado = true;
+    //     } else {
+    //         $persona = 'null';
+    //         $resultado = false;
+    //     }
+
+    //     if($persona == 'null') {
+    //         $resultado = false;
+    //     }
+
+    //     return $resultado;
+    // }
+
+    public function verificarPersona($carnet, $opcional, $env, $sistema) {
+
+        dump($opcional);
+
+        $c = 0;
+        $query = '';
+
+        foreach ($opcional as $key => $value) {
+            if ($key == 'fecha_nacimiento') {
+                $value = date('d/m/Y', strtotime($value));
+            }
+            if ($c == 0) {
+                $query = '?'.$key.'='.$value;
+            } else{
+                $query = $query.'&'.$key.'='.$value;
+            }
+            $c++;
+        }
 
         $token = $this->getToken($env,$sistema);
-        $fechaNac = date('d/m/Y', strtotime($fechaNac));
 
-        $url = $this->getUrlBase($env).'personas/'.$carnet.'?fecha_nacimiento='.$fechaNac.'&primer_apellido='.$paterno.'&segundo_apellido='.$materno.'&nombre='.$nombre;
-
-        if($complemento != ''){
-            $url = $this->getUrlBase($env).'personas/'.$carnet.'?fecha_nacimiento='.$fechaNac.'&primer_apellido='.$paterno.'&segundo_apellido='.$materno.'&nombre='.$nombre.'&complemento='.$complemento;
+        foreach ($opcional as $key => $value) {
+            
         }
+
+        $url = $this->getUrlBase($env).'personas/'.$carnet.$query;
 
         $response = $this->client->request(
             'GET', 
