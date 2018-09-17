@@ -2,6 +2,10 @@ Sie\AppWebBundle\Entity\TramiteDetalle:
     type: entity
     table: tramite_detalle
     indexes:
+        tramite_detalle_tramite_id_flujo_proceso_id_idx:
+            columns:
+                - tramite_id
+                - flujo_proceso_id
         IDX_66F6AE6DEDC78DDF:
             columns:
                 - flujo_proceso_id
@@ -57,6 +61,13 @@ Sie\AppWebBundle\Entity\TramiteDetalle:
             nullable: true
             comment: ''
             column: fecha_modificacion
+        valorEvaluacion:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: valor_evaluacion
     manyToOne:
         flujoProceso:
             targetEntity: FlujoProceso
