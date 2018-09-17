@@ -315,10 +315,10 @@ class ComisionController extends Controller {
         $query->execute();
         $faseTipoEntity = $query->fetchAll();
 
-        // if($nivelId == 12 and !$faseTipoEntity[0]['esactivo_primaria']){
-        //     $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Primario concluyeron")); 
-        //     return $this->redirectToRoute('sie_juegos_inscripcion_fp_index');
-        // }
+        if($nivelId == 12 and !$faseTipoEntity[0]['esactivo_primaria']){
+            $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Primario concluyeron")); 
+            return $this->redirectToRoute('sie_juegos_inscripcion_fp_index');
+        }
         if($nivelId == 13 and !$faseTipoEntity[0]['esactivo_secundaria']){
             $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Secundaria concluyeron")); 
             return $this->redirectToRoute('sie_juegos_inscripcion_fp_index');
@@ -433,10 +433,10 @@ class ComisionController extends Controller {
             $faseTipoEntity = $query->fetchAll();
 
 
-            // if($nivel == 12 and !$faseTipoEntity[0]['esactivo_primaria']){
-            //     $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Primario concluyeron")); 
-            //     return $this->redirectToRoute('sie_juegos_comision_departamental_lista_index');
-            // }
+            if($nivel == 12 and !$faseTipoEntity[0]['esactivo_primaria']){
+                $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Primario concluyeron")); 
+                return $this->redirectToRoute('sie_juegos_comision_departamental_lista_index');
+            }
             if($nivel == 13 and !$faseTipoEntity[0]['esactivo_secundaria']){
                 $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Secundaria concluyeron")); 
                 return $this->redirectToRoute('sie_juegos_comision_departamental_lista_index');
@@ -1437,10 +1437,10 @@ class ComisionController extends Controller {
             $query->execute();
             $faseTipoEntity = $query->fetchAll();
 
-            // if(!$faseTipoEntity[0]['esactivo_primaria'] and $nivel == 12){
-            //     $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Primario concluyeron")); 
-            //     return $this->redirectToRoute('sie_juegos_inscripcion_fp_index');
-            // }
+            if(!$faseTipoEntity[0]['esactivo_primaria'] and $nivel == 12){
+                $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Primario concluyeron")); 
+                return $this->redirectToRoute('sie_juegos_inscripcion_fp_index');
+            }
             if(!$faseTipoEntity[0]['esactivo_secundaria'] and $nivel == 13){
                 $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Secundaria concluyeron")); 
                 return $this->redirectToRoute('sie_juegos_inscripcion_fp_index');
@@ -1488,10 +1488,10 @@ class ComisionController extends Controller {
             $query->execute();
             $faseTipoEntity = $query->fetchAll();
 
-            // if(!$faseTipoEntity[0]['esactivo_primaria'] and $nivel == 12){
-            //     $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Primario concluyeron")); 
-            //     return $this->redirectToRoute('sie_juegos_inscripcion_fp_index');
-            // }
+            if(!$faseTipoEntity[0]['esactivo_primaria'] and $nivel == 12){
+                $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Primario concluyeron")); 
+                return $this->redirectToRoute('sie_juegos_inscripcion_fp_index');
+            }
             if(!$faseTipoEntity[0]['esactivo_secundaria'] and $nivel == 13){
                 $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Secundaria concluyeron")); 
                 return $this->redirectToRoute('sie_juegos_inscripcion_fp_index');
@@ -1536,10 +1536,10 @@ class ComisionController extends Controller {
             $query->execute();
             $faseTipoEntity = $query->fetchAll();
 
-            // if(!$faseTipoEntity[0]['esactivo_primaria'] and $nivel == 12){
-            //     $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Primario concluyeron")); 
-            //     return $this->redirectToRoute('sie_juegos_inscripcion_fp_index');
-            // }
+            if(!$faseTipoEntity[0]['esactivo_primaria'] and $nivel == 12){
+                $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Primario concluyeron")); 
+                return $this->redirectToRoute('sie_juegos_inscripcion_fp_index');
+            }
             if(!$faseTipoEntity[0]['esactivo_secundaria'] and $nivel == 13){
                 $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Secundaria concluyeron")); 
                 return $this->redirectToRoute('sie_juegos_inscripcion_fp_index');
@@ -2571,10 +2571,10 @@ class ComisionController extends Controller {
             return $this->redirectToRoute('sie_juegos_comision_entrenador_f'.$fase .'_lista_index');
         }
 
-        // if(!$faseTipoEntity[0]['esactivo_primaria'] and $nivelId == 12){
-        //     $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Primario concluyeron")); 
-        //     return $this->redirectToRoute('sie_juegos_comision_entrenador_f'.$fase .'_lista_index');
-        // }
+        if(!$faseTipoEntity[0]['esactivo_primaria'] and $nivelId == 12){
+            $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Primario concluyeron")); 
+            return $this->redirectToRoute('sie_juegos_comision_entrenador_f'.$fase .'_lista_index');
+        }
         if(!$faseTipoEntity[0]['esactivo_secundaria'] and $nivelId == 13){
             $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Secundaria concluyeron")); 
             return $this->redirectToRoute('sie_juegos_comision_entrenador_f'.$fase .'_lista_index');
@@ -2774,10 +2774,10 @@ class ComisionController extends Controller {
             $foto = $entityComisionJuegosDatos->getFoto();
 
 
-            // if(!$faseTipoEntity[0]['esactivo_primaria'] and $nivelId == 12){
-            //     $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Primario concluyeron")); 
-            //     return $this->redirectToRoute('sie_juegos_comision_entrenador_f'.$fase .'_lista_index');
-            // }
+            if(!$faseTipoEntity[0]['esactivo_primaria'] and $nivelId == 12){
+                $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Primario concluyeron")); 
+                return $this->redirectToRoute('sie_juegos_comision_entrenador_f'.$fase .'_lista_index');
+            }
             if(!$faseTipoEntity[0]['esactivo_secundaria'] and $nivelId == 13){
                 $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Secundaria concluyeron")); 
                 return $this->redirectToRoute('sie_juegos_comision_entrenador_f'.$fase .'_lista_index');
