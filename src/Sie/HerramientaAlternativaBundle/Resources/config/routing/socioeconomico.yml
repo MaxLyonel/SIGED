@@ -24,7 +24,7 @@ socioeconomicoalt_edit:
 socioeconomicoalt_update:
     path:     /update
     defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteInscripcionSocioeconomicoAlternativa:update" }
-    methods:  [POST, PUT]
+    methods:  [POST]
 
 socioeconomicoalt_delete:
     path:     /{id}/delete

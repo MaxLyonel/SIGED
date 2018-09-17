@@ -103,6 +103,98 @@ class Segip {
         return $resultado;
     }
 
+    public function buscarPersonaPorCarnet($carnet, $opcional, $env, $sistema) {
+
+        $c = 0;
+        $query = '';
+
+        $parametros = array();
+        foreach ($opcional as $key => $value) {
+            if($value && $key != 'entorno' && $key != '_token' && $key != 'carnet'){
+                $parametros[$key] = $value;
+            }
+            
+        }
+
+        foreach ($parametros as $key => $value) {
+            if ($key == 'fecha_nacimiento') {
+                $value = date('d/m/Y', strtotime($value));
+            }
+            if ($c == 0) {
+                $query = '?'.$key.'='.$value;
+            } else{
+                $query = $query.'&'.$key.'='.$value;
+            }
+            $c++;
+        }
+
+        $token = $this->getToken($env,$sistema);
+
+        $url = $this->getUrlBase($env).'personas/'.$carnet.$query;
+
+        $response = $this->client->request(
+            'GET', 
+            $url, 
+            ['headers' => ['Accept' => 'application/json', 'Authorization' => $token], 
+            ['debug' => true]])->getBody()->getContents();
+
+        $responseDecode = json_decode($response, true);
+
+        return $responseDecode;
+    }
+
+    public function verificarPersonaPorCarnet($carnet, $opcional, $env, $sistema) {
+
+        $c = 0;
+        $query = '';
+
+        $parametros = array();
+        foreach ($opcional as $key => $value) {
+            if($value && $key != 'entorno' && $key != '_token' && $key != 'carnet'){
+                $parametros[$key] = $value;
+            }
+            
+        }
+
+        foreach ($parametros as $key => $value) {
+            if ($key == 'fecha_nacimiento') {
+                $value = date('d/m/Y', strtotime($value));
+            }
+            if ($c == 0) {
+                $query = '?'.$key.'='.$value;
+            } else{
+                $query = $query.'&'.$key.'='.$value;
+            }
+            $c++;
+        }
+
+        $token = $this->getToken($env,$sistema);
+
+        $url = $this->getUrlBase($env).'personas/'.$carnet.$query;
+
+        $response = $this->client->request(
+            'GET', 
+            $url, 
+            ['headers' => ['Accept' => 'application/json', 'Authorization' => $token], 
+            ['debug' => true]])->getBody()->getContents();
+
+        $responseDecode = json_decode($response, true);
+
+        if ($responseDecode['ConsultaDatoPersonaEnJsonResult']['EsValido'] === "true") {
+            $persona = $responseDecode['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson'];
+            $resultado = true;
+        } else {
+            $persona = 'null';
+            $resultado = false;
+        }
+
+        if($persona == 'null') {
+            $resultado = false;
+        }
+
+        return $resultado;
+    }
+
     private function getToken($env, $sistema){
         if ($env == 'dev') {
             $token = $this->sistemas_dev;

@@ -19,6 +19,7 @@
             <div class="col-xs-12">
                 <div class="alert alert-danger alert-dismissible" role="alert" id="result" style="display: none;">
                     <strong>¡Advertencia!</strong> <input type="text" id="errorxls" class="form-control input-sm" readonly='true'>
+
                 </div>
             </div>
         </div>
@@ -37,6 +38,7 @@
 
         <!-- /.row -->
      {% include 'SieAppWebBundle:Persona:buscarPersona.html.twig' with {'formBuscarPersona': formBuscarPersona} %}
+     <input type="hidden" id="plan" value="{{ plan }}">
 
      <div id="facilitador"></div> 
         </div>
@@ -136,6 +138,7 @@
         var ci = document.getElementById("ci").value;
         var complemento = document.getElementById("complemento").value;
         var extranjero = document.getElementById("extranjero").value;
+        var plan = document.getElementById("plan").value;
 
         //alert(opcion);
         if (complemento=="")complemento=0;
@@ -144,7 +147,7 @@
         var formData = $('#formxls').serialize();
         $.ajax({
             type: 'get',
-            url: Routing.generate('sie_pnp_buscar_facilitador', {'ci': ci,'complemento':complemento,'extranjero': extranjero}),
+            url: Routing.generate('sie_pnp_buscar_facilitador', {'ci': ci,'complemento':complemento,'extranjero': extranjero,'plan': plan}),
             data: formData,
             beforeSend: function () {
                 $("#facilitador").empty();

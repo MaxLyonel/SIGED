@@ -223,8 +223,11 @@
                                 <i class="fa fa-home"></i> RUP-4 <i class="fa fa-caret-down"></i>
                             </a>
                             <ul class="collapse nav" id="rup4-2016">
-                                <li><a href="{{path('sie_pnp_registrar_curso')}}">
+                                <li><a href="{{path('sie_pnp_registrar_curso',{ 'plan': 2 })}}">
                                     <i class="fa fa-angle-double-right"></i> Registrar Curso</a>
+                                </li>
+                                <li><a href="{{path('sie_pnp_registrar_curso',{ 'plan': 1 })}}">
+                                    <i class="fa fa-angle-double-right"></i> Registrar Curso (Plan Antiguo)</a>
                                 </li>
                                 <li><a href="{{path('sie_pnp_listar_archivos_editnew')}}">
                                     <i class="fa fa-angle-double-right"></i> Ver Curso</a>

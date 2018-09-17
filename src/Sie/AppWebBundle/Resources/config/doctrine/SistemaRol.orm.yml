@@ -1,0 +1,39 @@
+Sie\AppWebBundle\Entity\SistemaRol:
+    type: entity
+    table: sistema_rol
+    indexes:
+        IDX_6B4D1234EF3F27EB:
+            columns:
+                - rol_tipo_id
+        IDX_6B4D123434C419BF:
+            columns:
+                - sistema_tipo_id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    manyToOne:
+        rolTipo:
+            targetEntity: RolTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rol_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        sistemaTipo:
+            targetEntity: SistemaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                sistema_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

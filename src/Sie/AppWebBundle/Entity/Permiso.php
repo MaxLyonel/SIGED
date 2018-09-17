@@ -20,95 +20,6 @@ class Permiso
     private $permiso;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\ObjetoTipo
-     */
-    private $objetoTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\OperacionTipo
-     */
-    private $operacionTipo;
-
-
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set permiso
-     *
-     * @param string $permiso
-     * @return Permiso
-     */
-    public function setPermiso($permiso)
-    {
-        $this->permiso = $permiso;
-
-        return $this;
-    }
-
-    /**
-     * Get permiso
-     *
-     * @return string 
-     */
-    public function getPermiso()
-    {
-        return $this->permiso;
-    }
-
-    /**
-     * Set objetoTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\ObjetoTipo $objetoTipo
-     * @return Permiso
-     */
-    public function setObjetoTipo(\Sie\AppWebBundle\Entity\ObjetoTipo $objetoTipo = null)
-    {
-        $this->objetoTipo = $objetoTipo;
-
-        return $this;
-    }
-
-    /**
-     * Get objetoTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\ObjetoTipo 
-     */
-    public function getObjetoTipo()
-    {
-        return $this->objetoTipo;
-    }
-
-    /**
-     * Set operacionTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\OperacionTipo $operacionTipo
-     * @return Permiso
-     */
-    public function setOperacionTipo(\Sie\AppWebBundle\Entity\OperacionTipo $operacionTipo = null)
-    {
-        $this->operacionTipo = $operacionTipo;
-
-        return $this;
-    }
-
-    /**
-     * Get operacionTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\OperacionTipo 
-     */
-    public function getOperacionTipo()
-    {
-        return $this->operacionTipo;
-    }
-    /**
      * @var boolean
      */
     private $create;
@@ -138,6 +49,39 @@ class Permiso
      */
     private $menuObjeto;
 
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set permiso
+     *
+     * @param string $permiso
+     * @return Permiso
+     */
+    public function setPermiso($permiso)
+    {
+        $this->permiso = $permiso;
+    
+        return $this;
+    }
+
+    /**
+     * Get permiso
+     *
+     * @return string 
+     */
+    public function getPermiso()
+    {
+        return $this->permiso;
+    }
 
     /**
      * Set create

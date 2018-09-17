@@ -62,8 +62,8 @@
                 <!-- contenido tabs -->
             </div>
             <div class="panel-body no-padding" id="modal-body">
-
-                {{form_start(form, { 'attr': {'role': 'form','onsubmit':'return (validaLista()&&validaSeleccion())'} } )}}
+                {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'id':'form_new'} } )}}                    
+                {#{{form_start(form, { 'attr': {'role': 'form','onsubmit':'return (validaLista()&&validaSeleccion())'} } )}}#}
                 <div class="form-body">
                 <div class="alert alert-info">
                     <span class="alert-icon"><i class="fa fa-info"></i></span>
@@ -593,6 +593,56 @@
             
         var peticion1;
         //$('#form_turno').on('change',function(){
+        function guardarRudeal(){
+            if(conta == 0 || conta == ""){
+                alert('Asegurese de completar el apartado 2.9 de Educacion Diversa');
+                return false;
+             }
+            if(conta ==2)
+            {
+                if((contb == 0 || contb == "")){
+                    alert('Debe seleccionar la Unidad Militar a la que pertenece');
+                    return false;
+                }
+
+            } else if(conta ==3)
+            {
+                if((contc == 0 || contc == "")){
+                    alert('Debe seleccionar el Penal al que pertenece');
+                    return false;
+                }
+
+            }
+            var formData = $('#form_new').serialize();
+            //alert(formData);
+            $.ajax({
+                type: 'post',
+                url: "{{path('socioeconomicoalt_create')}}",
+                data: formData,
+                beforeSend: function (){
+                    $('#msg').empty();
+                },
+                success: function (data) {
+                    //confirm(data.msg);
+                    $('#modal').modal('hide');
+                    if(data.tipo=='exito'){
+                            $('#msg').append('<div class="alert alert-success alert-dismissible" role="alert">'+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+                        '<strong><i class="fa fa-linux"></i></strong>'+ data.msg +'</div>');    
+                        }else{
+                            $('#msg').append('<div class="alert alert-danger alert-dismissible" role="alert">'+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+                        '<strong><i class="fa fa-linux"></i></strong>'+ data.msg +'</div>');
+                    }
+                },
+                statusCode: {
+                    500: function () {
+                    },
+                    404: function () {
+                    }
+                }
+            });
+        }
         function listarProvincias(idDpto) {
             if (peticion1 && peticion1.readyState != 4) {
                 peticion1.abort();

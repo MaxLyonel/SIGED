@@ -77,3 +77,21 @@ reporte_especial_informacion_general_print_pdf:
 reporte_especial_informacion_general_print_xls:
     path:     /informacion/general/especial/print/xls
     defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralEspecialPrintXls }
+
+reporte_especial_centro_educativo_index:
+    path:     /especial/centro/educativo
+    defaults: { _controller: SieAppWebBundle:Reporte:especialInstitucionEducativaIndex }
+
+reporte_especial_centro_educativo_pdf:
+    path:     /especial/centro/educativo/pdf
+    defaults: { _controller: SieAppWebBundle:Reporte:especialInstitucionEducativaPdf }
+
+reporte_especial_centro_educativo_xls:
+    path:     /especial/centro/educativo/xls
+    defaults: { _controller: SieAppWebBundle:Reporte:especialInstitucionEducativaXls }
+
+reporte_adultos_index:
+    path:     /adultos
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:alternativaIndex }
+
+

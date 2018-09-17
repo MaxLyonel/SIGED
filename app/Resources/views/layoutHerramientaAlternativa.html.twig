@@ -38,6 +38,8 @@
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/jasny-bootstrap-fileinput/css/jasny-bootstrap-fileinput.min.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.min.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/css/datatables.responsive.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
@@ -485,8 +487,8 @@
                                 {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
                                 {#<li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>#}
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
-                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>                                
-                                <li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>
+                                <li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
+                                <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>
                                 <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
                                 <li><a href="{{path('herramientalt_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>                                                                
                                 {% if (app.session.get('ie_id') != -1) %}
@@ -532,8 +534,8 @@
                                 {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
                                 {#<li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>#}
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
-                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>
-                                <li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>
+                                <li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
+                                <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>
                                 <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>                                
                                 {% if (app.session.get('ie_id') != -1) %}
                                     <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
@@ -567,8 +569,8 @@
                                 {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
                                 {#<li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>#}
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
-                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>
-                                <li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>                                
+                                <li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
+                                <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>
                                 {% if (app.session.get('ie_id') != -1) %}
                                     <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
                                     <li><a href="{{path('sie_alt_lista_estudiantes_excel')}}">Exportar listas a Excel </a></li>
@@ -1132,6 +1134,10 @@
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery-autosize/jquery.autosize.min.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.jquery.min.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery-validation/dist/jquery.validate.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/js/fuelux.min.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/datatables.responsive.js')}}"></script>

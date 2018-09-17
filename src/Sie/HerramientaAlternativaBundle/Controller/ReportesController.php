@@ -421,22 +421,30 @@ class ReportesController extends Controller {
         
         $idlocalidad = $socioalteIdEntity[0]->getSeccioniiiLocalidadTipo()->getId();
         //dump($idlocalidad);die;
-        
-        $query = "select socioeconomico_lugar_recursivo(".$idlocalidad.");";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);        
-        $po = $stmt->fetchAll();
+        //si el estudiante no es inmigrante
+        if ($idlocalidad != 0){
+            $query = "select socioeconomico_lugar_recursivo(".$idlocalidad.");";
+            $stmt = $db->prepare($query);
+            $params = array();
+            $stmt->execute($params);        
+            $po = $stmt->fetchAll();
+        //dump($po);die;
         //$countdir = count($po);
         
-        $porciones = explode("|", $po[0]['socioeconomico_lugar_recursivo']);
+            $porciones = explode("|", $po[0]['socioeconomico_lugar_recursivo']);
         //dump($porciones);die;
         
-        $dirDep = $porciones[2];        
-        $dirProv = $porciones[3];
-        $dirSec = $porciones[4];
-        $dirLoc = $porciones[6];
-//        //get the values of report
+            $dirDep = $porciones[2];        
+            $dirProv = $porciones[3];
+            $dirSec = $porciones[4];
+            $dirLoc = $porciones[6];
+        }else{
+            $dirDep = 0;        
+            $dirProv = 0;
+            $dirSec = 0;
+            $dirLoc = 0;
+        }
+          //get the values of report
 //        //create the response object to down load the file
         
 

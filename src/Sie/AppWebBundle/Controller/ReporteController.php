@@ -4477,6 +4477,361 @@ class ReporteController extends Controller {
         }
     }
 
+
+
+    /**
+     * Pagina Inicial - Instituciones Educativas - Nacional - Educacion Especial
+     * rcanaviri
+     * @param Request $request
+     * @return type
+     */
+    public function especialInstitucionEducativaIndexAction(Request $request) {        
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d H:i:s'));
+        $gestionActual = date_format($fechaActual,'Y');
+        $fechaEstadistica = $fechaActual->format('d-m-Y H:i:s');
+        
+        $gestionProcesada = $gestionActual;
+
+        $codigo = 0;
+		$nivel = 0;	
+
+		if ($request->isMethod('POST')) {
+            $codigo = base64_decode($request->get('codigo'));
+			$rol = $request->get('rol');
+        } else {
+            $codigo = 0;
+			$rol = 0;	
+		}
+
+        $defaultController = new DefaultCont();
+        $defaultController->setContainer($this->container);
+
+        $entidad = $this->buscaEntidadRol($codigo,$rol);
+        $subEntidades = $this->buscaSubEntidadRolEspecialInstitucionEducativa($codigo,$rol);
+        
+        // devuelve un array con los diferentes tipos de reportes 2:dependencia 
+        $entityEstadistica = $this->buscaEstadisticaEspecialInstitucionEducativaAreaRol($codigo,$rol); 
+
+        if(count($subEntidades)>0 and isset($subEntidades)){
+            foreach ($subEntidades as $key => $dato) {
+                if(isset(reset($entityEstadistica)['dato'][0]['cantidad'])){             
+                    $subEntidades[$key]['total_general'] = reset($entityEstadistica)['dato'][0]['cantidad'];
+                } else {          
+                    $subEntidades[$key]['total_general'] = 0;
+                } 
+            }
+        } else {
+            $subEntidades = null;
+        }
+
+        $link = true;
+        if ($rol == 10){
+            $link = false;
+        }
+        
+        $chartDependencia = $this->chartColumn($entityEstadistica[2],"Centro de Educación Especial según Dependencia",$gestionProcesada,"Estudiantes","chartContainerDependencia");
+        
+        if($rol == 0){
+            $mensaje = '$("#modal-bootstrap-tour").modal("show");';
+        } else {
+            $mensaje = '$("#modal-bootstrap-tour").modal("hide");';
+        }
+
+
+        if(count($subEntidades)>0 and isset($subEntidades)){
+            return $this->render('SieAppWebBundle:Reporte:institucionEducativaEspecial.html.twig', array(
+                'infoEntidad'=>$entidad,
+                'infoSubEntidad'=>$subEntidades, 
+                'datoGraficoDependencia'=>$chartDependencia,
+                'mensaje'=>$mensaje,
+                'gestion'=>$gestionActual,
+                'fechaEstadistica'=>$fechaEstadistica,
+                'link'=>$link,
+                'form' => $defaultController->createLoginForm()->createView()
+            ));
+        } else {
+            return $this->render('SieAppWebBundle:Reporte:institucionEducativaEspecial.html.twig', array(
+                'infoEntidad'=>$entidad,
+                'datoGraficoDependencia'=>$chartDependencia,
+                'mensaje'=>$mensaje,
+                'gestion'=>$gestionActual,
+                'fechaEstadistica'=>$fechaEstadistica,
+                'link'=>$link,
+                'form' => $defaultController->createLoginForm()->createView()
+            ));
+        }
+    }
+
+
+
+    /**
+     * Busca el detalle de centros de educacion especial en funcion al tipo de rol - Educacion Especial
+     * Jurlan
+     * @param Request $request
+     * @return type
+     */
+    public function buscaEstadisticaEspecialInstitucionEducativaAreaRol($codigo,$rol) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+        $gestionProcesada = $this->buscaGestionVistaMaterializadaRegular();
+        //$gestionActual = 2016;
+
+        $em = $this->getDoctrine()->getManager();
+
+        $queryEntidad = $em->getConnection()->prepare("
+            with tabla as (                
+                select dt.id as dependencia_tipo_id, dt.dependencia,count(*) as cantidad
+                FROM institucioneducativa ie
+                INNER JOIN jurisdiccion_geografica jg ON jg.id = ie.le_juridicciongeografica_id
+                INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id, lugar_tipo.area2001 AS area FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 5) loc ON loc.id = jg.lugar_tipo_id_localidad
+                INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 4) can ON can.id = loc.lugar_tipo_id
+                INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 3) sec ON sec.id = can.lugar_tipo_id
+                INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 2) pro ON pro.id = sec.lugar_tipo_id
+                INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 1) dep ON dep.id = pro.lugar_tipo_id
+                INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 7) dis ON dis.id = jg.lugar_tipo_id_distrito
+                INNER JOIN dependencia_tipo as dt ON dt.id = ie.dependencia_tipo_id
+                INNER JOIN orgcurricular_tipo as oct ON oct.id = ie.orgcurricular_tipo_id
+                INNER JOIN institucioneducativa_acreditacion_tipo as ieat ON ieat.id = COALESCE(ie.institucioneducativa_acreditacion_tipo_id::integer, 0)
+                INNER JOIN estadoinstitucion_tipo eit ON eit.id = ie.estadoinstitucion_tipo_id
+                /* 
+                LEFT JOIN ( SELECT DISTINCT ON (a.institucioneducativa_id) a.id,
+                        a.institucioneducativa_id,
+                        b.carnet AS ci_director,
+                        (((b.paterno::text || ' '::text) || b.materno::text) || ' '::text) || b.nombre::text AS director,
+                        a.cargo_tipo_id AS item_director,
+                        b.celular AS celular_director,
+                        a.ref AS referencia_telefono
+                    FROM maestro_inscripcion a
+                        JOIN persona b ON a.persona_id = b.id
+                    WHERE (a.gestion_tipo_id IN ( SELECT max(maestro_inscripcion.gestion_tipo_id) AS gestion_tipo_id
+                            FROM maestro_inscripcion
+                            WHERE (maestro_inscripcion.cargo_tipo_id = ANY (ARRAY[1, 12])) AND maestro_inscripcion.es_vigente_administrativo = true)) AND (a.cargo_tipo_id = ANY (ARRAY[1, 12])) AND a.es_vigente_administrativo = true
+                    ORDER BY a.institucioneducativa_id, a.id DESC
+                ) dir ON ie.id = dir.institucioneducativa_id
+                LEFT JOIN (select ieaea.institucioneducativa_id,
+                    string_agg(DISTINCT eat.id::character varying::text, ','::text) AS niveles_id,
+                    string_agg(DISTINCT eat.area_especial::text, ', '::text) AS niveles
+                    from institucioneducativa_area_especial_autorizado as ieaea
+                    inner join especial_area_tipo as eat on eat.id = ieaea.especial_area_tipo_id
+                    where eat.id <> 99
+                    group by ieaea.institucioneducativa_id 
+                ) iena ON iena.institucioneducativa_id = ie.id
+                LEFT JOIN ( 
+                    SELECT string_agg(vv.turno_id::character varying::text, '-'::text ORDER BY vv.turno_id) AS turno_id,
+                        string_agg(vv.turno, '-'::text ORDER BY vv.turno_id) AS turno,
+                        vv.institucioneducativa_id
+                    FROM ( SELECT v.turno,
+                                    CASE v.turno
+                                        WHEN 'M'::text THEN 1
+                                        WHEN 'T'::text THEN 2
+                                        WHEN 'N'::text THEN 3
+                                        ELSE 0
+                                    END AS turno_id,
+                                v.institucioneducativa_id
+                            FROM ( 
+                            
+                        select distinct iec2.institucioneducativa_id
+                        , unnest(string_to_array(string_agg(DISTINCT
+                                            CASE tt1.abrv
+                                                WHEN 'MTN'::text THEN 'M-T-N'::character varying
+                                                WHEN '.'::text THEN ''::character varying
+                                                WHEN 'MN'::text THEN 'M-N'::character varying
+                                                ELSE tt1.abrv
+                                            END::text, '-'::text), '-'::text, ''::text)) AS turno
+                        from institucioneducativa_curso as iec2 
+                        inner join (
+                                    select distinct on (ie1.id) 
+                                    ie1.id, iec1.gestion_tipo_id
+                                    from institucioneducativa as ie1
+                                    inner join institucioneducativa_curso as iec1 on iec1.institucioneducativa_id = ie1.id
+                                    inner join turno_tipo tt1 ON tt1.id = iec1.turno_tipo_id
+                                    where ie1.orgcurricular_tipo_id = 2 and ie1.id not in (1,2,3,4,5,6,7,8,9)
+                                    order by ie1.id, tt1.abrv, iec1.gestion_tipo_id desc
+                                    ) as ieg on ieg.id = iec2.institucioneducativa_id and ieg.gestion_tipo_id = iec2.gestion_tipo_id
+                                    inner join turno_tipo tt1 ON tt1.id = iec2.turno_tipo_id
+                                    group by iec2.institucioneducativa_id
+                                ) v
+                            GROUP BY v.institucioneducativa_id, v.turno
+                            ORDER BY
+                                    CASE v.turno
+                                        WHEN 'M'::text THEN 1
+                                        WHEN 'T'::text THEN 2
+                                        WHEN 'N'::text THEN 3
+                                        ELSE 0
+                                    END) vv
+                    GROUP BY vv.institucioneducativa_id
+                ) iet ON iet.institucioneducativa_id = ie.id
+                LEFT JOIN ( SELECT DISTINCT ON (ies1.institucioneducativa_id) ies1.institucioneducativa_id,
+                        ies1.gestion_tipo_id,
+                        ies1.telefono1,
+                        ies1.telefono2,
+                        ies1.fax,
+                        ies1.email
+                    FROM institucioneducativa_sucursal ies1
+                    INNER JOIN institucioneducativa as ie1 on ie1.id = ies1.institucioneducativa_id
+                    WHERE ie1.orgcurricular_tipo_id = 2
+                    ORDER BY ies1.institucioneducativa_id, ies1.gestion_tipo_id DESC, ies1.id DESC
+                ) ies ON ies.institucioneducativa_id = ie.id
+                */
+            WHERE ie.institucioneducativa_acreditacion_tipo_id = 1 and oct.id = 2 and ie.estadoinstitucion_tipo_id = 10 and ie.id not in (1,2,3,4,5,6,7,8,9) and ie.institucioneducativa_tipo_id = 4
+            group by dt.id, dt.dependencia
+            )   
+
+            select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
+            , sum(cantidad) as cantidad from tabla as t 
+            inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
+            group by dt.id, dt.dependencia
+            
+            order by tipo_id, id
+             
+        "); 
+
+        if($rol == 9 or $rol == 5) // Director o Administrativo
+        {
+            $queryEntidad = $em->getConnection()->prepare("
+                with tabla as (                
+                    select dt.id as dependencia_tipo_id, dt.dependencia,count(*) as cantidad
+                    FROM institucioneducativa ie
+                    INNER JOIN jurisdiccion_geografica jg ON jg.id = ie.le_juridicciongeografica_id
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id, lugar_tipo.area2001 AS area FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 5) loc ON loc.id = jg.lugar_tipo_id_localidad
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 4) can ON can.id = loc.lugar_tipo_id
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 3) sec ON sec.id = can.lugar_tipo_id
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 2) pro ON pro.id = sec.lugar_tipo_id
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 1) dep ON dep.id = pro.lugar_tipo_id
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 7) dis ON dis.id = jg.lugar_tipo_id_distrito
+                    INNER JOIN dependencia_tipo as dt ON dt.id = ie.dependencia_tipo_id
+                    INNER JOIN orgcurricular_tipo as oct ON oct.id = ie.orgcurricular_tipo_id
+                    INNER JOIN institucioneducativa_acreditacion_tipo as ieat ON ieat.id = COALESCE(ie.institucioneducativa_acreditacion_tipo_id::integer, 0)
+                    INNER JOIN estadoinstitucion_tipo eit ON eit.id = ie.estadoinstitucion_tipo_id                    
+                    WHERE ie.institucioneducativa_acreditacion_tipo_id = 1 and oct.id = 2 and ie.estadoinstitucion_tipo_id = 10 and ie.id not in (1,2,3,4,5,6,7,8,9) and ie.institucioneducativa_tipo_id = 4 and ie.id = ".$codigo."
+                    group by dt.id, dt.dependencia
+                )   
+
+                select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
+                , sum(cantidad) as cantidad from tabla as t 
+                inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
+                group by dt.id, dt.dependencia
+                
+                order by tipo_id, id
+            ");     
+        }  
+
+        if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
+        {
+            $queryEntidad = $em->getConnection()->prepare("    
+                with tabla as (                
+                    select dt.id as dependencia_tipo_id, dt.dependencia,count(*) as cantidad
+                    FROM institucioneducativa ie
+                    INNER JOIN jurisdiccion_geografica jg ON jg.id = ie.le_juridicciongeografica_id
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id, lugar_tipo.area2001 AS area FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 5) loc ON loc.id = jg.lugar_tipo_id_localidad
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 4) can ON can.id = loc.lugar_tipo_id
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 3) sec ON sec.id = can.lugar_tipo_id
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 2) pro ON pro.id = sec.lugar_tipo_id
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 1) dep ON dep.id = pro.lugar_tipo_id
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 7) dis ON dis.id = jg.lugar_tipo_id_distrito
+                    INNER JOIN dependencia_tipo as dt ON dt.id = ie.dependencia_tipo_id
+                    INNER JOIN orgcurricular_tipo as oct ON oct.id = ie.orgcurricular_tipo_id
+                    INNER JOIN institucioneducativa_acreditacion_tipo as ieat ON ieat.id = COALESCE(ie.institucioneducativa_acreditacion_tipo_id::integer, 0)
+                    INNER JOIN estadoinstitucion_tipo eit ON eit.id = ie.estadoinstitucion_tipo_id                    
+                    WHERE ie.institucioneducativa_acreditacion_tipo_id = 1 and oct.id = 2 and ie.estadoinstitucion_tipo_id = 10 and ie.id not in (1,2,3,4,5,6,7,8,9) and ie.institucioneducativa_tipo_id = 4 and dis.codigo = '".$codigo."'
+                    group by dt.id, dt.dependencia
+                )   
+
+                select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
+                , sum(cantidad) as cantidad from tabla as t 
+                inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
+                group by dt.id, dt.dependencia
+                
+                order by tipo_id, id
+            ");  
+        }  
+
+        if($rol == 7) // Tecnico Departamental
+        {
+            $queryEntidad = $em->getConnection()->prepare("                
+                with tabla as (                
+                    select dt.id as dependencia_tipo_id, dt.dependencia,count(*) as cantidad
+                    FROM institucioneducativa ie
+                    INNER JOIN jurisdiccion_geografica jg ON jg.id = ie.le_juridicciongeografica_id
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id, lugar_tipo.area2001 AS area FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 5) loc ON loc.id = jg.lugar_tipo_id_localidad
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 4) can ON can.id = loc.lugar_tipo_id
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 3) sec ON sec.id = can.lugar_tipo_id
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 2) pro ON pro.id = sec.lugar_tipo_id
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 1) dep ON dep.id = pro.lugar_tipo_id
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 7) dis ON dis.id = jg.lugar_tipo_id_distrito
+                    INNER JOIN dependencia_tipo as dt ON dt.id = ie.dependencia_tipo_id
+                    INNER JOIN orgcurricular_tipo as oct ON oct.id = ie.orgcurricular_tipo_id
+                    INNER JOIN institucioneducativa_acreditacion_tipo as ieat ON ieat.id = COALESCE(ie.institucioneducativa_acreditacion_tipo_id::integer, 0)
+                    INNER JOIN estadoinstitucion_tipo eit ON eit.id = ie.estadoinstitucion_tipo_id                    
+                    WHERE ie.institucioneducativa_acreditacion_tipo_id = 1 and oct.id = 2 and ie.estadoinstitucion_tipo_id = 10 and ie.id not in (1,2,3,4,5,6,7,8,9) and ie.institucioneducativa_tipo_id = 4 and dep.codigo = '".$codigo."'
+                    group by dt.id, dt.dependencia
+                )   
+
+                select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
+                , sum(cantidad) as cantidad from tabla as t 
+                inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
+                group by dt.id, dt.dependencia
+                
+                order by tipo_id, id
+            ");  
+        } 
+
+        if($rol == 8 or $rol == 20) // Tecnico Nacional
+        {            
+            $queryEntidad = $em->getConnection()->prepare("
+                with tabla as (                
+                    select dt.id as dependencia_tipo_id, dt.dependencia,count(*) as cantidad
+                    FROM institucioneducativa ie
+                    INNER JOIN jurisdiccion_geografica jg ON jg.id = ie.le_juridicciongeografica_id
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id, lugar_tipo.area2001 AS area FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 5) loc ON loc.id = jg.lugar_tipo_id_localidad
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 4) can ON can.id = loc.lugar_tipo_id
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 3) sec ON sec.id = can.lugar_tipo_id
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 2) pro ON pro.id = sec.lugar_tipo_id
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 1) dep ON dep.id = pro.lugar_tipo_id
+                    INNER JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 7) dis ON dis.id = jg.lugar_tipo_id_distrito
+                    INNER JOIN dependencia_tipo as dt ON dt.id = ie.dependencia_tipo_id
+                    INNER JOIN orgcurricular_tipo as oct ON oct.id = ie.orgcurricular_tipo_id
+                    INNER JOIN institucioneducativa_acreditacion_tipo as ieat ON ieat.id = COALESCE(ie.institucioneducativa_acreditacion_tipo_id::integer, 0)
+                    INNER JOIN estadoinstitucion_tipo eit ON eit.id = ie.estadoinstitucion_tipo_id                    
+                    WHERE ie.institucioneducativa_acreditacion_tipo_id = 1 and oct.id = 2 and ie.estadoinstitucion_tipo_id = 10 and ie.id not in (1,2,3,4,5,6,7,8,9) and ie.institucioneducativa_tipo_id = 4
+                    group by dt.id, dt.dependencia
+                )   
+
+                select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
+                , sum(cantidad) as cantidad from tabla as t 
+                inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
+                group by dt.id, dt.dependencia
+                
+                order by tipo_id, id
+            ");    
+        } 
+
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll(); 
+
+        $aDato = array();
+
+        foreach ($objEntidad as $key => $dato) {
+            $aDato[$dato['tipo_id']]['tipo'] = $dato['tipo_nombre'];
+            if (isset($aDato[$dato['tipo_id']]['dato'][0]['cantidad'])){
+                $cantidadParcial = $aDato[$dato['tipo_id']]['dato'][0]['cantidad'] + $dato['cantidad'];
+            } else {
+                $cantidadParcial = $dato['cantidad'];
+            }    
+            $aDato[$dato['tipo_id']]['dato'][0] = array('detalle'=>'Total', 'cantidad'=>$cantidadParcial);    
+            $aDato[$dato['tipo_id']]['dato'][$dato['id']] = array('detalle'=>$dato['nombre'], 'cantidad'=>$dato['cantidad']);  
+        }
+        return $aDato;
+    }
+
     /**
      * Busca el detalle de estudiantes en funcion al tipo de rol - Educacion Especial
      * Jurlan
@@ -5173,6 +5528,106 @@ class ReporteController extends Controller {
     }
 
     /**
+     * Busca el nombre de las entidades pertenecienten a un pais, departamento, distrito en funcion al tipo de rol
+     * Jurlan
+     * @param Request $request
+     * @return type
+     */
+    public function buscaSubEntidadRolEspecialInstitucionEducativa($codigo,$rol) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+        $gestionProcesada = $gestionActual;
+        //$gestionActual = 2016;
+
+        $em = $this->getDoctrine()->getManager();
+
+        $queryEntidad = $em->getConnection()->prepare("
+                select 'Departamento' as nombreArea, dep.codigo as codigo, dep.lugar as nombre, 7 as rolUsuario, coalesce(count(*),0) as cantidad
+                FROM institucioneducativa ie
+                JOIN jurisdiccion_geografica jg ON jg.id = ie.le_juridicciongeografica_id
+                JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id, lugar_tipo.area2001 AS area FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 5) loc ON loc.id = jg.lugar_tipo_id_localidad
+                JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 4) can ON can.id = loc.lugar_tipo_id
+                JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 3) sec ON sec.id = can.lugar_tipo_id
+                JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 2) pro ON pro.id = sec.lugar_tipo_id
+                JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 1) dep ON dep.id = pro.lugar_tipo_id
+                JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 7) dis ON dis.id = jg.lugar_tipo_id_distrito
+                WHERE ie.institucioneducativa_acreditacion_tipo_id = 1 and ie.orgcurricular_tipo_id = 2 and ie.estadoinstitucion_tipo_id = 10 and ie.id not in (1,2,3,4,5,6,7,8,9) and ie.institucioneducativa_tipo_id = 4
+                group by dep.codigo, dep.lugar
+                order by dep.codigo, dep.lugar
+            "); 
+
+        if($rol == 9 or $rol == 5) // Director o Administrativo
+        {                 
+        }  
+
+        if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
+        {
+            $queryEntidad = $em->getConnection()->prepare("
+                    select 'Centro de Educación Especial' as nombreArea, ie.id as codigo, ie.institucioneducativa as nombre, 9 as rolUsuario, coalesce(count(*),0) as cantidad
+                    FROM institucioneducativa ie
+                    JOIN jurisdiccion_geografica jg ON jg.id = ie.le_juridicciongeografica_id
+                    JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id, lugar_tipo.area2001 AS area FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 5) loc ON loc.id = jg.lugar_tipo_id_localidad
+                    JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 4) can ON can.id = loc.lugar_tipo_id
+                    JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 3) sec ON sec.id = can.lugar_tipo_id
+                    JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 2) pro ON pro.id = sec.lugar_tipo_id
+                    JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 1) dep ON dep.id = pro.lugar_tipo_id
+                    JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 7) dis ON dis.id = jg.lugar_tipo_id_distrito
+                    WHERE ie.institucioneducativa_acreditacion_tipo_id = 1 and ie.orgcurricular_tipo_id = 2 and ie.estadoinstitucion_tipo_id = 10 and ie.id not in (1,2,3,4,5,6,7,8,9) and ie.institucioneducativa_tipo_id = 4 and dis.codigo = '".$codigo."'
+                    group by ie.id, ie.institucioneducativa
+                    order by ie.id, ie.institucioneducativa
+                ");  
+        }  
+
+        if($rol == 7) // Tecnico Departamental
+        {
+            $queryEntidad = $em->getConnection()->prepare("
+                    select 'Distrito Educativo' as nombreArea, dis.codigo as codigo, dis.lugar as nombre, 10 as rolUsuario, coalesce(count(*),0) as cantidad
+                    FROM institucioneducativa ie
+                    JOIN jurisdiccion_geografica jg ON jg.id = ie.le_juridicciongeografica_id
+                    JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id, lugar_tipo.area2001 AS area FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 5) loc ON loc.id = jg.lugar_tipo_id_localidad
+                    JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 4) can ON can.id = loc.lugar_tipo_id
+                    JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 3) sec ON sec.id = can.lugar_tipo_id
+                    JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 2) pro ON pro.id = sec.lugar_tipo_id
+                    JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 1) dep ON dep.id = pro.lugar_tipo_id
+                    JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 7) dis ON dis.id = jg.lugar_tipo_id_distrito
+                    WHERE ie.institucioneducativa_acreditacion_tipo_id = 1 and ie.orgcurricular_tipo_id = 2 and ie.estadoinstitucion_tipo_id = 10 and ie.id not in (1,2,3,4,5,6,7,8,9) and ie.institucioneducativa_tipo_id = 4 and dep.codigo = '".$codigo."'
+                    group by dis.codigo, dis.lugar
+                    order by dis.codigo, dis.lugar
+                ");  
+        } 
+
+        if($rol == 8 or $rol == 20) // Tecnico Nacional
+        {
+            $queryEntidad = $em->getConnection()->prepare("
+                select 'Departamento' as nombreArea, dep.codigo as codigo, dep.lugar as nombre, 7 as rolUsuario, coalesce(count(*),0) as cantidad
+                FROM institucioneducativa ie
+                JOIN jurisdiccion_geografica jg ON jg.id = ie.le_juridicciongeografica_id
+                JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id, lugar_tipo.area2001 AS area FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 5) loc ON loc.id = jg.lugar_tipo_id_localidad
+                JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 4) can ON can.id = loc.lugar_tipo_id
+                JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 3) sec ON sec.id = can.lugar_tipo_id
+                JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 2) pro ON pro.id = sec.lugar_tipo_id
+                JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 1) dep ON dep.id = pro.lugar_tipo_id
+                JOIN (SELECT lugar_tipo.id, lugar_tipo.codigo, lugar_tipo.lugar, lugar_tipo.lugar_tipo_id FROM lugar_tipo WHERE lugar_tipo.lugar_nivel_id = 7) dis ON dis.id = jg.lugar_tipo_id_distrito
+                WHERE ie.institucioneducativa_acreditacion_tipo_id = 1 and ie.orgcurricular_tipo_id = 2 and ie.estadoinstitucion_tipo_id = 10 and ie.id not in (1,2,3,4,5,6,7,8,9) and ie.institucioneducativa_tipo_id = 4
+                group by dep.codigo, dep.lugar
+                order by dep.codigo, dep.lugar
+            ");    
+        } 
+
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll(); 
+        if (count($objEntidad)>0 and $rol != 9 and $rol != 5){
+            return $objEntidad;
+        } else {
+            return '';
+        }
+    }
+
+    /**
      * Imprime reportes estadisticos segun el tipo de rol en formato PDF - Educación Especial
      * Jurlan
      * @param Request $request
@@ -5297,5 +5752,135 @@ class ReporteController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
     }
+
+
+
+    /**
+     * Imprime reportes estadisticos de centros de educacion especial segun el tipo de rol en formato PDF - Educación Especial
+     * Jurlan
+     * @param Request $request
+     * @return type
+     */
+    public function especialInstitucionEducativaPdfAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+        if ($request->isMethod('POST')) {
+            /*
+             * Recupera datos del formulario
+             */
+            $gestion = $request->get('gestion');
+            $codigoArea = base64_decode($request->get('codigo'));
+            $rol = $request->get('rol');
+        } else {
+            $gestion = $gestionActual;
+            $codigoArea = 0;
+            $rol = 0;
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+
+        
+        // por defecto
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_institucionEducativa_Nacional_v1_rcm.rptdesign&__format=pdf&codigo='.$codigoArea));
+
+        if($rol == 9 or $rol == 5) // Director o Administrativo
+        {              
+        }  
+
+        if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
+        {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_institucionEducativa_Distrital_v1_rcm.rptdesign&__format=pdf&codigo='.$codigoArea));
+        }  
+
+        if($rol == 7) // Tecnico Departamental
+        { 
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_institucionEducativa_Departamental_v1_rcm.rptdesign&__format=pdf&codigo='.$codigoArea));
+        } 
+
+        if($rol == 8 or $rol == 20) // Tecnico Nacional
+        {  
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_institucionEducativa_Nacional_v1_rcm.rptdesign&__format=pdf&codigo='.$codigoArea));
+        } 
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    /**
+     * Imprime reportes estadisticos de centros de educacion especial segun el tipo de rol en formato XLS - Educación Especial
+     * Jurlan
+     * @param Request $request
+     * @return type
+     */
+    public function especialInstitucionEducativaXlsAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+        if ($request->isMethod('POST')) {
+            /*
+             * Recupera datos del formulario
+             */
+            $gestion = $request->get('gestion');
+            $codigoArea = base64_decode($request->get('codigo'));
+            $rol = $request->get('rol');
+        } else {
+            $gestion = $gestionActual;
+            $codigoArea = 0;
+            $rol = 0;
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $arch = 'MinEdu_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.xls';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        
+        // por defecto
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_institucionEducativa_Nacional_v1_rcm.rptdesign&__format=xls&codigo='.$codigoArea));
+
+        if($rol == 9 or $rol == 5) // Director o Administrativo
+        {              
+        }  
+
+        if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
+        {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_institucionEducativa_Distrital_v1_rcm.rptdesign&__format=xls&codigo='.$codigoArea));
+        }  
+
+        if($rol == 7) // Tecnico Departamental
+        { 
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_institucionEducativa_Departamental_v1_rcm.rptdesign&__format=xls&codigo='.$codigoArea));
+        } 
+
+        if($rol == 8 or $rol == 20) // Tecnico Nacional
+        {  
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_est_institucionEducativa_Nacional_v1_rcm.rptdesign&__format=xls&codigo='.$codigoArea));
+        } 
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
 
 }

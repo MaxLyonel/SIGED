@@ -13,7 +13,7 @@
         </div><!-- /.breadcrumb-wrapper -->
     </div><!-- /.header-content -->
     <!--/ End page header -->
-    <div class="body-content animated fadeIn">
+    {#<div class="body-content animated fadeIn">
         <div class="row">
             <div class="col-md-12">
                 <p class="lead">Estadísticas</p>
@@ -63,11 +63,11 @@
 
             </div>
         </div><!-- /.row -->
-    </div>
+    </div>#}
 {% endblock %}
 {% block javascripts %}
     {{parent()}}
-    <script>
+    <!--script>
         var registroConsol = function (gestionid) {
             $.ajax({
                 type: 'get',
@@ -130,5 +130,5 @@
         $(window).load(function(){
             cargatablas();
         });
-    </script>
+    </script-->
 {% endblock %}

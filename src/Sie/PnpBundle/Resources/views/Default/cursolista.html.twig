@@ -69,7 +69,7 @@
                     <h4><small>FECHA DE INICIO :</small></small><br>{% if datos.fecha_inicio %}{{ datos.fecha_inicio|date('d/m/Y') }}{% endif %}</h4>
                 </div>
                 <div class="col-md-4">
-                    <h4><small>BLOQUE :</small><br>{{ datos.ciclo_tipo_id }}</h4>                   
+                    <h4><small>CICLO :</small><br>{% if datos.plan == 1 %}BLOQUE {% endif %}{{ datos.nciclo }}</h4>
                 </div>
             </div>
             <div class="row">
@@ -80,7 +80,7 @@
                     <h4><small>FECHA DE FIN :</small><br>{% if datos.fecha_fin %}{{ datos.fecha_fin|date('d/m/Y') }}{% endif %}</h4>
                 </div>
                 <div class="col-xs-4">
-                    <h4><small>PARTE :</small><br>{{ datos.grado_tipo_id }}</h4>
+                    <h4><small>GRADO:{% if datos.plan == 2 %} ÁMBITO DE APRENDIZAJE:{% endif %}</small><br>{% if datos.plan == 1 %}PARTE {% endif %}{{ datos.ngrado }}</h4>
                 </div>
             </div>
             <div class="row">

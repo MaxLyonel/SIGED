@@ -64,7 +64,7 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
         $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
 
         $query = $repository->createQueryBuilder('i')
-            ->select('i.id ieducativaId, i.institucioneducativa ieducativa, d.id distritoId, d.distrito distrito, dp.id departamentoId, dp.departamento departamento, de.dependencia dependencia, jg.cordx cordx, jg.cordy cordy, st.id sucId')
+            ->select('i.id ieducativaId, i.institucioneducativa ieducativa,isuc.direccion, d.id distritoId, d.distrito distrito, dp.id departamentoId, dp.departamento departamento, de.dependencia dependencia, jg.cordx cordx, jg.cordy cordy, st.id sucId')
             ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'isuc', 'WITH', 'isuc.institucioneducativa = i.id')
             ->innerJoin('SieAppWebBundle:JurisdiccionGeografica', 'jg', 'WITH', 'i.leJuridicciongeografica = jg.id')
             ->innerJoin('SieAppWebBundle:DistritoTipo', 'd', 'WITH', 'jg.distritoTipo = d.id')
@@ -78,10 +78,12 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             ->getQuery();
 
         $institucion = $query->getOneOrNullResult();
+        //$institucion = $query->getResult();
+        //dump($institucion);die;
 
         //Información de la/el estudiante
         $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $aInfoStudent['codigoRude']));
-
+        //dump($aInfoStudent);die;
         // $unidadmil= $em->getRepository('SieAppWebBundle:UnidadMilitar')->findOneBy(array('unidadMilitar'=>$form['seccioniiUnidadMilitar']));
 
         //
@@ -106,7 +108,7 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
                 'institucion' => $institucion,
                 'estudiante' => $estudiante,
                 'student' => $student,
-                'form' => $this->newForm($idInscripcion, $gestion)->createView(),
+                'form' => $this->newForm($idInscripcion, $gestion,$institucion['direccion'])->createView(),
             ));
         }
 
@@ -117,7 +119,8 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
      * formulario de editar NUEVO rudeal
      */
 
-    private function newForm($idInscripcion, $gestion) {
+    private function newForm($idInscripcion, $gestion,$idireccion) {
+        //dump($idireccion);die;
         $em = $this->getDoctrine()->getManager();
 
         $estudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $idInscripcion));
@@ -263,7 +266,7 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
         $institucion = $this->session->get('ie_id');
 
         $form = $this->createFormBuilder()
-            ->setAction($this->generateUrl('socioeconomicoalt_create'))
+            //->setAction($this->generateUrl('socioeconomicoalt_create'))
             ->add('estudianteInscripcion', 'hidden', array('data' => $idInscripcion))
             ->add('gestionId', 'hidden', array('data' => $gestion))
             //Datos del estudiante
@@ -335,9 +338,10 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             ->add('seccionvEstudianteDemoraLlegarCentroMinutos', 'text', array('data' => 0, 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,2}', 'maxlength' => '2')))
             ->add('seccionviModalidadEstudioTipo', 'entity', array('label' => false, 'required' => true, 'class' => 'SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltModalidadTipo', 'property' => 'modalidad', 'attr' => array('class' => 'form-control')))
             ->add('seccionviEstudiantePorqueInterrupcionservicios', 'textarea', array('required' => false, 'attr' => array('class' => 'form-control')))
-            ->add('lugar', 'text', array('required' => true, 'attr' => array('class' => 'form-control')))
+            ->add('lugar', 'text', array('required' => true,'data' => $idireccion, 'attr' => array('class' => 'form-control')))
             ->add('fecha', 'date', array('format' => 'dd-MM-yyyy', 'data' => new \DateTime('now'), 'required' => false, 'attr' => array('class' => 'form-control')))
-            ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
+            //->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
+            ->add('guardar', 'button', array('label'=> 'Guardar', 'attr'=>array('class'=>'btn btn-primary', 'onclick'=>'guardarRudeal()')))
             ->getForm();
 
         return $form;
@@ -363,7 +367,7 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             $paisNac =  $em->getRepository('SieAppWebBundle:PaisTipo')->findOneBy(array('id' => 1));
         }
 
-        ////dump($socioeconomico->getSeccioniiiLocalidadTipo()->getId());die;
+        //dump($socioeconomico);die;
         if ($socioeconomico->getSeccioniiiLocalidadTipo()->getId() == 0)
         {
             $trozos = explode(",", $socioeconomico->getSeccioniiiZona());
@@ -723,7 +727,7 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
         //dump($modalidad);die;
         $institucion = $this->session->get('ie_id');
         $form = $this->createFormBuilder()
-            ->setAction($this->generateUrl('socioeconomicoalt_update'))
+            //->setAction($this->generateUrl('socioeconomicoalt_update'))
             ->add('estudianteInscripcion', 'hidden', array('data' => $idInscripcion))
             ->add('gestionId', 'hidden', array('data' => $gestion))
             ->add('socioeconomico', 'hidden', array('data' => $socioeconomico->getId()))
@@ -813,7 +817,7 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             ->add('seccionvIdioma2', 'entity', array('data' => $em->getReference('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltHablaTipo', $idioma2), 'required' => false, 'label' => false, 'class' => 'SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltHablaTipo', 'property' => 'habla', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
             ->add('seccionvIdioma3', 'entity', array('data' => $em->getReference('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltHablaTipo', $idioma3), 'required' => false, 'label' => false, 'class' => 'SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltHablaTipo', 'property' => 'habla', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
             ->add('seccionvEstudianteEsnacionoriginaria', 'choice', array('data' => $socioeconomico->getSeccionvEstudianteEsnacionoriginaria(), 'required' => false, 'label' => false, 'empty_value' => false, 'choices' => array(false => 'NO', true => 'SI')))
-            ->add('seccionvEstudianteNacionoriginariaTipo', 'entity', array('data' => $em->getReference('SieAppWebBundle:NacionOriginariaTipo', $socioeconomico->getSeccionvEstudianteNacionoriginariaTipo()->getId()), 'label' => false, 'required' => false, 'class' => 'SieAppWebBundle:NacionOriginariaTipo', 'property' => 'nacion_originaria', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+            ->add('seccionvEstudianteNacionoriginariaTipo', 'entity', array('data' => $em->getReference('SieAppWebBundle:NacionOriginariaTipo', $socioeconomico->getSeccionvEstudianteNacionoriginariaTipo() ? $socioeconomico->getSeccionvEstudianteNacionoriginariaTipo()->getId() : 0), 'label' => false, 'required' => false, 'class' => 'SieAppWebBundle:NacionOriginariaTipo', 'property' => 'nacion_originaria', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
             ->add('seccionvEstudianteEsocupacion', 'choice', array('data' => $socioeconomico->getSeccionvEstudianteEsocupacion(), 'required' => false, 'label' => false, 'empty_value' => false, 'choices' => array(false => 'NO', true => 'SI')))
             ->add('seccionvTrabaja', 'entity', array('data' => $ocupacionArray, 'multiple' => true, 'required' => false, 'label' => false, 'class' => 'SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltOcupacionTipo', 'property' => 'ocupacion', 'attr' => array('class' => 'form-control js-example-basic-multiple', 'style'=>'width: 100%')))
             ->add('seccionvOtroTrabajo', 'text', array('data' => $socioeconomico->getSeccionvOtroTrabajo(), 'required' => false, 'attr' => array('class' => 'form-control', 'maxlength' => '50')))
@@ -828,8 +832,8 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             ->add('seccionviEstudiantePorqueInterrupcionservicios', 'textarea', array('data' => $socioeconomico->getSeccionviEstudiantePorqueInterrupcionservicios(), 'required' => false, 'attr' => array('class' => 'form-control')))
             ->add('lugar', 'text', array('data' => $socioeconomico->getLugar(), 'required' => true, 'attr' => array('class' => 'form-control')))
             ->add('fecha', 'date', array('format' => 'dd-MM-yyyy', 'data' => new \DateTime($socioeconomico->getFecha()->format('d-m-Y')), 'required' => false, 'attr' => array('class' => 'form-control')))
-
-            ->add('guardar', 'submit', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary', 'disbled' => true)))
+            //->add('guardar', 'submit', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary', 'disbled' => true)))
+            ->add('guardar', 'button', array('label'=> 'Guardar cambios', 'attr'=>array('class'=>'btn btn-primary', 'onclick'=>'editarRudeal()')))
             ->getForm();
          //
            // dump($umt);die;
@@ -1022,13 +1026,19 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             }
 
             $em->getConnection()->commit();
-            $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron registrados correctamente.');
-            return $this->redirect($this->generateUrl('herramienta_alter_cursos_index'));
+            //$this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron registrados correctamente.');
+            //return $this->redirect($this->generateUrl('herramienta_alter_cursos_index'));
+            $response = new JsonResponse();
+            return $response->setData(array('tipo'=>'exito','msg' => 'Los datos fueron registrados correctamente.'));
+            
 
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
-            $this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron registrados.');
-            return $this->redirect($this->generateUrl('herramienta_alter_cursos_index'));
+            //$this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron registrados.');
+            //return $this->redirect($this->generateUrl('herramienta_alter_cursos_index'));
+            $response = new JsonResponse();
+            return $response->setData(array('tipo'=>'error','msg' => 'Los datos no fueron registrados.'));
+            
         }
 
 
@@ -1046,6 +1056,7 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
         $gestion = $this->session->get('ie_gestion');
         $sucursal = $this->session->get('ie_suc_id');
         $periodo = $this->session->get('ie_per_cod');
+        //dump($periodo);die;
 
         try {
             $form = $request->get('form');
@@ -1143,9 +1154,10 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             $socioinscripcion->setFecha(new \DateTime($form['fecha']['year'].'-'.$form['fecha']['month'].'-'.$form['fecha']['day']));
             $socioinscripcion->setFechaRegistro(new \DateTime('now'));
             $socioinscripcion->setFechaModificacion(new \DateTime('now'));
+            //dump($socioinscripcion);die;
             $em->persist($socioinscripcion);
             $em->flush();
-
+            //dump($socioinscripcion);die;    
             /*eliminar idiomas*/
             $idiomas = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltHabla')->findBy(array('estudianteInscripcionSocioeconomicoAlternativa' => $socioinscripcion));
 
@@ -1251,13 +1263,18 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             }
 
             $em->getConnection()->commit();
-            $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron actualizados correctamente.');
-            return $this->redirect($this->generateUrl('herramienta_alter_cursos_index'));
+            //$this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron actualizados correctamente.');
+            $response = new JsonResponse();
+            return $response->setData(array('tipo'=>'exito','msg' => 'Los datos fueron actualizados correctamente.'));
+            //return $this->redirect($this->generateUrl('herramienta_alter_cursos_index'));
+            //return $this->redirect($this->generateUrl('herramienta_alter_info_estudianterequest_see_students'));
 
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
-            $this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron actualizados.');
-            return $this->redirect($this->generateUrl('herramienta_alter_cursos_index'));
+            //$this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron actualizados.');
+            //return $this->redirect($this->generateUrl('herramienta_alter_cursos_index'));
+            $response = new JsonResponse();
+            return $response->setData(array('tipo'=>'error','msg' => 'Los datos no fueron actualizados.'));
         }
     }
 
