@@ -110,7 +110,7 @@
                                                     <th>Fecha Fin</th>                            
                                                     <th>Ciclo</th>                            
                                                     <th>Grado</th>
-                                                    <th>Estudiantes Aprob.</th>  
+                                                    <th>Participantes Aprob.</th>  
                                                     <th>Departamento</th>  
                                                     <th>Provincia</th>
                                                     <th>Municipio</th>
@@ -180,7 +180,6 @@
                             <input type="text" id="plan" name="plan" value="" required="required" style="display:none" />
                             <input type="text" id="ciclo_tipo_id" name="ciclo_tipo_id" value="" required="required" style="display:none" />
                             <input type="text" id="grado_tipo_id" name="grado_tipo_id" value="" required="required" style="display:none" />
-                            <input type="text" id="planes" name="planes" value="" required="required" style="display:none" />
                             Fecha Inicio:
                             <input type="text" id="fecha_inicio" name="fecha_inicio" placeholder="Digite Fecha Inicio" required="required" value=""/>&nbsp;&nbsp;<br>
                             Fecha Fin:
@@ -349,7 +348,7 @@
          $('#curso_id').val(id);
          $('#fecha_fin').val(fecha_fin);
          $('#fecha_inicio').val(fecha_inicio);
-         $('#planes').val(plan);
+         $('#plan').val(plan);
          $('#ciclo_tipo_id').val(ciclo_tipo_id);
          $('#grado_tipo_id').val(grado_tipo_id);
     }
@@ -384,7 +383,6 @@
         //PLAN ANTIGUO B1P1 MAX 2017, B1P2, B2P1 MAX 2018,B2P2 MAX 2019
         var gpa=0;//grado plan antiguo
         if(b==1 && p==1)gpa=1;if(b==1 && p==2)gpa=2;if(b==2 && p==1)gpa=3;if(b==2 && p==2)gpa=4;
-
         //plan 1
         if (plan == 1){
             if(gpa==1 && (anio > 2017 || anio < 2009)){

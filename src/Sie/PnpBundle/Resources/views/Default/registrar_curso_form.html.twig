@@ -132,11 +132,11 @@
                             <td>{{ fila.materno }}</td> 
                             <td>{{ fila.fecha_inicio }}</td>
                             <td>{{ fila.fecha_fin }}</td>                            
-                            <td>{% if plan == 1 %} BLOQUE {% endif %}{{ fila.ciclo_tipo_id }}</td>
-                            <td>{% if plan == 1 %} PARTE {% endif %}{{ fila.grado_tipo_id }}</td>
+                            <td>{% if plan == 1 %} BLOQUE {% endif %}{{ fila.ciclo }}</td>
+                            <td>{% if plan == 1 %} PARTE {{ fila.grado_tipo_id }} {% endif %} {% if fila.grado_tipo_id == 14 or fila.grado_tipo_id == 16 %}Semestre 1{% elseif fila.grado_tipo_id == 15 or fila.grado_tipo_id == 17 %}Semestre 2{% endif %}</td>
                             <td>{{ fila.depto }}</td>
                             <td>{{ fila.lugar }}</td>
-                            {% if fila.ciclo_tipo_id == 2 and fila.grado_tipo_id == 2 %}
+                            {% if (fila.ciclo_tipo_id == 2 and fila.grado_tipo_id == 2) or fila.grado_tipo_id == 17 %}
                                 <td>Último Curso</td>
                             {% else %}
                                 {% if fila.esactivo == 1 %}
