@@ -4081,9 +4081,10 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
             $em->flush();
         }
 /////////////////////////////////////
-        $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id);
-        $plan=$result->getPlancurricularTipoId();
+        
         if($id!=0){
+            $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id);
+        $plan=$result->getPlancurricularTipoId();
             //VER SU CUMPLE LOS REQUESITIVOS PARA CERRAR EL CURSO
             $curso_ok=0;
             // 1.- QUE LA CANTIDAD DE ESTUDIANTES NO SEAN MENOR Q 8
@@ -4630,10 +4631,11 @@ ciclo_tipo_id, grado_tipo_id
         $db = $em->getConnection();
         $userId = $this->session->get('userId');
 
-        $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id);
-        $plan=$result->getPlancurricularTipoId();
+        
         ////////cerrar curso
         if ($val==6){
+            $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id);
+        $plan=$result->getPlancurricularTipoId();
              //VER SU CUMPLE LOS REQUESITIVOS PARA CERRAR EL CURSO
             $curso_ok=0;
             // 1.- QUE LA CANTIDAD DE ESTUDIANTES NO SEAN MENOR Q 8
