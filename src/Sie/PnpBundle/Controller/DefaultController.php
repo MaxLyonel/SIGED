@@ -4081,7 +4081,8 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
             $em->flush();
         }
 /////////////////////////////////////
-
+        $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id);
+        $plan=$result->getPlancurricularTipoId();
         if($id!=0){
             //VER SU CUMPLE LOS REQUESITIVOS PARA CERRAR EL CURSO
             $curso_ok=0;
@@ -4097,34 +4098,39 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
                 foreach ($estudiantes as $estudiante) {
                     $estudiante_inscripcion_id[]=$estudiante->getId();
                 }
-                //vemos de cada estudiantes si tiene notas puro 0 o con notas
-                foreach ($estudiante_inscripcion_id as $ei_id) {
-                    $query = "
-                    select en.nota_cuantitativa
-                    from estudiante_asignatura ea, estudiante_nota en
-                    where ea.id=en.estudiante_asignatura_id 
-                    and ea.estudiante_inscripcion_id='$ei_id'";
-                    $stmt = $db->prepare($query);
-                    $params = array();
-                    $stmt->execute($params);
-                    $po = $stmt->fetchAll();
-                    $nota = array();
-                    $datos_filas = array();
-                    foreach ($po as $p) {
-                        $nota[] = $p["nota_cuantitativa"];
+                if($plan==1){
+                //vemos de cada estudiantes si tiene notas puro 0 o con notas para el plan 1
+                    foreach ($estudiante_inscripcion_id as $ei_id) {
+                        $query = "
+                        select en.nota_cuantitativa
+                        from estudiante_asignatura ea, estudiante_nota en
+                        where ea.id=en.estudiante_asignatura_id 
+                        and ea.estudiante_inscripcion_id='$ei_id'";
+                        $stmt = $db->prepare($query);
+                        $params = array();
+                        $stmt->execute($params);
+                        $po = $stmt->fetchAll();
+                        $nota = array();
+                        $datos_filas = array();
+                        foreach ($po as $p) {
+                            $nota[] = $p["nota_cuantitativa"];
+                        }
+                        /////ver si las notas son 0
+                        //print_r($nota);die;
+                        $cant_ceros=0;
+                        foreach ($nota as $not) {
+                            if($not==0)$cant_ceros++;
+                        }
+                        //$cant_ceros=substr_count(implode(',', array_values($nota)), 0);
+                        $cant_notas=count($nota);
+                        //echo $cant_ceros;die;
+                        $notas_bien=0;
+                        if($cant_ceros==$cant_notas){$notas_bien=1; goto salto;}
+                        if($cant_ceros==0){$notas_bien=1; goto salto;}
                     }
-                    /////ver si las notas son 0
-                    //print_r($nota);die;
-                    $cant_ceros=0;
-                    foreach ($nota as $not) {
-                        if($not==0)$cant_ceros++;
-                    }
-                    //$cant_ceros=substr_count(implode(',', array_values($nota)), 0);
-                    $cant_notas=count($nota);
-                    //echo $cant_ceros;die;
-                    $notas_bien=0;
-                    if($cant_ceros==$cant_notas){$notas_bien=1; goto salto;}
-                    if($cant_ceros==0){$notas_bien=1; goto salto;}
+                }
+                else{//plan 2
+                    $notas_bien=1;
                 }
                 //vemos si todos los estudiantes estan bieno mal
                 salto:
@@ -4151,8 +4157,6 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
                             }
                             else{
                                 //recoger el plan para que pida el nombre     
-                                $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id);
-                                $plan=$result->getPlancurricularTipoId();
                                 if($plan == 2){
                                     $modulo_emergente=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneByInstitucioneducativaCurso($id);
                                     $nom_me=$modulo_emergente->getModuloEmergente();
@@ -4626,7 +4630,8 @@ ciclo_tipo_id, grado_tipo_id
         $db = $em->getConnection();
         $userId = $this->session->get('userId');
 
-
+        $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id);
+        $plan=$result->getPlancurricularTipoId();
         ////////cerrar curso
         if ($val==6){
              //VER SU CUMPLE LOS REQUESITIVOS PARA CERRAR EL CURSO
@@ -4644,33 +4649,38 @@ ciclo_tipo_id, grado_tipo_id
                     $estudiante_inscripcion_id[]=$estudiante->getId();
                 }
                 //vemos de cada estudiantes si tiene notas puro 0 o con notas
-                foreach ($estudiante_inscripcion_id as $ei_id) {
-                    $query = "
-                    select en.nota_cuantitativa
-                    from estudiante_asignatura ea, estudiante_nota en
-                    where ea.id=en.estudiante_asignatura_id 
-                    and ea.estudiante_inscripcion_id='$ei_id'";
-                    $stmt = $db->prepare($query);
-                    $params = array();
-                    $stmt->execute($params);
-                    $po = $stmt->fetchAll();
-                    $nota = array();
-                    $datos_filas = array();
-                    foreach ($po as $p) {
-                        $nota[] = $p["nota_cuantitativa"];
+                if($plan==1){
+                    foreach ($estudiante_inscripcion_id as $ei_id) {
+                        $query = "
+                        select en.nota_cuantitativa
+                        from estudiante_asignatura ea, estudiante_nota en
+                        where ea.id=en.estudiante_asignatura_id 
+                        and ea.estudiante_inscripcion_id='$ei_id'";
+                        $stmt = $db->prepare($query);
+                        $params = array();
+                        $stmt->execute($params);
+                        $po = $stmt->fetchAll();
+                        $nota = array();
+                        $datos_filas = array();
+                        foreach ($po as $p) {
+                            $nota[] = $p["nota_cuantitativa"];
+                        }
+                        /////ver si las notas son 0
+                        //print_r($nota);die;
+                        $cant_ceros=0;
+                        foreach ($nota as $not) {
+                            if($not==0)$cant_ceros++;
+                        }
+                        //$cant_ceros=substr_count(implode(',', array_values($nota)), 0);
+                        $cant_notas=count($nota);
+                        //echo $cant_ceros;die;
+                        $notas_bien=0;
+                        if($cant_ceros==$cant_notas){$notas_bien=1; goto salto;}
+                        if($cant_ceros==0){$notas_bien=1; goto salto;}
                     }
-                    /////ver si las notas son 0
-                    //print_r($nota);die;
-                    $cant_ceros=0;
-                    foreach ($nota as $not) {
-                        if($not==0)$cant_ceros++;
-                    }
-                    //$cant_ceros=substr_count(implode(',', array_values($nota)), 0);
-                    $cant_notas=count($nota);
-                    //echo $cant_ceros;die;
-                    $notas_bien=0;
-                    if($cant_ceros==$cant_notas){$notas_bien=1; goto salto;}
-                    if($cant_ceros==0){$notas_bien=1; goto salto;}
+                }
+                else {//plan 2
+                   $notas_bien=1;
                 }
                 //vemos si todos los estudiantes estan bieno mal
                 salto:
@@ -4696,9 +4706,6 @@ ciclo_tipo_id, grado_tipo_id
                                 );  
                             }
                             else{
-                                //recoger el plan para que pida el nombre     
-                                $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id);
-                                $plan=$result->getPlancurricularTipoId();
                                 if($plan == 2){
                                     $modulo_emergente=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneByInstitucioneducativaCurso($id);
                                     $nom_me=$modulo_emergente->getModuloEmergente();
@@ -6931,7 +6938,7 @@ public function crear_curso_automaticoAction(Request $request){
                     $em->flush();
 
                     /////////////OCUPACION Y DISCAPACDAD SI EL PLAN 2
-                    if ($plan==2){//carlos
+                    if ($plan==2){
                         //sacamos los datos anteriores para registrar en el  nuevo
                         $result=$em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findOneByestudianteInscripcion($id_estudiante_inscripcion);
                         $discapacidad=$result->getSeccionivDiscapacitadTipo()->getId();
