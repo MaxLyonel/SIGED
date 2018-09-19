@@ -687,7 +687,7 @@ class DownloadController extends Controller {
 
         $dirProv = $porciones[3];
         $dirMun = $porciones[4];
-        $dirLoc = $porciones[6];
+        $dirLoc = $socioregIdEntity->getSeccionivDescLocalidad();
         //get the values of report
         //create the response object to down load the file
         $response = new Response();

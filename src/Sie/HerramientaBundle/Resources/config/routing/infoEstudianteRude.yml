@@ -1,0 +1,77 @@
+info_estudiante_rude_index:
+    path:     /
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRude:index" }
+    options:
+         expose: true
+
+info_estudiante_rude_departamentos_nac:
+    path:     /departamentosNac/{pais}
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRude:departamentosNac" }
+    options:
+         expose: true
+
+info_estudiante_rude_provincias_nac:
+    path:     /provinciasNac/{departamento}
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRude:provinciasNac" }
+    options:
+         expose: true
+
+# TAB 1 -  datos
+info_estudiante_rude_save_form1:
+    path:     /saveForm1
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRude:saveForm1" }
+    options:
+         expose: true
+
+# TAB 2 -  DATOS ESTUDIANTE
+info_estudiante_rude_save_form2:
+    path:     /saveForm2
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRude:saveForm2" }
+    options:
+         expose: true
+
+# TAB 4 -  DIRECCION
+info_estudiante_rude_listarprovincias:
+    path:     /listarprovincias/{dpto}
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRude:listarprovincias" }
+    options:
+         expose: true
+
+info_estudiante_rude_listarmunicipios:
+    path:     /listarmunicipios/{prov}
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRude:listarmunicipios" }
+    options:
+         expose: true
+
+info_estudiante_rude_save_form4:
+    path:     /saveForm4
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRude:saveForm4" }
+    options:
+         expose: true
+
+# TAB 5 - ASPECTOS SOCIALES
+info_estudiante_rude_save_form5:
+    path:     /saveForm5
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRude:saveForm5" }
+    options:
+         expose: true
+
+# BUSCAR PERSONA SERVICIO SEGIP
+info_estudiante_rude_buscar_persona:
+    path:     /buscarPersona
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRude:buscarPersona" }
+    options:
+         expose: true
+
+info_estudiante_rude_save_formApoderado:
+    path:     /saveFormApoderado
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRude:saveFormApoderado" }
+    options:
+         expose: true
+
+# TAB 7
+info_estudiante_rude_save_form7:
+    path:     /saveForm7
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRude:saveForm7" }
+    options:
+         expose: true

@@ -5,3 +5,11 @@
 .jupper{
 	text-transform: uppercase;	
 }
+
+.btn-wizard{
+	display: inline-block;
+    padding: 5px 14px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+}

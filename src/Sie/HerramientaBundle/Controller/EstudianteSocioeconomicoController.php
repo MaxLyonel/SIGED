@@ -1326,6 +1326,8 @@ class EstudianteSocioeconomicoController extends Controller {
             $socioinscripcion->setSeccionivAvenida($form['seccioniiiAvenida'] ? mb_strtoupper($form['seccioniiiAvenida'], 'utf-8') : '');
             $socioinscripcion->setSeccionivNumero($form['seccioniiiNumero'] ? $form['seccioniiiNumero'] : 0);
             $socioinscripcion->setSeccionivTelefonocelular($form['seccioniiiTelefonocelular'] ? $form['seccioniiiTelefonocelular'] : 0);
+
+            
             $socioinscripcion->setSeccionvHablaNinezTipo($em->getRepository('SieAppWebBundle:IdiomaTipo')->find($form['seccionvIdiomaNines']));
             $socioinscripcion->setSeccionvEstudianteEscentroSalud($form['seccionvEstudianteEscentroSalud']);
             $socioinscripcion->setSeccionvCantCentrosaludTipo($em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegCantCentrosaludTipo')->find($form['seccionvCantCentroSalud']));
