@@ -244,7 +244,6 @@ class ReconocimientosaberesController extends Controller
                 break;
         }    
 
-        
         ////////////saber si el estudiante tiene cursos
         if($rude==0)
             if($complemento=='0')
@@ -252,6 +251,7 @@ class ReconocimientosaberesController extends Controller
             else
                 $where="estudiante.carnet_identidad = '$ci' AND estudiante.complemento = '$complemento'";
         else $where="estudiante.codigo_rude = '$ci'";
+        
         $po=$this->retornar_estudianteAction($ci,$where);
         $filas = array();
         $datos_filas = array();
@@ -260,7 +260,7 @@ class ReconocimientosaberesController extends Controller
             $nombre = $p["nombre"]." ".$p["paterno"]." ".$p["materno"];
             $estudiante_rec=1;
         }
-        if($estudiante_rec==1 and $opc==1){
+        if($estudiante_rec==1){
         //si no existe en el curso saber si el curso es aquel que le corresponde
             echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI o CODIGO RUDE '.$ci.' con nombre '.$nombre.', no puede ser beneficiado con Reconocimiento de Saberes porque tiene registro en el SIE.</div>'; die; 
         }
@@ -499,7 +499,7 @@ class ReconocimientosaberesController extends Controller
                     FROM 
                       estudiante INNER JOIN estudiante_inscripcion ON estudiante.id = estudiante_inscripcion.estudiante_id
                       INNER JOIN genero_tipo ON genero_tipo.id = estudiante.genero_tipo_id
-                      INNER JOIN estadomatricula_tipo ON estadomatricula_tipo.ID = estudiante_inscripcion.estadomatricula_inicio_tipo_id
+                      LEFT JOIN estadomatricula_tipo ON estadomatricula_tipo.ID = estudiante_inscripcion.estadomatricula_inicio_tipo_id
                       INNER JOIN institucioneducativa_curso ON estudiante_inscripcion.institucioneducativa_curso_id = institucioneducativa_curso.id
                     WHERE
                       $where ";
