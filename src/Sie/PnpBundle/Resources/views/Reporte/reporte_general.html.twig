@@ -59,6 +59,12 @@
                                     {% endif %}
                                 {% endfor %}
                             </select>
+                             <label for="gestion_inicio">Plan&nbsp;&nbsp;</label>
+                            <select class="form-control" required="required" id="plan" name="plan">
+                                <option value="3" {% if plan == 3 %}selected="selected"{% endif %}>Todos</option>
+                                <option value="2" {% if plan == 2 %}selected="selected"{% endif %}>Plan Nuevo</option>
+                                <option value="1" {% if plan == 1 %}selected="selected"{% endif %}>Plan Antiguo</option>
+                            </select>
                             <label class="radio-inline">
                               <input type="radio" name="m_option" id="option_2" value="2" {% if m_option==2 %} checked="checked" {% else %}{% endif %}> Graduados
                             </label>
@@ -170,7 +176,7 @@
             <div class="portlet portlet-blue">
                 <div class="portlet-heading">
                     <div class="portlet-title">
-                        <h4>Reporte de {% if m_option==2 %}Graduados{% else %}Todos{% endif %} por Bloque - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})&nbsp;&nbsp;&nbsp;B = Bloque P = Parte</h4>
+                        <h4>Reporte de {% if m_option==2 %}Graduados{% else %}Todos{% endif %} por Curso - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})&nbsp;&nbsp;&nbsp;</h4>
                     </div>
                     <div class="portlet-widgets">
                         <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation3"><i class="fa fa-chevron-down"></i></a>
@@ -184,10 +190,10 @@
                     <thead>
                         <tr>
                             <th>{% if nivel_fin == 1 %}Departamentos{% elseif nivel_fin == 2 %}Provincias{% else %}Municipios{% endif %}</th>
-                            <th>B1 P1</th>
-                            <th>B1 P2</th>
-                            <th>B2 P1</th>
-                            <th>B2 P2</th>
+                            <th>Segundo</th>
+                            <th>Tercero</th>
+                            <th>Quinto</th>
+                            <th>Sexto</th>
                             <th>Total</th>
                             {% if nivel_fin == 1 %}
                                 <th>Ver Provincias</th>
@@ -248,7 +254,7 @@
             <div class="portlet portlet-blue">
                 <div class="portlet-heading">
                     <div class="portlet-title">
-                        <h4>{% if m_option==2 %}Graduados{% else %}Todos{% endif %} Masculino por Bloque - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})</h4>
+                        <h4>{% if m_option==2 %}Graduados{% else %}Todos{% endif %} Masculino por Curso - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})</h4>
                     </div>
                     <div class="portlet-widgets">
                         <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation4"><i class="fa fa-chevron-down"></i></a>
@@ -262,10 +268,10 @@
                     <thead>
                         <tr>
                             <th>{% if nivel_fin == 1 %}Departamentos{% elseif nivel_fin == 2 %}Provincias{% else %}Municipios{% endif %}</th>
-                            <th>B1 P1</th>
-                            <th>B1 P2</th>
-                            <th>B2 P1</th>
-                            <th>B2 P2</th>
+                            <th>Segundo</th>
+                            <th>Tercero</th>
+                            <th>Quinto</th>
+                            <th>Sexto</th>
                             <th>Total</th>
                         </tr>
                     </thead>
@@ -302,7 +308,7 @@
         <div class="portlet portlet-blue">
             <div class="portlet-heading">
                 <div class="portlet-title">
-                    <h4>{% if m_option==2 %}Graduados{% else %}Todos{% endif %} Femenino por Bloque - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})</h4>
+                    <h4>{% if m_option==2 %}Graduados{% else %}Todos{% endif %} Femenino por Curso - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})</h4>
                 </div>
                 <div class="portlet-widgets">
                     <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation5"><i class="fa fa-chevron-down"></i></a>
@@ -316,10 +322,10 @@
                            <thead>
                         <tr>
                             <th>{% if nivel_fin == 1 %}Departamentos{% elseif nivel_fin == 2 %}Provincias{% else %}Municipios{% endif %}</th>
-                            <th>B1 P1</th>
-                            <th>B1 P2</th>
-                            <th>B2 P1</th>
-                            <th>B2 P2</th>
+                            <th>Segundo</th>
+                            <th>Tercero</th>
+                            <th>Quinto</th>
+                            <th>Sexto</th>
                             <th>Total</th>
                         </tr>
                     </thead>

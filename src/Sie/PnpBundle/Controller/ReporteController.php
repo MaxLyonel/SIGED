@@ -58,14 +58,22 @@ public function reporte_generalAction($nivel_ini,$lugar,$nivel_fin,Request $requ
 
     $result=$em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lugar);
     $lugar_nombre=$result->getLugar();
+    $plan=3;
     if($request->getMethod()=="POST") {
         $gestion_ini=$request->get("gestion_ini");
         $gestion_fin=$request->get("gestion_fin");
         $m_option=$request->get("m_option");
+        $plan=$request->get("plan");
         if($m_option==2)//graduados option 1 todos
             $graduado="AND estadomatricula_tipo_id=62";
         else
             $graduado="";
+        //plan
+        if($plan==3)
+            $graduado="$graduado";
+        elseif ($plan==2) $graduado="$graduado AND (bloque=34 OR bloque=35)";
+        else $graduado="$graduado AND (bloque=1 OR bloque=2)";
+
     }
     else{
         $graduado="AND estadomatricula_tipo_id=62";
@@ -112,10 +120,10 @@ public function reporte_generalAction($nivel_ini,$lugar,$nivel_fin,Request $requ
     }
     /////////////// TABLA 1 Calcular por departamento cantidad de graduados por bloque y parte 
     $query = "SELECT $select1,
-                sum(case when bloque=1 and parte=1 THEN cantidad ELSE 0 END) as b1p1,
-                sum(case when bloque=1 and parte=2 THEN cantidad ELSE 0 END) as b1p2,
-                sum(case when bloque=2 and parte=1 THEN cantidad ELSE 0 END) as b2p1,
-                sum(case when bloque=2 and parte=2 THEN cantidad ELSE 0 END) as b2p2,
+                sum(case when (bloque=1 and parte=1) or parte=14 THEN cantidad ELSE 0 END) as b1p1,
+                sum(case when (bloque=1 and parte=2) or parte=15 THEN cantidad ELSE 0 END) as b1p2,
+                sum(case when (bloque=2 and parte=1) or parte=16 THEN cantidad ELSE 0 END) as b2p1,
+                sum(case when (bloque=2 and parte=2) or parte=17 THEN cantidad ELSE 0 END) as b2p2,
                 sum(cantidad) as total
                 FROM
                 (
@@ -148,10 +156,10 @@ public function reporte_generalAction($nivel_ini,$lugar,$nivel_fin,Request $requ
     }
     /////////////////////////TOTAL T1/////////////
     $query = "SELECT 
-            sum(case when bloque=1 and parte=1 THEN cantidad ELSE 0 END) as b1p1,
-            sum(case when bloque=1 and parte=2 THEN cantidad ELSE 0 END) as b1p2,
-            sum(case when bloque=2 and parte=1 THEN cantidad ELSE 0 END) as b2p1,
-            sum(case when bloque=2 and parte=2 THEN cantidad ELSE 0 END) as b2p2,
+            sum(case when (bloque=1 and parte=1) or parte=14 THEN cantidad ELSE 0 END) as b1p1,
+            sum(case when (bloque=1 and parte=2) or parte=15 THEN cantidad ELSE 0 END) as b1p2,
+            sum(case when (bloque=2 and parte=1) or parte=16 THEN cantidad ELSE 0 END) as b2p1,
+            sum(case when (bloque=2 and parte=2) or parte=17 THEN cantidad ELSE 0 END) as b2p2,
             sum(cantidad) as total
             FROM(
             SELECT *,count(*) as cantidad 
@@ -180,10 +188,10 @@ public function reporte_generalAction($nivel_ini,$lugar,$nivel_fin,Request $requ
     /////////////////////////////
     /////////////// TABLA 2 y 3 Calcular por departamento cantidad de graduados por bloque y parte MASCULINO 
     $query = "SELECT $select1,genero,
-                sum(case when bloque=1 and parte=1 THEN cantidad ELSE 0 END) as b1p1,
-                sum(case when bloque=1 and parte=2 THEN cantidad ELSE 0 END) as b1p2,
-                sum(case when bloque=2 and parte=1 THEN cantidad ELSE 0 END) as b2p1,
-                sum(case when bloque=2 and parte=2 THEN cantidad ELSE 0 END) as b2p2,
+                sum(case when (bloque=1 and parte=1) or parte=14 THEN cantidad ELSE 0 END) as b1p1,
+                sum(case when (bloque=1 and parte=2) or parte=15 THEN cantidad ELSE 0 END) as b1p2,
+                sum(case when (bloque=2 and parte=1) or parte=16 THEN cantidad ELSE 0 END) as b2p1,
+                sum(case when (bloque=2 and parte=2) or parte=17 THEN cantidad ELSE 0 END) as b2p2,
                 sum(cantidad) as total
                 FROM
                 (
@@ -220,10 +228,10 @@ public function reporte_generalAction($nivel_ini,$lugar,$nivel_fin,Request $requ
     }
     /////////////////////////TOTAL T2 y T3/////////////
     $query = "SELECT genero,
-            sum(case when bloque=1 and parte=1 THEN cantidad ELSE 0 END) as b1p1,
-            sum(case when bloque=1 and parte=2 THEN cantidad ELSE 0 END) as b1p2,
-            sum(case when bloque=2 and parte=1 THEN cantidad ELSE 0 END) as b2p1,
-            sum(case when bloque=2 and parte=2 THEN cantidad ELSE 0 END) as b2p2,
+            sum(case when (bloque=1 and parte=1) or parte=14 THEN cantidad ELSE 0 END) as b1p1,
+            sum(case when (bloque=1 and parte=2) or parte=15 THEN cantidad ELSE 0 END) as b1p2,
+            sum(case when (bloque=2 and parte=1) or parte=16 THEN cantidad ELSE 0 END) as b2p1,
+            sum(case when (bloque=2 and parte=2) or parte=17 THEN cantidad ELSE 0 END) as b2p2,
             sum(cantidad) as total
             FROM(
             SELECT *,count(*) as cantidad 
@@ -241,6 +249,8 @@ public function reporte_generalAction($nivel_ini,$lugar,$nivel_fin,Request $requ
     $tabla2t = array();
     $tabla3t = array();
     $datos_filas = array();
+    $total_g_m=0;
+    $total_g_f=0;
     foreach ($po as $p) {
         $datos_filas["b1p1"] = $p["b1p1"];
         $datos_filas["b1p2"] = $p["b1p2"];
@@ -278,6 +288,7 @@ public function reporte_generalAction($nivel_ini,$lugar,$nivel_fin,Request $requ
             'nivel_fin'=>$nivel_fin,
             'lugar_nombre'=>$lugar_nombre,
             'lugar'=>$lugar,
+            'plan'=>$plan,
             ));
 }
 ///////////////////////////////////////////////////////777
@@ -301,16 +312,24 @@ public function reporte_por_gestionAction($nivel_ini,$lugar,$nivel_fin,Request $
             $gestion_fin_t = $p["gestion_fin"];
         } 
 
+    $plan=3;
     $result=$em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lugar);
     $lugar_nombre=$result->getLugar();
     if($request->getMethod()=="POST") {
         $gestion_ini=$request->get("gestion_ini");
         $gestion_fin=$request->get("gestion_fin");
         $m_option=$request->get("m_option");
+        $plan=$request->get("plan");
         if($m_option==2)//graduados option 1 todos
             $graduado="AND estadomatricula_tipo_id=62";
         else
             $graduado="";
+
+         //plan
+        if($plan==3)
+            $graduado="$graduado";
+        elseif ($plan==2) $graduado="$graduado AND (bloque=34 OR bloque=35)";
+        else $graduado="$graduado AND (bloque=1 OR bloque=2)";
     }
     else{
         $graduado="AND estadomatricula_tipo_id=62";
@@ -357,10 +376,10 @@ public function reporte_por_gestionAction($nivel_ini,$lugar,$nivel_fin,Request $
     }
     ///////////////GUARDAMOS LOS DEPARTAMENTOS Y EL ID
     $query = "SELECT $select1,
-            sum(case when bloque=1 and parte=1 THEN cantidad ELSE 0 END) as b1p1,
-            sum(case when bloque=1 and parte=2 THEN cantidad ELSE 0 END) as b1p2,
-            sum(case when bloque=2 and parte=1 THEN cantidad ELSE 0 END) as b2p1,
-            sum(case when bloque=2 and parte=2 THEN cantidad ELSE 0 END) as b2p2,
+            sum(case when (bloque=1 and parte=1) or parte=14 THEN cantidad ELSE 0 END) as b1p1,
+            sum(case when (bloque=1 and parte=2) or parte=15 THEN cantidad ELSE 0 END) as b1p2,
+            sum(case when (bloque=2 and parte=1) or parte=16 THEN cantidad ELSE 0 END) as b2p1,
+            sum(case when (bloque=2 and parte=2) or parte=17 THEN cantidad ELSE 0 END) as b2p2,
             sum(cantidad) as total
             FROM
             (
@@ -399,10 +418,10 @@ public function reporte_por_gestionAction($nivel_ini,$lugar,$nivel_fin,Request $
     /////////////// TABLA 1 Calcular en un bucle cada año
     for($i=$gestion_ini;$i<=$gestion_fin;$i++){
         $query = "SELECT $select1,
-            sum(case when bloque=1 and parte=1 THEN cantidad ELSE 0 END) as b1p1,
-            sum(case when bloque=1 and parte=2 THEN cantidad ELSE 0 END) as b1p2,
-            sum(case when bloque=2 and parte=1 THEN cantidad ELSE 0 END) as b2p1,
-            sum(case when bloque=2 and parte=2 THEN cantidad ELSE 0 END) as b2p2,
+            sum(case when (bloque=1 and parte=1) or parte=14 THEN cantidad ELSE 0 END) as b1p1,
+            sum(case when (bloque=1 and parte=2) or parte=15 THEN cantidad ELSE 0 END) as b1p2,
+            sum(case when (bloque=2 and parte=1) or parte=16 THEN cantidad ELSE 0 END) as b2p1,
+            sum(case when (bloque=2 and parte=2) or parte=17 THEN cantidad ELSE 0 END) as b2p2,
             sum(cantidad) as total
             FROM
             (
@@ -458,10 +477,10 @@ public function reporte_por_gestionAction($nivel_ini,$lugar,$nivel_fin,Request $
     $suma_t11=$suma_t12=$suma_t21=$suma_t22=0;
     for($i=$gestion_ini;$i<=$gestion_fin;$i++){
         $query = "SELECT 
-                sum(case when bloque=1 and parte=1 THEN cantidad ELSE 0 END) as b1p1,
-                sum(case when bloque=1 and parte=2 THEN cantidad ELSE 0 END) as b1p2,
-                sum(case when bloque=2 and parte=1 THEN cantidad ELSE 0 END) as b2p1,
-                sum(case when bloque=2 and parte=2 THEN cantidad ELSE 0 END) as b2p2,
+                sum(case when (bloque=1 and parte=1) or parte=14 THEN cantidad ELSE 0 END) as b1p1,
+                sum(case when (bloque=1 and parte=2) or parte=15 THEN cantidad ELSE 0 END) as b1p2,
+                sum(case when (bloque=2 and parte=1) or parte=16 THEN cantidad ELSE 0 END) as b2p1,
+                sum(case when (bloque=2 and parte=2) or parte=17 THEN cantidad ELSE 0 END) as b2p2,
                 sum(cantidad) as total
                 FROM
                 (
@@ -513,6 +532,7 @@ public function reporte_por_gestionAction($nivel_ini,$lugar,$nivel_fin,Request $
             'nivel_fin'=>$nivel_fin,
             'lugar_nombre'=>$lugar_nombre,
             'lugar'=>$lugar,
+            'plan'=>$plan,
             ));
 }
 

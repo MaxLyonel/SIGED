@@ -181,10 +181,10 @@ class FindSieController extends Controller {
             $this->session->set('ue_humanistica', true);
         }
 
-
         // $this->session->set('ue_general', (array_search("$this->unidadEducativa",$this->arrUeGeneral,true)!=false)?true:false);
-        $operativoPerUe = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent(array('sie'=> $this->session->get('ie_id'), 'gestion'=>$this->session->get('currentyear')-1));
-        if($this->session->get('roluser')==9)
+        $operativoPerUe = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent(array('sie'=> $this->unidadEducativa, 'gestion'=>$this->session->get('currentyear')-1));
+        
+        if($this->session->get('roluser')==9 || $this->session->get('roluser')==8 || $this->session->get('roluser')==10)
           $operativoPerUe=$operativoPerUe-1;
 
         $this->operativoUe = $operativoPerUe;
@@ -250,27 +250,27 @@ class FindSieController extends Controller {
       switch (true) {
         case $this->session->get('ue_modular'):
           # code...
-          $label = 'Unidad Educativa Modular';
+          $label = 'Acceso Unidad Educativa Modular';
           $btnClass = 'btn btn-teal';
           break;
         case $this->session->get('ue_regularizar'):
           # code...
-          $label = 'Unidad Educativa a Regularizar';
+          $label = 'Acceso Unidad Educativa a Regularizar';
           $btnClass = 'btn btn-lilac';
           break;
         case $this->session->get('ue_noturna'):
           # code...
-          $label = 'Unidad Educativa Nocturna';
+          $label = 'Acceso Unidad Educativa Nocturna';
           $btnClass = 'btn btn-warning';
           break;
         case $this->session->get('ue_tecteg'):
           # code...
-          $label = 'Unidad Educativa Tec. Tegnológica';
+          $label = 'Acceso Unidad Educativa Tec. Tegnológica';
           $btnClass = 'btn btn-success';
           break;
         default:
           # code...
-          $label = 'Unidad Educativa Plena';
+          $label = 'Acceso Unidad Educativa Plena';
           $btnClass = 'btn btn-primary text-center btn-block';
           break;
       }

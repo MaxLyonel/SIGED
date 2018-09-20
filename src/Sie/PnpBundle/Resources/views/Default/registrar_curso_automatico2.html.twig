@@ -104,15 +104,9 @@
         var array_fechasol = f11.split("/")
         var anio = parseInt(array_fechasol[2])
         // plan antiguo 1 debe estar estre 2009-2017
-        if (plan == 1){
-            if(anio > 2017 || anio < 2009){
-                alert("Error!!!. La gestión de la fecha inicial debe estar entre 2009-2017");
-                return false;
-            }
-        }
-        else{//plan 2 nuevo 20018 pero no antes q hoy
+        if(plan == 2){//plan 2 nuevo 20018 pero no antes q hoy
             if(anio < 2018){
-                alert("Error!!!. La gestión de la fecha inicial debe ser mínimo 2018 y no mayor a la fecha de hoy");
+                alert("Error!!!. La gestión de la fecha inicial debe ser mínimo 2018");
                 return false;   
             }
         }
