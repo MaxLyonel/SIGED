@@ -1454,7 +1454,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
             }else{
                 if($operativo == 9)
                 {
-                    $estadostramite = '9,12';
+                    $estadostramite = '9,12,8,14';
                     $titulo = $gestion. ' ' . $semestre->getPeriodo() . '-Inscripciones';    
                 }else{
                     $estadostramite = '8,14';
