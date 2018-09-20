@@ -1117,6 +1117,8 @@ GROUP BY depto
         $db = $em->getConnection();
         $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id_curso);
                 $plan=$result->getPlancurricularTipoId();
+        if($plan==1)$order="ORDER BY asignatura_tipo.asignatura, nota_tipo.orden";
+        if($plan==2)$order="order by  asignatura_tipo.asignatura_boletin";
         //LISTA DE NOTAS
          $query = "SELECT
                       estudiante_nota.id,
@@ -1143,7 +1145,7 @@ GROUP BY depto
                     left join estudiante_nota_cualitativa on estudiante_nota_cualitativa.estudiante_inscripcion_id=estudiante_inscripcion.id 
                     WHERE
                       estudiante_inscripcion.id  = ".$idinscripcion."
-                    ORDER BY asignatura_tipo.asignatura, nota_tipo.orden";
+                    $order";
         $stmt = $db->prepare($query);
         $params = array();
         $stmt->execute($params);
@@ -3091,7 +3093,7 @@ GROUP BY depto
                 }
                 ///////////plan 2
                 // id estduoante_socieconomico_alternativa 
-                $result=$em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findByestudianteInscripcion($estudiante_inscripcion_id);
+                $result=$em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findByestudianteIEstudianteInscripcionSocnscripcion($estudiante_inscripcion_id);
                 $estudiante_inscripcion_socioeconomico_alternativa_id = array();
                 foreach ($result as $results) {
                     $estudiante_inscripcion_socioeconomico_alternativa_id[]=$results->getId();
@@ -4081,8 +4083,10 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
             $em->flush();
         }
 /////////////////////////////////////
-
+        
         if($id!=0){
+            $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id);
+        $plan=$result->getPlancurricularTipoId();
             //VER SU CUMPLE LOS REQUESITIVOS PARA CERRAR EL CURSO
             $curso_ok=0;
             // 1.- QUE LA CANTIDAD DE ESTUDIANTES NO SEAN MENOR Q 8
@@ -4097,34 +4101,39 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
                 foreach ($estudiantes as $estudiante) {
                     $estudiante_inscripcion_id[]=$estudiante->getId();
                 }
-                //vemos de cada estudiantes si tiene notas puro 0 o con notas
-                foreach ($estudiante_inscripcion_id as $ei_id) {
-                    $query = "
-                    select en.nota_cuantitativa
-                    from estudiante_asignatura ea, estudiante_nota en
-                    where ea.id=en.estudiante_asignatura_id 
-                    and ea.estudiante_inscripcion_id='$ei_id'";
-                    $stmt = $db->prepare($query);
-                    $params = array();
-                    $stmt->execute($params);
-                    $po = $stmt->fetchAll();
-                    $nota = array();
-                    $datos_filas = array();
-                    foreach ($po as $p) {
-                        $nota[] = $p["nota_cuantitativa"];
+                if($plan==1){
+                //vemos de cada estudiantes si tiene notas puro 0 o con notas para el plan 1
+                    foreach ($estudiante_inscripcion_id as $ei_id) {
+                        $query = "
+                        select en.nota_cuantitativa
+                        from estudiante_asignatura ea, estudiante_nota en
+                        where ea.id=en.estudiante_asignatura_id 
+                        and ea.estudiante_inscripcion_id='$ei_id'";
+                        $stmt = $db->prepare($query);
+                        $params = array();
+                        $stmt->execute($params);
+                        $po = $stmt->fetchAll();
+                        $nota = array();
+                        $datos_filas = array();
+                        foreach ($po as $p) {
+                            $nota[] = $p["nota_cuantitativa"];
+                        }
+                        /////ver si las notas son 0
+                        //print_r($nota);die;
+                        $cant_ceros=0;
+                        foreach ($nota as $not) {
+                            if($not==0)$cant_ceros++;
+                        }
+                        //$cant_ceros=substr_count(implode(',', array_values($nota)), 0);
+                        $cant_notas=count($nota);
+                        //echo $cant_ceros;die;
+                        $notas_bien=0;
+                        if($cant_ceros==$cant_notas){$notas_bien=1; goto salto;}
+                        if($cant_ceros==0){$notas_bien=1; goto salto;}
                     }
-                    /////ver si las notas son 0
-                    //print_r($nota);die;
-                    $cant_ceros=0;
-                    foreach ($nota as $not) {
-                        if($not==0)$cant_ceros++;
-                    }
-                    //$cant_ceros=substr_count(implode(',', array_values($nota)), 0);
-                    $cant_notas=count($nota);
-                    //echo $cant_ceros;die;
-                    $notas_bien=0;
-                    if($cant_ceros==$cant_notas){$notas_bien=1; goto salto;}
-                    if($cant_ceros==0){$notas_bien=1; goto salto;}
+                }
+                else{//plan 2
+                    $notas_bien=1;
                 }
                 //vemos si todos los estudiantes estan bieno mal
                 salto:
@@ -4151,8 +4160,6 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
                             }
                             else{
                                 //recoger el plan para que pida el nombre     
-                                $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id);
-                                $plan=$result->getPlancurricularTipoId();
                                 if($plan == 2){
                                     $modulo_emergente=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneByInstitucioneducativaCurso($id);
                                     $nom_me=$modulo_emergente->getModuloEmergente();
@@ -4626,9 +4633,11 @@ ciclo_tipo_id, grado_tipo_id
         $db = $em->getConnection();
         $userId = $this->session->get('userId');
 
-
+        
         ////////cerrar curso
         if ($val==6){
+            $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id);
+        $plan=$result->getPlancurricularTipoId();
              //VER SU CUMPLE LOS REQUESITIVOS PARA CERRAR EL CURSO
             $curso_ok=0;
             // 1.- QUE LA CANTIDAD DE ESTUDIANTES NO SEAN MENOR Q 8
@@ -4644,33 +4653,38 @@ ciclo_tipo_id, grado_tipo_id
                     $estudiante_inscripcion_id[]=$estudiante->getId();
                 }
                 //vemos de cada estudiantes si tiene notas puro 0 o con notas
-                foreach ($estudiante_inscripcion_id as $ei_id) {
-                    $query = "
-                    select en.nota_cuantitativa
-                    from estudiante_asignatura ea, estudiante_nota en
-                    where ea.id=en.estudiante_asignatura_id 
-                    and ea.estudiante_inscripcion_id='$ei_id'";
-                    $stmt = $db->prepare($query);
-                    $params = array();
-                    $stmt->execute($params);
-                    $po = $stmt->fetchAll();
-                    $nota = array();
-                    $datos_filas = array();
-                    foreach ($po as $p) {
-                        $nota[] = $p["nota_cuantitativa"];
+                if($plan==1){
+                    foreach ($estudiante_inscripcion_id as $ei_id) {
+                        $query = "
+                        select en.nota_cuantitativa
+                        from estudiante_asignatura ea, estudiante_nota en
+                        where ea.id=en.estudiante_asignatura_id 
+                        and ea.estudiante_inscripcion_id='$ei_id'";
+                        $stmt = $db->prepare($query);
+                        $params = array();
+                        $stmt->execute($params);
+                        $po = $stmt->fetchAll();
+                        $nota = array();
+                        $datos_filas = array();
+                        foreach ($po as $p) {
+                            $nota[] = $p["nota_cuantitativa"];
+                        }
+                        /////ver si las notas son 0
+                        //print_r($nota);die;
+                        $cant_ceros=0;
+                        foreach ($nota as $not) {
+                            if($not==0)$cant_ceros++;
+                        }
+                        //$cant_ceros=substr_count(implode(',', array_values($nota)), 0);
+                        $cant_notas=count($nota);
+                        //echo $cant_ceros;die;
+                        $notas_bien=0;
+                        if($cant_ceros==$cant_notas){$notas_bien=1; goto salto;}
+                        if($cant_ceros==0){$notas_bien=1; goto salto;}
                     }
-                    /////ver si las notas son 0
-                    //print_r($nota);die;
-                    $cant_ceros=0;
-                    foreach ($nota as $not) {
-                        if($not==0)$cant_ceros++;
-                    }
-                    //$cant_ceros=substr_count(implode(',', array_values($nota)), 0);
-                    $cant_notas=count($nota);
-                    //echo $cant_ceros;die;
-                    $notas_bien=0;
-                    if($cant_ceros==$cant_notas){$notas_bien=1; goto salto;}
-                    if($cant_ceros==0){$notas_bien=1; goto salto;}
+                }
+                else {//plan 2
+                   $notas_bien=1;
                 }
                 //vemos si todos los estudiantes estan bieno mal
                 salto:
@@ -4696,9 +4710,6 @@ ciclo_tipo_id, grado_tipo_id
                                 );  
                             }
                             else{
-                                //recoger el plan para que pida el nombre     
-                                $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id);
-                                $plan=$result->getPlancurricularTipoId();
                                 if($plan == 2){
                                     $modulo_emergente=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneByInstitucioneducativaCurso($id);
                                     $nom_me=$modulo_emergente->getModuloEmergente();
@@ -4757,12 +4768,18 @@ ciclo_tipo_id, grado_tipo_id
             ///modulo emergente
             if ($val==5){
                 $modulo_emergente_id=$request->get("modulo_emergente_id");
-                $modulo_emergente=$request->get("modulo_emergente"); 
-                $product=$em->getRepository('SieAppWebBundle:AltModuloemergente')->find($modulo_emergente_id);
+                $modulo_emergente=$request->get("mmodulo_emergente"); 
+                $modulo_emergente_horas=$request->get("modulo_emergente_horas");
+                $rcurso_id=$request->get("rcurso_id");
+                $product=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneById($modulo_emergente_id);
                 $product->setModuloEmergente($modulo_emergente);
                 $product->setFechaModificacion(new \DateTime('now'));
                 $usuario = $em->getRepository('SieAppWebBundle:Usuario')->findOneById($this->session->get('userId'));
                 $product->setUsuario($usuario);
+                $em->flush();
+
+                $product=$em->getRepository('SieAppWebBundle:institucionEducativaCurso')->findOneById($rcurso_id);
+                $product->setDuracionhoras($modulo_emergente_horas);
                 $em->flush();
             }
             if ($val == 1) { 
@@ -4963,7 +4980,8 @@ ciclo_tipo_id, grado_tipo_id
                       persona.complemento,
                       ct.ciclo as nciclo,
                       gt.grado as ngrado,
-                      icd.plancurricular_tipo_id
+                      icd.plancurricular_tipo_id,
+                      institucioneducativa_curso.duracionhoras
                     FROM 
                       institucioneducativa_curso 
                       INNER JOIN institucioneducativa_curso_datos as icd ON icd.institucioneducativa_curso_id=institucioneducativa_curso.id
@@ -5032,6 +5050,7 @@ ciclo_tipo_id, grado_tipo_id
             $datos_filasdos["carnet"] = $p["carnet"];
             $datos_filasdos["complemento"] = $p["complemento"];
             $plan=$p["plancurricular_tipo_id"];
+            $duracionhoras = $p["duracionhoras"];
             $filasdos[] = $datos_filasdos;
         }
 
@@ -5045,7 +5064,7 @@ ciclo_tipo_id, grado_tipo_id
             );
         }
         //$this->session->getFlashBag()->add('success', 'Proceso realizado exitosamente.');
-        return $this->render('SiePnpBundle:Default:cursolista_editnew.html.twig', array('estudiantes' => $filas, 'plan'=>$plan,'datosentity' => $filasdos,'esactivo'=>$esactivo,'id_archivo'=>$id_archivo,'discapacidades'=>$discapacidades,'modulo_emergente'=>$modulo_emergente));
+        return $this->render('SiePnpBundle:Default:cursolista_editnew.html.twig', array('estudiantes' => $filas, 'plan'=>$plan,'datosentity' => $filasdos,'esactivo'=>$esactivo,'id_archivo'=>$id_archivo,'discapacidades'=>$discapacidades,'modulo_emergente'=>$modulo_emergente,'duracionhoras'=>$duracionhoras));
     }
     
 
@@ -5796,7 +5815,6 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                 $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion');")->execute();
                 $inscripcion = new EstudianteInscripcion();
                 $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById($estado));
-            
                 //if($tipo==0 or $tipo==2)
                 $inscripcion->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->findOneBycodigoRude($rude));
                 //else $inscripcion->setEstudiante($estudiante);
@@ -6044,6 +6062,8 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
         $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id_curso);
                 $plan=$result->getPlancurricularTipoId();
 
+        if($plan==1)$order="ORDER BY asignatura_tipo.asignatura, nota_tipo.orden";
+        if($plan==2)$order="order by  asignatura_tipo.asignatura_boletin";
         //LISTA DE NOTAS
         $query = "SELECT
                       estudiante_nota.id,
@@ -6070,7 +6090,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                     left join estudiante_nota_cualitativa on estudiante_nota_cualitativa.estudiante_inscripcion_id=estudiante_inscripcion.id 
                     WHERE
                       estudiante_inscripcion.id  = ".$idinscripcion."
-                    ORDER BY asignatura_tipo.asignatura, nota_tipo.orden";
+                    $order";
         $stmt = $db->prepare($query);
         $params = array();
         $stmt->execute($params);
@@ -6163,7 +6183,7 @@ public function registrar_cursoAction(Request $request, $plan){
                 $institucioneducativa_sucursal_id->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($le_jurisdiccion_g));  
                 $institucioneducativa_sucursal_id->setCodCerradaId(10);       
                 $institucioneducativa_sucursal_id->setPeriodoTipoId(5);       
-                $institucioneducativa_sucursal_id->setNombreSubcea("PNP");       
+                $institucioneducativa_sucursal_id->setNombreSubcea("PNP");  
 
                 $em->persist($institucioneducativa_sucursal_id);
                 $em->flush(); 
@@ -6486,14 +6506,15 @@ public function verificar_formAction($id_curso){
                 break;
         }    
     $institucion_educativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByInstitucioneducativaCurso($id_curso);
+    $plan=$institucion_educativa->getPlancurricularTipoId();
     if($institucion_educativa){
-        $form = $this->createForm(new RegistrarCursoType(array('lugar_tipo_id'=>$lugar_tipo_id,'nombre'=>$nombre)), null, array('action' => $this->generateUrl('sie_pnp_crear_curso_automatico'), 'method' => 'POST',));
+        $form = $this->createForm(new RegistrarCursoType(array('lugar_tipo_id'=>$lugar_tipo_id,'nombre'=>$nombre,'plan'=>$plan)), null, array('action' => $this->generateUrl('sie_pnp_crear_curso_automatico'), 'method' => 'POST',));
         ////que si esta en la tabla
-        return $this->render('SiePnpBundle:Default:registrar_curso_automatico2.html.twig',array('id_curso'=>$id_curso,'op'=>1,'form'=>$form->createView()));
+        return $this->render('SiePnpBundle:Default:registrar_curso_automatico2.html.twig',array('id_curso'=>$id_curso,'op'=>1,'plan'=>$plan,'form'=>$form->createView()));
     } else{
-        $form = $this->createForm(new RegistrarCursoType(array('lugar_tipo_id'=>$lugar_tipo_id,'nombre'=>$nombre)), null, array('action' => $this->generateUrl('sie_pnp_crear_curso_automatico'), 'method' => 'POST',));
+        $form = $this->createForm(new RegistrarCursoType(array('lugar_tipo_id'=>$lugar_tipo_id,'nombre'=>$nombre,'plan'=>$plan)), null, array('action' => $this->generateUrl('sie_pnp_crear_curso_automatico'), 'method' => 'POST',));
         ////que no esta en la tabla
-        return $this->render('SiePnpBundle:Default:registrar_curso_automatico2.html.twig',array('id_curso'=>$id_curso,'op'=>2,'form'=>$form->createView()));
+        return $this->render('SiePnpBundle:Default:registrar_curso_automatico2.html.twig',array('id_curso'=>$id_curso,'op'=>2,'plan'=>$plan,'form'=>$form->createView()));
     }
 }
 
@@ -6640,6 +6661,7 @@ public function verificar_formAction($id_curso){
 public function crear_curso_automaticoAction(Request $request){
     if($request->getMethod()=="POST") {
         $op=$request->get("op");
+        $plan=$request->get("plan");
         $id_curso=$request->get("id_curso");
         $form = $request->get('sie_pnp_registrar_curso_nuevo');
         $fecha_inicio= $form['fecha_inicio'];
@@ -6655,24 +6677,27 @@ public function crear_curso_automaticoAction(Request $request){
         $ie=$institucion_educativa->getInstitucioneducativa()->getId();
         //buscamos el curso siguiente dependendiendo del bloque y parte numeor de materias y el modulo dependiendo de la gestion
         $gestion= substr($fecha_fin,-4);
-        if($gestion <= 2019){
-            if($bloque_actual==1 and  $parte_actual==1){$bloque_nuevo=1;$parte_nuevo=2;$nroMaterias=6;$modulo=2;}
-            elseif($bloque_actual==1 and  $parte_actual==2){$bloque_nuevo=2;$parte_nuevo=1;$nroMaterias=5;$modulo=3;}
-            elseif($bloque_actual==2 and  $parte_actual==1){$bloque_nuevo=2;$parte_nuevo=2;$nroMaterias=3;$modulo=4;}
-            else {$bloque_nuevo="";$parte_nuevo="";}
-        }//else
+        //plan antiguo
+        if($bloque_actual==1 and  $parte_actual==1){$bloque_nuevo=1;$parte_nuevo=2;$nroMaterias=6;$modulo=2;}
+        elseif($bloque_actual==1 and  $parte_actual==2){$bloque_nuevo=2;$parte_nuevo=1;$nroMaterias=5;$modulo=3;}
+        elseif($bloque_actual==2 and  $parte_actual==1){$bloque_nuevo=2;$parte_nuevo=2;$nroMaterias=3;$modulo=4;}
+        //plan nuevo
+        elseif($parte_actual==14){$bloque_nuevo=34;$parte_nuevo=15;$nroMaterias=5;$modulo=12;}
+        elseif($parte_actual==15){$bloque_nuevo=35;$parte_nuevo=16;$nroMaterias=5;$modulo=13;}
+        elseif($parte_actual==16){$bloque_nuevo=35;$parte_nuevo=17;$nroMaterias=3;$modulo=14;}
+        else {$bloque_nuevo="";$parte_nuevo="";}
         //Sacar la fecha, si fecha menor o igual a 2019 sacamos las materias
         $gestion= substr($fecha_fin,-4);
-         if($gestion <= 2019){
-            if($modulo==1)
-                $materias = array('2000','2002','2005','2006','2007');
-            elseif($modulo==2)
-                $materias = array('2000','2001','2002','2003','2004','2005','2007');
-            elseif($modulo==3)
-                $materias = array('2000','2001','2002','2003','2004','2007');
-            elseif($modulo==4)
-                $materias = array('2000','2002','2006','2007');
-        }//else        
+        if($modulo==1)
+            $materias = array('2000','2002','2005','2006','2007');
+        elseif($modulo==2)
+            $materias = array('2000','2001','2002','2003','2004','2005','2007');
+        elseif($modulo==3)
+            $materias = array('2000','2001','2002','2003','2004','2007');
+        elseif($modulo==4)
+            $materias = array('2000','2002','2006','2007');
+        elseif($modulo == 12 or $modulo == 13 or $modulo == 14 )
+            $materias = array('2008','2009','2010','2011','2012');
 
         ///datos de la tabla maestro_inscripcion: institucion_educativa_id, persona_id
         $maestro_inscripcion=$em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneById($id_maestro_inscripcion);
@@ -6752,7 +6777,8 @@ public function crear_curso_automaticoAction(Request $request){
                 $institucioneducativa_sucursal_id->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($gestion));
                 $institucioneducativa_sucursal_id->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($le_jurisdiccion_g));  
                 $institucioneducativa_sucursal_id->setCodCerradaId(10);       
-                $institucioneducativa_sucursal_id->setPeriodoTipoId(5);       
+                $institucioneducativa_sucursal_id->setPeriodoTipoId(5);
+                $institucioneducativa_sucursal_id->setNombreSubcea("PNP");       
 
                 $em->persist($institucioneducativa_sucursal_id);
                 $em->flush(); 
@@ -6842,7 +6868,7 @@ public function crear_curso_automaticoAction(Request $request){
             $nuevo_curso_datos->setLocalidad($localidad);
             $nuevo_curso_datos->setEsactivo(false);
             $nuevo_curso_datos->setObs($userId);
-            $nuevo_curso_datos->setPlancurricularTipoId(1);
+            $nuevo_curso_datos->setPlancurricularTipoId($plan);
             $nuevo_curso_datos->setInstitucioneducativaCurso($nuevo_curso);
             $em->persist($nuevo_curso_datos);
             $em->flush(); 
@@ -6874,6 +6900,17 @@ public function crear_curso_automaticoAction(Request $request){
                 $em->persist($newArea);
                 $em->flush(); 
             }
+            //SI PLAN ES 2 REGISTRAR MODULO EMERGENTE CON NOMBRE VACIO en la tabla alt_moduloemergente
+            if($plan==2){
+                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('alt_moduloemergente');");
+                $query->execute();
+                $newAltModuloemergente = new AltModuloEmergente();
+                $newAltModuloemergente->setInstitucioneducativaCurso($nuevo_curso);
+                $newAltModuloemergente->setModuloEmergente("VACIO");
+                $newAltModuloemergente->setFechaRegistro(new \DateTime('now'));
+                $em->persist($newAltModuloemergente);
+                $em->flush();
+            }
 
             //////////////////////BUSCAMOS A TODOS LOS ESTUDIANTES INSCRITOS EN EL CURSO ANTERIOR PARA REGISTRAR EN EL NUEVO CURSO
             $estado=61; //62 En Clase 
@@ -6882,25 +6919,16 @@ public function crear_curso_automaticoAction(Request $request){
                 $aprobo=1;
                 $id_estudiante=$estudiante_inscripcion->getEstudiante()->getId();
                 $id_estudiante_inscripcion=$estudiante_inscripcion->getId();
+                $matricula_estado_id=$estudiante_inscripcion->getEstadomatriculaTipo()->getId();
+                if($matricula_estado_id==61)$aprobo=0;//ctv
                 // id de la tabla estudiante_asignatura
-                $estudiantes_asignaturas=$em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findByestudianteInscripcion($id_estudiante_inscripcion);
-                foreach ($estudiantes_asignaturas as $estudiante_asignatura) {
-                    $estudiante_asignatura_id=$estudiante_asignatura->getId();
-
-                    $estudiantes_notas=$em->getRepository('SieAppWebBundle:EstudianteNota')->findByestudianteAsignatura($estudiante_asignatura_id);
-                    foreach ($estudiantes_notas as $estudiate_nota) {
-                        if($estudiate_nota->getNotaTipo()->getId()==17){
-                            if($estudiate_nota->getNotaCuantitativa()<36)
-                                $aprobo=0;
-                        }
-                    }
-                }
+                
                 if($aprobo==1){//Aprobo por esa razon se lo registra al estudiante en estudiantes inscripcion
                     //ESTUDIANTE INSCRIPCION
                     $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion');");
                     $query->execute();
                     $inscripcion = new EstudianteInscripcion();
-                    $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById($estado));
+                    $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->    findOneById($estado));
                     $inscripcion->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->findOneById($id_estudiante));
                     $inscripcion->setNumMatricula(0);
                     $inscripcion->setObservacionId(0);
@@ -6916,55 +6944,116 @@ public function crear_curso_automaticoAction(Request $request){
                     $em->persist($inscripcion);
                     $em->flush();
 
-                    /////buscar las id en la tabla institucion educativa curso oferta para las materias para luego registrar en estudiante asignatura 
-                
-                    $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findByinsitucioneducativaCurso($nuevo_curso);
-                    foreach ($result as $results) {
-                        ///obtenemos el id del cusro oferta y su registro como symfony acepta
-                        $institucioneducativa_curso_oferta_id=$results->getId();
-                        ///////registramos estudiante asignatura
-                        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');");
-                        $query->execute();
-                        $estAsignaturaNew = new EstudianteAsignatura();
-                        $estAsignaturaNew->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
-                        $estAsignaturaNew->setEstudianteInscripcion($inscripcion);
-                        $estAsignaturaNew->setInstitucioneducativaCursoOferta($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($institucioneducativa_curso_oferta_id));
-                        $em->persist($estAsignaturaNew);
+                    /////////////OCUPACION Y DISCAPACDAD SI EL PLAN 2
+                    if ($plan==2){
+                        //sacamos los datos anteriores para registrar en el  nuevo
+                        $result=$em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findOneByestudianteInscripcion($id_estudiante_inscripcion);
+                        $discapacidad=$result->getSeccionivDiscapacitadTipo()->getId();
+                        $ocupacion=$result->getSeccionvOtroTrabajo();
+                        $lugar_llenar=$result->getLugar();
+                        
+                        //guardamos los datos
+                        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion_socioeconomico_alternativa');")->execute();
+                        $estinscsocalt = new EstudianteInscripcionSocioeconomicoAlternativa();
+                        $estinscsocalt->setEstudianteInscripcion($inscripcion);
+                        $estinscsocalt->setSeccionivDiscapacitadTipo($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findOneById($discapacidad));
+                        $estinscsocalt->setSeccionvOtroTrabajo($ocupacion);
+                        $estinscsocalt->setLugar($lugar_llenar);
+                        $estinscsocalt->setFechaRegistro(new \DateTime('now'));
+                        $estinscsocalt->setFecha(new \DateTime('now'));
+                        $em->persist($estinscsocalt);
                         $em->flush();
+                    }
+                ///////////////////FIN
 
-                        $materia_id=$results->getAsignaturaTipo()->getId();
-                        //////registramos 6 notas por materia (12:Trabajo Grupal,13:Trabajo Individual,14:Prueba Final,15:Asistencia,16:Nota Final)
-                        if($materia_id!=2007) //2007 prueba final solo debe tener una nota promedio final
-                        {
-                            for($i=12;$i<=16;$i++){
-                                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota');");
-                                $query->execute();
+                    /////buscar las id en la tabla institucion educativa curso oferta para las materias para luego registrar en estudiante asignatura 
+                    if ($plan==1){
+                        /////buscar las id en la tabla institucion educativa curso oferta para las materias para luego registrar en estudiante asignatura 
+                        $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findByinsitucioneducativaCurso($nuevo_curso);
+                        foreach ($result as $results) {
+                            ///obtenemos el id del cusro oferta y su registro como symfony acepta
+                            $institucioneducativa_curso_oferta_id=$results->getId();
+                            ///////registramos estudiante asignatura
+
+                            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');")->execute();
+                            $estAsignaturaNew = new EstudianteAsignatura();
+                            $estAsignaturaNew->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
+                            $estAsignaturaNew->setEstudianteInscripcion($inscripcion);
+                            $estAsignaturaNew->setInstitucioneducativaCursoOferta($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($institucioneducativa_curso_oferta_id));
+                            $em->persist($estAsignaturaNew);
+                            $em->flush();
+
+                            $materia_id=$results->getAsignaturaTipo()->getId();
+                            //////registramos 6 notas por materia (12:Trabajo Grupal,13:Trabajo Individual,14:Prueba Final,15:Asistencia,16:Nota Final)
+                            if($materia_id!=2007) //2007 prueba final solo debe tener una nota promedio final
+                            {
+                                for($i=12;$i<=16;$i++){
+                                    $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota');")->execute();
+                                    $registro_nota = new EstudianteNota();
+                                    $registro_nota->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($i));
+                                    $registro_nota->setEstudianteAsignatura($estAsignaturaNew);
+                                    $registro_nota->setNotaCuantitativa('0');
+                                    $registro_nota->setUsuarioId($this->session->get('userId'));
+                                    $registro_nota->setFechaRegistro(new \DateTime('now'));                       
+                                    $em->persist($registro_nota);
+                                    $em->flush();       
+                                }
+                            }
+                            else{
+                                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota');")->execute();
                                 $registro_nota = new EstudianteNota();
-                                $registro_nota->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($i));
+                                $registro_nota->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(17));
                                 $registro_nota->setEstudianteAsignatura($estAsignaturaNew);
                                 $registro_nota->setNotaCuantitativa('0');
                                 $registro_nota->setUsuarioId($this->session->get('userId'));
                                 $registro_nota->setFechaRegistro(new \DateTime('now'));                       
                                 $em->persist($registro_nota);
-                                $em->flush();       
+                                $em->flush();  
                             }
                         }
-                        else
-                        {
-                            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota');");
-                            $query->execute();
+                    }
+                    elseif($plan==2){
+                        /////buscar las id en la tabla institucion educativa curso oferta para las materias para luego registrar en estudiante asignatura 
+                        $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findByinsitucioneducativaCurso($nuevo_curso);
+                        foreach ($result as $results) {
+                        ///obtenemos el id del cusro oferta y su registro como symfony acepta
+                            $institucioneducativa_curso_oferta_id=$results->getId();
+                            ///////registramos estudiante asignatura
+
+                            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');")->execute();
+                            $estAsignaturaNew = new EstudianteAsignatura();
+                            $estAsignaturaNew->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
+                            $estAsignaturaNew->setEstudianteInscripcion($inscripcion);
+                            $estAsignaturaNew->setInstitucioneducativaCursoOferta($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($institucioneducativa_curso_oferta_id));
+                            $em->persist($estAsignaturaNew);
+                            $em->flush();
+
+                            $materia_id=$results->getAsignaturaTipo()->getId();
+                            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota');")->execute();
                             $registro_nota = new EstudianteNota();
-                            $registro_nota->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(17));
+                            $registro_nota->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(16));//NOTA FINAL
                             $registro_nota->setEstudianteAsignatura($estAsignaturaNew);
                             $registro_nota->setNotaCuantitativa('0');
                             $registro_nota->setUsuarioId($this->session->get('userId'));
                             $registro_nota->setFechaRegistro(new \DateTime('now'));                       
                             $em->persist($registro_nota);
-                            $em->flush();  
-                        }  
+                            $em->flush();
+                        }
+                        //nota cualitativa
+                        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota_cualitativa');")->execute();
+                        $registro_nota_cualitativa = new EstudianteNotaCualitativa();
+                        $registro_nota_cualitativa->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(16));//NOTA FINAL 
+                        $registro_nota_cualitativa->setEstudianteInscripcion($inscripcion);
+                        $registro_nota_cualitativa->setEstudianteInscripcion($inscripcion);
+                        $registro_nota_cualitativa->setNotaCuantitativa(0);
+                        $registro_nota_cualitativa->setUsuarioId($this->session->get('userId'));
+                        $registro_nota_cualitativa->setFechaRegistro(new \DateTime('now'));
+                        $em->persist($registro_nota_cualitativa);
+                        $em->flush();
+
                     }
                 }
-            }         
+            }
 
             $this->get('session')->getFlashBag()->add(
                     'notice',
@@ -7066,7 +7155,8 @@ public function cambiar_facilitadorAction(Request $request){
                 $institucioneducativa_sucursal_id->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($gestion_g));
                 $institucioneducativa_sucursal_id->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($le_jurisdiccion_g));  
                 $institucioneducativa_sucursal_id->setCodCerradaId(10);       
-                $institucioneducativa_sucursal_id->setPeriodoTipoId(5);       
+                $institucioneducativa_sucursal_id->setPeriodoTipoId(5);
+                $institucioneducativa_sucursal_id->setNombreSubcea("PNP");       
 
                 $em->persist($institucioneducativa_sucursal_id);
                 $em->flush(); 
@@ -7294,9 +7384,10 @@ public function cambiar_facilitador_encontradoAction(Request $request,$ci,$compl
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
     $query = "
-            select persona.carnet,persona.complemento, persona.nombre, persona.paterno, persona.materno,
+            SELECT persona.carnet,persona.complemento, persona.nombre, persona.paterno, persona.materno,
                 institucioneducativa_curso.fecha_inicio, institucioneducativa_curso.fecha_fin,
                 institucioneducativa_curso.ciclo_tipo_id, institucioneducativa_curso.grado_tipo_id,
+                                ct.ciclo,gt.grado,
                 institucioneducativa_curso.id,
 
                 CASE
@@ -7327,6 +7418,8 @@ public function cambiar_facilitador_encontradoAction(Request $request,$ci,$compl
             inner join persona 
             on maestro_inscripcion .persona_id = persona.id
             inner join institucioneducativa_curso_datos icd on icd.institucioneducativa_curso_id=institucioneducativa_curso.id
+            join ciclo_tipo ct on  institucioneducativa_curso.ciclo_tipo_id=ct.id
+                        join grado_tipo gt on institucioneducativa_curso.grado_tipo_id=gt.id
 
             where 
             persona.id = $persona_id and institucioneducativa_curso.institucioneducativa_id =$ie
@@ -7351,6 +7444,8 @@ public function cambiar_facilitador_encontradoAction(Request $request,$ci,$compl
             $datos_filas["fecha_fin"] = $p["fecha_fin"];
             $datos_filas["ciclo_tipo_id"] = $p["ciclo_tipo_id"];
             $datos_filas["grado_tipo_id"] = $p["grado_tipo_id"];
+            $datos_filas["ciclo"] = $p["ciclo"];
+            $datos_filas["grado"] = $p["grado"];
             $datos_filas["id"] = $p["id"];
             $datos_filas["depto"] = $p["depto"];
             $datos_filas["lugar"] = $p["lugar"];

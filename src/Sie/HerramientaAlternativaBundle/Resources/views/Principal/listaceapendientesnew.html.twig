@@ -82,7 +82,7 @@
                             <table class="table table-bordered table-striped" id="listaCeas">
                                 <thead>
                                 <tr>
-                                    <th class="text-center border-right">No.</th>
+                                    <th class="text-center" style="min-width:5px">No.</th>
                                     <th>Departamento</th>
                                     <th>Código de distrito</th>
                                     <th>Gestión</th>
@@ -94,7 +94,7 @@
                                 </thead>
                                 <tfoot>
                                 <tr>
-                                    <th class="text-center border-right">No.</th>
+                                    <th class="text-center" style="min-width:5px">No.</th>
                                     <th>Departamento</th>
                                     <th>Código de distrito</th>
                                     <th>Gestión</th>
@@ -107,7 +107,7 @@
                                 <tbody>
                                 {% for reg in entities %}
                                     <tr>
-                                        <td class="text-center border-right">{{ loop.index }}</td>
+                                        <td class="text-center">{{ loop.index }}</td>
                                         <td>{{ reg.lugar }}</td>
                                         <td>{{ reg.distrito_cod }}</td>
                                         <td>{{ reg.gestion_tipo_id }}</td>

@@ -29,6 +29,7 @@
     <br>
     <input name="op" style="display: none" value="{{ op }}"></input>
     <input name="id_curso" style="display: none" value="{{ id_curso }}"></input>
+    <input name="plan" id="plan" style="display: none" value="{{ plan }}"></input>
     <div class="row">            
             <div class="col-xs-12" align="center">
                 {{ form_row(form.save, { 'id': 'save','attr': { 'onclick':'return validar_fecha2()' }}) }}
@@ -82,6 +83,8 @@
   function validar_fecha2(){
     var f2 = document.getElementById("form_fecha_inicio2").value;
     var f1 = document.getElementById("fecha_anterior_fin").value;
+    var plan = document.getElementById("plan").value;
+    var fecha_actual = moment().format("DD/MM/YYYY"); //fecha actual
     var aFecha1 = f1.split('/'); 
     var aFecha2 = f2.split('/'); 
     var fFecha1 = Date.UTC(aFecha1[2],aFecha1[1]-1,aFecha1[0]); 
@@ -97,14 +100,39 @@
         var fFecha22 = Date.UTC(aFecha22[2],aFecha22[1]-1,aFecha22[0]); 
         var dif = fFecha22 - fFecha11;
         var dias1 = Math.floor(dif / (1000 * 60 * 60 * 24));         
-        if(dias1>60){
-            document.getElementById("save").style.visibility = 'hidden';
-            return true;
+              //validamos primero q la fecha (año) inicio no sea mayor que la fecha actual (año)
+        var array_fechasol = f11.split("/")
+        var anio = parseInt(array_fechasol[2])
+        // plan antiguo 1 debe estar estre 2009-2017
+        if(plan == 2){//plan 2 nuevo 20018 pero no antes q hoy
+            if(anio < 2018){
+                alert("Error!!!. La gestión de la fecha inicial debe ser mínimo 2018");
+                return false;   
+            }
         }
-        else{
-            alert("La fecha final debe ser mínimo 60 dias mayor que la fecha inicial");
-            return false;
-        }       
+             /////////////////////////////////
+    ///////////////VALIDAMOS PLAN 1 ENTRE 90 - 240 Y PLAN 2 ENTRE 150 -180
+        //////PARA EL PLAN 1
+        if(plan==1){
+            if(dias1>=90 && dias1<240){
+                document.getElementById("save").style.visibility = 'hidden';
+                return true;
+            }
+            else{
+                alert("La fecha final debe ser mínimo 90 días mayor que la fecha inicial pero no mayor a 240 días (3 meses a 8 meses)");
+                return false;
+            }    
+        }
+        else{ // PLAN 2
+            if(dias1>=140 && dias1<180){
+                document.getElementById("save").style.visibility = 'hidden';
+                return true;
+            }
+            else{
+                alert("La fecha final debe ser mínimo 140 días mayor que la fecha inicial pero no mayor a 180 días (5 meses a 6 meses)");
+                return false;
+            }   
+        }
     //alert("si es mayor osea bien");
     }
     else{

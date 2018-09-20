@@ -54,105 +54,14 @@ class ReconocimientosaberesController extends Controller
             try {
                 $em->getConnection()->beginTransaction();
                 $registrar=new PnpReconocimientoSaberes();
-                if($tipo=="Estudiante"){
-                    $registrar->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($estudiante_id));
+                $registrar->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($estudiante_id));
 
                     //actualizamos observacionadicional
-                    $estudiante_act = $em->getRepository('SieAppWebBundle:Estudiante')->find($estudiante_id);
-                    $estudiante_act->setObservacionadicional($observacionadicional);
-                    $em->flush();
-                }
-                else{///// como es persona debemos mover sus datos a estudiante y guardar el id en persona
-                    //BUSCAR VALORES
-
-                    switch ($cod_ue) {
-                    case 80480300://CHUQUISACA
-                        $ie = '80480300';
-                        $rude1 = $em->getRepository('SieAppWebBundle:PnpSerialRude')->find('1');
-                        break;
-                    case 80730794://LA PAZ
-                        $ie = '80730794';
-                        $rude1 = $em->getRepository('SieAppWebBundle:PnpSerialRude')->find('2');
-                        break;
-                    case 80980569://COCHABAMBA
-                        $ie = '80980569';
-                        $rude1 = $em->getRepository('SieAppWebBundle:PnpSerialRude')->find('3');
-                        break;
-                    case 81230297://ORURO
-                        $ie = '81230297';
-                        $rude1 = $em->getRepository('SieAppWebBundle:PnpSerialRude')->find('4');
-                        break;
-                    case 81480201://POTOSI
-                        $ie = '81480201';
-                        $rude1 = $em->getRepository('SieAppWebBundle:PnpSerialRude')->find('5');
-                        break;
-                    case 81730264://TARIJA
-                        $ie = '81730264';
-                        $rude1 = $em->getRepository('SieAppWebBundle:PnpSerialRude')->find('6');
-                        break;
-                    case 81981501://SANTA CRUZ
-                        $ie = '81981501';
-                        $rude1 = $em->getRepository('SieAppWebBundle:PnpSerialRude')->find('7');
-                        break;
-                    case 82230130://BENI
-                        $ie = '82230130';
-                        $rude1 = $em->getRepository('SieAppWebBundle:PnpSerialRude')->find('8');
-                        break;
-                    case 82480050://PANDO
-                        $ie = '82480050';
-                        $rude1 = $em->getRepository('SieAppWebBundle:PnpSerialRude')->find('9');
-                        break;
-                    }
-
-                    //GENERA RUDE
-                    $anio=date("Y");
-                    $seqrude = (string)$rude1->getSeqrude()+1;
-                    $codrude = $ie.$anio.str_pad($seqrude, 6, "0", STR_PAD_LEFT);
-
-                    //BUSCA DATOS PERSONA    
-                    $persona = $this->getDoctrine()->getRepository('SieAppWebBundle:Persona')->findOneById($estudiante_id);
-                    $estudiante = new Estudiante();
-                    $estudiante->setCodigoRude($codrude);
-                    $rude=$codrude;                
-                    $estudiante->setCarnetIdentidad($persona->getCarnet());                
-                    $estudiante->setPaterno($persona->getPaterno());
-                    $estudiante->setMaterno($persona->getMaterno());
-                    $estudiante->setNombre($persona->getNombre());
-                    $estudiante->setGeneroTipo($this->getDoctrine()->getRepository('SieAppWebBundle:GeneroTipo')->find($persona->getGeneroTipo()));
-                    $estudiante->setEstadoCivil($this->getDoctrine()->getRepository('SieAppWebBundle:EstadoCivilTipo')->find($persona->getEstadoCivilTipo()));
-                    $estudiante->setLugarNacTipo($this->getDoctrine()->getRepository('SieAppWebBundle:LugarTipo')->find('1'));                    
-                    $estudiante->setOficialia('');
-                    $estudiante->setLibro('');
-                    $estudiante->setPartida('');
-                    $estudiante->setFolio('');
-                    //$estudiante->setSangreTipoId($this->getDoctrine()->getRepository('SieAppWebBundle:SangreTipo')->find($persona->getSangreTipo())->getId());
-                    $estudiante->setIdiomaMaternoId('0');
-                    $estudiante->setSegipId('0');
-                    $estudiante->setComplemento('');
-                    $estudiante->setBolean(false);
-                    $estudiante->setFechaNacimiento($persona->getFechaNacimiento());                                               
-                    $estudiante->setFechaModificacion(new \DateTime('now'));
-                    $estudiante->setCorreo('');
-                    $estudiante->setPaisTipo($this->getDoctrine()->getRepository('SieAppWebBundle:PaisTipo')->find('1'));
-                    $estudiante->setLocalidadNac($this->getDoctrine()->getRepository('SieAppWebBundle:Persona')->find('1'));
-                    //$estudiante->setFoto();
-                    //$estudiante->setCelular('');
-                    //$estudiante->setResolucionaprovatoria('');
-                    //$estudiante->setCarnetCodepedis('');
-                    $estudiante->setObservacionadicional($observacionadicional);                            
-                    //$estudiante->setCarnetIbc('');
-                    //$estudiante->setLibretaMilitar('');
-                    $em->persist($estudiante);
-                    $em->flush();
-
-                    /////insertar el dato
-                    $registrar->setEstudiante($estudiante);
-
-                    //ACTUALIZA SECUANCIA DE RUDES
-                    $rude1->setSeqrude($seqrude);
-                    $em->persist($rude1);
-                    $em->flush();
-                }
+                $estudiante_act = $em->getRepository('SieAppWebBundle:Estudiante')->find($estudiante_id);
+                $estudiante_act->setObservacionadicional($observacionadicional);
+                $em->flush();
+                
+                
                 $registrar->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($cod_ue));
                 $registrar->setCurso($curso);
                 $registrar->setHomologado(false);
@@ -335,7 +244,6 @@ class ReconocimientosaberesController extends Controller
                 break;
         }    
 
-        
         ////////////saber si el estudiante tiene cursos
         if($rude==0)
             if($complemento=='0')
@@ -343,6 +251,7 @@ class ReconocimientosaberesController extends Controller
             else
                 $where="estudiante.carnet_identidad = '$ci' AND estudiante.complemento = '$complemento'";
         else $where="estudiante.codigo_rude = '$ci'";
+        
         $po=$this->retornar_estudianteAction($ci,$where);
         $filas = array();
         $datos_filas = array();
@@ -351,7 +260,7 @@ class ReconocimientosaberesController extends Controller
             $nombre = $p["nombre"]." ".$p["paterno"]." ".$p["materno"];
             $estudiante_rec=1;
         }
-        if($estudiante_rec==1 and $opc==1){
+        if($estudiante_rec==1){
         //si no existe en el curso saber si el curso es aquel que le corresponde
             echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI o CODIGO RUDE '.$ci.' con nombre '.$nombre.', no puede ser beneficiado con Reconocimiento de Saberes porque tiene registro en el SIE.</div>'; die; 
         }
@@ -395,21 +304,7 @@ class ReconocimientosaberesController extends Controller
                 $result['tipo'] = "Estudiante";
             }
             if(count($result)==0){//buscamos en persona 
-                $servicioPersona = $this->get('sie_app_web.persona');
-                $persona = $servicioPersona->buscarPersona($ci,$complemento,0);    
-                $result = array();
-                if($persona->type_msg === "success"){   
-                    $result['id'] = $persona->result[0]->id;
-                    $result['paterno'] = $persona->result[0]->paterno;
-                    $result['materno'] = $persona->result[0]->materno;
-                    $result['nombre'] = $persona->result[0]->nombre;
-                    $fecha_nac=$persona->result[0]->fecha_nacimiento;
-                    $result['fecha_nac'] = $fecha_nac;
-                    $result['genero'] = $persona->result[0]->genero_tipo_id;
-                    $result['ci'] = $persona->result[0]->carnet;
-                    $result['complemento'] = $persona->result[0]->complemento;
-                    $result['tipo'] = "Persona";
-                }
+                echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI o CODIGO RUDE '.$ci.' no aparece, registreló en gestión de usuarios y vuelva a buscar.</div>'; die;       
             }
         ////////////Buscarmos en estudiante y persona y preguntamos si encontro
             if(count($result)>0){    
@@ -604,7 +499,7 @@ class ReconocimientosaberesController extends Controller
                     FROM 
                       estudiante INNER JOIN estudiante_inscripcion ON estudiante.id = estudiante_inscripcion.estudiante_id
                       INNER JOIN genero_tipo ON genero_tipo.id = estudiante.genero_tipo_id
-                      INNER JOIN estadomatricula_tipo ON estadomatricula_tipo.ID = estudiante_inscripcion.estadomatricula_inicio_tipo_id
+                      LEFT JOIN estadomatricula_tipo ON estadomatricula_tipo.ID = estudiante_inscripcion.estadomatricula_inicio_tipo_id
                       INNER JOIN institucioneducativa_curso ON estudiante_inscripcion.institucioneducativa_curso_id = institucioneducativa_curso.id
                     WHERE
                       $where ";
