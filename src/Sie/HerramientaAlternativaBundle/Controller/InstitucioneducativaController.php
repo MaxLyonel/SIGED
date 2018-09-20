@@ -1446,7 +1446,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
             $operativo = $form['operativo'];
             $em = $this->getDoctrine()->getManager();
             $semestre = $em->getRepository('SieAppWebBundle:PeriodoTipo')->find($periodo);
-            if($gestion<(new \DateTime())->format('Y'))
+            if($operativo == 5)
             {
                 $estadostramite = '5';
                 //$periodo ='2,3';
@@ -1512,7 +1512,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
             $gestion = (new \DateTime())->format('Y');
             //dump($gestion);die;
             $periodo = '2';                    
-            $estadostramite = '9,12';
+            $estadostramite = '9,12,8,14';
             $titulo = 'Primer Semestre 2018-Inscripciones';
         }        
 
@@ -1665,7 +1665,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                return $g->createQueryBuilder('g')->where('g.id >= 2006')->orderBy('g.id','DESC');},'property'=>'gestion','empty_value' => 'Seleccione gestión'))
             ->add('semestre','entity',array('label'=>'Semestre','required'=>true,'class'=>'SieAppWebBundle:PeriodoTipo','query_builder'=>function(EntityRepository $p){
               return $p->createQueryBuilder('p')->where('p.id in (2,3)');},'property'=>'periodo','empty_value' => 'Seleccione semestre'))
-            ->add('operativo','choice',array('label'=>'Operativo','required'=>true,'choices'=>array('9' => 'Inscripciones','8' => 'Notas'),'empty_value' => 'Seleccione operativo'))
+            ->add('operativo','choice',array('label'=>'Operativo','required'=>true,'choices'=>array('9' => 'Inscripciones','8' => 'Notas','5'=>"Regularizaciones gestion pasadas"),'empty_value' => 'Seleccione operativo'))
             ->add('buscar', 'submit', array('label'=> 'Buscar', 'attr'=>array('class'=>'btn btn-primary')))
             ->getForm();
 
