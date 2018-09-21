@@ -19,6 +19,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\User;
 use Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnico;
 
+
 /**
  * EstudianteInscripcion controller.
  *
@@ -305,9 +306,19 @@ class InboxController extends Controller {
             'arrSieInfo'=>$arrSieInfo[0],
             'gestion'=>$this->session->get('currentyear'),
             'form'=> $this->formUePlena(json_encode($arrFullUeInfo),$objTypeOfUE)->createView(),
+            'formOperativoRude'=> $this->formOperativoRude(json_encode($arrFullUeInfo),$objTypeOfUE)->createView(),
             'consolidationform'=> $this->infoConsolidationForm(json_encode($arrFullUeInfo))->createView(),
             'entities' => $entities
         ));
+    }
+
+    // this is fot the RUDE Operativo
+    private function formOperativoRude($data,$objTypeOfUE){
+      return $this->createFormBuilder()
+            ->add('data', 'hidden', array('data'=>$data))
+            ->add('downOperativoRude','button',array('label'=>'Generar Archivo RUDE', 'attr'=>array('class'=>'btn btn-inverse btn-stroke text-center btn-block', 'onclick'=> 'downOperativoRudeup()') ))
+            ->getForm();
+
     }
     /**
     *buill the ue plena form
@@ -984,6 +995,70 @@ class InboxController extends Controller {
         'gestion' => $form['gestion'],
         'periodo' => $periodo));
     }
+
+    public function downOperativoRudeAction(Request $request){
+
+      // create DB conexion
+      $em = $this->getDoctrine()->getManager();
+      
+      //get values send
+      $form = $request->get('form');
+      // conver json values to array
+      $arrData = json_decode($form['data'],true);
+      //to generate the file execute de function
+      $cabecera = 'R';
+      $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_rude_txt('" . $arrData['id'] . "','" . $arrData['gestion'] . "','" . $cabecera . "');");
+      $query->execute();
+
+      $newGenerateFile = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'R';
+      //get the file to generate the new file
+      $dir = '/archivos/descargas/';
+
+      //decode base64
+      $outputdata = system('base64 '.$dir.''.$newGenerateFile. '.sie  >> ' . $dir . 'NR' . $newGenerateFile . '.sie');
+
+      system('rm -fr ' . $dir . $newGenerateFile.'.sie');
+      exec('mv ' . $dir . 'NR' .$newGenerateFile . '.sie ' . $dir . $newGenerateFile . '.sie ');
+
+      //name the file
+     exec('zip -P 3I35I3Client ' . $dir . $newGenerateFile . '.zip ' . $dir  . $newGenerateFile . '.sie');
+     exec('mv ' . $dir . $newGenerateFile . '.zip ' . $dir . $newGenerateFile . '.igm ');
+     
+     return $this->render($this->session->get('pathSystem') . ':Inbox:downOperativoRude.html.twig', array(
+        'file' => $newGenerateFile . '.igm ',
+        'datadownload' => $form['data'],
+
+     ));
+
+    }
+
+    public function downloadAction(Request $request, $file,$datadownload) {
+      // dump($datadownload);die;
+      $form = json_decode($datadownload,true);
+      $form['operativoTipo']=5;
+      // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,1);
+      $objOperativoLog = $this->get('funciones')->saveOperativoLog($form);
+        //get path of the file
+        //$dir = $this->get('kernel')->getRootDir() . '/../web/downloadempfiles/';
+        $dir = '/archivos/descargas/';
+        //remove space on the post values
+        $file = preg_replace('/\s+/', '', $file);
+        $file = str_replace('%20', '', $file);
+        //create response to donwload the file
+        $response = new Response();
+        //then send the headers to foce download the zip file
+        $response->headers->set('Content-Type', 'application/zip');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $file));
+        $response->setContent(file_get_contents($dir) . $file);
+        $response->headers->set('Pragma', "no-cache");
+        $response->headers->set('Expires', "0");
+        $response->headers->set('Content-Transfer-Encoding', "binary");
+        $response->sendHeaders();
+        $response->setContent(readfile($dir . $file));
+        return $response;
+    }
+
+
 
 
 }
