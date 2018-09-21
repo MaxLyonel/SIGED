@@ -3,7 +3,8 @@
     <div class="panel-heading">
         <h4>NOTAS DEL PARTICIPANTE.
     </div>
-    {% set cualitativa = 0 %}{% set aprobados = 0 %}{% set contar = 0 %}
+    {% set cualitativa = 0 %}{% set aprobados = 0 %}{% set contar = 0 %}{% set ceros = 0 %}
+    <div class="panel-body">
     <div class="panel-body">
         <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
             <table  id="tablaListadoPersonas" class="display" cellspacing="0" border="0" width="100%">   
@@ -18,7 +19,7 @@
 
                         <td>{{nota.asignatura|capitalize}} {% if contar == 5 %}({{modulo_emergente.moduloEmergente|capitalize}}){% endif %}</td>
                         <td align="center">{{ nota.nota_cuantitativa }}
-                            {% if nota.nota_cuantitativa >= 51 %}{% set aprobados = aprobados + 1 %}{% endif %}
+                            {% if nota.nota_cuantitativa >= 51 %}{% set aprobados = aprobados + 1 %}{% elseif nota.nota_cuantitativa == 0 %} {% set ceros = ceros + 1 %} {% endif %}
                         </td>
                         {% if cualitativa == 0 %}
                             <td rowspan="5">
@@ -31,11 +32,13 @@
                 <tr>
                     <td colspan="3"> <strong>Estado: </strong>
                         <div id="estado_elegir">
-                            <select class="form-control" required="required" name="estado">
+                           <select class="form-control" required="required" name="estado">
                                 {% if aprobados >= 5 %}
                                     <option value="62" selected>Promovida/o</option>
+                                {% elseif ceros >= 5 %}
+                                    <option value="61" selected>Retirada/o</option>
                                 {% else %}
-                                    <option value="61" selected>Postergada/o</option>
+                                    <option value="63" selected>Postergada/o</option>
                                 {%  endif %}
                             </select>
                         </div>

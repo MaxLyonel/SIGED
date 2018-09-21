@@ -1,13 +1,13 @@
-{% if consolEspecial is not empty %}
+{% if consol is not empty %}
     <div class="table-responsive col-md-9">
         <table class="table table-bordered table-striped" id="listaConsol">
             <thead>
                 <tr>
-                	<th>#</th>
+                	<th style="min-width:15px">#</th>
                     <th>Departamento</th>
                     <th>Distrito</th>
                     <th>SIE</th>
-                    <th>Centro</th>
+                    <th>Institución Educativa</th>
                     <th>Bim. 1</th>
                     <th>Bim. 2</th>
                     <th>Bim. 3</th>
@@ -28,9 +28,9 @@
                 </tr>
             </tfoot>
             <tbody>
-                {% for registro in consolEspecial %}
+                {% for registro in consol %}
                 	<tr>
-                		<td>{{loop.index}}</td>
+                		<td class="text-center">{{loop.index}}</td>
                 		<td>{{registro.departamento}}</td>
                 		<td>{{registro.distrito}}</td>
                 		<td>{{registro.codigo_sie}}</td>
@@ -47,12 +47,12 @@
 {% else %}
     No se encontraron registros.
 {% endif %}
-{% if centrosEspecial is not empty %}
+{% if ues is not empty %}
 	<div class="col-md-3">
 		{% if app.session.get('roluser') != 10 %}
-		    <div class="panel panel-teal">
-		        <div class="panel-heading">
-		            <h3 class="panel-title">Cantidad de Centros</h3>
+		    <div class="panel panel-default">
+		        <div class="panel-heading text-center">
+		            <h3 class="panel-title">Estadística</h3>
 		        </div><!-- /.panel-heading -->
 		        <div class="panel-body">
 		            <div class="table-responsive col-md-12">
@@ -81,7 +81,7 @@
 				            </tfoot>
 				            <tbody>
 				            	{% set cant = 0 %}
-				                {% for registro in centrosEspecial %}
+				                {% for registro in ues %}
 				                	{% set cant = cant + registro.total %}
 				                	<tr>
 				                		<td>{{loop.index}}</td>
@@ -96,17 +96,17 @@
 				            </tbody>
 				        </table>
 				    </div>
-				    <div class="well col-md-12">
-				    	<h4>Cantidad de Centros: <span class="label label-primary">{{cant}}</span></h4>
+				    <div class="well well-md col-md-12">
+				    	<h4>{{label}}: <span class="label label-primary">{{cant}}</span></h4>
 				    </div>
 		        </div><!-- /.panel-body -->
 		    </div><!-- /.panel -->
 		{% else %}
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 	            <div class="mini-stat-type-4 bg-teal shadow">
-	                <h3>Cantidad de Centros en el distrito</h3>
+	                <h3>{{label_distrito}}</h3>
 	                {% set cant = 0 %}
-	                {% for registro in centrosEspecial %}
+	                {% for registro in ues %}
 	                	{% set cant = cant + registro.total %}
 	                {% endfor %}
 	                <h1 class="count">{{cant}}</h1>

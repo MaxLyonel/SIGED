@@ -155,7 +155,7 @@
                         {% if opc == 0 %}
                             <div class="col-lg-4 col-md-3" align="center">&nbsp;</div>
                             <div class="col-lg-4 col-md-3" align="center">
-                                <h4>Fecha de Reconocimiento de Saberes (2009-2016)</h4>
+                                <h4>Fecha de Reconocimiento de Saberes</h4>
                                 <input type="text" onkeypress="return false" name="fecha" id="fecha" value="01/01/2015" placeholder="FECHA" />
                             </div><br/><br/><br/>
                         {% endif %}
@@ -163,7 +163,7 @@
                         <input name="tipo" id="tipo" required="required" value="{{ result.tipo }}" style="visibility:hidden"  />
                         <input name="opc" id="opc" required="required" value="{{ opc }}" style="visibility:hidden"  />
                         <div class="row" align="center">
-                            <button type="submit" {% if opc == 0 %} onclick="return ver_fecha()" {% endif %} class="btn btn-default">&nbsp;Registrar Datos</button>
+                            <button type="submit" class="btn btn-default">&nbsp;Registrar Datos</button>
                         </div>
                     </div>
                 </div>          

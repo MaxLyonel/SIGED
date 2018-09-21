@@ -10,12 +10,10 @@
         <tr role="row">
           <th class="text-center">Gestión</th>
           <th class="text-center">Lugar</th>
-          <th class="text-center">Periodo</th>
-          <th class="text-center">Bloque</th>
-          <th class="text-center">Parte</th>
+          <th class="text-center">Plan</th>
+          <th class="text-center">Grado</th>
           <th class="text-center">Fecha Inicio</th>
           <th class="text-center">Fecha Fin</th>
-          <th class="text-center">Paralelo</th>
           <th class="text-center">Id Curso</th>
           <th class="text-center">Estado Matrícula</th>
           <th class="text-center">Acciones</th>
@@ -27,12 +25,17 @@
           <tr class = "success">
             <td>{{data.gestion_tipo_id_raep}}</td>
             <td>{{data.institucioneducativa_raep}}</td>
-            <td>{{data.periodo_raep}}</td>
-            <td>{{data.bloque_p }} </td>
-            <td>{{data.parte_p}}</td>
+            <td>
+              {% if data.parte_p == 1 or data.parte_p == 2 %} Anitguo {% else %} Actual{% endif %}
+            </td>
+            <td>
+              {% if (data.bloque_p == 1 and data.parte_p == 1) or data.parte_p == 14 %}Segundo{% endif %}
+              {% if (data.bloque_p == 1 and data.parte_p == 2) or data.parte_p == 15 %}Tercero{% endif %}
+              {% if (data.bloque_p == 2 and data.parte_p == 1) or data.parte_p == 16 %}Quinto{% endif %}
+              {% if (data.bloque_p == 2 and data.parte_p == 2) or data.parte_p == 17 %}Sexto{% endif %}
+            </td>
             <td>{{data.fech_ini_p}}</td>
             <td>{{data.fech_fin_p}}</td>
-            <td>{{data.paralelo_raep}} </td>
             <td>{{data.institucioneducativa_curso_id_raep}} </td>
             <td>{{data.estadomatricula_p}}</td>
              <td><a role="button" class="btn btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id': data.institucioneducativa_curso_id_raep~"|"~data.bloque_p~"|"~data.parte_p,'esactivo':0}) }}" >&nbsp;</a></td>
