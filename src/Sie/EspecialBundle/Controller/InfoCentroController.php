@@ -359,30 +359,58 @@ class InfoCentroController extends Controller {
         
         $roluser = $this->session->get('roluser');
         $roluserlugarid = $this->session->get('roluserlugarid');
+        $bundle = $this->session->get('pathSystem');
+
+        switch ($bundle) {
+            case 'SieRegularBundle':
+            case 'SieHerramientaBundle':
+                $instipoid = 1;
+                $title = 'Reporte de consolidación de operativos por gestión y Unidad Educativa - '.$gestionid;
+                $label = 'Cantidad de Unidades Educativas que reportaron información';
+                $label_distrito = 'Cantidad de Unidades Educativas que reportaron información en el distrito';
+                break;
+
+            case 'SieEspecialBundle':
+                $instipoid = 4;
+                $title = 'Reporte de cierre de operativos por gestión y Centro de Educación Especial - '.$gestionid;
+                $label = 'Cantidad de Centros que reportaron matrícula';
+                $label_distrito = 'Cantidad de Centros que reportaron matrícula en el distrito';
+                break;
+            
+            default:
+                $instipoid = 1;
+                $title = 'Reporte de consolidación de operativos por gestión y Unidad Educativa - '.$gestionid;
+                $label = 'Cantidad de Unidades Educativas que reportaron información';
+                $label_distrito = 'Cantidad de Unidades Educativas que reportaron información en el distrito';
+                break;
+        }
         
-        $consolEspecial = $this->get('sie_app_web.funciones')->reporteConsolEspecial($gestionid, $roluser, $roluserlugarid);
+        $consol = $this->get('sie_app_web.funciones')->reporteConsol($gestionid, $roluser, $roluserlugarid, $instipoid);
 
         switch ($roluser) {
             case 8:
-                $centrosEspecial = $this->get('sie_app_web.funciones')->estadisticaConsolEspecialNal($gestionid);
+                $ues = $this->get('sie_app_web.funciones')->estadisticaConsolNal($gestionid, $instipoid);
                 break;
 
             case 7:
-                $centrosEspecial = $this->get('sie_app_web.funciones')->estadisticaConsolEspecialDptal($gestionid, $roluserlugarid);
+                $ues = $this->get('sie_app_web.funciones')->estadisticaConsolDptal($gestionid, $roluserlugarid, $instipoid);
                 break;
 
             case 10:
-                $centrosEspecial = $this->get('sie_app_web.funciones')->estadisticaConsolEspecialDtal($gestionid, $roluserlugarid);
+                $ues = $this->get('sie_app_web.funciones')->estadisticaConsolDtal($gestionid, $roluserlugarid, $instipoid);
                 break;
 
             default:
-                $centrosEspecial = null;
+                $ues = null;
                 break;
         }
 
         return $this->render('SieEspecialBundle:Institucioneducativa:consol_especial.html.twig', array(
-          'consolEspecial' => $consolEspecial,
-          'centrosEspecial' => $centrosEspecial,
+          'consol' => $consol,
+          'ues' => $ues,
+          'title' => $title,
+          'label' => $label,
+          'label_distrito' => $label_distrito,
         ));
     }
 

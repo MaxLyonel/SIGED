@@ -178,7 +178,7 @@ class Funciones {
         return $response;
     }
 
-    public function reporteConsolEspecial($gestionid, $roluser, $roluserlugarid){
+    public function reporteConsol($gestionid, $roluser, $roluserlugarid, $instipoid){
 
         $lugar = $this->em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
         
@@ -222,7 +222,7 @@ class Funciones {
             LEFT JOIN lugar_tipo lt4 ON lt4.id = lt3.lugar_tipo_id
             INNER JOIN distrito_tipo dt ON jg.distrito_tipo_id = dt.id
             WHERE ".$where." AND rc.gestion = ".$gestionid." AND
-            rc.institucioneducativa_tipo_id = 4
+            rc.institucioneducativa_tipo_id = ".$instipoid."
             ORDER BY
             codigo_departamento,
             codigo_distrito,
@@ -234,7 +234,7 @@ class Funciones {
     }
 
 
-    public function estadisticaConsolEspecialNal($gestionid){
+    public function estadisticaConsolNal($gestionid, $instipoid){
         $query = $this->em->getConnection()->prepare("
             SELECT
             lt4.codigo as codigo_departamento,
@@ -266,7 +266,7 @@ class Funciones {
             LEFT JOIN lugar_tipo lt4 ON lt4.id = lt3.lugar_tipo_id
             INNER JOIN distrito_tipo dt ON jg.distrito_tipo_id = dt.id
             WHERE rc.gestion = ".$gestionid." AND
-            rc.institucioneducativa_tipo_id = 4
+            rc.institucioneducativa_tipo_id = ".$instipoid."
             GROUP BY
             codigo_departamento,
             departamento
@@ -278,7 +278,7 @@ class Funciones {
         return $registro_consolidacion;
     }
 
-    public function estadisticaConsolEspecialDptal($gestionid, $roluserlugarid){
+    public function estadisticaConsolDptal($gestionid, $roluserlugarid, $instipoid){
 
         $lugar = $this->em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
 
@@ -315,7 +315,7 @@ class Funciones {
             LEFT JOIN lugar_tipo lt4 ON lt4.id = lt3.lugar_tipo_id
             INNER JOIN distrito_tipo dt ON jg.distrito_tipo_id = dt.id
             WHERE lt4.codigo = '".$lugar->getCodigo()."' AND rc.gestion = ".$gestionid." AND
-            rc.institucioneducativa_tipo_id = 4
+            rc.institucioneducativa_tipo_id = ".$instipoid."
             GROUP BY
             codigo_departamento,
             departamento,
@@ -330,7 +330,7 @@ class Funciones {
         return $registro_consolidacion;
     }
 
-    public function estadisticaConsolEspecialDtal($gestionid, $roluserlugarid){
+    public function estadisticaConsolDtal($gestionid, $roluserlugarid, $instipoid){
 
         $lugar = $this->em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
 
@@ -363,7 +363,7 @@ class Funciones {
             LEFT JOIN lugar_tipo lt4 ON lt4.id = lt3.lugar_tipo_id
             INNER JOIN distrito_tipo dt ON jg.distrito_tipo_id = dt.id
             WHERE dt.id = '".$lugar->getCodigo()."' AND rc.gestion = ".$gestionid." AND
-            rc.institucioneducativa_tipo_id = 4;
+            rc.institucioneducativa_tipo_id = ".$instipoid.";
         ");
         $query->execute();
         $registro_consolidacion = $query->fetchAll();
