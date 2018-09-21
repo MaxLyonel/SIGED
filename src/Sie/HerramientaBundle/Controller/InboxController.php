@@ -600,8 +600,12 @@ class InboxController extends Controller {
       $form['reglas'] = '1,2,3,8,10,12,13,16';
       $form['gestion'] = $data['gestion'];
       $form['sie'] = $data['id'];
-      
-      $objObsQA = $this->getObservationQA($form);
+
+      if ($data['gestion'] == $this->session->get('currentyear')) {
+        $objObsQA = $this->getObservationQA($form);
+      } else {
+        $objObsQA = null;
+      }
 
       if($objObsQA){
         return $this->render($this->session->get('pathSystem') . ':Inbox:list_inconsistencia.html.twig', array(
