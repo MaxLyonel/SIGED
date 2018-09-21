@@ -2,19 +2,17 @@
 
 {% block contentoption %}
 
-
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> Principal <span>Menu Principal</span></h2>
+        <h2><i class="fa fa-list-alt"></i> Principal <span>Menú principal</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
-                    <a href="dashboard.html">Información de Unidad Educativa</a>
+                    <a href="#">Inicio</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
-
             </ol>
         </div><!-- /.breadcrumb-wrapper -->
     </div><!-- /.header-content -->
@@ -22,106 +20,108 @@
 
     <div class="body-content animated fadeIn">
         <div class="row">
-            <div class="col-md-5">
-                <!-- Start input fields - basic form -->
-                <div class="panel rounded shadow">
-                    <div class="panel panel-primary shadow">
-                        <div class="panel-heading">
-                            <div class="pull-left">
-                                <h3 class="panel-title">Seguimiento Bono Juancito Pinto</h3>
-                            </div>
-                            <div class="pull-right">
-                                <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div><!-- /.panel-heading -->
-                        <div class="panel-body">
-                            {{ form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form'} } ) }}
-                            <div class="row">
-                                <div class="form-group col-md-3">
-                                    {{ form_label(form.dpto) }}
-                                </div>
-                                <div class="form-group col-md-6">
-                                    {{ form_widget(form.dpto) }}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 col-md-offset-3">
-                                    {{ form_widget(form.getReporte ) }}
-                                </div>
-                            </div>
-                            {{ form_end(form) }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-7">
-                <!-- Start input fields - basic form -->
-                <div class="panel rounded shadow">
-                    <div class="panel panel-teal shadow">
-                        <div class="panel-heading">
-                            <div class="pull-left">
-                                <h3 class="panel-title">Notificaciones</h3>
-                            </div>
-                            <div class="pull-right">
-                                <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div><!-- /.panel-heading -->
-                        <div class="panel-body no-padding">
-                            <ul class="list-group">
-                                {% for entity in entities|slice(0, 5) %}
-                                    {% if entity.rolTipo.id == app.session.get('roluser') %}
-                                        <li class="list-group-item">
-                                            <span class="badge {% if(entity.notif.noticiaTipo) == 0  %}badge-success{% elseif(entity.notif.noticiaTipo) == 1 %}badge-warning{% else %}badge-danger{% endif %}">{% if(entity.notif.noticiaTipo) == 0  %}Normal{% elseif(entity.notif.noticiaTipo) == 1 %}Urgente{% else %}Muy Urgente{% endif %}</span>
-                                            <h5 class="list-group-item-heading text-primary"><strong><span class="glyphicon glyphicon-time"></span> {% if entity.notif.fechaCrea %}{{ entity.notif.fechaCrea|date('d-m-Y') }}{% endif %} | {{ entity.notif.titulo }}</strong></h5>
-                                            <p class="list-group-item-text list-group-item-text-notif text-justify"><i class="fa fa-rss-square text-warning"></i> {{ entity.notif.mensaje|raw }}</p>
-                                            <p class="list-group-item-text text-green">
-                                                {% if entity.notif.adjunto %}
-                                                    Descargar adjunto: <a href="{{ asset('uploads/adjuntos/' ~ entity.notif.adjunto) }}" target="_blank"><img src="{{asset('img/pdf.png') }}" alt="{{ entity.notif.adjunto }}" width="20" height="20"></a>
-                                                    {% endif %}
-                                            </p>
-                                        </li>
-                                    {% endif %}
-                                {% else %}
-                                    <!-- <li class="list-group-item">
-                                        <h2 class="list-group-item-heading text-info"><i class="fa fa-info-circle fa-fw"></i>
-                                            Ante las dificultades presentadas en el registro de datos del <b>Módulo RUDE</b> (Registro Único de Estudiantes) mediante el sistema academico, el operativo queda suspendido hasta nuevo aviso.
-                                            <br><br>
-                                            <b>UNIDAD DE SISTEMAS - SIE</b>
-                                        </h2>
-                                    </li> -->
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% if false %}
-          <div class="row">
-                <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
-                    <div class="mini-stat-type-4 bg shadow">
-                         <h3>Observaciones</h3>
-                        <!--<h1 class="count">3</h1>
-                        <a href="http://djavaui.com" target="_blank" class="btn btn-danger">VIEW</a> -->
+            <div class="col-md-12">
+                <!-- Start default panel -->
+                <div class="panel panel-primary rounded shadow">
+                    <!-- Start panel heading -->
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{title}}</h3>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <!--/ End panel heading -->
+                    <!-- Start panel content -->
+                    <div class="panel-body">
                         <div class="row">
-                            <div class="col-xs-2 "><b>Tipo</b></div>
-                            <div class="col-xs-10 "><b>Observación</b></div>
+                            <div class="form-group">
+                                <label class="col-md-2 col-md-offset-3 control-label text-right" for="gestiones"><strong>Seleccionar gestión:</strong></label>
+                                <div class="col-md-2">
+                                    <select onchange="registroConsol(this.value)" id="gestiones" class="form-control">
+                                        {% for gestion in gestiones %}
+                                            <option value="{{gestion}}">{{gestion}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        {% for observation in objObservactionSie %}
+                        <hr>
                         <div class="row">
-                            <div class="col-xs-2 ">{{observation.entidad}}</div>
-                            <div class="col-xs-10 ">{{observation.obs   }}</div>
-                            <!-- <div class="clearfix visible-xs"></div> -->
+                            <div class="col-md-12" id="tableConsol">
+                                {% include 'SieEspecialBundle:Institucioneducativa:consol_especial.html.twig' with {'consolEspecial': consol, 'label': label, 'label_distrito': label_distrito} %}
+                            </div>
                         </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                </div>
-              {% endif %}
+                    </div><!-- /.panel-body -->
+                    <!--/ End panel content -->
+                </div><!-- /.panel -->
+                <!--/ End default panel -->
 
-          </div>
-
+            </div>
+        </div><!-- /.row -->
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var registroConsol = function (gestionid) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('herramienta_especial_registro_consol', {'gestionid': gestionid}),
+                beforeSend: function () {
+                    $("#tableConsol").empty();
+                    $("#tableConsol").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" style="width: 80px;" /></div>');
+                },
+                success: function (data) {
+                    $("#listaConsol").remove();
+                    $("#tableConsol").empty();
+                    $("#tableConsol").append(data);
+                    cargatablas();
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+        var cargatablas = function (identif){
+            // Setup - add a text input to each footer cell
+            $('#listaConsol tfoot th').each( function () {
+                var title = $(this).text();
+                if(title.trim() === "" || title === "#"){
+                    $(this).html('');
+                } else {
+                    $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+                }
+            } );
+
+            // DataTable
+            var table = $('#listaConsol').DataTable( {
+                    "order": [[ 0, "asc" ]],
+                    "columnDefs": [
+                        { "orderable": false, "targets": [8,7,6,5] }
+                    ],
+                }
+            );
+
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        };
+
+        $(document).ready(function(){
+            cargatablas();
+        });
+    </script>
 {% endblock %}

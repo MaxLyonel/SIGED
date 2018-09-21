@@ -102,7 +102,7 @@ class ReportesController extends Controller {
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents('http://172.20.0.117:8080/birt-viewer/frameset?__report=siged/esp_lst_Participantes_v3.rptdesign&institucioneducativa_id='.$request->get('idInstitucion').'&gestion_tipo_id='.$request->get('gestion').'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'esp_lst_Participantes_v3.rptdesign&institucioneducativa_id='.$request->get('idInstitucion').'&gestion_tipo_id='.$request->get('gestion').'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
