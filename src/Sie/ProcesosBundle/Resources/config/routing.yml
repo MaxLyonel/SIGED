@@ -1,0 +1,27 @@
+sie_procesos:
+    path:    /procesos
+    defaults: { _controller: SieProcesos:Default:index }
+
+sie_procesos_flujotipo:
+    resource: "@SieProcesosBundle/Resources/config/routing/flujotipo.yml"
+    prefix:   /flujotipo
+
+sie_procesos_procesotipo:
+    resource: "@SieProcesosBundle/Resources/config/routing/procesotipo.yml"
+    prefix:   /procesotipo
+
+sie_procesos_flujoproceso:
+    resource: "@SieProcesosBundle/Resources/config/routing/flujoproceso.yml"
+    prefix:   /flujoproceso
+
+sie_procesos_flujorol:
+    resource: "@SieProcesosBundle/Resources/config/routing/rol.yml"
+    prefix:   /flujorol
+
+sie_procesos_flujoseguimiento:
+    resource: "@SieProcesosBundle/Resources/config/routing/seguimiento.yml"
+    prefix:   /flujoseguimiento
+
+sie_procesos_tramite_rue:
+    resource: "@SieProcesosBundle/Resources/config/routing/tramiterue.yml"
+    prefix:   /tramiterue

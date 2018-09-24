@@ -1,0 +1,84 @@
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Unidad Educativa: {{nombre_ie}}</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    {% if app.session.flashBag.has('error') %}
+                    <div class="alert alert-danger">
+                        {% for msg in app.session.flashBag.get('error') %}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                {{ msg }}
+                        {% endfor %}
+                    </div>
+                    {% endif %} 
+                    <div class="form-body col-lg-4 col-md-6">
+                        <div style= "display:none" >
+                            <textarea id="code" rows="11">
+                            st=>start: Inicio|past
+                            e=>end: Fin|past
+                            {% for f in flujo %}
+                                {% if f.fecha_registro %}
+                                    {% set estado = "current" %}
+                                {% else %}
+                                    {% set estado = "past" %}
+                                {% endif %}
+                                {% if f.es_evaluacion =="1" %}
+                                    {{f.id}}=>operation: {{f.proceso_tipo}}
+                                    {{ f.fecha_registro }}
+                                    {{f.variable_evaluacion}}={{ f.valor_evaluacion }}|{{estado}}
+                                {% else %}
+                                    {{f.id}}=>operation: {{f.proceso_tipo}}
+                                    {{ f.fecha_registro }}|{{estado}}
+                                {% endif %}
+                                {% if f.es_evaluacion =="1" %}
+                                    c{{f.id}}=>condition: {{f.variable_evaluacion}}?|past
+                                {% endif %}
+                            {% endfor %}
+                            {% set sw = 0 %}
+                            {% for f in flujo %}
+                                {% if f.es_evaluacion =="1" %}
+                                    {% if sw == 0 %}
+                                        {{f.id}}->c{{f.id}}
+                                        {% set sw = 1 %}
+                                    {% endif %}
+                                    {% if f.condicion == "SI" %}
+                                        c{{f.id}}(yes)->{{f.condicion_tarea_siguiente}}
+                                    {% else %}
+                                        c{{f.id}}(no)->{{f.condicion_tarea_siguiente}}
+                                    {% endif %}
+                                {% else %}
+                                    {% set sw = 0 %}
+                                    {% if f.tarea_ant_id == null %}
+                                        st->{{f.id}}
+                                        {{f.id}}->{{f.tarea_sig_id}}
+                                    {% else %}
+                                        {% if f.tarea_sig_id == null %}
+                                            {{f.id}}->e
+                                        {% else %}
+                                            {{f.id}}->{{f.tarea_sig_id}}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            st@>e({"stroke":"Green"})
+                            </textarea></div>
+                            <div style= "display:none"><button id="run" type="button">Run</button></div>
+                            <div id="canvas">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

@@ -1,0 +1,78 @@
+{% extends 'layoutProcesos.html.twig' %}
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> Busqueda de procesos</h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{ path('flujoproceso_rol') }}">Roles</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                 <li class="active">
+                    <i class="fa fa-angle-right"></i>
+                    Buscar por rol
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+<div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-12">
+                <div class="panel rounded shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Procesos de un rol</h3>
+                        </div>
+                        <div class="pull-right">                        
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+						{{ form_start(form) }}
+						    <div class="form-group">
+                                <label class="col-sm-2">Nombre de rol:</label>
+                                <div class="col-sm-4">
+                                    {{ form_widget(form.rol, {'attr':{'class':'form-control'} }) }}
+                                </div>
+                            </div>
+						{{ form_end(form) }}
+                        <div class="clearfix"></div>
+                        <div class="form-group">
+                            <div id="tablaprocesorol">
+                            </div>
+                        </div>
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript" charset="utf-8" >
+    $('#form_rol').click(function(){
+            //alert('hola');
+            if($('#form_rol').val()!="")
+            { 
+                formData = {rol: $('#form_rol').val()};
+                $.ajax({
+                    type: 'GET',
+                    url: "{{path('flujorol_listar_proceso_rol')}}",
+                    data: formData,
+                    success: function (data) {
+                        $('#tablaprocesorol').empty();
+                        $('#tablaprocesorol').append(data);
+                        //$("#tareas").append(data);
+                        
+                    },
+                }); 
+            }
+        });
+    
+    </script>
+{% endblock %}

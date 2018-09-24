@@ -139,3 +139,11 @@ herramienta_alter_reporte_operativo_exitoso_cerrado:
 sie_alt_lista_estudiantes_excel:
     path:     /reportesEstudiantesExcel
     defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportesEstudiantesExcel}    
+
+sie_alt_lista_ceaspendientes:
+    path:     /reportesCeasPendientes
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportesCeasPendientes} 
+    
+sie_alt_lista_operativos:
+    path:     /reportesCeasOperativos
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportesCeasOperativos} 

@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityRepository;
 
 /**
  * EstudianteInscripcion controller.
@@ -1273,5 +1274,156 @@ class ReportesController extends Controller {
 
     }
     ///********************************MARCELO */
+    public function reportesCeasPendientes(Request $request){
 
+        $tipo = $request->get('tipo'); 
+        $rol = $request->get('rol');
+        $gestion = $request->get('gestion');
+        $id_usuario = $request->get('id_usuario');
+        if ($rol == 8 )
+        {
+            $departamento = $request->get('departamento');
+        }
+        $argum= 'CEAS CON PENDIENTES DE REPORTE DE INFORMACIÓN';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/' . $tipo);
+       // dump($roluser);die;
+        if ($rol== 8) //NACIONAL
+        {
+            if($gestion && $departamento)
+            {
+                $nombre_archivo = "xxx";
+                $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_' . $departamento . '_' . $gestion . '.' . $tipo));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Gestion=' . $gestion .  '&Departamento=' . $departamento. '&&__format='. $tipo .'&'));
+            }
+            if(!$gestion && !$departamento)
+            {
+                $nombre_archivo = "xxx";
+                $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '.' . $tipo));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&&__format='. $tipo .'&'));
+            }else{
+                if($gestion)
+                {
+                    $nombre_archivo = "xxx";
+                    $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_NACIONAL_' . $gestion . '.' . $tipo));
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Gestion=' . $gestion . '&&__format='. $tipo .'&'));
+                }else{
+                    $nombre_archivo = "xxx";
+                    $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_' . $departamento . '.' . $tipo));
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Departamento=' . $departamento . '&&__format='. $tipo .'&'));
+                }
+            }
+        }elseif ($rol == 7)//departamental
+        {
+            $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$id_usuario,'rolTipo'=>$rol));
+            //dump($usuariorol);die;
+            $idlugarusuario = $usuariorol[0]->getLugarTipo()->getId();
+            
+            if($gestion)
+            {
+                $nombre_archivo = "xxx";
+                $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_DEPARTAMENTAL_' . $gestion . '.' . $tipo));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Gestion=' . $gestion . '&Departamento=' . $idlugarusuario . '&&__format='. $tipo .'&'));
+            }else{
+                $nombre_archivo = "xxx";
+                $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_DEPARTAMENTAL.'.$tipo));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo . '.rptdesign&Departamento=' . $idlugarusuario . '&&__format='. $tipo . '&'));
+            }
+        }elseif ($rolu == 10)//DISTRITO
+        {
+            $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$id_usuario,'rolTipo'=>$rol));
+            $distrito = $usuariorol[0]->getLugarTipo()->getCodigo();
+            if($gestion)
+            {
+                $nombre_archivo = "xxx";
+                $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_DISTRITAL_' . $gestion . '.' .$tipo));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Gestion=' . $gestion . '&Distrito=' . $distrito . '&&__format='. $tipo .'&'));
+            }else{
+                $nombre_archivo = "xxx";
+                $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_DISTRITAL.'. $tipo));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&&__format='. $tipo .'&'));
+            }
+        }
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+    public function reportesCeasOperativos(Request $request){
+
+        $tipo = $request->get('tipo'); 
+        $rol = $request->get('rol');
+        $gestion = $request->get('gestion');
+        $id_usuario = $request->get('id_usuario');
+        if ($rol == 8 )
+        {
+            $departamento = $request->get('departamento');
+        }
+        $argum= 'CONTROL DE OPERATIVOS POR CEA';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/' . $tipo);
+       // dump($roluser);die;
+        if ($rol== 8) //NACIONAL
+        {
+            if($gestion && $departamento)
+            {
+                $nombre_archivo = "xxx";
+                $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_' . $departamento . '_' . $gestion . '.' . $tipo));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Gestion=' . $gestion .  '&Departamento=' . $departamento. '&&__format='. $tipo .'&'));
+            }
+            if(!$gestion && !$departamento)
+            {
+                $nombre_archivo = "xxx";
+                $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '.' . $tipo));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&&__format='. $tipo .'&'));
+            }else{
+                if($gestion)
+                {
+                    $nombre_archivo = "xxx";
+                    $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_NACIONAL_' . $gestion . '.' . $tipo));
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Gestion=' . $gestion . '&&__format='. $tipo .'&'));
+                }else{
+                    $nombre_archivo = "xxx";
+                    $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_' . $departamento . '.' . $tipo));
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Departamento=' . $departamento . '&&__format='. $tipo .'&'));
+                }
+            }
+        }elseif ($rol == 7)//departamental
+        {
+            $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$id_usuario,'rolTipo'=>$rol));
+            //dump($usuariorol);die;
+            $idlugarusuario = $usuariorol[0]->getLugarTipo()->getId();
+            
+            if($gestion)
+            {
+                $nombre_archivo = "xxx";
+                $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_DEPARTAMENTAL_' . $gestion . '.' . $tipo));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Gestion=' . $gestion . '&Departamento=' . $idlugarusuario . '&&__format='. $tipo .'&'));
+            }else{
+                $nombre_archivo = "xxx";
+                $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_DEPARTAMENTAL.'.$tipo));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo . '.rptdesign&Departamento=' . $idlugarusuario . '&&__format='. $tipo . '&'));
+            }
+        }elseif ($rolu == 10)//DISTRITO
+        {
+            $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$id_usuario,'rolTipo'=>$rol));
+            $distrito = $usuariorol[0]->getLugarTipo()->getCodigo();
+            if($gestion)
+            {
+                $nombre_archivo = "xxx";
+                $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_DISTRITAL_' . $gestion . '.' .$tipo));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Gestion=' . $gestion . '&Distrito=' . $distrito . '&&__format='. $tipo .'&'));
+            }else{
+                $nombre_archivo = "xxx";
+                $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_DISTRITAL.'. $tipo));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&&__format='. $tipo .'&'));
+            }
+        }
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
 }
