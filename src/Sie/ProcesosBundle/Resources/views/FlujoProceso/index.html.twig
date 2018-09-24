@@ -1,0 +1,584 @@
+{% extends 'layoutProcesos.html.twig' %}
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-file-text-o"></i> Registrar flujo de un proceso <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-file-text-o"></i>
+                    <a href="{{ path('flujotipo')}}">Procesos</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">
+                    <i class="fa fa-angle-right"></i>
+                    Registrar flujo de proceso
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-12">
+                <div class="panel rounded shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Datos de proceso</h3>
+                        </div>
+                        
+                        <div class="pull-right">
+                            <a href="{{ path('flujoproceso_formulario_nuevo') }}" class="btn btn-primary">
+                                <i class="fa fa-plus"></i> Crear formulario
+                            </a>
+                        
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+						    <!-- Start basic wizard horizontal -->
+                            <div id="basic-wizard-horizontal">
+                                <h4></h4>
+                                <div class="panel panel-tab rounded shadow">
+                                    <!-- Start tabs heading -->
+                                    <div class="panel-heading no-padding " id="tabs">
+                                        <ul class="nav nav-tabs">
+                                            <li class="active">
+                                                <a href="#tab1-1" data-toggle="tab" id="t1" >
+                                                    <i class="fa fa-user"></i>
+                                                    <div>
+                                                        <span class="text-strong">Paso 1</span>
+                                                        <span>Tareas</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#tab1-2" data-toggle="tab" onclick="cargar_tareas_proceso(2)" id="t2" >
+                                                    <i class="fa fa-file-text"></i>
+                                                    <div  >
+                                                        <span class="text-strong">Paso 2</span>
+                                                        <span>Pasos</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#tab1-3" data-toggle="tab" onclick="cargar_tareas_proceso(3)" id="t3">
+                                                    <i class="fa fa-credit-card"></i>
+                                                    <div>
+                                                        <span class="text-strong">Paso 3</span>
+                                                        <span>Condición</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#tab1-4" data-toggle="tab" id="t4">
+                                                    <i class="fa fa-credit-card"></i>
+                                                    <div>
+                                                        <span class="text-strong">Paso 4</span>
+                                                        <span>Flujo del Proceso</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div><!-- /.panel-heading -->
+                                    <!--/ End tabs heading -->
+
+                                    <!-- Start tabs content -->
+                                    <div class="panel-body">
+                                            {#<form action"#" class="tab-content form-horizontal">#}
+                                        <div class="tab-pane fade in active inner-all" id="tab1-1">
+                                            <h4 class="page-header">Proceso</h4>
+                                            {{ form_start(form,{ 'attr': {'class': 'tab-content form-horizontal','id':'form_flujo'} } ) }}
+                                            <div class="form-group">
+                                                <label class="col-sm-2">Nombre de proceso</label>
+                                                <div class="col-sm-4">
+                                                    {{ form_widget(form.proceso, {'attr':{'class':'form-control'} }) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2">Tarea</label>
+                                                <div class="col-sm-4">
+                                                    {{ form_widget(form.tarea, {'attr':{'class':'form-control','onclick':'cargar_tareas_proceso(0)'} }) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2">Rol</label>
+                                                <div class="col-sm-4">
+                                                    {{ form_widget(form.rol, {'attr':{'class':'form-control'} }) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2">Observación</label>
+                                                <div class="col-sm-4">
+                                                    {{ form_widget(form.observacion, {'attr':{'class':'form-control'} }) }}                                                       
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2">Tipo de asignación de tarea</label>
+                                                <div class="col-sm-4">
+                                                    {{ form_widget(form.asignacion, {'attr':{'class':'form-control'} }) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2">Evaluación</label>
+                                                <div class="col-md-1">
+                                                    {{ form_widget(form.evaluacion, {'attr':{'class':'form-control'} }) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2">Variable de valuación</label>
+                                                <div class="col-sm-4">
+                                                    {{ form_widget(form.varevaluacion, {'attr':{'class':'form-control'} }) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2">Tarea anterior</label>
+                                                <div class="col-sm-4">
+                                                    {{ form_widget(form.tareaant, {'attr':{'class':'form-control'} }) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2">Tarea siguiente</label>
+                                                <div class="col-sm-4">
+                                                    {{ form_widget(form.tareasig, {'attr':{'class':'form-control'} }) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2">Plazo</label>
+                                                <div class="col-md-1">
+                                                    {{ form_widget(form.plazo, {'attr':{'class':'validar'} }) }}
+                                                </div>
+                                            </div>
+                                            {{ form_end(form) }}  
+                                            <div class="form-group">
+                                                <button id="adicionartarea" class="btn btn-primary" onclick="cargartarea()">Adicionar</button>
+                                            </div>
+                                            <div id="tareas">
+                                            
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-2">
+                                            <h4 class="page-header">Pasos de una tarea</h4>
+                                            {{ form_start(form_pasos,{ 'attr': {'class': 'tab-content form-horizontal','id':'form_pasos'} } ) }}
+                                            <div class="form-group">
+                                                <label class="col-sm-2">Tarea</label>
+                                                <div class="col-sm-4">
+                                                    {{ form_widget(form_pasos.ptarea, {'attr':{'class':'form-control'} }) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2">Nombre del paso</label>
+                                                <div class="col-sm-4">
+                                                    {{ form_widget(form_pasos.nombre, {'attr':{'class':'form-control'} }) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2">Posición</label>
+                                                <div class="col-md-1">
+                                                    {{ form_widget(form_pasos.posicion, {'attr':{'class':'validar'} }) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2">Tipo de paso</label>
+                                                <div class="col-sm-4">
+                                                    {{ form_widget(form_pasos.tipopaso, {'attr':{'class':'form-control'} }) }}
+                                                </div>
+                                            </div>
+                                            {{ form_end(form_pasos) }}
+                                            <div class="form-group">
+                                                <button id="adicionarpaso" class="btn btn-primary" onclick="cargarPasos()">Adicionar</button>
+                                            </div>
+                                            <div id="tablapasos">
+                                            
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-3">
+                                            <h4 class="page-header">Condición de tarea</h4>
+                                            {{ form_start(form_condicion,{ 'attr': {'class': 'tab-content form-horizontal','id':'form_condicion'} } ) }}
+                                                <input id="cont" name="cont" type="hidden" value="">
+                                            <div class="form-group">
+                                                <label class="col-sm-2">Tarea</label>
+                                                <div class="col-sm-4">
+                                                    {{ form_widget(form_condicion.ctarea, {'attr':{'class':'form-control'} }) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2">Condición</label>
+                                                <div class="col-sm-4">
+                                                    {{ form_widget(form_condicion.condiciones, {'attr':{'class':'form-control'} }) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2">Tarea siguiente a la condición</label>
+                                                <div class="col-sm-4">
+                                                    {{ form_widget(form_condicion.ctareasig, {'attr':{'class':'form-control'} }) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2">Tipo condición</label>
+                                                <div class="col-sm-4">
+                                                    {{ form_widget(form_condicion.tipocondicion, {'attr':{'class':'form-control'} }) }}
+                                                </div>
+                                            </div>
+                                            {{ form_end(form_condicion) }}  
+                                            <div class="form-group">
+                                                <button id="adicionarcondicion" class="btn btn-primary" onclick="adicionarcondicion()">Adicionar</button>
+                                            </div>
+                                            <div id="tablacondicion">
+                                            
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-4">
+                                            <h4 class="page-header">Flujo</h4>
+                                            <div class="form-group">
+                                                <button id="finalizar" class="btn btn-success" >Finalizar Proceso</button>
+                                            </div>
+                                            <div id="flujo">
+                                               
+                                            </div>
+                                        </div>
+                                        {#</form>#}
+                                    </div><!-- /.panel-body -->
+                                    <!--/ End tabs content -->
+
+                                    <!-- Start pager -->
+                                    {#<div class="panel-footer">
+                                        <ul class="pager wizard no-margin">
+                                            <li class="previous"><a href="">Anterior</a></li>
+                                            <li class="next"><a href="" id="siguiente">Siguiente</a></li>
+                                        </ul>
+                                    </div><!-- /.panel-footer -->#}
+                                    <!--/ End pager -->
+
+                                </div><!-- /.panel -->
+                            </div><!-- /#basic-wizard-horizontal -->
+                            <!--/ End basic wizard horizontal-->
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+        </div>
+    </div>
+       
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript" charset="utf-8" >
+        $('#form_proceso').click(function(){
+            //alert('hola');
+            if($('#form_proceso').val()!="")
+            { 
+                formData = {flujotipo: $('#form_proceso').val()};
+                $.ajax({
+                    type: 'GET',
+                    url: "{{path('flujoproceso_listar_tareas')}}",
+                    data: formData,
+                    success: function (data) {
+                        $('#tareas').empty();
+                        $('#tareas').append(data);
+                        //$("#tareas").append(data);
+                        
+                    },
+                }); 
+            }
+        });
+        function cargar_tareas_proceso(paso) {
+            if($('#form_proceso').val()==""){return false;}
+            var formData = {flujotipo: $('#form_proceso').val(),paso: paso};
+            $.ajax({
+                type: 'get',
+                url: "{{path('flujoproceso_tareasproceso')}}",
+                data: formData,
+                //url: Routing.generate('flujoproceso_tareasproceso', {'flujotipo': flujotipo}),
+                success: function (data) {
+                    $("#form_tareaant").empty();
+                    $("#form_tareaant").append('<option value="">Seleccionar tarea anterior</option>');
+                    $("#form_tareasig").empty();
+                    $("#form_tareasig").append('<option value="">Seleccionar tarea siguiente</option>');
+                    $("#form_ptarea").empty();
+                    $("#form_ptarea").append('<option value="">Seleccionar tarea</option>');
+                    $("#form_ctarea").empty();
+                    $("#form_ctarea").append('<option value="">Seleccionar tarea</option>');
+                    $("#form_ctareasig").empty();
+                    $("#form_ctareasig").append('<option value="">Seleccionar tarea siguiente</option>');
+                    $.each(data.tareas, function (i, value) {
+                        $("#form_tareaant").append('<option value="' + i + '">' + value + '</option>');
+                        $("#form_tareasig").append('<option value="' + i + '">' + value + '</option>');
+                        $("#form_ptarea").append('<option value="' + i + '">' + value + '</option>');
+                        $("#form_ctareasig").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    $.each(data.ctareas, function (i, value) {
+                        $("#form_ctarea").append('<option value="' + i + '">' + value + '</option>');
+                        
+                    });
+                    //$('#cont').val(cont);
+                }
+            });
+        }
+        $("#t1").click(function(){
+            //$('#tabs').disableTab(1);
+            $('#tab1-1').css('display', 'block'); 
+            $('#tab1-2').css('display', 'none'); 
+            $('#tab1-3').css('display', 'none'); 
+            $('#tab1-4').css('display', 'none'); 
+            //$("#tab2").attr('disabled','disabled');
+        });
+        $('#t2').click(function(){
+            if($('#form_proceso').val()!=""){
+                var tabla = document.getElementById('tabla_p');
+	            var cont =	tabla.rows.length;
+                if(cont-1<3){
+                    alert('Debe rgistrar al menos tres tareas del proceso');
+                    return false;
+                }
+            }
+            $('#tab1-1').css('display', 'none'); 
+            $('#tab1-2').css('display', 'block'); 
+            $('#tab1-3').css('display', 'none'); 
+            $('#tab1-4').css('display', 'none'); 
+            if($('#form_proceso').val()!="")
+            {   //alert('entra');
+                
+                
+                formData = {flujotipo: $('#form_proceso').val()};
+                //
+                
+                $.ajax({
+                    type: 'GET',
+                    url: "{{path('flujoproceso_listar_pasos')}}",
+                    data: formData,
+                    beforeSend: function () {
+                        $('#tablapasos').empty();
+                    },
+                    success: function (data) {
+                        $('#tablapasos').empty();
+                        $('#tablapasos').append(data);
+                        //$("#tareas").append(data);
+                        
+                        
+                    },
+                });
+            }
+        });
+        $('#t3').click(function(){
+            //alert($('#cont').val());
+            if($('#form_proceso').val()!=""){
+                var tabla = document.getElementById('tabla_p');
+	            var cont =	tabla.rows.length;
+                var tablap = document.getElementById('t_pasos');
+	            var cont1 =	tablap.rows.length;
+                if(cont-1<3){
+                    alert('Debe rgistrar al menos tres tareas del proceso');
+                    return false;
+                }
+                if(cont1-1<3){
+                    alert('Debe rgistrar los pasos del proceso');
+                    return false;
+                }
+            }
+            $('#tab1-1').css('display', 'none'); 
+            $('#tab1-2').css('display', 'none'); 
+            $('#tab1-3').css('display', 'block'); 
+            $('#tab1-4').css('display', 'none');
+            
+            if($('#form_proceso').val()!="")
+            {   //alert('entra');
+                formData = {flujotipo: $('#form_proceso').val()};
+                $.ajax({
+                    type: 'GET',
+                    url: "{{path('flujoproceso_listar_condicion')}}",
+                    data: formData,
+                    beforeSend: function () {
+                        $('#tablacondicion').empty();
+                    },
+                    success: function (data) {
+                        //
+                        //
+                        $('#tablacondicion').empty();
+                        $('#tablacondicion').append(data);
+                        //$("#tareas").append(data);
+                        
+                    },
+                });
+            }
+        });
+       $('#t4').click(function(){
+            
+            $('#tab1-1').css('display', 'none'); 
+            $('#tab1-2').css('display', 'none'); 
+            $('#tab1-3').css('display', 'none'); 
+            $('#tab1-4').css('display', 'block'); 
+           if($('#form_proceso').val()!="")
+           {
+                var tabla = document.getElementById('tabla_p');
+	            var cont =	tabla.rows.length;
+                if(cont-1<3)
+                {
+                    alert('Debe rgistrar al menos tres tareas del proceso');
+                    return false;
+                }
+            }
+            if($('#form_proceso').val()!="")
+            //alert('entra');
+            {   //alert('flujo');
+                formData = {flujotipo: $('#form_proceso').val()};
+                $.ajax({
+                    type: 'GET',
+                    url: "{{path('flujoproceso_listar_flujo')}}",
+                    data: formData,
+                    beforeSend: function () {
+                        $('#flujo').empty();
+                    },
+                    success: function (data) {
+                        $('#flujo').empty();
+                        $('#flujo').append(data);
+                        //$("#tareas").append(data);
+                        
+                    },
+                });
+            }
+        });
+        function cargartarea(){
+            var proceso = $('#form_proceso').val();
+            var tarea = $('#form_tarea').val();
+            var rol = $('#form_rol').val();
+            var asignacion= $('#form_asignacion').val();
+            var evaluacion= $('#form_evaluacion').val();
+            var varevaluacion= $('#form_varevaluacion').val();
+            var tareaant= $('#form_tareaant').val();
+            var tabla = document.getElementById('tabla_p');
+	        var cont =	tabla.rows.length;
+            if(proceso == ''){ alert('Debe seleccionar un proceso'); return false; }
+            if(tarea == ''){ alert('Debe seleccionar una tarea'); return false; }
+            if(rol == ''){ alert('Debe seleccionar un rol'); return false; }
+            if(asignacion == ''){ alert('Debe seleccionar un tipo de asignacion'); return false; }
+            if(evaluacion == ''){ alert('Debe seleccionar evaluacion'); return false; }
+            else{ if (evaluacion==1 && varevaluacion==''){alert('Debe ingresar la variable de evaluacion'); return false;} }
+            if(tareaant == ''&& cont >1){ alert('Debe seleccionar tarea anterior'); return false; }
+            /*if(xhr1 && xhr1.readyState != 4){
+              //  xhr1.abort();
+            }*/
+            formData = $('#form_flujo').serialize();
+               //alert(formData);
+            $.ajax({
+                    type: 'GET',
+                    url: "{{path('flujoproceso_guardar_tarea')}}",
+                    data: formData,
+                    beforeSend: function () {
+                        $('#tareas').empty();
+                    },
+                    success: function (data) {
+                        $('#tareas').empty();
+                        $('#tareas').append(data);
+                        $("#form_observacion").val('');
+                        $("#form_orden").val('');
+                        $("#form_varevaluacion").val('');
+                        $("#form_plazo").val('');
+                        
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown)
+                    {
+                        alert('Error: ' + errorThrown);
+                    }
+                });
+            //return false;
+            
+            
+        }
+        
+        var cargarPasos = function(){
+            
+            var proceso = $('#form_proceso').val();
+            var tarea = $('#form_ptarea').val();
+            var nombre = $('#form_nombre').val();
+            var posicion= $('#form_posicion').val();
+            var tipopaso= $('#form_tipopaso').val();
+            if(proceso == ''){ alert('Debe seleccionar un proceso'); return false; }
+            if(tarea == ''){ alert('Debe seleccionar una tarea'); return false; }
+            if(nombre == ''){ alert('Debe registrar el nombre del paso'); return false; }
+            if(posicion == ''){ alert('Debe registrar la posicion del paso'); return false; }
+            if(tipopaso == ''){ alert('Debe seleccionar el tipo de paso'); return false; }
+            formData = $('#form_pasos').serialize();
+            //alert(formData);
+            $.ajax({
+                type: 'GET',
+                url: "{{path('flujoproceso_guardar_pasos')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#tablapasos').empty();
+                },
+                success: function (data) {
+                    $('#tablapasos').empty();
+                    $('#tablapasos').append(data);
+                    $('#form_nombre').val('');
+                    $('#form_posicion').val('');
+
+                },
+            });
+        }
+        var adicionarcondicion = function(){
+            
+            var proceso = $('#form_proceso').val();
+            var tarea = $('#form_ctarea').val();
+            var condicion = $('#form_condiciones').val();
+            
+            var tareasig= $('#form_ctareasig').val();
+            var tipocondicion= $('#form_tipocondicion').val();
+            if(proceso == ''){ alert('Debe seleccionar un proceso'); return false; }
+            if(tarea == ''){ alert('Debe seleccionar una tarea'); return false; }
+            if(condicion == ''){ alert('Debe seleccionar la condicion'); return false; }
+            if(tareasig == ''){ alert('Debe seleccionar la siguiente tarea a la condicion'); return false; }
+            if(tipocondicion == ''){ alert('Debe seleccionar el tipo de condicion'); return false; }
+            formData = $('#form_condicion').serialize();
+            //alert(formData);
+            $.ajax({
+                type: 'GET',
+                url: "{{path('flujoproceso_guardar_condicion')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#tablacondicion').empty();
+                },
+                success: function (data) {
+                    $('#tablacondicion').empty();
+                    $('#tablacondicion').append(data);
+                },
+            });
+        }
+       
+        var borrarFila = function (t){
+            var td = t.parentNode;
+	        var tr = td.parentNode;
+	        var table = tr.parentNode;
+	        table.removeChild(tr);
+        }
+        $(function(){
+            $(".validar").keydown(function(event){
+            //alert(event.keyCode);
+                if((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !==190  && event.keyCode !==110 && event.keyCode !==8 && event.keyCode !==9  ){
+                    return false;
+                }
+            });
+        });
+        $('#finalizar').click(function(){
+            if($('#form_proceso').val()!="")
+            {
+                formData = {flujotipo: $('#form_proceso').val()};
+                $.ajax({
+                type: 'POST',
+                url: "{{path('flujoproceso_finalizar')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#flujo').empty();
+                },
+                success: function (data) {
+                    $('#flujo').empty();
+                    $('#flujo').append(data);
+                },
+                });
+            }
+
+        });
+      
+    </script>
+
+{% endblock %}

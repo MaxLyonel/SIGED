@@ -362,12 +362,39 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
     if (!isset($id_usuario)) {
         return $this->redirect($this->generateUrl('login'));
     }
-    $sesion = $request->getSession();
+    $form = $this->ceaspendientesForm($this->session->get('roluser'),'operativo');
+    return $this->render($this->session->get('pathSystem') . ':Principal:listaceacerradonew.html.twig', array(
+        'form' => $form->createView(),
+        'rol' => $this->session->get('roluser'),
+        'id_usuario' =>$id_usuario,
+        ));
+}
+
+public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS CERRADOS
+{
+    $rol = $request->get('rol');
+    if(!$request->get('gestion'))
+    {
+        $gestion = 'select id from gestion_tipo';
+    }else{
+        $gestion = $request->get('gestion');
+    }
+    $id_usuario = $request->get('id_usuario');
+    if ($rol == 8 )
+    {
+        if(!$request->get('departamento'))
+        {
+            $departamento = 'select id from departamento_tipo';
+        }else{
+            $departamento = $request->get('departamento');
+        }
+    }
     $em = $this->getDoctrine()->getManager();
     //$em = $this->getDoctrine()->getEntityManager();
     $db = $em->getConnection();  
     
-    if ($sesion->get('roluser') == '8' ){//NACIONAL
+
+    if ($rol == '8' ){//NACIONAL
 //            $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$sesion->get('userId'),'rolTipo'=>$sesion->get('roluser')));            
 //            $coddis = $usuariorol[0]->getLugarTipo()->getCodigo();
 //            dump($usuariorol);
@@ -434,13 +461,12 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
             
             ) b on a.institucioneducativa_id=b.institucioneducativa_id and a.sucursal_tipo_id=b.sucursal_tipo_id and 
             cast(cast(a.gestion_tipo_id as character varying) || cast(a.periodo_tipo_id as character varying) as integer)=b.gestionperiodo
-            order by k.id, a.distrito_cod, ie.id, nombre_subcea, gestion_tipo_id, periodo_tipo_id
-        
-        ";
+            where a.gestion_tipo_id in (". $gestion .") and cast(k.codigo as int) in (". $departamento .")
+            order by k.id, a.distrito_cod, ie.id, nombre_subcea, gestion_tipo_id, periodo_tipo_id";
     }
     
-    if ($sesion->get('roluser') == '7' ){//DEPARTAMENTO            
-        $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$sesion->get('userId'),'rolTipo'=>$sesion->get('roluser')));            
+    if ($rol == '7' ){//DEPARTAMENTO            
+        $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$id_usuario,'rolTipo'=>$rol));            
         $idlugarusuario = $usuariorol[0]->getLugarTipo()->getId();
 //            dump($idlugarusuario);
 //            die;
@@ -509,15 +535,15 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
             ) b on a.institucioneducativa_id=b.institucioneducativa_id and a.sucursal_tipo_id=b.sucursal_tipo_id and 
             cast(cast(a.gestion_tipo_id as character varying) || cast(a.periodo_tipo_id as character varying) as integer)=b.gestionperiodo
             
-            where k.id = '".$idlugarusuario."'
+            where k.id = '".$idlugarusuario."' and a.gestion_tipo_id in (". $gestion .")
             
             order by 
             k.id, a.distrito_cod,
             ie.id, nombre_subcea, gestion_tipo_id, periodo_tipo_id";
     }
     
-    if ($sesion->get('roluser') == '10' ){//DISTRITO            
-        $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$sesion->get('userId'),'rolTipo'=>$sesion->get('roluser')));            
+    if ($rol == '10' ){//DISTRITO            
+        $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$id_usuario,'rolTipo'=>$rol));            
         $coddis = $usuariorol[0]->getLugarTipo()->getCodigo();
 //            dump($coddis);
 //            die;
@@ -586,7 +612,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
             ) b on a.institucioneducativa_id=b.institucioneducativa_id and a.sucursal_tipo_id=b.sucursal_tipo_id and 
             cast(cast(a.gestion_tipo_id as character varying) || cast(a.periodo_tipo_id as character varying) as integer)=b.gestionperiodo
             
-            where a.distrito_cod = '".$coddis."'
+            where a.distrito_cod = '".$coddis."' and a.gestion_tipo_id in (". $gestion .")
             
             order by 
             k.id, a.distrito_cod,
@@ -599,7 +625,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
     $po = $stmt->fetchAll();
 //        dump($po);
 //        die;
-    return $this->render($this->session->get('pathSystem') . ':Principal:listaceacerradonew.html.twig', array(
+    return $this->render($this->session->get('pathSystem') . ':Principal:tablaceaoperativopendiente.html.twig', array(
             'entities' => $po,
         ));
     }
@@ -1227,15 +1253,48 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
             return $this->redirect($this->generateUrl('login'));
         }
         $sesion = $request->getSession();
+        $form = $this->ceaspendientesForm($sesion->get('roluser'),'ceaspendientes');
+//        dump($po); die;
+        return $this->render($this->session->get('pathSystem') . ':Principal:listaceapendientesnew.html.twig', array(
+                //'entities' => $po,
+                'rol' => $sesion->get('roluser'),
+                'id_usuario' =>$id_usuario,
+                'form' => $form->createView(),
+            ));
+    }
+    public function listaceaspendientesAction(Request $request) {        
+
+        //dump($request);die;
+        $rol = $request->get('rol');
+        if(!$request->get('gestion'))
+        {
+            $gestion = '2017,2018,2019';
+        }else{
+            $gestion = $request->get('gestion');
+        }
+        $id_usuario = $request->get('id_usuario');
+        if ($rol == 8 )
+        {
+            if(!$request->get('departamento'))
+            {
+                $departamento = '1,2,3,4,5,6,7,8,9';
+            }else{
+                $departamento = $request->get('departamento');
+            }
+                
+
+        }
+        //dump($rol);die;
         $em = $this->getDoctrine()->getManager();        
         $db = $em->getConnection();
-        
 
-        if ($sesion->get('roluser') == '8' ) {//NACIONAL
+
+        if ($rol == '8' ) {//NACIONAL
              $query = "
                         select * from(
                             select
-                                k.id as deptoid,
+                            cast(k.codigo as int) as dep_codigo,
+                            k.id as deptoid,
                                 k.lugar,        
                                 b.distrito_cod,  
                                 d.id as ieue,	
@@ -1279,7 +1338,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                             inner join institucioneducativa_sucursal_tramite w on w.institucioneducativa_sucursal_id = z.id                      
                             inner join tramite_estado ff on ff.id = w.tramite_estado_id
                             inner join lugar_tipo k on k.id = lt.lugar_tipo_id
-                            where z.gestion_tipo_id in (2017,2018,2019) 			    
+                            where z.gestion_tipo_id in (". $gestion .") 			    
                             and w.tramite_estado_id not in (8,9,12,14)
                             and z.periodo_tipo_id in (2,3)
                             group by k.lugar, ie.id, ie.institucioneducativa, ff.tramite_estado, z.gestion_tipo_id, z.periodo_tipo_id, ff.id
@@ -1287,12 +1346,15 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                                     ) z on z.id_ie = d.id 					    
                         where z.gestion_tipo_id is not null                
                         order by lugar, ieue
-                        ) abc ";             
+                        ) abc where dep_codigo in (". $departamento .")";
         }
+        //dump($query);die;
 
-        if ($sesion->get('roluser') == '7' ) {//DEPARTAMENTAL
-            $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$sesion->get('userId'),'rolTipo'=>$sesion->get('roluser')));
+        if ($rol == '7' ) {//DEPARTAMENTAL
+            $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$id_usuario,'rolTipo'=>$rol));
+            //dump($usuariorol);die;
             $idlugarusuario = $usuariorol[0]->getLugarTipo()->getId();
+            //dump()
             
             $query = "
                                     select * from(
@@ -1341,7 +1403,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                                         inner join institucioneducativa_sucursal_tramite w on w.institucioneducativa_sucursal_id = z.id                      
                                         inner join tramite_estado ff on ff.id = w.tramite_estado_id
                                         inner join lugar_tipo k on k.id = lt.lugar_tipo_id
-                                        where z.gestion_tipo_id in (2017,2018,2019) 			    
+                                        where z.gestion_tipo_id in (". $gestion .") 			    
                                         and w.tramite_estado_id not in (8,9,12,14)
                                         and z.periodo_tipo_id in (2,3)
                                         group by k.lugar, ie.id, ie.institucioneducativa, ff.tramite_estado, z.gestion_tipo_id, z.periodo_tipo_id, ff.id
@@ -1353,8 +1415,8 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                                     where abc.deptoid = '".$idlugarusuario."'";
         } 
         
-        if ($sesion->get('roluser') == '10' ) {//DISTRITAL
-            $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$sesion->get('userId'),'rolTipo'=>$sesion->get('roluser')));     
+        if ($rol == '10' ) {//DISTRITAL
+            $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$id_usuario,'rolTipo'=>$rol));     
 
             $query = "
                                     select * from(
@@ -1403,7 +1465,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                                         inner join institucioneducativa_sucursal_tramite w on w.institucioneducativa_sucursal_id = z.id                      
                                         inner join tramite_estado ff on ff.id = w.tramite_estado_id
                                         inner join lugar_tipo k on k.id = lt.lugar_tipo_id
-                                        where z.gestion_tipo_id in (2017,2018,2019) 			    
+                                        where z.gestion_tipo_id in (". $gestion .") 			    
                                         and w.tramite_estado_id not in (8,9,12,14)
                                         and z.periodo_tipo_id in (2,3)
                                         group by k.lugar, ie.id, ie.institucioneducativa, ff.tramite_estado, z.gestion_tipo_id, z.periodo_tipo_id, ff.id
@@ -1420,11 +1482,43 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
         $params = array();
         $stmt->execute($params);
         $po = $stmt->fetchAll();
+        
 //        dump($po); die;
-        return $this->render($this->session->get('pathSystem') . ':Principal:listaceapendientesnew.html.twig', array(
+        return $this->render($this->session->get('pathSystem') . ':Principal:tablaceapendientes.html.twig', array(
                 'entities' => $po,
             ));
-    }  
+    }
+
+    public function ceaspendientesForm($rol,$tipo)
+    {   
+        $form = $this->createFormBuilder();
+            //->setAction($this->generateUrl('herramientalt_ceducativa_estadistiscas_cierre'))
+            if ($tipo =='operativo')
+                $form=$form
+                ->add('gestion','entity',array('label'=>'Gestión','required'=>false,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
+                    return $g->createQueryBuilder('g')->orderBy('g.id','DESC');},'property'=>'gestion','empty_value' => 'Todas'));
+            else{//ceas pendientes
+                $form=$form
+                ->add('gestion','entity',array('label'=>'Gestión','required'=>false,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
+                    return $g->createQueryBuilder('g')->where('g.id >= 2017')->orderBy('g.id','DESC');},'property'=>'gestion','empty_value' => 'Todas'));
+            }
+            if($rol==8)
+            {
+                $form = $form
+                ->add('departamento','entity',array('label'=>'Departamento','required'=>false,'class'=>'SieAppWebBundle:DepartamentoTipo','query_builder'=>function(EntityRepository $dp){
+                    return $dp->createQueryBuilder('dp')->where('dp.id >= 1')->orderBy('dp.departamento','ASC');},'property'=>'departamento','empty_value' => 'Todos'));
+            }
+            $form =$form    
+            /*->add('distrito','entity',array('label'=>'Distrito','required'=>true,'class'=>'SieAppWebBundle:DistritoTipo','query_builder'=>function(EntityRepository $ds){
+                return $ds->createQueryBuilder('ds')->orderBy('ds.distrito','ASC');},'property'=>'distrito','empty_value' => 'Todos'))*/
+            ->add('buscar', 'button', array('label'=> 'Buscar', 'attr'=>array('class'=>'btn btn-success', 'onclick'=>'buscarceaspendientes()')))
+            //->add('pdf', 'button', array('label'=> 'Exportar PDF', 'attr'=>array('class'=>'btn btn-sm btn-danger', 'onclick'=>"exportar('"."pdf"."')")))
+            //->add('xlsx', 'button', array('label'=> 'Exportar Excel', 'attr'=>array('class'=>'btn btn-sm btn-success', 'onclick'=>"exportar('"."xlsx"."')")))
+            ->getForm();
+
+        return $form;
+    }
+
     
     //************* ESTADISTICAS DE CIERRE 
     //************* ESTADISTICAS DE CIERRE 
@@ -1446,7 +1540,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
             $operativo = $form['operativo'];
             $em = $this->getDoctrine()->getManager();
             $semestre = $em->getRepository('SieAppWebBundle:PeriodoTipo')->find($periodo);
-            if($operativo == 5)
+            if($gestion<(new \DateTime())->format('Y'))
             {
                 $estadostramite = '5';
                 //$periodo ='2,3';
@@ -1512,7 +1606,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
             $gestion = (new \DateTime())->format('Y');
             //dump($gestion);die;
             $periodo = '2';                    
-            $estadostramite = '9,12,8,14';
+            $estadostramite = '9,12';
             $titulo = 'Primer Semestre 2018-Inscripciones';
         }        
 
@@ -1665,7 +1759,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                return $g->createQueryBuilder('g')->where('g.id >= 2006')->orderBy('g.id','DESC');},'property'=>'gestion','empty_value' => 'Seleccione gestión'))
             ->add('semestre','entity',array('label'=>'Semestre','required'=>true,'class'=>'SieAppWebBundle:PeriodoTipo','query_builder'=>function(EntityRepository $p){
               return $p->createQueryBuilder('p')->where('p.id in (2,3)');},'property'=>'periodo','empty_value' => 'Seleccione semestre'))
-            ->add('operativo','choice',array('label'=>'Operativo','required'=>true,'choices'=>array('9' => 'Inscripciones','8' => 'Notas','5'=>"Regularizaciones gestion pasadas"),'empty_value' => 'Seleccione operativo'))
+            ->add('operativo','choice',array('label'=>'Operativo','required'=>true,'choices'=>array('9' => 'Inscripciones','8' => 'Notas'),'empty_value' => 'Seleccione operativo'))
             ->add('buscar', 'submit', array('label'=> 'Buscar', 'attr'=>array('class'=>'btn btn-primary')))
             ->getForm();
 

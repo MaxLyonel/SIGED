@@ -1,0 +1,47 @@
+                    <div class="table-responsive col-md-12">
+                            <table class="table table-bordered table-striped" id="listaCeas">
+                                <thead>
+                                <tr>
+                                    <th class="text-center" style="min-width:5px">No.</th>
+                                    <th>Departamento</th>
+                                    <th>Código de distrito</th>
+                                    <th>Gestión</th>
+                                    <th>Semestre</th>
+                                    <th>Observación</th>
+                                    <th>Cod. Cea</th>
+                                    <th>Centro Alternativa</th>
+                                </tr>
+                                </thead>
+                                <tfoot>
+                                <tr>
+                                    <th class="text-center" style="min-width:5px">No.</th>
+                                    <th>Departamento</th>
+                                    <th>Código de distrito</th>
+                                    <th>Gestión</th>
+                                    <th>Semestre</th>
+                                    <th>Observación</th>
+                                    <th>Cod. Cea</th>
+                                    <th>Centro Alternativa</th>
+                                </tr>
+                                </tfoot>
+                                <tbody>
+                                {% for reg in entities %}
+                                    <tr>
+                                        <td class="text-center">{{ loop.index }}</td>
+                                        <td>{{ reg.lugar }}</td>
+                                        <td>{{ reg.distrito_cod }}</td>
+                                        <td>{{ reg.gestion_tipo_id }}</td>
+                                        <td>{{ reg.semestre }}</td>
+                                        <td>
+                                            <span class="label label-success">{{  reg.obs }} </span>
+
+                                        </td>
+
+
+                                        <td>{{ reg.ieue }}</td>
+                                        <td>{{ reg.institucioneducativa }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>

@@ -1,0 +1,7 @@
+flujoproceso_seguimiento:
+    path:     /
+    defaults: { _controller: "SieProcesosBundle:FlujoSeguimiento:index" }
+
+flujoseguimiento_verflujo:
+    path:     /verflujo
+    defaults: { _controller: "SieProcesosBundle:FlujoSeguimiento:verFlujo" }

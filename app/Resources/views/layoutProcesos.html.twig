@@ -12,7 +12,7 @@
             <meta name="description" content="Blankon is a theme fullpack admin template powered by Twitter bootstrap 3 front-end framework. Included are multiple example pages, elements styles, and javascript widgets to get your project started.">
             <meta name="keywords" content="admin, admin template, bootstrap3, clean, fontawesome4, good documentation, lightweight admin, responsive dashboard, webapp">
             <meta name="author" content="Djava UI">
-            <title>GESTION DE PROCESOS</title>
+            <title>GESTION DE FLUJOS DE PROCESOS</title>
             <!--/ END META SECTION -->
 
             <!-- START @FAVICONS -->
@@ -40,10 +40,9 @@
             <link href="{{asset('webolimpiadas/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.min.css')}}" rel="stylesheet">
 
 
-            <link href="{{asset('webolimpiadas/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.css')}}" rel="stylesheet">
-            <link href="{{asset('webolimpiadas/assets/global/plugins/bower_components/datatables/css/datatables.responsive.css')}}" rel="stylesheet">
-            <link href="{{asset('webolimpiadas/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
-
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
+            
             {# <link href="{{asset('css/plugins/bootstrap-combined/combined.css') }}" rel="stylesheet"> #}
             <link rel="stylesheet" type="text/css" href="{{asset('webolimpiadas/assets/commercial/plugins/cube-portfolio/cubeportfolio/css/cubeportfolio.css')}}">
             <!--/ END PAGE LEVEL STYLES -->
@@ -137,7 +136,7 @@
 
                         <!-- Start brand -->
                         <a class="navbar-brand" href="{{path('principal_web')}}">
-                            <img class="logo" src="{{asset('webolimpiadas/img/logo/html/logo-white.png')}}" alt="brand logo"/>
+                            <img class="logo" src="{{asset('webprocesos/img/logo/logo2.png')}}" alt="brand logo"/>
                         </a><!-- /.navbar-brand -->
                         <!--/ End brand -->
 
@@ -249,7 +248,7 @@
                 <!-- Start left navigation - profile shortcut -->
                 <div class="sidebar-content">
                     <div class="media">
-                        <a class="pull-left has-notif avatar" href="page-profile.html">
+                        <a class="pull-left has-notif avatar" {#href="page-profile.html"#}>
                             <img src="{{asset('webolimpiadas/img/avatar/50/1.png')}}" alt="admin">
                             <i class="online"></i>
                         </a>
@@ -282,7 +281,20 @@
                                 <li><a href="{{ path('flujotipo')}}">Registrar Proceso</a></li>
                                 <li><a href="{{ path('procesotipo')}}">Registrar Tareas</a></li>
                                 <li><a href="{{ path('flujoproceso')}}">Registrar Flujo de un proceso</a></li>
-                                <li><a href="{{ path('flujoproceso_seguimiento')}}">Seguimiento</a></li>
+                                <li><a href="{{ path('flujoproceso_seguimiento')}}">Seguimiento</span></a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                    {% if app.session.get('roluser') in [7,8,10,35,20] %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-bars"></i></span>
+                                <span class="text">Roles</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('flujorol')}}">Buscar por proceso</a></li>
+                                <li><a href="{{ path('flujoproceso_rol')}}">Buscar por rol</a></li>
                             </ul>
                         </li>
                     {% endif %}
@@ -311,19 +323,6 @@
                                     <li><a href="{{ path('tramite_rue_notificacion_minedu')}}" id="30"></a></li>
                                     <li><a href="{{ path('tramite_rue_registrar_minedu')}}" id="31"></a></li>
                                 {% endif %}
-                            </ul>
-                        </li>
-                    {% endif %}
-                    {% if app.session.get('roluser') in [7,8,10,35,20] %}
-                        <li class="submenu">
-                            <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-bars"></i></span>
-                                <span class="text">Roles</span>
-                                <span class="arrow"></span>
-                            </a>
-                            <ul>
-                                <li><a href="{{ path('flujorol')}}">Buscar por proceso</a></li>
-                                <li><a href="{{ path('flujoproceso_rol')}}">Buscar por rol</a></li>
                             </ul>
                         </li>
                     {% endif %}
@@ -1115,9 +1114,10 @@
             <script src="{{asset('webolimpiadas/assets/global/plugins/bower_components/jquery-autosize/jquery.autosize.min.js')}}"></script>
             <script src="{{asset('webolimpiadas/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.jquery.min.js')}}"></script>
 
-            <script src="{{asset('webolimpiadas/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
-            <script src="{{asset('webolimpiadas/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script>
-            <script src="{{asset('webolimpiadas/assets/global/plugins/bower_components/datatables/js/datatables.responsive.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/js/fuelux.min.js')}}"></script>
             <!--/ END PAGE LEVEL PLUGINS -->
 
             <!-- START @PAGE LEVEL SCRIPTS -->
