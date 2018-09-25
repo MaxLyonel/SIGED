@@ -170,6 +170,7 @@ class UpdateEstudentController  extends Controller{
       try {
         if($resultSegip || $resultSegip == 2){
             $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['studentid']);
+            $oldDataStudent = clone $objStudent;
             reset($form);
 
             while($val = current($form)){
@@ -193,7 +194,7 @@ class UpdateEstudentController  extends Controller{
               }
               next($form);
             }
-
+            //checkt if the data was saved with segip validation 
             if($resultSegip == 1){
                 $updateMessage = 'Datos Modificados Correctamente - validados con SEGIP';    
             }else{
@@ -201,7 +202,16 @@ class UpdateEstudentController  extends Controller{
             }
             $typeMessage = 'success';
             $mainMessage = 'Guardado';
-
+            $this->get('funciones')->setLogTransaccion(
+                                   $form['studentid'],
+                                    'estudiante',
+                                    'U',
+                                    '',
+                                    $objStudent,
+                                    $oldDataStudent,
+                                    'SIGED',
+                                    json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+            );
 
             $em->flush();
           }else{
