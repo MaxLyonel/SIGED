@@ -124,7 +124,7 @@
                                     </tr>
                                     <tr>
                                     <tr>
-                                        <td>Cant. CEAs</td>
+                                        <td>Cant. CEAs con Especialidades</td>
                                         <td>
                                             <button id="tour-13" onclick="document.forms['formEspCentrosPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
 
@@ -140,7 +140,7 @@
 
                                     <tr>
                                         <td>
-                                            <select width="100" style="width: 100px" id="listaesp" class="form-control btn-dpl" name="listaesp" onchange="this.form.submit();">
+                                            <select width="250px" style="width: 250px" id="listaesp" class="form-control btn-dpl" name="listaesp" onchange="this.form.submit();">
                                                 <option value="" disabled selected>Seleccionar Especialidad...</option>
                                                 {% for item in especialidades %}
                                                     <option value="{{ item.id }}">{{ item.especialidad }}</option>
@@ -162,7 +162,7 @@
                                     <tr>
                                         <td>
 
-                                            <input type="text" id="sie" name="sie" required="required" class="form-control" placeholder="Inserte SIE para especialidades" pattern="[0-9]{6,8}"  onchange="this.form.submit();" />
+                                            <input type="text" width="250px" style="width: 250px" id="sie" name="sie" required="required" class="form-control" placeholder="Inserte SIE para especialidades" pattern="[0-9]{6,8}"  onchange="this.form.submit();" />
 
                                         </td>
                                         <td>
@@ -179,7 +179,7 @@
                                     <tr>
                                         <td>
 
-                                            <input type="text" id="sie2" name="sie2" required="required" class="form-control" placeholder="Inserte SIE para estadisticas" pattern="[0-9]{6,8}"  onchange="this.form.submit();" />
+                                            <input type="text" width="250px" style="width: 250px" id="sie2" name="sie2" required="required" class="form-control" placeholder="Inserte SIE para estadisticas" pattern="[0-9]{6,8}"  onchange="this.form.submit();" />
 
                                         </td>
                                         <td>
