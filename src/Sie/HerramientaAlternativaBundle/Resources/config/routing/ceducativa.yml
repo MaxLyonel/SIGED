@@ -1,12 +1,6 @@
 herramienta_ceducativa_index:
     path:     /
     defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:index}  
-    
-sie_alt_ges_sub_sem:
-    path:     /gessubsem/
-    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:gessubsem}  
-    options:
-         expose: true
          
 sie_alt_ges_sub_sem_open:
     path:     /{teid}/{gestion}/{subcea}/{semestre}/{idiesuc}/gessubsemopen/
