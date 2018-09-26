@@ -705,7 +705,7 @@ class EstudianteUpdateController extends Controller {
             // $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
             // return $this->redirect($this->generateUrl('sie_estudiantes'));
         }else{
-            $updateMessage = 'Actualizacion no realizada, los datos reportados no coinciden';
+            $updateMessage = 'Actualización no realizada, De acuerdo a la validación del SEGIP, el número de carnet no corresponde a los datos (paterno, materno, nombre y fecha de nacimiento)';
             $typeMessage = 'warning';
             $mainMessage = 'Error';
         }
@@ -770,7 +770,7 @@ class EstudianteUpdateController extends Controller {
             // $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
             // return $this->redirect($this->generateUrl('sie_estudiantes'));
         }else{
-            $updateMessage = 'Actualizacion no realizada, los datos reportados no coinciden';
+              $updateMessage = 'Actualización no realizada, De acuerdo a la validación del SEGIP, el número de carnet no corresponde a los datos (paterno, materno, nombre y fecha de nacimiento)';
             $typeMessage = 'warning';
             $mainMessage = 'Error';
         }
@@ -868,7 +868,7 @@ class EstudianteUpdateController extends Controller {
             // $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
             // return $this->redirect($this->generateUrl('sie_estudiantes'));
         }else{
-            $updateMessage = 'Actualizacion no realizada, los datos reportados no coinciden';
+              $updateMessage = 'Actualización no realizada, De acuerdo a la validación del SEGIP, el número de carnet no corresponde a los datos (paterno, materno, nombre y fecha de nacimiento)';
             $typeMessage = 'warning';
             $mainMessage = 'Error';
         }
@@ -957,7 +957,7 @@ class EstudianteUpdateController extends Controller {
             // $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
             // return $this->redirect($this->generateUrl('sie_estudiantes'));
         }else{
-            $updateMessage = 'Actualizacion no realizada, los datos reportados no coinciden';
+              $updateMessage = 'Actualización no realizada, De acuerdo a la validación del SEGIP, el número de carnet no corresponde a los datos (paterno, materno, nombre y fecha de nacimiento)';
             $typeMessage = 'warning';
             $mainMessage = 'Error';
         }
@@ -1044,7 +1044,7 @@ class EstudianteUpdateController extends Controller {
             // $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
             // return $this->redirect($this->generateUrl('sie_estudiantes'));
         }else{
-            $updateMessage = 'Actualizacion no realizada, los datos reportados no coinciden';
+              $updateMessage = 'Actualización no realizada, De acuerdo a la validación del SEGIP, el número de carnet no corresponde a los datos (paterno, materno, nombre y fecha de nacimiento)';
             $typeMessage = 'warning';
             $mainMessage = 'Error';
         }
