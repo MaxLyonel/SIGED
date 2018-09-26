@@ -18,22 +18,50 @@
             </ol>
         </div><!-- /.breadcrumb-wrapper -->
     </div>
-
-
-
+    <div class="col-md-12">
     <div class="panel panel-success rounded shadow">
         <div class="panel-heading">
-            <h3>Lista de Centros de Alternativa con Pendientes de Reporte de Información</h3>
+            <h3>Centros de Alternativa con Pendientes de Reporte de Información</h3>
 
         </div><!-- /.panel-heading -->
-        <div class="panel-sub-heading">
-
-        </div><!-- /.panel-sub-heading -->
-        <div class="panel-body">
-            <div >
+        <div class="panel-body panel-success">
+            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form'} } )}}
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-lg-3 col-md-3">
+                        {{ form_label(form.gestion)}}
+                        {{form_widget(form.gestion) }}
+                    </div>
+                    {% if rol == 8 %}
+                    <div class="form-group col-lg-3 col-md-3">
+                        {{ form_label(form.departamento)}}
+                        {{form_widget(form.departamento) }}
+                    </div>
+                    {% endif %}
+                    {#<div class="form-group col-lg-2 col-md-2">
+                        {{ form_label(form.distrito)}}
+                        {{form_widget(form.distrito) }}
+                    </div>#}
+                </div>
+                <div class="row">
+                    <div class="form-group col-lg-3 col-md-3">                                        
+                        {{ form_widget(form.buscar ) }}
+                    </div>
+                </div>
+                {#<div class="panel-heading" id="exportar" style= "display:none">
+                    <div class="pull-right">
+                        {{ form_widget(form.pdf ) }}
+                        {{ form_widget(form.xlsx) }}
+                    </div>
+                    <div class="clearfix"></div>
+                </div>#}
+                {{form_end(form)}}
+            </div>
+        </div>
+        <div >
                 <div class="row">
                     <div class="col-md-12">
-
+                    <div id="tabla"></div>
                         <!-- Start default tabs -->
                         {# <div class="panel panel-tab rounded shadow">
                              <!-- Start tabs heading -->
@@ -78,7 +106,7 @@
                          </div><!-- /.panel -->
                          <!--/ End default tabs -->#}
 
-                        <div class="table-responsive col-md-12">
+                        {#<div class="table-responsive col-md-12">
                             <table class="table table-bordered table-striped" id="listaCeas">
                                 <thead>
                                 <tr>
@@ -124,13 +152,16 @@
                                 {% endfor %}
                                 </tbody>
                             </table>
-                        </div>
+                        </div>#}
 
                     </div>
                 </div><!-- /.row -->
             </div>
-        </div><!-- /.panel-body -->
+    </div><!-- /.panel-body -->
     </div>
+    <div class="panel-sub-heading">
+    </div><!-- /.panel-sub-heading -->
+</div>
 
 
 
@@ -169,10 +200,63 @@
 {% block javascripts %}
     {{parent()}}
     <script>
-
-        $( document ).ready(function() {
-            cargatablas();
-        });
+        function buscarceaspendientes()
+        {
+            //alert('{{rol}}');
+            if('{{rol}}'== 8)
+            {
+                var formData = {gestion: $('#form_gestion').val(),departamento: $('#form_departamento').val(),rol: '{{ rol }}', id_usuario: '{{ id_usuario }}'};    
+            }else{
+                var formData = {gestion: $('#form_gestion').val(),rol: '{{ rol }}',id_usuario: '{{ id_usuario }}'};
+            }
+            $.ajax({
+                type: 'get',
+                url: "{{path('sie_alt_ges_sub_sem_ceas_pendinte_lista')}}",
+                data: formData,
+                beforeSend: function (){
+                    $('#tabla').empty();
+                    $("#tabla").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $('#tabla').empty();
+                    $('#tabla').append(data);
+                    $('#exportar').css('display', 'block'); 
+                    $( document ).ready(function() {
+                        cargatablas();
+                    });
+                },
+                statusCode: {
+                    500: function () {
+                    },
+                    404: function () {
+                    }
+                }
+            });
+        }
+        function exportar(tipo)
+        {
+            //alert(tipo);
+            if('{{rol}}'== 8)
+            {
+                var formData = {tipo: tipo, gestion: $('#form_gestion').val(),departamento: $('#form_departamento').val(),rol: '{{ rol }}', id_usuario: '{{ id_usuario }}'};    
+            }else{
+                var formData = {tipo: tipo, gestion: $('#form_gestion').val(),rol: '{{ rol }}',id_usuario: '{{ id_usuario }}'};
+            }
+            $.ajax({
+                type: 'get',
+                url: "{{path('sie_alt_lista_ceaspendientes')}}",
+                data: formData,
+                success: function (data) {
+                    
+                },
+                statusCode: {
+                    500: function () {
+                    },
+                    404: function () {
+                    }
+                }
+            });
+        }
 
         var cargatablas = function (identif){
             // Setup - add a text input to each footer cell

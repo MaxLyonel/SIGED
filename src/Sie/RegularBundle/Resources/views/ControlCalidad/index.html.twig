@@ -56,9 +56,12 @@
                         <div class="circle-tile-number text-faded">
                             {{ entidad.entidad }}
                         </div>
-                        {% for gest in gestiones %}
-                            <a href="{{ path('ccalidad_list', { 'id': entidad.id, 'gestion': gest.id }) }}" class="circle-tile-footer">Ver inconsistencias {{gest.id}} <i class="fa fa-chevron-circle-right"></i></a>
-                        {% endfor %}
+                        <select id="gestionesCalidad_{{entidad.id}}" onchange="listaInconsistencias({{entidad.id}})" class="form-control">
+                            <option value="-1">Seleccionar gestión...</option>
+                            {% for gestion in gestiones %}
+                                <option value="{{gestion.id}}">{{gestion.id}}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
             </div>
@@ -80,11 +83,26 @@
                         <div class="circle-tile-number text-faded">
                             Reporte
                         </div>
-                        <a href="{{ path('ccalidad_reporte', { 'lugar_tipo_id': lugar_tipo_id }) }}" class="circle-tile-footer">Generar reporte<i class="fa fa-save"></i></a>
+                        <a href="{{ path('ccalidad_reporte', { 'lugar_tipo_id': lugar_tipo_id }) }}" class="circle-tile-footer">Generar reporte <i class="fa fa-save"></i></a>
                     </div>
                 </div>
             </div>
         </div>
     {% endif %}
     <!-- end DASHBOARD CIRCLE TILES --> 
+{% endblock %}
+{% block javascripts %}
+{{parent()}}
+<script>
+    function listaInconsistencias(entidadid){
+        var gestion = $('#gestionesCalidad_'+entidadid).val();
+        var ruta = Routing.generate('ccalidad_list', {'id': entidadid, 'gestion': gestion});
+
+        if(gestion != -1){
+            window.location.href = ruta;
+        } else {
+            alert("Debe seleccionar una gestión válida");
+        }
+    }
+</script>
 {% endblock %}

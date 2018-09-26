@@ -1,0 +1,100 @@
+<div class="table-responsive col-md-12">
+                            <table class="table table-bordered table-striped" id="listaConsol">
+                                <thead>
+                                <tr>
+                                    <th class="text-center" style="min-width:5px">No.</th>
+                                    <th>Departamento</th>
+                                    <th>Código de distrito</th>
+                                    <th>Cod. Cea</th>
+                                    <th>CEA</th>
+                                    <th class="text-center" style="min-width:5px">Sub Cea</th>
+                                    <th>Gestión</th>
+                                    <th>Periodo</th>
+                                    <th>Estado</th>
+                                    <th class="text-center">Operativos</th>
+                                </tr>
+                                </thead>
+                                <tfoot>
+                                <tr>
+                                    <th style="min-width:5px">No.</th>
+                                    <th>Departamento</th>
+                                    <th>Código de distrito</th>
+                                    <th>Cod. Cea</th>
+                                    <th>CEA</th>
+                                    <th class="text-center" style="min-width:5px">Sub Cea</th>
+                                    <th>Gestión</th>
+                                    <th>Periodo</th>
+                                    <th>Estado</th>
+                                    <th class="text-center"></th>
+                                </tr>
+                                </tfoot>
+                                <tbody>
+
+                                {% for reg in entities %}
+                                    <tr>
+                                        <td class="text-center">{{ loop.index }}</td>
+                                        <td>
+                                            {#<img class="img-circle img-bordered-theme" alt="..." src="../../../img/avatar/35/2.png">#}
+                                            <span>{{ reg.lugar }}</span>
+                                        </td>
+                                        <td>{{ reg.distrito_cod }}</td>
+                                        <td>{{ reg.ieid }}</td>
+                                        <td>{{ reg.institucioneducativa }}</td>
+                                        <td class="text-center">{{ reg.nombre_subcea }}</td>
+                                        <td class="text-center">{{ reg.gestion_tipo_id }}</td>
+                                        <td>{{ reg.semestre }}</td>
+                                        {#<td>{{ reg.nombre }} {{ reg.paterno }} {{ reg.materno }}</td>#}
+                                        <td>{{ reg.tramite_estado }}</td>
+                                        <td class="text-center">
+                                            {% if ((reg.teid == '6') or (reg.teid == '7') or (reg.teid == '11') or (reg.teid == '13') or (reg.teid == '5')) %}
+                                                <button type="submit" class="btn-danger btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
+                                                    <i class="fa fa-hand-paper-o"></i>
+                                                    {{reg.obs}}
+                                                </button>
+                                            {% elseif (reg.teid == '14') %}     {#¡Fin de Semestre - Cerrado! #}
+                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_solicitud_cambiar_estado_a_regularizado', {'iestid': reg.iestid})}}" method="post" style="display:inline-block" onsubmit="return verificarRegularizacion();">
+                                                    <button type="submit" class="btn-warning btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
+                                                        <i class="fa fa-edit"></i>
+                                                        Autorización para regularizar operativo Fin de Semestre
+                                                    </button>
+                                                </form>
+                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_continuar_sig_operativo', {'iestid': reg.iestid})}}" method="post" style="display:inline-block">
+                                                    <button type="submit" class="btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
+                                                        <i class="fa fa-arrow-circle-right"></i>
+                                                        Continuar con operativo Inicio de Semestre
+                                                    </button>
+                                                </form>
+                                            {% elseif (reg.teid == '12') %}      {#¡Inicio de Semestre - Cerrado!  #}
+                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_solicitud_cambiar_estado_a_regularizado', {'iestid': reg.iestid})}}" method="post" style="display:inline-block" onsubmit="return verificarRegularizacion();">
+                                                    <button type="submit" class="btn-warning btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
+                                                        <i class="fa fa-edit"></i>
+                                                        Autorización para regularizar operativo Inicio de Semestre
+                                                    </button>
+                                                </form>
+                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_continuar_sig_operativo', {'iestid': reg.iestid})}}" method="post" style="display:inline-block" onsubmit="return verificarSiguienteOperativo();">
+                                                    <button type="submit" class="btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
+                                                        <i class="fa fa-arrow-circle-right"></i>
+                                                        Continuar con operativo Fin de Semestre
+                                                    </button>
+                                                </form>
+                                            {% elseif (reg.teid == '8') %}    {#Fin de Semestre Regularizado - Cerrado#}
+                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_continuar_sig_operativo', {'iestid': reg.iestid})}}" method="post" style="display:inline-block">
+                                                    <button type="submit" class="btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
+                                                        <i class="fa fa-arrow-circle-right"></i>
+                                                        Continuar con operativo Inicio de Semestre
+                                                    </button>
+                                                </form>
+                                            {% elseif (reg.teid == '9') %}    {#Inicio de Semestre  Regularizado - Cerrado#}
+                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_continuar_sig_operativo', {'iestid': reg.iestid})}}" method="post" style="display:inline-block" onsubmit="return verificarSiguienteOperativo();">
+                                                    <button type="submit" class="btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
+                                                        <i class="fa fa-arrow-circle-right"></i>
+                                                        Continuar con operativo Fin de Semestre
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>

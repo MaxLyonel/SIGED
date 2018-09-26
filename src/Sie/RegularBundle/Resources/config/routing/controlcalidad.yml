@@ -5,6 +5,8 @@ ccalidad_index:
 ccalidad_list:
     path:     /{id}/{gestion}/list
     defaults: { _controller: "SieRegularBundle:ControlCalidad:list" }
+    options:
+         expose: true
 
 ccalidad_detalle:
     path:     /{id}/detalle

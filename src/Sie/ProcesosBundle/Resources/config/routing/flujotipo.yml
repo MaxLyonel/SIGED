@@ -1,0 +1,34 @@
+flujotipo:
+    path:     /
+    defaults: { _controller: "SieProcesosBundle:FlujoTipo:index" }
+
+flujotipo_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieProcesosBundle:FlujoTipo:show" }
+
+flujotipo_new:
+    path:     /new
+    defaults: { _controller: "SieProcesosBundle:FlujoTipo:new" }
+
+flujotipo_create:
+    path:     /create
+    defaults: { _controller: "SieProcesosBundle:FlujoTipo:create" }
+    methods:  POST
+
+flujotipo_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieProcesosBundle:FlujoTipo:edit" }
+
+flujotipo_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieProcesosBundle:FlujoTipo:update" }
+    methods:  [POST, PUT]
+
+flujotipo_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieProcesosBundle:FlujoTipo:delete" }
+##    methods:  [POST, DELETE]
+
+flujotipo_ver:
+    path:     /{id}/verflujo
+    defaults: { _controller: "SieProcesosBundle:FlujoTipo:verFlujo" }

@@ -79,7 +79,12 @@ sie_alt_ges_sub_sem_ceas_pendinte:
     defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:ceaspendientes}
     options:
          expose: true
+
+sie_alt_ges_sub_sem_ceas_pendinte_lista:
+    path:     /ceaspendientes/lista
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:listaceaspendientes}
          
+
 herramientalt_ceducativa_estadistiscas_cierre:
     path:     /ceasstdcierre/
     defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:ceasstdcierre}
@@ -161,3 +166,7 @@ sie_alt_clistardistritos:
     defaults: { _controller: "SieHerramientaAlternativaBundle:Institucioneducativa:listardistritos" }
     options:
          expose: true
+
+sie_alt_ges_sub_sem_panel_operativos_lista:
+    path:     /gessubsempaneloperativoslista/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:paneloperativoslista}  

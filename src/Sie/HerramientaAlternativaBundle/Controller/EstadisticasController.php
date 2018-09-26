@@ -1742,7 +1742,7 @@ union all
      * @return type
      */
     public function centroAltEspecialidadPrintXlsAction(Request $request) {
-        // dump($request);die;
+         //dump($request);die;
         /*
          * Define la zona horaria y halla la fecha actual
          */
@@ -1757,7 +1757,7 @@ union all
              */
             $gestion = $request->get('gestion');
             $periodo = $request->get('periodo');
-            $sie = $request->get('siecentrop');
+            $sie = $request->get('siecentrox');
             //   dump($value);
             $codigoArea = base64_decode($request->get('codigo'));
             $rol = $request->get('rol');
@@ -1795,7 +1795,7 @@ union all
 //reportes por estadisticas de centro
 
     public function  centroAltEstPrintPdfAction(Request $request) {
-        // dump($request);die;
+       // dump($request);die;
 
         /*
          * Define la zona horaria y halla la fecha actual
@@ -1814,7 +1814,7 @@ union all
             //   dump($value);
             $codigoArea = base64_decode($request->get('codigo'));
             $rol = $request->get('rol');
-
+          //  dump($gestion);dump($periodo);dump($sie);die;
         } else {
             $gestion = $gestionActual;
             $codigoArea = 0;
@@ -1823,7 +1823,7 @@ union all
             $sie = $request->get('siecentroestp');
         }
 
-
+     //   dump($gestion);dump($periodo);dump($sie);
         $em = $this->getDoctrine()->getManager();
 
         $arch = 'CEA_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.pdf';
@@ -1832,7 +1832,7 @@ union all
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
         // por defecto
-        //   dump($this->container->getParameter('urlreportweb') . 'alt_est_nacional_por_especialidad_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion.'&Periodo='.$periodo.'&idespecialidad='.$value);die;
+  //dump($this->container->getParameter('urlreportweb') . 'alt_est_cea_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion.'&Periodo='.$periodo.'&CEA='.$sie);die;
         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_cea_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion.'&Periodo='.$periodo.'&CEA='.$sie));
 
         $response->setStatusCode(200);
@@ -1849,7 +1849,7 @@ union all
      * @return type
      */
     public function centroAltEstPrintXlsAction(Request $request) {
-        // dump($request);die;
+     //   dump($request);die;
         /*
          * Define la zona horaria y halla la fecha actual
          */
@@ -1884,7 +1884,7 @@ union all
         $response = new Response();
         $response->headers->set('Content-type', 'application/vnd.ms-excel');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        //   dump($this->container->getParameter('urlreportweb') . 'alt_esp_nacional_cant_centros_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo);die;
+   //         dump($this->container->getParameter('urlreportweb') . 'alt_est_cea_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo.'&CEA='.$sie);die;
         // por defecto
 
         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_cea_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo.'&CEA='.$sie));

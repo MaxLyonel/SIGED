@@ -1,0 +1,15 @@
+flujorol:
+    path:     /
+    defaults: { _controller: "SieProcesosBundle:FlujoRol:index" }
+
+flujorol_listar_roles:
+    path:     /lista_proceso_rol
+    defaults: { _controller: "SieProcesosBundle:FlujoRol:listaProcesoRol" }
+
+flujorol_listar_proceso_rol:
+    path:     /lista_rol_proceso
+    defaults: { _controller: "SieProcesosBundle:FlujoRol:listaRolProceso" }
+
+flujoproceso_rol:
+    path:     /flujoprocesorol
+    defaults: { _controller: "SieProcesosBundle:FlujoRol:FlujoProcesoRol" }

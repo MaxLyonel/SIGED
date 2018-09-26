@@ -1,0 +1,49 @@
+flujoproceso:
+    path:     /
+    defaults: { _controller: "SieProcesosBundle:FlujoProceso:index" }
+
+flujoproceso_guardar_tarea:
+    path:     /guardar_tarea
+    defaults: { _controller: "SieProcesosBundle:FlujoProceso:guardarTarea" }
+
+flujoproceso_guardar_pasos:
+    path:     /guardar_pasos
+    defaults: { _controller: "SieProcesosBundle:FlujoProceso:guardarPasos" }
+
+flujoproceso_guardar_condicion:
+    path:     /guardar_condicion
+    defaults: { _controller: "SieProcesosBundle:FlujoProceso:guardarCondicion" }
+
+flujoproceso_tareasproceso:
+    path:     /cargar_tareas
+    defaults: { _controller: "SieProcesosBundle:FlujoProceso:cargarTareas" }
+
+flujoproceso_listar_tareas:
+    path:     /listar_tareas
+    defaults: { _controller: "SieProcesosBundle:FlujoProceso:listarTareas" }
+
+flujoproceso_listar_pasos:
+    path:     /listar_pasos
+    defaults: { _controller: "SieProcesosBundle:FlujoProceso:listarPasos" }
+
+flujoproceso_listar_condicion:
+    path:     /listar_condicion
+    defaults: { _controller: "SieProcesosBundle:FlujoProceso:listarCondicion" }
+
+flujoproceso_listar_flujo:
+    path:     /listar_flujo
+    defaults: { _controller: "SieProcesosBundle:FlujoProceso:listarFlujo" }
+
+flujoproceso_finalizar:
+    path:     /finalizar
+    defaults: { _controller: "SieProcesosBundle:FlujoProceso:finalizar" }
+
+flujoproceso_formulario_nuevo:
+    path:     /formulario_nuevo
+    defaults: { _controller: "SieProcesosBundle:FlujoProceso:formularioNuevo" }
+
+flujoproceso_formulario_guardar:
+    path:     /formulario_guardar
+    defaults: { _controller: "SieProcesosBundle:FlujoProceso:formularioGuardar" }
+
+
