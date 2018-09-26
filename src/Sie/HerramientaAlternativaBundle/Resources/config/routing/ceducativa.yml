@@ -170,3 +170,11 @@ sie_alt_clistardistritos:
 sie_alt_ges_sub_sem_panel_operativos_lista:
     path:     /gessubsempaneloperativoslista/
     defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:paneloperativoslista}  
+
+sie_alt_ges_sub_sem:
+    path:     /gessubsem/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:gessubsem}  
+    options:
+         expose: true
+
+
