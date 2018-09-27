@@ -1,0 +1,17 @@
+downloadrudefile_index:
+  path: /
+  defaults: { _controller: SieRegularBundle:DownloadRudeFile:index }
+
+downloadrudefile_downoperativorude:
+  path: /downrudefile
+  defaults: { _controller: SieRegularBundle:DownloadRudeFile:downoperativorude }
+  options:
+       expose: true  
+
+downloadrudefile_download:
+    path:     /download/{file}/{datadownload}
+    defaults: { _controller: SieRegularBundle:DownloadRudeFile:download }       
+
+downloadrudefile_listIndex:
+    path:     /listIndex
+    defaults: { _controller: SieRegularBundle:DownloadRudeFile:listIndex }      
