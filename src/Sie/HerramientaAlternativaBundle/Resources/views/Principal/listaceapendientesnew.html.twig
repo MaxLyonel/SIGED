@@ -48,20 +48,23 @@
                         {{ form_widget(form.buscar ) }}
                     </div>
                 </div>
-                {#<div class="panel-heading" id="exportar" style= "display:none">
+                {{form_end(form)}}
+                {{form_start(form_exp)}}
+                <div class="panel-heading" id="exportar1" style= "display:none">
                     <div class="pull-right">
-                        {{ form_widget(form.pdf ) }}
-                        {{ form_widget(form.xlsx) }}
+                        {{ form_widget(form_exp.pdf1 ) }}
+                        {{ form_widget(form_exp.xlsx1) }}
                     </div>
                     <div class="clearfix"></div>
-                </div>#}
-                {{form_end(form)}}
+                </div>
+                {{form_end(form_exp)}}
             </div>
         </div>
         <div >
                 <div class="row">
                     <div class="col-md-12">
                     <div id="tabla"></div>
+                    
                         <!-- Start default tabs -->
                         {# <div class="panel panel-tab rounded shadow">
                              <!-- Start tabs heading -->
@@ -220,7 +223,11 @@
                 success: function (data) {
                     $('#tabla').empty();
                     $('#tabla').append(data);
-                    $('#exportar').css('display', 'block'); 
+                    $('#form_rol').val('{{rol}}');
+                    $('#form_id_usuario').val('{{id_usuario}}');
+                    $('#form_gestion1').val($('#form_gestion').val());
+                    $('#form_departamento1').val($('#form_departamento').val());
+                    $('#exportar1').css('display', 'block');
                     $( document ).ready(function() {
                         cargatablas();
                     });
@@ -233,7 +240,16 @@
                 }
             });
         }
-        function exportar(tipo)
+        $('#form_pdf1').click(function(){
+            //alert('entra');
+            
+            $('#form_tipo').val('pdf');
+        });
+        
+        $('#form_xlsx1').click(function(){
+            $('#form_tipo').val('xlsx');
+        });
+        /*function exportar(tipo)
         {
             //alert(tipo);
             if('{{rol}}'== 8)
@@ -247,7 +263,7 @@
                 url: "{{path('sie_alt_lista_ceaspendientes')}}",
                 data: formData,
                 success: function (data) {
-                    
+                    //document.location.href = data;;
                 },
                 statusCode: {
                     500: function () {
@@ -256,7 +272,7 @@
                     }
                 }
             });
-        }
+        }*/
 
         var cargatablas = function (identif){
             // Setup - add a text input to each footer cell

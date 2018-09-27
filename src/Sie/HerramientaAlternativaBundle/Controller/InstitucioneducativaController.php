@@ -363,10 +363,12 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
         return $this->redirect($this->generateUrl('login'));
     }
     $form = $this->ceaspendientesForm($this->session->get('roluser'),'operativo');
+    $form_exp = $this->exportaroperativoForm();
     return $this->render($this->session->get('pathSystem') . ':Principal:listaceacerradonew.html.twig', array(
         'form' => $form->createView(),
         'rol' => $this->session->get('roluser'),
         'id_usuario' =>$id_usuario,
+        'form_exp' => $form_exp->createView(),
         ));
 }
 
@@ -875,8 +877,11 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                     foreach ($podis as $p){
                         $lugarestipoid = $p["get_ie_distrito_id"];           
                     }
+
                     $lugarids = explode(",", $lugarestipoid);
-                    $dis_id = substr($lugarids[0],1,strlen($lugarids[0]));                
+                    //dump($lugarids);die;
+                    $dis_id = substr($lugarids[0],1,strlen($lugarids[0]));
+                    //dump($dis_id);die;
                     $dis_cod = $em->getRepository('SieAppWebBundle:LugarTipo')->find($dis_id);
                     $iest->setDistritoCod($dis_cod->getCodigo());
                     $iest->setFechainicio(new \DateTime('now'));
@@ -917,6 +922,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                             foreach ($podis as $p){
                                 $lugarestipoid = $p["get_ie_distrito_id"];           
                             }
+                            //dump($lugarestipoid);die;
                             $lugarids = explode(",", $lugarestipoid);
                             $dis_id = substr($lugarids[0],1,strlen($lugarids[0]));                
                             $dis_cod = $em->getRepository('SieAppWebBundle:LugarTipo')->find($dis_id);
@@ -957,6 +963,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                             foreach ($podis as $p){
                                 $lugarestipoid = $p["get_ie_distrito_id"];           
                             }
+                            //dump($lugarestipoid);die;
                             $lugarids = explode(",", $lugarestipoid);
                             $dis_id = substr($lugarids[0],1,strlen($lugarids[0]));                
                             $dis_cod = $em->getRepository('SieAppWebBundle:LugarTipo')->find($dis_id);
@@ -1254,12 +1261,14 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
         }
         $sesion = $request->getSession();
         $form = $this->ceaspendientesForm($sesion->get('roluser'),'ceaspendientes');
+        $form_pendientes = $this->exportarpendientesForm();
 //        dump($po); die;
         return $this->render($this->session->get('pathSystem') . ':Principal:listaceapendientesnew.html.twig', array(
                 //'entities' => $po,
                 'rol' => $sesion->get('roluser'),
                 'id_usuario' =>$id_usuario,
                 'form' => $form->createView(),
+                'form_exp' => $form_pendientes->createView(),
             ));
     }
     public function listaceaspendientesAction(Request $request) {        
@@ -1268,7 +1277,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
         $rol = $request->get('rol');
         if(!$request->get('gestion'))
         {
-            $gestion = '2017,2018,2019';
+            $gestion = 'select id from gestion_tipo where id>=2017';
         }else{
             $gestion = $request->get('gestion');
         }
@@ -1288,7 +1297,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
         $em = $this->getDoctrine()->getManager();        
         $db = $em->getConnection();
 
-
+        
         if ($rol == '8' ) {//NACIONAL
              $query = "
                         select * from(
@@ -1488,6 +1497,38 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                 'entities' => $po,
             ));
     }
+    public function exportarpendientesForm()
+
+    {   //dump($tipo);die;
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl('sie_alt_lista_ceaspendientes'))
+            ->add('tipo','hidden')
+            ->add('rol','hidden')
+            ->add('gestion1','hidden')
+            ->add('departamento1','hidden')
+            ->add('id_usuario','hidden')
+            ->add('pdf1', 'submit', array('label'=> 'Exportar PDF', 'attr'=>array('class'=>'btn btn-sm btn-danger')))
+            ->add('xlsx1', 'submit', array('label'=> 'Exportar Excel', 'attr'=>array('class'=>'btn btn-sm btn-success')))
+            ->getForm();
+
+        return $form;
+    }
+    public function exportaroperativoForm()
+
+    {   //dump($tipo);die;
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl('sie_alt_lista_operativos'))
+            ->add('tipo','hidden')
+            ->add('rol','hidden')
+            ->add('gestion1','hidden')
+            ->add('departamento1','hidden')
+            ->add('id_usuario','hidden')
+            ->add('pdf1', 'submit', array('label'=> 'Exportar PDF', 'attr'=>array('class'=>'btn btn-sm btn-danger')))
+            ->add('xlsx1', 'submit', array('label'=> 'Exportar Excel', 'attr'=>array('class'=>'btn btn-sm btn-success')))
+            ->getForm();
+
+        return $form;
+    }
 
     public function ceaspendientesForm($rol,$tipo)
     {   
@@ -1512,8 +1553,6 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             /*->add('distrito','entity',array('label'=>'Distrito','required'=>true,'class'=>'SieAppWebBundle:DistritoTipo','query_builder'=>function(EntityRepository $ds){
                 return $ds->createQueryBuilder('ds')->orderBy('ds.distrito','ASC');},'property'=>'distrito','empty_value' => 'Todos'))*/
             ->add('buscar', 'button', array('label'=> 'Buscar', 'attr'=>array('class'=>'btn btn-success', 'onclick'=>'buscarceaspendientes()')))
-            //->add('pdf', 'button', array('label'=> 'Exportar PDF', 'attr'=>array('class'=>'btn btn-sm btn-danger', 'onclick'=>"exportar('"."pdf"."')")))
-            //->add('xlsx', 'button', array('label'=> 'Exportar Excel', 'attr'=>array('class'=>'btn btn-sm btn-success', 'onclick'=>"exportar('"."xlsx"."')")))
             ->getForm();
 
         return $form;

@@ -1274,43 +1274,57 @@ class ReportesController extends Controller {
 
     }
     ///********************************MARCELO */
-    public function reportesCeasPendientes(Request $request){
+    public function reportesCeasPendientesAction(Request $request){
 
-        $tipo = $request->get('tipo'); 
-        $rol = $request->get('rol');
-        $gestion = $request->get('gestion');
-        $id_usuario = $request->get('id_usuario');
+        
+        $form = $request->get('form'); 
+        //dump($form);die;
+        $tipo = $form['tipo']; 
+        $rol = $form['rol']; 
+        $gestion = $form['gestion1']; 
+        $id_usuario = $form['id_usuario']; 
         if ($rol == 8 )
         {
-            $departamento = $request->get('departamento');
+            $departamento = $form['departamento1'];
+            if($departamento!="")
+            {
+                $em = $this->getDoctrine()->getManager();
+                $dep = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($departamento);
+            }
+            
         }
         $argum= 'CEAS CON PENDIENTES DE REPORTE DE INFORMACIÓN';
         $response = new Response();
         $response->headers->set('Content-type', 'application/' . $tipo);
-       // dump($roluser);die;
+
+        //dump($rol);die;
         if ($rol== 8) //NACIONAL
-        {
-            if($gestion && $departamento)
-            {
-                $nombre_archivo = "xxx";
-                $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_' . $departamento . '_' . $gestion . '.' . $tipo));
+        {   //dump($departamento);die;
+            if($gestion!="" and $departamento!="")
+            {   
+                //dump($departamento);die;
+                $nombre_archivo = "alt_lst_CEAS_pendientes_nacional_v2_ma";
+                $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_' . strtoupper($dep->getDepartamento()) . '_' . $gestion . '.' . $tipo));
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Gestion=' . $gestion .  '&Departamento=' . $departamento. '&&__format='. $tipo .'&'));
-            }
-            if(!$gestion && !$departamento)
-            {
-                $nombre_archivo = "xxx";
-                $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '.' . $tipo));
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&&__format='. $tipo .'&'));
             }else{
-                if($gestion)
+                if($gestion=='' and $departamento=='')
                 {
-                    $nombre_archivo = "xxx";
-                    $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_NACIONAL_' . $gestion . '.' . $tipo));
-                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Gestion=' . $gestion . '&&__format='. $tipo .'&'));
+                    $nombre_archivo = "alt_lst_CEAS_pendientes_nacional_v1_ma";
+                    $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '.' . $tipo));
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&&__format='. $tipo .'&'));
                 }else{
-                    $nombre_archivo = "xxx";
-                    $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_' . $departamento . '.' . $tipo));
-                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Departamento=' . $departamento . '&&__format='. $tipo .'&'));
+                    if($gestion)
+                    {
+                        //dump($departamento);die;
+                        $nombre_archivo = "alt_lst_CEAS_pendientes_nacional_v3_ma";
+                        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_NACIONAL_' . $gestion . '.' . $tipo));
+                        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Gestion=' . $gestion . '&&__format='. $tipo .'&'));
+                    }else{
+
+                        $nombre_archivo = "alt_lst_CEAS_pendientes_nacional_v4_ma";
+                        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_' . strtoupper($dep->getDepartamento()) . '.' . $tipo));
+                        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Departamento=' . $departamento . '&&__format='. $tipo .'&'));
+                    }
                 }
             }
         }elseif ($rol == 7)//departamental
@@ -1321,11 +1335,11 @@ class ReportesController extends Controller {
             
             if($gestion)
             {
-                $nombre_archivo = "xxx";
+                $nombre_archivo = "alt_lst_CEAS_pendientes_departamental_v2_ma";
                 $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_DEPARTAMENTAL_' . $gestion . '.' . $tipo));
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Gestion=' . $gestion . '&Departamento=' . $idlugarusuario . '&&__format='. $tipo .'&'));
             }else{
-                $nombre_archivo = "xxx";
+                $nombre_archivo = "alt_lst_CEAS_pendientes_departamental_v1_ma";
                 $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_DEPARTAMENTAL.'.$tipo));
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo . '.rptdesign&Departamento=' . $idlugarusuario . '&&__format='. $tipo . '&'));
             }
@@ -1335,11 +1349,11 @@ class ReportesController extends Controller {
             $distrito = $usuariorol[0]->getLugarTipo()->getCodigo();
             if($gestion)
             {
-                $nombre_archivo = "xxx";
+                $nombre_archivo = "alt_lst_CEAS_pendientes_distrital_v2_ma";
                 $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_DISTRITAL_' . $gestion . '.' .$tipo));
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Gestion=' . $gestion . '&Distrito=' . $distrito . '&&__format='. $tipo .'&'));
             }else{
-                $nombre_archivo = "xxx";
+                $nombre_archivo = "alt_lst_CEAS_pendientes_distrital_v1_ma";
                 $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_DISTRITAL.'. $tipo));
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&&__format='. $tipo .'&'));
             }
@@ -1350,15 +1364,23 @@ class ReportesController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
     }
-    public function reportesCeasOperativos(Request $request){
+    public function reportesCeasOperativosAction(Request $request){
 
-        $tipo = $request->get('tipo'); 
-        $rol = $request->get('rol');
-        $gestion = $request->get('gestion');
-        $id_usuario = $request->get('id_usuario');
+        //dump();die;
+        $form = $request->get('form'); 
+        //dump($form);die;
+        $tipo = $form['tipo']; 
+        $rol = $form['rol']; 
+        $gestion = $form['gestion1']; 
+        $id_usuario = $form['id_usuario']; 
         if ($rol == 8 )
         {
-            $departamento = $request->get('departamento');
+            $departamento = $form['departamento1'];
+            if($departamento!="")
+            {
+                $em = $this->getDoctrine()->getManager();
+                $dep = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($departamento);
+            }
         }
         $argum= 'CONTROL DE OPERATIVOS POR CEA';
         $response = new Response();
@@ -1366,29 +1388,31 @@ class ReportesController extends Controller {
        // dump($roluser);die;
         if ($rol== 8) //NACIONAL
         {
-            if($gestion && $departamento)
+            if($gestion!= "" and $departamento!="")
             {
-                $nombre_archivo = "xxx";
-                $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_' . $departamento . '_' . $gestion . '.' . $tipo));
+                $nombre_archivo = "alt_lst_panel_control_operativos_nacional_v2_ma";
+                $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_' . strtoupper($dep->getDepartamento()) . '_' . $gestion . '.' . $tipo));
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Gestion=' . $gestion .  '&Departamento=' . $departamento. '&&__format='. $tipo .'&'));
-            }
-            if(!$gestion && !$departamento)
-            {
-                $nombre_archivo = "xxx";
-                $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '.' . $tipo));
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&&__format='. $tipo .'&'));
             }else{
-                if($gestion)
+                if($gestion=="" and $departamento=="")
                 {
-                    $nombre_archivo = "xxx";
-                    $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_NACIONAL_' . $gestion . '.' . $tipo));
-                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Gestion=' . $gestion . '&&__format='. $tipo .'&'));
+                    $nombre_archivo = "alt_lst_panel_control_operativos_nacional_v1_ma";
+                    $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '.' . $tipo));
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&&__format='. $tipo .'&'));
                 }else{
-                    $nombre_archivo = "xxx";
-                    $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_' . $departamento . '.' . $tipo));
-                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Departamento=' . $departamento . '&&__format='. $tipo .'&'));
+                    if($gestion)
+                    {
+                        $nombre_archivo = "alt_lst_panel_control_operativos_nacional_v3_ma";
+                        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_NACIONAL_' . $gestion . '.' . $tipo));
+                        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Gestion=' . $gestion . '&&__format='. $tipo .'&'));
+                    }else{
+                        $nombre_archivo = "alt_lst_panel_control_operativos_nacional_v4_ma";
+                        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_' . strtoupper($dep->getDepartamento()) . '.' . $tipo));
+                        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Departamento=' . $departamento . '&&__format='. $tipo .'&'));
+                    }
                 }
             }
+            
         }elseif ($rol == 7)//departamental
         {
             $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$id_usuario,'rolTipo'=>$rol));
@@ -1397,11 +1421,11 @@ class ReportesController extends Controller {
             
             if($gestion)
             {
-                $nombre_archivo = "xxx";
+                $nombre_archivo = "alt_lst_panel_control_operativos_departamental_v2_ma";
                 $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_DEPARTAMENTAL_' . $gestion . '.' . $tipo));
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Gestion=' . $gestion . '&Departamento=' . $idlugarusuario . '&&__format='. $tipo .'&'));
             }else{
-                $nombre_archivo = "xxx";
+                $nombre_archivo = "alt_lst_panel_control_operativos_departamental_v1_ma";
                 $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_DEPARTAMENTAL.'.$tipo));
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo . '.rptdesign&Departamento=' . $idlugarusuario . '&&__format='. $tipo . '&'));
             }
@@ -1411,11 +1435,11 @@ class ReportesController extends Controller {
             $distrito = $usuariorol[0]->getLugarTipo()->getCodigo();
             if($gestion)
             {
-                $nombre_archivo = "xxx";
+                $nombre_archivo = "alt_lst_panel_control_operativos_distrital_v2_ma";
                 $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_DISTRITAL_' . $gestion . '.' .$tipo));
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&Gestion=' . $gestion . '&Distrito=' . $distrito . '&&__format='. $tipo .'&'));
             }else{
-                $nombre_archivo = "xxx";
+                $nombre_archivo = "alt_lst_panel_control_operativos_distrital_v1_ma";
                 $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_DISTRITAL.'. $tipo));
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo .'.rptdesign&&__format='. $tipo .'&'));
             }
