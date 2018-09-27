@@ -34,10 +34,25 @@ class AreasController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
+        //get the send values
         $infoUe = $request->get('infoUe');
-        $data = $this->getAreas($infoUe);
+        $arrInfoUe = unserialize($infoUe);
+        
+        // dump($arrInfoUe);die;
+        // check if the course is PRIMARIA
+        if( $arrInfoUe['ueducativaInfoId']['sfatCodigo'] == 15 &&
+            $arrInfoUe['ueducativaInfoId']['setId'] == 13 &&
+            $arrInfoUe['ueducativaInfoId']['periodoId'] == 3
+          ){
+            $createNewCurricula = $this->get('funciones')->loadCurricula($infoUe);
+            $data = $this->get('funciones')->getOfertaBySieGestionSem($infoUe);
+            return $this->render('SieHerramientaAlternativaBundle:Areas:indexprimaria.html.twig', $data);
+        }else{
+            $data = $this->getAreas($infoUe);
+            return $this->render('SieHerramientaAlternativaBundle:Areas:index.html.twig', $data);    
+        }
 
-        return $this->render('SieHerramientaAlternativaBundle:Areas:index.html.twig', $data);
+        
     }
 
     public function areasaddAction(Request $request) {

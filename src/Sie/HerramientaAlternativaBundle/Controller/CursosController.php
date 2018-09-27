@@ -39,7 +39,7 @@ class CursosController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $objUeducativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getAlterCursosBySieGestSubPer($this->session->get('ie_id'), $this->session->get('ie_gestion'), $this->session->get('ie_subcea'), $this->session->get('ie_per_cod'));
-//dump($objUeducativa);die;
+// dump($objUeducativa);die;
         $exist = true;
         $aInfoUnidadEductiva = array();
         if ($objUeducativa) {
@@ -47,7 +47,7 @@ class CursosController extends Controller {
 
                 $sinfoUeducativa = serialize(array(
                     'ueducativaInfo' => array('ciclo' => $uEducativa['ciclo'], 'nivel' => $uEducativa['nivel'], 'grado' => $uEducativa['grado'], 'paralelo' => $uEducativa['paralelo'], 'turno' => $uEducativa['turno']),
-                    'ueducativaInfoId' => array('nivelId' => $uEducativa['nivelId'], 'cicloId' => $uEducativa['cicloId'], 'gradoId' => $uEducativa['gradoId'], 'turnoId' => $uEducativa['turnoId'], 'paraleloId' => $uEducativa['paraleloId'], 'iecId' => $uEducativa['iecId'], 'setCodigo'=>$uEducativa['setCodigo'], 'satCodigo'=>$uEducativa['satCodigo'])
+                    'ueducativaInfoId' => array('nivelId' => $uEducativa['nivelId'], 'cicloId' => $uEducativa['cicloId'], 'gradoId' => $uEducativa['gradoId'], 'turnoId' => $uEducativa['turnoId'], 'paraleloId' => $uEducativa['paraleloId'], 'iecId' => $uEducativa['iecId'], 'setCodigo'=>$uEducativa['setCodigo'], 'satCodigo'=>$uEducativa['satCodigo'],'sfatCodigo'=>$uEducativa['sfatCodigo'],'setId'=>$uEducativa['setId'],'periodoId'=>$uEducativa['periodoId'],)
                 ));
 
                 $aInfoUnidadEductiva[$uEducativa['turno']][$uEducativa['ciclo']][$uEducativa['grado']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa, 'nivelId' => $uEducativa['nivelId']);
@@ -58,7 +58,7 @@ class CursosController extends Controller {
             $this->addFlash('warninresult', $message);
             $exist = false;
         }
-//        dump($aInfoUnidadEductiva);die;
+       // dump($aInfoUnidadEductiva);die;
 //        dump($objUeducativa);
 //        die;
         return $this->render($this->session->get('pathSystem') . ':Cursos:index.html.twig', array(

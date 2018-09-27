@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Sie\AppWebBundle\Entity\LogTransaccion;
 use JMS\Serializer\SerializerBuilder;
 use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoLog;
+use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta;
+use Sie\AppWebBundle\Entity\InstitucioneducativaCurso;
 
 class Funciones {
 
@@ -437,6 +439,77 @@ class Funciones {
         $objStatistics = $query->fetchAll();
         return $objStatistics;
 
+    }
+
+    public function getOfertaBySieGestionSem($infoUe){
+        //convert the send data to array
+        $aInfoUeducativa = unserialize($infoUe);
+        $iecId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
+        //$iecId = '';
+        $nivel = $aInfoUeducativa['ueducativaInfoId']['nivelId'];
+        $grado = $aInfoUeducativa['ueducativaInfoId']['gradoId'];
+
+        $nivelCurso = $aInfoUeducativa['ueducativaInfo']['ciclo'];
+        $gradoParaleloCurso = $aInfoUeducativa['ueducativaInfo']['grado'] . " - " . $aInfoUeducativa['ueducativaInfo']['paralelo'];
+        $cursoOferta = array();
+
+         $cursoOferta = $this->em->createQueryBuilder()
+                                    ->select('ieco.id, at.id as idAsignatura, at.asignatura')
+                                    ->from('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco')
+                                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','WITH','ieco.insitucioneducativaCurso = iec.id')
+                                    ->innerJoin('SieAppWebBundle:AsignaturaTipo','at','WITH','ieco.asignaturaTipo = at.id')
+                                    ->where('iec.id = :idCurso')
+                                    ->setParameter('idCurso',$iecId)
+                                    ->orderBy('at.id','ASC')
+                                    ->getQuery()
+                                    ->getResult();
+                                    // dump($cursoOferta);die;
+        
+        return array('cursoOferta' => $cursoOferta, 'infoUe' => $infoUe, 'operativo' => '', 'nivel' => $nivel, 'grado' => $grado, 'nivelCurso' => $nivelCurso, 'gradoParaleloCurso' => $gradoParaleloCurso);
+    }
+
+    public function loadCurricula($infoUe){
+        //convert the send data to array
+        $aInfoUeducativa = unserialize($infoUe);
+        $instEduCursoId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
+        //look for the curricula to the UE
+        $objInstEduCursoOferta = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBy(array('insitucioneducativaCurso'=>$instEduCursoId));
+        
+        try {
+            $this->em->getConnection()->beginTransaction();
+            //define the id-s curricula
+            $arrCurricula = array(2008,2009,2010,2011,2012);
+// dump($instEduCursoId);die;
+            if(!$objInstEduCursoOferta){
+                //set ciclo_id with ID 12 like primaria 
+                $objInstEduCurso = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($instEduCursoId);
+
+                $objInstEduCurso->setCicloTipo($this->em->getRepository('SieAppWebBundle:CicloTipo')->find(12));
+                $this->em->persist($objInstEduCurso);
+                $this->em->flush();
+
+                //set thecurricula with the parameter in arrCurricula var
+                foreach ($arrCurricula as $value) {
+                    $newObjInstEduCursoOferta = new InstitucioneducativaCursoOferta();
+                    $newObjInstEduCursoOferta->setHorasmes(0);
+                    $newObjInstEduCursoOferta->setAsignaturaTipo($this->em->getRepository('SieAppWebBundle:AsignaturaTipo')->find($value));
+                    $newObjInstEduCursoOferta->setInsitucioneducativaCurso($this->em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($instEduCursoId));
+
+                    $this->em->persist($newObjInstEduCursoOferta);
+                                         
+                }
+                $this->em->flush();
+
+            }
+            $this->em->getConnection()->commit();
+            $objInstEduCursoOferta = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($instEduCursoId);
+            return $objInstEduCursoOferta;
+                
+        } catch (Exception $e) {
+            $this->em->getConnection()->rollback();
+            return new JsonResponse(array('msg'=>'error')); 
+        }
+        
     }
 
 
