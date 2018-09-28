@@ -10,6 +10,7 @@ use JMS\Serializer\SerializerBuilder;
 use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoLog;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCurso;
+use Sie\AppWebBundle\Entity\EstudianteAsignatura;
 
 class Funciones {
 
@@ -510,6 +511,65 @@ class Funciones {
             return new JsonResponse(array('msg'=>'error')); 
         }
         
+    }
+
+
+    public function setCurriculaStudent($data){
+        
+        // check if Exists CURSO
+        // $objInstCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($data['iecId']);
+        // if($objInstCurso){
+            // get info about curricula to student
+            $curriculaStudent = $this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array(
+                'estudianteInscripcion'=>$data['eInsId']
+            ));
+            // check if the student has curricula
+            if(!$curriculaStudent){
+                  //look for the curricula-s ID in curso_oferta table
+                  $queryInstCursoOferta = $this->em->createQueryBuilder()
+                                          ->select('ieco')
+                                          ->from('SieAppWebBundle:InstitucioneducativaCursoOferta', 'ieco')
+                                          ->where('ieco.insitucioneducativaCurso = :iecoId')
+                                          ->andWhere('ieco.asignaturaTipo != 0')
+                                          ->setParameter('iecoId', $data['iecId']);
+                                          
+                  $objAreas = $queryInstCursoOferta->getQuery()->getResult();
+
+                  foreach ($objAreas as $area) {
+                    
+                    $studentAsignatura = new EstudianteAsignatura();
+                    $studentAsignatura->setGestionTipo($this->em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear') ));
+                    $studentAsignatura->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($data['eInsId']));
+                    $studentAsignatura->setInstitucioneducativaCursoOferta($this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($area->getId()));
+                    $studentAsignatura->setFechaRegistro(new \DateTime('now'));
+                    $this->em->persist($studentAsignatura);
+                    $this->em->flush();
+
+
+                  }
+
+            }
+            
+        // }
+             $curriculaStudent = $this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array(
+                'estudianteInscripcion'=>$data['eInsId']
+            ));
+
+        return $curriculaStudent;
+    }
+
+    public function getCurriculaStudent($data){
+
+        $query = $this->em->createQueryBuilder()
+                ->select('at')
+                ->from('SieAppWebBundle:EstudianteAsignatura','ea')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
+                ->leftjoin('SieAppWebBundle:AsignaturaTipo', 'at', 'WITH', 'ieco.asignaturaTipo = at.id')
+                ->where('ea.estudianteInscripcion = :eInsId')
+                ->setParameter('eInsId', $data['eInsId'])
+                ;
+        $objAreasStudent = $query->getQuery()->getResult();
+        return $objAreasStudent;
     }
 
 
