@@ -27,3 +27,9 @@ herramienta_alter_infoEstudianteAreas_maestros_asignar:
     defaults: { _controller: "SieHerramientaAlternativaBundle:Areas:maestrosAsignar"}
     options:
          expose: true         
+
+herramienta_alter_areas_emergente:
+    path:     /areaEmergente
+    defaults: { _controller: SieHerramientaAlternativaBundle:Areas:areaEmergente }
+    options:
+         expose: true         
