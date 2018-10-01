@@ -1,5 +1,5 @@
 {% set onlyview = app.session.get('onlyview') %}
-<form action="" id="formMaestros" onsubmit="asignarMaestro(); return false">
+<form action="" id="formMaestros">
 	<table class="table table-lilac table-striped">
 		<thead>
 			<tr>
@@ -54,7 +54,7 @@
 	<div style="background:#EEEEEE; text-align:right; padding:5px; margin-top:-10px">
 		<button type="button" class="btn btn-default" onclick="cerrarMaestros({{ieco}})">Cerrar</button>
 		{% if onlyview == false %}
-			<button type="submit" class="btn btn-success">Guardar Cambios</button>
+			<button type="button" class="btn btn-success" onclick="asignarMaestro();">Guardar Cambios</button>
 		{% endif %}
 	</div>
 </form>

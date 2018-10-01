@@ -137,7 +137,7 @@ class DownloadFileSieController extends Controller {
           $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
           if($form['bimestre']>=1 && $form['gestion'] == $this->session->get('currentyear')){
           //the rule to donwload file with validations
-          $form['reglas'] = '1,2,3,8,10,12,13,16';
+          $form['reglas'] = '1,2,3,10,12,13,16';
 
           //first validations calidad
           /***********************************\
