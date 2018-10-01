@@ -1,0 +1,75 @@
+{% extends 'layoutProcesos.html.twig' %}
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> Busqueda de roles</h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{ path('flujorol') }}">Roles</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">
+                    <i class="fa fa-angle-right"></i>
+                    Buscar por proceso
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+<div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-12">
+                <div class="panel rounded shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Roles de un proceso</h3>
+                        </div>
+                        <div class="pull-right">                        
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+						{{ form_start(form) }}
+						    <div class="form-group">
+                                <label class="col-sm-2">Nombre de proceso</label>
+                                <div class="col-sm-4">
+                                    {{ form_widget(form.proceso, {'attr':{'class':'form-control'} }) }}
+                                </div>
+                            </div>
+						{{ form_end(form) }}
+                        <div id="tablarol">
+                        </div>
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript" charset="utf-8" >
+    $('#form_proceso').click(function(){
+            //alert('hola');
+            if($('#form_proceso').val()!="")
+            { 
+                formData = {flujotipo: $('#form_proceso').val()};
+                $.ajax({
+                    type: 'GET',
+                    url: "{{path('flujorol_listar_roles')}}",
+                    data: formData,
+                    success: function (data) {
+                        $('#tablarol').empty();
+                        $('#tablarol').append(data);
+                        //$("#tareas").append(data);
+                        
+                    },
+                }); 
+            }
+        });
+    
+    </script>
+{% endblock %}

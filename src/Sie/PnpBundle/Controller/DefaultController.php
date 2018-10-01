@@ -1117,6 +1117,8 @@ GROUP BY depto
         $db = $em->getConnection();
         $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id_curso);
                 $plan=$result->getPlancurricularTipoId();
+        if($plan==1)$order="ORDER BY asignatura_tipo.asignatura, nota_tipo.orden";
+        if($plan==2)$order="order by  asignatura_tipo.asignatura_boletin";
         //LISTA DE NOTAS
          $query = "SELECT
                       estudiante_nota.id,
@@ -1143,7 +1145,7 @@ GROUP BY depto
                     left join estudiante_nota_cualitativa on estudiante_nota_cualitativa.estudiante_inscripcion_id=estudiante_inscripcion.id 
                     WHERE
                       estudiante_inscripcion.id  = ".$idinscripcion."
-                    order by  asignatura_tipo.asignatura_boletin";
+                    $order";
         $stmt = $db->prepare($query);
         $params = array();
         $stmt->execute($params);
@@ -6059,6 +6061,9 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
         $db = $em->getConnection();
         $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id_curso);
                 $plan=$result->getPlancurricularTipoId();
+
+        if($plan==1)$order="ORDER BY asignatura_tipo.asignatura, nota_tipo.orden";
+        if($plan==2)$order="order by  asignatura_tipo.asignatura_boletin";
         //LISTA DE NOTAS
         $query = "SELECT
                       estudiante_nota.id,
@@ -6085,7 +6090,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                     left join estudiante_nota_cualitativa on estudiante_nota_cualitativa.estudiante_inscripcion_id=estudiante_inscripcion.id 
                     WHERE
                       estudiante_inscripcion.id  = ".$idinscripcion."
-                    order by  asignatura_tipo.asignatura_boletin";
+                    $order";
         $stmt = $db->prepare($query);
         $params = array();
         $stmt->execute($params);

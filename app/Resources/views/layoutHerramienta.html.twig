@@ -40,9 +40,8 @@
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.min.css')}}" rel="stylesheet">
 
 
-            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.css')}}" rel="stylesheet">
-            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/css/datatables.responsive.css')}}" rel="stylesheet">
-            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
 
             <link href="{{asset('css/plugins/bootstrap-combined/combined.css') }}" rel="stylesheet">
             <link rel="stylesheet" type="text/css" href="{{asset('webherramienta/assets/commercial/plugins/cube-portfolio/cubeportfolio/css/cubeportfolio.css')}}">
@@ -1222,9 +1221,10 @@
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery-autosize/jquery.autosize.min.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.jquery.min.js')}}"></script>
 
-            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
-            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script>
-            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/datatables.responsive.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/js/fuelux.min.js')}}"></script>
             <!--/ END PAGE LEVEL PLUGINS -->
 
             <!-- START @PAGE LEVEL SCRIPTS -->
@@ -1251,7 +1251,9 @@
             <script src="{{asset('js/plugins/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
             <script src="{{ asset('js/initialize.js')}}"></script>
             <!--/ END GOOGLE ANALYTICS -->
-        {%endblock%}
+
+            <script src="{{ asset('js/highcharts/highcharts.js')}}"></script>
+        {% endblock %}
     </body>
     <!--/ END BODY -->
 

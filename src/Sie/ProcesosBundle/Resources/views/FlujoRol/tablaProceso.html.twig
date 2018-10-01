@@ -1,0 +1,17 @@
+
+<table class="table table-striped table-primary" id="">
+    <thead>
+        <tr>
+            <th>Proceso</th>
+            <th>Tarea</th>
+        </tr>
+    </thead>
+    <tbody id="">
+        {% for proceso in procesos %}
+        <tr>
+            <td>{{proceso.flujo}}</td>
+            <td>{{proceso.proceso_tipo}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

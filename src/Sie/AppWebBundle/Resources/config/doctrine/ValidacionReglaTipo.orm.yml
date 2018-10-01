@@ -2,6 +2,9 @@ Sie\AppWebBundle\Entity\ValidacionReglaTipo:
     type: entity
     table: validacion_regla_tipo
     indexes:
+        IDX_FE42D94D4080FEFA:
+            columns:
+                - institucioneducativa_tipo_id
         IDX_FE42D94D1FE0474B:
             columns:
                 - validacion_regla_entidad_tipo_id
@@ -18,7 +21,7 @@ Sie\AppWebBundle\Entity\ValidacionReglaTipo:
         descripcion:
             type: string
             nullable: false
-            length: 100
+            length: 250
             fixed: false
             comment: ''
         detalle:
@@ -50,7 +53,22 @@ Sie\AppWebBundle\Entity\ValidacionReglaTipo:
             nullable: true
             unsigned: false
             comment: ''
+        esActivo:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: true
+            column: es_activo
     manyToOne:
+        institucioneducativaTipo:
+            targetEntity: InstitucioneducativaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         validacionReglaEntidadTipo:
             targetEntity: ValidacionReglaEntidadTipo
             cascade: {  }

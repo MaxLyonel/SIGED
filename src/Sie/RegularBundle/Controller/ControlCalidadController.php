@@ -25,7 +25,6 @@ class ControlCalidadController extends Controller {
     // Para Distrito
     public function indexAction(Request $request) {
         $id_usuario = $this->session->get('userId');
-        $currentyear = $this->session->get('currentyear');
 
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -37,40 +36,11 @@ class ControlCalidadController extends Controller {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
+        $currentyear = $this->session->get('currentyear');
+        $roluserlugarid = $this->session->get('roluserlugarid');
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $em->getRepository('SieAppWebBundle:Usuario');
-
-        switch($rol_usuario){
-            case 10://distrito
-                $query = $repository->createQueryBuilder('u')
-                    ->select('lt')
-                    ->innerJoin('SieAppWebBundle:UsuarioRol', 'ur', 'WITH', 'ur.usuario = u.id')
-                    ->innerJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'ur.lugarTipo = lt.id')
-                    ->where('u.id = :idUsuario')
-                    ->andwhere('lt.lugarNivel = :nivel')
-                    ->andwhere('ur.rolTipo = :rol')
-                    ->setParameter('idUsuario', $id_usuario)
-                    ->setParameter('nivel', 7)
-                    ->setParameter('rol', $rol_usuario)
-                    ->getQuery();
-                break;
-            case 9://unidad educativa
-            case 8://departamento
-            case 7://nacional
-                $query = $repository->createQueryBuilder('u')
-                    ->select('lt')
-                    ->innerJoin('SieAppWebBundle:UsuarioRol', 'ur', 'WITH', 'ur.usuario = u.id')
-                    ->innerJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'ur.lugarTipo = lt.id')
-                    ->where('u.id = :idUsuario')
-                    ->andwhere('ur.rolTipo = :rol')
-                    ->setParameter('idUsuario', $id_usuario)
-                    ->setParameter('rol', $rol_usuario)
-                    ->getQuery();
-                break;
-        }
-
-        $usuario_lugar = $query->getResult()[0];
+        $usuario_lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
 
         $repository = $em->getRepository('SieAppWebBundle:ValidacionReglaEntidadTipo');
 
@@ -81,7 +51,9 @@ class ControlCalidadController extends Controller {
                     ->innerJoin('SieAppWebBundle:ValidacionReglaTipo', 'vrt', 'WITH', 'vrt.validacionReglaEntidadTipo = vret.id')
                     ->innerJoin('SieAppWebBundle:ValidacionProceso', 'vp', 'WITH', 'vp.validacionReglaTipo = vrt.id')
                     ->where('vp.lugarTipoIdDistrito = :lugarDistrito')
+                    ->andWhere('vrt.esActivo = :esActivo')
                     ->setParameter('lugarDistrito', $usuario_lugar)
+                    ->setParameter('esActivo', true)
                     ->addGroupBy('vret.id, vret.entidad, vret.obs')
                     ->addOrderBy('vret.id')
                     ->getQuery();
@@ -92,7 +64,9 @@ class ControlCalidadController extends Controller {
                     ->innerJoin('SieAppWebBundle:ValidacionReglaTipo', 'vrt', 'WITH', 'vrt.validacionReglaEntidadTipo = vret.id')
                     ->innerJoin('SieAppWebBundle:ValidacionProceso', 'vp', 'WITH', 'vp.validacionReglaTipo = vrt.id')
                     ->where('vp.institucionEducativaId = :sie')
+                    ->andWhere('vrt.esActivo = :esActivo')
                     ->setParameter('sie', $this->session->get('ie_id'))
+                    ->setParameter('esActivo', true)
                     ->addGroupBy('vret.id, vret.entidad, vret.obs')
                     ->addOrderBy('vret.id')
                     ->getQuery();
@@ -103,8 +77,10 @@ class ControlCalidadController extends Controller {
                     ->innerJoin('SieAppWebBundle:ValidacionReglaTipo', 'vrt', 'WITH', 'vrt.validacionReglaEntidadTipo = vret.id')
                     ->innerJoin('SieAppWebBundle:ValidacionProceso', 'vp', 'WITH', 'vp.validacionReglaTipo = vrt.id')
                     ->innerJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'lt.id = vp.lugarTipoIdDistrito')
-                    ->andWhere('lt.lugarTipo = :lugarDepartamento')
+                    ->where('lt.lugarTipo = :lugarDepartamento')
+                    ->andWhere('vrt.esActivo = :esActivo')
                     ->setParameter('lugarDepartamento', $usuario_lugar)
+                    ->setParameter('esActivo', true)
                     ->addGroupBy('vret.id, vret.entidad, vret.obs')
                     ->addOrderBy('vret.id')
                     ->getQuery();
@@ -112,8 +88,6 @@ class ControlCalidadController extends Controller {
         }
 
         $entidades = $query->getResult();
-
-        $gestiones = array(2010,2011,2012,2013,2014,2015,2016,2017,2018);
 
         switch($rol_usuario){
             case 10://distrito
@@ -123,11 +97,9 @@ class ControlCalidadController extends Controller {
                     ->innerJoin('SieAppWebBundle:ValidacionProceso', 'vp', 'WITH', 'vp.validacionReglaTipo = vrt.id')
                     ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'vp.gestionTipo = gt.id')
                     ->where('vp.lugarTipoIdDistrito = :lugarDistrito')
-                    ->andWhere('gt.id in (:gestion)')
                     ->setParameter('lugarDistrito', $usuario_lugar)
-                    ->setParameter('gestion', $gestiones)
                     ->addGroupBy('gt.id')
-                    ->addOrderBy('gt.id')
+                    ->addOrderBy('gt.id', 'DESC')
                     ->getQuery();
                 break;
             case 9://unidad educativa
@@ -137,11 +109,9 @@ class ControlCalidadController extends Controller {
                     ->innerJoin('SieAppWebBundle:ValidacionProceso', 'vp', 'WITH', 'vp.validacionReglaTipo = vrt.id')
                     ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'vp.gestionTipo = gt.id')
                     ->where('vp.institucionEducativaId = :sie')
-                    ->andWhere('gt.id in (:gestion)')
                     ->setParameter('sie', $this->session->get('ie_id'))
-                    ->setParameter('gestion', $gestiones)
                     ->addGroupBy('gt.id')
-                    ->addOrderBy('gt.id')
+                    ->addOrderBy('gt.id', 'DESC')
                     ->getQuery();
                 break;
             case 7://departamento
@@ -152,11 +122,9 @@ class ControlCalidadController extends Controller {
                     ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'vp.gestionTipo = gt.id')
                     ->innerJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'lt.id = vp.lugarTipoIdDistrito')
                     ->where('lt.lugarTipo = :lugarDepartamento')
-                    ->andWhere('gt.id in (:gestion)')
                     ->setParameter('lugarDepartamento', $usuario_lugar)
-                    ->setParameter('gestion', $gestiones)
                     ->addGroupBy('gt.id')
-                    ->addOrderBy('gt.id')
+                    ->addOrderBy('gt.id', 'DESC')
                     ->getQuery();
                 break;
         }
@@ -190,38 +158,9 @@ class ControlCalidadController extends Controller {
 
         $entidad = $em->getRepository('SieAppWebBundle:ValidacionReglaEntidadTipo')->findOneById($id);
 
-        $repository = $em->getRepository('SieAppWebBundle:Usuario');
-
-        switch($rol_usuario){
-            case 10://distrito
-                $query = $repository->createQueryBuilder('u')
-                    ->select('lt')
-                    ->innerJoin('SieAppWebBundle:UsuarioRol', 'ur', 'WITH', 'ur.usuario = u.id')
-                    ->innerJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'ur.lugarTipo = lt.id')
-                    ->where('u.id = :idUsuario')
-                    ->andwhere('lt.lugarNivel = :nivel')
-                    ->andwhere('ur.rolTipo = :rol')
-                    ->setParameter('idUsuario', $id_usuario)
-                    ->setParameter('nivel', 7)
-                    ->setParameter('rol', $rol_usuario)
-                    ->getQuery();
-                break;
-            case 9://unidad educativa
-            case 8://departamento
-            case 7://nacional
-                $query = $repository->createQueryBuilder('u')
-                    ->select('lt')
-                    ->innerJoin('SieAppWebBundle:UsuarioRol', 'ur', 'WITH', 'ur.usuario = u.id')
-                    ->innerJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'ur.lugarTipo = lt.id')
-                    ->where('u.id = :idUsuario')
-                    ->andwhere('ur.rolTipo = :rol')
-                    ->setParameter('idUsuario', $id_usuario)
-                    ->setParameter('rol', $rol_usuario)
-                    ->getQuery();
-                break;
-        }
-
-        $usuario_lugar = $query->getResult()[0];
+        $roluserlugarid = $this->session->get('roluserlugarid');
+        
+        $usuario_lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
 
         $repository = $em->getRepository('SieAppWebBundle:ValidacionReglaTipo');
 
@@ -233,10 +172,12 @@ class ControlCalidadController extends Controller {
                     ->andWhere('vp.esActivo = :esactivo')
                     ->andWhere('vp.lugarTipoIdDistrito = :lugarDistrito')
                     ->andWhere('vp.gestionTipo = :gestion')
+                    ->andWhere('vrt.esActivo = :esActivo')
                     ->setParameter('reglaEntidad', $id)
                     ->setParameter('esactivo', 'f')
                     ->setParameter('lugarDistrito', $usuario_lugar)
                     ->setParameter('gestion', $gestion)
+                    ->setParameter('esActivo', true)
                     ->getQuery();
                 break;
             case 9://unidad educativa
@@ -246,10 +187,12 @@ class ControlCalidadController extends Controller {
                     ->andWhere('vp.esActivo = :esactivo')
                     ->andWhere('vp.institucionEducativaId = :sie')
                     ->andWhere('vp.gestionTipo = :gestion')
+                    ->andWhere('vrt.esActivo = :esActivo')
                     ->setParameter('reglaEntidad', $id)
                     ->setParameter('esactivo', 'f')
                     ->setParameter('sie', $this->session->get('ie_id'))
                     ->setParameter('gestion', $gestion)
+                    ->setParameter('esActivo', true)
                     ->getQuery();
                 break;
             case 7://departamento
@@ -260,10 +203,12 @@ class ControlCalidadController extends Controller {
                     ->andWhere('vp.esActivo = :esactivo')
                     ->andWhere('lt.lugarTipo = :lugarDepartamento')
                     ->andWhere('vp.gestionTipo = :gestion')
+                    ->andWhere('vrt.esActivo = :esActivo')
                     ->setParameter('reglaEntidad', $id)
                     ->setParameter('esactivo', 'f')
                     ->setParameter('lugarDepartamento', $usuario_lugar)
                     ->setParameter('gestion', $gestion)
+                    ->setParameter('esActivo', true)
                     ->getQuery();
                 break;
         }
@@ -296,38 +241,9 @@ class ControlCalidadController extends Controller {
 
         $regla = $em->getRepository('SieAppWebBundle:ValidacionReglaTipo')->findOneById($id);
 
-        $repository = $em->getRepository('SieAppWebBundle:Usuario');
-
-        switch($rol_usuario){
-            case 10://distrito
-                $query = $repository->createQueryBuilder('u')
-                    ->select('lt')
-                    ->innerJoin('SieAppWebBundle:UsuarioRol', 'ur', 'WITH', 'ur.usuario = u.id')
-                    ->innerJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'ur.lugarTipo = lt.id')
-                    ->where('u.id = :idUsuario')
-                    ->andwhere('lt.lugarNivel = :nivel')
-                    ->andwhere('ur.rolTipo = :rol')
-                    ->setParameter('idUsuario', $id_usuario)
-                    ->setParameter('nivel', 7)
-                    ->setParameter('rol', $rol_usuario)
-                    ->getQuery();
-                break;
-            case 9://unidad educativa
-            case 8://departamento
-            case 7://nacional
-                $query = $repository->createQueryBuilder('u')
-                    ->select('lt')
-                    ->innerJoin('SieAppWebBundle:UsuarioRol', 'ur', 'WITH', 'ur.usuario = u.id')
-                    ->innerJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'ur.lugarTipo = lt.id')
-                    ->where('u.id = :idUsuario')
-                    ->andwhere('ur.rolTipo = :rol')
-                    ->setParameter('idUsuario', $id_usuario)
-                    ->setParameter('rol', $rol_usuario)
-                    ->getQuery();
-                break;
-        }
-
-        $usuario_lugar = $query->getResult()[0];
+        $roluserlugarid = $this->session->get('roluserlugarid');
+        
+        $usuario_lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
 
         $repository = $em->getRepository('SieAppWebBundle:ValidacionReglaTipo');
 

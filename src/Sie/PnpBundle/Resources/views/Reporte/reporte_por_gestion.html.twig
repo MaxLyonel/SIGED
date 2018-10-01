@@ -58,6 +58,12 @@
                                     {% endif %}
                                 {% endfor %}
                             </select>
+                             <label for="gestion_inicio">Plan&nbsp;&nbsp;</label>
+                            <select class="form-control" required="required" id="plan" name="plan">
+                                <option value="3" {% if plan == 3 %}selected="selected"{% endif %}>Todos</option>
+                                <option value="2" {% if plan == 2 %}selected="selected"{% endif %}>Plan Nuevo</option>
+                                <option value="1" {% if plan == 1 %}selected="selected"{% endif %}>Plan Antiguo</option>
+                            </select>
                             <label class="radio-inline">
                               <input type="radio" name="m_option" id="option_2" value="2" {% if m_option==2 %} checked="checked" {% else %}{% endif %}> Graduados
                             </label>
@@ -91,7 +97,7 @@
                                     </div>
                                     <div class="circle-tile-content dark-blue">
                                         <div class="circle-tile-description text-faded">
-                                            Bloque 1 Parte 1
+                                            Segundo
                                         </div>
                                         <div class="circle-tile-number text-faded">
                                             {{ tabla11t.total|number_format }}
@@ -106,7 +112,7 @@
                                     </div>
                                     <div class="circle-tile-content green">
                                         <div class="circle-tile-description text-faded">
-                                            Bloque 1 Parte 2
+                                            Tercero
                                         </div>
                                         <div class="circle-tile-number text-faded">
                                             {{ tabla12t.total|number_format }}
@@ -121,7 +127,7 @@
                                     </div>
                                     <div class="circle-tile-content orange">
                                         <div class="circle-tile-description text-faded">
-                                            Bloque 2 Parte 1
+                                            Quinto
                                         </div>
                                         <div class="circle-tile-number text-faded">
                                             {{ tabla21t.total|number_format }}
@@ -136,7 +142,7 @@
                                     </div>
                                     <div class="circle-tile-content blue">
                                         <div class="circle-tile-description text-faded">
-                                            Bloque 2 Parte 2
+                                            Sexto
                                         </div>
                                         <div class="circle-tile-number text-faded">
                                             {{ tabla22t.total|number_format }}
@@ -157,7 +163,7 @@
             <div class="portlet portlet-blue">
                 <div class="portlet-heading">
                     <div class="portlet-title">
-                        <h4>Reporte de {% if m_option==2 %}Graduados {% else %}Todos {% endif %}- Bloque 1 Parte 1 - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})</h4>
+                        <h4>Reporte de {% if m_option==2 %}Graduados {% else %}Todos {% endif %}- Segundo - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})</h4>
                     </div>
                     <div class="portlet-widgets">
                         <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation2"><i class="fa fa-chevron-down"></i></a>
@@ -230,7 +236,7 @@
             <div class="portlet portlet-blue">
                 <div class="portlet-heading">
                     <div class="portlet-title">
-                        <h4>Reporte de {% if m_option==2 %}Graduados {% else %}Todos {% endif %}- Bloque 1 Parte 2 - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})</h4>
+                        <h4>Reporte de {% if m_option==2 %}Graduados {% else %}Todos {% endif %}- Tercero - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})</h4>
                     </div>
                     <div class="portlet-widgets">
                         <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation3"><i class="fa fa-chevron-down"></i></a>
@@ -303,7 +309,7 @@
             <div class="portlet portlet-blue">
                 <div class="portlet-heading">
                     <div class="portlet-title">
-                        <h4>Reporte de {% if m_option==2 %}Graduados {% else %}Todos {% endif %}- Bloque 2 Parte 1 - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})</h4>
+                        <h4>Reporte de {% if m_option==2 %}Graduados {% else %}Todos {% endif %}- Quinto - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})</h4>
                     </div>
                     <div class="portlet-widgets">
                         <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation4"><i class="fa fa-chevron-down"></i></a>
@@ -376,7 +382,7 @@
             <div class="portlet portlet-blue">
                 <div class="portlet-heading">
                     <div class="portlet-title">
-                        <h4>Reporte de {% if m_option==2 %}Graduados {% else %}Todos {% endif %}- Bloque 2 Parte 2 - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})</h4>
+                        <h4>Reporte de {% if m_option==2 %}Graduados {% else %}Todos {% endif %}- Sexto - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})</h4>
                     </div>
                     <div class="portlet-widgets">
                         <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation5"><i class="fa fa-chevron-down"></i></a>
@@ -462,13 +468,13 @@
             <div class="container-tabla" style="width: 100%; overflow: scroll;">
                 <div class="portlet-body">
                     <ul id="myTab" class="nav nav-tabs">
-                        <li class="active"><a href="tabs-accordions.html#b1p1" data-toggle="tab"><strong>Bloque 1 Parte 1</strong></a>
+                        <li class="active"><a href="tabs-accordions.html#b1p1" data-toggle="tab"><strong>Segundo</strong></a>
                         </li>
-                        <li><a href="tabs-accordions.html#b1p2" data-toggle="tab"><strong>Bloque 1 Parte 2</strong></a>
+                        <li><a href="tabs-accordions.html#b1p2" data-toggle="tab"><strong>Tercero</strong></a>
                         </li>
-                        <li><a href="tabs-accordions.html#b2p1" data-toggle="tab"><strong>Bloque 2 Parte 1</strong></a>
+                        <li><a href="tabs-accordions.html#b2p1" data-toggle="tab"><strong>Quinto</strong></a>
                         </li>
-                        <li><a href="tabs-accordions.html#b2p2" data-toggle="tab"><strong>Bloque 2 Parte 2</strong></a>
+                        <li><a href="tabs-accordions.html#b2p2" data-toggle="tab"><strong>Sexto</strong></a>
                         </li>
                     </ul>
                     <div id="myTabContent" class="tab-content" style="width: 100%;">
@@ -476,13 +482,13 @@
                             <div id="container1"></div> 
                         </div>
                         <div class="tab-pane fade" id="b1p2">
-                            <div id="container2" style="width: 73%;"></div>
+                            <div id="container2" style="width: 100%;"></div>
                         </div>
                          <div class="tab-pane fade" id="b2p1">
-                            <div id="container3" style="width: 73%;"></div>
+                            <div id="container3" style="width: 100%;"></div>
                         </div>
-                         <div class="tab-pane fade" id="b2p2" style="width: 100px;">
-                            <div id="container4" style="width: 73%;"></div>
+                         <div class="tab-pane fade" id="b2p2">
+                            <div id="container4" style="width: 100%;"></div>
                         </div>
                     </div>
                 </div>
@@ -722,7 +728,7 @@
     Highcharts.chart('container1', {
 
     title: {
-        text: '{{ lugar_nombre }} - {% if m_option==2 %}Graduados{% else %}Todos{% endif %} por Gesti\u00f3n Bloque 1 Parte 1 ({{gestion_ini}}-{{gestion_fin}})'
+        text: '{{ lugar_nombre }} - {% if m_option==2 %}Graduados{% else %}Todos{% endif %} por Gesti\u00f3n Segundo ({{gestion_ini}}-{{gestion_fin}})'
     },
 
     credits: {
@@ -768,7 +774,7 @@
     Highcharts.chart('container2', {
 
     title: {
-        text: '{{ lugar_nombre }} - {% if m_option==2 %}Graduados{% else %}Todos{% endif %} por Gesti\u00f3n Bloque 1 Parte 2 ({{gestion_ini}}-{{gestion_fin}})'
+        text: '{{ lugar_nombre }} - {% if m_option==2 %}Graduados{% else %}Todos{% endif %} por Gesti\u00f3n Tercero ({{gestion_ini}}-{{gestion_fin}})'
     },
 
     credits: {
@@ -813,7 +819,7 @@
     Highcharts.chart('container3', {
 
     title: {
-        text: '{{ lugar_nombre }} - {% if m_option==2 %}Graduados{% else %}Todos{% endif %} por Gesti\u00f3n Bloque 2 Parte 1 ({{gestion_ini}}-{{gestion_fin}})'
+        text: '{{ lugar_nombre }} - {% if m_option==2 %}Graduados{% else %}Todos{% endif %} por Gesti\u00f3n Quinto ({{gestion_ini}}-{{gestion_fin}})'
     },
 
     credits: {
@@ -858,7 +864,7 @@
     Highcharts.chart('container4', {
 
     title: {
-        text: '{{ lugar_nombre }} - {% if m_option==2 %}Graduados{% else %}Todos{% endif %} por Gesti\u00f3n Bloque 2 Parte 2 ({{gestion_ini}}-{{gestion_fin}})'
+        text: '{{ lugar_nombre }} - {% if m_option==2 %}Graduados{% else %}Todos{% endif %} por Gesti\u00f3n Sexto ({{gestion_ini}}-{{gestion_fin}})'
     },
 
     credits: {

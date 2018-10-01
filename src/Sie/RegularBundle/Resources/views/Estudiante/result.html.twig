@@ -35,18 +35,74 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-md-12">
+            <div class="panel rounded">
+                <div class="panel-heading"><h4>Datos del Estudiante
+                </h4> </div>
+                <div class="panel-body">
+
+                    <table class="table table-bordered table-hover cf">
+                        <thead class="cf">
+                            <tr class="info">
+                                <th>CI</th>
+                                <th>Complemento</th>
+                                <th>Paterno</th>
+                                <th>Materno</th>
+                                <th>Nombre</th>
+                                <th>Cod. Rude</th>
+                                <th>Fecha Nacimiento</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+
+                                <td data-title="Paterno" class="form-group">
+                                    {{student.carnetIdentidad}}
+                                </td>
+                                <td data-title="Paterno" class="form-group">
+                                    {{student.complemento}}
+                                </td>
+                                <td data-title="Paterno" class="form-group">
+                                    {{student.paterno}}
+                                </td>
+
+                                <td data-title="Materno" class="form-group">
+                                    {{student.materno}}
+                                </td>
+                                <td data-title="Nombre(s)" class="form-group">
+                                     {{student.nombre}}
+                                </td> 
+                                <td data-title="Nombre(s)" class="form-group">
+                                     {{student.codigoRude}}
+                                </td>
+                                <td data-title="Fecha Nac.">
+                                      {{student.fechaNacimiento|date('d-m-Y')}}
+                                </td>
+
+                        </tbody>
+
+                    </table>
+
+                        
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-lg-12">
             <div class="portlet portlet-blue">
                 <div class="portlet-heading">
                     <div class="portlet-title">
-                        <h4>Información Inscripción: {{student.paterno}} {{student.materno}} {{student.nombre}} - {{student.codigoRude}} </h4>
+                        <h4>Información Inscripción: </h4>
                     </div>
                     <div class="portlet-widgets">
                         <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation"><i class="fa fa-chevron-down"></i></a>
                     </div>
                     <div class="clearfix"></div>
                 </div>
-                <div id="pinformation" class="panel-collapse collapse in">
+                <div id="pinformation" class="panel-collapse collapse collapse">
                     <div class="portlet-body">
 
                         <div id="no-more-tables">
@@ -111,7 +167,7 @@
 
                         {%else%}
 
-                            {{form_start(form_mode1,{'attr':{'data-toggle': 'validator','form':'role'} })}}
+                            {{form_start(form_mode1,{'attr':{'data-toggle': 'validator','form':'role', 'id':'formMode1Id'} })}}
                             <h5>MODIFICACION Y/O INCLUSIÓN DE NOMBRE(S), APELLIDO(S) Y/O MODIFICACION DE FECHA DE NACIMIENTO</h5>
                             <h6>Los campos con (*) son requeridos</h6>
                             <div id="no-more-tables">
@@ -205,18 +261,22 @@
                                     <div class="col-sm-2">
                                         {{form_label(form_mode1.oficialia)}}
                                         {{form_widget(form_mode1.oficialia)}}
+                                        <div class="help-block with-errors"></div>
                                     </div>
                                     <div class="col-sm-2">
                                         {{form_label(form_mode1.libro)}}
                                         {{form_widget(form_mode1.libro)}}
+                                        <div class="help-block with-errors"></div>
                                     </div>
                                     <div class="col-sm-1">
                                         {{form_label(form_mode1.partida)}}
                                         {{form_widget(form_mode1.partida)}}
+                                        <div class="help-block with-errors"></div>
                                     </div>
                                     <div class="col-sm-1">
                                         {{form_label(form_mode1.folio)}}
                                         {{form_widget(form_mode1.folio)}}
+                                        <div class="help-block with-errors"></div>
                                     </div>
                                 </div>
 
@@ -225,6 +285,8 @@
                             </br>
                             {{form_widget(form_mode1.save)}}
                             {{form_end(form_mode1)}}
+
+                            <div id="resutlUpdateId"></div>
                         {% endif %}
                         <!--end mode1 form-->
                         <!--mode2 form-->
@@ -233,7 +295,8 @@
                         {%else%}
                             <h5>ddMODIFICACION Y/O INCLUSIÓN DE NOMBRE(S), APELLIDO(S) Y/O MODIFICACION DE FECHA DE NACIMIENTO</h5>
                             <h6>Los campos con (*) son requeridos</h6>
-                            {{form_start(form_mode2,{'attr':{'data-toggle': 'validator','form':'role'} })}}
+                            {{form_start(form_mode2,{'attr':{'data-toggle': 'validator','form':'role', 'id':'formMode1Id'} })}}
+
                             <div id="no-more-tables">
                                 <table class="table table-bordered table-hover cf">
                                     <thead class="cf">
@@ -340,6 +403,7 @@
                             </br>
                             {{form_widget(form_mode2.save)}}
                             {{form_end(form_mode2)}}
+                            <div id="resutlUpdateId"></div>
                         {%endif%}
                         <!--end mode2 form-->
 
@@ -348,7 +412,7 @@
 
                             <h5>MODIFICACIÓN Y/O INCLUSIÓN DE DATOS PROPIOS DEL CERTIFICADO DE NACIMIENTO, CARNET DE IDENTIDAD Y OTROS</h5>
                             <h6>Los campos con (*) son requeridos</h6>
-                            {{form_start(form_mode3,{'attr':{'data-toggle': 'validator','form':'role'} })}}
+                            {{form_start(form_mode3,{'attr':{'data-toggle': 'validator','form':'role', 'id':'formMode1Id'} })}}
 
                             <div class="row">
                               <div class="col-md-12">
@@ -416,7 +480,7 @@
                             </br>
                             {{form_widget(form_mode3.save)}}
                             {{form_end(form_mode3)}}
-
+                            <div id="resutlUpdateId"></div>
                         {%endif%}
                         <!--end mode3 form-->
 
@@ -440,7 +504,7 @@
     <script>
 
         //to validate the pais, departament, provincia and localidad by krlos
-        $('#form_save').click(function ( ) {
+   /*     $('#form_save').click(function ( ) {
 
             //alert($('#form_pais').val() + '---' + $('#form_departamento').val() + '---' + $('#form_provincia').val());
             //return false;
@@ -473,7 +537,7 @@
                 }
             }
 
-        });
+        });*/
 
 
 
@@ -521,5 +585,180 @@
                 }
             });
         }
+
+        var updateStudentFormA = function () {
+            if(confirm('¿Está seguro de Realizar estos cambios?')){
+
+                // body...
+                formData = $('#formMode1Id').serialize();
+                  $.ajax({
+                  type: 'post',
+                  data: formData,
+                  url: Routing.generate('sie_estudiantes_updatestudentmodeoneA'),
+                  beforeSend: function () {
+                      $("#resutlUpdateId").empty();
+                      $("#resutlUpdateId").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                  },
+                  success: function (data) {
+                      $("#resutlUpdateId").empty();
+                      $("#resutlUpdateId").append(data);
+                      $('.tooltips').tooltip();
+                  },
+                  statusCode: {
+                      500: function () {
+
+                      },
+                      404: function () {
+
+                      }
+                  }
+                }); 
+
+                $('#form_save').attr("disabled", true);
+
+            }else{
+                return false;
+            }
+            
+        };
+       var updateStudentFormD = function () {
+            if(confirm('¿Está seguro de Realizar estos cambios?')){
+                    // body...
+                    formData = $('#formMode1Id').serialize();
+                      $.ajax({
+                      type: 'post',
+                      data: formData,
+                      url: Routing.generate('sie_estudiantes_updatestudentmodeoneD'),
+                      beforeSend: function () {
+                          $("#resutlUpdateId").empty();
+                          $("#resutlUpdateId").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                      },
+                      success: function (data) {
+                          $("#resutlUpdateId").empty();
+                          $("#resutlUpdateId").append(data);
+                          $('.tooltips').tooltip();
+                      },
+                      statusCode: {
+                          500: function () {
+
+                          },
+                          404: function () {
+
+                          }
+                      }
+                  }); 
+
+                    $('#form_save').attr("disabled", true);
+
+                }else{
+                    return false;
+                }                  
+            
+
+            };
+
+
+         var updateStudentFormB = function () {
+            if(confirm('¿Está seguro de Realizar estos cambios?')){
+                    // body...
+                    formData = $('#formMode1Id').serialize();
+                      $.ajax({
+                      type: 'post',
+                      data: formData,
+                      url: Routing.generate('sie_estudiantes_updatestudentmodeoneB'),
+                      beforeSend: function () {
+                          $("#resutlUpdateId").empty();
+                          $("#resutlUpdateId").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                      },
+                      success: function (data) {
+                          $("#resutlUpdateId").empty();
+                          $("#resutlUpdateId").append(data);
+                          $('.tooltips').tooltip();
+                      },
+                      statusCode: {
+                          500: function () {
+
+                          },
+                          404: function () {
+
+                          }
+                      }
+                  }); 
+
+                $('#form_save').attr("disabled", true);
+
+            }else{
+                return false;
+            }
+        };
+
+
+         var updateStudentFormE = function () {
+            if(confirm('¿Está seguro de Realizar estos cambios?')){    
+                // body...
+                formData = $('#formMode1Id').serialize();
+                  $.ajax({
+                  type: 'post',
+                  data: formData,
+                  url: Routing.generate('sie_estudiantes_updatestudentmodeoneE'),
+                  beforeSend: function () {
+                      $("#resutlUpdateId").empty();
+                      $("#resutlUpdateId").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                  },
+                  success: function (data) {
+                      $("#resutlUpdateId").empty();
+                      $("#resutlUpdateId").append(data);
+                      $('.tooltips').tooltip();
+                  },
+                  statusCode: {
+                      500: function () {
+
+                      },
+                      404: function () {
+
+                      }
+                  }
+              }); 
+                         $('#form_save').attr("disabled", true);
+
+            }else{
+                return false;
+            }
+        };
+
+         var updateStudentFormC = function () {
+            if(confirm('¿Está seguro de Realizar estos cambios?')){
+                // body...
+                formData = $('#formMode1Id').serialize();
+                  $.ajax({
+                  type: 'post',
+                  data: formData,
+                  url: Routing.generate('sie_estudiantes_updatestudentmodeoneC'),
+                  beforeSend: function () {
+                      $("#resutlUpdateId").empty();
+                      $("#resutlUpdateId").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                  },
+                  success: function (data) {
+                      $("#resutlUpdateId").empty();
+                      $("#resutlUpdateId").append(data);
+                      $('.tooltips').tooltip();
+                  },
+                  statusCode: {
+                      500: function () {
+
+                      },
+                      404: function () {
+
+                      }
+                  }
+              }); 
+                        $('#form_save').attr("disabled", true);
+
+            }else{
+                return false;
+            }
+        };
+
+
     </script>
 {%endblock%}

@@ -1,0 +1,222 @@
+{% extends 'layoutProcesos.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+    <style type="text/css">
+          {#.end-element { background-color :indianred }#}
+    </style>
+{% endblock %}
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> Flujo del proceso</h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{ path('flujotipo')}}">Procesos</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">
+                    <i class="fa fa-angle-right"></i>
+                    Flujo del proceso
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+    
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-12">
+                <div class="panel rounded shadow">
+                    <div class="panel-heading">
+                        {% if app.session.flashBag.has('exito') %}
+                            <div class="alert alert-success">
+                                {% for msg in app.session.flashBag.get('exito') %}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    {{ msg }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        {% if app.session.flashBag.has('error') %}
+                            <div class="alert alert-danger">
+                                {% for msg in app.session.flashBag.get('error') %}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    {{ msg }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}    
+                        <div class="pull-left">
+                            <h3 class="panel-title">Proceso: <span>{{nombre}}</span></h3>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+           
+                        <table class="table table-striped table-primary" style= "display:none">
+    <thead>
+        <tr>
+                    <th>id_tarea</th>
+                    <th>Tarea</th>
+                    <th>Rol</th>
+                    <th>Nro. Orden</th>
+                    <th>Tiene Evaluación</th>
+                    <th>Variable Evaluación</th>
+                    <th>Condición</th>
+                    <th>Tipo de condición</th>
+                    <th>Tarea siguiente a la condición</th>
+                    <th>Plazo(dias)</th>
+                    <th>Tarea Anterior</th>
+                    <th>Tarea siguiente</th>
+                    
+            </tr>
+    </thead>
+    <tbody id="">
+        {% for f in flujo %}
+        <tr>
+            <td>{{f.id}}</td>
+            <td>{{f.proceso_tipo}}</td>
+            <td>{{f.rol}}</td>
+            <td>{{f.orden}}</td>
+            <td>
+                {% if f.es_evaluacion =="1" %}
+                    SI
+                {% else %}
+                    NO
+                {% endif %}
+            </td>
+            <td>{{f.variable_evaluacion}}</td>
+            <td>{{f.condicion}}</td>
+            <td>{{f.nombre}}</td>
+            <td>{{f.condicion_tarea_siguiente}}</td>
+            <td>{{f.plazo}}</td>
+            <td>{{f.tarea_ant_id}}</td>
+            <td>{{f.tarea_sig_id}}</td>
+            
+            
+            
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div style= "display:none" >
+<textarea id="code" style="width: 100%;" rows="11">
+
+st=>start: Inicio|past
+e=>end: Fin|past
+{% for f in flujo %}
+    {{f.id}}=>operation: {{f.proceso_tipo}}
+    {% if f.es_evaluacion =="1" %}
+        c{{f.id}}=>condition: {{f.variable_evaluacion}}?
+    {% endif %}
+{% endfor %}
+{% set sw = 0 %}
+{% for f in flujo %}
+    {% if f.es_evaluacion =="1" %}
+        {% if sw == 0 %}
+            {{f.id}}->c{{f.id}}
+            {% set sw = 1 %}
+        {% endif %}
+        {% if f.condicion == "SI" %}
+            c{{f.id}}(yes)->{{f.condicion_tarea_siguiente}}
+        {% else %}
+            c{{f.id}}(no)->{{f.condicion_tarea_siguiente}}
+        {% endif %}
+    {% else %}
+        {% set sw = 0 %}
+        {% if f.tarea_ant_id == null %}
+            st->{{f.id}}
+            {{f.id}}->{{f.tarea_sig_id}}
+        {% else %}
+            {% if f.tarea_sig_id == null %}
+                {{f.id}}->e
+            {% else %}
+                {{f.id}}->{{f.tarea_sig_id}}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+{% endfor %}
+st@>e({"stroke":"Green"})
+</textarea></div>
+        <div style= "display:none"><button id="run" type="button">Run</button></div>
+        <div id="canvas"></div>
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+ {% block javascripts %}
+    {{ parent() }} 
+        <!--<script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.0/raphael-min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="http://flowchart.js.org/"></script>-->
+        <!-- <script src="../release/flowchart.min.js"></script> -->
+        <script src="{{ asset('webprocesos/raphael-min.js') }}"></script>
+        <script src="{{ asset('webprocesos/jquery.min.js') }}"></script>
+        <script src="{{ asset('webprocesos/flowchart-latest.js') }}"></script>
+        
+        <script>
+
+            window.onload = function () {
+                var btn = document.getElementById("run"),
+                    cd = document.getElementById("code"),
+                    chart;
+
+                (btn.onclick = function () {
+                    var code = cd.value;
+                    
+
+                    if (chart) {
+                      chart.clean();
+                    }
+
+                    chart = flowchart.parse(code);
+                    chart.drawSVG('canvas', {
+                      // 'x': 30,
+                      // 'y': 50,
+                      'line-width': 3,
+                      'maxWidth': 3,//ensures the flowcharts fits within a certian width
+                      'line-length': 20,
+                      'text-margin': 10,
+                      'font-size': 12,
+                      'font': 'normal',
+                      'font-family': 'Helvetica',
+                      'font-weight': 'normal',
+                      'font-color': 'black',
+                      'line-color': 'black',
+                      'element-color': 'black',
+                      'fill': 'white',
+                      'yes-text': 'SI',
+                      'no-text': 'NO',
+                      'arrow-end': 'block',
+                      'scale': 1,
+                      'symbols': {
+                        'start': {
+                          'font-color': 'black',
+                          'element-color': 'black',
+                          'fill': 'black'
+                        },
+                        'end':{
+                          'class': 'end-element'
+                        }
+                      },
+                      'flowstate' : {
+                        'past' : { 'fill' : '#CCCCCC', 'font-size' : 12},
+                        'current' : {'fill' : 'yellow', 'font-color' : 'red', 'font-weight' : 'bold'},
+                        'future' : { 'fill' : '#FFFF99'},
+                        'request' : { 'fill' : 'blue'},
+                        'invalid': {'fill' : '#444444'},
+                        'approved' : { 'fill' : '#58C4A3', 'font-size' : 12, 'yes-text' : 'SI', 'no-text' : 'NO' },
+                        'rejected' : { 'fill' : '#C45879', 'font-size' : 12, 'yes-text' : 'NO', 'no-text' : 'SI' }
+                      }
+                    });
+
+
+                })();
+
+            };
+        </script>
+    {% endblock %}

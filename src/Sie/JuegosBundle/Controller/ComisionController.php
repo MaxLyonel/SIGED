@@ -659,6 +659,9 @@ class ComisionController extends Controller {
             case 11:         
                 $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v1.rptdesign&__format=pdf&id='.$id;
                 break;
+            case 20:         
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_comitetecnico_v1.rptdesign&__format=pdf&id='.$id;
+                break;
             case 103:         
                 $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v1.rptdesign&__format=pdf&id='.$id;
                 break;

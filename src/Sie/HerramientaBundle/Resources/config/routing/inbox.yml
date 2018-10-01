@@ -25,3 +25,17 @@ herramienta_inbox_close_operativo:
     defaults: { _controller: "SieHerramientaBundle:Inbox:closeOperativo"}
     options:
          expose: true
+
+herramienta_inbox_downoperativorude:
+    path:     /downoperativorude
+    defaults: { _controller: "SieHerramientaBundle:Inbox:downOperativoRude"}
+    options:
+         expose: true
+
+herramienta_inbox_downloadRude:
+    path:     /download/{file}/{datadownload}
+    defaults: { _controller: "SieHerramientaBundle:Inbox:download"}
+    options:
+         expose: true
+
+
