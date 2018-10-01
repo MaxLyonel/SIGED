@@ -33,3 +33,9 @@ herramienta_alter_areas_emergente:
     defaults: { _controller: SieHerramientaAlternativaBundle:Areas:areaEmergente }
     options:
          expose: true         
+
+herramienta_alter_infoEstudianteAreas_emergente_asignar:
+    path:     /emergenteAsignar
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Areas:emergenteAsignar"}
+    options:
+         expose: true         

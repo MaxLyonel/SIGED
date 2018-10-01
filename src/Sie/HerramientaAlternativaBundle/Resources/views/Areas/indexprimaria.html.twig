@@ -97,7 +97,6 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-            {#<button type="button" class="btn btn-theme" data-dismiss="modal">Guardar Cambios</button>#}
         </div>
     </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->
@@ -132,7 +131,7 @@
     };
 
     var deleteArea = function(idco, infoUe, asignatura, smpId){
-        if(confirm('¿Esta seguro(a) de eliminar el área de '+ asignatura +'?\nTenga en cuenta que también se eliminaran las calificaciones de los estudiantes.')){
+        if(confirm('¿Está segura(o) de eliminar el área de '+ asignatura +'?\nTenga en cuenta que también se eliminarán las calificaciones de los estudiantes.')){
             $.ajax({
                 type: 'post',
                 data: ({idco:idco, infoUe: infoUe, smpId: smpId}),
@@ -160,13 +159,9 @@
         }
     };
 
-    var xhr;
     var addpop = function(idco){
         if ($('#'+idco).is(':hidden')){
-            if (xhr && xhr.readyState != 4) {
-                xhr.abort();
-            }
-            xhr = $.ajax({
+            $.ajax({
                 type: 'post',
                 data: ({idco: idco}),
                 url: "{{ path('herramienta_alter_areas_maestros') }}",
@@ -196,9 +191,6 @@
                 }
             });
         }else{
-            if (xhr && xhr.readyState != 4) {
-                xhr.abort();
-            }
             $('#'+idco).fadeOut();
             $('#before'+idco).fadeOut();
             $('#after'+idco).fadeOut();
@@ -211,13 +203,9 @@
         $('#after'+idco).fadeOut();
     };
 
-    var xhr1;
     var asignarMaestro = function(){
-        if (xhr1 && xhr1.readyState != 4) {
-            xhr1.abort();
-        }
         var formData = $('#formMaestros').serialize();
-        xhr1 = $.ajax({
+        $.ajax({
             type: 'post',
             data: formData,
             url: "{{ path('herramienta_alter_infoEstudianteAreas_maestros_asignar') }}",
@@ -253,13 +241,9 @@
         return false;
     };
 
-    var xhr2;
     var addpopEmergente = function(idco){
         if ($('#emergente_'+idco).is(':hidden')){
-            if (xhr2 && xhr2.readyState != 4) {
-                xhr2.abort();
-            }
-            xhr2 = $.ajax({
+            $.ajax({
                 type: 'post',
                 data: ({idco: idco}),
                 url: "{{ path('herramienta_alter_areas_emergente') }}",
@@ -289,13 +273,31 @@
                 }
             });
         }else{
-            if (xhr2 && xhr.readyState != 4) {
-                xhr2.abort();
-            }
             $('#emergente_'+idco).fadeOut();
             $('#emergente_before_'+idco).fadeOut();
             $('#emergente_after_'+idco).fadeOut();
         }
+    };
+
+    var asignarEmergente = function(){
+        var formData = $('#formEmergente').serialize();
+        $.ajax({
+            type: 'post',
+            data: formData,
+            url: "{{ path('herramienta_alter_infoEstudianteAreas_emergente_asignar') }}",
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                var idco = data.ieco;
+                $('#emergente_'+idco).empty();
+                $('#emergente_'+idco).append("<div style='background:#906094; color:#FFFFFF; padding:5px; text-align:center;'>Cambios guardados</div>");
+                setTimeout("cerrarEmergente('"+idco+"')",2000)
+                
+            },
+            error: {
+            }
+        });
     };
 
     var cerrarEmergente = function(idco){

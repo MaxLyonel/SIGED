@@ -10,6 +10,7 @@ use Sie\AppWebBundle\Entity\SuperiorModuloPeriodo;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOfertaMaestro;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sie\AppWebBundle\Entity\EstudianteAsignatura;
+use Sie\AppWebBundle\Entity\AltModuloemergente;
 
 /**
  * EstudianteInscripcion controller.
@@ -324,7 +325,7 @@ class AreasController extends Controller {
         $gestion = $this->session->get('ie_gestion');
         $sucursal = $this->session->get('ie_suc_id');
         $periodo = $this->session->get('ie_per_cod');
-        
+
         $em = $this->getDoctrine()->getManager();
 
         $cursoOferta = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($ieco);
@@ -468,6 +469,40 @@ class AreasController extends Controller {
                     'emergente' => $emergente,
             )
         );
+    }
+
+    public function emergenteAsignarAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $id_usuario = $this->session->get('userId');
+        $ieco = $request->get('ieco');
+        $iec = $request->get('iec');
+        $emergente = mb_strtoupper($request->get('emergente'), 'utf-8');
+        
+        $moduloEmergente = $em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneBy(array('institucioneducativaCurso' => $iec));
+        if($moduloEmergente){
+            $moduloEmergente->setModuloEmergente($emergente);
+            $moduloEmergente->setUsuario($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($id_usuario));
+            $moduloEmergente->setFechaRegistro(new \DateTime('now'));
+            $em->persist($moduloEmergente);
+            $em->flush();
+        } else {
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('alt_moduloemergente');")->execute();
+            $newEmergente = new AltModuloemergente();
+            $newEmergente->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iec));
+            $newEmergente->setModuloEmergente($emergente);
+            $newEmergente->setUsuario($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($id_usuario));
+            $newEmergente->setFechaRegistro(new \DateTime('now'));
+            $em->persist($newEmergente);
+            $em->flush();
+            dump($newEmergente);
+        }
+
+        $response = new JsonResponse();
+        return $response->setData(array(
+            'ieco'=>$ieco,
+            'iec'=>$iec,
+            'emergente'=>$emergente
+        ));
     }
 
 }

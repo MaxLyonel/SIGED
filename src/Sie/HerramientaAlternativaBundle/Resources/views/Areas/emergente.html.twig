@@ -1,5 +1,4 @@
-<form action="" id="formMaestros" onsubmit="asignarEmergente();
-        return false">
+<form action="" id="formEmergente">
     <table class="table table-lilac table-striped">
         <thead>
             <tr>
@@ -11,7 +10,7 @@
                 <td>
                     <input type="hidden" name="iec" value="{{iec}}">
                     <input type="hidden" name="ieco" value="{{ieco}}">
-                    <input type="text" name="emergente" value="{{emergente}}" class="form-control input-md" autocomplete="off" {% if app.session.get('ie_per_estado') == '0' %}disabled{% endif %}>
+                    <input type="text" name="emergente" value="{% if emergente %}{{emergente.moduloEmergente}}{% endif %}" class="form-control input-md" autocomplete="off" {% if app.session.get('ie_per_estado') == '0' %}disabled{% endif %}>
                 </td>
             </tr>
         </tbody>
@@ -19,7 +18,7 @@
     <div style="background:#EEEEEE; text-align:right; padding:5px;">
         <button type="button" class="btn btn-default" onclick="cerrarEmergente({{ieco}})">Cerrar</button>
         {% if app.session.get('ie_per_estado') != '0' %}
-            <button type="submit" class="btn btn-success">Guardar Cambios</button>
+            <button type="button" class="btn btn-success" onclick="asignarEmergente();">Guardar Cambios</button>
         {% endif %}
     </div>
 </form>
