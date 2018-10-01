@@ -61,7 +61,7 @@ class StudentModuleController extends Controller {
 
         $objNewCurricula = $this->get('funciones')->setCurriculaStudent($data);
         $arrCourseToSelected = $this->get('funciones')->getCurriculaStudent($data);
-        
+        $form=array();
         $useTemplate = 'newcourseToSelected';
        }else{
             // all funcionality 
@@ -85,7 +85,9 @@ class StudentModuleController extends Controller {
             $arrCourseToSelected[]=$course;
 
           }
-        $useTemplate = 'courseToSelected';
+
+          $form = $this->addModuloStudentForm($infoUe, $infoStudent, json_encode($arrCourseToSelected) )->createView();
+          $useTemplate = 'courseToSelected';
        }
 
         //get required info about the studens 
@@ -111,7 +113,7 @@ class StudentModuleController extends Controller {
         'acreditacion'        => $arrInfoUe['ueducativaInfo']['grado'],
         'paralelo'            => $arrInfoUe['ueducativaInfo']['paralelo'],
         'turno'               => $arrInfoUe['ueducativaInfo']['turno'],
-        'form'                => $this->addModuloStudentForm($infoUe, $infoStudent, json_encode($arrCourseToSelected) )->createView(),
+        'form'                => $form,
         'objStudentInfo'      => $objStudentInfo
 
        ));
