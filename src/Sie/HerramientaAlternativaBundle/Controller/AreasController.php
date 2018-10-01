@@ -140,7 +140,7 @@ class AreasController extends Controller {
         }
     }
 
-    public function getAreas($infoUe) {        
+    public function getAreas($infoUe) {
         $aInfoUeducativa = unserialize($infoUe);
         $iecId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
         //$iecId = '';
@@ -443,6 +443,31 @@ class AreasController extends Controller {
         }
         $response = new JsonResponse();
         return $response->setData(array('ieco'=>$ieco[0]));
+    }
+
+    public function areaEmergenteAction(Request $request) {
+        $ieco = $request->get('idco');
+
+        $sie = $this->session->get('ie_id');
+        $gestion = $this->session->get('ie_gestion');
+        $sucursal = $this->session->get('ie_suc_id');
+        $periodo = $this->session->get('ie_per_cod');
+
+        $em = $this->getDoctrine()->getManager();
+
+        $cursoOferta = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($ieco);
+
+        $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($cursoOferta->getInsitucioneducativaCurso());
+
+        $emergente = $em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneBy(array('institucioneducativaCurso' => $curso->getId()));
+
+        return $this->render($this->session->get('pathSystem') . ':Areas:emergente.html.twig', array(
+                    'iec' => $curso->getId(),
+                    'ieco' => $ieco,
+                    'operativo' => $periodo,
+                    'emergente' => $emergente,
+            )
+        );
     }
 
 }
