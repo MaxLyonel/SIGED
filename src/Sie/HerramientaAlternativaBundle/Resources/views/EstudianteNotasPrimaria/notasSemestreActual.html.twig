@@ -75,7 +75,14 @@
                         {% for asig in areas %}
                             {% if (app.session.get('roluser') != 2) %}
                                 <tr>
-                                    <td>{{asig.asignatura}}<br><small style="color:#000000; opacity:0.3; font-size:9px">{{asig.area}}</small></td>
+                                    <td>
+                                        {{asig.asignatura}}
+                                        {% if asig.idAsignatura == 2012 %}
+                                            <br>
+                                            <b><small class="text-info">{{emergente}}</small></b>
+                                        {% endif %}
+                                        
+                                    </td>
                                     {% for n in asig.notas %}
                                         <td align="center">
                                             {% if app.session.get('ie_per_estado') == 2 or app.session.get('ie_per_estado') == 3 %}
@@ -105,7 +112,7 @@
                                                 <td rowspan="5">
                                                     <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{nc.idEstudianteNotaCualitativa}}">
                                                     <input type="hidden" name="idNotaTipoCualitativa[]" value="{{nc.idNotaTipo}}">
-                                                    <textarea name="notaCualitativa[]" cols="40" rows="7" class="form-control jupper">{{ nc.notaCualitativa }}</textarea>
+                                                    <textarea name="notaCualitativa[]" cols="27" rows="7" class="form-control jupper" style="resize:vertical">{{ nc.notaCualitativa }}</textarea>
                                                 </td>
                                             {% endfor %}
                                         {% endif %}
