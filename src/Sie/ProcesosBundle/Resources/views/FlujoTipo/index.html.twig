@@ -1,0 +1,136 @@
+{% extends 'layoutProcesos.html.twig' %}
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> Procesos <span>Lista de procesos</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{ path('flujotipo')}}">Procesos</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+    
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-12">
+                <div class="panel rounded shadow">
+                    <div class="panel-heading">
+                        {% if app.session.flashBag.has('exito') %}
+                            <div class="alert alert-success">
+                                {% for msg in app.session.flashBag.get('exito') %}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    {{ msg }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        {% if app.session.flashBag.has('error') %}
+                            <div class="alert alert-danger">
+                                {% for msg in app.session.flashBag.get('error') %}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    {{ msg }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}    
+                        <div class="pull-left">
+                            <h3 class="panel-title"></h3>
+                        </div>
+                        <div class="pull-right">
+                            <a href="{{ path('flujotipo_new') }}" class="btn btn-primary">
+                                <i class="fa fa-plus"></i> Nuevo
+                            </a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                    <div class="table-responsive col-md-12">
+                        <table class="table table-bordered table-striped table-primary" id="data_tabla">
+                            <thead>
+                                <tr>
+                                    <th WIDTH="30">Id</th>
+                                    <th>Proceso</th>
+                                    <th>Obs</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th WIDTH="30">Id</th>
+                                    <th>Proceso</th>
+                                    <th>Obs</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                            {% for entity in entities %}
+                                <tr>
+                                    <td>{{ entity.id }}</a></td>
+                                    <td>{{ entity.flujo }}</td>
+                                    <td>{{ entity.obs }}</td>
+                                    <td>
+                                        <a href="{{ path('flujotipo_edit', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Editar">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
+                                        <a href="{{ path('flujotipo_ver', { 'id': entity.id }) }}" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" title="Ver">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                        <a href="{{ path('flujotipo_delete', { 'id': entity.id }) }}" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="return confirm('¿Esta suguro de eliminar?')">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+ {% block javascripts %}
+    {{ parent() }} 
+    <script>
+       $( document ).ready(function() {
+            cargatablas();
+        });
+        var cargatablas = function (identif){
+            // Setup - add a text input to each footer cell
+            $('#data_tabla tfoot th').each( function () {
+                var title = $(this).text();
+                if(title.trim() === "" || title === "Acciones"){
+                    $(this).html('');
+                } else {
+                    $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+                }
+            } );
+            // DataTable
+            var table = $('#data_tabla').DataTable( {
+                    "order": [[ 0, "asc" ]],
+                    "columnDefs": [
+                        { "orderable": false, "targets": [0] }
+                    ],
+                }
+            );
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        };
+    </script>
+    {% endblock %}

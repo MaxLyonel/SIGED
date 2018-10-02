@@ -1,0 +1,30 @@
+procesotipo:
+    path:     /
+    defaults: { _controller: "SieProcesosBundle:ProcesoTipo:index" }
+
+procesotipo_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieProcesosBundle:ProcesoTipo:show" }
+
+procesotipo_new:
+    path:     /new
+    defaults: { _controller: "SieProcesosBundle:ProcesoTipo:new" }
+
+procesotipo_create:
+    path:     /create
+    defaults: { _controller: "SieProcesosBundle:ProcesoTipo:create" }
+    methods:  POST
+
+procesotipo_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieProcesosBundle:ProcesoTipo:edit" }
+
+procesotipo_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieProcesosBundle:ProcesoTipo:update" }
+    methods:  [POST, PUT]
+
+procesotipo_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieProcesosBundle:ProcesoTipo:delete" }
+    #methods:  [POST, DELETE]

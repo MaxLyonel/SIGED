@@ -1,0 +1,17 @@
+herramienta_alter_infoEstudianteNotasPrimaria_index:
+    path:     /index
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteNotasPrimaria:index"}
+    options:
+         expose: true
+
+herramienta_alter_infoEstudianteNotasPrimaria_create_update:
+    path:     /createUpdate
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteNotasPrimaria:createUpdate"}
+    options:
+         expose: true
+
+herramienta_alter_infoEstudianteNotasPrimaria_delete:
+    path:     /delete
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteNotasPrimaria:delete"}
+    options:
+         expose: true

@@ -126,6 +126,7 @@ class InfoPersonalAdmController extends Controller {
         $query = $em->createQuery(
                         'SELECT count(mi.id) FROM SieAppWebBundle:MaestroInscripcion mi
                     WHERE mi.institucioneducativa = :idInstitucion
+                    AND mi.esVigenteAdministrativo = true
                     AND mi.gestionTipo = :gestion
                     AND mi.cargoTipo IN (:cargos)')
                 ->setParameter('idInstitucion', $institucion)
@@ -478,16 +479,16 @@ class InfoPersonalAdmController extends Controller {
             if ($request->get('idCargo') == 1 || $request->get('idCargo') == 12) {
                 $maestroInscripcion_aux = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findBy(array('cargoTipo' => $request->get('idCargo'), 'gestionTipo' => $gestion, 'institucioneducativa' => $institucion));
                 foreach ($maestroInscripcion_aux as $aux) {
-                    $aux->setEsVigenteAdministrativo(0);
+                    $aux->setEsVigenteAdministrativo(1 - $aux->getEsVigenteAdministrativo());
+                    $em->persist($aux);
+                    $em->flush();
                 }
+            } else {
+                $maestroInscripcion->setEsVigenteAdministrativo(1 - $maestroInscripcion->getEsVigenteAdministrativo());
+
+                $em->persist($maestroInscripcion);
+                $em->flush();
             }
-
-            $cargo = $em->getRepository('SieAppWebBundle:CargoTipo')->findOneById($request->get('idCargo'));
-            $maestroInscripcion->setCargotipo($cargo);
-            $maestroInscripcion->setEsVigenteAdministrativo(1 - $maestroInscripcion->getEsVigenteAdministrativo());
-
-            $em->persist($maestroInscripcion);
-            $em->flush();
             $em->getConnection()->commit();
 
             return $this->redirect($this->generateUrl('herramienta_info_personal_adm_index'));

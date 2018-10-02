@@ -20,132 +20,56 @@
             </ol>
         </div><!-- /.breadcrumb-wrapper -->
     </div>
-
-
-    <div class="panel panel-success rounded shadow">
-        <div class="panel-heading">
-            <h3>Panel de control de operativos por CEA.</h3>
-
-        </div><!-- /.panel-heading -->
-        <div class="panel-sub-heading">
-
-        </div><!-- /.panel-sub-heading -->
-        <div class="panel-body">
-
-            <div>
+    <div class="col-md-12">
+        <div class="panel panel-success rounded shadow">
+            <div class="panel-heading">
+                <h3>Panel de control de operativos por CEA.</h3>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12">
                         <p class="lead">Por esta interfaz los tecnicos <code>SIE</code> pueden dar continuidad al siguiente operativo o habilitar al centro una ultima edición de datos en modo regularización.</p>
-
-                        <div class="table-responsive col-md-12">
-                            <table class="table table-bordered table-striped" id="listaConsol">
-                                <thead>
-                                <tr>
-                                    <th class="text-center" style="min-width:5px">No.</th>
-                                    <th>Departamento</th>
-                                    <th>Código de distrito</th>
-                                    <th>Cod. Cea</th>
-                                    <th>CEA</th>
-                                    <th class="text-center" style="min-width:5px">Sub Cea</th>
-                                    <th>Gestión</th>
-                                    <th>Periodo</th>
-                                    <th>Estado</th>
-                                    <th class="text-center">Operativos</th>
-                                </tr>
-                                </thead>
-                                <tfoot>
-                                <tr>
-                                    <th style="min-width:5px">No.</th>
-                                    <th>Departamento</th>
-                                    <th>Código de distrito</th>
-                                    <th>Cod. Cea</th>
-                                    <th>CEA</th>
-                                    <th class="text-center" style="min-width:5px">Sub Cea</th>
-                                    <th>Gestión</th>
-                                    <th>Periodo</th>
-                                    <th>Estado</th>
-                                    <th class="text-center"></th>
-                                </tr>
-                                </tfoot>
-                                <tbody>
-
-                                {% for reg in entities %}
-                                    <tr>
-                                        <td class="text-center">{{ loop.index }}</td>
-                                        <td>
-                                            {#<img class="img-circle img-bordered-theme" alt="..." src="../../../img/avatar/35/2.png">#}
-                                            <span>{{ reg.lugar }}</span>
-                                        </td>
-                                        <td>{{ reg.distrito_cod }}</td>
-                                        <td>{{ reg.ieid }}</td>
-                                        <td>{{ reg.institucioneducativa }}</td>
-                                        <td class="text-center">{{ reg.nombre_subcea }}</td>
-                                        <td class="text-center">{{ reg.gestion_tipo_id }}</td>
-                                        <td>{{ reg.semestre }}</td>
-                                        {#<td>{{ reg.nombre }} {{ reg.paterno }} {{ reg.materno }}</td>#}
-                                        <td>{{ reg.tramite_estado }}</td>
-                                        <td class="text-center">
-                                            {% if ((reg.teid == '6') or (reg.teid == '7') or (reg.teid == '11') or (reg.teid == '13') or (reg.teid == '5')) %}
-                                                <button type="submit" class="btn-danger btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
-                                                    <i class="fa fa-hand-paper-o"></i>
-                                                    {{reg.obs}}
-                                                </button>
-                                            {% elseif (reg.teid == '14') %}     {#¡Fin de Semestre - Cerrado! #}
-                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_solicitud_cambiar_estado_a_regularizado', {'iestid': reg.iestid})}}" method="post" style="display:inline-block" onsubmit="return verificarRegularizacion();">
-                                                    <button type="submit" class="btn-warning btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
-                                                        <i class="fa fa-edit"></i>
-                                                        Autorización para regularizar operativo Fin de Semestre
-                                                    </button>
-                                                </form>
-                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_continuar_sig_operativo', {'iestid': reg.iestid})}}" method="post" style="display:inline-block">
-                                                    <button type="submit" class="btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
-                                                        <i class="fa fa-arrow-circle-right"></i>
-                                                        Continuar con operativo Inicio de Semestre
-                                                    </button>
-                                                </form>
-                                            {% elseif (reg.teid == '12') %}      {#¡Inicio de Semestre - Cerrado!  #}
-                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_solicitud_cambiar_estado_a_regularizado', {'iestid': reg.iestid})}}" method="post" style="display:inline-block" onsubmit="return verificarRegularizacion();">
-                                                    <button type="submit" class="btn-warning btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
-                                                        <i class="fa fa-edit"></i>
-                                                        Autorización para regularizar operativo Inicio de Semestre
-                                                    </button>
-                                                </form>
-                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_continuar_sig_operativo', {'iestid': reg.iestid})}}" method="post" style="display:inline-block" onsubmit="return verificarSiguienteOperativo();">
-                                                    <button type="submit" class="btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
-                                                        <i class="fa fa-arrow-circle-right"></i>
-                                                        Continuar con operativo Fin de Semestre
-                                                    </button>
-                                                </form>
-                                            {% elseif (reg.teid == '8') %}    {#Fin de Semestre Regularizado - Cerrado#}
-                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_continuar_sig_operativo', {'iestid': reg.iestid})}}" method="post" style="display:inline-block">
-                                                    <button type="submit" class="btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
-                                                        <i class="fa fa-arrow-circle-right"></i>
-                                                        Continuar con operativo Inicio de Semestre
-                                                    </button>
-                                                </form>
-                                            {% elseif (reg.teid == '9') %}    {#Inicio de Semestre  Regularizado - Cerrado#}
-                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_continuar_sig_operativo', {'iestid': reg.iestid})}}" method="post" style="display:inline-block" onsubmit="return verificarSiguienteOperativo();">
-                                                    <button type="submit" class="btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
-                                                        <i class="fa fa-arrow-circle-right"></i>
-                                                        Continuar con operativo Fin de Semestre
-                                                    </button>
-                                                </form>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
+                        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form'} } )}}
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="form-group col-lg-3 col-md-3">
+                                    {{ form_label(form.gestion)}}
+                                    {{form_widget(form.gestion) }}
+                                </div>
+                                {% if rol == 8 %}
+                                <div class="form-group col-lg-3 col-md-3">
+                                    {{ form_label(form.departamento)}}
+                                    {{form_widget(form.departamento) }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-3 col-md-3">                                        
+                                    {{ form_widget(form.buscar ) }}
+                                </div>
+                            </div>
                         </div>
-
+                        {{form_end(form)}}
+                        {{form_start(form_exp)}}
+                <div class="panel-heading" id="exportar1" style= "display:none">
+                    <div class="pull-right">
+                        {{ form_widget(form_exp.pdf1 ) }}
+                        {{ form_widget(form_exp.xlsx1) }}
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                {{form_end(form_exp)}}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="tabla"></div>
+                            </div>    
+                        </div>
                     </div>
                 </div>
             </div>
-
-        </div><!-- /.panel-body -->
+        </div>
     </div>
-
-
+            
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
@@ -167,14 +91,78 @@
                     return false;
                 }
             };
+    function buscarceaspendientes()
+        {
+            //alert('{{rol}}');
+            if('{{rol}}'== 8)
+            {
+                var formData = {gestion: $('#form_gestion').val(),departamento: $('#form_departamento').val(),rol: '{{ rol }}', id_usuario: '{{ id_usuario }}'};    
+            }else{
+                var formData = {gestion: $('#form_gestion').val(),rol: '{{ rol }}',id_usuario: '{{ id_usuario }}'};
+            }
+            $.ajax({
+                type: 'get',
+                url: "{{path('sie_alt_ges_sub_sem_panel_operativos_lista')}}",
+                data: formData,
+                beforeSend: function (){
+                    $('#tabla').empty();
+                    $("#tabla").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $('#tabla').empty();
+                    $('#tabla').append(data);
+                    $('#form_rol').val('{{rol}}');
+                    $('#form_id_usuario').val('{{id_usuario}}');
+                    $('#form_gestion1').val($('#form_gestion').val());
+                    $('#form_departamento1').val($('#form_departamento').val());
+                    $('#exportar1').css('display', 'block');
 
-
-
-
-            $( document ).ready(function() {
-                cargatablas();
+                     $( document ).ready(function() {
+                    cargatablas();
             });
 
+                },
+                statusCode: {
+                    500: function () {
+                    },
+                    404: function () {
+                    }
+                }
+            });
+        }
+        $('#form_pdf1').click(function(){
+            //alert('entra');
+            $('#form_tipo').val('pdf');
+        });
+        
+        $('#form_xlsx1').click(function(){
+            $('#form_tipo').val('xlsx');
+        });
+        /*function exportar(tipo)
+        {
+            //alert(tipo);
+            if('{{rol}}'== 8)
+            {
+                var formData = {tipo: tipo, gestion: $('#form_gestion').val(),departamento: $('#form_departamento').val(),rol: '{{ rol }}', id_usuario: '{{ id_usuario }}'};    
+            }else{
+                var formData = {tipo: tipo, gestion: $('#form_gestion').val(),rol: '{{ rol }}',id_usuario: '{{ id_usuario }}'};
+            }
+            $.ajax({
+                type: 'get',
+                url: "{{path('sie_alt_lista_operativos')}}",
+                data: formData,
+                success: function (data) {
+                    
+                },
+                statusCode: {
+                    500: function () {
+                    },
+                    404: function () {
+                    }
+                }
+            });
+        }*/
+           
             var cargatablas = function (identif){
                 // Setup - add a text input to each footer cell
                 $('#listaConsol tfoot th').each( function () {

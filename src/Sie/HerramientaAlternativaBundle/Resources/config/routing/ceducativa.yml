@@ -1,12 +1,6 @@
 herramienta_ceducativa_index:
     path:     /
     defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:index}  
-    
-sie_alt_ges_sub_sem:
-    path:     /gessubsem/
-    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:gessubsem}  
-    options:
-         expose: true
          
 sie_alt_ges_sub_sem_open:
     path:     /{teid}/{gestion}/{subcea}/{semestre}/{idiesuc}/gessubsemopen/
@@ -64,7 +58,7 @@ herramienta_ceducativa_seleccionar_cea:
 herramienta_ceducativa_buscar_cea:
     path:     /buscarcea/
     defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:buscarcea}    
-    methods:  [POST, PUT]
+    methods:  [GET]
     
 herramienta_ceducativa_abrir_cea:
     path:     /{ie_id}/{ie_nombre}/abrircea/
@@ -85,7 +79,12 @@ sie_alt_ges_sub_sem_ceas_pendinte:
     defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:ceaspendientes}
     options:
          expose: true
+
+sie_alt_ges_sub_sem_ceas_pendinte_lista:
+    path:     /ceaspendientes/lista
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:listaceaspendientes}
          
+
 herramientalt_ceducativa_estadistiscas_cierre:
     path:     /ceasstdcierre/
     defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:ceasstdcierre}
@@ -167,3 +166,25 @@ sie_alt_clistardistritos:
     defaults: { _controller: "SieHerramientaAlternativaBundle:Institucioneducativa:listardistritos" }
     options:
          expose: true
+
+sie_alt_ges_sub_sem_panel_operativos_lista:
+    path:     /gessubsempaneloperativoslista/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:paneloperativoslista}  
+
+sie_alt_ges_sub_sem:
+    path:     /gessubsem/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:gessubsem}  
+    options:
+         expose: true
+
+herramientalt_ceducativa_lista_gestion:
+    path:     /ceducativaListaGestion/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:ceducativaListaGestion}
+
+herramientalt_ceducativa_lista_subcea:
+    path:     /ceducativaListaSubcea/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:ceducativaListaSubcea}
+
+
+
+

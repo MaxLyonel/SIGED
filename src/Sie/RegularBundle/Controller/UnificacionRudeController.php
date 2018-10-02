@@ -468,6 +468,9 @@ class UnificacionRudeController extends Controller {
         $inscripinco = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findBy(array('estudiante' => $studentinc), array('fechaInscripcion'=>'DESC'));
         $inscripcorr = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findBy(array('estudiante' => $studentcor), array('fechaInscripcion'=>'DESC'));
 
+        $studentDatPerInco = $em->getRepository('SieAppWebBundle:EstudianteDatopersonal')->findBy(array('estudiante' => $studentinc));        
+        $studentPnpRecSabInco = $em->getRepository('SieAppWebBundle:PnpReconocimientoSaberes')->findBy(array('estudiante' => $studentinc));
+        
         //*************GENERANDO BACKUP DEL RUDE INCORRECTO
         $sqlb = "select * from sp_genera_repaldo_rude('".$rudeinc."')";
         $queryverdipb = $em->getConnection()->prepare($sqlb);
@@ -480,12 +483,14 @@ class UnificacionRudeController extends Controller {
             $sesion = $request->getSession();
             //***********ESTUDIANTE INSCRIPCION            
             if (($inscripinco) && ($studentcor)) {
-                foreach ($inscripinco as $inscrip) { // A LAS INSCRIPCIONES INCORRECTAS SE LE ASIGNA EL ESTUDIANTE CORRECTO                    
+                foreach ($inscripinco as $inscrip) {
                     $antes = $inscrip;                    
                     $inscrip->setEstudiante($studentcor);
                     $em->persist($inscrip);
-                    $em->flush();     
-                    
+                    $em->flush();
+                    //******EL DATO DEL ESTUDIANTE DESTACADO ES LLEVADO JUNTO CON LA INSCRIPCION
+                    //$studentDestacInco = $em->getRepository('SieAppWebBundle:EstudianteDestacado')->findBy(array('estudianteInscripcion' => $inscrip));
+
                     $resp = $defaultController->setLogTransaccion(
                             $inscrip->getId(),              //key
                             'estudiante_inscripcion',       //tabla
@@ -499,7 +504,22 @@ class UnificacionRudeController extends Controller {
                     );
                 }
             }
-
+            //***********ESTUDIANTE DATOS PERSONALES
+            if ($studentDatPerInco) {
+                foreach ($studentDatPerInco as $stuDatPer) {
+                    $stuDatPer->setEstudiante($studentcor);
+                    $em->persist($stuDatPer);
+                    $em->flush();
+                }                    
+            }
+            //***********PNP RECONOCIMIENTO SABERES
+            if ($studentPnpRecSabInco) {
+                foreach ($studentPnpRecSabInco as $stuPnpinco) {
+                    $stuPnpinco->setEstudiante($studentcor);
+                    $em->persist($stuPnpinco);
+                    $em->flush();
+                }                    
+            }
             //**********ESTUDIANTE APODERADOS
             /*if (($apodeinc) && ($studentcor)) {
                 foreach ($inscripcorr as $inscrip) {
@@ -508,7 +528,6 @@ class UnificacionRudeController extends Controller {
                     $em->flush();                
                 }
             }*/
-
             //***********REGISTRANDO CAMBIO DE ESTADO EN CONTROL DE CALIDAD       
             if ($studentinc) {
                 $antes = $studentinc->getId(); 

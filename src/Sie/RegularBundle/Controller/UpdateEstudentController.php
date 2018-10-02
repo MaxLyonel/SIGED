@@ -106,47 +106,121 @@ class UpdateEstudentController  extends Controller{
                    ->add('CarnetIdentidad', 'text', array('label' => 'Carnet', 'data'=>$data->getCarnetIdentidad(), 'disabled'=> ($data->getCarnetIdentidad())?true:false,'attr' => array('class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '10', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
                    ->add('Complemento', 'text', array('label' => 'Complemento', 'data'=>$data->getComplemento(), 'disabled'=>($data->getComplemento())?true:false,'attr' => array('class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '2', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
                    ->add('studentid', 'hidden', array('data' => $data->getId()))
+                   ->add('paterno', 'hidden', array('data' => $data->getPaterno()))
+                   ->add('materno', 'hidden', array('data' => $data->getMaterno()))
+                   ->add('nombre', 'hidden', array('data' => $data->getNombre()))
+                   ->add('fechaNacimiento', 'hidden', array('data' => $data->getFechaNacimiento()->format('d-m-Y')))
+                   ->add('ci', 'hidden', array('data' => $data->getCarnetIdentidad()))
+                   ->add('complemento', 'hidden', array('data' => $data->getComplemento()))
+                   ->add('id', 'hidden', array('data' => $data->getId()))
                   ->add('save', 'button', array('label' => 'Guardar', 'attr'=> array('class'=>'btn btn-success','onclick'=>'resetData()')))
                   ->getForm();
           return $form;
       }
 
+      /**
+    * check the student info with the segip service
+    **/
+    private function saveResultSegipService($form){
+        //create db conexion
+        $em = $this->getDoctrine()->getManager();
+        
+        $answerSegip=2;
+        // chec if the student has CI-COMPLEMENTO to do the validation
+        if($form['ci']){
+
+            $answerSegip = $this->get('sie_app_web.segip')->verificarPersona(
+                $form['ci'],
+                $form['complemento'],
+                $form['paterno'],
+                $form['materno'],
+                $form['nombre'],
+                $form['fechaNacimiento'],
+                'prod', 'academico');
+            
+        }
+    
+        $student = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['id']);
+        if($answerSegip===true){
+            $student->setSegipId(20);       
+        }else{
+            $student->setSegipId(0);       
+        }
+        $em->flush();
+        return $answerSegip;
+        return $answerSegip;
+    }
+
     public function restartAction(Request $request){
 
       //get values send
       $form = $request->get('form');
+      $form['ci'] = isset($form['CarnetIdentidad'])?$form['CarnetIdentidad']:$form['ci'];
+      $form['complemento'] = isset($form['Complemento'])?$form['Complemento']:$form['complemento'];
+      // dump($form);
+      $resultSegip = $this->saveResultSegipService($form);
 
+// dump($resultSegip);
+// die;
       $done = false;
       // create DB conexion
       $em = $this->getDoctrine()->getManager();
       $em->getConnection()->beginTransaction();
+      $mainMessage='';
       try {
-        $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['studentid']);\
-        reset($form);
-        while($val = current($form)){
-          if(key($form) == 'studentid' || key($form) == '_token'){
-          }else {
-            switch (key($form)) {
-              case 'LocalidadNac':
-                  $objStudent->setLocalidadNac($val);
-                break;
-              case 'CarnetIdentidad':
-                $objStudent->setCarnetIdentidad($val);
-                break;
-              case 'Complemento':
-                $objStudent->setComplemento($val);
-                break;
+        if($resultSegip || $resultSegip == 2){
+            $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['studentid']);
+            $oldDataStudent = clone $objStudent;
+            reset($form);
 
-              default:
-                # code...
-                break;
+            while($val = current($form)){
+              if(key($form) == 'studentid' || key($form) == '_token'){
+              }else {
+                switch (key($form)) {
+                  case 'LocalidadNac':
+                      $objStudent->setLocalidadNac($val);
+                    break;
+                  case 'CarnetIdentidad':
+                    $objStudent->setCarnetIdentidad($val);
+                    break;
+                  case 'Complemento':
+                    $objStudent->setComplemento($val);
+                    break;
+
+                  default:
+                    # code...
+                    break;
+                }
+              }
+              next($form);
             }
+            //checkt if the data was saved with segip validation 
+            if($resultSegip == 1){
+                $updateMessage = 'Datos Modificados Correctamente - validados con SEGIP';    
+            }else{
+                $updateMessage = 'Datos Modificados Correctamente';    
+            }
+            $typeMessage = 'success';
+            $mainMessage = 'Guardado';
+            $this->get('funciones')->setLogTransaccion(
+                                   $form['studentid'],
+                                    'estudiante',
+                                    'U',
+                                    '',
+                                    $objStudent,
+                                    $oldDataStudent,
+                                    'SIGED',
+                                    json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+            );
+
+            $em->flush();
+          }else{
+
+            $updateMessage = 'Actualizacion no realizada, los datos reportados no coinciden';
+            $typeMessage = 'warning';
+            $mainMessage = 'Error';
+
           }
-          next($form);
-        }
-
-
-        $em->flush();
         // Try and commit the transaction
         $em->getConnection()->commit();
         $done = true;
@@ -160,7 +234,10 @@ class UpdateEstudentController  extends Controller{
 
       // dump($inscriptionId);die;
       return $this->render('SieRegularBundle:UpdateEstudent:restart.html.twig', array(
-        'done' => $done
+        'done' => $done,
+        'updateMessage' => $updateMessage,
+        'typeMessage' => $typeMessage,
+        'mainMessage' => $mainMessage,
           // ...
       ));
     }

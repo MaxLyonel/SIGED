@@ -82,7 +82,7 @@ class EstudianteUpdateController extends Controller {
         $form = $request->get('form');
         $this->session->set('yearQA',isset($form['gestion'])?$form['gestion']:$this->session->get('currentyear'));
 
-        $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude']));
+        $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => trim($form['codigoRude']) ));
         //verificamos si existe el estudiante
         if ($student) {
           //check if it has tramite
@@ -268,13 +268,17 @@ class EstudianteUpdateController extends Controller {
         if (!$m3) {
 
             $form = $this->createFormBuilder($student)
-                    ->setAction($this->generateUrl('sie_estudiantes_updatestudentA', array('id' => $student->getId())))
+                    // ->setAction($this->generateUrl('sie_estudiantes_updatestudentA', array('id' => $student->getId())))
                     ->add('codigoRude', 'hidden', array('label' => 'codigo rude'))
+                    ->add('ci', 'hidden', array('label' => 'carnetIdentidad','required' => false, 'mapped' => false, 'data'=>$student->getCarnetIdentidad()))
+                    ->add('complemento', 'hidden', array('label' => 'complemento','required' => false, 'mapped' => false))
+                    ->add('id', 'hidden', array('label' => 'id','required' => false, 'data'=>$student->getId()))
                     ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü- A-ZÑÜÖÄËÏ\'-]{2,30}')))
                     ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü- A-ZÑÜÖÄËÏ\'-]{2,30}')))
                     ->add('nombre', 'text', array('label' => 'Nombre', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñ-\'-. A-ZÑ-\'-.]{2,40}')))
                     ->add('fechaNacimiento', 'text', array('data' => $student->getFechaNacimiento()->format('d-m-Y'), 'label' => 'Fecha Nacimiento', 'attr' => array('readonly' => 'readonly', 'class' => 'form-control')))
-                    ->add('save', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
+                    // ->add('save', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
+                    ->add('save', 'button', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary', 'onclick'=>'updateStudentFormA()')))
                     ->getForm();
         } else {
             //look for new values
@@ -293,7 +297,8 @@ class EstudianteUpdateController extends Controller {
             $dataProvincia = ($student->getLugarProvNacTipo()) ? $student->getLugarProvNacTipo()->getId() : 1;
 
             $form = $this->createFormBuilder($student)
-                    ->setAction($this->generateUrl('sie_estudiantes_updatestudentD', array('id' => $student->getId())))
+                    // ->setAction($this->generateUrl('sie_estudiantes_updatestudentD', array('id' => $student->getId())))
+                    ->add('id', 'hidden', array('label' => 'id','required' => false, 'data'=>$student->getId()))
                     ->add('codigoRude', 'hidden', array('label' => 'codigo rude'))
                     ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄËÏ\'-]{2,30}')))
                     ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄËÏ\'-]{2,30}')))
@@ -340,15 +345,27 @@ class EstudianteUpdateController extends Controller {
                     ->add('ci', 'text', array('required' => false, 'mapped' => false, 'data' => $cistudent, 'label' => 'CI', 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{2,12}', 'maxlength' => '12')))
                     ->add('complemento', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getComplemento(), 'label' => 'Complemento', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Complemento no es lo mismo que la expedicion de su CI, por favor no coloque abreviaturas de departamentos")))
                     //->add('generoTipo', 'choice', array('required' => false, 'mapped' => false, 'choices' => $em->getRepository('SieAppWebBundle:GeneroTipo')->findAll(), 'label' => 'Género', 'attr' => array('class' => 'form-control')))
+                    // ->add('generoTipo', 'entity', array('label' => 'Género', 'attr' => array('class' => 'form-control'),
+                    //     'mapped' => false, 'class' => 'SieAppWebBundle:GeneroTipo',
+                    //     'data' => $em->getReference('SieAppWebBundle:GeneroTipo', $student->getGeneroTipo()->getId())
+                    // ))
                     ->add('generoTipo', 'entity', array('label' => 'Género', 'attr' => array('class' => 'form-control'),
-                        'mapped' => false, 'class' => 'SieAppWebBundle:GeneroTipo',
-                        'data' => $em->getReference('SieAppWebBundle:GeneroTipo', $student->getGeneroTipo()->getId())
-                    ))
+                    'mapped' => false, 'class' => 'SieAppWebBundle:GeneroTipo',
+                    'query_builder' => function (EntityRepository $e) {
+                        return $e->createQueryBuilder('gt')
+                                ->where('gt.id IN (:arrGenero)')
+                                ->setParameter('arrGenero', array(1,2))
+                                // ->orderBy('lt.codigo', 'ASC')
+                        ;
+                    }, 'property' => 'genero',
+                    'data' => $em->getReference('SieAppWebBundle:GeneroTipo', $student->getGeneroTipo()->getId())
+                ))
                     ->add('oficialia', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getOficialia(), 'label' => 'Oficialia', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-./_ ]{0,40}')))
                     ->add('libro', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getLibro(), 'label' => 'Libro', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/_() ]{0,20}')))
                     ->add('partida', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getPartida(), 'label' => 'Partida', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/ ]{0,15}')))
                     ->add('folio', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getFolio(), 'label' => 'Folio', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/ ]{0,15}')))
-                    ->add('save', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
+                    // ->add('save', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
+                      ->add('save', 'button', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary', 'onclick'=>'updateStudentFormD()')))
                     ->getForm();
         }
 
@@ -375,15 +392,22 @@ class EstudianteUpdateController extends Controller {
         }
         if (!$m3) {
             $form = $this->createFormBuilder($student)
-                    ->setAction($this->generateUrl('sie_estudiantes_updatestudentB', array('id' => $student->getId())))
+                    // ->setAction($this->generateUrl('sie_estudiantes_updatestudentB', array('id' => $student->getId())))
                     ->add('codigoRude', 'hidden', array('label' => 'codigo rude'))
+
+                    ->add('ci', 'hidden', array('label' => 'carnetIdentidad','required' => false, 'mapped'=>false, 'data'=>$student->getCarnetIdentidad()))
+                    ->add('complemento', 'hidden', array('label' => 'complemento','required' => false, 'mapped'=>false, 'data'=>$student->getComplemento()))
+                    ->add('id', 'hidden', array('label' => 'id','required' => false, 'data'=>$student->getId()))
+
+
                     ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü- A-ZÑÜÖÄËÏ\'-]{2,30}')))
                     ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü- A-ZÑÜÖÄËÏ\'-]{2,30}')))
                     ->add('nombre', 'text', array('label' => 'Nombre', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñ-\'.- A-ZÑ-\'.-]{2,40}')))
                     ->add('fechaNacimiento', 'text', array('data' => $student->getFechaNacimiento()->format('d-m-Y'), 'label' => 'Fecha Nacimiento', 'attr' => array('class' => 'form-control')))
                     ->add('resolAprobatoria', 'textarea', array('required' => false, 'data' => $student->getResolucionaprovatoria(), 'mapped' => false, 'attr' => array('class' => 'form-control', 'rows' => '2', 'cols' => '3', 'maxlength' => '15')))
                     ->add('obsAdicional', 'textarea', array('required' => false, 'data' => $student->getObservacionadicional(), 'mapped' => false, 'attr' => array('class' => 'form-control', 'maxlength' => '50')))
-                    ->add('save', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
+                    // ->add('save', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
+                     ->add('save', 'button', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary', 'onclick'=>'updateStudentFormB()')))
                     ->getForm();
         } else {
             //look for new values
@@ -400,8 +424,10 @@ class EstudianteUpdateController extends Controller {
             $this->lugarNac = $student->getLugarNacTipo();
             $this->pais = $student->getPaisTipo()->getId();
             $form = $this->createFormBuilder($student)
-                    ->setAction($this->generateUrl('sie_estudiantes_updatestudentE', array('id' => $student->getId())))
+                    // ->setAction($this->generateUrl('sie_estudiantes_updatestudentE', array('id' => $student->getId())))
                     ->add('codigoRude', 'hidden', array('label' => 'codigo rude'))
+
+                    ->add('id', 'hidden', array('label' => 'id','required' => false, 'data'=>$student->getId()))
 
                     ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄËÏ\'-]{2,30}')))
                     ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄËÏ\'-]{2,30}')))
@@ -450,15 +476,27 @@ class EstudianteUpdateController extends Controller {
                     ->add('ci', 'text', array('required' => false, 'mapped' => false, 'data' => $cistudent, 'label' => 'CI', 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{2,12}', 'maxlength' => '12')))
                     ->add('complemento', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getComplemento(), 'label' => 'Complemento', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Complemento no es lo mismo que la expedicion de su CI, por favor NO coloque abreviaturas de departamentos")))
                     //->add('generoTipo', 'choice', array('required' => false, 'mapped' => false, 'choices' => $em->getRepository('SieAppWebBundle:GeneroTipo')->findAll(), 'label' => 'Género', 'attr' => array('class' => 'form-control')))
+                    // ->add('generoTipo', 'entity', array('label' => 'Género', 'attr' => array('class' => 'form-control'),
+                    //     'mapped' => false, 'class' => 'SieAppWebBundle:GeneroTipo',
+                    //     'data' => $em->getReference('SieAppWebBundle:GeneroTipo', $student->getGeneroTipo()->getId())
+                    // ))
                     ->add('generoTipo', 'entity', array('label' => 'Género', 'attr' => array('class' => 'form-control'),
-                        'mapped' => false, 'class' => 'SieAppWebBundle:GeneroTipo',
-                        'data' => $em->getReference('SieAppWebBundle:GeneroTipo', $student->getGeneroTipo()->getId())
+                    'mapped' => false, 'class' => 'SieAppWebBundle:GeneroTipo',
+                    'query_builder' => function (EntityRepository $e) {
+                        return $e->createQueryBuilder('gt')
+                                ->where('gt.id IN (:arrGenero)')
+                                ->setParameter('arrGenero', array(1,2))
+                                // ->orderBy('lt.codigo', 'ASC')
+                        ;
+                    }, 'property' => 'genero',
+                    'data' => $em->getReference('SieAppWebBundle:GeneroTipo', $student->getGeneroTipo()->getId())
                     ))
                     ->add('oficialia', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getOficialia(), 'label' => 'Oficialia', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-./_ ]{0,40}')))
                     ->add('libro', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getLibro(), 'label' => 'Libro', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/_() ]{0,20}')))
                     ->add('partida', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getPartida(), 'label' => 'Partida', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/ ]{0,15}')))
                     ->add('folio', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getFolio(), 'label' => 'Folio', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/ ]{0,15}')))
-                    ->add('save', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
+                    // ->add('save', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
+                    ->add('save', 'button', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary', 'onclick'=>'updateStudentFormE()')))
                     ->getForm();
         }
         return $form;
@@ -501,11 +539,19 @@ class EstudianteUpdateController extends Controller {
 //        echo $student->getPaisTipo()->getId();
 //        die;
         $formMode3 = $this->createFormBuilder($estudiante)
-                ->setAction($this->generateUrl('sie_estudiantes_updatestudentC', array('id' => $student->getId())))
+                // ->setAction($this->generateUrl('sie_estudiantes_updatestudentC', array('id' => $student->getId())))
                 //->setAction($this->generateUrl('sie_estudiantes_result'))
                 //->add('codigoRude', 'hidden', array('label' => 'codigo rude'))
                 //->add('pais', 'choice', array('mapped' => false, 'label' => 'Pais', 'attr' => array('class' => 'form-control')))
                 //->add('pais', 'choice', array('mapped' => false, 'choices' => $em->getRepository('SieAppWebBundle:PaisTipo')->findAll(), 'label' => 'Pais', 'attr' => array('class' => 'form-control')))
+                ->add('nombre', 'hidden', array('label' => '','required' => false, 'mapped'=>false, 'data'=>$student->getNombre()))
+                ->add('paterno', 'hidden', array('label' => '','required' => false, 'mapped'=>false, 'data'=>$student->getPaterno()))
+                ->add('materno', 'hidden', array('label' => '','required' => false, 'mapped'=>false, 'data'=>$student->getMaterno()))
+                ->add('fechaNacimiento', 'hidden', array('label' => '','required' => false, 'mapped'=>false, 'data'=>$student->getFechaNacimiento()->format('d-m-Y')))
+                
+                ->add('id', 'hidden', array('label' => 'id','required' => false, 'data'=>$student->getId()))
+
+
                 ->add('pais', 'entity', array('label' => 'Pais', 'attr' => array('class' => 'form-control'),
                     'mapped' => false, 'class' => 'SieAppWebBundle:PaisTipo',
                     'query_builder' => function (EntityRepository $e) {
@@ -548,8 +594,19 @@ class EstudianteUpdateController extends Controller {
                 ->add('ci', 'text', array('required' => false, 'mapped' => false, 'data' => $cistudent, 'label' => 'CI', 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{2,12}', 'maxlength' => '12')))
                 ->add('complemento', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getComplemento(), 'label' => 'Complemento', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Complemento no es lo mismo que expedición, por favor NO colocar abreviaturas de Departamentos")))
                 //->add('generoTipo', 'choice', array('required' => false, 'mapped' => false, 'choices' => $em->getRepository('SieAppWebBundle:GeneroTipo')->findAll(), 'label' => 'Género', 'attr' => array('class' => 'form-control')))
+                // ->add('generoTipo', 'entity', array('label' => 'Género', 'attr' => array('class' => 'form-control'),
+                //     'mapped' => false, 'class' => 'SieAppWebBundle:GeneroTipo',
+                //     'data' => $em->getReference('SieAppWebBundle:GeneroTipo', $student->getGeneroTipo()->getId())
+                // ))
                 ->add('generoTipo', 'entity', array('label' => 'Género', 'attr' => array('class' => 'form-control'),
                     'mapped' => false, 'class' => 'SieAppWebBundle:GeneroTipo',
+                    'query_builder' => function (EntityRepository $e) {
+                        return $e->createQueryBuilder('gt')
+                                ->where('gt.id IN (:arrGenero)')
+                                ->setParameter('arrGenero', array(1,2))
+                                // ->orderBy('lt.codigo', 'ASC')
+                        ;
+                    }, 'property' => 'genero',
                     'data' => $em->getReference('SieAppWebBundle:GeneroTipo', $student->getGeneroTipo()->getId())
                 ))
                 ->add('oficialia', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getOficialia(), 'label' => 'Oficialia', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-./_ ]{0,40}')))
@@ -557,98 +614,198 @@ class EstudianteUpdateController extends Controller {
                 ->add('partida', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getPartida(), 'label' => 'Partida', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/ ]{0,15}')))
                 ->add('folio', 'text', array('required' => false, 'mapped' => false, 'data' => $student->getFolio(), 'label' => 'Folio', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9-/ ]{0,15}')))
                 ->add('isDoubleNcnal', 'checkbox', array('label'=>'Doble Nacionalidad','data'=>$student->getEsDobleNacionalidad(),'required' => false, 'mapped' => false,'attr' => array('class'   => 'form-control', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => ""),))
-                ->add('save', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
+                // ->add('save', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
+                  ->add('save', 'button', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary', 'onclick'=>'updateStudentFormC()')))
                 ->getForm();
 
         return $formMode3;
     }
 
     /**
-     * update an existing Estudiante entity.
-     *
-     */
-    public function updateStudentAAction(Request $request, $id) {
-
+    * check the student info with the segip service
+    **/
+    private function saveResultSegipService($form){
+        //create db conexion
         $em = $this->getDoctrine()->getManager();
-        $form = $request->get('form');
-        $entity = $em->getRepository('SieAppWebBundle:Estudiante')->find($id);
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Estudiante entity.');
+
+        // chec if the student has CI-COMPLEMENTO to do the validation
+        $answerSegip=2;
+        
+        if($form['ci']){
+
+            $arrParametros = array(       'complemento'=>$form['complemento'],
+                'primer_apellido'=>$form['paterno'],
+                'segundo_apellido'=>$form['materno'],
+                'nombre'=>$form['nombre'],
+                'fecha_nacimiento'=>$form['fechaNacimiento']);
+
+            $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $form['ci'],$arrParametros,'prod', 'academico');
+
         }
-        $oldDataStudent = clone $entity;
-        $entity->setPaterno(mb_strtoupper($form['paterno'], 'utf8'));
-        $entity->setMaterno(mb_strtoupper($form['materno'], 'utf8'));
-        $entity->setNombre(mb_strtoupper($form['nombre'], 'utf8'));
-        $entity->setFechaNacimiento(new \DateTime($form['fechaNacimiento']));
+            
+        
+    
+        $student = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['id']);
+        if($answerSegip===true){
+            $student->setSegipId(20);       
+        }else{
+            $student->setSegipId(0);       
+        }
         $em->flush();
-
-        $this->get('funciones')->setLogTransaccion(
-                               $entity->getId(),
-                                'estudiante',
-                                'U',
-                                '',
-                                $entity,
-                                $oldDataStudent,
-                                'SIGED',
-                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-        );          
-
-
-        $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
-        return $this->redirect($this->generateUrl('sie_estudiantes'));
+        return $answerSegip;
     }
 
     /**
      * update an existing Estudiante entity.
      *
      */
-    public function updateStudentBAction(Request $request, $id) {
+    // public function updateStudentAAction(Request $request, $id) {
+    public function updateStudentAAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
+           
 
-        $entity = $em->getRepository('SieAppWebBundle:Estudiante')->find($id);
+        $entity = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['id']);
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Estudiante entity.');
         }
+
         $oldDataStudent = clone $entity;
-        $entity->setPaterno(mb_strtoupper($form['paterno']));
-        $entity->setMaterno(mb_strtoupper($form['materno']));
-        $entity->setNombre(mb_strtoupper($form['nombre']));
-        $entity->setFechaNacimiento(new \DateTime($form['fechaNacimiento']));
-        $entity->setResolucionaprovatoria($form['resolAprobatoria']);
-        $entity->setObservacionadicional($form['obsAdicional']);
-        $em->persist($entity);
-        $em->flush();
-         $this->get('funciones')->setLogTransaccion(
-                               $entity->getId(),
-                                'estudiante',
-                                'U',
-                                '',
-                                $entity,
-                                $oldDataStudent,
-                                'SIGED',
-                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-        );          
-        $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
-        return $this->redirect($this->generateUrl('sie_estudiantes'));
+        // save the segip id - validation
+        $resultSegip = $this->saveResultSegipService($form);
+
+        if($resultSegip || $resultSegip == 2){
+              
+            $entity->setPaterno(mb_strtoupper($form['paterno'], 'utf8'));
+            $entity->setMaterno(mb_strtoupper($form['materno'], 'utf8'));
+            $entity->setNombre(mb_strtoupper($form['nombre'], 'utf8'));
+            $entity->setFechaNacimiento(new \DateTime($form['fechaNacimiento']));
+            $em->flush();
+
+            $this->get('funciones')->setLogTransaccion(
+                                   $entity->getId(),
+                                    'estudiante',
+                                    'U',
+                                    '',
+                                    $entity,
+                                    $oldDataStudent,
+                                    'SIGED',
+                                    json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+            );
+
+            if($resultSegip == 1){
+                $updateMessage = 'Datos Modificados Correctamente - validados con SEGIP';    
+            }else{
+                $updateMessage = 'Datos Modificados Correctamente';    
+            }
+            
+            $typeMessage = 'success';
+            $mainMessage = 'Guardado';
+            
+            // $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
+            // return $this->redirect($this->generateUrl('sie_estudiantes'));
+        }else{
+            $updateMessage = 'Actualización no realizada, De acuerdo a la validación del SEGIP, el número de carnet no corresponde a los datos (paterno, materno, nombre y fecha de nacimiento)';
+            $typeMessage = 'warning';
+            $mainMessage = 'Error';
+        }
+
+        return $this->render($this->session->get('pathSystem') . ':Estudiante:updateStudent.html.twig', array(
+            'updateMessage' => $updateMessage,
+            'typeMessage'   => $typeMessage,
+            'mainMessage'   => $mainMessage
+
+        ));
     }
 
     /**
      * update an existing Estudiante entity.
      *
      */
-    public function updateStudentCAction(Request $request, $id) {
+    public function updateStudentBAction(Request $request) {
+
+        $em = $this->getDoctrine()->getManager();
+        $form = $request->get('form');
+
+        $entity = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['id']);
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Estudiante entity.');
+        }
+        $oldDataStudent = clone $entity;
+
+         // save the segip id - validation
+        $resultSegip = $this->saveResultSegipService($form);
+
+        if($resultSegip || $resultSegip == 2){
+            
+
+            $entity->setPaterno(mb_strtoupper($form['paterno']));
+            $entity->setMaterno(mb_strtoupper($form['materno']));
+            $entity->setNombre(mb_strtoupper($form['nombre']));
+            $entity->setFechaNacimiento(new \DateTime($form['fechaNacimiento']));
+            $entity->setResolucionaprovatoria($form['resolAprobatoria']);
+            $entity->setObservacionadicional($form['obsAdicional']);
+            $em->persist($entity);
+            $em->flush();
+             $this->get('funciones')->setLogTransaccion(
+                                   $entity->getId(),
+                                    'estudiante',
+                                    'U',
+                                    '',
+                                    $entity,
+                                    $oldDataStudent,
+                                    'SIGED',
+                                    json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+            );          
+            // $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
+            // return $this->redirect($this->generateUrl('sie_estudiantes'));
+            if($resultSegip == 1){
+                $updateMessage = 'Datos Modificados Correctamente - validados con SEGIP';    
+            }else{
+                $updateMessage = 'Datos Modificados Correctamente';    
+            }
+            $typeMessage = 'success';
+            $mainMessage = 'Guardado';
+            
+            // $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
+            // return $this->redirect($this->generateUrl('sie_estudiantes'));
+        }else{
+              $updateMessage = 'Actualización no realizada, De acuerdo a la validación del SEGIP, el número de carnet no corresponde a los datos (paterno, materno, nombre y fecha de nacimiento)';
+            $typeMessage = 'warning';
+            $mainMessage = 'Error';
+        }
+
+        return $this->render($this->session->get('pathSystem') . ':Estudiante:updateStudent.html.twig', array(
+            'updateMessage' => $updateMessage,
+            'typeMessage'   => $typeMessage,
+            'mainMessage'   => $mainMessage
+
+        ));
+    }
+
+    /**
+     * update an existing Estudiante entity.
+     *
+     */
+    public function updateStudentCAction(Request $request) {
         //die('krlos');
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
 
-        $entity = $em->getRepository('SieAppWebBundle:Estudiante')->find($id);
+        $entity = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['id']);
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Estudiante entity.');
         }
         $oldDataStudent = clone $entity;
-        // $this->saveLogTransaction($entity, $form, __FUNCTION__, false);
+          // save the segip id - validation
+        $resultSegip = $this->saveResultSegipService($form);
+        // dump($resultSegip);
+        // dump($form);
+        // die;
+        if($resultSegip || $resultSegip == 2){
+
+             // $this->saveLogTransaction($entity, $form, __FUNCTION__, false);
         //die('"'.isset($form['departamento']).'"');
         //Array ( [pais] => 0 [departamento] => 1 [provincia] => 23 [localidad] => localidad [ci] => 9977761 [complemento] => N [generoTipo] => 0 [oficialia] => ofi [libro] => libro [partida] => partida [folio] => folio [save] => [_token] => OF55YYMRBysUBsEUK_Op9az4wkkA9nnABC1AGDdwCKY )
 //        $entity->setPaterno($form['paterno']);
@@ -700,9 +857,31 @@ class EstudianteUpdateController extends Controller {
                                 $oldDataStudent,
                                 'SIGED',
                                 json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-        );          
-        $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
-        return $this->redirect($this->generateUrl('sie_estudiantes'));
+        );  
+            if($resultSegip == 1){
+                $updateMessage = 'Datos Modificados Correctamente - validados con SEGIP';    
+            }else{
+                $updateMessage = 'Datos Modificados Correctamente';    
+            }
+            $typeMessage = 'success';
+            $mainMessage = 'Guardado';
+            
+            // $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
+            // return $this->redirect($this->generateUrl('sie_estudiantes'));
+        }else{
+              $updateMessage = 'Actualización no realizada, De acuerdo a la validación del SEGIP, el número de carnet no corresponde a los datos (paterno, materno, nombre y fecha de nacimiento)';
+            $typeMessage = 'warning';
+            $mainMessage = 'Error';
+        }
+
+        return $this->render($this->session->get('pathSystem') . ':Estudiante:updateStudent.html.twig', array(
+            'updateMessage' => $updateMessage,
+            'typeMessage'   => $typeMessage,
+            'mainMessage'   => $mainMessage
+
+        ));
+
+       
     }
 
     /**
@@ -713,18 +892,22 @@ class EstudianteUpdateController extends Controller {
      * @throws type
      * Save administrativo and manera voluntaria CAMBIOS
      */
-    public function updateStudentDAction(Request $request, $id) {
+    public function updateStudentDAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
         /*
           print_r($form);
           die; */
-        $entity = $em->getRepository('SieAppWebBundle:Estudiante')->find($id);
+        $entity = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['id']);
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Estudiante entity.');
         }
         $oldDataStudent = clone $entity;
+
+           // save the segip id - validation
+        $resultSegip = $this->saveResultSegipService($form);
+          if($resultSegip || $resultSegip == 2){
         // $this->saveLogTransaction($entity, $form, __FUNCTION__, true);
         //Array ( [pais] => 0 [departamento] => 1 [provincia] => 23 [localidad] => localidad [ci] => 9977761 [complemento] => N [generoTipo] => 0 [oficialia] => ofi
         //[libro] => libro [partida] => partida [folio] => folio [save] => [_token] => OF55YYMRBysUBsEUK_Op9az4wkkA9nnABC1AGDdwCKY )
@@ -762,8 +945,32 @@ class EstudianteUpdateController extends Controller {
                                 'SIGED',
                                 json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
         );      
-        $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
-        return $this->redirect($this->generateUrl('sie_estudiantes'));
+        // $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
+        // return $this->redirect($this->generateUrl('sie_estudiantes'));
+            if($resultSegip == 1){
+                $updateMessage = 'Datos Modificados Correctamente - validados con SEGIP';    
+            }else{
+                $updateMessage = 'Datos Modificados Correctamente';    
+            }
+            $typeMessage = 'success';
+            $mainMessage = 'Guardado';
+            
+            // $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
+            // return $this->redirect($this->generateUrl('sie_estudiantes'));
+        }else{
+              $updateMessage = 'Actualización no realizada, De acuerdo a la validación del SEGIP, el número de carnet no corresponde a los datos (paterno, materno, nombre y fecha de nacimiento)';
+            $typeMessage = 'warning';
+            $mainMessage = 'Error';
+        }
+
+        return $this->render($this->session->get('pathSystem') . ':Estudiante:updateStudent.html.twig', array(
+            'updateMessage' => $updateMessage,
+            'typeMessage'   => $typeMessage,
+            'mainMessage'   => $mainMessage
+
+        ));
+
+
     }
 
     /**
@@ -773,17 +980,21 @@ class EstudianteUpdateController extends Controller {
      * @return type
      * @throws type
      */
-    public function updateStudentEAction(Request $request, $id) {
+    public function updateStudentEAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
 
 
-        $entity = $em->getRepository('SieAppWebBundle:Estudiante')->find($id);
+        $entity = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['id']);
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Estudiante entity.');
         }
         $oldDataStudent = clone $entity;
+            // save the segip id - validation
+        $resultSegip = $this->saveResultSegipService($form);
+
+        if($resultSegip || $resultSegip == 2){
         //Array ( [pais] => 0 [departamento] => 1 [provincia] => 23 [localidad] => localidad [ci] => 9977761 [complemento] => N [generoTipo] => 0 [oficialia] => ofi [libro] => libro [partida] => partida [folio] => folio [save] => [_token] => OF55YYMRBysUBsEUK_Op9az4wkkA9nnABC1AGDdwCKY )
         $entity->setPaterno(mb_strtoupper($form['paterno']));
         $entity->setMaterno(mb_strtoupper($form['materno']));
@@ -821,8 +1032,30 @@ class EstudianteUpdateController extends Controller {
                                 'SIGED',
                                 json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
         );      
-        $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
-        return $this->redirect($this->generateUrl('sie_estudiantes'));
+        // $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
+        // return $this->redirect($this->generateUrl('sie_estudiantes'));
+            if($resultSegip == 1){
+                $updateMessage = 'Datos Modificados Correctamente - validados con SEGIP';    
+            }else{
+                $updateMessage = 'Datos Modificados Correctamente';    
+            }
+            $typeMessage = 'success';
+            $mainMessage = 'Guardado';
+            
+            // $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
+            // return $this->redirect($this->generateUrl('sie_estudiantes'));
+        }else{
+              $updateMessage = 'Actualización no realizada, De acuerdo a la validación del SEGIP, el número de carnet no corresponde a los datos (paterno, materno, nombre y fecha de nacimiento)';
+            $typeMessage = 'warning';
+            $mainMessage = 'Error';
+        }
+
+        return $this->render($this->session->get('pathSystem') . ':Estudiante:updateStudent.html.twig', array(
+            'updateMessage' => $updateMessage,
+            'typeMessage'   => $typeMessage,
+            'mainMessage'   => $mainMessage
+
+        ));
     }
     /*
     save the log transaccion

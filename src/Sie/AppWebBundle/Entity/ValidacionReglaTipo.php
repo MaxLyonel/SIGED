@@ -220,4 +220,60 @@ class ValidacionReglaTipo
     {
         return $this->validacionReglaEntidadTipo;
     }
+    /**
+     * @var boolean
+     */
+    private $esActivo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\InstitucioneducativaTipo
+     */
+    private $institucioneducativaTipo;
+
+
+    /**
+     * Set esActivo
+     *
+     * @param boolean $esActivo
+     * @return ValidacionReglaTipo
+     */
+    public function setEsActivo($esActivo)
+    {
+        $this->esActivo = $esActivo;
+    
+        return $this;
+    }
+
+    /**
+     * Get esActivo
+     *
+     * @return boolean 
+     */
+    public function getEsActivo()
+    {
+        return $this->esActivo;
+    }
+
+    /**
+     * Set institucioneducativaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\InstitucioneducativaTipo $institucioneducativaTipo
+     * @return ValidacionReglaTipo
+     */
+    public function setInstitucioneducativaTipo(\Sie\AppWebBundle\Entity\InstitucioneducativaTipo $institucioneducativaTipo = null)
+    {
+        $this->institucioneducativaTipo = $institucioneducativaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get institucioneducativaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\InstitucioneducativaTipo 
+     */
+    public function getInstitucioneducativaTipo()
+    {
+        return $this->institucioneducativaTipo;
+    }
 }

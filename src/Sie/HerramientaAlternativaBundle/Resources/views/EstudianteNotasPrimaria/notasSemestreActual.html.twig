@@ -1,0 +1,296 @@
+<style>
+    .jupper{
+        text-transform: uppercase;
+    }
+</style>
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        {% if app.session.get('ie_per_estado') == 2 or app.session.get('ie_per_estado') == 3 %}
+           <form action="" id="formNotas" onsubmit="registrarNotas(); return false">
+               <input type="hidden" name="infoUe" value="{{infoUe}}">
+               <input type="hidden" name="infoStudent" value="{{infoStudent}}">
+           {% endif %}
+           <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Registro de Notas Primaria</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body no-padding" id="modal-body">
+
+                <div class="alert " style="padding:10px">
+                    <h5 class="text-lilac">Datos del Curso</h5>
+                    {% if nivel == 15 %}
+                        <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                            <tr>
+                                <th>Nivel</th><td>{{especialidad}}</td>
+                                <th>Turno</th><td>{{turno}}</td>
+                            </tr>
+                            <tr>
+                                <th>Etapa</th><td>{{acreditacion}}</td>
+                                <th>Paralelo</th><td>{{paralelo}}</td>
+                            </tr>
+                        </table>
+                    {% else %}
+                        <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                            <tr>
+                                <th>Area</th><td>{{area}}</td>
+                                <th>Turno</th><td>{{turno}}</td>
+                            </tr>
+                            <tr>
+                                <th>Especialidad</th><td>{{especialidad}}</td>
+                                <th>Paralelo</th><td>{{paralelo}}</td>
+                            </tr>
+                            <tr>
+                                <th>Nivel de Acreditación</th><td colspan="3">{{acreditacion}}</td>
+                            </tr>
+                        </table>
+                    {% endif %}
+                    <h5 class="text-info">Datos del Estudiante</h5>
+                    <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                        <tr>
+                            <th>Código Rudeal</th><td>{{estudiante.codigoRude}}</td>
+                        </tr>
+                        <tr>
+                            <th>Estudiante</th><td>{{estudiante.estudiante}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <h5 class="text-success" style="margin-left:10px; margin-top:-15px">Notas</h5>
+                {% if areas|length > 0 %}
+                    <table class="table table-bordered">
+                       <thead>
+                          <tr>
+                             <th rowspan="2" style="vertical-align: middle">Módulo</th>
+                             <th colspan="1" style="text-align:center">Valoración Cuantitativa</th>
+                             <th rowspan="2">Valoración Cualitativa</th>
+                         </tr>
+                         <tr>
+                            <th style="text-align:center">Promedio Semestral</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set cont = 0 %}
+                        {% for asig in areas %}
+                            {% if (app.session.get('roluser') != 2) %}
+                                <tr>
+                                    <td>{{asig.asignatura}}<br><small style="color:#000000; opacity:0.3; font-size:9px">{{asig.area}}</small></td>
+                                    {% for n in asig.notas %}
+                                        <td align="center">
+                                            {% if app.session.get('ie_per_estado') == 2 or app.session.get('ie_per_estado') == 3 %}
+                                                <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
+                                                <input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
+                                                <input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
+                                                <input name="notas[]" type="text" size="3" maxlength="3" style="width:50px" value="{{n.nota}}" onkeypress="return validarNota(event)" onkeyup="notaVerificar(this,{{asig.idAsignatura}})" onblur="notaCero(this,{{asig.idAsignatura}})" class="form-control input-sm {{asig.idAsignatura}} nota" autocomplete="off">
+                                            {% else %}
+                                                <input type="text" size="3" style="width:50px" value="{{n.nota}}" class="form-control input-sm {{asig.idAsignatura}} nota" autocomplete="off" disabled="disabled">
+                                            {% endif %}
+                                        </td>
+                                        {# <td>
+                                            <select id="{{asig.idAsignatura}}" class="form-control input-sm estados" name="idEstados[]" disabled required="true" onclick="this.blur()">
+                                                <option value="">Estado...</option>
+                                                {% for ea in estadosAsignatura %}
+                                                    {% if asig.idEstadoAsignatura == ea.id %}
+                                                        {% set selected = 'selected' %}
+                                                    {% else %}
+                                                        {% set selected = '' %}
+                                                    {% endif %}
+                                                    <option value="{{ea.id}}" {{selected}}>{{ea.estado}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td> #}
+                                        {% if cont == 0 %}
+                                            {% for nc in cualitativas %}
+                                                <td rowspan="5">
+                                                    <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{nc.idEstudianteNotaCualitativa}}">
+                                                    <input type="hidden" name="idNotaTipoCualitativa[]" value="{{nc.idNotaTipo}}">
+                                                    <textarea name="notaCualitativa[]" cols="40" rows="7" class="form-control jupper">{{ nc.notaCualitativa }}</textarea>
+                                                </td>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td>{{asig.asignatura}}<br><small style="color:#000000; opacity:0.3; font-size:9px">{{asig.area}}</small></td>
+                                    {% for n in asig.notas %}
+                                        <td align="center">
+                                            <input type="text" size="3" style="width:50px" value="{{n.nota}}" class="form-control input-sm" autocomplete="off" disabled="true">
+                                        </td>
+                                        {# <td>
+                                            <select  class="form-control input-sm estado" readonly disabled="true">
+                                                <option value="">Seleccionar...</option>
+                                                {% for ea in estadosAsignatura %}
+                                                    {% if asig.idEstadoAsignatura == ea.id %}
+                                                        {% set selected = 'selected' %}
+                                                    {% else %}
+                                                        {% set selected = '' %}
+                                                    {% endif %}
+                                                    <option value="{{ea.id}}" {{selected}}>{{ea.estado}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td> #}
+                                        {% if cont == 0 %}
+                                            {% for nc in cualitativas %}
+                                                <td rowspan="5">
+                                                    <textarea cols="40" rows="7" disabled>{{ nc.notaCualitativa }}</textarea>
+                                                </td>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </tr>
+                            {% endif %}
+                            {% set cont = cont + 1 %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="row" style="padding:10px">
+                    <div class="col-md-8 text-right">
+                        <b>Estado de matrícula</b>
+                    </div>
+                    <div class="col-md-4">
+                        <select id="estadoMatricula" disabled class="form-control">
+                            <option value=""></option>
+                            {% for em in estadosMatricula %}
+                                {% if inscripcion.estadomatriculaTipo.id == em.id %}
+                                    {% set selected = 'selected' %}
+                                {% else %}
+                                    {% set selected = '' %}
+                                {% endif %}
+                                <option value="{{em.id}}" {{selected}}>{{em.estadomatricula}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    <i class="fa fa-info-circle"></i> El estudiante no realizó la toma de materias, para proceder con el registro de notas.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        {% if app.session.get('ie_per_estado') == 2 or app.session.get('ie_per_estado') == 3 %}
+            <button type="submit" class="btn btn-theme">Guardar Cambios</button>
+        {% endif %}
+    </div>
+</div><!-- /.modal-content -->
+{% if app.session.get('ie_per_estado') == 2 or app.session.get('ie_per_estado') == 3 %}
+</form>
+{% endif %}
+</div><!-- /.modal-dialog -->
+<script>
+$(document).ready( function(){
+    $(".estados").each(function (index) {
+        if($(this).val() == ""){
+         $(this).val(3);
+     }
+ });
+});
+
+var notaVerificar = function(control,clase){
+  if(control.value < 0){ control.value = 0; }
+  if(control.value > 100){ control.value = 100; }
+
+  if(control.value != "" && control.value != 0){
+    control.value = Math.round(control.value);
+}
+actualizarEstado();
+cambiarEstado(control.value,clase);
+}
+
+var notaCero = function(control,clase){
+  if(control.value == ""){ control.value = 0; }
+  actualizarEstado();
+  cambiarEstado(control.value,clase);
+}
+
+var cambiarEstado = function(nota,clase){
+    var clase = clase.toString();
+    if(nota == 0){
+      $('select#'+clase).val(3);
+      //$('select#'+clase).css('border-color','#CCCCCC')
+  }
+  if(nota>=1 && nota<=50){
+      $('select#'+clase).val(25);
+      //$('select#'+clase).css('border-color','#f60949')
+  }
+  if(nota>=51 && nota<=100){
+      $('select#'+clase).val(5);
+      //$('select#'+clase).css('border-color','#1cd229')
+  }
+}
+
+    var validarNota = function(e){
+      var key = e || window.event;
+      var k = key.charCode || key.keyCode;
+          if ((k < 48 || k > 57) //NUmeros
+              && (k != 13) //ENTER
+              && (k != 8) //retroceso
+              && (k != 9) //tab
+              )
+              return false;
+
+      actualizarEstado();
+    }
+
+  var actualizarEstado = function(){
+    var estado = 5;
+    var contadorCeros = 0;
+    var contadorAprobados = 0;
+    $(".nota").each(function (index) {
+        if($(this).val() == 0){ contadorCeros+=1; }
+        if($(this).val() >= 51){ contadorAprobados+=1; }
+    });
+
+    var totalNotas = $('.nota').size();
+    if(contadorCeros == totalNotas){ 
+        estado = 3; 
+    }else{
+        if(contadorAprobados == totalNotas){ 
+            estado = 5; 
+        }else{
+            estado = 22;
+        }   
+    }
+    $('#estadoMatricula').val(estado);
+  }
+  actualizarEstado();
+
+  var registrarNotas = function(){
+    var enviar = true;
+
+    $(".nota").each(function (index) {
+        if($(this).val() == 0){
+        	enviar = true;//false;
+        }
+    });
+
+    if(enviar == false){
+    	alert('Las notas no pueden ser cero');
+    }
+
+    if(enviar == true){
+    	var formData = $('#formNotas').serialize();
+       $.ajax({
+           type: 'post',
+           url: Routing.generate('herramienta_alter_infoEstudianteNotasPrimaria_create_update'),
+           data: formData,
+           beforeSend: function () {
+               $('#modal-body').empty();
+               $('.modal-footer').empty();
+               $('#modal-body').append("<div style='text-align:center; padding:10px; color:#6ECBFF; font-size:15px'><img src='{{asset('img/loading-sm.gif')}}'><br>Espere mientras se procesan los cambios...</div>");
+           },
+           success: function (data) {
+              //alert(data);
+              $('#modal').modal('hide');
+          },
+          error: function (data) {
+
+          }
+      });
+   }
+}
+</script>

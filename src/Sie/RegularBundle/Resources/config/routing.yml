@@ -347,3 +347,7 @@ sie_app_web_info_bono:
 sie_app_web_listainscritosestudiantesolim:
     resource: "@SieRegularBundle/Resources/config/routing/listainscritosestudiantesolim.yml"
     prefix:   /sie/listainscritosestudiantesolim
+    
+sie_app_web_downloadrudefile:
+    resource: "@SieRegularBundle/Resources/config/routing/downloadrudefile.yml"
+    prefix:   /sie/downloadrudefile
