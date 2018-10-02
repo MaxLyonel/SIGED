@@ -391,7 +391,7 @@
                         {% endif %}
                     {% endif %}
 
-                    {% if rol20 == true or rol8 == true or app.session.get('userId') == 92506172 or app.session.get('userId') == 13794031  or app.session.get('userId') == 92506479  or app.session.get('userId') == 13794032 or app.session.get('userId') = 13793984  %}
+                    {% if rol20 == true or rol8 == true or app.session.get('userId') == 92506172 or app.session.get('userId') == 13794031  or app.session.get('userId') == 92506479  or app.session.get('userId') == 13794032 or app.session.get('userId') == 13793984  %}
                         <!-- Start development - sub menu -->
                         {% for key,menu in app.session.get('aMenu') %}
                             <li class="submenu {% if app.session.get('pMenuId') == menu[0]['menuId'] %} active {% endif %}">
