@@ -2,7 +2,7 @@
 {% block contentoption %}
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> Tramite RUE<span>Recepción Distrito</span></h2>
+        <h2><i class="fa fa-list-alt"></i> Tramite RUE:<span>Notificación Departamental</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -39,13 +39,13 @@
                             </div>
                         {% endif %}    
                         <div class="pull-left">
-                            <h3 class="panel-title">RECEPCIÓN DISTRITAL</h3>
+                            <h3 class="panel-title">NOTIFICACIÓN DEPARTAMENTAL</h3>
                         </div>
-                        <div class="pull-right">
+                        {#<div class="pull-left">
                             <a href="{{ path('tramite_rue_recepcion_distrito_nuevo') }}" class="btn btn-primary">
                                 <i class="fa fa-plus"></i> Nuevo
                             </a>
-                        </div>
+                        </div>#}
                         <div class="clearfix"></div>
                     </div><!-- /.panel-heading -->
                     <div class="panel-body">
@@ -83,6 +83,9 @@
                                         <td>{{ tramite.obs }}</a></td>
                                         <td>{{ tramite.nombre }}</td>
                                         <td>
+                                            <a href="{{path('tramite_rue_notificacion_departamental_nuevo', { 'id': tramite.id })}}" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" title="Notificación">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
                                             <a href="#" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Editar">
                                                 <i class="fa fa-pencil"></i>
                                             </a>
@@ -103,26 +106,11 @@
     </div>
 {% endblock %}
  {% block javascripts %}
-    {{ parent() }} 
+    {{ parent() }}
+    <script src="{{ asset('webprocesos/raphael-min.js') }}"></script>
+    <script src="{{ asset('webprocesos/jquery.min.js') }}"></script>
+    <script src="{{ asset('webprocesos/flowchart-latest.js') }}"></script>
     <script>
-        $('#form_buscar').click(function(){
-            var formData = {idrue: $('#form_idrue').val()};
-            $.ajax({
-                type: 'GET',
-                url: "{{path('tramite_rue_buscar_rue')}}",
-                data: formData,
-                success: function (data) {
-                    $('#form_institucioneducativa').val(data.ie);
-                    $("#form_dependencia").val(data.dep);
-                    $("#form_tipoeducacion").val(data.tipo);
-                    $("#form_estadoinstitucioneducativa").val(data.estado);
-                    $("#form_departamento").val(data.departamento);
-                    $("#form_distrito").val(data.distrito);
-                },
-
-            });
-
-        });
         $( document ).ready(function() {
             cargatablas();
         });
@@ -155,6 +143,94 @@
                     }
                 } );
             } );
-        };    
+        };
+        /*$('#form_buscar').click(function(){
+            var formData = {idrue: $('#form_idrue').val()};
+            $.ajax({
+                type: 'GET',
+                url: "{{path('tramite_rue_buscar_rue')}}",
+                data: formData,
+                success: function (data) {
+                    $('#form_institucioneducativa').val(data.ie);
+                    $("#form_dependencia").val(data.dep);
+                    $("#form_tipoeducacion").val(data.tipo);
+                    $("#form_estadoinstitucioneducativa").val(data.estado);
+                    $("#form_departamento").val(data.departamento);
+                    $("#form_distrito").val(data.distrito);
+                },
+
+            });
+
+        });
+        function verflujo(idtramte){
+            var formData = {proceso: 5,tramite: idtramte};
+            $.ajax({
+                type: 'get',
+                url: "{{ path('tramite_rue_flujoseguimiento_verflujo') }}",
+                data: formData,
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                    //$('#modal').modal('show');
+                    var btn = document.getElementById("run"),
+                    cd = document.getElementById("code"),
+                    chart;
+                    var code = cd.value;
+                    if (chart) {
+                      chart.clean();
+                    }
+                    chart = flowchart.parse(code);
+                    chart.drawSVG('canvas', {
+                      // 'x': 30,
+                      // 'y': 50,
+                      'line-width': 3,
+                      'maxWidth': 3,//ensures the flowcharts fits within a certian width
+                      'line-length': 20,
+                      'text-margin': 10,
+                      'font-size': 12,
+                      'font': 'normal',
+                      'font-family': 'Helvetica',
+                      'font-weight': 'normal',
+                      'font-color': 'black',
+                      'line-color': 'black',
+                      'element-color': 'black',
+                      'fill': 'white',
+                      'yes-text': 'SI',
+                      'no-text': 'NO',
+                      'arrow-end': 'block',
+                      'scale': 1,
+                      'symbols': {
+                        'start': {
+                          'font-color': 'black',
+                          'element-color': 'black',
+                          'fill': 'black'
+                        },
+                        'end':{
+                          'class': 'end-element'
+                        }
+                      },
+                      'flowstate' : {
+                        'past' : { 'fill' : 'white','font-color' : 'black', 'font-size' : 12},
+                        'current' : {'fill' : '#FFFF99', 'font-color' : 'black', 'font-weight' : 'bold'},
+                        'future' : { 'fill' : '#FFFF99'},
+                        'request' : { 'fill' : 'blue'},
+                        'invalid': {'fill' : '#444444'},
+                        'approved' : { 'fill' : '#58C4A3', 'font-size' : 12, 'yes-text' : 'SI', 'no-text' : 'NO' },
+                        'rejected' : { 'fill' : '#C45879', 'font-size' : 12, 'yes-text' : 'NO', 'no-text' : 'SI' }
+                      }
+                    });
+                },
+                statusCode: {
+                    500: function () {
+                    },
+                    404: function () {
+                    }
+                }
+            });
+        }*/
+        
     </script>
     {% endblock %}

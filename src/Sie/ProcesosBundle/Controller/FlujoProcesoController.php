@@ -347,6 +347,7 @@ class FlujoProcesoController extends Controller
         //dump($request);die;
         $flujotipo = $request->get('flujotipo');
         $data = $this->listarP($flujotipo);
+        //dump($data);die;
         return $this->render('SieProcesosBundle:FlujoProceso:tablaPasos.html.twig',$data);
     }
     

@@ -18,31 +18,31 @@
 
     <thead>
         <tr>
-                    <th>id_proceso</th>
-                    <th>id_tarea</th>
+                    {#<th>id_proceso</th>
+                    <th>id_tarea</th>#}
                     <th>Tarea</th>
                     <th>Rol</th>
                     <th>Observacion</th>
-                    <th>Nro. Orden</th>
+                    {#<th>Nro. Orden</th>#}
                     <th>Tipo de asignacion</th>
                     <th>Evaluación</th>
                     <th>Variable Evaluación</th>
                     <th>Tarea Anterior</th>
                     <th>Tarea siguiente</th>
                     <th>Plazo(dias)</th>
-                    <th></th>                                        
+                    <th>Acciones</th>                                        
             </tr>
     </thead>
     <tbody id="tablatarea">
         
         {% for tarea in tareas %}
         <tr>
-            <td>{{tarea.flujo_tipo_id}}</td>
-            <td>{{tarea.id}}</td>
+            {#<td>{{tarea.flujo_tipo_id}}</td>
+            <td>{{tarea.id}}</td>#}
             <td>{{tarea.proceso_tipo}}</td>
             <td>{{tarea.rol}}</td>
             <td>{{tarea.obs}}</td>
-            <td>{{tarea.orden}}</td>
+            {#<td>{{tarea.orden}}</td>#}
             <td>{{tarea.nombre}}</td>
             <td>
                 {% if tarea.es_evaluacion =="1" %}
@@ -55,7 +55,14 @@
             <td>{{tarea.tarea_ant_id}}</td>
             <td>{{tarea.tarea_sig_id}}</td>
             <td>{{tarea.plazo}}</td>
-            <td></td>
+            <td>
+                <a href="{{ path('flujotipo_edit', { 'id': tarea.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Editar">
+                    <i class="fa fa-pencil"></i>
+                </a>
+                <a href="{{ path('flujotipo_delete', { 'id': tarea.id }) }}" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="return confirm('¿Esta suguro de eliminar?')">
+                    <i class="fa fa-times"></i>
+                </a>
+            </td>
             
         </tr>
         {% endfor %}

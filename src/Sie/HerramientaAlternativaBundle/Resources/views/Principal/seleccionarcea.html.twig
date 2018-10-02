@@ -9,17 +9,42 @@
         {% endfor %}
     </div>
     <div class="row">
-        <div class="col-md-12">
+        <div class="body-content animated fadeIn">
             <!-- Start inline form -->
-            <div class="panel rounded shadow">
+            <div class="panel">
                 <div class="panel-heading">
                     <div class="pull-left">
                         <h3 class="panel-title">Selección de CEA: <code>Introduzca el código SIE del centro que desea gestionar.</code></h3>
                     </div>
                     <div class="clearfix"></div>
                 </div><!-- /.panel-heading -->
-                <div class="panel-body no-padding">
-                    <form action="{{path('herramienta_ceducativa_buscar_cea')}}" method="post" style="display:inline-block">
+                <div class="panel-body">
+                    {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form', 'id': 'form_cea'} } )}}
+                    <div class="row">
+                        <div class="form-group col-lg-3 col-md-3">
+                            {{ form_label(form.codsie)}}
+                            {{form_widget(form.codsie,{'attr':{'onchange':'gestion(this.value)'}}) }}
+                        </div>
+                        <div class="form-group col-lg-3 col-md-3">
+                            {{ form_label(form.gestion)}}
+                            {{form_widget(form.gestion,{'attr':{'onchange':'subcea(this.value)'}}) }}
+                        </div>
+                        <div class="form-group col-lg-3 col-md-3">
+                            {{ form_label(form.subcea)}}
+                            {{form_widget(form.subcea,{'attr':{'onchange':'semestre(this.value)'}}) }}
+                        </div>
+                        <div class="form-group col-lg-3 col-md-3">
+                            {{ form_label(form.semestre)}}
+                            {{form_widget(form.semestre) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-3 col-md-3">                                        
+                            {{ form_widget(form.buscar ) }}
+                        </div>
+                    </div>
+                    {{form_end(form)}}
+                    {#<form action="{{path('herramienta_ceducativa_buscar_cea')}}" method="post" style="display:inline-block">
                         <div class="form-body">
                             <div class="form-group">
                                 <label class="sr-only" for="Inputcodsie">Codigo SIE</label>
@@ -27,12 +52,132 @@
                             </div><!-- /.form-group -->                            
                             <button type="submit" class="btn btn-success">Buscar</button>
                         </div><!-- /.form-body -->
-                    </form>
+                    </form>#}
+                    <div id="lista">
+                    </div>    
                 </div><!-- /.panel-body -->
             </div><!-- /.panel -->
             <!--/ End inline form -->
-
         </div>
     </div>
     
-{% endblock %}    
+{% endblock %}   
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function buscarhistorial()
+        {
+            //alert('entra');
+            var formData = $('#form_cea').serialize();
+            $.ajax({
+                type: 'get',
+                url: "{{path('herramienta_ceducativa_buscar_cea')}}",
+                data: formData,
+                beforeSend: function (){
+                    $('#lista').empty();
+                    $("#lista").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $('#lista').empty();
+                    $('#lista').append(data);
+                    $( document ).ready(function() {
+                        cargatablas();
+                    });
+                },
+                statusCode: {
+                    500: function () {
+                    },
+                    404: function () {
+                    }
+                }
+            });
+        }
+  
+        var cargatablas = function (identif){
+            // Setup - add a text input to each footer cell
+            $('#tabla tfoot th').each( function () {
+                var title = $(this).text();
+                if(title.trim() === "" || title === "No."){
+                    $(this).html('');
+                } else {
+                    $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+                }
+            } );
+
+        // DataTable
+        var table = $('#tabla').DataTable( {
+            "order": [[ 0, "asc" ]],
+            "columnDefs": [
+                { "orderable": false, "targets": [0] }
+                ],
+            }
+        );
+
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        };
+        function gestion(id_cea)
+        {
+            //alert('hola');
+            var formData = {id_cea: id_cea};
+            $.ajax({
+                type: 'get',
+                url: "{{path('herramientalt_ceducativa_lista_gestion')}}",
+                data: formData,
+                beforeSend: function () {
+                    $("#form_gestion").empty();
+                    $("#form_gestion").append('<option value="">Buscando...</option>');
+                    $("#form_subcea").empty();
+                    $("#form_subces").append('<option value="">Buscando...</option>');
+                },
+                success: function (data) {
+                    $("#form_gestion").empty();
+                    $("#form_gestion").append('<option value="">Todos</option>');
+                    $("#form_subcea").empty();
+                    $("#form_subcea").append('<option value="">Todos</option>');
+                    $.each(data.gestion, function (i, value) {
+                        $("#form_gestion").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    $.each(data.subcea, function (i, value) {
+                        $("#form_subcea").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+
+        function subcea(gestion)
+        {
+            //alert($('#form_codsie').val());
+            //alert('hola');
+            var formData = {id_cea: $('#form_codsie').val(), gestion: gestion};
+            $.ajax({
+                type: 'get',
+                url: "{{path('herramientalt_ceducativa_lista_subcea')}}",
+                data: formData,
+                beforeSend: function () {
+                    $("#form_subcea").empty();
+                    $("#form_subcea").append('<option value="">Buscando...</option>');
+                },
+                success: function (data) {
+                    $("#form_subcea").empty();
+                    $("#form_subcea").append('<option value="">Todos</option>');
+                    $.each(data.subcea, function (i, value) {
+                        $("#form_subcea").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+            
+        }
+
+    </script>
+{% endblock %} 

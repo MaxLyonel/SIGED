@@ -58,7 +58,7 @@ herramienta_ceducativa_seleccionar_cea:
 herramienta_ceducativa_buscar_cea:
     path:     /buscarcea/
     defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:buscarcea}    
-    methods:  [POST, PUT]
+    methods:  [GET]
     
 herramienta_ceducativa_abrir_cea:
     path:     /{ie_id}/{ie_nombre}/abrircea/
@@ -176,5 +176,15 @@ sie_alt_ges_sub_sem:
     defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:gessubsem}  
     options:
          expose: true
+
+herramientalt_ceducativa_lista_gestion:
+    path:     /ceducativaListaGestion/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:ceducativaListaGestion}
+
+herramientalt_ceducativa_lista_subcea:
+    path:     /ceducativaListaSubcea/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:ceducativaListaSubcea}
+
+
 
 

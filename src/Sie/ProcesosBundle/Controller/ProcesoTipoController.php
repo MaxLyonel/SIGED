@@ -232,6 +232,7 @@ class ProcesoTipoController extends Controller
             $query=$em->getConnection()->prepare('select * from flujo_proceso where proceso_id='.$entity->getId());
             $query->execute();
             $fp = $query->fetchAll();
+            //dump($fp);die;
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find ProcesoTipo entity.');
             }
@@ -244,7 +245,7 @@ class ProcesoTipoController extends Controller
                     ->getFlashBag()
                     ->add('exito', $mensaje);           
             }else{
-                $mensaje = 'No se puede eliminar la tarea, pues tiene un proceso ACTIVO';
+                $mensaje = 'No se puede eliminar la tarea, pues esta asociado a un proceso';
                 $request->getSession()
                     ->getFlashBag()
                     ->add('error', $mensaje);       
