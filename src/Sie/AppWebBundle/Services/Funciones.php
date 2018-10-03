@@ -524,14 +524,16 @@ class Funciones {
             $curriculaStudent = $this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array(
                 'estudianteInscripcion'=>$data['eInsId']
             ));
+
             // check if the student has curricula
             if(!$curriculaStudent){
+
                   //look for the curricula-s ID in curso_oferta table
                   $queryInstCursoOferta = $this->em->createQueryBuilder()
                                           ->select('ieco')
                                           ->from('SieAppWebBundle:InstitucioneducativaCursoOferta', 'ieco')
                                           ->where('ieco.insitucioneducativaCurso = :iecoId')
-                                          ->andWhere('ieco.asignaturaTipo != 0')
+                                          ->andWhere('ieco.asignaturaTipo = 0')
                                           ->setParameter('iecoId', $data['iecId']);
                                           
                   $objAreas = $queryInstCursoOferta->getQuery()->getResult();
@@ -590,7 +592,6 @@ class Funciones {
         // $em->getConnection()->beginTransaction();
 
         if($nivel == 15 || $nivel == 5){
-            // dump($iecId);die;
             try {                
                 $iePeriodo = $this->em->createQueryBuilder()
                     ->select('g')
@@ -600,7 +601,7 @@ class Funciones {
                     ->setParameter('idCurso', $iecId)
                     ->getQuery()
                     ->getResult();
-                // dump($iePeriodo);die;
+                
                 $moduloPeriodo = $this->em->createQueryBuilder()
                     ->select('l')
                     ->from('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g')
@@ -610,13 +611,9 @@ class Funciones {
                     ->where('h.id = :idCurso')
                     ->setParameter('idCurso', $iecId)
                     ->getQuery()
-                    // $moduloPeriodo = $moduloPeriodo->getSQL();
-                    // dump($moduloPeriodo);
-
                     ->getResult();
-                // dump($moduloPeriodo);die;                
-                    if($moduloPeriodo) {                    
-                    // if(false) {                    
+                
+                    if($moduloPeriodo) {                                     
                         $modulos = $this->em->createQueryBuilder()
                         ->select('l')
                         ->from('SieAppWebBundle:SuperiorModuloTipo' ,'l')
@@ -635,9 +632,8 @@ class Funciones {
                         ->getQuery()
                         ->getResult();
                     }                
-                // dump($modulos); die;
+                
                 foreach ($modulos as $modulo) {
-                    // dump($modulos);
                     //die("abc");        
                     $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
                     $smp = new SuperiorModuloPeriodo();
@@ -658,9 +654,7 @@ class Funciones {
                     $this->em->flush();
                 }
 
-                // dump($smp);die;
-
-
+                
 
                 return json_encode(array('id'=>400, 'status'=>'done'));
                 // $em->getConnection()->commit();
@@ -669,7 +663,5 @@ class Funciones {
             }
         }
     }
-
-
 
 }
