@@ -55,15 +55,14 @@
 
                   <tfoot><tr></tr></tfoot>
                   <tbody>
-                    {% for  modules in arrCourseToSelected %}
+                     {% for  modules in arrCourseToSelected %}
                     <tr role="row" class="odd">
-                      <td>{{modules.asignatura}}</td>
+                      <td>{{modules.modulo}}</td>
                       <td class="dt-body-center">
                         <div class="ckbox ckbox-lilac">
                             <input id="checkbox-disabled-checked2" checked="checked" type="checkbox" disabled="disabled">
                             <label for="checkbox-disabled-checked2"></label>
                         </div>
-                        
                       </td>
                     </tr>
                     {% endfor %}
