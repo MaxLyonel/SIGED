@@ -45,8 +45,11 @@ class AreasController extends Controller {
             $arrInfoUe['ueducativaInfoId']['setId'] == 13 &&
             $arrInfoUe['ueducativaInfoId']['periodoId'] == 3
           ){
-            $createNewCurricula = $this->get('funciones')->loadCurricula($infoUe);
+            // $createNewCurricula = $this->get('funciones')->loadCurricula($infoUe);
+            $createNewCurricula = $this->get('funciones')->loadCurriculaCurso($infoUe);
+        // dump($createNewCurricula);die;
             $data = $this->get('funciones')->getOfertaBySieGestionSem($infoUe);
+            
             return $this->render('SieHerramientaAlternativaBundle:Areas:indexprimaria.html.twig', $data);
         }else{
             $data = $this->getAreas($infoUe);
