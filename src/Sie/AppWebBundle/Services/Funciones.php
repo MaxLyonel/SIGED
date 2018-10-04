@@ -12,6 +12,7 @@ use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCurso;
 use Sie\AppWebBundle\Entity\EstudianteAsignatura;
 use Sie\AppWebBundle\Entity\SuperiorModuloPeriodo;
+use Sie\AppWebBundle\Entity\SuperiorModuloTipo;
 
 class Funciones {
 
@@ -612,26 +613,62 @@ class Funciones {
                     ->setParameter('idCurso', $iecId)
                     ->getQuery()
                     ->getResult();
+
+                $sw = false;
+                foreach ($moduloPeriodo as $key => $value) {
+                    if ($value->getCodigo() == '415') {
+                        $sw = true;
+                    }
+                }
+                if(!$sw){
+                    $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_tipo');")->execute();
+                    $newSuperiorModuloTipo = new SuperiorModuloTipo();
+                    $newSuperiorModuloTipo->setModulo('MÓDULO EMERGENTE');
+                    $newSuperiorModuloTipo->setObs('');
+                    $newSuperiorModuloTipo->setCodigo('415');
+                    $newSuperiorModuloTipo->setSigla('MIE');
+                    $newSuperiorModuloTipo->setOficial(1);
+                    $newSuperiorModuloTipo->setSuperiorAreaSaberesTipo($this->em->getRepository('SieAppWebBundle:SuperiorAreaSaberesTipo')->find(1));
+                    $this->em->persist($newSuperiorModuloTipo);
+                    $this->em->flush();
+
+                    $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
+                    $smp = new SuperiorModuloPeriodo();
+                    $smp->setSuperiorModuloTipo($newSuperiorModuloTipo);
+                    $smp->setInstitucioneducativaPeriodo($iePeriodo[0]);
+                    $smp->setHorasModulo(0);
+                    $this->em->persist($smp);
+                    $this->em->flush();
+
+                    $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
+                    $ieco = new InstitucioneducativaCursoOferta();
+                    $ieco->setAsignaturaTipo($this->em->getRepository('SieAppWebBundle:AsignaturaTipo')->find('0'));
+                    $ieco->setInsitucioneducativaCurso($this->em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecId));
+                    $ieco->setSuperiorModuloPeriodo($smp);
+                    $ieco->setHorasmes(0);
+                    $this->em->persist($ieco);
+                    $this->em->flush();
+                }
                 
-                    if($moduloPeriodo) {                                     
-                        $modulos = $this->em->createQueryBuilder()
-                        ->select('l')
-                        ->from('SieAppWebBundle:SuperiorModuloTipo' ,'l')
-                        ->where('l.codigo IN (:codigos)')
-                        ->andWhere('l.id NOT IN (:modulos)')
-                        ->setParameter('codigos', array(401,402,403,404))
-                        ->setparameter('modulos', $moduloPeriodo)
-                        ->getQuery()
-                        ->getResult();
-                    }else {
-                        $modulos = $this->em->createQueryBuilder()
-                        ->select('l')
-                        ->from('SieAppWebBundle:SuperiorModuloTipo' ,'l')
-                        ->where('l.codigo IN (:codigos)')
-                        ->setParameter('codigos', array(401,402,403,404))
-                        ->getQuery()
-                        ->getResult();
-                    }                
+                if($moduloPeriodo) {                                     
+                    $modulos = $this->em->createQueryBuilder()
+                    ->select('l')
+                    ->from('SieAppWebBundle:SuperiorModuloTipo' ,'l')
+                    ->where('l.codigo IN (:codigos)')
+                    ->andWhere('l.id NOT IN (:modulos)')
+                    ->setParameter('codigos', array(401,402,403,404))
+                    ->setparameter('modulos', $moduloPeriodo)
+                    ->getQuery()
+                    ->getResult();
+                }else {
+                    $modulos = $this->em->createQueryBuilder()
+                    ->select('l')
+                    ->from('SieAppWebBundle:SuperiorModuloTipo' ,'l')
+                    ->where('l.codigo IN (:codigos)')
+                    ->setParameter('codigos', array(401,402,403,404))
+                    ->getQuery()
+                    ->getResult();
+                }                
                 
                 foreach ($modulos as $modulo) {
                     //die("abc");        
@@ -645,6 +682,7 @@ class Funciones {
                     // dump($smp->getId());
 
                     //get the curricula to the course 
+                    $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
                     $ieco = new InstitucioneducativaCursoOferta();
                     $ieco->setAsignaturaTipo($this->em->getRepository('SieAppWebBundle:AsignaturaTipo')->find('0'));
                     $ieco->setInsitucioneducativaCurso($this->em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecId));
