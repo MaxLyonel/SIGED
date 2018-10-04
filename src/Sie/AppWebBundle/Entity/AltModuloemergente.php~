@@ -136,4 +136,32 @@ class AltModuloemergente
     {
         return $this->usuario;
     }
+    /**
+     * @var \DateTime
+     */
+    private $fechaRegistro;
+
+
+    /**
+     * Set fechaRegistro
+     *
+     * @param \DateTime $fechaRegistro
+     * @return AltModuloemergente
+     */
+    public function setFechaRegistro($fechaRegistro)
+    {
+        $this->fechaRegistro = $fechaRegistro;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaRegistro
+     *
+     * @return \DateTime 
+     */
+    public function getFechaRegistro()
+    {
+        return $this->fechaRegistro;
+    }
 }
