@@ -19,23 +19,30 @@
 
     <thead>
         <tr>
-            <th>id Tarea</th>
+            {#<th>id Tarea</th>#}
             <th>Tarea</th>
             <th>Paso</th>
             <th>Posición</th>
             <th>Tipo de paso</th>
-            <th></th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody id = "tbodypaso">
         {% for paso in pasos %}
         <tr>
-            <td>{{paso.id}}</td>
+            {#<td>{{paso.id}}</td>#}
             <td>{{paso.proceso_tipo}}</td>
             <td>{{paso.paso}}</td>
             <td>{{paso.posicion}}</td>
             <td>{{paso.tipo_paso}}</td>
-            <td></td>
+            <td>
+                <a href="{{ path('flujotipo_edit', { 'id': paso.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Editar">
+                    <i class="fa fa-pencil"></i>
+                </a>
+                <a href="{{ path('flujotipo_delete', { 'id': paso.id }) }}" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="return confirm('¿Esta suguro de eliminar?')">
+                    <i class="fa fa-times"></i>
+                </a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

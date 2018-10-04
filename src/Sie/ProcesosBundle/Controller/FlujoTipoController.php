@@ -235,10 +235,18 @@ class FlujoTipoController extends Controller
         //if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('SieAppWebBundle:FlujoTipo')->find($id);
-
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find FlujoTipo entity.');
             }
+            $repository = $em->getRepository('SieAppWebBundle:Tramite');
+                $query = $repository->createQueryBuilder('t')
+                    ->select('t')
+                    ->innerJoin('SieAppWebBundle:flujotipo', 'ft', 'WITH', 't.flujoTipo = ft.id')
+                    ->where('ft.id = '. $id)
+                    ->setMaxResults(1)
+                    ->getQuery();
+                $tramites = $query->getResult();
+                
             //dump(strpos($entity->getObs(),"ACTIVO"));die;
             if(strpos($entity->getObs(),"ACTIVO")!==false)
             {
@@ -246,10 +254,22 @@ class FlujoTipoController extends Controller
                 $request->getSession()
                     ->getFlashBag()
                     ->add('error', $mensaje);    
+            }elseif($tramites){
+                $mensaje = 'No se puede eliminar el proceso, pues cuenta con TRÁMITES';
+                $request->getSession()
+                    ->getFlashBag()
+                    ->add('error', $mensaje);    
             }else{
+                //dump($tramites);die;
+                $query = $em->getConnection()->prepare("delete from wf_tarea_compuerta where flujo_proceso_id in (select id from flujo_proceso where flujo_tipo_id=". $id . ")");
+                $query->execute();
+                $query = $em->getConnection()->prepare("delete from wf_pasos_flujo_proceso where flujo_proceso_id in (select id from flujo_proceso where flujo_tipo_id=". $id . ")");
+                $query->execute();
+                $query = $em->getConnection()->prepare("delete from flujo_proceso where flujo_tipo_id=" . $id);
+                $query->execute();
                 $em->remove($entity);
                 $em->flush();
-                $mensaje = 'La tarea se eliminó con éxito';
+                $mensaje = 'El proceso se eliminó con éxito';
                 $request->getSession()
                     ->getFlashBag()
                     ->add('exito', $mensaje);

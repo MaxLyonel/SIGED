@@ -56,7 +56,8 @@
                             </button>
                             <ul class="dropdown-menu pull-right no-border" role="menu">                                                
                                 {% if app.session.get('ie_id') != -1 %}
-                                    <li class="active"><a onclick="selgessubsemFormShow();"><i class="fa fa-history"></i> <span>Historial del Centro.</span></a></li>                                                
+                                    {#<li class="active"><a onclick="selgessubsemFormShow();"><i class="fa fa-history"></i> <span>Historial del Centro.</span></a></li>#}
+                                    <li class="active"><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}"><i class="fa fa-history"></i> <span>Historial del Centro.</span></a></li>
                                     <li><a href="{{path('herramienta_alter_galeria_fotos_centro')}}"><i class="fa fa-fw fa-photo"></i> <span>Galeria de Fotos</span> <small></small></a></li>
                                     <li><a href="{{path('herramienta_alter_galeria_fotos_centro_editar_foto')}}"><i class="fa fa-pencil"></i> <span>Editar Fotos</span> <small></small></a></li>
                                     {#<li><a href="{{ path('herramientalt_ceducativa_estadistiscas_departamento')}}"><i class="fa fa-fw fa-edit"></i> <span>Estadísticas</span></a></li>#}
@@ -68,7 +69,9 @@
 
                     <ul class="list-unstyled no-padding hidden-sm hidden-xs cover-menu">                                        
                         {% if app.session.get('ie_id') != -1 %}
-                            <li class="active"><a onclick="selgessubsemFormShow();"><i class="fa fa-history"></i> <span>Historial del Centro.</span></a></li>
+                            {#<li class="active"><a onclick="selgessubsemFormShow();"><i class="fa fa-history"></i> <span>Historial del Centro.</span></a></li>#}
+                            {#<li class="active"><a href="{{path('sie_alt_ges_sub_sem')}}"><i class="fa fa-history"></i> <span>Historial del Centro.</span></a></li>#}
+                            <li class="active"><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}"><i class="fa fa-history"></i> <span>Historial del Centro.</span></a></li>
                             <li><a href="{{path('herramienta_alter_galeria_fotos_centro')}}"><i class="fa fa-fw fa-photo"></i> <span>Galeria de Fotos</span> <small></small></a></li>
                             <li><a href="{{path('herramienta_alter_galeria_fotos_centro_editar_foto')}}"><i class="fa fa-pencil"></i> <span>Editar Fotos</span> <small></small></a></li>                                                           
                             {#<li><a href="{{ path('herramientalt_ceducativa_estadistiscas_departamento')}}"><i class="fa fa-fw fa-edit"></i> <span>Estadísticas</span></a></li>#}
@@ -87,12 +90,8 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-{% if app.session.get('ie_id') != '-1' %}
-            <script>
-            $(document).ready(function () {                
-                selgessubsemFormShow();
-            });  
-            </script>
-{% endif %}
+        <script>
+        
+    </script>
 {% endblock %}
     

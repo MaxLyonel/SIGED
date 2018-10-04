@@ -2,7 +2,7 @@
 {% block contentoption %}
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> Tramite RUE<span>Recepción Distrito</span></h2>
+        <h2><i class="fa fa-list-alt"></i> Tramite RUE:<span>Emitir Resolución Administrativa</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -39,13 +39,13 @@
                             </div>
                         {% endif %}    
                         <div class="pull-left">
-                            <h3 class="panel-title">RECEPCIÓN DISTRITAL</h3>
+                            <h3 class="panel-title">EMITIR RESOLUCIÓN ADMINISTRATIVA</h3>
                         </div>
-                        <div class="pull-right">
+                        {#<div class="pull-left">
                             <a href="{{ path('tramite_rue_recepcion_distrito_nuevo') }}" class="btn btn-primary">
                                 <i class="fa fa-plus"></i> Nuevo
                             </a>
-                        </div>
+                        </div>#}
                         <div class="clearfix"></div>
                     </div><!-- /.panel-heading -->
                     <div class="panel-body">
@@ -83,6 +83,9 @@
                                         <td>{{ tramite.obs }}</a></td>
                                         <td>{{ tramite.nombre }}</td>
                                         <td>
+                                            <a href="{{path('tramite_rue_resolucion_departamental_nuevo', { 'id': tramite.id })}}" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" title="Resolución">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
                                             <a href="#" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Editar">
                                                 <i class="fa fa-pencil"></i>
                                             </a>
@@ -105,7 +108,7 @@
  {% block javascripts %}
     {{ parent() }} 
     <script>
-        $('#form_buscar').click(function(){
+      /*  $('#form_buscar').click(function(){
             var formData = {idrue: $('#form_idrue').val()};
             $.ajax({
                 type: 'GET',
@@ -121,8 +124,7 @@
                 },
 
             });
-
-        });
+        });*/
         $( document ).ready(function() {
             cargatablas();
         });
@@ -155,6 +157,6 @@
                     }
                 } );
             } );
-        };    
+        };
     </script>
     {% endblock %}

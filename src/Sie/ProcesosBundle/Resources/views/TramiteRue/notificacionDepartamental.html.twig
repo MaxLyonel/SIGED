@@ -2,7 +2,7 @@
 {% block contentoption %}
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> Tramite RUE<span>Enviar Notificación Distrital</span></h2>
+        <h2><i class="fa fa-list-alt"></i> Tramite RUE:<span>Notificación departamental</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -39,7 +39,7 @@
                             </div>
                         {% endif %}    
                         <div class="pull-left">
-                            <h3 class="panel-title">ENVIAR NOTIFICACION DISTRITAL</h3>
+                            <h3 class="panel-title">NOTIFICACION DEPARTAMENTAL</h3>
                         </div>
                         {#<div class="pull-left">
                             <a href="{{ path('tramite_rue_recepcion_distrito_nuevo') }}" class="btn btn-primary">
@@ -49,47 +49,56 @@
                         <div class="clearfix"></div>
                     </div><!-- /.panel-heading -->
                     <div class="panel-body">
-                        <table class="table table-striped table-primary">
-                            <thead>
-                                <tr>
-                                    <th>Nro. Trámite</th>
-                                    <th>Unidad Educativa</th>
-                                    <th>Tipo de Trámite</th>
-                                    <th>Fecha de Trámite</th>
-                                    <th>Observación</th>
-                                    <th>Usuario Recepción</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {% for tramite in tramites %}
-                                <tr>
-                                    <td>{{ tramite.id }}</a></td>
-                                    <td>{{ tramite.institucioneducativa }}</td>
-                                    <td>{{ tramite.tramite_tipo }}</td>
-                                    <td>{{ tramite.fecha_registro }}</a></td>
-                                    <td>{{ tramite.obs }}</a></td>
-                                    <td>{{ tramite.nombre }}</td>
-                                    <td>
-                                        <a href="{{path('tramite_rue_notificacion_departamental_nuevo', { 'id': tramite.id })}}" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" title="Elaborar Informe">
-                                            <i class="fa fa-eye"></i>
-                                        </a>
-                                        <a href="#" class="btn btn-primary btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="verflujo({{ tramite.id }});" data-placement="top" title="Editar">
-                                            <i class="fa fa-pencil"></i>
-                                        </a>
-                                        <a href="#" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="return confirm('¿Esta suguro de eliminar?')">
-                                            <i class="fa fa-times"></i>
-                                        </a>
-                                        
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                        <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
-                            
+                        <div class="table-responsive col-md-12">
+                            <table class="table table-bordered table-striped table-primary" id="recepDep">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center border-right" WIDTH="50">No. Tramite</th>
+                                        <th>Unidad Educativa</th>
+                                        <th>Tipo de Trámite</th>
+                                        <th>Fecha de Trámite</th>
+                                        <th>Observación</th>
+                                        <th>Usuario Recepción</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th class="text-center border-right">No. Tramite</th>
+                                        <th>Unidad Educativa</th>
+                                        <th>Tipo de Trámite</th>
+                                        <th>Fecha de Trámite</th>
+                                        <th>Observación</th>
+                                        <th>Usuario Recepción</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                {% for tramite in tramites %}
+                                    <tr>
+                                        <td>{{ tramite.id }}</a></td>
+                                        <td>{{ tramite.institucioneducativa }}</td>
+                                        <td>{{ tramite.tramite_tipo }}</td>
+                                        <td>{{ tramite.fecha_registro }}</a></td>
+                                        <td>{{ tramite.obs }}</a></td>
+                                        <td>{{ tramite.nombre }}</td>
+                                        <td>
+                                            <a href="{{path('tramite_rue_notificacion_departamental_nuevo', { 'id': tramite.id })}}" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" title="Notificación">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                            <a href="#" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Editar">
+                                                <i class="fa fa-pencil"></i>
+                                            </a>
+                                            <a href="#" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="return confirm('¿Esta suguro de eliminar?')">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
                         </div>
-    			    </div><!-- /.panel-body -->
+			        </div><!-- /.panel-body -->
                 </div>
             </div>
         </div>
@@ -97,12 +106,9 @@
     </div>
 {% endblock %}
  {% block javascripts %}
-    {{ parent() }}
-    <script src="{{ asset('webprocesos/raphael-min.js') }}"></script>
-    <script src="{{ asset('webprocesos/jquery.min.js') }}"></script>
-    <script src="{{ asset('webprocesos/flowchart-latest.js') }}"></script>
+    {{ parent() }} 
     <script>
-        $('#form_buscar').click(function(){
+      /*  $('#form_buscar').click(function(){
             var formData = {idrue: $('#form_idrue').val()};
             $.ajax({
                 type: 'GET',
@@ -118,76 +124,39 @@
                 },
 
             });
-
+        });*/
+        $( document ).ready(function() {
+            cargatablas();
         });
-        function verflujo(idtramte){
-            var formData = {proceso: 5,tramite: idtramte};
-            $.ajax({
-                type: 'get',
-                url: "{{ path('tramite_rue_flujoseguimiento_verflujo') }}",
-                data: formData,
-                beforeSend: function () {
-                    $('#modal').empty();
-                },
-                success: function (data) {
-                    $('#modal').empty();
-                    $('#modal').append(data);
-                    //$('#modal').modal('show');
-                    var btn = document.getElementById("run"),
-                    cd = document.getElementById("code"),
-                    chart;
-                    var code = cd.value;
-                    if (chart) {
-                      chart.clean();
-                    }
-                    chart = flowchart.parse(code);
-                    chart.drawSVG('canvas', {
-                      // 'x': 30,
-                      // 'y': 50,
-                      'line-width': 3,
-                      'maxWidth': 3,//ensures the flowcharts fits within a certian width
-                      'line-length': 20,
-                      'text-margin': 10,
-                      'font-size': 12,
-                      'font': 'normal',
-                      'font-family': 'Helvetica',
-                      'font-weight': 'normal',
-                      'font-color': 'black',
-                      'line-color': 'black',
-                      'element-color': 'black',
-                      'fill': 'white',
-                      'yes-text': 'SI',
-                      'no-text': 'NO',
-                      'arrow-end': 'block',
-                      'scale': 1,
-                      'symbols': {
-                        'start': {
-                          'font-color': 'black',
-                          'element-color': 'black',
-                          'fill': 'black'
-                        },
-                        'end':{
-                          'class': 'end-element'
-                        }
-                      },
-                      'flowstate' : {
-                        'past' : { 'fill' : 'white','font-color' : 'black', 'font-size' : 12},
-                        'current' : {'fill' : '#FFFF99', 'font-color' : 'black', 'font-weight' : 'bold'},
-                        'future' : { 'fill' : '#FFFF99'},
-                        'request' : { 'fill' : 'blue'},
-                        'invalid': {'fill' : '#444444'},
-                        'approved' : { 'fill' : '#58C4A3', 'font-size' : 12, 'yes-text' : 'SI', 'no-text' : 'NO' },
-                        'rejected' : { 'fill' : '#C45879', 'font-size' : 12, 'yes-text' : 'NO', 'no-text' : 'SI' }
-                      }
-                    });
-                },
-                statusCode: {
-                    500: function () {
-                    },
-                    404: function () {
-                    }
+        var cargatablas = function (identif){
+            // Setup - add a text input to each footer cell
+            $('#recepDep tfoot th').each( function () {
+                var title = $(this).text();
+                if(title.trim() === "" || title === "Acciones"){
+                    $(this).html('');
+                } else {
+                    $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
                 }
-            });
-        }
+            } );
+            // DataTable
+            var table = $('#recepDep').DataTable( {
+                    "order": [[ 0, "asc" ]],
+                    "columnDefs": [
+                        { "orderable": false, "targets": [0] }
+                    ],
+                }
+            );
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        };
     </script>
     {% endblock %}
