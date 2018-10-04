@@ -54,7 +54,7 @@
                     </div>
                 </div>
                    
-                <h4>Áreas actuales del curso</h4>
+                <h4>Áreas actuales del cursos</h4>
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
@@ -66,18 +66,25 @@
                             </tr>
                         </thead>
                         <tbody>
-                           {% for co in cursoOferta %}
+                            {% for co in cursoOferta %}
                                 <tr>
                                     <td class="text-center border-right">{{loop.index}}</td>
                                     <td>{{co.codigo}}</td>
-                                    <td>{{co.modulo}}</td>
+                                    <td>
+                                        <span id="modulo_{{co.smpid}}">{{co.modulo}}</span>
+                                        {% if co.codigo == '415' %}
+                                            <button class="btn" onclick="addpopEmergente({{co.smpid}})"><i class="fa fa-edit text-lilac"></i></button>
+                                            <div class="arrow-before" style="display:none; margin-left:10px;" id="emergente_before_{{co.smpid}}"></div><div class="arrow-after" style="display:none;margin-left:10px;" id="emergente_after_{{co.smpid}}"></div>
+                                            <div id="emergente_{{co.smpid}}" style="display:none; position:absolute; z-index:5; width:500px; margin-left:-350px; border:2px solid #906094; box-shadow: 7px 7px 4px #929292;" class="divEmergente">
+                                            </div>
+                                        {% endif %}
+                                    </td>
                                     <td>
                                         <button class="btn" onclick="addpop('{{co.iecoid}}', '{{ infoUe }}')"><i class="fa fa-users text-lilac"></i></button>
                                         <div class="arrow-before" style="display:none; margin-left:10px;" id=""></div><div class="arrow-after" style="display:none;margin-left:10px;" id=""></div>
                                         <div id="{{co.iecoid}}" style="display:none; position:absolute; z-index:5; width:500px; margin-left:-250px; border:2px solid #906094; box-shadow: 7px 7px 4px #929292;" class="divMaestros">
                                         </div>
                                     </td>
-                                   
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -234,27 +241,27 @@
         return false;
     };
 
-    var addpopEmergente = function(idco){
-        if ($('#emergente_'+idco).is(':hidden')){
+    var addpopEmergente = function(smpid){
+        if ($('#emergente_'+smpid).is(':hidden')){
             $.ajax({
                 type: 'post',
-                data: ({idco: idco}),
+                data: ({smpid: smpid}),
                 url: "{{ path('herramienta_alter_areas_emergente') }}",
                 beforeSend: function () {
                     $('.divEmergente').hide();
                     $('.arrow-before').hide();
                     $('.arrow-after').hide();
-                    $("#emergente_"+idco).empty();
-                    $('#emergente_before_'+idco).fadeIn();
-                    $('#emergente_after_'+idco).fadeIn();
-                    $('#emergente_'+idco).fadeIn();
-                    $('#emergente_'+idco).append("<div style='background:#906094; text-align:center; color:#FFFFFF'><div style='padding:10px 0px 10px 0px;'>Cargando materia emergente...<br><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></div></div>");
+                    $("#emergente_"+smpid).empty();
+                    $('#emergente_before_'+smpid).fadeIn();
+                    $('#emergente_after_'+smpid).fadeIn();
+                    $('#emergente_'+smpid).fadeIn();
+                    $('#emergente_'+smpid).append("<div style='background:#906094; text-align:center; color:#FFFFFF'><div style='padding:10px 0px 10px 0px;'>Cargando materia emergente...<br><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></div></div>");
                 },
                 success: function (data) {
-                    $("#emergente_"+idco).empty();
-                    $("#emergente_"+idco).append(data);
+                    $("#emergente_"+smpid).empty();
+                    $("#emergente_"+smpid).append(data);
                     $('.chosen-select').chosen({allow_single_deselect: false});
-                    $('#emergente_'+idco).fadeIn();
+                    $('#emergente_'+smpid).fadeIn();
                 },
                 statusCode: {
                     500: function () {
@@ -266,9 +273,9 @@
                 }
             });
         }else{
-            $('#emergente_'+idco).fadeOut();
-            $('#emergente_before_'+idco).fadeOut();
-            $('#emergente_after_'+idco).fadeOut();
+            $('#emergente_'+smpid).fadeOut();
+            $('#emergente_before_'+smpid).fadeOut();
+            $('#emergente_after_'+smpid).fadeOut();
         }
     };
 
@@ -282,20 +289,21 @@
 
             },
             success: function (data) {
-                var idco = data.ieco;
-                $('#emergente_'+idco).empty();
-                $('#emergente_'+idco).append("<div style='background:#906094; color:#FFFFFF; padding:5px; text-align:center;'>Cambios guardados</div>");
-                setTimeout("cerrarEmergente('"+idco+"')",2000)
-                
+                var smpid = data.smpid;
+                $('#emergente_'+smpid).empty();
+                $('#modulo_'+smpid).empty();
+                $('#emergente_'+smpid).append("<div style='background:#906094; color:#FFFFFF; padding:5px; text-align:center;'>Cambios guardados</div>");
+                setTimeout("cerrarEmergente('"+smpid+"')",2000)
+                $('#modulo_'+smpid).append(data.emergente);
             },
             error: {
-            }
+            },
         });
     };
 
-    var cerrarEmergente = function(idco){
-        $('#emergente_'+idco).fadeOut();
-        $('#emergente_before_'+idco).fadeOut();
-        $('#emergente_after_'+idco).fadeOut();
+    var cerrarEmergente = function(smpid){
+        $('#emergente_'+smpid).fadeOut();
+        $('#emergente_before_'+smpid).fadeOut();
+        $('#emergente_after_'+smpid).fadeOut();
     };
 </script>

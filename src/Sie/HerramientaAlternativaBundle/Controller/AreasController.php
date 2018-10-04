@@ -449,7 +449,7 @@ class AreasController extends Controller {
     }
 
     public function areaEmergenteAction(Request $request) {
-        $ieco = $request->get('idco');
+        $smpid = $request->get('smpid');
 
         $sie = $this->session->get('ie_id');
         $gestion = $this->session->get('ie_gestion');
@@ -458,17 +458,13 @@ class AreasController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $cursoOferta = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($ieco);
+        $superiorModuloPeriodo = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($smpid);
 
-        $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($cursoOferta->getInsitucioneducativaCurso());
-
-        $emergente = $em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneBy(array('institucioneducativaCurso' => $curso->getId()));
+        $superiorModuloTipo = $superiorModuloPeriodo->getSuperiorModuloTipo();
 
         return $this->render($this->session->get('pathSystem') . ':Areas:emergente.html.twig', array(
-                    'iec' => $curso->getId(),
-                    'ieco' => $ieco,
-                    'operativo' => $periodo,
-                    'emergente' => $emergente,
+                'smpid' => $smpid,
+                'modulo' => $superiorModuloTipo,
             )
         );
     }
@@ -476,33 +472,22 @@ class AreasController extends Controller {
     public function emergenteAsignarAction(Request $request){
         $em = $this->getDoctrine()->getManager();
         $id_usuario = $this->session->get('userId');
-        $ieco = $request->get('ieco');
-        $iec = $request->get('iec');
+        $smpid = $request->get('smpid');
+        $smtid = $request->get('smtid');
         $emergente = mb_strtoupper($request->get('emergente'), 'utf-8');
         
-        $moduloEmergente = $em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneBy(array('institucioneducativaCurso' => $iec));
+        $moduloEmergente = $em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find($smtid);
+
         if($moduloEmergente){
-            $moduloEmergente->setModuloEmergente($emergente);
-            $moduloEmergente->setUsuario($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($id_usuario));
-            $moduloEmergente->setFechaRegistro(new \DateTime('now'));
+            $moduloEmergente->setModulo($emergente);
             $em->persist($moduloEmergente);
             $em->flush();
-        } else {
-            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('alt_moduloemergente');")->execute();
-            $newEmergente = new AltModuloemergente();
-            $newEmergente->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iec));
-            $newEmergente->setModuloEmergente($emergente);
-            $newEmergente->setUsuario($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($id_usuario));
-            $newEmergente->setFechaRegistro(new \DateTime('now'));
-            $em->persist($newEmergente);
-            $em->flush();
-            dump($newEmergente);
         }
 
         $response = new JsonResponse();
         return $response->setData(array(
-            'ieco'=>$ieco,
-            'iec'=>$iec,
+            'smpid'=>$smpid,
+            'smtid'=>$smtid,
             'emergente'=>$emergente
         ));
     }
