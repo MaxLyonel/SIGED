@@ -1618,37 +1618,37 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
 
     {   
         $form = $this->createFormBuilder();
-                if($rol==9){
-                    $gestion = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getGestionCea($ie_id);
-                    $subcea = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getSubceaGestion($ie_id,'');
-                    //dump($gestion);die;
-                    $gestionesArray = array();
-                    $subceasArray = array();
-                    //$provincia[-1] = '-Todos-';
-    	            foreach ($gestion as $g) {
-                        //dump($g);die;
-                        $gestionesArray[$g['gestion']] = $g['gestion'];
-                    }
-                    foreach ($subcea as $sc) {
-                        //dump($sc);die;
-                        $subceasArray[$sc['sucursal']] = $sc['sucursal'];
-                    }
-                    $form=$form
-                    ->add('codsie','text',array('label'=>'Cod. SIE','data'=>$ie_id,'read_only'=>true))
-                    ->add('gestion','choice',array('label'=>'Gestión','required'=>true,'choices'=>$gestionesArray,'empty_value' => 'Todas'))
-                    ->add('subcea','choice',array('label'=>'Sucursal','required'=>true,'choices'=>$subceasArray,'empty_value' => 'Todas'));
-                }else{
-                    $form=$form
-                    ->add('codsie','text',array('label'=>'Cod. SIE'))
-                    ->add('gestion','choice',array('label'=>'Gestión','required'=>true,'empty_value' => 'Todas'))
-                    ->add('subcea','choice',array('label'=>'Sucursal','required'=>true,'empty_value' => 'Todas'));
-                }
-            //->setAction($this->generateUrl('herramientalt_ceducativa_estadistiscas_cierre'))
-                $form=$form
-                ->add('semestre','entity',array('label'=>'Semestre','required'=>false,'class'=>'SieAppWebBundle:PeriodoTipo','query_builder'=>function(EntityRepository $p){
-                    return $p->createQueryBuilder('p')->where('p.id=2 or p.id=3');},'property'=>'periodo','empty_value' => 'Todas'))
-                ->add('buscar', 'button', array('label'=> 'Buscar', 'attr'=>array('class'=>'btn btn-success', 'onclick'=>'buscarhistorial()')))
-                ->getForm();
+        if($rol==9){
+            $gestion = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getGestionCea($ie_id);
+            $subcea = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getSubceaGestion($ie_id,'');
+            //dump($gestion);die;
+            $gestionesArray = array();
+            $subceasArray = array();
+            //$provincia[-1] = '-Todos-';
+    	    foreach ($gestion as $g) {
+                //dump($g);die;
+                $gestionesArray[$g['gestion']] = $g['gestion'];
+            }
+            foreach ($subcea as $sc) {
+                //dump($sc);die;
+                $subceasArray[$sc['sucursal']] = $sc['sucursal'];
+            }
+            $form=$form
+                ->add('codsie','text',array('label'=>'Cod. SIE','data'=>$ie_id,'read_only'=>true))
+                ->add('gestion','choice',array('label'=>'Gestión','required'=>true,'data'=>(new \DateTime())->format('Y'),'choices'=>$gestionesArray,'empty_value' => 'Todas'))
+                ->add('subcea','choice',array('label'=>'Sucursal','required'=>true,'choices'=>$subceasArray,'empty_value' => 'Todas'));
+        }else{
+            $form=$form
+                ->add('codsie','text',array('label'=>'Cod. SIE'))
+                ->add('gestion','choice',array('label'=>'Gestión','required'=>true,'empty_value' => 'Todas'))
+                ->add('subcea','choice',array('label'=>'Sucursal','required'=>true,'empty_value' => 'Todas'));
+        }
+        //->setAction($this->generateUrl('herramientalt_ceducativa_estadistiscas_cierre'))
+        $form=$form
+            ->add('semestre','entity',array('label'=>'Semestre','required'=>false,'class'=>'SieAppWebBundle:PeriodoTipo','query_builder'=>function(EntityRepository $p){
+                return $p->createQueryBuilder('p')->where('p.id=2 or p.id=3');},'property'=>'periodo','empty_value' => 'Todas'))
+            ->add('buscar', 'button', array('label'=> 'Buscar', 'attr'=>array('class'=>'btn btn-success', 'onclick'=>'buscarhistorial()')))
+            ->getForm();
         return $form;
     }
 
