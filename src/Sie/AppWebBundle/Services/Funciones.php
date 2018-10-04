@@ -521,7 +521,7 @@ class Funciones {
         // $objInstCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($data['iecId']);
         // if($objInstCurso){
             // get info about curricula to student
-            $curriculaStudent = $this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array(
+           /* $curriculaStudent = $this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array(
                 'estudianteInscripcion'=>$data['eInsId']
             ));
 
@@ -551,9 +551,43 @@ class Funciones {
 
                   }
 
-            }
+            }*/
             
         // }
+
+                $queryInstCursoOferta = $this->em->createQueryBuilder()
+                                          ->select('ieco')
+                                          ->from('SieAppWebBundle:InstitucioneducativaCursoOferta', 'ieco')
+                                          ->where('ieco.insitucioneducativaCurso = :iecoId')
+                                          ->andWhere('ieco.asignaturaTipo = 0')
+                                          ->setParameter('iecoId', $data['iecId']);
+                                          
+                $objAreas = $queryInstCursoOferta->getQuery()->getResult();
+
+                $curriculaStudent = $this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array(
+                        'estudianteInscripcion'=>$data['eInsId']
+                    ));
+                // dump($curriculaStudent);
+                foreach ($objAreas  as $area) {
+                     // dump($area->getId());
+                    $oldcurriculaStudent = $this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneBy(array(
+                        'institucioneducativaCursoOferta'=>$area->getId(),
+                        'estudianteInscripcion' => $data['eInsId'],
+                        'gestionTipo' => $this->session->get('currentyear')
+                    )); 
+                    if(!$oldcurriculaStudent){
+                        $studentAsignatura = new EstudianteAsignatura();
+                        $studentAsignatura->setGestionTipo($this->em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear') ));
+                        $studentAsignatura->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($data['eInsId']));
+                        $studentAsignatura->setInstitucioneducativaCursoOferta($this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($area->getId()));
+                        $studentAsignatura->setFechaRegistro(new \DateTime('now'));
+                        $this->em->persist($studentAsignatura);
+                        $this->em->flush();
+                    }
+                    
+                    
+                }               
+
              $curriculaStudent = $this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array(
                 'estudianteInscripcion'=>$data['eInsId']
             ));
