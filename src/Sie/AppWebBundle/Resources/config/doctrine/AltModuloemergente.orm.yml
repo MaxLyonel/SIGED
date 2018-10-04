@@ -2,12 +2,12 @@ Sie\AppWebBundle\Entity\AltModuloemergente:
     type: entity
     table: alt_moduloemergente
     indexes:
-        IDX_71F5E8C79E4EDBFE:
-            columns:
-                - institucioneducativa_curso_id
         IDX_71F5E8C7DB38439E:
             columns:
                 - usuario_id
+        IDX_71F5E8C7D31B799D:
+            columns:
+                - institucioneducativa_curso_oferta_id
     id:
         id:
             type: integer
@@ -37,15 +37,6 @@ Sie\AppWebBundle\Entity\AltModuloemergente:
             comment: ''
             column: fecha_registro
     manyToOne:
-        institucioneducativaCurso:
-            targetEntity: InstitucioneducativaCurso
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                institucioneducativa_curso_id:
-                    referencedColumnName: id
-            orphanRemoval: false
         usuario:
             targetEntity: Usuario
             cascade: {  }
@@ -53,6 +44,15 @@ Sie\AppWebBundle\Entity\AltModuloemergente:
             inversedBy: null
             joinColumns:
                 usuario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaCursoOferta:
+            targetEntity: InstitucioneducativaCursoOferta
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_curso_oferta_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

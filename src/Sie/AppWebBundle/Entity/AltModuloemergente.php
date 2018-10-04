@@ -25,14 +25,19 @@ class AltModuloemergente
     private $fechaModificacion;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\InstitucioneducativaCurso
+     * @var \DateTime
      */
-    private $institucioneducativaCurso;
+    private $fechaRegistro;
 
     /**
      * @var \Sie\AppWebBundle\Entity\Usuario
      */
     private $usuario;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta
+     */
+    private $institucioneducativaCursoOferta;
 
 
     /**
@@ -92,26 +97,26 @@ class AltModuloemergente
     }
 
     /**
-     * Set institucioneducativaCurso
+     * Set fechaRegistro
      *
-     * @param \Sie\AppWebBundle\Entity\InstitucioneducativaCurso $institucioneducativaCurso
+     * @param \DateTime $fechaRegistro
      * @return AltModuloemergente
      */
-    public function setInstitucioneducativaCurso(\Sie\AppWebBundle\Entity\InstitucioneducativaCurso $institucioneducativaCurso = null)
+    public function setFechaRegistro($fechaRegistro)
     {
-        $this->institucioneducativaCurso = $institucioneducativaCurso;
+        $this->fechaRegistro = $fechaRegistro;
     
         return $this;
     }
 
     /**
-     * Get institucioneducativaCurso
+     * Get fechaRegistro
      *
-     * @return \Sie\AppWebBundle\Entity\InstitucioneducativaCurso 
+     * @return \DateTime 
      */
-    public function getInstitucioneducativaCurso()
+    public function getFechaRegistro()
     {
-        return $this->institucioneducativaCurso;
+        return $this->fechaRegistro;
     }
 
     /**
@@ -136,32 +141,27 @@ class AltModuloemergente
     {
         return $this->usuario;
     }
-    /**
-     * @var \DateTime
-     */
-    private $fechaRegistro;
-
 
     /**
-     * Set fechaRegistro
+     * Set institucioneducativaCursoOferta
      *
-     * @param \DateTime $fechaRegistro
+     * @param \Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta $institucioneducativaCursoOferta
      * @return AltModuloemergente
      */
-    public function setFechaRegistro($fechaRegistro)
+    public function setInstitucioneducativaCursoOferta(\Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta $institucioneducativaCursoOferta = null)
     {
-        $this->fechaRegistro = $fechaRegistro;
+        $this->institucioneducativaCursoOferta = $institucioneducativaCursoOferta;
     
         return $this;
     }
 
     /**
-     * Get fechaRegistro
+     * Get institucioneducativaCursoOferta
      *
-     * @return \DateTime 
+     * @return \Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta 
      */
-    public function getFechaRegistro()
+    public function getInstitucioneducativaCursoOferta()
     {
-        return $this->fechaRegistro;
+        return $this->institucioneducativaCursoOferta;
     }
 }
