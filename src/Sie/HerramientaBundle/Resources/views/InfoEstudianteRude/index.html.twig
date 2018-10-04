@@ -86,7 +86,7 @@
             						</a>
             					</li>
             					<li {% if socioeconomico.registroFinalizado < 2 %} class="disabled" {% endif %}>
-            						<a id="paso2" href="#tab2" {% if socioeconomico.registroFinalizado >= 2 %} data-toggle="tab" {% endif %} aria-expanded="false">
+            						<a id="paso2" href="#tab2" {% if socioeconomico.registroFinalizado >= 2 or 1 == 1 %} data-toggle="tab" {% endif %} aria-expanded="false">
             							<i class="fa fa-file"></i>
             							<div>
             								<span class="text-strong">II</span>
@@ -95,7 +95,7 @@
             						</a>
             					</li>
             					<li {% if socioeconomico.registroFinalizado < 3 %} class="disabled" {% endif %}>
-            						<a id="paso3" href="#tab3" {% if socioeconomico.registroFinalizado >= 3 %} data-toggle="tab" {% endif %} aria-expanded="false">
+            						<a id="paso3" href="#tab3" {% if socioeconomico.registroFinalizado >= 3 or 1 == 1 %} data-toggle="tab" {% endif %} aria-expanded="false">
             							<i class="fa fa-check-circle"></i>
             							<div>
             								<span class="text-strong">III</span>
@@ -104,7 +104,7 @@
             						</a>
             					</li>
             					<li {% if socioeconomico.registroFinalizado < 4 %} class="disabled" {% endif %}>
-            						<a id="paso4" onclick="document.getElementById('tabTutor').click();" href="#tab4" {% if socioeconomico.registroFinalizado >= 4 %} data-toggle="tab" {% endif %} aria-expanded="false">
+            						<a id="paso4" onclick="document.getElementById('tabTutor').click();" href="#tab4" {% if socioeconomico.registroFinalizado >= 4 or 1 == 1 %} data-toggle="tab" {% endif %} aria-expanded="false">
             							<i class="fa fa-users"></i>
             							<div>
             								<span class="text-strong">IV</span>
@@ -113,7 +113,7 @@
             						</a>
             					</li>
             					<li {% if socioeconomico.registroFinalizado < 5 %} class="disabled" {% endif %}>
-            						<a id="paso5" href="#tab5" {% if socioeconomico.registroFinalizado >= 5 %} data-toggle="tab" {% endif %} aria-expanded="false">
+            						<a id="paso5" href="#tab5" {% if socioeconomico.registroFinalizado >= 5 or 1 == 1 %} data-toggle="tab" {% endif %} aria-expanded="false">
             							<i class="fa fa-print"></i>
             							<div>
             								<span class="text-strong">V</span>
