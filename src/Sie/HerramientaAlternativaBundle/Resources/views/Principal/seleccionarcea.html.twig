@@ -11,10 +11,15 @@
     <div class="row">
         <div class="body-content animated fadeIn">
             <!-- Start inline form -->
-            <div class="panel">
+            <div class="panel panel-success">
                 <div class="panel-heading">
                     <div class="pull-left">
-                        <h3 class="panel-title">Selección de CEA: <code>Introduzca el código SIE del centro que desea gestionar.</code></h3>
+                        {% if app.session.get('roluser') == 9 %}
+                            <p><h3>Panel de selección:<span> Gestión, Sub CEA, Semestre del CEA</span></h3></p>
+                            <p><h4>Por esta interfaz los usuarios del <code>Siged Alternativa</code> pueden seleccionar una gestión, sub centro y semestre para ver o reportar datos.</h4></p>
+                        {% else %}
+                            <h3 class="panel-title">Selección de CEA: <code>Introduzca el código SIE, </code> y/o las opciones de Gestion y/o Sucursal y/o Semestre, del centro que desea gestionar.</h3>
+                        {% endif %}
                     </div>
                     <div class="clearfix"></div>
                 </div><!-- /.panel-heading -->
@@ -65,6 +70,12 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
+        $( document ).ready(function() {
+            if("{{app.session.get('roluser')}}" == 9){
+                buscarhistorial();
+            }
+        });
+        
         function buscarhistorial()
         {
             //alert('entra');
