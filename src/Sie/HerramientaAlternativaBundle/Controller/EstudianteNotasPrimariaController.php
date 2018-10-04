@@ -130,20 +130,21 @@ class EstudianteNotasPrimariaController extends Controller {
         $operativo = 1;
         // Obtenemos las asignaturas de humanistica (15) tecnica (18 a 25)
         $asignaturas = $em->createQueryBuilder()
-                    ->select('at.id as asignaturaId, at.asignatura, ea.id as estAsigId, ieco.id as idCursoOferta')
+                    ->select('smt.id as asignaturaId, smt.modulo as asignatura, ea.id as estAsigId, eae.id as idEstadoAsignatura, ieco.id as idCursoOferta, sast.id as idAreaSaberes, sast.areaSuperior')
                     ->from('SieAppWebBundle:EstudianteAsignatura','ea')
+                    ->leftJoin('SieAppWebBundle:EstudianteasignaturaEstado','eae','with','ea.estudianteasignaturaEstado = eae.id')
                     ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
                     ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
-                    ->innerJoin('SieAppWebBundle:AsignaturaTipo','at','WITH','ieco.asignaturaTipo = at.id')
-                    // ->leftJoin('SieAppWebBundle:SuperiorModuloPeriodo','smp','WITH','ieco.superiorModuloPeriodo = smp.id')
-                    // ->leftJoin('SieAppWebBundle:SuperiorModuloTipo','smt','WITH','smp.superiorModuloTipo = smt.id')
-                    // ->leftJoin('SieAppWebBundle:SuperiorAreaSaberesTipo','sast','with','smt.superiorAreaSaberesTipo = sast.id')
+                    ->innerJoin('SieAppWebBundle:SuperiorModuloPeriodo','smp','WITH','ieco.superiorModuloPeriodo = smp.id')
+                    ->innerJoin('SieAppWebBundle:SuperiorModuloTipo','smt','WITH','smp.superiorModuloTipo = smt.id')
+                    ->innerJoin('SieAppWebBundle:SuperiorAreaSaberesTipo','sast','with','smt.superiorAreaSaberesTipo = sast.id')
                     //->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro','iecom','with','iecom.institucioneducativaCursoOferta = ieco.id')
                     //->innerJoin('SieAppWebBundle:MaestroInscripcion','mi','with','iecom.maestroInscripcion = mi.id')
                     //->innerJoin('SieAppWebBundle:Persona','p','with','mi.persona = p.id')
                    // ->innerJoin('SieAppWebBundle:NotaTipo','nt','with','iecom.notaTipo = nt.id')
-                    //->groupBy('smt.id, smt.modulo, ea.id, eae.id, ieco.id, sast.id')
-                    ->orderBy('at.id','ASC')
+                    ->groupBy('smt.id, smt.modulo, ea.id, eae.id, ieco.id, sast.id')
+                    ->orderBy('sast.id','ASC')
+                    ->addOrderBy('smt.modulo','ASC')
                     ->where('ei.id = :idInscripcion')
                     //->andWhere('nt.id IN (:idsNotas)')
                     ->setParameter('idInscripcion',$idInscripcion)
@@ -176,7 +177,7 @@ class EstudianteNotasPrimariaController extends Controller {
         $notasArray = array();
         $cont = 0;
         foreach ($asignaturas as $a) {
-            $notasArray[$cont] = array('idAsignatura'=>$a['asignaturaId'],'asignatura'=>$a['asignatura']);
+            $notasArray[$cont] = array('area'=>$a['areaSuperior'],'idAsignatura'=>$a['asignaturaId'],'asignatura'=>$a['asignatura'],'idEstadoAsignatura'=>$a['idEstadoAsignatura']);
 
             $asignaturasNotas = $em->createQueryBuilder()
                                 ->select('en.id as idNota, nt.id as idNotaTipo, nt.notaTipo, ea.id as idEstudianteAsignatura, en.notaCuantitativa, en.notaCualitativa')
