@@ -1620,7 +1620,7 @@ class ComisionController extends Controller {
                 $cupoTotal = 1;
                 break;
             case 152:                
-                $cupoTotal = 3;
+                $cupoTotal = 1;
                 break;
             case 153:               
                 $cupoTotal = 3;
@@ -1671,53 +1671,53 @@ class ComisionController extends Controller {
         switch ($disciplinaId) {
             case 3:
                 if ($codigoEntidad == 9) {
-                    $cupoMaxMaestro = 2;
-                    $cupoMaxDelegado = 2;
-                    $cupoMaxApoderado = 2;            
+                    $cupoMaxMaestro = 1;
+                    $cupoMaxDelegado = 1;
+                    $cupoMaxApoderado = 1;            
                     $cupoTotal = 2;
                 } else {
-                    $cupoMaxMaestro = 2;
-                    $cupoMaxDelegado = 2;
-                    $cupoMaxApoderado = 2;            
+                    $cupoMaxMaestro = 1;
+                    $cupoMaxDelegado = 1;
+                    $cupoMaxApoderado = 1;            
                     $cupoTotal = 2;
                 }
                 break;
             case 4:
                 if ($codigoEntidad == 9) {
-                    $cupoMaxMaestro = 2;
-                    $cupoMaxDelegado = 2;
-                    $cupoMaxApoderado = 2;            
+                    $cupoMaxMaestro = 1;
+                    $cupoMaxDelegado = 1;
+                    $cupoMaxApoderado = 1;             
                     $cupoTotal = 2;
                 } else {
-                    $cupoMaxMaestro = 2;
-                    $cupoMaxDelegado = 2;
-                    $cupoMaxApoderado = 2;            
+                    $cupoMaxMaestro = 1;
+                    $cupoMaxDelegado = 1;
+                    $cupoMaxApoderado = 1;             
                     $cupoTotal = 2;
                 }
                 break;
             case 5:
                 if ($codigoEntidad == 9) {
-                    $cupoMaxMaestro = 2;
-                    $cupoMaxDelegado = 2;
-                    $cupoMaxApoderado = 2;            
+                    $cupoMaxMaestro = 1;
+                    $cupoMaxDelegado = 1;
+                    $cupoMaxApoderado = 1;            
                     $cupoTotal = 2;
                 } else {
-                    $cupoMaxMaestro = 2;
-                    $cupoMaxDelegado = 2;
-                    $cupoMaxApoderado = 2;            
+                    $cupoMaxMaestro = 1;
+                    $cupoMaxDelegado = 1;
+                    $cupoMaxApoderado = 1;            
                     $cupoTotal = 2;
                 }
                 break;
             case 7:
                 if ($codigoEntidad == 9) {
-                    $cupoMaxMaestro = 2;
-                    $cupoMaxDelegado = 2;
-                    $cupoMaxApoderado = 2;            
+                    $cupoMaxMaestro = 1;
+                    $cupoMaxDelegado = 1;
+                    $cupoMaxApoderado = 1;             
                     $cupoTotal = 2;
                 } else {
-                    $cupoMaxMaestro = 2;
-                    $cupoMaxDelegado = 2;
-                    $cupoMaxApoderado = 2;            
+                    $cupoMaxMaestro = 1;
+                    $cupoMaxDelegado = 1;
+                    $cupoMaxApoderado = 1;              
                     $cupoTotal = 2;
                 }
                 break;
@@ -1784,7 +1784,7 @@ class ComisionController extends Controller {
                 $mensaje = "No es posible incluir mas padres/madres de familia para la prueba seleccionada";
             }  
         }
-        return $mensaje;
+        return "no es posible incluir acompañantes";
     }
 
     /**
@@ -1799,28 +1799,28 @@ class ComisionController extends Controller {
                 $cupoMaxMaestro = 1;
                 $cupoMaxDelegado = 1;
                 $cupoMaxApoderado = 1;            
-                $cupoTotal = 3;
+                $cupoTotal = 2;
                 break;
             case 4:
                 $cupoMaxEntrenador = 1;
                 $cupoMaxMaestro = 1;
                 $cupoMaxDelegado = 1;
                 $cupoMaxApoderado = 1;            
-                $cupoTotal = 3;
+                $cupoTotal = 2;
                 break;
             case 5:
                 $cupoMaxEntrenador = 1;
                 $cupoMaxMaestro = 1;
                 $cupoMaxDelegado = 1;
                 $cupoMaxApoderado = 1;            
-                $cupoTotal = 3;
+                $cupoTotal = 2;
                 break;
             case 7:
                 $cupoMaxEntrenador = 1;
                 $cupoMaxMaestro = 1;
                 $cupoMaxDelegado = 1;
                 $cupoMaxApoderado = 1;            
-                $cupoTotal = 3;
+                $cupoTotal = 2;
                 break;
             case 14:
                 $cupoMaxEntrenador = 1;

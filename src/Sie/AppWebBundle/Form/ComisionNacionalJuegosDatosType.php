@@ -31,7 +31,7 @@ class ComisionNacionalJuegosDatosType extends AbstractType
             ->add('comisionTipoId',
                       'choice',  
                       array('label' => 'Comisión Tipo',
-                            'choices' => $comisionPri,
+                            'choices' => $comisionSec,
                             )
                 )
             ->add('foto', 'file', array('label' => 'Fotografía (.bmp)', 'required' => false, 'data_class' => null)) 
@@ -51,7 +51,7 @@ class ComisionNacionalJuegosDatosType extends AbstractType
                         ->innerJoin('SieAppWebBundle:NivelTipo', 'nt', 'WITH', 'nt.id = dt.nivelTipo')
                         ->where('nt.id = :nivel')
                         ->orderBy('pt.id', 'ASC')
-                        ->setParameter('nivel', 12);
+                        ->setParameter('nivel', 13);
                 },
                 'label' => 'Prueba',
             ))          
