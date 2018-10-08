@@ -14,7 +14,8 @@
         {% endfor %}
     </div>
 {% endif %} 
-
+<div id="msgp">
+</div>
 <table class="table table-striped table-primary" id="t_pasos">
 
     <thead>
@@ -36,10 +37,10 @@
             <td>{{paso.posicion}}</td>
             <td>{{paso.tipo_paso}}</td>
             <td>
-                <a href="{{ path('flujotipo_edit', { 'id': paso.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Editar">
+                <a class="btn btn-primary btn-xs text-primary" data-toggle="modal" data-target="#modal" data-placement="top" title="Editar" onclick="ediatarpaso({{paso.id}})">
                     <i class="fa fa-pencil"></i>
                 </a>
-                <a href="{{ path('flujotipo_delete', { 'id': paso.id }) }}" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="return confirm('¿Esta suguro de eliminar?')">
+                <a class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="eliminarpaso({{paso.id}})">
                     <i class="fa fa-times"></i>
                 </a>
             </td>
