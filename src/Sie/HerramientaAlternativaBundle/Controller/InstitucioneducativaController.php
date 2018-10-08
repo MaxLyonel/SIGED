@@ -1035,9 +1035,11 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
         $params = array();
         $stmt->execute($params);
         $po = $stmt->fetchAll();
-        
+        //dump($po);die;
         return $this->render($this->session->get('pathSystem') . ':Principal:distritolistaceas.html.twig', array(
                 'entities' => $po,
+        /*return $this->render($this->session->get('pathSystem') . ':Principal:listaceasdistrito.html.twig', array(
+                'entities' => $po,*/
             ));
     }
     
@@ -1047,7 +1049,8 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
         $sesion->set('ie_nombre', $ie_nombre);
         $sesion->set('ie_per_estado', '3');
         $sesion->set('ie_operativo', '¡En modo edición!');
-        return $this->redirect($this->generateUrl('principal_web'));
+        //return $this->redirect($this->generateUrl('principal_web'));
+        return $this->redirect($this->generateUrl('herramienta_ceducativa_seleccionar_cea'));
     }
     
     public function seleccionarceaAction() {
@@ -1592,11 +1595,11 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             //->setAction($this->generateUrl('herramientalt_ceducativa_estadistiscas_cierre'))
             if ($tipo =='operativo')
                 $form=$form
-                ->add('gestion','entity',array('label'=>'Gestión','required'=>false,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
+                ->add('gestion','entity',array('label'=>'Seleccione Gestión','required'=>false,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
                     return $g->createQueryBuilder('g')->orderBy('g.id','DESC');},'property'=>'gestion','empty_value' => 'Todas'));
             else{//ceas pendientes
                 $form=$form
-                ->add('gestion','entity',array('label'=>'Gestión','required'=>false,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
+                ->add('gestion','entity',array('label'=>'Seleccione Gestión','required'=>false,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
                     return $g->createQueryBuilder('g')->where('g.id >= 2017')->orderBy('g.id','DESC');},'property'=>'gestion','empty_value' => 'Todas'));
             }
             if($rol==8)
@@ -1618,7 +1621,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
 
     {   
         $form = $this->createFormBuilder();
-        if($rol==9){
+        if($rol==9 or $rol==10){
             $gestion = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getGestionCea($ie_id);
             $subcea = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getSubceaGestion($ie_id,'');
             //dump($gestion);die;
