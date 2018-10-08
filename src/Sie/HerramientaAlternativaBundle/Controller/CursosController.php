@@ -76,7 +76,19 @@ class CursosController extends Controller {
         $exist = true;
         $objStudents = array();
         $dataUe=(unserialize($infoUe));
-//        dump($dataUe); die;
+        // dump($infoUe);
+       // dump($dataUe); die;
+        if( $this->get('funciones')->validatePrimaria($this->session->get('ie_id'),$this->session->get('currentyear'),$infoUe)
+          ){
+            dump($this->get('funciones')->getModIntEmer($dataUe['ueducativaInfoId']['iecId']));
+            dump('yes');
+            dump($dataUe);
+            die('krlos');
+        }else{
+            dump('no');
+        }
+        
+
         $objStudents = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getListStudentPerCourseAlter($aInfoUeducativa['ueducativaInfoId']['iecId']);
 //        dump($aInfoUeducativa['ueducativaInfoId']['iecId']);
 //        die;

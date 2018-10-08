@@ -767,4 +767,24 @@ class Funciones {
 
     }
 
+    public function getModIntEmer($iecId){
+// dump($iecId);
+        $moduloPeriodo = $this->em->createQueryBuilder()
+                    ->select('l')
+                    ->from('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g')
+                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo = g.id')
+                    ->innerJoin('SieAppWebBundle:SuperiorModuloPeriodo', 'k', 'WITH', 'g.id = k.institucioneducativaPeriodo')
+                    ->innerJoin('SieAppWebBundle:SuperiorModuloTipo', 'l', 'WITH', 'l.id = k.superiorModuloTipo ')
+                    ->where('h.id = :idCurso')
+                    ->andwhere('l.codigo = :codigo')
+                    ->setParameter('idCurso', $iecId)
+                    ->setParameter('codigo', 415)
+                    ->getQuery();
+         $moduloPeriodo = $moduloPeriodo->getSQL();
+         // dump($moduloPeriodo);
+         // $moduloPeriodo = $moduloPeriodo->getResult();
+
+        return $moduloPeriodo;
+    }
+
 }
