@@ -565,7 +565,8 @@
                                 <span class="arrow"></span>
                             </a>
                             <ul>
-                                <li><a onclick="selceadistritoShow();">Listar mis CEAS.</a></li>
+                                {#<li><a onclick="selceadistritoShow();">Listar mis CEAS.</a></li>#}
+                                <li><a href="{{path('herramienta_ceducativa_distrito_listaceas')}}">Listar mis CEAS.</a></li>
                                 {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
                                 {#<li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>#}
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
@@ -589,7 +590,7 @@
                                 <span class="arrow"></span>
                             </a>
                             <ul>
-                                <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Historial del centro</a></li>
+                                <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Gestionar C.E.A.</a></li>
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
                                 <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
                                 <li><a href="{{path('sie_alt_lista_estudiantes_excel')}}">Exportar listas a Excel </a></li>
