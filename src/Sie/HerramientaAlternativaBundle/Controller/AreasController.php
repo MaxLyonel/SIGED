@@ -41,9 +41,7 @@ class AreasController extends Controller {
         
         // dump($arrInfoUe);die;
         // check if the course is PRIMARIA
-        if( $arrInfoUe['ueducativaInfoId']['sfatCodigo'] == 15 &&
-            $arrInfoUe['ueducativaInfoId']['setId'] == 13 &&
-            $arrInfoUe['ueducativaInfoId']['periodoId'] == 3
+        if( $this->get('funciones')->validatePrimaria($this->session->get('ie_id'),$this->session->get('currentyear'),$infoUe)
           ){
             //set the All data about curricula on the course
             $createNewCurricula = $this->get('funciones')->loadCurriculaCurso($infoUe);

@@ -736,4 +736,35 @@ class Funciones {
         }
     }
 
+    public function validatePrimaria($sie,$gestion,$infoUe){
+        // get the send data
+        $arrInfoUe = unserialize($infoUe);
+        //var to set true or false if the ue is primaria
+        $swValidationPrimaria = false;
+        
+        // check if the course is PRIMARIA
+        if( 
+            $gestion == 2018 &&
+            $arrInfoUe['ueducativaInfoId']['sfatCodigo'] == 15 &&
+            $arrInfoUe['ueducativaInfoId']['setId'] == 13 &&
+            $arrInfoUe['ueducativaInfoId']['periodoId'] == 3
+          ){
+            $swValidationPrimaria=true;
+        }else{
+            if(
+                $gestion >= 2019 &&
+                $arrInfoUe['ueducativaInfoId']['sfatCodigo'] == 15 &&
+                $arrInfoUe['ueducativaInfoId']['setId'] == 13 &&
+                $arrInfoUe['ueducativaInfoId']['periodoId'] >= 2
+            ){
+                $swValidationPrimaria=true;
+            }else{
+                $swValidationPrimaria=false;
+            }        
+        }
+
+        return $swValidationPrimaria;
+
+    }
+
 }
