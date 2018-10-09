@@ -780,11 +780,18 @@ class Funciones {
                     ->setParameter('idCurso', $iecId)
                     ->setParameter('codigo', 415)
                     ->getQuery();
-         $moduloPeriodo = $moduloPeriodo->getSQL();
+         // $moduloPeriodo = $moduloPeriodo->getSQL();
          // dump($moduloPeriodo);
-         // $moduloPeriodo = $moduloPeriodo->getResult();
+         $moduloPeriodo = $moduloPeriodo->getResult();
+         // dump($moduloPeriodo[0]->getModulo());die;
+         $swSetNameModIntEmer = false;
+         if($moduloPeriodo){
+            if($moduloPeriodo[0]->getModulo()!='MÓDULO EMERGENTE'){
+                $swSetNameModIntEmer = true;
+            }
+         }
 
-        return $moduloPeriodo;
+        return $swSetNameModIntEmer;
     }
 
 }

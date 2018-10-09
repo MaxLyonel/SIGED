@@ -78,14 +78,10 @@ class CursosController extends Controller {
         $dataUe=(unserialize($infoUe));
         // dump($infoUe);
        // dump($dataUe); die;
+        $swSetNameModIntEmer = false;
         if( $this->get('funciones')->validatePrimaria($this->session->get('ie_id'),$this->session->get('currentyear'),$infoUe)
           ){
-            dump($this->get('funciones')->getModIntEmer($dataUe['ueducativaInfoId']['iecId']));
-            dump('yes');
-            dump($dataUe);
-            die('krlos');
-        }else{
-            dump('no');
+            $swSetNameModIntEmer = $this->get('funciones')->getModIntEmer($dataUe['ueducativaInfoId']['iecId']);  
         }
         
 
@@ -124,7 +120,8 @@ class CursosController extends Controller {
                     'infoUe' => $infoUe,
                     'etapaespecialidad' => $etapaespecialidad,
                     'dataUe'=> $dataUe['ueducativaInfo'],
-                    'totalInscritos'=>count($objStudents)
+                    'totalInscritos'=>count($objStudents),
+                    'swSetNameModIntEmer' => $swSetNameModIntEmer,
         ));
     }
 
