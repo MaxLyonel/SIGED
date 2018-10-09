@@ -38,4 +38,10 @@ herramienta_alter_infoEstudianteAreas_emergente_asignar:
     path:     /emergenteAsignar
     defaults: { _controller: "SieHerramientaAlternativaBundle:Areas:emergenteAsignar"}
     options:
+         expose: true
+
+herramienta_alter_areas_registerNameModIntEmer:
+    path:     /registerNameModIntEmer
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Areas:registerNameModIntEmer"}
+    options:
          expose: true         

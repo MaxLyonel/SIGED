@@ -194,7 +194,31 @@
             });
         };
 
+        var registerNameModIntEmer = function(nameModIntEmer, codMIE, infoUe) {
+            $.ajax({
+                type: 'post',
+                data: ({infoUe: infoUe, nameModIntEmer: nameModIntEmer, codMIE:codMIE}),
+                url: "{{ path('herramienta_alter_areas_registerNameModIntEmer') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    if(data.status){
+                        seeStudents(infoUe);
+                    }else{
+                        return false;
+                    }
+                },
+                statusCode: {
+                    500: function () {
 
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
         var seeStudents = function (infoUe) {
             $.ajax({
                 type: 'get',
@@ -205,6 +229,17 @@
                     $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
                 },
                 success: function (data) {
+                    if(data.codMIE > 0){
+                          bootbox.prompt({
+                          // size: "small",
+                          title: "Registrar Nombre del MÓDULO EMERGENTE",
+                          callback: function(result){ /* result = String containing user input if OK clicked or null if Cancel clicked */
+                            if(result){
+                                registerNameModIntEmer(result, data.codMIE, infoUe)
+                            }
+                          }
+                        })
+                    }
                     $("#idstudents").empty();
                     $("#idstudents").append(data);
                 },

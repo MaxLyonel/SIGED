@@ -767,9 +767,9 @@ class Funciones {
 
     }
 
-    public function getModIntEmer($iecId){
+    public function validateModIntEmer($iecId){
 // dump($iecId);
-        $moduloPeriodo = $this->em->createQueryBuilder()
+        $moduloIntEmer = $this->em->createQueryBuilder()
                     ->select('l')
                     ->from('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g')
                     ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo = g.id')
@@ -782,16 +782,18 @@ class Funciones {
                     ->getQuery();
          // $moduloPeriodo = $moduloPeriodo->getSQL();
          // dump($moduloPeriodo);
-         $moduloPeriodo = $moduloPeriodo->getResult();
+         $moduloIntEmer = $moduloIntEmer->getResult();
          // dump($moduloPeriodo[0]->getModulo());die;
          $swSetNameModIntEmer = false;
-         if($moduloPeriodo){
-            if($moduloPeriodo[0]->getModulo()!='MÓDULO EMERGENTE'){
-                $swSetNameModIntEmer = true;
+         if($moduloIntEmer){
+            if($moduloIntEmer[0]->getModulo()=='MÓDULO EMERGENTE'){
+                $arrModIntEme = array('status'=>false,'codMIE'=>$moduloIntEmer[0]->getId());
+            }else{
+                $arrModIntEme = array('status'=>true,'codMIE'=>$moduloIntEmer[0]->getId());
             }
          }
-
-        return $swSetNameModIntEmer;
+         
+        return json_encode($arrModIntEme);
     }
 
 }

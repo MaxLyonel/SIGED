@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sie\AppWebBundle\Entity\EstudianteInscripcion;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Sie\AppWebBundle\Entity\EstudianteAsignatura;
+use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * EstudianteInscripcion controller.
  *
@@ -79,12 +80,19 @@ class CursosController extends Controller {
         // dump($infoUe);
        // dump($dataUe); die;
         $swSetNameModIntEmer = false;
+        // validate if the course is PRIMARIA
         if( $this->get('funciones')->validatePrimaria($this->session->get('ie_id'),$this->session->get('currentyear'),$infoUe)
           ){
-            $swSetNameModIntEmer = $this->get('funciones')->getModIntEmer($dataUe['ueducativaInfoId']['iecId']);  
+            //get the values about its module integrado emergente
+            $jsonModIntEmer = $this->get('funciones')->validateModIntEmer($dataUe['ueducativaInfoId']['iecId']);
+            $arrModIntEme = json_decode($jsonModIntEmer,true);
+            // validate if the MIE has name
+            if(!$arrModIntEme['status']){
+                $response = new JsonResponse();
+                return $response->setData($arrModIntEme);
+            }
         }
         
-
         $objStudents = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getListStudentPerCourseAlter($aInfoUeducativa['ueducativaInfoId']['iecId']);
 //        dump($aInfoUeducativa['ueducativaInfoId']['iecId']);
 //        die;

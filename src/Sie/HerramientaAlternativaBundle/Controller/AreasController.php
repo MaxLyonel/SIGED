@@ -11,6 +11,7 @@ use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOfertaMaestro;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sie\AppWebBundle\Entity\EstudianteAsignatura;
 use Sie\AppWebBundle\Entity\AltModuloemergente;
+use Sie\AppWebBundle\Entity\SuperiorModuloTipo;
 
 /**
  * EstudianteInscripcion controller.
@@ -488,6 +489,32 @@ class AreasController extends Controller {
             'smtid'=>$smtid,
             'emergente'=>$emergente
         ));
+    }
+
+    public function registerNameModIntEmerAction(Request $request){
+        // get the send values
+        $infoUe = $request->get('infoUe');
+        $nameModIntEmer = $request->get('nameModIntEmer');
+        $codMIE = $request->get('codMIE');
+        try {
+            $em =  $this->getDoctrine()->getManager();
+            $objSupModTipo = $em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find($codMIE);
+            if($objSupModTipo){
+                $objSupModTipo->setModulo(ucwords(trim($nameModIntEmer)));
+                $em->persist($objSupModTipo);
+                $em->flush();
+                $arrResponse = array('status'=>true, 'message'=>'changed');
+            }else{
+                $arrResponse = array('status'=>false, 'message'=>'NO changed');
+            }
+            
+        } catch (Exception $e) {
+            
+        }
+        
+        $response = new JsonResponse();
+        return $response->setData($arrResponse);
+        
     }
 
 }
