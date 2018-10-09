@@ -638,9 +638,11 @@ class TrasladoController extends Controller {
                 ->where('e.codigoRude = :id')
                 ->andwhere('iec.gestionTipo = :gestion')
                 ->andWhere('it = :idTipo')
+                ->andwhere('ei.estadomatriculaTipo = :mat')
                 ->setParameter('id', $id)
                 ->setParameter('gestion', $this->session->get('currentyear'))
                 ->setParameter('idTipo',1)
+                ->setParameter('mat', 4)
                 ->orderBy('ei.fechaInscripcion', 'ASC')
                 ->getQuery();
         try {

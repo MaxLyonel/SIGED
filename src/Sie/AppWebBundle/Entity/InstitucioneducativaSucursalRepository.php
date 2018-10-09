@@ -47,6 +47,81 @@ class InstitucioneducativaSucursalRepository extends EntityRepository
         
         return $qb->getQuery()->getResult();
     }
+
+    public function getAllSucursalTipo1($ie_id,$gestion,$subcea,$periodo)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb
+                ->select('d.id as gestionTipo, b.id as SucursalIE, a.id as IEsucursalId, a.periodoTipoId, h.id as teid, h.tramiteEstado as te, h.obs as observacion')
+                ->from('SieAppWebBundle:InstitucioneducativaSucursal', 'a')
+                ->innerJoin('SieAppWebBundle:SucursalTipo', 'b', 'WITH', 'b.id = a.sucursalTipo')
+                ->innerJoin('SieAppWebBundle:Institucioneducativa', 'c', 'WITH', 'c.id = a.institucioneducativa')
+                ->innerJoin('SieAppWebBundle:GestionTipo', 'd', 'WITH', 'd.id = a.gestionTipo') 
+                ->leftJoin('SieAppWebBundle:InstitucioneducativaSucursalTramite', 'g', 'WITH', 'g.institucioneducativaSucursal = a.id')
+                ->leftJoin('SieAppWebBundle:TramiteEstado', 'h', 'WITH', 'h.id = g.tramiteEstado') 
+                ->where('c.id = '.$ie_id)
+                ->andWhere('a.periodoTipoId in (:periodo)')
+                //->andWhere($qb->expr()->in('a.periodoTipoId', $periodo));
+                ->andWhere('a.gestionTipo in (:gestion)')
+                ->andWhere('a.sucursalTipo in (:subcea)')
+                ->setParameter('periodo', $periodo)
+                ->setParameter('gestion', $gestion)
+                ->setParameter('subcea', $subcea)
+                ->groupBy('d.id, b.id, a.id, a.periodoTipoId, h.id')
+                ->orderBy('d.id, b.id, a.id, a.periodoTipoId')
+                ;
+        
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getGestionCea($id_cea) {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb
+                ->select('g.id as gestion')
+                ->from('SieAppWebBundle:InstitucioneducativaSucursal', 'a')
+                ->innerJoin('SieAppWebBundle:GestionTipo', 'g', 'WITH', 'g.id = a.gestionTipo') 
+                ->where('a.institucioneducativa = '.$id_cea)
+                ->distinct('g.id')
+                ->orderBy('g.id','DESC')
+                ;
+        
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getSubceaGestion($id_cea,$gestion) {
+        //bdump($id_cea,$gestion);die;
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb
+                ->select('b.id as sucursal')
+                ->from('SieAppWebBundle:InstitucioneducativaSucursal', 'a');
+                if($gestion!=""){
+                    $qb
+                    ->innerJoin('SieAppWebBundle:GestionTipo', 'g', 'WITH', 'g.id = a.gestionTipo');
+                }
+                $qb
+                ->innerJoin('SieAppWebBundle:SucursalTipo', 'b', 'WITH', 'b.id = a.sucursalTipo')
+                ->where('a.institucioneducativa = '.$id_cea);
+                if($gestion!=""){
+                    $qb
+                    ->andWhere('g.id = '.$gestion);
+                }
+                $qb
+                ->distinct('b.id')
+                ->orderBy('b.id')
+                ;
+        
+        return $qb->getQuery()->getResult();
+    }
+    public function getSubceaSemestre($id_cea) {
+        //bdump($id_cea,$gestion);die;
+        $qb = $this->getEntityManager()->createQueryBuilder()
+                ->select('a.periodoTipoId as periodo')
+                ->from('SieAppWebBundle:InstitucioneducativaSucursal', 'a')
+                ->where('a.institucioneducativa = '.$id_cea)
+                ->distinct('a.periodoTipoId');
+        return $qb->getQuery()->getResult();
+    }
+
     public function getAllSucursalTipoPer($ie_id) {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb

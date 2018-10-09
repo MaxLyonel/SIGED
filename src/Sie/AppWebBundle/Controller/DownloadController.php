@@ -687,14 +687,12 @@ class DownloadController extends Controller {
 
         $dirProv = $porciones[3];
         $dirMun = $porciones[4];
-        $dirLoc = $porciones[6];
         //get the values of report
         //create the response object to down load the file
         $response = new Response();
-        $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'RUDE_' .$rude. '_' .$gestion. '.pdf'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'rude2017.rptdesign&codue=' . $codue .'&rude='. $rude .'&gestion=' . $gestion .'&eins='. $eins .'&dirLoc='. $dirLoc .'&dirMun='. $dirMun .'&dirProv='. $dirProv . '&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'rude2017.rptdesign&codue=' . $codue .'&rude='. $rude .'&gestion=' . $gestion .'&eins='. $eins .'&dirMun='. $dirMun .'&dirProv='. $dirProv . '&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');

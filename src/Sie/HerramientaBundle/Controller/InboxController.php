@@ -1007,16 +1007,22 @@ class InboxController extends Controller {
       
       //get values send
       $form = $request->get('form');
+      //get the file to generate the new file
+      $dir = '/archivos/descargas/';
       // conver json values to array
       $arrData = json_decode($form['data'],true);
-      //to generate the file execute de function
       $cabecera = 'R';
+      //before to donwload file remove the old
+      $fileRude = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'R';
+      system('rm -fr ' . $dir .$fileRude.'.sie' );      
+      system('rm -fr ' . $dir .$fileRude.'.igm' );
+      
+      //to generate the file execute de function
       $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_rude_txt('" . $arrData['id'] . "','" . $arrData['gestion'] . "','" . $cabecera . "');");
       $query->execute();
 
       $newGenerateFile = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'R';
-      //get the file to generate the new file
-      $dir = '/archivos/descargas/';
+      
 
       //decode base64
       $outputdata = system('base64 '.$dir.''.$newGenerateFile. '.sie  >> ' . $dir . 'NR' . $newGenerateFile . '.sie');

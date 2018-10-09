@@ -1211,26 +1211,24 @@ class AreasController extends Controller {
             }else{
                 $horasNum = $horas[$i];
             }
-            if($idnt[$i] == 0){
-                if($iecom[$i] == 'nuevo' and $idmi[$i] != ''){
-                    $newCOM = new InstitucioneducativaCursoOfertaMaestro();
-                    $newCOM->setInstitucioneducativaCursoOferta($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($ieco[$i]));
-                    $newCOM->setMaestroInscripcion($em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($idmi[$i]));
-                    $newCOM->setHorasMes($horasNum);
-                    $newCOM->setFechaRegistro(new \DateTime('now'));
-                    $newCOM->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($idnt[$i]));
-                    $newCOM->setEsVigenteMaestro('t');
-                    $em->persist($newCOM);
+            if($iecom[$i] == 'nuevo' and $idmi[$i] != ''){
+                $newCOM = new InstitucioneducativaCursoOfertaMaestro();
+                $newCOM->setInstitucioneducativaCursoOferta($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($ieco[$i]));
+                $newCOM->setMaestroInscripcion($em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($idmi[$i]));
+                $newCOM->setHorasMes($horasNum);
+                $newCOM->setFechaRegistro(new \DateTime('now'));
+                $newCOM->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($idnt[$i]));
+                $newCOM->setEsVigenteMaestro('t');
+                $em->persist($newCOM);
+                $em->flush();
+            }else{
+                if($idmi[$i] != ''){
+                    $updateCOM = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->find($iecom[$i]);
+                    $updateCOM->setMaestroInscripcion($em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($idmi[$i]));
+                    $updateCOM->setHorasMes($horasNum);
+                    $updateCOM->setFechaModificacion(new \DateTime('now'));
+                    $updateCOM->setEsVigenteMaestro('t');
                     $em->flush();
-                }else{
-                    if($idmi[$i] != ''){
-                        $updateCOM = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->find($iecom[$i]);
-                        $updateCOM->setMaestroInscripcion($em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($idmi[$i]));
-                        $updateCOM->setHorasMes($horasNum);
-                        $updateCOM->setFechaModificacion(new \DateTime('now'));
-                        $updateCOM->setEsVigenteMaestro('t');
-                        $em->flush();
-                    }
                 }
             }
         }

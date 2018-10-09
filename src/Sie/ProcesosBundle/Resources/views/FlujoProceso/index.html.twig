@@ -25,24 +25,24 @@
                 <div class="panel rounded shadow">
                     <div class="panel-heading">
                         <div class="pull-left">
-                            <h3 class="panel-title">Datos de proceso</h3>
+                            <h3 class="panel-title">Datos de proceso: <span id="proceso_nombre"></span></h3>
                         </div>
-                        
-                        <div class="pull-right">
+                        {#<div class="pull-right">
                             <a href="{{ path('flujoproceso_formulario_nuevo') }}" class="btn btn-primary">
                                 <i class="fa fa-plus"></i> Crear formulario
                             </a>
                         
-                        </div>
+                        </div>#}
                         <div class="clearfix"></div>
                     </div><!-- /.panel-heading -->
                     <div class="panel-body">
 						    <!-- Start basic wizard horizontal -->
-                            <div id="basic-wizard-horizontal">
+                            <div class="col-md-12">
                                 <h4></h4>
-                                <div class="panel panel-tab rounded shadow">
+                                <div class="panel panel-tab panel-tab-double panel-tab-vertical row no-margin mb-15 rounded shadow">
+                                {#<div class="panel panel-tab rounded shadow">#}
                                     <!-- Start tabs heading -->
-                                    <div class="panel-heading no-padding " id="tabs">
+                                    <div class="panel-heading no-padding col-lg-1 col-md-1 col-sm-1" id="tabs" >
                                         <ul class="nav nav-tabs">
                                             <li class="active">
                                                 <a href="#tab1-1" data-toggle="tab" id="t1" >
@@ -58,7 +58,7 @@
                                                     <i class="fa fa-file-text"></i>
                                                     <div  >
                                                         <span class="text-strong">Paso 2</span>
-                                                        <span>Pasos</span>
+                                                        <span>Pasos tarea</span>
                                                     </div>
                                                 </a>
                                             </li>
@@ -67,7 +67,7 @@
                                                     <i class="fa fa-credit-card"></i>
                                                     <div>
                                                         <span class="text-strong">Paso 3</span>
-                                                        <span>Condición</span>
+                                                        <span>Condición tarea</span>
                                                     </div>
                                                 </a>
                                             </li>
@@ -76,20 +76,18 @@
                                                     <i class="fa fa-credit-card"></i>
                                                     <div>
                                                         <span class="text-strong">Paso 4</span>
-                                                        <span>Flujo del Proceso</span>
+                                                        <span>Finalizar proceso</span>
                                                     </div>
                                                 </a>
                                             </li>
                                         </ul>
                                     </div><!-- /.panel-heading -->
                                     <!--/ End tabs heading -->
-
                                     <!-- Start tabs content -->
-                                    <div class="panel-body">
-                                            {#<form action"#" class="tab-content form-horizontal">#}
+                                    <div class="panel-body col-lg-11 col-md-11 col-sm-11">
+                                        <div class="tab-content">
                                         <div class="tab-pane fade in active inner-all" id="tab1-1">
-                                            <h4 class="page-header">Proceso</h4>
-                                            {{ form_start(form,{ 'attr': {'class': 'tab-content form-horizontal','id':'form_flujo'} } ) }}
+                                            {{ form_start(form,{ 'attr': {'class': 'tab-content form-horizontal','id':'form_flujo','onsubmit':'return false;'} } ) }}
                                             <div class="form-group">
                                                 <label class="col-sm-2">Nombre de proceso</label>
                                                 <div class="col-sm-4">
@@ -97,149 +95,205 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="col-sm-2">Tarea</label>
-                                                <div class="col-sm-4">
-                                                    {{ form_widget(form.tarea, {'attr':{'class':'form-control','onclick':'cargar_tareas_proceso(0)'} }) }}
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-2">Rol</label>
-                                                <div class="col-sm-4">
-                                                    {{ form_widget(form.rol, {'attr':{'class':'form-control'} }) }}
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-2">Observación</label>
-                                                <div class="col-sm-4">
-                                                    {{ form_widget(form.observacion, {'attr':{'class':'form-control'} }) }}                                                       
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-2">Tipo de asignación de tarea</label>
-                                                <div class="col-sm-4">
-                                                    {{ form_widget(form.asignacion, {'attr':{'class':'form-control'} }) }}
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-2">Evaluación</label>
-                                                <div class="col-md-1">
-                                                    {{ form_widget(form.evaluacion, {'attr':{'class':'form-control'} }) }}
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-2">Variable de valuación</label>
-                                                <div class="col-sm-4">
-                                                    {{ form_widget(form.varevaluacion, {'attr':{'class':'form-control'} }) }}
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-2">Tarea anterior</label>
-                                                <div class="col-sm-4">
-                                                    {{ form_widget(form.tareaant, {'attr':{'class':'form-control'} }) }}
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-2">Tarea siguiente</label>
-                                                <div class="col-sm-4">
-                                                    {{ form_widget(form.tareasig, {'attr':{'class':'form-control'} }) }}
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-2">Plazo</label>
-                                                <div class="col-md-1">
-                                                    {{ form_widget(form.plazo, {'attr':{'class':'validar'} }) }}
-                                                </div>
-                                            </div>
-                                            {{ form_end(form) }}  
-                                            <div class="form-group">
-                                                <button id="adicionartarea" class="btn btn-primary" onclick="cargartarea()">Adicionar</button>
+                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" id="id_adicionar" formaction="">
+                                                    <i class="fa fa-plus"></i>Agregar una tarea
+                                                </button>
                                             </div>
                                             <div id="tareas">
-                                            
+                                            </div>
+                                            {#<div id="formModal" class="modal fade"  role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.5);">#}
+                                            <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.5);">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                            <h4 class="modal-title">Tarea</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <label class="col-sm-6">Adicionar tarea</label>
+                                                                <div class="col-sm-4">
+                                                                    {{ form_widget(form.tarea, {'attr':{'class':'form-control','onclick':'cargar_tareas_proceso(0)'} }) }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-sm-6">Rol</label>
+                                                                <div class="col-sm-4">
+                                                                    {{ form_widget(form.rol, {'attr':{'class':'form-control'} }) }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-sm-6">Observación</label>
+                                                                <div class="col-sm-4">
+                                                                    {{ form_widget(form.observacion, {'attr':{'class':'form-control'} }) }}                                                       
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-sm-6">Tipo de asignación de tarea</label>
+                                                                <div class="col-sm-4">
+                                                                    {{ form_widget(form.asignacion, {'attr':{'class':'form-control'} }) }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-sm-6">Evaluación</label>
+                                                                <div class="col-md-4">
+                                                                    {{ form_widget(form.evaluacion, {'attr':{'class':'form-control'} }) }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-sm-6">Variable de valuación</label>
+                                                                <div class="col-sm-4">
+                                                                    {{ form_widget(form.varevaluacion, {'attr':{'class':'form-control'} }) }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-sm-6">Tarea anterior</label>
+                                                                <div class="col-sm-4">
+                                                                    {{ form_widget(form.tareaant, {'attr':{'class':'form-control'} }) }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-sm-6">Tarea siguiente</label>
+                                                                <div class="col-sm-4">
+                                                                    {{ form_widget(form.tareasig, {'attr':{'class':'form-control'} }) }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-sm-6">Plazo</label>
+                                                                <div class="col-md-1">
+                                                                    {{ form_widget(form.plazo, {'attr':{'class':'validar'} }) }}
+                                                                </div>
+                                                            </div>
+                                                            {{ form_end(form) }}  
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button id="adicionartarea" class="btn btn-primary" onclick="cargartarea()">Guardar</button>
+                                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="tab-pane fade inner-all" id="tab1-2">
-                                            <h4 class="page-header">Pasos de una tarea</h4>
-                                            {{ form_start(form_pasos,{ 'attr': {'class': 'tab-content form-horizontal','id':'form_pasos'} } ) }}
                                             <div class="form-group">
-                                                <label class="col-sm-2">Tarea</label>
-                                                <div class="col-sm-4">
-                                                    {{ form_widget(form_pasos.ptarea, {'attr':{'class':'form-control'} }) }}
+                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal2" id="id_adicionar2">
+                                                    <i class="fa fa-plus"></i>Agregar pasos
+                                                </button>
+                                            </div>
+                                             <div id="tablapasos">
+                                            </div>
+                                            <div class="modal fade" id="formModal2" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.5);">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                            <h4 class="modal-title">Pasos de una tarea</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            {{ form_start(form_pasos,{ 'attr': {'class': 'tab-content form-horizontal','id':'form_pasos'} } ) }}
+                                                            <div class="form-group">
+                                                                <label class="col-sm-2">Tarea</label>
+                                                                <div class="col-sm-4">
+                                                                    {{ form_widget(form_pasos.ptarea, {'attr':{'class':'form-control'} }) }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-sm-2">Nombre del paso</label>
+                                                                <div class="col-sm-4">
+                                                                    {{ form_widget(form_pasos.nombre, {'attr':{'class':'form-control'} }) }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-sm-2">Posición</label>
+                                                                <div class="col-md-1">
+                                                                    {{ form_widget(form_pasos.posicion, {'attr':{'class':'validar'} }) }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-sm-2">Tipo de paso</label>
+                                                                <div class="col-sm-4">
+                                                                    {{ form_widget(form_pasos.tipopaso, {'attr':{'class':'form-control'} }) }}
+                                                                </div>
+                                                            </div>
+                                                            {{ form_end(form_pasos) }}
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button id="adicionarpaso" class="btn btn-primary" onclick="cargarPasos()">Adicionar</button>
+                                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-2">Nombre del paso</label>
-                                                <div class="col-sm-4">
-                                                    {{ form_widget(form_pasos.nombre, {'attr':{'class':'form-control'} }) }}
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-2">Posición</label>
-                                                <div class="col-md-1">
-                                                    {{ form_widget(form_pasos.posicion, {'attr':{'class':'validar'} }) }}
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-2">Tipo de paso</label>
-                                                <div class="col-sm-4">
-                                                    {{ form_widget(form_pasos.tipopaso, {'attr':{'class':'form-control'} }) }}
-                                                </div>
-                                            </div>
-                                            {{ form_end(form_pasos) }}
-                                            <div class="form-group">
-                                                <button id="adicionarpaso" class="btn btn-primary" onclick="cargarPasos()">Adicionar</button>
-                                            </div>
-                                            <div id="tablapasos">
-                                            
                                             </div>
                                         </div>
                                         <div class="tab-pane fade inner-all" id="tab1-3">
-                                            <h4 class="page-header">Condición de tarea</h4>
-                                            {{ form_start(form_condicion,{ 'attr': {'class': 'tab-content form-horizontal','id':'form_condicion'} } ) }}
-                                                <input id="cont" name="cont" type="hidden" value="">
-                                            <div class="form-group">
-                                                <label class="col-sm-2">Tarea</label>
-                                                <div class="col-sm-4">
-                                                    {{ form_widget(form_condicion.ctarea, {'attr':{'class':'form-control'} }) }}
+                                                <div class="form-group">
+                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal3" id="id_adicionar3">
+                                                        <i class="fa fa-plus"></i>Agregar condición
+                                                    </button>
                                                 </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-2">Condición</label>
-                                                <div class="col-sm-4">
-                                                    {{ form_widget(form_condicion.condiciones, {'attr':{'class':'form-control'} }) }}
+                                                <div id="tablacondicion">
                                                 </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-2">Tarea siguiente a la condición</label>
-                                                <div class="col-sm-4">
-                                                    {{ form_widget(form_condicion.ctareasig, {'attr':{'class':'form-control'} }) }}
+                                                <div class="modal fade" id="formModal3" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.5);">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                    <h4 class="modal-title">Adicionar Pasos de una tarea</h4>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                {{ form_start(form_condicion,{ 'attr': {'class': 'tab-content form-horizontal','id':'form_condicion'} } ) }}
+                                                                    {#<input id="cont" name="cont" type="hidden" value="">#}
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-2">Tarea</label>
+                                                                    <div class="col-sm-4">
+                                                                        {{ form_widget(form_condicion.ctarea, {'attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-2">Condición</label>
+                                                                    <div class="col-sm-4">
+                                                                        {{ form_widget(form_condicion.condiciones, {'attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-2">Tarea siguiente a la condición</label>
+                                                                    <div class="col-sm-4">
+                                                                        {{ form_widget(form_condicion.ctareasig, {'attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-2">Tipo condición</label>
+                                                                    <div class="col-sm-4">
+                                                                        {{ form_widget(form_condicion.tipocondicion, {'attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                {{ form_end(form_condicion) }}  
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button id="adicionarcondicion" class="btn btn-primary" onclick="adicionarcondicion()">Adicionar</button>
+                                                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-2">Tipo condición</label>
-                                                <div class="col-sm-4">
-                                                    {{ form_widget(form_condicion.tipocondicion, {'attr':{'class':'form-control'} }) }}
-                                                </div>
-                                            </div>
-                                            {{ form_end(form_condicion) }}  
-                                            <div class="form-group">
-                                                <button id="adicionarcondicion" class="btn btn-primary" onclick="adicionarcondicion()">Adicionar</button>
-                                            </div>
-                                            <div id="tablacondicion">
-                                            
-                                            </div>
                                         </div>
                                         <div class="tab-pane fade inner-all" id="tab1-4">
-                                            <h4 class="page-header">Flujo</h4>
+                                            {#<h4 class="page-header">Flujo</h4>#}
                                             <div class="form-group">
+                                                {#{% set id = 0 %}
+                                                <a href="{{ path('flujotipo_ver', { 'id': id }) }}" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" title="Ver">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>#}
                                                 <button id="finalizar" class="btn btn-success" >Finalizar Proceso</button>
                                             </div>
                                             <div id="flujo">
                                                
                                             </div>
                                         </div>
+                                        </div>
                                         {#</form>#}
                                     </div><!-- /.panel-body -->
+                                   
                                     <!--/ End tabs content -->
 
                                     <!-- Start pager -->
@@ -255,24 +309,40 @@
                             </div><!-- /#basic-wizard-horizontal -->
                             <!--/ End basic wizard horizontal-->
                     </div><!-- /.panel-body -->
+                    
                 </div>
             </div>
         </div>
     </div>
-       
+    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+    </div><!-- /.modal -->  
 {% endblock %}
 {% block javascripts %}
     {{parent()}}
     <script type="text/javascript" charset="utf-8" >
-        $('#form_proceso').click(function(){
+        $('#id_adicionar').click(function(){
+            if($('#form_proceso').val()==""){ alert('Debe seleccionar un proceso'); return false;}
+        });
+        $('#id_adicionar2').click(function(){
+            if($('#form_proceso').val()==""){ alert('Debe seleccionar un proceso'); return false;}
+        }); 
+        $('#id_adicionar3').click(function(){
+            if($('#form_proceso').val()==""){ alert('Debe seleccionar un proceso'); return false;}
+        });        
+        $('#form_proceso').change(function(){
             //alert('hola');
             if($('#form_proceso').val()!="")
             { 
+                $('#proceso_nombre').text($('#form_proceso option:selected').text());
                 formData = {flujotipo: $('#form_proceso').val()};
                 $.ajax({
                     type: 'GET',
                     url: "{{path('flujoproceso_listar_tareas')}}",
                     data: formData,
+                    beforeSend: function () {
+                        $('#tareas').empty();
+                        $('#tareas').append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                    },
                     success: function (data) {
                         $('#tareas').empty();
                         $('#tareas').append(data);
@@ -283,6 +353,7 @@
             }
         });
         function cargar_tareas_proceso(paso) {
+            //alert('hola');
             if($('#form_proceso').val()==""){return false;}
             var formData = {flujotipo: $('#form_proceso').val(),paso: paso};
             $.ajax({
@@ -349,6 +420,7 @@
                     data: formData,
                     beforeSend: function () {
                         $('#tablapasos').empty();
+                        $('#tablapasos').append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
                     },
                     success: function (data) {
                         $('#tablapasos').empty();
@@ -390,6 +462,7 @@
                     data: formData,
                     beforeSend: function () {
                         $('#tablacondicion').empty();
+                        $('#tablacondicion').append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
                     },
                     success: function (data) {
                         //
@@ -428,6 +501,7 @@
                     data: formData,
                     beforeSend: function () {
                         $('#flujo').empty();
+                        $('#flujo').append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
                     },
                     success: function (data) {
                         $('#flujo').empty();
@@ -465,16 +539,17 @@
                     url: "{{path('flujoproceso_guardar_tarea')}}",
                     data: formData,
                     beforeSend: function () {
-                        $('#tareas').empty();
+                        //$('#tareas').empty();
                     },
                     success: function (data) {
+                        $('#formModal').hide();
+                        //$('#formModal').modal('hide');
                         $('#tareas').empty();
                         $('#tareas').append(data);
-                        $("#form_observacion").val('');
+                        /*$("#form_observacion").val('');
                         $("#form_orden").val('');
                         $("#form_varevaluacion").val('');
-                        $("#form_plazo").val('');
-                        
+                        $("#form_plazo").val('');*/
                     },
                     error: function (XMLHttpRequest, textStatus, errorThrown)
                     {
@@ -508,6 +583,8 @@
                     $('#tablapasos').empty();
                 },
                 success: function (data) {
+                    $('#formModal2').hide();
+                    //$('#formModal2').modal('hide');
                     $('#tablapasos').empty();
                     $('#tablapasos').append(data);
                     $('#form_nombre').val('');
@@ -539,6 +616,7 @@
                     $('#tablacondicion').empty();
                 },
                 success: function (data) {
+                    $('#formModal3').hide();
                     $('#tablacondicion').empty();
                     $('#tablacondicion').append(data);
                 },
@@ -562,23 +640,232 @@
         $('#finalizar').click(function(){
             if($('#form_proceso').val()!="")
             {
+                
                 formData = {flujotipo: $('#form_proceso').val()};
                 $.ajax({
+                    type: 'POST',
+                    url: "{{path('flujoproceso_finalizar')}}",
+                    data: formData,
+                    beforeSend: function () {
+                        $('#flujo').empty();
+                    },
+                    success: function (data) {
+                        $('#flujo').empty();
+                        $('#flujo').append(data);
+                        //window.open("{{ path('flujotipo_ver', { 'id': "+ formData  + "}) }}");
+                    },
+                });
+            }else{
+               alert('Debe seleccionar un proceso');
+               return false;
+            }
+        }); 
+
+        function eliminarpaso(id){
+            confirm('¿Esta suguro de eliminar?');
+            //alert(id);
+            formData = {id: id};
+            $.ajax({
                 type: 'POST',
-                url: "{{path('flujoproceso_finalizar')}}",
+                url: "{{path('flujoproceso_pasos_delete')}}",
                 data: formData,
                 beforeSend: function () {
-                    $('#flujo').empty();
+                    //$('#tablapasos').empty();
                 },
                 success: function (data) {
-                    $('#flujo').empty();
-                    $('#flujo').append(data);
+                    $('#tablapasos').empty();
+                    $('#tablapasos').append(data);
                 },
-                });
-            }
+            });
+        }
 
-        });
-      
+        function eliminarcondicion(id){
+            confirm('¿Esta suguro de eliminar?');
+            //alert(id);
+            formData = {id: id};
+            $.ajax({
+                type: 'POST',
+                url: "{{path('flujoproceso_condicion_delete')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#tablapasos').empty();
+                },
+                success: function (data) {
+                    $('#tablacondicion').empty();
+                    $('#tablacondicion').append(data);
+                },
+            });
+        }
+
+        function eliminartarea(id){
+            if(confirm('¿Se eliminaran todas las tareas siguientes a esta. Está suguro de eliminar ?')){
+                formData = {id: id};
+                $.ajax({
+                    type: 'POST',
+                    url: "{{path('flujoproceso_tarea_delete')}}",
+                    data: formData,
+                    beforeSend: function () {
+                        //$('#tareas').empty();
+                    },
+                    success: function (data) {
+                        $('#tareas').empty();
+                        $('#tareas').append(data);
+                    },
+                });
+            }else{
+                return false;
+            }
+        }
+        
+        function ediatarpaso(id){
+            //confirm('¿Esta suguro de eliminar?');
+            //alert(id);
+            formData = {id: id};
+            $.ajax({
+                type: 'POST',
+                url: "{{path('flujoproceso_pasos_editar')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#modal').empty();
+                    $('#modal').append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    if(data.mensaje){
+                        $('#modal').modal('hide');
+                        $('#msgp').append('<div class="alert alert-danger">'+
+                            '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+ data.mensaje +'</div>')
+                    }else{
+                        $('#modal').empty();
+                        $('#modal').append(data);
+                    }
+                    
+                },
+            });
+        }
+        function guardarEditPasos(){
+            var nombre = $('#form_nombre_edit').val();
+            var posicion= $('#form_posicion_edit').val();
+            var tipopaso= $('#form_tipopaso_edit').val();
+            if(nombre == ''){ alert('Debe registrar el nombre del paso'); return false; }
+            if(posicion == ''){ alert('Debe registrar la posicion del paso'); return false; }
+            if(tipopaso == ''){ alert('Debe seleccionar el tipo de paso'); return false; }
+            formData = $('#form_pasos_edit').serialize();
+            //alert(formData);
+            $.ajax({
+                type: 'POST',
+                url: "{{path('flujoproceso_pasos_update')}}",
+                data: formData,
+                beforeSend: function () {
+                    //$('#tablapasos').empty();
+                },
+                success: function (data) {
+                    //$('#modal').hide();
+                    $('#modal').modal('hide');
+                    $('#tablapasos').empty();
+                    $('#tablapasos').append(data);
+                },
+            });
+        }
+        function ediatartarea(id){
+            formData = {id: id};
+            $.ajax({
+                type: 'POST',
+                url: "{{path('flujoproceso_tarea_editar')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#modal').empty();
+                    $('#modal').append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    if(data.mensaje){
+                        $('#modal').modal('hide');
+                        $('#msg').append('<div class="alert alert-danger">'+
+                            '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+ data.mensaje +'</div>')
+                    }else{
+                        $('#modal').empty();
+                        $('#modal').append(data);
+                    }
+                },
+            });
+        }
+        function guardarEditTarea(){
+            var rol = $('#form_rol_edit').val();
+            var asignacion= $('#form_asignacion_edit').val();
+            var evaluacion= $('#form_evaluacion_edit').val();
+            var varevaluacion= $('#form_varevaluacion_edit').val();
+            if(rol == ''){ alert('Debe seleccionar un rol'); return false; }
+            if(asignacion == ''){ alert('Debe seleccionar un tipo de asignacion'); return false; }
+            if(evaluacion == ''){ alert('Debe seleccionar evaluacion'); return false; }
+            else{ if (evaluacion==1 && varevaluacion==''){alert('Debe ingresar la variable de evaluacion'); return false;} }
+            formData = $('#form_edit_tarea').serialize();
+            $.ajax({
+                type: 'POST',
+                url: "{{path('flujoproceso_tarea_update')}}",
+                data: formData,
+                beforeSend: function () {
+                    //$('#tareas').empty();
+                },
+                success: function (data) {
+                    //$('#modal').hide();
+                    $('#modal').modal('hide');
+                    $('#tareas').empty();
+                    $('#tareas').append(data);
+                },
+            });
+        }
+
+        function ediatarcondicion(id){
+            //confirm('¿Esta suguro de eliminar?');
+            //alert(id);
+            formData = {id: id};
+            $.ajax({
+                type: 'POST',
+                url: "{{path('flujoproceso_condicion_editar')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#modal').empty();
+                    $('#modal').append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    if(data.mensaje){
+                        $('#modal').modal('hide');
+                        $('#msgc').append('<div class="alert alert-danger">'+
+                            '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+ data.mensaje +'</div>')
+                    }else{
+                        $('#modal').empty();
+                        $('#modal').append(data);
+                    }
+                    
+                },
+            });
+        }
+        function guardarEditCondicion(){
+            var tarea = $('#form_ctarea_edit').val();
+            var condicion = $('#form_condiciones_edit').val();
+            var tareasig= $('#form_ctareasig_edit').val();
+            var tipocondicion= $('#form_tipocondicion_edit').val();
+            if(tarea == ''){ alert('Debe seleccionar una tarea'); return false; }
+            if(condicion == ''){ alert('Debe seleccionar la condicion'); return false; }
+            if(tareasig == ''){ alert('Debe seleccionar la siguiente tarea a la condicion'); return false; }
+            if(tipocondicion == ''){ alert('Debe seleccionar el tipo de condicion'); return false; }
+            formData = $('#form_condicion_edit').serialize();
+            //alert(formData);
+            $.ajax({
+                type: 'POST',
+                url: "{{path('flujoproceso_condicion_update')}}",
+                data: formData,
+                beforeSend: function () {
+                    //$('#tablapasos').empty();
+                },
+                success: function (data) {
+                    //$('#modal').hide();
+                    $('#modal').modal('hide');
+                    $('#tablacondicion').empty();
+                    $('#tablacondicion').append(data);
+                },
+            });
+        }
+        
     </script>
 
 {% endblock %}

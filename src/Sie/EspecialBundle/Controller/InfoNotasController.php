@@ -49,7 +49,7 @@ class InfoNotasController extends Controller {
             $grado = $curso->getgradoTipo()->getId();
             $gestionActual = $this->session->get('currentyear');
 
-            $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
+            $operativo = $this->operativo($sie,$gestion);
 
             $notas = null;
             $vista = 1;
@@ -173,6 +173,41 @@ class InfoNotasController extends Controller {
         } catch (Exception $e) {
             return new JsonResponse(array('msg'=>'error'));
         }
+    }
+
+    public function operativo($sie,$gestion){
+        $em = $this->getDoctrine()->getManager();
+        // Obtenemos el operativo para bloquear los controles
+        $registroOperativo = $em->createQueryBuilder()
+                        ->select('rc.bim1,rc.bim2,rc.bim3,rc.bim4')
+                        ->from('SieAppWebBundle:RegistroConsolidacion','rc')
+                        ->where('rc.unidadEducativa = :ue')
+                        ->andWhere('rc.gestion = :gestion')
+                        ->setParameter('ue',$sie)
+                        ->setParameter('gestion',$gestion)
+                        ->getQuery()
+                        ->getResult();
+        if(!$registroOperativo){
+            // Si no existe es operativo inicio de gestion
+            $operativo = 0;
+        }else{
+            if($registroOperativo[0]['bim1'] == 0 and $registroOperativo[0]['bim2'] == 0 and $registroOperativo[0]['bim3'] == 0 and $registroOperativo[0]['bim4'] == 0){
+                $operativo = 1; // Primer Bimestre
+            }
+            if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] == 0 and $registroOperativo[0]['bim3'] == 0 and $registroOperativo[0]['bim4'] == 0){
+                $operativo = 2; // Primer Bimestre
+            }
+            if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] == 0 and $registroOperativo[0]['bim4'] == 0){
+                $operativo = 3; // Primer Bimestre
+            }
+            if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] >= 1 and $registroOperativo[0]['bim4'] == 0){
+                $operativo = 4; // Primer Bimestre
+            }
+            if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] >= 1 and $registroOperativo[0]['bim4'] >= 1){
+                $operativo = 5; // Fin de gestion o cerrado
+            }
+        }
+        return $operativo;
     }
 
 }

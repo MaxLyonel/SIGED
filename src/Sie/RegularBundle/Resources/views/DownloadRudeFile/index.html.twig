@@ -1,0 +1,123 @@
+{% extends "layoutRegular.html.twig" %}
+
+{% block stylesheets %}
+ {{parent()}}
+{% endblock %}
+
+{% block contentoption %}
+	
+	  <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>{{ app.session.get('tituloTipo') }}
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-search"></i>  <a href="{{path('areas')}}">Operativo Rude</a></li>
+                    <li><i class="fa fa-list"></i>  <a href="{{path('areas',{'op':'result'})}}">{{ app.session.get('tituloTipo') }}</a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+        	<div class="panel">
+        		<div class="panel-heading"></div>
+        		<div class="panel-body">
+
+        			{{form_start(form, {'attr':{'class':'form-horizontal', 'id': 'downOperativoRudeId' }} )}}
+
+        			 <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">{{form_label(form.codigoSie)}}</label>
+                            <div class="col-sm-10">
+
+                            	{{form_widget(form.codigoSie)}}
+                            	{{form_widget(form.gestion)}}
+	
+                            </div>
+                        </div>
+                       
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                            	{{form_widget(form.downOperativoRude)}}
+
+                            </div>
+                        </div>
+                    </form>
+                    {{form_end(form)}}
+
+                    <div id="downoperativoId"></div>
+        			
+        		</div>
+        	</div>
+        	
+        </div>
+        <div class="col-md-6">
+        	<div class="panel">
+        		<div class="panel-heading"></div>
+        		<div class="panel-body">
+
+        			<table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Departamento</th>
+                                                <th>Cantidad</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for item in objStatistics %}
+                                            <tr>
+                                                <td>{{loop.index}}</td>
+                                                <td>{{item.departamento}}</td>
+                                                <td>{{item.total}}</td>
+                                                
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+
+        			
+
+
+        		</div>
+        	</div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+	 {{parent()}}
+
+	 <<script>
+	 	var downOperativoRudeup = function(){
+		    var formData = $('#downOperativoRudeId').serialize();
+
+		     $.ajax({
+		            type: 'post',
+		            url: Routing.generate('downloadrudefile_downoperativorude'),
+		            data: formData,
+		            beforeSend: function () {
+		                $("#downoperativoId").empty();
+		                $("#downoperativoId").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+		            },
+		            success: function (data) {
+		                $("#downoperativoId").empty();
+		                $("#downoperativoId").html(data);
+		            },
+		            error: function (data) {
+		                $("#downoperativoId").empty();
+		                $("#downoperativoId").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No hay conexion con el servidor</div>');
+		            }
+		        });
+    };
+	 </script>
+
+
+
+{% endblock %}
+

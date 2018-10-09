@@ -24,6 +24,10 @@ class EstudianteInscripcionSocioeconomicoRegInternetTipo
      */
     private $obs;
 
+    public function __toString(){
+        return $this->accesointernetTipo;
+    }
+
 
     /**
      * Get id

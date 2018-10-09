@@ -14,27 +14,35 @@
         {% endfor %}
     </div>
 {% endif %} 
-
+<div id="msgc">
+</div>
 <table class="table table-striped table-primary" id="tablacondicion">
     <thead>
         <tr>
-            <th>id_tarea</th>
+            {#<th>id_tarea</th>#}
             <th>Tarea</th>
             <th>Condición</th>
             <th>Tarea siguiente</th>
             <th>Tipo de condición</th>
-            <th></th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody id="tbodycondicion">
         {% for condicion in condiciones %}
         <tr>
-            <td>{{ condicion.id }}</td>
+            {#<td>{{ condicion.id }}</td>#}
             <td>{{ condicion.proceso_tipo }}</td>
             <td>{{ condicion.condicion }}</td>
-            <td>{{ condicion.condicion_tarea_siguiente}}</td>
+            <td>{{ condicion.condicion_tarea_sig}}</td>
             <td>{{ condicion.tipo_compuerta }}</td>
-            <td></td>
+            <td>
+                <a class="btn btn-primary btn-xs text-primary" data-toggle="modal" data-target="#modal" data-placement="top" title="Editar" onclick="ediatarcondicion({{condicion.id}})">
+                    <i class="fa fa-pencil"></i>
+                </a>
+                <a class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="eliminarcondicion({{condicion.id}})">
+                    <i class="fa fa-times"></i>
+                </a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

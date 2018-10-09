@@ -1,3 +1,7 @@
+sie_herramienta_info_estudianteRude:
+    resource: "@SieHerramientaBundle/Resources/config/routing/infoEstudianteRude.yml"
+    prefix:   /sie/infoEstudianteRude
+
 sie_herramienta_info_estudianteDatosCurso:
     resource: "@SieHerramientaBundle/Resources/config/routing/infoEstudianteDatosCurso.yml"
     prefix:   /sie/infoEstudianteDatosCurso

@@ -1,0 +1,54 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Modificar paso</h4>
+            </div>
+            <div class="panel-body">
+                {{ form_start(form,{ 'attr': {'class': 'tab-content form-horizontal','id':'form_pasos_edit'} } ) }}
+                <div class="form-group">
+                    <label class="col-sm-2">Tarea</label>
+                    <div class="col-sm-6">
+                    {{ form_widget(form.ptarea_edit, {'attr':{'class':'form-control'} }) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2">Nombre del paso</label>
+                    <div class="col-sm-6">
+                        {{ form_widget(form.nombre_edit, {'attr':{'class':'form-control'} }) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2">Posición</label>
+                    <div class="col-md-2">
+                        {{ form_widget(form.posicion_edit, {'attr':{'class':'validar'} }) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2">Tipo de paso</label>
+                <div class="col-sm-6">
+                    {{ form_widget(form.tipopaso_edit, {'attr':{'class':'form-control'} }) }}
+                </div>
+                {{ form_end(form) }}
+            </div>
+            <div class="panel-footer">
+                <div class="pull-right">
+                    <button type="button" class="btn btn-primary" onclick="guardarEditPasos()">Guardar Cambios</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</div><!-- /.modal-dialog -->
+<script>
+            $(function(){
+            $(".validar").keydown(function(event){
+            //alert(event.keyCode);
+                if((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !==190  && event.keyCode !==110 && event.keyCode !==8 && event.keyCode !==9  ){
+                    return false;
+                }
+            });
+        });
+</script>

@@ -46,4 +46,38 @@ flujoproceso_formulario_guardar:
     path:     /formulario_guardar
     defaults: { _controller: "SieProcesosBundle:FlujoProceso:formularioGuardar" }
 
+flujoproceso_pasos_delete:
+    path:     /pasos_delete
+    defaults: { _controller: "SieProcesosBundle:FlujoProceso:pasosDelete" }
 
+flujoproceso_condicion_delete:
+    path:     /condicion_delete
+    defaults: { _controller: "SieProcesosBundle:FlujoProceso:condicionDelete" }
+
+flujoproceso_tarea_delete:
+    path:     /tarea_delete
+    defaults: { _controller: "SieProcesosBundle:FlujoProceso:tareaDelete" }
+
+flujoproceso_pasos_editar:
+    path:     /pasos_editar
+    defaults: { _controller: "SieProcesosBundle:FlujoProceso:editarPasos" }
+
+flujoproceso_pasos_update:
+    path:     /pasos_update
+    defaults: { _controller: "SieProcesosBundle:FlujoProceso:updatePasos" }
+
+flujoproceso_tarea_editar:
+    path:     /tarea_editar
+    defaults: { _controller: "SieProcesosBundle:FlujoProceso:editarTarea" }
+
+flujoproceso_tarea_update:
+    path:     /tarea_update
+    defaults: { _controller: "SieProcesosBundle:FlujoProceso:updateTarea" }
+
+flujoproceso_condicion_editar:
+    path:     /condicion_editar
+    defaults: { _controller: "SieProcesosBundle:FlujoProceso:editarCondicion" }
+
+flujoproceso_condicion_update:
+    path:     /condicion_update
+    defaults: { _controller: "SieProcesosBundle:FlujoProceso:updateCondicion" }
