@@ -736,11 +736,11 @@ class ComisionController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
         //if ($request->isMethod('POST')) {
-
-        $objEntidad = $this->buscaEntidadFase(4,$id_usuario);        
-        $codigoEntidad = $objEntidad[0]['id'];
-        $id = $request->get('id');
+        
         $comision = $request->get('comision');  
+        $objEntidad = $this->buscaEntidadFase(4,$id_usuario);      
+        $codigoEntidad = $objEntidad[0]['id'];
+        $id = $request->get('id'); 
         $estudiante = $request->get('estudiante');     
 
          $em = $this->getDoctrine()->getManager();
@@ -773,6 +773,62 @@ class ComisionController extends Controller {
         ));    
     }
 
+    /**
+     * get request
+     * @param type $request, $fase
+     * return list of students
+     */
+    public function delegadoRegistroEditaAction(Request $request) {
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y'); 
+
+        $sesion = $request->getSession();
+        $id_usuario = $this->session->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        //if ($request->isMethod('POST')) {
+        
+        $fase = $request->get('fase'); 
+        $comision = $request->get('comision');  
+        $objEntidad = $this->buscaEntidadFase($fase,$id_usuario);      
+        $codigoEntidad = $objEntidad[0]['id'];
+        $id = $request->get('id'); 
+        $estudiante = $request->get('estudiante');     
+
+         $em = $this->getDoctrine()->getManager();
+        if($comision==101){
+            $entityEstudianteJuegos = $em->getRepository('SieAppWebBundle:EstudianteInscripcionJuegos')->findOneBy(array('id'=>$id));
+            $estudianteId = $entityEstudianteJuegos->getEstudianteInscripcion()->getEstudiante()->getId();
+            $entityDatos = new EstudianteDatopersonal();
+            $formFoto = $this->createCreateEstudianteFotoForm($entityDatos);
+        } else {      
+            $estudianteId = 0;
+            $entityDatos = $em->getRepository('SieAppWebBundle:ComisionJuegosDatos')->findOneBy(array('id'=>$id));
+            $formFoto = $this->createCreateComisionFotoForm($entityDatos);
+        }        
+
+        $entityDatos = new ComisionJuegosDatos();
+        $form = $this->createDelegacionNacionalForm($entityDatos);
+
+        $exist = true;
+
+        return $this->render($this->session->get('pathSystem') . ':Comision:indexNacional.html.twig', array(
+                    'form' => $form->createView(),
+                    'formFoto' => $formFoto->createView(),
+                        'objEntidad' => $objEntidad,
+                        'gestion' => $gestionActual,  
+                        'estudiante' => $estudianteId,                   
+                        'exist' => $exist,       
+                        'inscripcion' =>  $id,
+                        'codigoEntidad' => $codigoEntidad,
+                        'fase' => 4,
+        ));  
+    }
+
     private function createCreateEstudianteFotoForm(EstudianteDatopersonal $entity)
     { 
         //$entity->setPruebaTipo();
@@ -789,6 +845,19 @@ class ComisionController extends Controller {
         //$entity->setPruebaTipo();
         $form = $this->createForm(new ComisionJuegosFotoType(), $entity, array(
             'action' => $this->generateUrl('sie_juegos_acreditacion_registro_save_comision'),
+            'method' => 'POST', 
+        ));   
+        return $form;
+        
+    }
+
+
+
+    private function createCreateComisionDelegadoFotoForm(ComisionJuegosDatos $entity)
+    { 
+        //$entity->setPruebaTipo();
+        $form = $this->createForm(new ComisionJuegosFotoType(), $entity, array(
+            'action' => $this->generateUrl('sie_juegos_acreditacion_registro_save_delegado'),
             'method' => 'POST', 
         ));   
         return $form;
@@ -861,7 +930,6 @@ class ComisionController extends Controller {
     }
 
 
-
     public function acreditacionRegistroSaveComisionAction(Request $request)
     { 
         
@@ -922,6 +990,70 @@ class ComisionController extends Controller {
         );  
         
         return $this->redirect($this->generateUrl('sie_juegos_comision_nacional_lista_index'));   
+    }
+
+
+
+    public function acreditacionRegistroSaveDelegadoAction(Request $request)
+    { 
+        
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y'); 
+        //if ($request->isMethod('POST')) {
+        $em = $this->getDoctrine()->getManager();
+        
+        $estudianteId = $request->get('id');
+        $inscripcionId = $request->get('inscripcion');
+    
+
+        $entityEstudianteDatopersonal = $em->getRepository('SieAppWebBundle:ComisionJuegosDatos')->findOneBy(array('id' => $inscripcionId));                 
+        $form = $this->createCreateComisionDelegadoFotoForm($entityEstudianteDatopersonal);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            if (null != $form->get('foto')->getData()) {
+                $file = $entityEstudianteDatopersonal->getFoto();
+
+                $filename = md5(uniqid()) . '.' . $file->guessExtension();
+                
+                $filesize = $file->getClientSize();
+                if ($filesize/1024 < 501) {
+                    $adjuntoDir = $this->container->getParameter('kernel.root_dir') . '/../web/uploads/fotos_juegos';
+                    $file->move($adjuntoDir, $filename);
+
+                    $entityEstudianteDatopersonal->setFoto($filename);
+                    
+                } else {
+                    $this->get('session')->getFlashBag()->set(
+                        'danger',
+                        array(
+                            'title' => 'Alerta!',
+                            'message' => 'Fotografia muy grande, favor ingresar una fotografía que no exceda los 500KiB.'
+                        )
+                    );   
+                    return $this->redirect($this->generateUrl('sie_juegos_comision_nacional_lista_index')); 
+                }              
+            }
+        }                        
+        
+        //$entityEstudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('id' => $estudianteId));
+        //$entityEstudianteDatopersonal->setEstudiante($entityEstudiante);
+        //$entityEstudianteDatopersonal->setEstatura($estatura);
+        //$entityEstudianteDatopersonal->setTalla($talla);
+        //$entityEstudianteDatopersonal->setPeso($peso);   
+        $em->persist($entityEstudianteDatopersonal);
+        $em->flush(); 
+
+        $this->get('session')->getFlashBag()->set(
+            'success',
+            array(
+                'title' => 'correcto!',
+                'message' => 'Fotografia registrada'
+            )
+        );  
+        
+        return $this->redirect($this->generateUrl('sie_juegos_comision_entrenador_f3_lista_index'));   
     }
     
     /**
@@ -1165,7 +1297,7 @@ class ComisionController extends Controller {
         //get db connexion
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
-                select ejd.id, ".$fase." as fase, ejd.carnet_identidad, ejd.nombre, ejd.paterno, ejd.materno, ct.comision, dt.disciplina, pt.prueba, gtp.genero as genero_prueba, ejd.foto, ejd.posicion
+                select ejd.id, ".$fase." as fase, ejd.carnet_identidad, ejd.nombre, ejd.paterno, ejd.materno, ct.id as comisionId, ct.comision, dt.disciplina, pt.prueba, gtp.genero as genero_prueba, ejd.foto, ejd.posicion
                 from comision_juegos_datos as ejd
                 inner join comision_tipo as ct on ct.id = ejd.comision_tipo_id
                 inner join genero_tipo as gt on gt.id = ejd.genero_tipo
@@ -2447,6 +2579,7 @@ class ComisionController extends Controller {
         //get the info ue
         $infoDeporte = $request->get('infoDeportes');
         $ainfoDeporte = unserialize($infoDeporte);
+        //dump($ainfoDeporte);die;
 
         //get the values throght the infoUe
         $codigoEntidad = $ainfoDeporte['requestUser']['codigoEntidad'];
@@ -2487,21 +2620,47 @@ class ComisionController extends Controller {
         $entityDatos = new ComisionJuegosDatos();
         $form = $this->createEntrenadorEstudianteForm($entityDatos,$nivelId,$disciplinaId);
 
-        return $this->render($this->session->get('pathSystem') . ':Comision:seeEntrenadoresClasificacion.html.twig', array(
-                    'form' => $form->createView(),
-                    'objDelegados' => $objDelegados,
-                    'objDelegadosRegistrados' => $objDelegadosRegistrados,
-                    'codigoEntidad' => $codigoEntidad,
-                    'nivel' => $nivel,
-                    'gestion' => $gestion,
-                    'aData' => $aData,
-                    'disciplina' => $disciplina,
-                    'prueba' => $prueba,
-                    'genero' => $genero,
-                    'infoDeporte' => $infoDeporte,
-                    'fase' => $fase,
-                    'exist' => $exist
-        ));
+        $id = $request->get('id');
+        // dump($id);die;
+        if(isset($id)){
+            $entityDatos = $em->getRepository('SieAppWebBundle:ComisionJuegosDatos')->findOneBy(array('id'=>$id));
+            $formFoto = $this->createCreateComisionDelegadoFotoForm($entityDatos);
+            $formFoto = $formFoto->createView();
+
+            return $this->render($this->session->get('pathSystem') . ':Comision:seeEntrenadoresClasificacion.html.twig', array(
+                'form' => $form->createView(),
+                'formFoto' => $formFoto,
+                'delegado' => $id,
+                'objDelegados' => $objDelegados,
+                'objDelegadosRegistrados' => $objDelegadosRegistrados,
+                'codigoEntidad' => $codigoEntidad,
+                'nivel' => $nivel,
+                'gestion' => $gestion,
+                'aData' => $aData,
+                'disciplina' => $disciplina,
+                'prueba' => $prueba,
+                'genero' => $genero,
+                'infoDeporte' => $infoDeporte,
+                'fase' => $fase,
+                'exist' => $exist
+            ));
+        } else {
+            return $this->render($this->session->get('pathSystem') . ':Comision:seeEntrenadoresClasificacion.html.twig', array(
+                'form' => $form->createView(),
+                'objDelegados' => $objDelegados,
+                'objDelegadosRegistrados' => $objDelegadosRegistrados,
+                'codigoEntidad' => $codigoEntidad,
+                'nivel' => $nivel,
+                'gestion' => $gestion,
+                'aData' => $aData,
+                'disciplina' => $disciplina,
+                'prueba' => $prueba,
+                'genero' => $genero,
+                'infoDeporte' => $infoDeporte,
+                'fase' => $fase,
+                'exist' => $exist
+            ));
+        }
     }
 
     /**

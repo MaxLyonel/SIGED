@@ -82,6 +82,10 @@ sie_juegos_acreditacion_registro_save_comision:
     path:    /acreditacion/registro/save/comision
     defaults: { _controller: SieJuegosBundle:Comision:acreditacionRegistroSaveComision }
 
+sie_juegos_acreditacion_registro_save_delegado:
+    path:    /acreditacion/registro/save/delegado
+    defaults: { _controller: SieJuegosBundle:Comision:acreditacionRegistroSaveDelegado }
+
 sie_juegos_acreditacion_registro_elimina:
     path:    /acreditacion/registro/elimina
     defaults: { _controller: SieJuegosBundle:Comision:acreditacionRegistroElimina }
