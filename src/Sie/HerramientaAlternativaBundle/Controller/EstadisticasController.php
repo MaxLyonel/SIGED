@@ -264,12 +264,12 @@ class EstadisticasController extends Controller
         // para seleccionar ti
 
         //$chartMatricula = $this->chartColumnInformacionGeneral($entityEstadistica,"Matrícula",$gestionProcesada,1,"chartContainerMatricula");
-//        $chartDiscapacidad = $this->chartDonut3d($entityEstadistica[3],"Estudiantes matriculados según Área de Atención",$gestionProcesada,"Estudiantes","chartContainerDiscapacidad");
+        $chartDiscapacidad = $this->chartDonutInformacionGeneralNivelGrado($entityEstadistica[3],"Estudiantes matriculados según Etapa/Acreditación",$gestion,"Estudiantes","chartContainerDiscapacidad");
 //        //$chartNivelGrado = $this->chartDonutInformacionGeneralNivelGrado($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio y Año de Escolaridad ",$gestionProcesada,6,"chartContainerEfectivoNivelGrado");
         $chartGenero = $this->chartPie($entityEstadistica[1],"Estudiantes matriculados según Sexo",$gestion,"Estudiantes","chartContainerGenero");
 //        //$chartArea = $this->chartPyramidInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Área Geográfica",$gestionProcesada,4,"chartContainerEfectivoArea");
         $chartDependencia = $this->chartColumn($entityEstadistica[2],"Estudiantes matriculados según Dependencia",$gestion,"Estudiantes","chartContainerDependencia");
-//        $chartModalidad = $this->chartSemiPieDonut3d($entityEstadistica[4],"Estudiantes matriculados según Modalidad",$gestionProcesada,"Estudiantes","chartContainerModalidad");
+//        $chartModalidad = $this->chartSemiPieDonut3d($entityEstadistica[4],"Estudiantes matriculados según Modalidad",$gestion,"Estudiantes","chartContainerModalidad");
 
 
         if(count($subEntidades)>0 and isset($subEntidades)){
@@ -277,6 +277,7 @@ class EstadisticasController extends Controller
                 'infoEntidad'=>$entidad,
                 'infoSubEntidad'=>$subEntidades,
                 'gestion'=>$gestion,
+                'datoGraficoDiscapacidad'=>$chartDiscapacidad,
                 'datoGraficoGenero'=>$chartGenero,
                 'datoGraficoDependencia'=>$chartDependencia,
                 'fechaEstadistica'=>$fechaEstadistica,
@@ -286,6 +287,7 @@ class EstadisticasController extends Controller
             return $this->render($this->session->get('pathSystem') . ':Reporte:matriculaEducativaAlternativa.html.twig', array(
                 'infoEntidad'=>$entidad,
                 'gestion'=>$gestion,
+                'datoGraficoDiscapacidad'=>$chartDiscapacidad,
                 'datoGraficoGenero'=>$chartGenero,
                 'datoGraficoDependencia'=>$chartDependencia,
                 'fechaEstadistica'=>$fechaEstadistica,
@@ -365,12 +367,12 @@ union all
 									else ''
 								end as nombre
 								, case 
-									when a.codigo in (15) and b.codigo = '1' and d.codigo = '1' then 'Basicos'
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '1' then 'Básicos'
 									when a.codigo in (15) and b.codigo = '1' and d.codigo = '2' then 'Avanzados'
 									when a.codigo in (15) and b.codigo = '2' and d.codigo = '1' then 'Aplicados'
 									when a.codigo in (15) and b.codigo = '2' and d.codigo = '2' then 'Complementarios'
-									when a.codigo in (15) and b.codigo = '2' and d.codigo = '3' then 'Epecializados'
-									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 1 then 'Basico'
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '3' then 'Especializados'
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 1 then 'Básico'
 									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 2 then 'Auxiliar'
 									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 3 then 'Medio'
 									else ''
@@ -453,12 +455,12 @@ union all
 									else ''
 								end as nombre
 								, case 
-									when a.codigo in (15) and b.codigo = '1' and d.codigo = '1' then 'Basicos'
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '1' then 'Básicos'
 									when a.codigo in (15) and b.codigo = '1' and d.codigo = '2' then 'Avanzados'
 									when a.codigo in (15) and b.codigo = '2' and d.codigo = '1' then 'Aplicados'
 									when a.codigo in (15) and b.codigo = '2' and d.codigo = '2' then 'Complementarios'
-									when a.codigo in (15) and b.codigo = '2' and d.codigo = '3' then 'Epecializados'
-									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 1 then 'Basico'
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '3' then 'Especializados'
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 1 then 'Básico'
 									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 2 then 'Auxiliar'
 									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 3 then 'Medio'
 									else ''
@@ -538,12 +540,12 @@ union all
 									else ''
 								end as nombre
 								, case 
-									when a.codigo in (15) and b.codigo = '1' and d.codigo = '1' then 'Basicos'
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '1' then 'Básicos'
 									when a.codigo in (15) and b.codigo = '1' and d.codigo = '2' then 'Avanzados'
 									when a.codigo in (15) and b.codigo = '2' and d.codigo = '1' then 'Aplicados'
 									when a.codigo in (15) and b.codigo = '2' and d.codigo = '2' then 'Complementarios'
-									when a.codigo in (15) and b.codigo = '2' and d.codigo = '3' then 'Epecializados'
-									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 1 then 'Basico'
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '3' then 'Especializados'
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 1 then 'Básico'
 									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 2 then 'Auxiliar'
 									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 3 then 'Medio'
 									else ''
@@ -625,12 +627,12 @@ union all
 									else ''
 								end as nombre
 								, case 
-									when a.codigo in (15) and b.codigo = '1' and d.codigo = '1' then 'Basicos'
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '1' then 'Básicos'
 									when a.codigo in (15) and b.codigo = '1' and d.codigo = '2' then 'Avanzados'
 									when a.codigo in (15) and b.codigo = '2' and d.codigo = '1' then 'Aplicados'
 									when a.codigo in (15) and b.codigo = '2' and d.codigo = '2' then 'Complementarios'
-									when a.codigo in (15) and b.codigo = '2' and d.codigo = '3' then 'Epecializados'
-									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 1 then 'Basico'
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '3' then 'Especializados'
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 1 then 'Básico'
 									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 2 then 'Auxiliar'
 									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 3 then 'Medio'
 									else ''
@@ -711,12 +713,12 @@ union all
 									else ''
 								end as nombre
 								, case 
-									when a.codigo in (15) and b.codigo = '1' and d.codigo = '1' then 'Basicos'
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '1' then 'Básicos'
 									when a.codigo in (15) and b.codigo = '1' and d.codigo = '2' then 'Avanzados'
 									when a.codigo in (15) and b.codigo = '2' and d.codigo = '1' then 'Aplicados'
 									when a.codigo in (15) and b.codigo = '2' and d.codigo = '2' then 'Complementarios'
-									when a.codigo in (15) and b.codigo = '2' and d.codigo = '3' then 'Epecializados'
-									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 1 then 'Basico'
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '3' then 'Especializados'
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 1 then 'Básico'
 									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 2 then 'Auxiliar'
 									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 3 then 'Medio'
 									else ''
@@ -831,6 +833,239 @@ union all
                 });
             }
         ";
+        return $datos;
+    }
+
+    public function chartDonut3dAlt($entity,$titulo,$subTitulo,$nombreLabel,$contenedor) {
+
+        $datosTemp = "";
+        $subTotal = 0;
+        foreach ($entity['dato'] as $key => $dato) {
+            $porcentaje = 0;
+            if ($key == 0){
+                $subTotal = $dato['cantidad'];
+            } else {
+                $porcentaje = round(((100*$dato['cantidad'])/(($subTotal==0) ? 1: $subTotal)),1);
+                $datosTemp = $datosTemp."{name: '".$dato['subdetalle']."', y: ".$porcentaje.", label: ".$dato['cantidad']."},";
+            }
+        }
+
+        $pointLabel = $nombreLabel;
+
+        $datos = "   
+            function ".$contenedor."Load() {
+                 $('#".$contenedor."').highcharts({
+                    chart: {
+                        type: 'pie',
+                        options3d: {
+                            enabled: true,
+                            alpha: 45
+                        }
+                    },
+                    //colors: ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1'],
+                    colors: ['#89B440', '#D7AF29', '#E98E25', '#F2774D', '#DB3F30', '#2C4853', '#688F9E', '#0F88B7', '#34B0AE', '#36B087'],
+                    title: {
+                        text: '".$titulo."'
+                    },
+                    subtitle: {
+                        text: '".$subTitulo."'
+                    },
+                    plotOptions: {
+                        pie: {
+                            innerSize: 100,
+                            depth: 45,
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.label:,.0f}</b> ({point.percentage:.1f}%)',
+                                style: {
+                                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                                }
+                            },
+                            showInLegend: true,
+                        }
+                    },
+                    tooltip: {
+                        shared: true,
+                        useHTML: true,
+                        headerFormat: '<span style=&#39;font-size:11px&#39;>{series.name}</span><br>',
+                        pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.label:,.0f} ".$pointLabel."</b> del total<br/>'
+                    },
+                    series: [{
+                        name: '".$entity['tipo']."',
+                        colorByPoint: true,
+                        data: [".$datosTemp."]
+                    }]
+                });
+            }
+        ";
+        return $datos;
+    }
+
+    public function chartDonutInformacionGeneralNivelGrado($entity,$titulo,$subTitulo,$tipoReporte,$contenedor) {
+        //dump($entity);die;
+        $aData = array();
+        foreach ($entity['dato'] as $key => $dato) {
+            if ($key != 0) {
+                $aData[$dato['detalle']][$dato['subdetalle']] = $dato['cantidad'];
+            }
+        }
+        $data = "";
+        $categoria = "";
+        $cantidad = 0;
+        $subCategoria = "";
+        $subCantidad = 0;
+        $subPorcentaje = 0;
+        $total = $entity['dato'][0]['cantidad'];
+        foreach ($aData as $key => $nivel) {
+            $nombre = $key;
+            if ($categoria == "") {
+                $categoria = "'".$key."'";
+            } else {
+                $categoria = $categoria . ",'" . $key . "'";
+            }
+
+            $cantidad = 0;
+            foreach ($nivel as $key => $dato) {
+
+                $cantidad = $cantidad + $dato;
+                $porcentaje = round(($dato*100)/($total), 1);
+          //      dump($porcentaje);die;
+                if ($subCategoria == "") {
+                    $subCategoria = "'" . $key . "'";
+                } else {
+                    $subCategoria = $subCategoria . ",'" . $key . "'";
+                }
+                if ($subPorcentaje == "") {
+                    $subPorcentaje = $porcentaje;
+                } else {
+                    $subPorcentaje = $subPorcentaje . "," . $porcentaje;
+                }
+                if ($subCantidad == "") {
+                    $subCantidad = $dato;
+                } else {
+                    $subCantidad = $subCantidad . "," . $dato;
+                }
+            }
+
+            if ($data == "") {
+                $data = "{
+                            y: " . $cantidad . ", 
+                            color: colors[1], 
+                            drilldown: {
+                                name: '" . $nombre . "',
+                                labels:[" . $subCategoria . "],
+                                categories: [" . $subCantidad . "],
+                                data: [" . $subPorcentaje . "]
+                            }
+                        }";
+            } else {
+                $data = $data.",{
+                            y: " . $cantidad . ", 
+                            color: colors[0], 
+                            drilldown: {
+                                name: '" . $nombre . "',
+                                labels:[" . $subCategoria . "],
+                                categories: [" . $subCantidad . "],
+                                data: [" . $subPorcentaje . "]
+                            }
+                        }";
+            }
+            $subCategoria = "";
+            $subCantidad = "";
+            $subPorcentaje = "";
+        }
+
+        $datos = "  
+            var colors = Highcharts.getOptions().colors,
+            categories = [".$categoria."],            
+            data = [".$data."],
+            nivelData = [],
+            gradoData = [],
+            i,
+            j,
+            dataLen = data.length,
+            drillDataLen,
+            brightness;
+
+            for (i = 0; i < dataLen; i += 1) {
+
+                nivelData.push({
+                    name: categories[i],
+                    y: data[i].y,
+                    label: data[i].y,
+                    color: data[i].color
+                });
+
+                drillDataLen = data[i].drilldown.data.length;
+                for (j = 0; j < drillDataLen; j += 1) {
+                    brightness = 0.2 - (j / drillDataLen) / 5;
+                    gradoData.push({
+                        label: data[i].drilldown.categories[j],
+                        y: data[i].drilldown.data[j],
+                        name: data[i].drilldown.labels[j],
+                        color: Highcharts.Color(data[i].color).brighten(brightness).get()
+                    });
+                }
+            }
+
+            function ".$contenedor."Load() {
+                 $('#".$contenedor."').highcharts({                    
+                    chart: {
+                        type: 'pie'
+                    },
+                    title: {
+                        text: '".$titulo."'
+                    },
+                    subtitle: {
+                        text: '".$subTitulo."'
+                    },
+                    yAxis: {
+                        title: {
+                            text: ''
+                        }
+                    },
+                    plotOptions: {
+                        pie: {
+                            shadow: false,
+                            center: ['50%', '50%']
+                        }
+                    },
+                    tooltip: {
+                        //valueSuffix: '%',
+                        shared: true,
+                        useHTML: true,
+                        headerFormat: '<span style=&#39;font-size:11px&#39;>{series.name}</span><br>',
+                        pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.label:,.0f} Participantes</b> del total<br/>'
+                    },
+                    series: [{
+                        name: 'Etapa/Acreditación',
+                        data: nivelData,
+                        size: '60%',
+                        dataLabels: {
+                            formatter: function () {
+                                return this.y > 0 ? this.point.name : null;
+                            },
+                            color: '#ffffff',
+                            distance: -30
+                        }
+                    }, {
+                        name: 'Cantidad',
+                        data: gradoData,
+                        size: '80%',
+                        innerSize: '60%',
+                        dataLabels: {
+                            formatter: function () {
+                                return this.y > 0 ? '' + this.point.name + ' - ' + (this.point.label).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.') + ' (' + this.y + '%)' : null;
+                            }
+                        }
+                    }]
+
+                });
+            }
+        ";
+      //  dump($datos);die;
         return $datos;
     }
 

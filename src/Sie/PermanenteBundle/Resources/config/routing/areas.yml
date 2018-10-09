@@ -1,0 +1,29 @@
+permanente_areas_index:
+    path:     /
+    defaults: { _controller: SiePermanenteBundle:Areas:index }
+    options:
+         expose: true
+
+permanente_areas_maestros:
+    path:     /areamaestro
+    defaults: { _controller: SiePermanenteBundle:Areas:areamaestro }
+    options:
+         expose: true         
+         
+permanente_areas_add:
+    path:     /areasadd
+    defaults: { _controller: SiePermanenteBundle:Areas:areasadd }
+    options:
+         expose: true            
+         
+permanente_areas_delete:
+    path:     /areasdelete
+    defaults: { _controller: SiePermanenteBundle:Areas:areasdelete }
+    options:
+         expose: true          
+
+permanente_infoEstudianteAreas_maestros_asignar:
+    path:     /maestrosAsignar
+    defaults: { _controller: "SiePermanenteBundle:Areas:maestrosAsignar"}
+    options:
+         expose: true         
