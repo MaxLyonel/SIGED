@@ -768,7 +768,7 @@ class Funciones {
     }
 
     public function validateModIntEmer($iecId){
-// dump($iecId);
+
         $moduloIntEmer = $this->em->createQueryBuilder()
                     ->select('l')
                     ->from('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g')
@@ -780,10 +780,8 @@ class Funciones {
                     ->setParameter('idCurso', $iecId)
                     ->setParameter('codigo', 415)
                     ->getQuery();
-         // $moduloPeriodo = $moduloPeriodo->getSQL();
-         // dump($moduloPeriodo);
+         
          $moduloIntEmer = $moduloIntEmer->getResult();
-         // dump($moduloPeriodo[0]->getModulo());die;
          $swSetNameModIntEmer = false;
          if($moduloIntEmer){
             if($moduloIntEmer[0]->getModulo()=='MÓDULO EMERGENTE'){
@@ -794,6 +792,50 @@ class Funciones {
          }
          
         return json_encode($arrModIntEme);
+    }
+
+      public function validatePrimariaCourse($iecId){
+        //look data about the course in a query
+        $query = $this->em->createQueryBuilder()
+                    ->select('IDENTITY(iec.gestionTipo) as gestion,sfat.codigo as sfatCodigo, (seet.id) as setId, (ies.periodoTipoId) as periodoId')
+                    ->from('SieAppWebBundle:InstitucioneducativaCurso', 'iec')
+                    ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'siep', 'WITH', 'iec.superiorInstitucioneducativaPeriodo = siep.id')
+                    ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion', 'siea', 'WITH', 'siep.superiorInstitucioneducativaAcreditacion = siea.id')
+                    ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'ies', 'WITH', 'siea.institucioneducativaSucursal = ies.id')
+                    ->innerJoin('SieAppWebBundle:SuperiorAcreditacionEspecialidad', 'sae', 'WITH', 'siea.acreditacionEspecialidad = sae.id')
+                    ->innerJoin('SieAppWebBundle:SuperiorEspecialidadTipo', 'seet', 'WITH', 'sae.superiorEspecialidadTipo = seet.id')
+                    ->innerJoin('SieAppWebBundle:SuperiorFacultadAreaTipo', 'sfat', 'WITH', 'seet.superiorFacultadAreaTipo = sfat.id')
+                    ->where('iec.id = :iecId')
+                    ->setParameter('iecId', $iecId)
+                    ->getQuery();
+
+        $objInfoCourse = $query->getResult();
+        //set values to validate PRIMARIA course
+        $swValidationPrimaria = false;
+        
+        // check if the course is PRIMARIA
+        if( 
+            $objInfoCourse[0]['gestion'] == 2018 &&
+            $objInfoCourse[0]['sfatCodigo'] == 15 &&
+            $objInfoCourse[0]['setId'] == 13 &&
+            $objInfoCourse[0]['periodoId'] == 3
+          ){
+            $swValidationPrimaria=true;
+        }else{
+            if(
+                $objInfoCourse[0]['gestion'] >= 2019 &&
+                $objInfoCourse[0]['sfatCodigo'] == 15 &&
+                $objInfoCourse[0]['setId'] == 13 &&
+                $objInfoCourse[0]['periodoId'] >= 2
+            ){
+                $swValidationPrimaria=true;
+            }else{
+                $swValidationPrimaria=false;
+            }        
+        }
+        // return the response
+        return $swValidationPrimaria;
+
     }
 
 }
