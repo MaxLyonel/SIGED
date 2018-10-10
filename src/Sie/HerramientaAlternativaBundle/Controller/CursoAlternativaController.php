@@ -219,42 +219,65 @@ class CursoAlternativaController extends Controller {
             
             if ($var['nivelcod'] == '13'){//id 13 HUMANISTICA
                 //MATEMATICA
-                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
-                $smp = new SuperiorModuloPeriodo();
-                $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52419'));
-                $smp->setInstitucioneducativaPeriodo($siep);
-                $smp->setHorasModulo('0');
-                $em->persist($smp);
-                $em->flush();
+                $smp_aux = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->findBy(array('superiorModuloTipo' => $em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52419'), 'institucioneducativaPeriodo' => $siep));
+                if(!$smp_aux){
+                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
+                    $smp = new SuperiorModuloPeriodo();
+                    $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52419'));
+                    $smp->setInstitucioneducativaPeriodo($siep);
+                    $smp->setHorasModulo('0');
+                    $em->persist($smp);
+                    $em->flush();
+                }
 
                 //LENGUAJE
-                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
-                $smp = new SuperiorModuloPeriodo();
-                $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52420'));
-                $smp->setInstitucioneducativaPeriodo($siep);
-                $smp->setHorasModulo('0');
-                $em->persist($smp);
-                $em->flush();
+                $smp_aux = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->findBy(array('superiorModuloTipo' => $em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52420'), 'institucioneducativaPeriodo' => $siep));
+                if(!$smp_aux){
+                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
+                    $smp = new SuperiorModuloPeriodo();
+                    $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52420'));
+                    $smp->setInstitucioneducativaPeriodo($siep);
+                    $smp->setHorasModulo('0');
+                    $em->persist($smp);
+                    $em->flush();
+                }
 
                 //CIENCIAS SOCIALES
-                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
-                $smp = new SuperiorModuloPeriodo();
-                $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52421'));
-                $smp->setInstitucioneducativaPeriodo($siep);
-                $smp->setHorasModulo('0');
-                $em->persist($smp);
-                $em->flush();
+                $smp_aux = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->findBy(array('superiorModuloTipo' => $em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52421'), 'institucioneducativaPeriodo' => $siep));
+                if(!$smp_aux){
+                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
+                    $smp = new SuperiorModuloPeriodo();
+                    $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52421'));
+                    $smp->setInstitucioneducativaPeriodo($siep);
+                    $smp->setHorasModulo('0');
+                    $em->persist($smp);
+                    $em->flush();
+                }
 
                 //CIENCIAS NATURALES
-                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
-                $smp = new SuperiorModuloPeriodo();
-                $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52422'));
-                $smp->setInstitucioneducativaPeriodo($siep);
-                $smp->setHorasModulo('0');
-                $em->persist($smp);
-                $em->flush();
+                $smp_aux = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->findBy(array('superiorModuloTipo' => $em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52422'), 'institucioneducativaPeriodo' => $siep));
+                if(!$smp_aux){
+                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
+                    $smp = new SuperiorModuloPeriodo();
+                    $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52422'));
+                    $smp->setInstitucioneducativaPeriodo($siep);
+                    $smp->setHorasModulo('0');
+                    $em->persist($smp);
+                    $em->flush();
+                }
 
                 //MÓDULO EMERGENTE
+                // $smt_aux = $em->createQueryBuilder()
+                // ->select('k')
+                // ->from('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g')
+                // ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo = g.id')
+                // ->innerJoin('SieAppWebBundle:SuperiorModuloPeriodo', 'k', 'WITH', 'g.id = k.institucioneducativaPeriodo')
+                // ->innerJoin('SieAppWebBundle:SuperiorModuloTipo', 'l', 'WITH', 'l.id = k.superiorModuloTipo ')
+                // ->where('h.id = :idCurso')
+                // ->setParameter('idCurso', $iec->getId())
+                // ->getQuery()
+                // ->getResult();
+                
                 $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_tipo');")->execute();
                 $newSuperiorModuloTipo = new SuperiorModuloTipo();
                 $newSuperiorModuloTipo->setModulo('MÓDULO EMERGENTE');
@@ -266,13 +289,16 @@ class CursoAlternativaController extends Controller {
                 $em->persist($newSuperiorModuloTipo);
                 $em->flush();
 
-                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
-                $smp = new SuperiorModuloPeriodo();
-                $smp->setSuperiorModuloTipo($newSuperiorModuloTipo);
-                $smp->setInstitucioneducativaPeriodo($siep);
-                $smp->setHorasModulo(0);
-                $em->persist($smp);
-                $em->flush();
+                $smp_aux = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->findBy(array('superiorModuloTipo' => $newSuperiorModuloTipo, 'institucioneducativaPeriodo' => $siep));
+                if(!$smp_aux){
+                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
+                    $smp = new SuperiorModuloPeriodo();
+                    $smp->setSuperiorModuloTipo($newSuperiorModuloTipo);
+                    $smp->setInstitucioneducativaPeriodo($siep);
+                    $smp->setHorasModulo(0);
+                    $em->persist($smp);
+                    $em->flush();
+                }
             }
 
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso');")->execute();
