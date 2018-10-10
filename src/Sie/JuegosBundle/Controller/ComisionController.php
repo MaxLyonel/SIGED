@@ -1409,7 +1409,7 @@ class ComisionController extends Controller {
                 inner join disciplina_tipo as dt on dt.id =  pt.disciplina_tipo_id
                 inner join genero_tipo as gtp on gtp.id = pt.genero_tipo_id
                 where det.id = ".$codigoEntidad." and ejd.gestion_tipo_id = ".$gestion." and ejd.fase_tipo_id = 4 and (ejd.prueba_tipo_id is null or ejd.prueba_tipo_id = 0)
-                and dt.nivel_tipo_id = (case ft.esactivo_secundaria when 't' then 13 else 12 end)
+                and ct.nivel_tipo_id = (case ft.esactivo_secundaria when 't' then 13 else 12 end)
                 order by dt.disciplina, pt.prueba, gtp.genero, nombre, paterno, materno
 
             ");
