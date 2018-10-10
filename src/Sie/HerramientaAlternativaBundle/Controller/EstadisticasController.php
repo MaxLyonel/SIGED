@@ -426,7 +426,9 @@ union all
            -- left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
           --  left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
           --  left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
-            where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = ".$periodo." --and cast(substring(cod_dis,1,1) as integer)=2
+              inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+                    left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
+            where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = ".$periodo." and ie.id='".$area."' --and cast(substring(cod_dis,1,1) as integer)=2
             and a.codigo in (15,18,19,20,21,22,23,24,25)
             group by ie.dependencia_tipo_id,a.id,b.id,d.id,es.genero_tipo_id
 )
