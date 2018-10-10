@@ -35,6 +35,7 @@ class ComisionDepartamentalJuegosDatosType extends AbstractType
                                                 ,'147' => 'Director Servicio Departamental Deporte'
                                                 ,'152' => 'Equipo Médico'
                                                 ,'153' => 'Equipo de Seguridad Patrulla'
+                                                ,'122' => 'Representación Cultural - Responsable Danza'
                                             ),
                             )
                 )

@@ -1,0 +1,84 @@
+<div class="panel panel-danger">
+
+    <div class="panel-heading">
+        <h4>
+            Especialidades - {{ cantesp }}
+        </h4>
+    </div>
+    <div class="panel-body">
+        <p>Listado de todas las especialidades permitidas para los centros autorizados a proporcionar las mismas en cursos de Educación Permanente</p>
+        <br>
+        <button type="button" class="btn btn-danger" onclick="nuevaEspecialidad();" >Nuevo</button>
+        <br>
+        <br>
+        {% if existeesp %}
+            <div class="table-responsive col-md-12">
+                <table class="table table-bordered table-striped" id="listaEsp">
+                    <thead>
+                    <tr>
+                        <th class="text-center border-right">N°</th>
+                        <th class="text-center border-right">Especialidad</th>
+                        <th class="text-center border-right">Tecnico Basico</th>
+                        <th class="text-center border-right">Tecnico Auxiliar</th>
+                        <th class="text-center border-right">Tecnico Medio</th>
+                        <th class="text-center border-right">Operaciones </th>
+
+
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th class="text-center border-right">N°</th>
+                        <th class="text-center border-right">Especialidad</th>
+                        <th class="text-center border-right">Tecnico Basico</th>
+                        <th class="text-center border-right">Tecnico Auxiliar</th>
+                        <th class="text-center border-right">Tecnico Medio</th>
+                        <th class="text-center border-right">Operaciones </th>
+                    </tr>
+                    </tfoot>
+                    <tbody>
+                    {% for especialidades in especialidades %}
+                        <tr>
+                            <td data-title="N°" class="text-center">{{ loop.index }}</td>
+                            <td data-title="Especialidad" class="text-center">{{ especialidades.especialidad }}</td>
+                            <td data-title="Tecnico_Basico" class="text-center">
+                                {% if (especialidades.tecnicobasico == '1') %}
+                                <i class="fa fa-check" style="color:#009500;"></i>
+                                {% elseif (especialidades.tecnicobasico == '0') %}
+                                <i class="fa fa-close" style="color:#dd0304;">
+                                    {% endif %}
+                            </td>
+                            <td data-title="Tecnico_Auxiliar" class="text-center">
+                                {% if (especialidades.tecnicoauxiliar == '1') %}
+                                <i class="fa fa-check" style="color:#009500;"></i>
+                                {% elseif (especialidades.tecnicoauxiliar == '0') %}
+                                <i class="fa fa-close" style="color:#dd0304;">
+                                    {% endif %}
+                            </td>
+                            <td data-title="Tecnico_Medio" class="text-center">
+                                {% if (especialidades.tecnicomedio == '1') %}
+                                <i class="fa fa-check" style="color:#009500;"></i>
+                                {% elseif (especialidades.tecnicomedio == '0') %}
+                                <i class="fa fa-close" style="color:#dd0304;">
+                                    {% endif %}
+
+                            </td>
+                            <td data-title="Acciones" class="text-center">
+                                {#<a href="#" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="View detail"><i class="fa fa-eye"></i></a>#}
+                                {#<button class="btn btn-lilac btn-xs btn-stroke" onclick="showEditCursoCorto();">#}
+                                <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="editarEspecialidad({{ especialidades.id }},{{ especialidades.tecnicobasico }},{{ especialidades.tecnicoauxiliar }},{{ especialidades.tecnicomedio }});"><i class="fa fa-pencil"></i></a>
+                                    <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="eliminarEspecialidad({{ especialidades.id }}));"><i class="fa fa-times"></i></button>
+
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        {% else %}
+            <p> NO EXISTEN ESPECIALIDADES...</p>
+        {% endif %}
+    </div>
+
+</div>
