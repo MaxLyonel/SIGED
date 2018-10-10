@@ -920,6 +920,7 @@ union all
         $subCantidad = 0;
         $subPorcentaje = 0;
         $total = $entity['dato'][0]['cantidad'];
+        $count = 1;
         foreach ($aData as $key => $nivel) {
             $nombre = $key;
             if ($categoria == "") {
@@ -954,7 +955,7 @@ union all
             if ($data == "") {
                 $data = "{
                             y: " . $cantidad . ", 
-                            color: colors[1], 
+                            color: colors[".$count."], 
                             drilldown: {
                                 name: '" . $nombre . "',
                                 labels:[" . $subCategoria . "],
@@ -965,7 +966,7 @@ union all
             } else {
                 $data = $data.",{
                             y: " . $cantidad . ", 
-                            color: colors[0], 
+                            color: colors[".$count."],  
                             drilldown: {
                                 name: '" . $nombre . "',
                                 labels:[" . $subCategoria . "],
@@ -977,10 +978,12 @@ union all
             $subCategoria = "";
             $subCantidad = "";
             $subPorcentaje = "";
+            $count++;
         }
 
-        $datos = "  
-            var colors = Highcharts.getOptions().colors,
+        $datos = " 
+            var colors = ['#0F88B7', '#34B0AE', '#36B087', '#89B440', '#D7AF29', '#E98E25', '#F2774D', '#DB3F30', '#2C4853', '#688F9E'],
+            
             categories = [".$categoria."],            
             data = [".$data."],
             nivelData = [],
@@ -1017,6 +1020,7 @@ union all
                     chart: {
                         type: 'pie'
                     },
+                    colors: ['#0F88B7', '#34B0AE', '#36B087', '#89B440', '#D7AF29', '#E98E25', '#F2774D', '#DB3F30', '#2C4853', '#688F9E'],
                     title: {
                         text: '".$titulo."'
                     },
