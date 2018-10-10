@@ -59,6 +59,7 @@
                                         <th>Fecha de Trámite</th>
                                         <th>Observación</th>
                                         <th>Usuario Recepción</th>
+                                        <th>Estado</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
@@ -70,6 +71,7 @@
                                         <th>Fecha de Trámite</th>
                                         <th>Observación</th>
                                         <th>Usuario Recepción</th>
+                                        <th>Estado</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </tfoot>
@@ -82,6 +84,7 @@
                                         <td>{{ tramite.fecha_registro }}</a></td>
                                         <td>{{ tramite.obs }}</a></td>
                                         <td>{{ tramite.nombre }}</td>
+                                        <td>{{ tramite.estado }}</td>
                                         <td>
                                             <a href="{{path('tramite_rue_notificacion_minedu_nuevo', { 'id': tramite.id })}}" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" title="Notificar">
                                                 <i class="fa fa-eye"></i>

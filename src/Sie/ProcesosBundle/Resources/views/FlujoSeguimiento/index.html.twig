@@ -80,6 +80,10 @@
                 type: 'GET',
                 url: "{{path('flujoseguimiento_verflujo')}}",
                 data: formData,
+                beforeSend: function () {
+                        $('#flujo').empty();
+                        $('#flujo').append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
                 success: function (data) {
                     $('#flujo').empty();
                     $('#flujo').append(data);
