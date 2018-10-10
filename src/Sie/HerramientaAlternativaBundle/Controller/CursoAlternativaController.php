@@ -81,9 +81,6 @@ class CursoAlternativaController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-        
-//        dump($nivelid);
-//        die;
                 
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
@@ -139,7 +136,7 @@ class CursoAlternativaController extends Controller {
         $params = array();
         $cursos->execute($params);
         $cur = $cursos->fetchAll();
-        //dump($query); die;
+        
         if ($cur){                                  
             $count = count($cur);           
             $primerparalelo = $cur[$count-1]['id'];
@@ -181,9 +178,10 @@ class CursoAlternativaController extends Controller {
 
         
         $dat = explode(",", $var['paralelocod']);
+
         $em->getConnection()->beginTransaction();
         try {
-            if ($dat[1] != '-1'){
+            if ($dat[1] == '-1'){
                 $query = "
                             select c.id
                             from superior_facultad_area_tipo a 
@@ -215,9 +213,7 @@ class CursoAlternativaController extends Controller {
                 $siep->setSuperiorPeriodoTipo($em->getRepository('SieAppWebBundle:SuperiorPeriodoTipo')->find('2'));              
                 $em->persist($siep);
                 $em->flush();
-                
-            }
-            else{
+            }else{
                 $siep = $em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo')->find($dat[1]);
             }
             
@@ -357,8 +353,7 @@ class CursoAlternativaController extends Controller {
         $params = array();
         $cursos->execute($params);
         $cur = $cursos->fetchAll();
-//        dump($cur);
-//        die;        
+
         if ($cur){            
             $em->getConnection()->beginTransaction();
             try {
@@ -375,15 +370,10 @@ class CursoAlternativaController extends Controller {
                     $params = array();
                     $cursossp->execute($params);
                     $cursp = $cursossp->fetchAll();
-                    
-//                    dump($cursp);
-//                    die;
-                    
+                                        
                     $newidpara = $cursp[0]['paralelo_tipo_id'];
                     $par = $em->getRepository('SieAppWebBundle:ParaleloTipo')->find($newidpara + 1);                    
                     $iec->setParaleloTipo($par);
-//                    dump($par);
-//                    die;
                     $em->persist($iec);
                     $em->flush();
                 }
@@ -408,14 +398,9 @@ class CursoAlternativaController extends Controller {
         //get the send values
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
-//          dump($aInfoUeducativa['ueducativaInfoId']['nivelId']);die;
         $iecid = $aInfoUeducativa['ueducativaInfoId']['iecId'];
-        //dump($iecid);die;        
         $iec = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecid);
         $response = new JsonResponse();
-        //dump(count($iec)); die;        
-        
-        //dump(count($iecpercount));die;
         $em->getConnection()->beginTransaction();
         try {
             $iecpercount = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findBySuperiorInstitucioneducativaPeriodo($iec->getSuperiorInstitucioneducativaPeriodo()->getId());    
@@ -444,7 +429,6 @@ class CursoAlternativaController extends Controller {
             }else{
                     if (count($iecpercount) == 1 ){//BORRA  MODULO PERIODO Y ACREDITACION PUESTO QUE ES EL ULTIMO CURSO              
                         $smp = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->findByInstitucioneducativaPeriodo($iec->getSuperiorInstitucioneducativaPeriodo());
-                        //dump($smp); die;
                         if ($aInfoUeducativa['ueducativaInfoId']['nivelId'] == '15'){
                             foreach ($smp as $smprow) {
                                 $em->remove($smprow);
@@ -457,7 +441,6 @@ class CursoAlternativaController extends Controller {
                                 return $response->setData(array('mensaje'=>'No se puede eliminar el curso, la especialidad aun tiene registro de módulos.'));
                             }
                         }                
-        //                dump($smp); die;                
                         $siep = $em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo')->find($iec->getSuperiorInstitucioneducativaPeriodo());
                         $sieca = $em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion')->find($siep->getSuperiorInstitucioneducativaAcreditacion());    
                         
@@ -516,9 +499,7 @@ class CursoAlternativaController extends Controller {
     }
 
     public function verificarcursoduplicado($aInfoUeducativa, $idcurso) {
-        //dump($aInfoUeducativa);die;
         $em = $this->getDoctrine()->getManager();
-        //$em = $this->getDoctrine()->getEntityManager();
         $db = $em->getConnection();            
         $query = " select h.id as idcurso, f.gestion_tipo_id,f.periodo_tipo_id,e.institucioneducativa_id, stt.turno_superior, a.codigo as nivel_id, a.facultad_area,b.codigo as ciclo_id,b.especialidad,d.codigo as grado_id,d.acreditacion
                     ,pt.id as paralelo_id, pt.paralelo
@@ -554,7 +535,6 @@ class CursoAlternativaController extends Controller {
         $params = array();
         $stmt->execute($params);
         $po = $stmt->fetchAll();
-        //dump($po); die;     
         if (count($po) == 0){
             return '-1';
         }
@@ -589,8 +569,7 @@ class CursoAlternativaController extends Controller {
         $params = array();
         $cursos->execute($params);
         $cur = $cursos->fetchAll();
-//        dump($cur);
-//        die;
+
         if ($cur){            
             $em->getConnection()->beginTransaction();
             try {
@@ -630,8 +609,7 @@ class CursoAlternativaController extends Controller {
         $params = array();
         $cursos->execute($params);
         $cur = $cursos->fetchAll();
-//        dump($cur);
-//        die;
+
         if ($cur){            
             $em->getConnection()->beginTransaction();
             try {
@@ -644,14 +622,10 @@ class CursoAlternativaController extends Controller {
                         $output  = str_replace($letters, $fruit, $idsdel);
                         $porciones = explode(",", $output);
                         $i = 1;
-//                        dump(count($porciones));
-//                        die;
                         while ($i <= count($porciones) - 1){                            
-//                            dump($output.' '.$porciones[$i]);
-//                            die;
+
                             $smp = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalTramite')->find($porciones[$i]);
-//                            dump($smp);
-//                            die;
+
                             $em->remove($smp);
                             $em->flush();
                             $i = $i + 1;
