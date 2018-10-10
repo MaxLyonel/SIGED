@@ -7,17 +7,18 @@
         {% endfor %}
     </div>
 {% endif %} 
-{% if flujotipo == 5 %}
+{% if flujotipo == 5 or flujotipo == 14 %}
     <div><h4>Unidad Educativa: {{nombre_ie}}</h4></div>
 {% else %}
     <div><h4>Estudiante: {{estudiante}}</h4></div>
 {% endif %}
- {% if (flujotipo == 5 and nombre_ie != null) or (flujotipo in [6,7] and estudiante != null) %} 
+ {% if (flujotipo in [5,14] and nombre_ie != null) or (flujotipo in [6,7] and estudiante != null) %} 
 <div style= "display:none" >
 <textarea id="code" style="width: 100%;" rows="11">
 
 st=>start: Inicio|past
 e=>end: Fin|past
+{% set sw = 0 %}
 {% for f in flujo %}
     {% if f.fecha_registro %}
         {% set estado = "current" %}
@@ -29,13 +30,30 @@ e=>end: Fin|past
         {{ f.fecha_registro }}
         {{f.variable_evaluacion}}={{ f.valor_evaluacion }}|{{estado}}
     {% else %}
-        {{f.id}}=>operation: {{f.proceso_tipo}}
-        {{ f.fecha_registro }}|{{estado}}
+        {% if sw == 0 %}
+            {{f.id}}=>operation: {{f.proceso_tipo}}
+            {{ f.fecha_registro }}|{{estado}}
+            {% set tarea = f.id %}
+            {% set sw = 1 %}
+        {% else %}
+            {% if tarea ==  f.id %}
+                {% set fecha = fecha ~ " " ~ f.fecha_registro ~ " " %}
+                {{f.id}}=>operation: {{f.proceso_tipo}}
+                {{ fecha }}|{{estado}}
+                {% set tarea = f.id %}
+            {% else %}
+                {% set fecha = f.fecha_registro %}
+                {{f.id}}=>operation: {{f.proceso_tipo}}
+                {{ fecha }}|{{estado}}
+                {% set tarea = f.id %}
+            {% endif %}
+        {% endif %}
     {% endif %}
     {% if f.es_evaluacion =="1" %}
         c{{f.id}}=>condition: {{f.variable_evaluacion}}?|past
     {% endif %}
 {% endfor %}
+
 {% set sw = 0 %}
 {% for f in flujo %}
     {% if f.es_evaluacion =="1" %}
