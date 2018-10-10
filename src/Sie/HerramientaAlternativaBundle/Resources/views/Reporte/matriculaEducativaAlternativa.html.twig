@@ -416,22 +416,22 @@
                 {% endif %}
             {% endif %}
             <div id="tour-7" class="col-lg-8 col-md-8 col-sm-12 col-xs-12">     
-                {#<div class="row">                                       #}
-                    {#<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">#}
-                        {#<div class="panel panel-default shadow">#}
-                            {#<div class="panel-body">#}
-                                {#<!-- Start project overview -->#}
-                                {#<div class="row">         #}
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="panel panel-default shadow">
+                            <div class="panel-body">
+                                <!-- Start project overview -->
+                                <div class="row">
 
-                                    {#<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">#}
-                                        {#<div id="chartContainerDiscapacidad" style="height:300px;"> </div> #}
-                                    {#</div>   #}
-                                    {##}
-                                {#</div>                            #}
-                            {#</div><!-- /.panel-body -->#}
-                        {#</div>#}
-                    {#</div>#}
-                {#</div>#}
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div id="chartContainerDiscapacidad" style="height:300px;"> </div>
+                                    </div>
+
+                                </div>
+                            </div><!-- /.panel-body -->
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="panel panel-default shadow">
@@ -456,22 +456,22 @@
                         </div>
                     </div>
                 </div> 
-                {#<div class="row">                                       #}
+                {#<div class="row">#}
                     {#<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">#}
                         {#<div class="panel panel-default shadow">#}
                             {#<div class="panel-body">#}
                                 {#<!-- Start project overview -->#}
-                                {#<div class="row">         #}
+                                {#<div class="row">#}
 
                                     {#<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">#}
-                                        {#<div id="chartContainerModalidad" style="height:400px;"> </div> #}
-                                    {#</div>   #}
-                                    {##}
-                                {#</div>                            #}
+                                        {#<div id="chartContainerModalidad" style="height:400px;"> </div>#}
+                                    {#</div>#}
+
+                                {#</div>#}
                             {#</div><!-- /.panel-body -->#}
                         {#</div>#}
                     {#</div>#}
-                {#</div> #}
+                {#</div>#}
                 {% if infoEstadisticaUE is defined and infoEstadisticaEE is defined %}
                     <div class="row">     
                         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">             
@@ -601,15 +601,15 @@
             {% autoescape %}
                 {% if datoGraficoModalidad is defined %}
                     {{ datoGraficoModalidad|raw }}
-                {% endif %} 
+                {% endif %}
             {% endautoescape %}
 
 
             $(function () {
-              //  chartContainerDiscapacidadLoad();
+                chartContainerDiscapacidadLoad();
                 chartContainerGeneroLoad();  
                 chartContainerDependenciaLoad();
-             //   chartContainerModalidadLoad();
+//                chartContainerModalidadLoad();
             });  
 
             function seeGraphic (infoTipo,infoCodigo,infoRol) {

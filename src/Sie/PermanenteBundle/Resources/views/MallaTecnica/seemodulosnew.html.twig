@@ -1,0 +1,430 @@
+    <div class="header-content">
+        <h2><i class="glyphicon glyphicon-list-alt"></i> {{ especialidad }} <span> - </span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <i class="fa fa-calendar"></i>
+            <span class="label"> Total Semestres:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="">
+                        {#{% if (ultimoperiodo == 2) %}
+                            <a href="#" id="xeditableduracion" data-pk="{{ultimoperiodo.id}}">1 Semestre</a>
+                        {% elseif (ultimoperiodo == 3) %}
+                            <a href="#" id="xeditableduracion" data-pk="{{ultimoperiodo.id}}">2 Semestres</a>
+                        {% elseif (ultimoperiodo == 4) %}
+                            <a href="#" id="xeditableduracion" data-pk="{{ultimoperiodo.id}}">3 Semestres</a>
+                        {% elseif (ultimoperiodo == 5) %}
+                            <a href="#" id="xeditableduracion" data-pk="{{ultimoperiodo.id}}">4 Semestres</a>
+                        {% elseif (ultimoperiodo == 6) %}
+                            <a href="#" id="xeditableduracion" data-pk="{{ultimoperiodo.id}}">5 Semestres</a>
+                        {% elseif (ultimoperiodo == 7) %}
+                            <a href="#" id="xeditableduracion" data-pk="{{ultimoperiodo.id}}">6 Semestres</a>
+                        {% elseif (ultimoperiodo == 8) %}
+                            <a href="#" id="xeditableduracion" data-pk="{{ultimoperiodo.id}}">7 Semestres</a>
+                        {% endif%} #}
+                    </a>
+                </li>
+            </ol>
+            ---        
+            <i class="fa fa-clock-o"></i>
+            <span class="label"> Total Horas:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="">
+                        <a href="#" id="xeditableduracion" data-pk="123">{{ (tothoras[0]['totbas']) + (tothoras[0]['totaux']) + (tothoras[0]['totmed']) }}</a>
+                    </a>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->                                        
+    </div>
+    <BR>        
+    {% if existper == true %}
+        <small>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel">
+                        <BR>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3 class="panel-title text-center"><i class="glyphicon glyphicon-pawn"></i>  TÉCNICO BÁSICO</h3>
+                            </div>
+                            <div class="col-md-6">
+                                <h3 class="panel-title text-center"><i class="glyphicon glyphicon-knight"></i>  TÉCNICO AUXILIAR</h3>
+                            </div>
+                            {#<div class="col-md-4">#}
+                                {#<h3 class="panel-title text-center"><i class="glyphicon glyphicon-bishop"></i>  TÉCNICO MEDIO</h3>#}
+                            {#</div> #}
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="panel-title text-center"><i class="fa fa-clock-o"></i>  Total horas :{{ tothoras[0]['totbas'] }}</h6>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="panel-title text-center"><i class="fa fa-clock-o"></i>  Total horas :{{ tothoras[0]['totaux'] }}</h6>
+                            </div>
+                            {#<div class="col-md-4">#}
+                                {#<h6 class="panel-title text-center"><i class="fa fa-clock-o"></i>  Total horas :{{ tothoras[0]['totmed'] }}</h6>#}
+                            {#</div> #}
+                        </div>
+                        <BR>
+                            <div class="row">
+                            {% if (app.session.get('ie_per_estado') != '0') %}
+                                <div class="col-md-12">
+                                    <div class="col-sm-offset-5">
+                                        <button onclick="nuevomoduloabrir();" class="btn btn-primary btn-stroke">
+                                            <i class="fa fa-newspaper-o"></i> Nuevo Módulo
+                                        </button>                            
+                                    </div>
+                                </div>
+                            {% endif %}    
+                            </div>                        
+                        <BR>
+                            <div id="nuevomodulo" style="display:none;">
+                                <div class="panel rounded shadow">
+                                    <div class="panel-body no-padding">
+                                        <form id="formnuevomodulotec" onsubmit="enviaformmodulo(); return false;" method="post" style="">
+                                            <input type="hidden" name="infoUe" value="{{infoUe}}">
+                                            <div class="form-body">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Acreditación</label>
+                                                            <select name="acreditacionid" id="acreditacionid" class="form-control input-sm mb-15">
+                                                                    <option value="-999">Elija una acreditación</option>
+                                                                    {% for data in periodos %}
+                                                                        <option value="{{data.saeid}}">{{ data.acreditacion }}</option>
+                                                                    {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </div>          
+                                                    <div class="col-md-4">
+                                                        <div class="form-group has-primary">
+                                                            <div class="form-group">
+                                                                <label class="control-label">Descripcion del Módulo</label>
+                                                                <input name="modulo" id="modulo" class="form-control" type="text">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {#<div class="col-md-3">#}
+                                                        {#<div class="form-group">#}
+                                                            {#<label class="control-label">Áreas y saberes de conocimientos</label>#}
+                                                            {#<select name="area" id="area" class="form-control input-sm mb-15">#}
+                                                                {#<option value="-999">Elija un área</option>#}
+                                                                {#<option style="background-color: #3F9266" value="1">AREA HUMANISTICA</option>#}
+                                                                {#<option style="background-color: #BF7F21" value="2">TECNICA PRODUCTIVA FORMACION DE LA ESPECIALIDAD</option>#}
+                                                                {#<option style="background-color: #2B8FAB" value="3">EMPRENDIMIENTOS E INFORMATICA</option>#}
+                                                            {#</select>#}
+                                                        {#</div>#}
+                                                    {#</div>#}
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Carga Horaria</label>
+                                                            <select name="horas" id="horas" class="form-control input-sm mb-15">
+                                                                <option value="-999">Elija una carga horaria</option>
+                                                                <option value="60">60</option>
+                                                                <option value="80">80</option>
+                                                                <option value="100">100</option>
+                                                                <option value="120">120</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div id="barradeareas" class="col-md-12">
+                                                        <div class="progress progress-xxs no-margin">
+                                                            <div id="progressbar" class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-footer">
+                                                <div class="col-sm-offset-5">
+                                                    <a onclick="nuevomodulocerrar();" class="btn btn-danger btn-stroke"><i class="fa fa-ban" aria-hidden="true"></i> Cancelar</a>
+                                                    <button id="botonguardarmodulo" type="submit" class="btn btn-success btn-stroke">
+                                                        <i class="fa fa-floppy-o"></i> Guardar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                    {% else %}                                                
+                        <small>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="panel">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title text-center"><i class="glyphicon glyphicon-pawn"></i>  TÉCNICO BÁSICO</h3>
+                                        </div>                                                
+                                        <BR>        
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class="col-sm-3 control-label">Duración</label>
+                                                <div class="col-sm-9">                                
+                                                    <a href="#" id="xeditableduracionnew" data-pk="{{siea}}">1 Semestre</a>                                
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="col-sm-3 control-label">Total Horas:</label>
+                                                <div class="col-sm-9">
+                                                    <a href="#" id="totalhorasper">0</a>
+                                                </div>
+                                            </div>
+                                        </div>                    
+                                        <BR>
+                                    </div>
+                                </div>
+                            </div>
+                        </small>
+                    {% endif %}    
+                    <BR>                                                
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <div id="modulosbasid" >
+                                <table class="table table-no-border table-middle table-lilac">
+                                    <tbody>
+                                        <tr>
+                                            <td align="left" class="warning">#</td>
+                                            <td align="left" class="warning"><b class="text-block">ACREDITACIÓN</b></td>
+                                            <td align="left" class="warning"><b class="text-block">MÓDULO</b></td>
+                                            <td align="left" class="warning"><b class="text-block">HORAS</b></td>
+                                            {% if (app.session.get('ie_per_estado') != '0') %}
+                                                <td align="center" class="warning"><b class="text-block">ELIMINAR</b></td>
+                                            {% endif %} 
+                                        </tr>
+                                        {% if exist == true %}    
+                                            {% for data in modulos %}                                                                
+                                                <tr>
+                                                    <td>
+                                                        <b class="text-block">{{loop.index}}</b>
+                                                    </td>
+                                                    <td>
+                                                        <a href="#" {#class="xeditablesemestre"#} id="xesemestres{{loop.index}}" data-pk="{{data.mod_per_hor_id}}">{{data.acreditacion}}</a>
+                                                    </td>
+                                                    <td>
+                                                        <b class="text-block">{{data.modulo}}</b>
+                                                        <span class="text-block text-muted">
+                                                            {#<a href="#" #}{#class="xeditablearea"#}{# id="xeareas{{loop.index}}" data-pk="{{data.smtid}}">{{data.area_superior}}</a>                                                            #}
+                                                        </span>
+                                                        <div class="progress progress-xxs no-margin">
+                                                            {% if data.area_saberes_id == 1 %}
+                                                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+                                                            {% elseif data.area_saberes_id == 2 %}
+                                                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+                                                            {% elseif data.area_saberes_id == 3 %}
+                                                                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+                                                            {% endif %}
+                                                        </div>
+                                                    </td>
+                                                    <td>  
+                                                {% if (app.session.get('ie_per_estado') != '0')  %}                                                            
+                                                        <a href="#" class="xeditablehoras" id="xehoras{{loop.index}}" data-pk="{{data.mod_per_hor_id}}">{{data.horas_modulo}}</a> 
+                                                {% else %}    
+                                                        <a href="#" {#class="xeditablehoras"#} id="xehoras{{loop.index}}" data-pk="{{data.mod_per_hor_id}}">{{data.horas_modulo}}</a> 
+                                                {% endif %} 
+                                                    </td> 
+                                                {% if (app.session.get('ie_per_estado') != '0') %}
+                                                    <td class="text-center">
+                                                        <span><i class="icon-minus-sign"></i>
+                                                            <button type="button" class="btn btn-circle btn-warning btn-stroke" onclick="deleteModulo('{{ data.mod_per_hor_id }}');">                                                            
+                                                                <i class="fa fa-eraser"></i>
+                                                            </button>
+                                                        </span>
+                                                    </td>
+                                                {% endif %}    
+                                                </tr>
+                                            {% endfor %}
+                                        {% endif %}   
+                                        </tbody>
+                                    </table>
+                                </div>    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </small>    
+
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+    </div>
+    <script>
+        $(document).ready(function() {
+            $.fn.editable.defaults.mode = 'popup';            
+            
+            //enable / disable
+            {# $('#enablexeditables').click(function() {
+                $('.editable').editable('toggleDisabled');
+            });#}
+                        
+            {#$('.xeditablearea').editable({
+                type: 'select',
+                title: 'Seleccione el Área',
+                placement: 'right',
+                disabled: 'true',
+                source: [
+                    {value: 1, text: 'AREA HUMANISTICA'},
+                    {value: 2, text: 'TECNICA PRODUCTIVA FORMACION DE LA ESPECIALIDAD'},
+                    {value: 3, text: 'EMPRENDIMIENTOS E INFORMATICA'}
+                ],
+                url: Routing.generate('herramienta_alter_malla_tecnica_modulos_change_area')
+            });#}
+                    
+            $('.xeditablehoras').editable({
+                type: 'select',
+                title: 'Seleccione la cantidad de horas',
+                placement: 'right',
+                disabled: 'true',
+                source: [
+                    {value: 60, text: '60'},
+                    {value: 80, text: '80'},
+                    {value: 100, text: '100'},
+                    {value: 120, text: '120'}
+                ],
+                url: Routing.generate('permanente_malla_tecnica_modulos_change_horas')
+            }); 
+
+            $('.editable').editable('toggleDisabled');
+
+            {#var semestres =
+                            [
+                            {% for periodo in periodos %}
+                                {value: {{periodo.siepid}}, text: '{{periodo.periodo_superior}}'},
+                            {% endfor %}                                
+                            ];
+            
+            $('.xeditablesemestre').editable({
+                type: 'select',
+                title: 'Seleccione el periodo del módulo',
+                placement: 'left',
+                disabled: 'true',
+                source: semestres,
+                url: Routing.generate('herramienta_alter_malla_tecnica_modulos_change_semestre')
+            });#}
+            
+            $("#area").change(function() {
+                $("#barradeareas").show();
+                $("#progressbar").removeClass("progress-bar-success progress-bar-warning progress-bar-info");
+                switch(parseInt(this.value)) {
+                    case 1:
+                        $("#progressbar").addClass("progress-bar progress-bar-success");
+                        break;
+                    case 2:
+                        $("#progressbar").addClass("progress-bar progress-bar-warning");
+                        break;
+                    case 3:
+                        $("#progressbar").addClass("progress-bar progress-bar-info");
+                        break;
+                    default:
+                        $("#barradeareas").hide();
+                };
+                            
+            });
+        });
+        
+        function nuevomoduloabrir(){
+            $("#nuevomodulo").show();
+            $("#barradeareas").hide();            
+	    }
+        
+        function nuevomodulocerrar(){
+            $("#nuevomodulo").hide();
+	    }
+
+        function enviaformmodulo() {
+            var msj = '\n\n ¿Esta seguro de continuar?';
+
+            var acre = document.getElementById("acreditacionid").selectedIndex;
+            if ( acre == null || acre == 0 ) {
+                alert('Elija una acreditación.');
+                return false;
+            }
+            else{
+                    var horas = document.getElementById("horas").selectedIndex;
+                    if ( horas == null || horas == 0 ) {
+                        alert('Elija una carga horaria.');
+                        return false;
+                    }
+                    else{
+                        var modulo = document.getElementById("modulo").value;
+                        if( modulo == null || modulo.length == 0 || /^\s+$/.test(modulo) ) {
+                          alert('Describa el módulo.');
+                          return false;
+                        }
+                        else{
+                            if (confirm('Está por crear un nuevo módulo: '+modulo+msj)) {
+                                    var formData = $('#formnuevomodulotec').serialize();
+
+                                    $.ajax({
+                                        type: 'post',
+                                        url: Routing.generate('permanente_malla_tecnica_modulos_add'),
+                                        data: formData,
+                                        beforeSend: function () {
+                                            $("#nuevomodulo").hide();
+                                            $("#modulosbasid").empty();
+                                        },
+                                        success: function (data) {
+                                            $("#acreditacionid option").each(function () {
+                                            if ($(this).text() === "-999") {
+                                                $(this).prop("selected", true);
+                                                return;}
+                                            else{
+                                                $(this).prop("selected", false);
+                                                return;}
+                                            });
+                                            $("#modulo").val("");
+                                            $("#area option").each(function () {
+                                            if ($(this).text() === "-999") {
+                                                $(this).prop("selected", true);
+                                                return;}
+                                            else{
+                                                $(this).prop("selected", false);
+                                                return;}
+                                            });
+                                            $("#horas option").each(function () {
+                                            if ($(this).text() === "-999") {
+                                                $(this).prop("selected", true);
+                                                return;}
+                                            else{
+                                                $(this).prop("selected", false);
+                                                return;}
+                                            });
+                                            $("#modulosbasid").empty();
+                                            $("#modulosbasid").append(data);
+                                        },
+                                        error: function () {
+
+                                        }
+                                    });
+                                }
+                            return false;
+                        }
+                    }
+                }
+
+        };
+
+        function deleteModulo(smpid) {
+            var msj = '\n\n ¿Esta seguro de continuar?';
+
+            if (confirm('Está por eliminar un módulo:' + msj)) {
+                var formData = $('#formnuevomodulotec').serialize();
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('permanente_malla_tecnica_modulos_delete', {'smpid': smpid}),
+                    data: formData,
+                    beforeSend: function () {
+                        $("#modulosbasid").empty();            
+                    },
+                    success: function (data) {
+                        $("#modulosbasid").empty();
+                        $("#modulosbasid").append(data);
+                        $("#nuevomodulo").hide();
+                    },
+                    error: function () {
+
+                    }
+                });
+                }
+            return false;
+        };
+    </script>
