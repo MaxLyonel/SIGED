@@ -7,9 +7,13 @@
         {% endfor %}
     </div>
 {% endif %} 
-{% if flujotipo == 5 or flujotipo == 14 %}
+{% if flujotipo == 5 %}
     <div><h4>Unidad Educativa: {{nombre_ie}}</h4></div>
-{% else %}
+{% endif %}
+{% if flujotipo == 14 %}
+    <div><h4>Instituto Técnico Tecnológico: {{nombre_ie}}</h4></div>
+{% endif %}
+{% if flujotipo in [6,7] %}
     <div><h4>Estudiante: {{estudiante}}</h4></div>
 {% endif %}
  {% if (flujotipo in [5,14] and nombre_ie != null) or (flujotipo in [6,7] and estudiante != null) %} 

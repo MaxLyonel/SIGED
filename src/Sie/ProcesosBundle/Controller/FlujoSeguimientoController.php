@@ -87,7 +87,10 @@ class FlujoSeguimientoController extends Controller
     public function listarF($flujotipo,$tramite)
     {
         $em = $this->getDoctrine()->getManager();
-        if($flujotipo == 5)
+        /**
+         * TRAMITE RUE
+         */
+        if($flujotipo == 5) 
         {
             $query = $em->getConnection()->prepare('select p.id, p.flujo,d.institucioneducativa, p.proceso_tipo, p.orden, p.es_evaluacion,p.variable_evaluacion, p.condicion, p.nombre,d.valor_evaluacion, p.condicion_tarea_siguiente, p.plazo, p.tarea_ant_id, p.tarea_sig_id, p.rol_tipo_id,d.id as td_id,d.tramite_id, d.flujo_proceso_id,d.fecha_registro,d.usuario_remitente_id,d.usuario_destinatario_id
         from
@@ -110,6 +113,9 @@ class FlujoSeguimientoController extends Controller
         ON p.id=d.flujo_proceso_id order by p.orden,d.fecha_registro');
         
         }
+        /**
+         * TRAMITE RITT NUEVOS
+         */
         if($flujotipo == 14)
         {
             //dump($nombre_instituto);die;
@@ -133,6 +139,9 @@ class FlujoSeguimientoController extends Controller
         ON p.id=d.flujo_proceso_id order by p.orden,d.fecha_registro');
         
         }
+        /**
+         * TRAMITE PARA ESTUDIANTES
+         */
         if($flujotipo == 6 || $flujotipo == 7 )
         {
             $query = $em->getConnection()->prepare("select p.id, p.flujo,d.estudiante, p.proceso_tipo, p.orden, p.es_evaluacion,p.variable_evaluacion, p.condicion, p.nombre,d.valor_evaluacion, p.condicion_tarea_siguiente, p.plazo, p.tarea_ant_id, p.tarea_sig_id, p.rol_tipo_id,d.id as td_id,d.tramite_id, d.flujo_proceso_id,d.fecha_registro,d.usuario_remitente_id,d.usuario_destinatario_id
@@ -163,9 +172,9 @@ class FlujoSeguimientoController extends Controller
         $data['flujotipo'] = $flujotipo;
         if($flujotipo == 5)
         {
-            $data['nombre_ie']=$arrData[0]['institucioneducativa'];
+            $data['nombre']=$arrData[0]['institucioneducativa'];
         }elseif($flujotipo == 6 || $flujotipo == 7 ){
-            $data['estudiante'] = $arrData[0]['estudiante'];
+            $data['nombre'] = $arrData[0]['estudiante'];
         }elseif($flujotipo == 14){
             $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
                 ->select('wf')
@@ -176,8 +185,7 @@ class FlujoSeguimientoController extends Controller
             //dump($wfSolicitudTramite);die;
             $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
             $nombre_instituto = $datos[10]['nom_instituto'];
-            
-            $data['nombre_ie'] = $nombre_instituto;
+            $data['nombre'] = $nombre_instituto;
         }
         return $data;
     }
