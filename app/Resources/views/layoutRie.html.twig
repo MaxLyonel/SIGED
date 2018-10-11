@@ -146,14 +146,14 @@
                             <span>Inicio</span>
                         </a>
                     </li>
-                    
-                    <li>
-                        <a href="{{path('certificado_rie')}}">
-                            <i class="material-icons">content_copy</i>
-                            <span>Certificado RIE</span>
-                        </a>
-                    </li>
-                    
+                    {% if app.session.get('roluser') == 8 %}
+                        <li>
+                            <a href="{{path('certificado_rie')}}">
+                                <i class="material-icons">content_copy</i>
+                                <span>Certificado RIE</span>
+                            </a>
+                        </li>
+                    {% endif %}
                     <li>
                         <a href="{{path('lei')}}">
                             <i class="material-icons">account_balance</i>
@@ -187,46 +187,35 @@
                             <span>Registro - Cursos</span>
                         </a>
                     </li>                       
-                    
-                    <li>
-                        <a href="{{path('carrera_rie_list')}}">
-                            <i class="material-icons">view_comfy</i>
-                            <span>Catálogo de Carreras</span>
-                        </a>
-                    </li>
-
-                    <!--
-                    <li>
-                        <a href="{{path('consultains_rie')}}">
-                            <i class="material-icons">low_priority</i>
-                            <span>Consulta</span>
-                        </a>
-                    </li>
-                    -->
-
                     {% if app.session.get('roluser') == 8 %}
-                    <li>
-                        <a href="{{path('area_rie_list')}}">
-                            <i class="material-icons">view_agenda</i>
-                            <span>Admin-Areas</span>
-                        </a>
-                    </li>
+                        <li>
+                            <a href="{{path('carrera_rie_list')}}">
+                                <i class="material-icons">view_comfy</i>
+                                <span>Catálogo de Carreras</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{path('area_rie_list')}}">
+                                <i class="material-icons">view_agenda</i>
+                                <span>Admin-Areas</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{path('reporte_rie_subsede')}}">
+                                <i class="material-icons">view_quilt</i>
+                                <span>Sede-Subsede</span>
+                            </a>
+                        </li>                    
+
+                        <li>
+                            <a href="{{path('reporte_list')}}">
+                                <i class="material-icons">report</i>
+                                <span>Reportes</span>
+                            </a>
+                        </li>
                     {% endif %}
-
-                    <li>
-                        <a href="{{path('reporte_rie_subsede')}}">
-                            <i class="material-icons">view_quilt</i>
-                            <span>Sede-Subsede</span>
-                        </a>
-                    </li>                    
-
-                    <li>
-                        <a href="{{path('reporte_list')}}">
-                            <i class="material-icons">report</i>
-                            <span>Reportes</span>
-                        </a>
-                    </li>
-
                 </ul>
             </div>
             <!-- #Menu -->
