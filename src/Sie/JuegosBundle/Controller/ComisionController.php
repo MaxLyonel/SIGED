@@ -1616,7 +1616,10 @@ class ComisionController extends Controller {
         $respuesta = array();
         try{
             $entityDatos = $em->getRepository('SieAppWebBundle:ComisionJuegosDatos')->findOneBy(array('id'=>$inscripcion));
-            $nivel = $entityDatos->getPruebaTipo()->getDisciplinaTipo()->getNivelTipo()->getId();  
+            $comision = $entityDatos->getComisionTipoId();  
+
+            $entityComision = $em->getRepository('SieAppWebBundle:ComisionTipo')->findOneBy(array('id'=>$comision));
+            $nivel = $entityComision->getNivelTipoId();  
 
             $fase = $entityDatos->getFaseTipo()->getId();   
             $query = $em->getConnection()->prepare("select * from fase_tipo where id = ".$fase);
