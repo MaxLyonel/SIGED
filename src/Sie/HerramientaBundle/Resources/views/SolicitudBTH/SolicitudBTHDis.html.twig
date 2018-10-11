@@ -1,0 +1,349 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-table animated fadeIn"></i> Solicitud BTH <span>Solicitud BTH </span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#"}>Solicitud BTH</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <div class="body-content animated fadeIn">
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="panel">
+                    <div class="panel-body">
+
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Formulario de Solicitud BTH</h3>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="panel panel-success">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">1.- Información General</h3>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                {#{% set iedu = ieducativa[0] %}
+                                                {% set iedusu = ieducativa[1] %}#}
+                                                <div class="col-md-3">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <strong>Código RUE</strong>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <strong>Unidad Educativa</strong>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <strong>Sub Sistema</strong>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            {#{{ institucion.id }}#}
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            {#{{ iedu.institucioneducativa }}#}
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div><!-- /.panel-body -->
+                                    </div>
+                                    <div class="panel panel-success">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">2.- Localización</h3>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <strong>Departamento</strong>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <strong>Cantón</strong>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <strong>Distrito</strong>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            {#{{ ubicacion['departamento'] }}#}
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            {#{{ ubicacion['canton'] }}#}
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                           {# {{ ubicacion['distrito'] }}#}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <strong>Localidad</strong>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <strong>Zona</strong>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <strong>Dirección</strong>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            {#{{ ubicacion['localidad'] }}#}
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            {#{{ ubicacion['zona'] }}#}
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            {#{{ ubicacion['direccion'] }}#}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div><!-- /.panel-body -->
+                                    </div>
+                                    <div class="panel panel-success">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">3.- Cumplimiento de Requisitos</h3>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">
+
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <strong>3.1 Técnico Administrativo</strong>
+                                                </div>
+                                                <div class="col-md-4">
+
+                                                    <div class="ckbox ckbox-theme">
+                                                        <input id="tecadmin"  type="checkbox">
+                                                        <label for="tecadmin"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <strong>3.2 Infraestructura y Equipamiento</strong>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="ckbox ckbox-theme">
+                                                        <input id="infra" type="checkbox">
+                                                        <label for="infra"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <strong>2.3 Desarrollo Curricular</strong>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="ckbox ckbox-theme">
+                                                        <input id="descurricular" type="checkbox">
+                                                        <label for="descurricular"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <strong>2.4 Informe</strong>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="ckbox ckbox-theme">
+                                                        <input id="informe"  type="checkbox">
+                                                        <label for="informe"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div><!-- /.panel-body -->
+                                    </div>
+                                    <div class="panel panel-success">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">4.- Especialidad</h3>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">
+
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <strong>Seleccionar las especialidades</strong>
+                                                </div>
+                                                <div class="col-md-3">
+
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <select data-placeholder="Seleccionar especialidad" id="select_especialidad" name="select_especialidad[]"  class="chosen-select" multiple="" tabindex="-1" style="display: none;">
+                                                        {#{% for especialidad in especialidad %}#}
+                                                            <option value="{#{{ especialidad.id }}#}">{#{{ especialidad.especialidad }}#}</option>
+                                                        {#{% endfor %}#}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <strong>Seleccionar Curso al que se Aplica</strong>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <strong><span class="label label-warning">Nivel: Secundaria</span></strong>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <select data-placeholder="Seleccionar Curso" class="chosen-select" multiple="" tabindex="-1" style="display: none;">
+                                                        {#{% if cursos %}
+                                                            {% for cursos in cursos %}#}
+                                                                <option value="{#{{ cursos.grado_tipo_id }}#}">{#{{ cursos.grado }}#}</option>
+                                                            {#{% endfor %}
+                                                        {% else %}#}
+                                                            <option value="">U.E. sin cursos </option>
+                                                        {#{% endif %}#}
+                                                    </select>
+                                                </div>
+                                            </div>
+
+
+                                        </div><!-- /.panel-body -->
+                                    </div>
+
+                                    <div class="panel panel-success">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">5.- Evaluación</h3>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">
+
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <strong>¿Solicitud Procedente?</strong>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <div class="rdio rdio-theme circle">
+                                                        <input id="siprocede" type="radio" name="radiotype1" value="si" onclick="muestraobs()" >
+                                                        <label for="siprocede"><strong>Si</strong></label>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="rdio rdio-theme circle">
+                                                        <input id="noprocede" type="radio" name="radiotype1" value="no" onclick="muestraobs()">
+                                                        <label for="noprocede"><strong>No</strong></label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8" id="obs">
+                                                    <textarea class="form-control" rows="5"></textarea>
+                                                </div>
+                                            </div>
+                                            <BR>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="pull-left">
+                                                        {#<button class="btn btn-sm btn-facebook"  title="Adjuntar Documento"><i class="glyphicon glyphicon-paperclip"></i>Adjuntar Documento</button>#}
+                                                        <input type="file" id="adjdocumento" title="Adjuntar Documento" >
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="pull-right">
+                                                        <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="/*enviarSolicitudbth()*/"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+
+                                        </div><!-- /.panel-body -->
+                                    </div>
+                                </div>
+                            </div><!-- /.panel-body -->
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+{% endblock %}
+{% block javascripts%}
+{{ parent() }}
+    <script>
+        $(document).ready(function(){
+            $('#obs').hide();
+        });
+        function muestraobs(){
+            var respuesta=$('input:radio[name=radiotype1]:checked').val();
+            if(respuesta=='si'){
+                $('#obs').hide();
+            }else {
+                $('#obs').show(2000);
+            }
+
+        }
+    </script>
+
+{% endblock %}
