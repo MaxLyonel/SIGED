@@ -95,7 +95,7 @@ class LocalEducativoController extends Controller {
                           LEFT JOIN lugar_tipo AS lt4 ON lt4.id = lt3.lugar_tipo_id
                           LEFT JOIN institucioneducativa ie
                                  ON jg.id = ie.le_juridicciongeografica_id
-                              WHERE juridiccion_acreditacion_tipo_id = 3
+                              WHERE juridiccion_acreditacion_tipo_id = 1
                                 AND lt3.id = ".$provincia."
                            GROUP BY jg.id, lt.lugar, lt1.lugar, lt2.lugar, lt3.lugar, lt4.lugar 
                            ORDER BY instituto ASC";
@@ -115,7 +115,7 @@ class LocalEducativoController extends Controller {
                           LEFT JOIN lugar_tipo AS lt4 ON lt4.id = lt3.lugar_tipo_id
                           LEFT JOIN institucioneducativa ie
                                  ON jg.id = ie.le_juridicciongeografica_id
-                              WHERE juridiccion_acreditacion_tipo_id = 3
+                              WHERE juridiccion_acreditacion_tipo_id = 1
                                 AND lt3.id = ".$provincia."
                                 AND lt.lugar LIKE '%".$localidad."%' 
                            GROUP BY jg.id, lt.lugar, lt1.lugar, lt2.lugar, lt3.lugar, lt4.lugar 
@@ -140,7 +140,7 @@ class LocalEducativoController extends Controller {
                            LEFT JOIN institucioneducativa ie
                                   ON jg.id = ie.le_juridicciongeografica_id
                                WHERE jg.id = ".$form['leId']."
-                                AND juridiccion_acreditacion_tipo_id = 3
+                                AND juridiccion_acreditacion_tipo_id = 1
                             GROUP BY jg.id, lt.lugar, lt1.lugar, lt2.lugar, lt3.lugar, lt4.lugar 
                             ORDER BY instituto ASC";
                     $stmt = $db->prepare($query);
@@ -151,7 +151,7 @@ class LocalEducativoController extends Controller {
         }
 
         if (!$entities){
-        	$this->get('session')->getFlashBag()->add('msgSearch', 'No se encontró la información buscada o no se permite la edición del registro...');
+        	$this->get('session')->getFlashBag()->add('msgSearch', 'No se encontro la información...');
         	$formLe = $this->createSearchFormLe();
         	$formLeId = $this->createSearchFormLeId();
         	return $this->render('SieRieBundle:LocalEducativo:search.html.twig', array('formLe' => $formLe->createView(), 'formLeId' => $formLeId->createView()));
@@ -222,7 +222,7 @@ class LocalEducativoController extends Controller {
             //$entity->setDistritoTipoId(1);   // no toma en cuenta el distrito id
             $entity->setZona(mb_strtoupper($form['zona'], 'utf-8'));
             $entity->setDireccion(mb_strtoupper($form['direccion'], 'utf-8'));
-            $entity->setJuridiccionAcreditacionTipo($em->getRepository('SieAppWebBundle:JurisdiccionGeograficaAcreditacionTipo')->find(3));
+            $entity->setJuridiccionAcreditacionTipo($em->getRepository('SieAppWebBundle:JurisdiccionGeograficaAcreditacionTipo')->find(1));
             $em->persist($entity);
     		$em->flush();
     		$this->get('session')->getFlashBag()->add('mensaje', 'El local educativo fue registrada correctamente  con el codigo:  ' .  $entity->getId() );
