@@ -8,7 +8,7 @@
 {% block contentoption %}
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> Seguimiento: <span>Trámite</span></h2>
+        <h2><i class="fa fa-list-alt"></i> Seguimiento de trámite</h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -30,10 +30,10 @@
 <div class="body-content animated fadeIn">
         <div class="row">
             <div class="col-12">
-                <div class="panel rounded shadow">
+                <div class="panel panel-primary">
                     <div class="panel-heading">
-                        <div class="pull-left">
-                            <h3 class="panel-title">Seguimiento de trámite</h3>
+                        <div class="pull-left ">
+                            <h3 class="panel-title">Seleccione opciones de búsqueda</h3>
                         </div>
                         <div class="pull-right">                        
                         </div>
@@ -42,11 +42,11 @@
                     <div class="panel-body">
 						<div class="form-group">
                             {{ form_start(form,{ 'attr': {'id':'form_seguimiento'} } ) }}
-						    <label class="col-sm-2">Nombre de proceso</label>
+						    <label class="col-sm-2">Nombre de proceso:</label>
                             <div class="col-sm-4">
                                 {{ form_widget(form.proceso, {'attr':{'class':'form-control'} }) }}
                             </div>
-                            <label class="col-sm-2">Trámite</label>
+                            <label class="col-sm-2">Trámite:</label>
                             <div class="col-sm-4">
                                 {{ form_widget(form.tramite, {'attr':{'class':'form-control'} }) }}
                             </div>

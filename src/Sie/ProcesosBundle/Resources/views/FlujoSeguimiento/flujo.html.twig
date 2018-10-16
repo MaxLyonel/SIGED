@@ -1,4 +1,3 @@
-
 {% if app.session.flashBag.has('error') %}
     <div class="alert alert-danger">
         {% for msg in app.session.flashBag.get('error') %}
@@ -6,13 +5,21 @@
                 {{ msg }}
         {% endfor %}
     </div>
-{% endif %} 
-{% if flujotipo == 5 or flujotipo == 14 %}
-    <div><h4>Unidad Educativa: {{nombre_ie}}</h4></div>
-{% else %}
-    <div><h4>Estudiante: {{estudiante}}</h4></div>
 {% endif %}
- {% if (flujotipo in [5,14] and nombre_ie != null) or (flujotipo in [6,7] and estudiante != null) %} 
+<div class="panel panel-success">
+    <div class="panel-heading">
+{% if flujotipo == 5 %}
+    <div><h4>UNIDAD EDUCATIVA: <span>{{nombre}}</span></h4></div>
+{% endif %}
+{% if flujotipo == 14 %}
+    <div><h4>INSTITUTO TÉCNICO TECNOLÓGICO: {{nombre}}</h4></div>
+{% endif %}
+{% if flujotipo in [6,7] %}
+    <div><h4>ESTUDIANTE: {{nombre}}</h4></div>
+{% endif %}
+ {% if (flujotipo in [5,14,6,7] and nombre != null) %} 
+    </div>
+    <div class="panel-body">
 <div style= "display:none" >
 <textarea id="code" style="width: 100%;" rows="11">
 
@@ -84,5 +91,7 @@ st@>e({"stroke":"Green"})
 </textarea></div>
 <div style= "display:none"><button id="run" type="button">Run</button></div>
 <div id="canvas">
+</div>
+</dvi>
 </div>
 {% endif %}

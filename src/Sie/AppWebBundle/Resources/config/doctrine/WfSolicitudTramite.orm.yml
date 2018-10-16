@@ -1,0 +1,55 @@
+Sie\AppWebBundle\Entity\WfSolicitudTramite:
+    type: entity
+    table: wf_solicitud_tramite
+    indexes:
+        IDX_C719D200820C2849:
+            columns:
+                - tramite_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        datos:
+            type: text
+            nullable: false
+            length: null
+            fixed: false
+            comment: ''
+        esValido:
+            type: boolean
+            nullable: false
+            comment: ''
+            column: es_valido
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        lugarTipoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: lugar_tipo_id
+    manyToOne:
+        tramite:
+            targetEntity: Tramite
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tramite_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
