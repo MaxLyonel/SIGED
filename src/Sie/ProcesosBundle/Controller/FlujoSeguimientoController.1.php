@@ -72,8 +72,7 @@ class FlujoSeguimientoController extends Controller
         //dump($id);die;
         $data = $this->listarF($form['proceso'],$form['tramite']);
         //dump($data);die;
-        //if (($form['proceso'] == 5 && !$data['nombre']) || ($form['proceso'] == 14 && !$data['nombre_ie']) || ($form['proceso'] == 6 && !$data['estudiante']) || ($form['proceso'] == 7 && !$data['estudiante'])) 
-        if (($form['proceso'] == 5 || $form['proceso'] == 6 || $form['proceso'] == 7 || $form['proceso'] == 14 )  && !$data['nombre']) 
+        if (($form['proceso'] == 5 && !$data['nombre_ie']) || ($form['proceso'] == 14 && !$data['nombre_ie']) || ($form['proceso'] == 6 && !$data['estudiante']) || ($form['proceso'] == 7 && !$data['estudiante'])) 
         {
             //dump($data['nombre_ie']);die;
             $mensaje = 'Número de tramite es incorrecto';
@@ -174,10 +173,8 @@ class FlujoSeguimientoController extends Controller
         if($flujotipo == 5)
         {
             $data['nombre']=$arrData[0]['institucioneducativa'];
-
         }elseif($flujotipo == 6 || $flujotipo == 7 ){
             $data['nombre'] = $arrData[0]['estudiante'];
-
         }elseif($flujotipo == 14){
             $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
                 ->select('wf')
@@ -187,7 +184,6 @@ class FlujoSeguimientoController extends Controller
                 ->getResult();
             //dump($wfSolicitudTramite);die;
             $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
-            //dump($datos);die;
             $nombre_instituto = $datos[10]['nom_instituto'];
             $data['nombre'] = $nombre_instituto;
         }
