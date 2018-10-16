@@ -171,7 +171,7 @@ class ReportesController extends Controller {
         return $response;
     }
     
-    public function centralizadoresAction(Request $request) {        
+    public function centralizadoresAction(Request $request) {
         $infoUe = $request->get('dat');
         $aInfoUeducativa = unserialize($infoUe);
         $nivel = $aInfoUeducativa['ueducativaInfoId']['nivelId'];
@@ -180,6 +180,8 @@ class ReportesController extends Controller {
         $turno = $aInfoUeducativa['ueducativaInfoId']['turnoId'];
         $paralelo = $aInfoUeducativa['ueducativaInfoId']['paraleloId'];
         $paralelotxt = $aInfoUeducativa['ueducativaInfo']['paralelo'];
+        
+        $idCurso = $aInfoUeducativa['ueducativaInfoId']['iecId'];
 
 
             /*print_r($this->session->get('ie_id'));
@@ -197,19 +199,26 @@ class ReportesController extends Controller {
 
         
         if ($nivel == '15'){//CENTRALIZADOR HUMANISTICA
+            // FUNCION PARA VERIFICAR SI EL CURSO DE PRIMARIA TRABAJA CON LA NUEVA CURRICULA
+            $primariaNuevo = $this->get('funciones')->validatePrimariaCourse($idCurso);
             if (
                 ($this->session->get('ie_gestion') == '2016') || ($this->session->get('ie_gestion') == '2017') ||
                 ($this->session->get('ie_gestion') == '2018') || ($this->session->get('ie_gestion') == '2019')
             ) {
                 if ($this->session->get('ie_per_estado') == '0') {
-                    //VALIDOS                    
+                    //VALIDOS
+                    if ($primariaNuevo ) { // VERIFICAMOS SI SE UTILIZARA EL NUEVO REPORTE 2018 
+                        $reporte = 'alt_lst_EstudiantesBoletinCentralizador_2018_v1_rcm.rptdesign';
+                    } else {
+                        $reporte = 'alt_lst_EstudiantesBoletinCentralizdor_2016_valido_v1_hcq.rptdesign';
+                    }
                     $ciclotxt = $aInfoUeducativa['ueducativaInfo']['ciclo'];
                     $ciclotxt = substr($ciclotxt, 11, 7);
                     $arch = $this->session->get('ie_id').'_'.$ciclotxt.'_'.$grado.'_'.$paralelotxt.'_'.date('Ymd') . '.pdf';
                     $response = new Response();
                     $response->headers->set('Content-type', 'application/pdf');
                     $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_lst_EstudiantesBoletinCentralizdor_2016_valido_v1_hcq.rptdesign&__format=pdf&institucioneducativa_id='.$this->session->get('ie_id').'&gestion_tipo_id='.$this->session->get('ie_gestion').'&sucursal_tipo_id='.$this->session->get('ie_subcea').'&periodo_tipo_id='.$this->session->get('ie_per_cod').'&nivel_id='.$nivel.'&ciclo_id='.$ciclo.'&grado_id='.$grado.'&turno_tipo_id='.$turno.'&paralelo_tipo_id='.$paralelo.'&&__format=pdf&'));
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $reporte .'&__format=pdf&institucioneducativa_id='.$this->session->get('ie_id').'&gestion_tipo_id='.$this->session->get('ie_gestion').'&sucursal_tipo_id='.$this->session->get('ie_subcea').'&periodo_tipo_id='.$this->session->get('ie_per_cod').'&nivel_id='.$nivel.'&ciclo_id='.$ciclo.'&grado_id='.$grado.'&turno_tipo_id='.$turno.'&paralelo_tipo_id='.$paralelo.'&&__format=pdf&'));
                     $response->setStatusCode(200);
                     $response->headers->set('Content-Transfer-Encoding', 'binary');
                     $response->headers->set('Pragma', 'no-cache');
@@ -217,13 +226,19 @@ class ReportesController extends Controller {
                 }
                 else{
                     //NO VALIDOS
+                    if ($primariaNuevo) {
+                        $reporte = 'alt_lst_EstudiantesBoletinCentralizador_2018_v1_rcm.rptdesign'; // cambiar con el no valido
+                    } else {
+                        $reporte = 'alt_lst_EstudiantesBoletinCentralizdor_2016_no_valido_v1_hcq.rptdesign';
+                    }
+
                     $ciclotxt = $aInfoUeducativa['ueducativaInfo']['ciclo'];
                     $ciclotxt = substr($ciclotxt, 11, 7);
                     $arch = $this->session->get('ie_id').'_'.$ciclotxt.'_'.$grado.'_'.$paralelotxt.'_'.date('Ymd') . '.pdf';
                     $response = new Response();
                     $response->headers->set('Content-type', 'application/pdf');
                     $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_lst_EstudiantesBoletinCentralizdor_2016_no_valido_v1_hcq.rptdesign&__format=pdf&institucioneducativa_id='.$this->session->get('ie_id').'&gestion_tipo_id='.$this->session->get('ie_gestion').'&sucursal_tipo_id='.$this->session->get('ie_subcea').'&periodo_tipo_id='.$this->session->get('ie_per_cod').'&nivel_id='.$nivel.'&ciclo_id='.$ciclo.'&grado_id='.$grado.'&turno_tipo_id='.$turno.'&paralelo_tipo_id='.$paralelo.'&&__format=pdf&'));
+                    $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $reporte .'&__format=pdf&institucioneducativa_id='.$this->session->get('ie_id').'&gestion_tipo_id='.$this->session->get('ie_gestion').'&sucursal_tipo_id='.$this->session->get('ie_subcea').'&periodo_tipo_id='.$this->session->get('ie_per_cod').'&nivel_id='.$nivel.'&ciclo_id='.$ciclo.'&grado_id='.$grado.'&turno_tipo_id='.$turno.'&paralelo_tipo_id='.$paralelo.'&&__format=pdf&'));
                     //$link = $this->container->getParameter('urlreportweb') . 'alt_lst_EstudiantesBoletinCentralizdor_2016_no_valido_v1_hcq.rptdesign&__format=pdf&institucioneducativa_id='.$this->session->get('ie_id').'&gestion_tipo_id='.$this->session->get('ie_gestion').'&sucursal_tipo_id='.$this->session->get('ie_subcea').'&periodo_tipo_id='.$this->session->get('ie_per_cod').'&nivel_id='.$nivel.'&ciclo_id='.$ciclo.'&grado_id='.$grado.'&turno_tipo_id='.$turno.'&paralelo_tipo_id='.$paralelo.'&&__format=pdf&';
                     //$response->setContent(file_get_contents($link));                    
                     $response->setStatusCode(200);
@@ -314,11 +329,18 @@ class ReportesController extends Controller {
 //        die;
         
         if ($nivel == '15'){
+            $primariaNuevo = $this->get('funciones')->validatePrimariaCourse($idCurso);
+            if($primariaNuevo){
+                $reporte = 'alt_libreta_electronica_v1_ma.rptdesign';
+            }else{
+                $reporte = 'alt_est_LibretaElectronicaHumanistica2016_v1_hcq.rptdesign';
+            }
+
             $arch = $this->session->get('ie_id').'_'.$est[0]->getCodigoRude().'_'.date('Ymd') . '.pdf';
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));            
-            $link = $this->container->getParameter('urlreportweb') . 'alt_est_LibretaElectronicaHumanistica2016_v1_hcq.rptdesign&__format=pdf&estudiante_inscripcion_id='.$eInsId.'&&__format=pdf&';
+            $link = $this->container->getParameter('urlreportweb') . $reporte . '&__format=pdf&estudiante_inscripcion_id='.$eInsId.'&&__format=pdf&';
 //            dump($link);
 //            die;
             $response->setContent(file_get_contents($link));            

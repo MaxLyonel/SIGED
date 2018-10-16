@@ -119,6 +119,7 @@ class CursosController extends Controller {
         }
 
         //dump($objStudents); die;
+        $primariaNuevo = $this->get('funciones')->validatePrimariaCourse($dataUe['ueducativaInfoId']['iecId']);
 
         return $this->render($this->session->get('pathSystem') . ':InfoEstudianteRequest:seeStudents.html.twig', array(
                     'objStudents' => $objStudents,
@@ -130,6 +131,7 @@ class CursosController extends Controller {
                     'dataUe'=> $dataUe['ueducativaInfo'],
                     'totalInscritos'=>count($objStudents),
                     'swSetNameModIntEmer' => $swSetNameModIntEmer,
+                    'primariaNuevo' => $primariaNuevo
         ));
     }
 
