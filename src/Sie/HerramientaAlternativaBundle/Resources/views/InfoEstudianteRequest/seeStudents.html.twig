@@ -170,7 +170,7 @@
                                                     {#SE CONTROLA EL ACESSO EN LA PANTALLA DE NOTAS POR ESO ESTA ACTIVO PARA TODOS LO ESTADOS MENOS INCRIPCIONES#}
                                                     {% if (app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '0') %}
                                                         {% if primariaNuevo %}
-                                                            <li style="display: none">
+                                                            <li>
                                                               <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotasPrimaria('{{infoUe}}', '{{jsnInfoStudent}}');" >
                                                                 <span class="label label-primary"><i class="fa fa-list"></i> Registro de Notas</span>
                                                               </a>
