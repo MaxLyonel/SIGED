@@ -180,7 +180,9 @@ class RegistroInstitucionEducativaController extends Controller {
     		$em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
     		$form = $request->get('form');
-
+            
+            $form['fechaResolucion']=date("Y-m-d",strtotime($form['fechaResolucion']));
+            
             $buscar_institucion = $this->validarInstitucionEducativa($form);
     		if($buscar_institucion != 99){ // En caso de existir el instituto no se puede guardar
     			$this->get('session')->getFlashBag()->add('msgSearch', 'La institución educativa se encuentra registrada, con código(s) RIE : '.$buscar_institucion);
