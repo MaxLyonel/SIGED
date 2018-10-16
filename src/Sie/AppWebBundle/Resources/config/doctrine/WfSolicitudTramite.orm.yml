@@ -17,7 +17,7 @@ Sie\AppWebBundle\Entity\WfSolicitudTramite:
     fields:
         datos:
             type: text
-            nullable: false
+            nullable: true
             length: null
             fixed: false
             comment: ''
@@ -38,7 +38,7 @@ Sie\AppWebBundle\Entity\WfSolicitudTramite:
             column: fecha_modificacion
         lugarTipoId:
             type: integer
-            nullable: false
+            nullable: true
             unsigned: false
             comment: ''
             column: lugar_tipo_id
