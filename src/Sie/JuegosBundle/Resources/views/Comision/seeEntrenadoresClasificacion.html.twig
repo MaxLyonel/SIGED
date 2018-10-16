@@ -83,6 +83,50 @@
             </div><!-- /.panel-body -->
         </div>                    
     </div>   
+
+    {% if formFoto is defined  %}
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-lilac shadow">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Modificación</h3>
+                    </div><!-- /.pull-left -->
+                    <div class="pull-right">
+
+                    </div><!-- /.pull-right -->
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+                    <!-- Start project overview -->
+                    <ol class="breadcrumb">
+                    </ol>
+                    <!-- Start datatable -->                      
+                    <!--/ End datatable -->
+                    <div id="no-more-tables"> 
+                    {{form_start(formFoto, { 'attr': { 'role': "form", 'class': 'form-horizontal form-bordered'} } )}}  
+                        <input type="hidden" name="inscripcion" value="{{delegado}}"/>                                    
+                        <div class="form-group">
+                            <div class="col-lg-6 col-md-8 col-sm-6 col-xs-12">
+                                <label class="control-label">
+                                    {{form_label(formFoto.foto)}}                                    
+                                </label>     
+                                {{ form_widget(formFoto.foto, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}} ) }}
+                                <div class="help-block with-errors"></div>
+                            </div>   
+                        </div>                            
+                        <div class="form-group">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                {{ form_widget(formFoto.submit,{ 'attr':{'class':'btn btn-success col-lg-12 col-md-12 col-sm-12 col-xs-12' } } ) }}
+                            </div>   
+                        </div>
+                    {{form_end(formFoto)}} 
+                    </div>
+                    <!-- /.portlet -->
+                    <!--/ End project overview -->  
+                </div><!-- /.panel-body -->
+            </div>                    
+        </div> 
+    {% endif %}  
     {% if objDelegadosRegistrados is defined  %} 
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">      <div class="panel panel-primary shadow">
                 <div class="panel-heading">
@@ -115,6 +159,7 @@
                                 <th>Comisión</th>  
                                 <th>Posición</th>  
                                 <th>Foto</th>                             
+                                <th style="min-width: 50px">&nbsp;</th>                             
                                 <th style="min-width: 50px">&nbsp;</th>
                             </tr>
                         </thead>
@@ -130,6 +175,7 @@
                                 {% set generoPrueba = data.genero_prueba %}    
                                 {% set ci = data.carnet_identidad %}
                                 {% set comision = data.comision %}
+                                {% set comisionId = data.comisionid %}
                                 {% set posicion = data.posicion %}
                                 {% if data.foto == "" %}
                                     {% set foto = "user.png" %}
@@ -146,6 +192,9 @@
                                     <td align="">{{comision}}</td>
                                     <td align="">{{posicion}}</td>
                                     <td align="center"><img src="{{ asset('uploads/fotos_juegos/'~foto) }}" title="{{nombre}}" class="img-circle" width="30" height="30"></td>
+                                    <td align="">
+                                        <a  title="{{nombre}}" onclick="seeDelegadosEdit('{{infoDeporte}}','{{id}}');" class="btn btn-warning"><i class="fa fa-edit"></i></a>  
+                                    </td>
                                     <td align="">
                                         <form role="form" action="{{ path('sie_juegos_comision_entrenador_lista_registro_elimina') }}" method="POST">
                                             <input type="hidden" name="id" value="{{ id }}" />  
@@ -378,6 +427,28 @@
             }
         });
     }
+
+    var seeDelegadosEdit = function (infoDeportes,key) {
+        $.ajax({
+            type: 'get',
+            data: ({infoDeportes: infoDeportes, id: key}),
+            url: Routing.generate('sie_juegos_comision_entrenador_lista_clasificacion'),
+            beforeSend: function () {
+                $("#idstudents").empty();
+                $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+            },
+            success: function (data) {
+                $("#idstudents").empty();
+                $("#idstudents").append(data);
+            },
+            statusCode: {
+                500: function () {
+                },
+                404: function () {
+                }
+            }
+        });
+    };
 
     function setDeportistas(es,des) {
         var deportistas = document.getElementsByName('deportistas[]');

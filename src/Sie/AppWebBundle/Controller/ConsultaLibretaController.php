@@ -130,6 +130,11 @@ class ConsultaLibretaController extends Controller {
 
         $aBim = ($aBim) ? $aBim : array();
 
+        $arrGetsion = array();
+        for($i=0;$i<5;$i++){
+          $arrGetsion[date('Y')-$i]=date('Y')-$i;
+        }
+
         $formsearch = $this->createFormBuilder()
                 ->setAction($this->generateUrl('consultalibreta_buscar'))
                 ->add('rudeoci', 'hidden', array('mapped' => false, 'required' => true, 'invalid_message' => 'Campor 1 obligatorio', 'data' => $objStudent[0]['codigoRude']))
@@ -137,7 +142,7 @@ class ConsultaLibretaController extends Controller {
                 ->add('month', 'hidden', array('mapped' => false, 'required' => true, 'invalid_message' => 'Campor 1 obligatorio', 'data' => $session->get('month')))
                 ->add('day', 'hidden', array('mapped' => false, 'required' => true, 'invalid_message' => 'Campor 1 obligatorio', 'data' => $session->get('day')))
                 ->add('fechaNacimiento', 'hidden', array('data' => $form['fechaNacimiento']))
-                ->add('gestion', 'choice', array('mapped' => false, 'choices' => array('2017' => '2017', '2016' => '2016', '2015' => '2015', '2014' => '2014'), 'required' => true, 'invalid_message' => 'Campor 2 obligatorio'))
+                ->add('gestion', 'choice', array('mapped' => false, 'choices' => $arrGetsion, 'required' => true, 'invalid_message' => 'Campor 2 obligatorio'))
                 ->add('buscar', 'submit', array('label' => 'Buscar'))
                 ->getForm();
 

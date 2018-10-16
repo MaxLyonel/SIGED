@@ -1,0 +1,660 @@
+
+<html>
+<title>W3.CSS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<div class="header-content" >
+    {#<head>#}
+        {#<meta charset="utf-8">#}
+        {#<meta http-equiv="X-UA-Compatible" content="IE=edge">#}
+        {#<meta name="viewport" content="width=device-width, initial-scale=1">#}
+        {#<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">#}
+        {#<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>#}
+        {#<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>#}
+        {#<script type="text/javascript">#}
+            {#$(document).ready(function(){#}
+                {#$("#myTab li:eq(0) a").tab('show');#}
+            {#});#}
+        {#</script>#}
+        {#<style type="text/css">#}
+            {#.bs-example{#}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                {#margin: 20px;#}
+            {#}#}
+        {#</style>#}
+    {#</head>#}
+
+
+
+
+
+{% if exist == true %}
+
+
+
+
+
+
+  <small id="listEstudiante">
+
+      <div class="w3-container w3-red">
+          <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
+          <h3><i class="glyphicon glyphicon-info-sign"></i>  Información del Curso - Cant Participantes:  {{ totalInscritos }}  </h3>
+
+      </div>
+         {#<h2>London</h2>#}
+        <BR>
+        <div class="row">
+            <div class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('noinscription') %}
+                    <div class="alert alert-warning alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('goodinscription') %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% for flashMessage in app.session.flashbag.get('errorcursoduplicado') %}
+        <div class="row">
+            <div class="col-md-12" align="center">
+                 <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">
+                    {% for flashIdcurso in app.session.flashbag.get('idcursodup') %}
+                        <a href="#" onclick="doCursoDuplicado('{{ infoUe }}','{{ flashIdcurso }}');">
+                            <span><i class="icon-leaf"></i>
+                                VER CURSO DUPLICADO -- {{ flashIdcurso }}
+                            </span>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+            <p>
+            <div class="col-md-12">
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        {% for flashMessage in app.session.flashbag.get('seedatoscursoduplicado') %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+      <div class="panel-sub-heading inner-all">
+          <div class="pull-left">
+              <ul class="list-inline no-margin">
+                  <li class="hidden-xs">
+                      <a href="#" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Editar Curso</a>
+                  </li>
+                  <li>
+                      <a href="#" class="btn btn-danger btn-sm"><i class="fa fa-times"></i> Eliminar Curso</a>
+                  </li>
+
+              </ul>
+          </div>
+          <div class="clearfix"></div>
+      </div>
+      <div class="panel-body no-padding">
+          <div class="table-responsive">
+              <table class="table">
+                  <tbody>
+                  <tr>
+                      <td></td>
+                      <td>
+                          <span class="pull-left text-capitalize">Subarea:</span>
+
+                      </td>
+                      <td>
+                          <span class="pull-none text-strong">{{ cursolargo[0].sub_area }}</span>
+                      </td>
+                      <td></td>
+                  </tr>
+                  <tr>
+                      <td></td>
+                      <td>
+                          <span class="pull-left text-capitalize">Programa:</span>
+
+                      </td>
+                      <td>
+                          <span class="pull-none text-strong">{{ cursolargo[0].programa }}</span>
+                      </td>
+                      <td></td>
+                  </tr>
+                  <tr>
+                      <td></td>
+                      <td>
+                          <span class="pull-left text-capitalize">Area Tematica:</span>
+                      </td>
+                      <td>
+                          <span class="pull-none text-strong">{{ cursolargo[0].areatematica}}</span>
+                      </td>
+                      <td></td>
+                  </tr>
+                  <tr>
+                      <td></td>
+                      <td>
+                          <span class="pull-left text-capitalize">Nivel:</span>
+                      </td>
+                      <td>
+                          <span class="pull-none text-strong">{{ cursolargo[0].acreditacion}}</span>
+                      </td>
+                      <td></td>
+                  </tr>
+                  <tr>
+                      <td></td>
+                      <td>
+                          <span class="pull-left text-capitalize">Especialidad:</span>
+                      </td>
+                      <td>
+                          <span class="pull-none text-strong">{{ cursolargo[0].especialidad}}</span>
+                      </td>
+                      <td></td>
+                  </tr>
+                  <tr>
+                      <td></td>
+                      <td>
+                          <span class="pull-left text-capitalize">Carga Horaria:</span>
+                      </td>
+                      <td>
+                          <span class="pull-none text-strong"> {{ cursolargo[0].duracionhoras}} Hrs.</span>
+                      </td>
+                      <td></td>
+                  </tr>
+                  <tr>
+                      <td></td>
+                      <td>
+                          <span class="pull-left text-capitalize">Turno:</span>
+                      </td>
+                      <td>
+                          <span class="pull-none text-strong">{{ cursolargo[0].turno}}</span>
+                      </td>
+                      <td></td>
+                  </tr>
+                  <tr>
+                      <td></td>
+                      <td>
+                          <span class="pull-left text-capitalize">Fecha Inicio:</span>
+                      </td>
+                      <td>
+                          <span class="pull-none text-strong">{{ cursolargo[0].fecha_inicio}}</span>
+                      </td>
+                      <td></td>
+                  </tr>
+                  <tr>
+                      <td></td>
+                      <td>
+                          <span class="pull-left text-capitalize">Fecha Fin:</span>
+                      </td>
+                      <td>
+                          <span class="pull-none text-strong">{{ cursolargo[0].fecha_fin}}</span>
+                      </td>
+                      <td></td>
+                  </tr>
+                  <tr>
+                      <td></td>
+                      <td>
+                          <span class="pull-left text-capitalize">Población:</span>
+                      </td>
+                      <td>
+                          <span class="pull-none text-strong">{{ cursolargo[0].poblacion}}</span>
+                      </td>
+                      <td></td>
+                  </tr>
+                  <tr> <td></td>
+                      <td>
+                          <span class="pull-left text-capitalize">Detalle Población:</span>
+                      </td>
+                      <td>
+                          <span class="pull-none text-strong">{{ cursolargo[0].poblacion_detalle}}</span>
+                      </td>
+                      <td></td>
+                  </tr>
+                  </tbody>
+              </table>
+          </div>
+      </div>
+
+      <div class="w3-container w3-red">
+          <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
+          <h3><i class="glyphicon glyphicon-map-marker"></i>  Lugar de Realización del Curso  </h3>
+      </div>
+      <div class="panel-sub-heading inner-all">
+          <div class="pull-left">
+              <ul class="list-inline no-margin">
+                  {#<li>#}
+                      {#<a href="mail-inbox.html" class="btn btn-danger btn-sm"><i class="fa fa-arrow-left"></i> Back</a>#}
+                  {#</li>#}
+                  {#<li class="hidden-xs">#}
+                      {#<a href="#" class="btn btn-primary btn-sm"><i class="fa fa-save"></i> Save Draft</a>#}
+                  {#</li>#}
+              </ul>
+          </div>
+          <div class="clearfix"></div>
+      </div>
+      <div class="panel-body no-padding">
+          <div class="table-responsive">
+              <table class="table">
+                  <tbody>
+                  <tr>
+                      <td></td>
+                      <td>
+                          <span class=" text-capitalize">Departamento:</span>
+                      </td>
+                      <td>
+                          <span class="pull-none text-strong">{{ cursolargo[0].departamento}}</span>
+                      </td>
+                      <td></td>
+                  </tr>
+                  <tr>
+                      <td></td>
+                      <td>
+                          <span class=" text-capitalize">Provincia:</span>
+
+                      </td>
+                      <td>
+                          <span class="pull-none text-strong">{{ cursolargo[0].provincia}}</span>
+                      </td>
+                      <td></td>
+                  </tr>
+                  <tr>
+                      <td></td>
+                      <td>
+                          <span class="text-capitalize">Municipio:</span>
+                      </td>
+                      <td>
+                          <span class="text-strong">{{ cursolargo[0].municipio}}</span>
+                      </td>
+                      <td></td>
+                  </tr>
+                  <tr>
+                      <td></td>
+                      <td>
+                          <span class="text-capitalize">Ciudad, Pueblo o Comunidad:</span>
+                      </td>
+                      <td>
+                          <span class="text-strong">{{ cursolargo[0].comunidad}}</span>
+                      </td>
+                      <td></td>
+                  </tr>
+
+                  </tbody>
+              </table>
+          </div>
+      </div>
+
+    <!-- /.row -->
+
+
+
+</small>
+{% else %}
+{% endif %}
+<script>
+    $(document).ready( function(){
+        $(".tooltips").tooltip();
+        //onchange="getSelectedValue()"
+        //herramienta_per_estudiantechange_estado
+        $( "body .estados" ).on( "change", function() {
+//            console.log( $(this).val() );
+//            console.log( $(this).attr('id').split('-')[1] );
+            matricula = $(this).val();
+            idestins = $(this).attr('id').split('-')[1];
+            $.ajax({
+                type: "post",
+                data: ({matricula:matricula,idestins:idestins}),
+                url: "{{ path('herramienta_per_estudiantechange_estado') }}",
+                beforeSend: function () {
+                    //$('#listEstudiante').empty();
+                    $("#menestado").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $('#menestado').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
+
+//                    $('#listEstudiante').empty();
+//                    $('#listEstudiante').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        });
+
+    });
+
+     var getRudeal = function (infoUe, infoStudent) {
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: "{{ path('socioeconomicoalt_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $("#modal").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    }
+
+    var removeInscriptionStudent = function (idcurso, idestins,infoUe) {
+
+      if(confirm('¡¡Advertencia!! Esta por eliminar una inscripción. ¿Esta seguro de continuar?')){
+        $.ajax({
+            type: 'post',
+            data: ({idcurso: idcurso, idestins: idestins,infoUe:infoUe}),
+            url: "{{ path('herramienta_per_estudianterequest_removeinscription') }}",
+            beforeSend: function () {
+//              $("#listEstudiante").empty();
+              $("#listEstudiante").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+            },
+            success: function (data) {
+              $("#listEstudiante").empty();
+              $("#listEstudiante").append(data);
+            },
+            statusCode: {
+                    500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+      }else{
+        return false;
+      }
+
+    };
+
+    var doInscriptions = function(data){
+     $.ajax({
+         type: 'post',
+         data: ({infoUe: data }),
+         url: "{{ path('per_inscriptionstudent_index') }}",
+         beforeSend: function () {
+             $('#modal').empty();
+         },
+         success: function (data) {
+             $('#modal').empty();
+             $('#modal').append(data);
+         },
+         statusCode: {
+             500: function () {
+
+             },
+             404: function () {
+
+             }
+         }
+     });
+   };
+
+    var doInscriptionsCI = function(data){
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: data }),
+            url: "{{ path('per_inscriptioncistudent_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+    var Imprimir = function(data){
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: data }),
+            url: "{{ path('permanente_reporte_participantes_curso_corto') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+
+    var closeInscriptions = function(data){
+        if(confirm('¡¡Advertencia!! Esta por cerrar el curso, no se permitiran realizar modificaciones. ¿Esta seguro de continuar?')){
+
+            $.ajax({
+            type: 'post',
+            data: ({infoUe: data }),
+            url: "{{ path('herramienta_per_estudianterequest_closeinscription') }}",
+            beforeSend: function () {
+//                $('#listEstudiante').empty();
+                $("#listEstudiante").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+
+            },
+            success: function (data) {
+                $('#listEstudiante').empty();
+                $('#listEstudiante').append(data);
+                window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
+
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+        }else{
+            return false;
+        }
+    };
+
+
+
+
+   var doCursoDuplicado = function (infoUe,idcursodup) {
+            $.ajax({
+                type: 'get',
+                data: ({infoUe: infoUe, idcursodup: idcursodup}),
+                url: Routing.generate('herramientalt_ceducativa_curso_duplicado'),
+                beforeSend: function () {
+                    $("#idstudents").empty();
+                    $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $("#idstudents").empty();
+                    $("#idstudents").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+   var doInscriptionsWithOutRude = function(data){
+     $.ajax({
+         type: 'post',
+         data: ({infoUe: data }),
+         url: "{{ path('alter_inscriptionstudent_without_rude_index') }}",
+         beforeSend: function () {
+             $('#modal').empty();
+         },
+         success: function (data) {
+             $('#modal').empty();
+             $('#modal').append(data);
+         },
+         statusCode: {
+             500: function () {
+
+             },
+             404: function () {
+
+             }
+         }
+     });
+   };
+
+   var addModulosToStudeent = function (infoUe, infoStudent) {
+
+    $.ajax({
+        type: 'post',
+        data: ({infoUe: infoUe, infoStudent: infoStudent}),
+        url: "{{ path('herramienta_alter_studentModule_index') }}",
+        beforeSend: function () {
+            $('#modal').empty();
+        },
+        success: function (data) {
+            $('#modal').empty();
+            $('#modal').append(data);
+        },
+        statusCode: {
+            500: function () {
+
+            },
+            404: function () {
+
+            }
+        }
+      });
+    };
+
+    var deletecurso = function(infoUe){
+        if(confirm('¡¡Advertencia!! Esta por eliminar el curso. ¿Esta seguro de continuar?')){
+
+            $.ajax({
+         type: 'post',
+         data: ({infoUe: infoUe }),
+         url: "{{ path('herramienta_per_cursocorto_delete') }}",
+                beforeSend: function () {
+                    $('#mengestioncurso').empty();
+                    $('#mengestioncurso').append("<div style='text-align:center; color:#5C9FFB'>Eliminando curso...</div>");
+                },
+                success: function (data) {
+                    $('#mengestioncurso').empty();
+                    $('#mengestioncurso').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
+                    window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
+                },
+                error: function(data){
+                    $('#mengestioncurso').empty();
+                    $('#mengestioncurso').html("<div class='alert alert-warning alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Proceso detenido!</strong> Si desea eliminar el curso debe antes eliminar lo siguiente: Toma de materias, inscripciones, materias/módulos maestro asignados.</div>");
+                    //window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
+                }
+            });
+        }
+    else{
+        return false;
+    }
+   };
+
+    var opencurso = function(infoUe){
+        if(confirm('¡¡Advertencia!! Se Abrira el curso para realizar operaciones. ¿Esta seguro de continuar?')){
+
+            $.ajax({
+                type: 'post',
+                data: ({infoUe: infoUe }),
+                url: "{{ path('herramienta_per_open_curso_nuevo') }}",
+                beforeSend: function () {
+                    $('#mengestioncurso').empty();
+                    $('#mengestioncurso').append("<div style='text-align:center; color:#5C9FFB'>Habilitando curso...</div>");
+                },
+                success: function (data) {
+                    $('#mengestioncurso').empty();
+                    $('#mengestioncurso').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
+                    window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
+                },
+                error: function(data){
+                    $('#mengestioncurso').empty();
+                    $('#mengestioncurso').html("<div class='alert alert-warning alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Proceso detenido!</strong> Si desea eliminar el curso debe antes eliminar lo siguiente: Toma de materias, inscripciones, materias/módulos maestro asignados.</div>");
+                    //window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
+                }
+            });
+        }
+        else{
+            return false;
+        }
+    };
+
+
+function getSelectedValue()
+{
+
+    console.log($(this).val());
+    //var selectedValue = document.getElementById("estado").value();
+
+
+}
+
+
+</script>

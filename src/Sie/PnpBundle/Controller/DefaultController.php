@@ -3103,10 +3103,11 @@ GROUP BY depto
                 foreach ($result as $results) {
                     $estudiante_nota_id[]=$results->getId();
                 }
-                ///////////plan 2
+                ///////////plan 2 carlos 
                 // id estduoante_socieconomico_alternativa 
-                $result=$em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findByestudianteIEstudianteInscripcionSocnscripcion($estudiante_inscripcion_id);
+                $result=$em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findOneByestudianteInscripcion($estudiante_inscripcion_id);
                 $estudiante_inscripcion_socioeconomico_alternativa_id = array();
+                if($result)
                 foreach ($result as $results) {
                     $estudiante_inscripcion_socioeconomico_alternativa_id[]=$results->getId();
                 }
@@ -3121,7 +3122,7 @@ GROUP BY depto
                 $params = array();
                 $stmt->execute($params);
                 $po = $stmt->fetchAll();
-                
+                $id_ico=0;
                 foreach ($po as $p) {
                     $id_ico = $p["id"];
                 }

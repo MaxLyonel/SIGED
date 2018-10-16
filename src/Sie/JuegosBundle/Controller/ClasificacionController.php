@@ -1233,7 +1233,6 @@ class ClasificacionController extends Controller {
                         }
                     }
                 }
-
             } else {
                 if ($tipoDisciplinaPrueba["idDisciplina"] == 8){ //natacion
                     if ($prueba == 65 or $prueba == 66 or $prueba == 67 or $prueba == 68 or $prueba == 69 or $prueba == 70 or $prueba == 71 or $prueba == 72 or $prueba == 73 or $prueba == 74 or $prueba == 124 or $prueba == 125 or $prueba == 126 or $prueba == 127 or $prueba == 128 or $prueba == 129 or $prueba == 130 or $prueba == 131 or $prueba == 132 or $prueba == 133){ // promocional
@@ -2301,6 +2300,7 @@ class ClasificacionController extends Controller {
                 ->innerJoin('SieAppWebBundle:FaseTipo', 'ft', 'WITH', 'ft.id = eij.faseTipo')
                 ->andWhere('gt.id = :gestionId')
                 ->andWhere('ft.id = :faseId')
+                ->andWhere('dt.nivelTipo = 13')
                 ->andWhere('lt5.codigo = :departamentoId')
                 ->setParameter('departamentoId', $departamento)
                 ->setParameter('faseId', $fase)

@@ -1,0 +1,254 @@
+herramienta_per_cursos_largos_index:
+    path:    /index
+    defaults: { _controller: SiePermanenteBundle:CursosLargos:index}
+    options:
+         expose: true
+
+herramienta_per_cursos_largos_new:
+    path:   /new
+    defaults: { _controller: SiePermanenteBundle:CursosLargos:newCursoLargo}
+
+herramienta_per_cursos_largos_create:
+    path:     /create
+    defaults: { _controller: SiePermanenteBundle:CursosLargos:createCursoLargo}
+    methods:  POST
+
+herramienta_per_cursos_largos_edit:
+    path:   /edit/
+    defaults: { _controller: SiePermanenteBundle:CursosLargos:editCursoLargo}
+    options:
+      expose: true
+
+herramienta_per_cursos_largos_update:
+    path:     /update/
+    defaults: { _controller: "SiePermanenteBundle:CursosLargos:updateCursoLargo" }
+    methods:  [POST, PUT]
+
+herramienta_per_cursos_largos_delete:
+    path:   /delete/
+    defaults: { _controller: SiePermanenteBundle:CursosLargos:deleteCursoLargo}
+    options:
+          expose: true
+
+sie_per_listarespecialidades:
+    path:     /listaresp/{progarea}
+    defaults: { _controller: "SiePermanenteBundle:CursosLargos:listarEspecialidades" }
+    options:
+         expose: true
+
+sie_per_listarniveles:
+    path:     /listarniv/{espec}
+    defaults: { _controller: "SiePermanenteBundle:CursosLargos:listarNiveles" }
+    options:
+         expose: true
+
+sie_per_mostrarhoras_largos:
+    path:     /mostrarhoras/{niv}
+    defaults: { _controller: "SiePermanenteBundle:CursosLargos:mostrarHoras" }
+    options:
+         expose: true
+
+sie_per_clistarprovincias:
+    path:     /listarprovincias/{dpto}
+    defaults: { _controller: "SiePermanenteBundle:CursosLargos:listarprovincias" }
+    options:
+         expose: true
+
+sie_per_clistarmunicipios:
+    path:     /listarmunicipios/{prov}
+    defaults: { _controller: "SiePermanenteBundle:CursosLargos:listarmunicipios" }
+    options:
+         expose: true
+
+sie_per_mostrarpob_largos:
+    path:     /mostrarpoblar/{pob}
+    defaults: { _controller: "SiePermanenteBundle:CursosLargos:mostrarPobDetalle" }
+    options:
+         expose: true
+
+herramienta_per_cursos_largos_show_maestro:
+    path:   /showma/
+    defaults: { _controller: SiePermanenteBundle:CursosLargos:showMaestroCursoLargo}
+    options:
+          expose: true
+
+herramienta_per_cursos_largos_add_maestro:
+    path:     /addm/
+    defaults: { _controller: SiePermanenteBundle:CursosLargos:addMaestroCursoLargo}
+    methods:
+
+herramienta_per_cursos_largos_delete_maestro:
+    path:     /delm/
+    defaults: { _controller: SiePermanenteBundle:CursosLargos:deleteMaestroCursoLargo}
+    methods:
+
+herramienta_per_cursos_largos_show_estudiante:
+    path:   /showes/
+    defaults: { _controller: SiePermanenteBundle:CursosLargos:showEstudianteCursoLargo}
+    options:
+         expose: true
+
+herramienta_per_info_estudianterequest_see_students:
+    path:     /sie_per/seestudents/
+    defaults: { _controller: SiePermanenteBundle:CursosLargos:seeStudents }
+    options:
+         expose: true
+
+herramienta_per_info_cursos_largos:
+    path:     /sie_per/cursoslargos/
+    defaults: { _controller: SiePermanenteBundle:CursosLargos:mostrarCursolargo }
+    options:
+         expose: true
+
+herramienta_per_info_estudiante_inscriptions:
+    resource: "@SiePermanenteBundle/Resources/config/routing/studentInscriptions.yml"
+    prefix:   /sie/estudiante_inscriptions_per
+
+herramienta_per_estudianterequest_removeinscription:
+    path:     /sie/removeinscription/
+    defaults: { _controller: SiePermanenteBundle:CursosLargos:removeStudents }
+    options:
+         expose: true
+herramienta_per_estudianterequest_closeinscription:
+    path:     /closeins/
+    defaults: { _controller: "SiePermanenteBundle:CursosLargos:closeInscription"}
+    options:
+         expose: true
+
+herramienta_per_cursocorto_delete:
+    path:     /deletecursoco
+    defaults: { _controller: SiePermanenteBundle:CursosLargos:deleteCursoCorto }
+    options:
+         expose: true
+
+herramienta_per_estudiantechange_estado:
+    path:     /estado
+    defaults: { _controller: SiePermanenteBundle:CursosLargos:changeEstado }
+    options:
+         expose: true
+
+herramienta_per_add_curso_nuevo:
+    path:     /cursonuevo/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:addCursoNuevo"}
+    options:
+         expose: true
+
+herramienta_per_edit_curso_nuevo:
+    path:     /cursoedit/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:editCurso"}
+    options:
+         expose: true
+
+herramienta_per_delete_curso_nuevo:
+    path:     /cursodelete/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:deleteCurso"}
+    options:
+         expose: true
+
+herramienta_per_show_curso_nuevo:
+    path:     /showcursonuevo/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:showCursoNuevo"}
+    options:
+         expose: true
+
+herramienta_per_show_curso_edit:
+    path:     /showcursoedit/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:showCursoEdit"}
+    options:
+         expose: true
+
+herramienta_per_delete_programa_nuevo:
+    path:     /programadelete/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:deletePrograma"}
+    options:
+         expose: true
+
+herramienta_per_show_programa_nuevo:
+    path:     /showprogramanuevo/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:showProgramaNuevo"}
+    options:
+         expose: true
+
+herramienta_per_show_programa_edit:
+    path:     /showprogramadit/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:showProgramaEdit"}
+    options:
+         expose: true
+
+herramienta_per_delete_areatem_nuevo:
+    path:     /areatemdelete/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:deleteAreaTem"}
+    options:
+         expose: true
+
+herramienta_per_show_areatem_nuevo:
+    path:     /showareatemnuevo/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:showAreaTemNuevo"}
+    options:
+         expose: true
+
+herramienta_per_show_areatem_edit:
+    path:     /showtemdit/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:showAreaTemEdit"}
+    options:
+         expose: true
+
+herramienta_per_open_curso_nuevo:
+    path:     /cursoopen/
+    defaults: { _controller: "SiePermanenteBundle:CursosLargos:openCurso"}
+    options:
+         expose: true
+
+herramienta_per_add_programa:
+    path:     /programanuevo/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:addProgramaNuevo"}
+    options:
+         expose: true
+
+herramienta_per_edit_programa:
+    path:     /programaedit/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:editPrograma"}
+    options:
+         expose: true
+
+herramienta_per_add_areatem:
+    path:     /areatemnuevo/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:addAreaTemNuevo"}
+    options:
+         expose: true
+
+herramienta_per_edit_areatem:
+    path:     /areatemedit/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:editAreaTem"}
+    options:
+         expose: true
+
+herramienta_per_add_areatematica:
+    path:     /areatemnueva/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:addAreaTematica"}
+    options:
+         expose: true
+
+herramienta_per_list_curso_corto:
+    path:     /listacursos/
+    defaults: { _controller: "SiePermanenteBundle:CursosLargos:listaCurso"}
+    options:
+         expose: true
+
+herramienta_per_show_list_curso_corto:
+    path:     /showlistacursos/
+    defaults: { _controller: "SiePermanenteBundle:CursosLargos:showlistaCurso"}
+    options:
+         expose: true
+
+herramienta_permanente_admin:
+    path:     /admincursos
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:admincursos"}
+    options:
+         expose: true
+
+herramienta_per_info_inscriptionsCI:
+    resource: "@SiePermanenteBundle/Resources/config/routing/InscriptionsCI.yml"
+    prefix:   /sie/estudiante_inscriptions_per
+
+

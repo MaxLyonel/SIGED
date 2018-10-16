@@ -230,11 +230,20 @@
                                 </a>
                                 <div class="dropdown-menu animated flipInX">
                                     <div class="dropdown-header">
-                                        <span class="title">Notificaciones <strong>(1)</strong></span>
+                                        <span class="title">Notificaciones <strong>(2)</strong></span>
                                         {#<span class="option text-right"><a href="form-element.html#"><i class="fa fa-cog"></i> Configuración</a></span>#}
                                     </div>
                                     <div class="dropdown-body niceScroll">
                                         <div class="media-list small">
+                                            <div href="form-element.html#" class="media">
+                                                <div class="media-object pull-left"><i class="fa fa-male"></i></div>
+                                                <div class="media-body">
+                                                    <span class="media-text">
+                                                        Se habilita la opción Historial del Centro en el menú Gestión en el Sistema de Educación Alternativa, para que los CEAs puedan realizar el registro de la información del periodo actual o la regularización de alguna gestión pasada.
+                                                    </span>
+                                                    <span class="media-meta">05/09/2018</span>
+                                                </div>
+                                            </div>
                                             <div href="form-element.html#" class="media">
                                                 <div class="media-object pull-left"><i class="fa fa-male"></i></div>
                                                 <div class="media-body">
@@ -565,7 +574,8 @@
                                 <span class="arrow"></span>
                             </a>
                             <ul>
-                                <li><a onclick="selceadistritoShow();">Listar mis CEAS.</a></li>
+                                {#<li><a onclick="selceadistritoShow();">Listar mis CEAS.</a></li>#}
+                                <li><a href="{{path('herramienta_ceducativa_distrito_listaceas')}}">Listar mis CEAS.</a></li>
                                 {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
                                 {#<li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>#}
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
@@ -589,7 +599,7 @@
                                 <span class="arrow"></span>
                             </a>
                             <ul>
-                                <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Historial del centro</a></li>
+                                <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Gestionar C.E.A.</a></li>
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
                                 <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
                                 <li><a href="{{path('sie_alt_lista_estudiantes_excel')}}">Exportar listas a Excel </a></li>
