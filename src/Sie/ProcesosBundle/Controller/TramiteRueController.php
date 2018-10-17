@@ -1117,7 +1117,7 @@ class TramiteRueController extends Controller
         $query1 = $em->getConnection()->prepare('select * from flujo_proceso where id=' . $tarea_ant . ' and es_evaluacion=true');
         $query1->execute();
         $evaluacion = $query1->fetchAll();
-        $query = $em->createQuery('SELECT se
+        /*$query = $em->createQuery('SELECT se
             FROM SieAppWebBundle:TtecInstitucioneducativaSede se
             JOIN se.institucioneducativa ie 
             WHERE ie.institucioneducativaTipo in (:idTipo)
@@ -1127,7 +1127,7 @@ class TramiteRueController extends Controller
             ->setParameter('idTipo', array(7, 8, 9))
             ->setParameter('idEstado', 10)
             ->setParameter('estadoSede', TRUE); 
-            $entities = $query->getResult(); 
+            $entities = $query->getResult(); */
 
         if($rol == 7){ // departamental
             if ($evaluacion)
@@ -1144,13 +1144,16 @@ class TramiteRueController extends Controller
                 left join persona p on p.id=u.persona_id
                 where se.estado =true and ie.institucioneducativa_tipo in (7.8.9) and ie.estadoinstitucion_tipo =10 and t.flujo_tipo_id=". $flujotipo ." and t.fecha_fin is null and ". $tarea ." and ur.rol_tipo_id=7 and ur.lugar_tipo_id=". $lugarTipo[0]['lugar_tipo_id'] . " and td.valor_evaluacion = (select condicion from wf_tarea_compuerta where flujo_proceso_id=". $tarea_ant ." and condicion_tarea_siguiente=". $tarea_actual . ")");
             }else{
-                $query = $em->getConnection()->prepare("select t.id,tt.tramite_tipo,t.fecha_registro,td.obs,p.nombre,case when td.flujo_proceso_id = ". $tarea_ant ." then 'ENVIADO' else 'DEVUELTO' end as estado
-                from tramite t join tramite_detalle td on cast(t.tramite as int)=td.id
-                join tramite_tipo tt on t.tramite_tipo=tt.id
-                join usuario_rol ur on td.usuario_remitente_id=ur.usuario_id
-                join usuario u on td.usuario_remitente_id=u.id
-                join persona p on p.id=u.persona_id
-                where t.flujo_tipo_id=". $flujotipo ." and t.fecha_fin is null and ". $tarea ." and ur.rol_tipo_id=7 and ur.lugar_tipo_id=".$lugarTipo[0]['lugar_tipo_id']);
+                $query = $em->getConnection()->prepare("select ie.id as codrie,ie.institucioneducativa,t.id,tt.tramite_tipo,t.fecha_registro,td.obs,p.nombre,case when td.flujo_proceso_id = ". $tarea_ant ." then 'ENVIADO' else 'DEVUELTO' end as estado
+                from ttec_institucioneducativa_sede se
+                join institucioneducativa ie on se.institucioneducativa_id=ie.id
+                left join tramite t on ie.id=t.institucioneducativa_id
+                left join tramite_detalle td on cast(t.tramite as int)=td.id
+                left join tramite_tipo tt on t.tramite_tipo=tt.id
+                left join usuario_rol ur on td.usuario_remitente_id=ur.usuario_id
+                left join usuario u on td.usuario_remitente_id=u.id
+                left join persona p on p.id=u.persona_id
+                where se.estado =true and ie.institucioneducativa_tipo in (7.8.9) and ie.estadoinstitucion_tipo =10 and t.flujo_tipo_id=". $flujotipo ." and t.fecha_fin is null and ". $tarea ." and ur.rol_tipo_id=7 and ur.lugar_tipo_id=".$lugarTipo[0]['lugar_tipo_id']);
             }
         }elseif($rol == 8){
             if ($evaluacion)
