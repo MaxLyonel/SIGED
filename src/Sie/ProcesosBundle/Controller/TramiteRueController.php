@@ -1133,7 +1133,7 @@ class TramiteRueController extends Controller
             if ($evaluacion)
             {
                 
-                $query = $em->getConnection()->prepare("select t.id,t.institucioneducativa_id,ie.institucioneducativa,ie.sede,t.tramite_tipo,t.fecha_registro,t.obs,t.nombre,t.estado
+                $query = $em->getConnection()->prepare("select t.id,ie.institucioneducativa_id,ie.institucioneducativa,ie.sede,t.tramite_tipo,t.fecha_registro,t.obs,t.nombre,t.estado
                 from
                 (select se.institucioneducativa_id, se.sede,ie.institucioneducativa
                 from ttec_institucioneducativa_sede se
@@ -1149,7 +1149,7 @@ class TramiteRueController extends Controller
                 join persona p on p.id=u.persona_id
                 where t.flujo_tipo_id=". $flujotipo ." and t.fecha_fin is null and ". $tarea ." and ur.rol_tipo_id=7 and ur.lugar_tipo_id=". $lugarTipo[0]['lugar_tipo_id'] . " and td.valor_evaluacion = (select condicion from wf_tarea_compuerta where flujo_proceso_id=". $tarea_ant ." and condicion_tarea_siguiente=". $tarea_actual . "))t on ie.institucioneducativa_id=t.institucioneducativa_id");
             }else{
-                $query = $em->getConnection()->prepare("select t.id,t.institucioneducativa_id,ie.institucioneducativa,ie.sede,t.tramite_tipo,t.fecha_registro,t.obs,t.nombre,t.estado
+                $query = $em->getConnection()->prepare("select t.id,ie.institucioneducativa_id,ie.institucioneducativa,ie.sede,t.tramite_tipo,t.fecha_registro,t.obs,t.nombre,t.estado
                 from
                 (select se.institucioneducativa_id, se.sede,ie.institucioneducativa
                 from ttec_institucioneducativa_sede se
