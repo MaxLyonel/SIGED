@@ -1169,15 +1169,17 @@ class TramiteRueController extends Controller
             if ($evaluacion)
             {
                 
-                $query = $em->getConnection()->prepare("select t.id,tt.tramite_tipo,t.fecha_registro,td.obs,p.nombre,case when td.flujo_proceso_id = ". $tarea_ant ." then 'ENVIADO' else 'DEVUELTO' end as estado
+                $query = $em->getConnection()->prepare("select t.id,ie.id as codrie,ie.institucioneducativa,tt.tramite_tipo,t.fecha_registro,td.obs,p.nombre,case when td.flujo_proceso_id = ". $tarea_ant ." then 'ENVIADO' else 'DEVUELTO' end as estado
                 from tramite t join tramite_detalle td on cast(t.tramite as int)=td.id
+                join institucioneducativa ie on t.institucioneducativa_id=ie.id
                 join tramite_tipo tt on t.tramite_tipo=tt.id
                 join usuario u on td.usuario_remitente_id=u.id
                 join persona p on p.id=u.persona_id
                 where t.flujo_tipo_id=". $flujotipo ." and t.fecha_fin is null and ". $tarea ." and td.valor_evaluacion = (select condicion from wf_tarea_compuerta where flujo_proceso_id=". $tarea_ant ." and condicion_tarea_siguiente=". $tarea_actual . ")");
             }else{
-                $query = $em->getConnection()->prepare("select t.id,tt.tramite_tipo,t.fecha_registro,td.obs,p.nombre,case when td.flujo_proceso_id = ". $tarea_ant ." then 'ENVIADO' else 'DEVUELTO' end as estado
+                $query = $em->getConnection()->prepare("select t.id,ie.id as codrie,ie.institucioneducativa,tt.tramite_tipo,t.fecha_registro,td.obs,p.nombre,case when td.flujo_proceso_id = ". $tarea_ant ." then 'ENVIADO' else 'DEVUELTO' end as estado
                 from tramite t join tramite_detalle td on cast(t.tramite as int)=td.id
+                join institucioneducativa ie on t.institucioneducativa_id=ie.id
                 join tramite_tipo tt on t.tramite_tipo=tt.id
                 join usuario u on td.usuario_remitente_id=u.id
                 join persona p on p.id=u.persona_id
