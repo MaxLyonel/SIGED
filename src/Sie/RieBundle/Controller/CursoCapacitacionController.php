@@ -141,6 +141,7 @@ class CursoCapacitacionController extends Controller {
                 }
             }
             else{ //el curso debe ser registrado
+                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('ttec_carrera_tipo');")->execute();
                 $curso = new TtecCarreraTipo(); 
                 $curso->setNombre(strtoupper($form['ttecCarreraTipo']));
                 $curso->setFechaRegistro(new \DateTime('now'));
