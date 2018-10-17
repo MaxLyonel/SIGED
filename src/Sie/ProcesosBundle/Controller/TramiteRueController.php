@@ -1142,7 +1142,7 @@ class TramiteRueController extends Controller
                 left join usuario_rol ur on td.usuario_remitente_id=ur.usuario_id
                 left join usuario u on td.usuario_remitente_id=u.id
                 left join persona p on p.id=u.persona_id
-                where se.estado =true and ie.institucioneducativa_tipo in (7.8.9) and ie.estadoinstitucion_tipo =10 and t.flujo_tipo_id=". $flujotipo ." and t.fecha_fin is null and ". $tarea ." and ur.rol_tipo_id=7 and ur.lugar_tipo_id=". $lugarTipo[0]['lugar_tipo_id'] . " and td.valor_evaluacion = (select condicion from wf_tarea_compuerta where flujo_proceso_id=". $tarea_ant ." and condicion_tarea_siguiente=". $tarea_actual . ")");
+                where se.estado =true and ie.institucioneducativa_tipo in (7,8,9) and ie.estadoinstitucion_tipo =10 and t.flujo_tipo_id=". $flujotipo ." and t.fecha_fin is null and ". $tarea ." and ur.rol_tipo_id=7 and ur.lugar_tipo_id=". $lugarTipo[0]['lugar_tipo_id'] . " and td.valor_evaluacion = (select condicion from wf_tarea_compuerta where flujo_proceso_id=". $tarea_ant ." and condicion_tarea_siguiente=". $tarea_actual . ")");
             }else{
                 $query = $em->getConnection()->prepare("select ie.id as codrie,ie.institucioneducativa,t.id,tt.tramite_tipo,t.fecha_registro,td.obs,p.nombre,case when td.flujo_proceso_id = ". $tarea_ant ." then 'ENVIADO' else 'DEVUELTO' end as estado
                 from ttec_institucioneducativa_sede se
@@ -1153,7 +1153,7 @@ class TramiteRueController extends Controller
                 left join usuario_rol ur on td.usuario_remitente_id=ur.usuario_id
                 left join usuario u on td.usuario_remitente_id=u.id
                 left join persona p on p.id=u.persona_id
-                where se.estado =true and ie.institucioneducativa_tipo in (7.8.9) and ie.estadoinstitucion_tipo =10 and t.flujo_tipo_id=". $flujotipo ." and t.fecha_fin is null and ". $tarea ." and ur.rol_tipo_id=7 and ur.lugar_tipo_id=".$lugarTipo[0]['lugar_tipo_id']);
+                where se.estado =true and ie.institucioneducativa_tipo_id in (7,8,9) and ie.estadoinstitucion_tipo_id=10 and t.flujo_tipo_id=". $flujotipo ." and t.fecha_fin is null and ". $tarea ." and ur.rol_tipo_id=7 and ur.lugar_tipo_id=".$lugarTipo[0]['lugar_tipo_id']);
             }
         }elseif($rol == 8){
             if ($evaluacion)
