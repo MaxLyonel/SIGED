@@ -1,0 +1,18 @@
+solicitud_ritt_index:
+    path:     /
+    defaults: { _controller: SieRieBundle:SolicitudRITT:index }
+
+solicitud_ritt_guarda_tramite:
+    path:     /rittGuardaTramite
+    defaults: { _controller: SieRieBundle:SolicitudRITT:guardaTramite }
+
+solicitud_ritt_lista_Nac:
+    path:     /rittListatramites
+    defaults: { _controller: SieRieBundle:SolicitudRITT:ListaTramitesNac }
+
+
+
+
+
+
+
