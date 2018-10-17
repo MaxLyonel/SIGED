@@ -158,6 +158,7 @@ class InstitucioneducativaCursoRepository extends EntityRepository
               ->leftjoin('SieAppWebBundle:SuperiorModuloTipo', 'smt', 'WITH', 'smp.superiorModuloTipo = smt.id')
               ->where('iec.id = :ie_curso_id')
               ->setParameter('ie_curso_id', $data['ueducativaInfoId']['iecId'])
+              ->orderBy('smt.id', 'ASC')
       ;
       return $qb->getQuery()->getResult();
     }

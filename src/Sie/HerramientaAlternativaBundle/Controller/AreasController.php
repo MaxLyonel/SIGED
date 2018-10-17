@@ -224,6 +224,7 @@ class AreasController extends Controller {
                 ->innerJoin('SieAppWebBundle:SuperiorModuloTipo', 'k', 'WITH', 'k.id = l.superiorModuloTipo')              
                 ->where('h.id = :idCurso')
                 ->setParameter('idCurso', $iecId)
+                ->orderBy('k.id', 'ASC')
                 ->getQuery()
                 ->getResult();
         
