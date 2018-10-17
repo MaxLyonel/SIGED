@@ -610,6 +610,68 @@ class Funciones {
         return $objAreasStudent;
     }
 
+    public function lookforModuleToCourse($iecId){
+
+        $query = $this->em->createQueryBuilder()
+                ->select('l.id as smpid, k.modulo, g.id as iecoid, k.codigo as codigo')
+                ->from('SieAppWebBundle:InstitucioneducativaCursoOferta', 'g')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.id = g.insitucioneducativaCurso')               
+                ->innerJoin('SieAppWebBundle:SuperiorModuloPeriodo', 'l', 'WITH', 'l.id = g.superiorModuloPeriodo')              
+                ->innerJoin('SieAppWebBundle:SuperiorModuloTipo', 'k', 'WITH', 'k.id = l.superiorModuloTipo')              
+                ->where('h.id = :idCurso')
+                ->setParameter('idCurso', $iecId)
+                ->getQuery();
+        $objModulesInCourse = $query->getResult();
+        return $objModulesInCourse;
+    }
+
+    public function setModuleToCourse($moduloPeriodo,$iecId){
+
+         $moduloPeriodo = $this->em->createQueryBuilder()
+                    ->select('l.codigo as codigo, k.id as smpid')
+                    ->from('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g')
+                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo = g.id')
+                    ->innerJoin('SieAppWebBundle:SuperiorModuloPeriodo', 'k', 'WITH', 'g.id = k.institucioneducativaPeriodo')
+                    ->innerJoin('SieAppWebBundle:SuperiorModuloTipo', 'l', 'WITH', 'l.id = k.superiorModuloTipo ')
+                    ->where('h.id = :idCurso')
+                    ->setParameter('idCurso', $iecId)
+                    ->getQuery()
+                    ->getResult();
+        
+        
+        foreach ($moduloPeriodo as $value) {
+           // dump($value['codigo']);
+           $foundElement = true;
+           $objModulesInCourse = $this->lookforModuleToCourse($iecId);
+           reset($objModulesInCourse);
+           while( $foundElement && $val = current($objModulesInCourse) ){
+                if($value['codigo']!=408){
+                    if($value['codigo']==$val['codigo']){
+                        $foundElement=false;
+                    }else{
+                     $smpid = $value['smpid'];
+                    }
+                }else{
+                    $foundElement=false;
+                }
+                
+            next($objModulesInCourse);
+           }
+           if($foundElement){
+             //get the curricula to the course 
+                $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
+                $ieco = new InstitucioneducativaCursoOferta();
+                $ieco->setAsignaturaTipo($this->em->getRepository('SieAppWebBundle:AsignaturaTipo')->find('0'));
+                $ieco->setInsitucioneducativaCurso($this->em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecId));
+                $ieco->setSuperiorModuloPeriodo($this->em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($smpid));
+                $ieco->setHorasmes(0);
+                $this->em->persist($ieco);
+                $this->em->flush();
+           }
+        }
+          return json_encode(array('id'=>400, 'status'=>'done'));
+
+    }
 
     public function loadCurriculaCurso($infoUe){
         $aInfoUeducativa = unserialize($infoUe);
@@ -683,7 +745,7 @@ class Funciones {
                     $this->em->persist($ieco);
                     $this->em->flush();
                 }
-                
+                $moduleToCurse = $this->setModuleToCourse($moduloPeriodo,$iecId);
                 if($moduloPeriodo) {                                     
                     $modulos = $this->em->createQueryBuilder()
                     ->select('l')
