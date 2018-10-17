@@ -235,6 +235,7 @@ class CursoAlternativaController extends Controller {
                         $sw = true;
                     }
                 }
+                
                 if(!$sw){
                     $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_tipo');")->execute();
                     $newSuperiorModuloTipo = new SuperiorModuloTipo();
@@ -250,18 +251,9 @@ class CursoAlternativaController extends Controller {
                     $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
                     $smp = new SuperiorModuloPeriodo();
                     $smp->setSuperiorModuloTipo($newSuperiorModuloTipo);
-                    $smp->setInstitucioneducativaPeriodo($iePeriodo[0]);
+                    $smp->setInstitucioneducativaPeriodo($siep);
                     $smp->setHorasModulo(0);
                     $em->persist($smp);
-                    $em->flush();
-
-                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
-                    $ieco = new InstitucioneducativaCursoOferta();
-                    $ieco->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find('0'));
-                    $ieco->setInsitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecId));
-                    $ieco->setSuperiorModuloPeriodo($smp);
-                    $ieco->setHorasmes(0);
-                    $em->persist($ieco);
                     $em->flush();
                 }
                 
@@ -294,7 +286,6 @@ class CursoAlternativaController extends Controller {
                     $em->persist($smp);
                     $em->flush();
                 }
-                
             }
 
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso');")->execute();
