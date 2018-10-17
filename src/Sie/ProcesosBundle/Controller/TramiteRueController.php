@@ -1163,7 +1163,7 @@ class TramiteRueController extends Controller
         return $data;
     }
     
-    public function guardarTramiteDetalle($usuario,$uDestinatario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,$varevaluacion,$idtramite,$datos)
+    public function guardarTramiteDetalle($usuario,$uDestinatario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,$varevaluacion,$idtramite,$datos,$lugarTipo_id)
     {
 
         //dump($datos);die;
@@ -1217,13 +1217,16 @@ class TramiteRueController extends Controller
             $em->flush();
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('wf_solicitud_tramite');")->execute();
             //dump($tramite);die;
-            //datos propios de la solicitud
-            $wfSolicitudTramite->setTramite($tramite);
-            $wfSolicitudTramite->setDatos($datos);
-            $wfSolicitudTramite->setEsValido(true);
-            $wfSolicitudTramite->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));
-            $em->persist($wfSolicitudTramite);
-            $em->flush();
+            if ($datos){
+                //datos propios de la solicitud
+                $wfSolicitudTramite->setTramite($tramite);
+                $wfSolicitudTramite->setDatos($datos);
+                $wfSolicitudTramite->setEsValido(true);
+                $wfSolicitudTramite->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));
+                $wfSolicitudTramite->setLugarTipoId($lugarTipo_id);
+                $em->persist($wfSolicitudTramite);
+                $em->flush();
+            }
         }else{
             /*$query = $em->getConnection()->prepare('select * from tramite_detalle where flujo_proceso_id='. $flujoproceso->getTareaAntId());
             $query->execute();
@@ -1238,10 +1241,13 @@ class TramiteRueController extends Controller
                 ->getQuery()
                 ->getResult();
             //dump($wfSolicitudTramite);die;
-            $wfSolicitudTramite[0]->setDatos($datos);
-            $wfSolicitudTramite[0]->setEsValido(true);
-            $wfSolicitudTramite[0]->setFechaModificacion(new \DateTime(date('Y-m-d H:i:s')));
-            $em->flush();
+            if($wfSolicitudTramite){
+                //datos de la solicitud
+                $wfSolicitudTramite[0]->setDatos($datos);
+                $wfSolicitudTramite[0]->setEsValido(true);
+                $wfSolicitudTramite[0]->setFechaModificacion(new \DateTime(date('Y-m-d H:i:s')));
+                $em->flush();
+            }
             //dump($tramite);die;
             //$tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($tramiteD[0]->getTramite()->getId());
         }
@@ -1261,14 +1267,12 @@ class TramiteRueController extends Controller
             $td_anterior = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
             $tramiteDetalle->setTramiteDetalle($td_anterior);
         }
-        
         //dump($flujoproceso);die;
         if ($flujoproceso->getEsEvaluacion() == true) 
         {
             $tramiteDetalle->setValorEvaluacion($varevaluacion);
         }
         if($flujoproceso->getWfAsignacionTareaTipo()->getId() == 3) //asignacion por seleccion
-        
         {
                if($idtramite != "")
                {
