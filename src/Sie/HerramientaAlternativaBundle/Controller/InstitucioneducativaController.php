@@ -1407,7 +1407,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                             inner join tramite_estado ff on ff.id = w.tramite_estado_id
                             inner join lugar_tipo k on k.id = lt.lugar_tipo_id
                             where z.gestion_tipo_id in (". $gestion .") 			    
-                            and w.tramite_estado_id not in (8,9,12,14)
+                            and w.tramite_estado_id not in (8,9,10,12,14)
                             and z.periodo_tipo_id in (2,3)
                             group by k.lugar, ie.id, ie.institucioneducativa, ff.tramite_estado, z.gestion_tipo_id, z.periodo_tipo_id, ff.id
                             order by k.lugar, ie.id
@@ -1472,7 +1472,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                                         inner join tramite_estado ff on ff.id = w.tramite_estado_id
                                         inner join lugar_tipo k on k.id = lt.lugar_tipo_id
                                         where z.gestion_tipo_id in (". $gestion .") 			    
-                                        and w.tramite_estado_id not in (8,9,12,14)
+                                        and w.tramite_estado_id not in (8,9,10,12,14)
                                         and z.periodo_tipo_id in (2,3)
                                         group by k.lugar, ie.id, ie.institucioneducativa, ff.tramite_estado, z.gestion_tipo_id, z.periodo_tipo_id, ff.id
                                         order by k.lugar, ie.id
@@ -1534,7 +1534,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                                         inner join tramite_estado ff on ff.id = w.tramite_estado_id
                                         inner join lugar_tipo k on k.id = lt.lugar_tipo_id
                                         where z.gestion_tipo_id in (". $gestion .") 			    
-                                        and w.tramite_estado_id not in (8,9,12,14)
+                                        and w.tramite_estado_id not in (8,9,10,12,14)
                                         and z.periodo_tipo_id in (2,3)
                                         group by k.lugar, ie.id, ie.institucioneducativa, ff.tramite_estado, z.gestion_tipo_id, z.periodo_tipo_id, ff.id
                                         order by k.lugar, ie.id
