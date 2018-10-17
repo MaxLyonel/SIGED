@@ -186,7 +186,8 @@
                             <i class="material-icons">clear_all</i>
                             <span>Registro - Cursos</span>
                         </a>
-                    </li>                       
+                    </li>
+
                     {% if app.session.get('roluser') == 8 %}
                         <li>
                             <a href="{{path('carrera_rie_list')}}">
@@ -213,6 +214,21 @@
                             <a href="{{path('reporte_list')}}">
                                 <i class="material-icons">report</i>
                                 <span>Reportes</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{path('solicitud_ritt_lista_Nac')}}">
+                                <i class="material-icons">card_travel</i>
+                                <span>Trámites -  RITT Recibidos</span>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% if app.session.get('roluser')==7 %}
+                        <li>
+                            <a href="{{path('solicitud_ritt_index')}}">
+                                <i class="material-icons">card_travel</i>
+                                <span>Trámites -  RITT</span>
                             </a>
                         </li>
                     {% endif %}
