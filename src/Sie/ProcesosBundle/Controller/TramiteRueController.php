@@ -1117,18 +1117,6 @@ class TramiteRueController extends Controller
         $query1 = $em->getConnection()->prepare('select * from flujo_proceso where id=' . $tarea_ant . ' and es_evaluacion=true');
         $query1->execute();
         $evaluacion = $query1->fetchAll();
-        /*$query = $em->createQuery('SELECT se
-            FROM SieAppWebBundle:TtecInstitucioneducativaSede se
-            JOIN se.institucioneducativa ie 
-            WHERE ie.institucioneducativaTipo in (:idTipo)
-            AND ie.estadoinstitucionTipo in (:idEstado)
-            AND se.estado = :estadoSede
-            ORDER BY ie.id ')
-            ->setParameter('idTipo', array(7, 8, 9))
-            ->setParameter('idEstado', 10)
-            ->setParameter('estadoSede', TRUE); 
-            $entities = $query->getResult(); */
-
         if($rol == 7){ // departamental
             if ($evaluacion)
             {
@@ -1169,7 +1157,8 @@ class TramiteRueController extends Controller
             if ($evaluacion)
             {
                 
-                $query = $em->getConnection()->prepare("select t.id,ie.id as codrie,ie.institucioneducativa,tt.tramite_tipo,t.fecha_registro,td.obs,p.nombre,case when td.flujo_proceso_id = ". $tarea_ant ." then 'ENVIADO' else 'DEVUELTO' end as estado
+                $query = $em->getConnection()->prepare("select t.id,ie.id as codrie,
+                ie.institucioneducativa,tt.tramite_tipo,t.fecha_registro,td.obs,p.nombre,case when td.flujo_proceso_id = ". $tarea_ant ." then 'ENVIADO' else 'DEVUELTO' end as estado
                 from tramite t join tramite_detalle td on cast(t.tramite as int)=td.id
                 join institucioneducativa ie on t.institucioneducativa_id=ie.id
                 join tramite_tipo tt on t.tramite_tipo=tt.id
