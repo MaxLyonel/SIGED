@@ -36,6 +36,7 @@ class EstudianteNotasPrimariaController extends Controller {
     }
 
     public function indexAction(Request $request){
+
         $infoUe = $request->get('infoUe');
         $infoStudent = $request->get('infoStudent');
         $data = $this->getNotas($infoUe, $infoStudent);
@@ -130,7 +131,7 @@ class EstudianteNotasPrimariaController extends Controller {
         $operativo = 1;
         // Obtenemos las asignaturas de humanistica (15) tecnica (18 a 25)
         $asignaturas = $em->createQueryBuilder()
-                    ->select('smt.id as asignaturaId, smt.modulo as asignatura, ea.id as estAsigId, eae.id as idEstadoAsignatura, ieco.id as idCursoOferta, sast.id as idAreaSaberes, sast.areaSuperior')
+                    ->select('smt.id as asignaturaId, smt.modulo as asignatura, smt.codigo, ea.id as estAsigId, eae.id as idEstadoAsignatura, ieco.id as idCursoOferta, sast.id as idAreaSaberes, sast.areaSuperior')
                     ->from('SieAppWebBundle:EstudianteAsignatura','ea')
                     ->leftJoin('SieAppWebBundle:EstudianteasignaturaEstado','eae','with','ea.estudianteasignaturaEstado = eae.id')
                     ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
@@ -142,9 +143,9 @@ class EstudianteNotasPrimariaController extends Controller {
                     //->innerJoin('SieAppWebBundle:MaestroInscripcion','mi','with','iecom.maestroInscripcion = mi.id')
                     //->innerJoin('SieAppWebBundle:Persona','p','with','mi.persona = p.id')
                    // ->innerJoin('SieAppWebBundle:NotaTipo','nt','with','iecom.notaTipo = nt.id')
-                    ->groupBy('smt.id, smt.modulo, ea.id, eae.id, ieco.id, sast.id')
-                    ->orderBy('sast.id','ASC')
-                    ->addOrderBy('smt.modulo','ASC')
+                    ->groupBy('smt.id, smt.modulo, smt.codigo, ea.id, eae.id, ieco.id, sast.id')
+                    // ->orderBy('sast.id','ASC')
+                    ->orderBy('smt.codigo','ASC')
                     ->where('ei.id = :idInscripcion')
                     //->andWhere('nt.id IN (:idsNotas)')
                     ->setParameter('idInscripcion',$idInscripcion)
@@ -177,7 +178,7 @@ class EstudianteNotasPrimariaController extends Controller {
         $notasArray = array();
         $cont = 0;
         foreach ($asignaturas as $a) {
-            $notasArray[$cont] = array('area'=>$a['areaSuperior'],'idAsignatura'=>$a['asignaturaId'],'asignatura'=>$a['asignatura'],'idEstadoAsignatura'=>$a['idEstadoAsignatura']);
+            $notasArray[$cont] = array('area'=>$a['areaSuperior'],'idAsignatura'=>$a['asignaturaId'],'asignatura'=>$a['asignatura'], 'codigo'=>$a['codigo'], 'idEstadoAsignatura'=>$a['idEstadoAsignatura']);
 
             $asignaturasNotas = $em->createQueryBuilder()
                                 ->select('en.id as idNota, nt.id as idNotaTipo, nt.notaTipo, ea.id as idEstudianteAsignatura, en.notaCuantitativa, en.notaCualitativa')
@@ -291,16 +292,6 @@ class EstudianteNotasPrimariaController extends Controller {
 
         $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(3,5,22,4));
 
-        // OBTENER EL NOMBRE DEL MODULO EMERGENTE
-        $emergente = $em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneBy(array('institucioneducativaCurso'=>$iecId));
-        if ($emergente) {
-          $emergente = $emergente->getModuloEmergente();
-        } else {
-          $emergente = '';
-        }
-        
-
-
         $em->getConnection()->commit();
         return array(
                     'tipo'=>$tipo,
@@ -320,8 +311,7 @@ class EstudianteNotasPrimariaController extends Controller {
                     'paralelo'=>$aInfoUeducativa['ueducativaInfo']['paralelo'],
                     'turno'=>$aInfoUeducativa['ueducativaInfo']['turno'],
                     'estadosMatricula'=>$estadosMatricula,
-                    'inscripcion'=>$inscripcion,
-                    'emergente'=>$emergente
+                    'inscripcion'=>$inscripcion
                 );
     }
 

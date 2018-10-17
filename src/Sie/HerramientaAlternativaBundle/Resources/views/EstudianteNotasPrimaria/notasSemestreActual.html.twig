@@ -62,12 +62,12 @@
                     <table class="table table-bordered">
                        <thead>
                           <tr>
-                             <th rowspan="2" style="vertical-align: middle">Módulo</th>
-                             <th colspan="1" style="text-align:center">Valoración Cuantitativa</th>
-                             <th rowspan="2">Valoración Cualitativa</th>
+                             <th rowspan="2" style="vertical-align: middle">Área de Saberes y Conocimientos</th>
+                             <th colspan="1" style="text-align:center">VALORACIÓN</th>
+                             <th rowspan="2">VALORACIÓN INTEGRAL:</th>
                          </tr>
                          <tr>
-                            <th style="text-align:center">Promedio Semestral</th>
+                            <th style="text-align:center">NUMERAL</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -76,12 +76,10 @@
                             {% if (app.session.get('roluser') != 2) %}
                                 <tr>
                                     <td>
-                                        {{asig.asignatura}}
-                                        {% if asig.idAsignatura == 2012 %}
-                                            <br>
-                                            <b><small class="text-info">{{emergente}}</small></b>
+                                        {% if asig.codigo == 415 %}
+                                            <small style="color:#78747D; display:block; margin-bottom:12px;">FORMACIÓN PARA LA VIDA</small>
                                         {% endif %}
-                                        
+                                        {{asig.asignatura}}
                                     </td>
                                     {% for n in asig.notas %}
                                         <td align="center">
