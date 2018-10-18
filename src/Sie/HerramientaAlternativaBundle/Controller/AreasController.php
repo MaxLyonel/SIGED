@@ -501,7 +501,7 @@ class AreasController extends Controller {
             $em =  $this->getDoctrine()->getManager();
             $objSupModTipo = $em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find($codMIE);
             if($objSupModTipo){
-                $objSupModTipo->setModulo(strtoupper(trim($nameModIntEmer)));
+                $objSupModTipo->setModulo(mb_strtoupper(trim($nameModIntEmer), 'UTF-8'));
                 $em->persist($objSupModTipo);
                 $em->flush();
                 $arrResponse = array('status'=>true, 'message'=>'changed');
