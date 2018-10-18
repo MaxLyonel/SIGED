@@ -210,25 +210,33 @@
 												</div>
 											</div>
 											{# <div id="bloqueNacimiento"> #}
+                                                {% if estudiante.lugarNacTipo %}
+                                                
 												<div class="row form-group">
 													<label class="col-md-4 col-sm-4">Departamento:</label>
 													<div class="col-md-8 col-sm-8">
 														{# {{ form_widget(form2.departamento, {'attr':{'class':'form-control jupper readonly','onchange':'prov(this.value)'} }) }} #}
-														<b>{{ form2.departamento.vars.data }}</b>
+														{# <b>{{ form2.departamento.vars.data }}</b> #}
+                                                        <b>{{estudiante.lugarNacTipo.lugar|upper}}</b>
 													</div>
 												</div>
+                                                {% endif %}
+                                                {% if estudiante.lugarProvNacTipo %}
 												<div class="row form-group">
 													<label class="col-md-4 col-sm-4">Provincia:</label>
 													<div class="col-md-8 col-sm-8">
 														{# {{ form_widget(form2.provincia, {'attr':{'class':'form-control jupper readonly'} }) }} #}
-														<b>{{ form2.provincia.vars.data }}</b>
+														{# <b>{{ form2.provincia.vars.data }}</b> #}
+                                                        <b>{{estudiante.lugarProvNacTipo.lugar|upper}}</b>
 													</div>
 												</div>
+                                                {% endif %}
 												<div class="row form-group">
 													<label class="col-md-4 col-sm-4">Localidad:</label>
 													<div class="col-md-8 col-sm-8">
 														{# {{ form_widget(form2.localidad, {'attr':{'class':'form-control jupper readonly'} }) }} #}
-														<b>{{ form2.localidad.vars.value }}</b>
+														{# <b>{{ form2.localidad.vars.value }}</b> #}
+                                                        <b>{{estudiante.localidadNac}}</b>
 													</div>
 												</div>
 											{# </div> #}

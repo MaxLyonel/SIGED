@@ -243,8 +243,8 @@ class InfoEstudianteRudeController extends Controller {
     private function createForm2($socioeconomico, $e){
         $em = $this->getDoctrine()->getManager();
         $pais = $e->getPaisTipo()->getId();
-        $departamento = $e->getLugarNacTipo()->getId();
-        $provincia = $e->getLugarProvNacTipo()->getId();
+        $departamento = ($e->getLugarNacTipo())?$e->getLugarNacTipo()->getId():'';
+        $provincia = ($e->getLugarProvNacTipo())?$e->getLugarProvNacTipo()->getId():'';
 
         $departamentos = array();
         $provincias = array();
@@ -306,7 +306,6 @@ class InfoEstudianteRudeController extends Controller {
                     ->add('folio', 'text', array('required' => false, 'data'=>$e->getFolio()))
 
                     ->getForm();
-
         return $form;
     }
 

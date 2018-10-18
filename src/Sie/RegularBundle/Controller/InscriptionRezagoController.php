@@ -595,7 +595,7 @@ class InscriptionRezagoController extends Controller {
         $form = $request->get('form');
         // validate if the ue is MODULAR
         $objUeModular = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array(
-            'institucioneducativa'                   => $form['institucionEducativa'], 
+            'institucioneducativaId'                   => $form['institucionEducativa'], 
             'institucioneducativaHumanisticoTecnicoTipo' => 3, 
             'gestionTipoId'                            => $this->session->get('currentyear'),
 

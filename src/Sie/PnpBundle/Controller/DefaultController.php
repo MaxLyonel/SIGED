@@ -1168,7 +1168,19 @@ GROUP BY depto
         if($plan==1)
             return $this->render('SiePnpBundle:Default:vernotas.html.twig', array('notas' => $filas,'cant_notas'=>$cant_notas));
         elseif($plan==2){
-            $modulo_emergente=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneByInstitucioneducativaCurso($id_curso);
+             $query = "SELECT ico.id from institucioneducativa_curso ic
+            join institucioneducativa_curso_oferta ico on ico.insitucioneducativa_curso_id=ic.id
+            where ic.id=$id_curso and ico.asignatura_tipo_id=2012
+            ";
+            $stmt = $db->prepare($query);
+            $params = array();
+            $stmt->execute($params);
+            $po = $stmt->fetchAll();
+            
+            foreach ($po as $p) {
+                $id_ico = $p["id"];
+            }
+            $modulo_emergente=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneByInstitucioneducativaCursoOferta($id_ico);
             return $this->render('SiePnpBundle:Default:vernotas_p2.html.twig', array('notas' => $filas,'cant_notas'=>$cant_notas,'modulo_emergente'=>$modulo_emergente));
         }
     }
@@ -3091,19 +3103,36 @@ GROUP BY depto
                 foreach ($result as $results) {
                     $estudiante_nota_id[]=$results->getId();
                 }
-                ///////////plan 2
+                ///////////plan 2 carlos 
                 // id estduoante_socieconomico_alternativa 
-                $result=$em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findByestudianteIEstudianteInscripcionSocnscripcion($estudiante_inscripcion_id);
+                $result=$em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findOneByestudianteInscripcion($estudiante_inscripcion_id);
                 $estudiante_inscripcion_socioeconomico_alternativa_id = array();
+                if($result)
                 foreach ($result as $results) {
                     $estudiante_inscripcion_socioeconomico_alternativa_id[]=$results->getId();
                 }
-                //id alt_modulo_emergente
-                $result=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findByinstitucioneducativaCurso($institucioneducativa_curso_id);
+                
+                 //PLAN 2
+                //id alt_moduloemergente
+                $query = "SELECT ico.id from institucioneducativa_curso ic
+                join institucioneducativa_curso_oferta ico on ico.insitucioneducativa_curso_id=ic.id
+                where ic.id=$institucioneducativa_curso_id and ico.asignatura_tipo_id=2012
+                ";
+                $stmt = $db->prepare($query);
+                $params = array();
+                $stmt->execute($params);
+                $po = $stmt->fetchAll();
+                $id_ico=0;
+                foreach ($po as $p) {
+                    $id_ico = $p["id"];
+                }
+
+                $result=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findByinstitucioneducativaCursoOferta($id_ico);
                 $alt_moduloemergente_id = array();
                 foreach ($result as $results) {
                     $alt_moduloemergente_id[]=$results->getId();
-                }
+                }   
+
                 //id estudiante_nota_cualitativa
                 $result=$em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findByestudianteInscripcion($estudiante_inscripcion_id);
                 $estudiante_nota_cualitativa_id = array();
@@ -3352,7 +3381,6 @@ order by t2.fecha_inicio";
        
         //echo "<script>alert('$lugar_usuario')</script>";
 
-
         if($id_eliminar!=0){
             // id de la tabla institucion_educativa
             $institucioneducativa_curso_id=$id_eliminar;    
@@ -3396,6 +3424,7 @@ order by t2.fecha_inicio";
                 }
                 //PLAN 2
                 //id alt_moduloemergente
+
                 $result=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findByinstitucioneducativaCurso($institucioneducativa_curso_id);
                 $alt_moduloemergente_id = array();
                 foreach ($result as $results) {
@@ -3688,6 +3717,35 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
                     $em->remove($element);
                 }          
                 $em->flush();
+
+                 //PLAN 2
+                //id alt_moduloemergente
+                $query = "SELECT ico.id from institucioneducativa_curso ic
+                join institucioneducativa_curso_oferta ico on ico.insitucioneducativa_curso_id=ic.id
+                where ic.id=$institucioneducativa_curso_id and ico.asignatura_tipo_id=2012
+                ";
+                $stmt = $db->prepare($query);
+                $params = array();
+                $stmt->execute($params);
+                $po = $stmt->fetchAll();
+                
+                foreach ($po as $p) {
+                    $id_ico = $p["id"];
+                }
+
+                $result=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findByinstitucioneducativaCursoOferta($id_ico);
+                $alt_moduloemergente_id = array();
+                foreach ($result as $results) {
+                    $alt_moduloemergente_id[]=$results->getId();
+                }   
+                ////////////////ELMINANDO
+                //plan 2 eliminando modulo emergente
+                $result=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findById($alt_moduloemergente_id);
+                foreach ($result as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
                 // Eliminar Institucion educativa Curso Oferta
                 $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findById($institucioneducativa_curso_oferta_id);
                 foreach ($result as $element) {
@@ -3703,20 +3761,6 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
                 }          
                 $em->flush();
                 /////////////////////fin Nuevo
-                //PLAN 2
-                //id alt_moduloemergente
-                $result=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findByinstitucioneducativaCurso($institucioneducativa_curso_id);
-                $alt_moduloemergente_id = array();
-                foreach ($result as $results) {
-                    $alt_moduloemergente_id[]=$results->getId();
-                }   
-                ////////////////ELMINANDO
-                //plan 2 eliminando modulo emergente
-                $result=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findById($alt_moduloemergente_id);
-                foreach ($result as $element) {
-                    $em->remove($element);
-                }
-                $em->flush();
 
                 // Eliminar Institucion educativa Curso
                 $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findById($institucioneducativa_curso_id);
@@ -4161,12 +4205,24 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
                             else{
                                 //recoger el plan para que pida el nombre     
                                 if($plan == 2){
-                                    $modulo_emergente=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneByInstitucioneducativaCurso($id);
+                                     $query = "SELECT ico.id from institucioneducativa_curso ic
+                                        join institucioneducativa_curso_oferta ico on ico.insitucioneducativa_curso_id=ic.id
+                                        where ic.id=$id and ico.asignatura_tipo_id=2012
+                                        ";
+                                        $stmt = $db->prepare($query);
+                                        $params = array();
+                                        $stmt->execute($params);
+                                        $po = $stmt->fetchAll();
+                                        
+                                        foreach ($po as $p) {
+                                            $id_ico = $p["id"];
+                                        }
+                                    $modulo_emergente=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneByInstitucioneducativaCursoOferta($id_ico);
                                     $nom_me=$modulo_emergente->getModuloEmergente();
                                     if($nom_me == "VACIO"){
                                         $this->get('session')->getFlashBag()->add(
                                     'error',
-                                    'Colocar Nombre al Módulo Emergente!!!.'
+                                    'Colocar Nombre al Área de Formación para la Vida!!.'
                                     );           
                                     }
                                     else{
@@ -4711,7 +4767,19 @@ ciclo_tipo_id, grado_tipo_id
                             }
                             else{
                                 if($plan == 2){
-                                    $modulo_emergente=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneByInstitucioneducativaCurso($id);
+                                     $query = "SELECT ico.id from institucioneducativa_curso ic
+                                        join institucioneducativa_curso_oferta ico on ico.insitucioneducativa_curso_id=ic.id
+                                        where ic.id=$id and ico.asignatura_tipo_id=2012
+                                        ";
+                                        $stmt = $db->prepare($query);
+                                        $params = array();
+                                        $stmt->execute($params);
+                                        $po = $stmt->fetchAll();
+                                        
+                                        foreach ($po as $p) {
+                                            $id_ico = $p["id"];
+                                        }
+                                    $modulo_emergente=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneByInstitucioneducativaCursoOferta($id_ico);
                                     $nom_me=$modulo_emergente->getModuloEmergente();
                                     if($nom_me == "VACIO"){
                                         $this->get('session')->getFlashBag()->add(
@@ -5054,9 +5122,24 @@ ciclo_tipo_id, grado_tipo_id
             $filasdos[] = $datos_filasdos;
         }
 
+        // id institucion educativa curso oferta
+        $query = "SELECT ico.id from institucioneducativa_curso ic
+        join institucioneducativa_curso_oferta ico on ico.insitucioneducativa_curso_id=ic.id
+        where ic.id=$id and ico.asignatura_tipo_id=2012
+        ";
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        
+        foreach ($po as $p) {
+            $id_ico = $p["id"];
+        }
+
         $discapacidades= $this->getDoctrine()->getRepository('SieAppWebBundle:DiscapacidadTipo')->findAll();
         ///sacamos el modulo emergente
-        $modulo_emergente=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneByInstitucioneducativaCurso($id);
+        $modulo_emergente=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneByInstitucioneducativaCursoOferta($id_ico);
+
         if(!$modulo_emergente){
             $modulo_emergente = array(
                 "id" => 0,
@@ -6121,7 +6204,20 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
             return $this->render('SiePnpBundle:Default:vernotas_edit.html.twig', array('notas' => $filas,'cant_notas'=>$cant_notas,'id_curso'=>$id_curso,'idinscripcion'=>$idinscripcion,'carnet'=>$carnet,'complemento'=>$complemento,'nombre'=>$nombre));
         if($plan==2){
             //recoger nombre modulo emergente 
-            $modulo_emergente=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneByInstitucioneducativaCurso($id_curso);
+
+            $query = "SELECT ico.id from institucioneducativa_curso ic
+            join institucioneducativa_curso_oferta ico on ico.insitucioneducativa_curso_id=ic.id
+            where ic.id=$id_curso and ico.asignatura_tipo_id=2012
+            ";
+            $stmt = $db->prepare($query);
+            $params = array();
+            $stmt->execute($params);
+            $po = $stmt->fetchAll();
+            
+            foreach ($po as $p) {
+                $id_ico = $p["id"];
+            }
+            $modulo_emergente=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneByInstitucioneducativaCursoOferta($id_ico);
 
             return $this->render('SiePnpBundle:Default:vernotas_edit_p2.html.twig', array('notas' => $filas,'cant_notas'=>$cant_notas,'id_curso'=>$id_curso,'idinscripcion'=>$idinscripcion,'carnet'=>$carnet,'complemento'=>$complemento,'nombre'=>$nombre,'modulo_emergente'=>$modulo_emergente));
         }
@@ -6332,7 +6428,7 @@ public function registrar_cursoAction(Request $request, $plan){
                 $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('alt_moduloemergente');");
                 $query->execute();
                 $newAltModuloemergente = new AltModuloEmergente();
-                $newAltModuloemergente->setInstitucioneducativaCurso($nuevo_curso);
+                $newAltModuloemergente->setInstitucioneducativaCursoOferta($newArea);
                 $newAltModuloemergente->setModuloEmergente("VACIO");
                 $newAltModuloemergente->setFechaRegistro(new \DateTime('now'));
                 $em->persist($newAltModuloemergente);
@@ -6640,7 +6736,7 @@ public function verificar_formAction($id_curso){
             $datos_filas["sie"] = $p["sie"];
             $datos_filas["institucioneducativa"] = $p["institucioneducativa"];
             $datos_filas["nivel"] = $p["nivel"];
-            $datos_filas["grado"] = $p["grado"];
+            $datos_filas["grado"] = $p["grado   "];
             $datos_filas["paralelo"] = $p["paralelo"];
             $datos_filas["turno"] = $p["turno"];
             $datos_filas["estadoMatricula"] = $p["estadomatricula"];
@@ -6905,7 +7001,7 @@ public function crear_curso_automaticoAction(Request $request){
                 $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('alt_moduloemergente');");
                 $query->execute();
                 $newAltModuloemergente = new AltModuloEmergente();
-                $newAltModuloemergente->setInstitucioneducativaCurso($nuevo_curso);
+                $newAltModuloemergente->setInstitucioneducativaCursoOferta($newArea);
                 $newAltModuloemergente->setModuloEmergente("VACIO");
                 $newAltModuloemergente->setFechaRegistro(new \DateTime('now'));
                 $em->persist($newAltModuloemergente);

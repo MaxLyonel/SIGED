@@ -403,9 +403,7 @@ class UnificacionRudeController extends Controller {
                 break;
             }
         }
-        
-        $validado = 1;
-        
+                        
         //********** SE VERIFICA QUE LOS HISTORIALES NO CUENTEN CON ESTADOS SIMILARES EN LA MISMA GESTION
         $sqlb = "select cast('Regular' as varchar) as subsistema, cast('Mismo estado en la misma gestión' as varchar) as observacion, gestion_rude_b as gestion, estadomatricula_rude_b as estadomatricula from (
             select * from (            
@@ -433,10 +431,79 @@ class UnificacionRudeController extends Controller {
         if (count($dataInscriptionJsonVerDipb) > 0) {
             $message = "¡Proceso de dentenido! se ha detectado inconsistencia de datos :".$dataInscriptionJsonVerDipb[0]['subsistema']." ".$dataInscriptionJsonVerDipb[0]['observacion']." ".$dataInscriptionJsonVerDipb[0]['gestion'];
             $this->addFlash('notihistory', $message);
+            $validado = 0;
             //return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulterror.html.twig' );
         } else {
             $validado = 1;
         }
+
+        //*********** PARA ALTERNATIVA SE VERIFICA QUE ULTIMOS GRADOS TENGAN COERENCIA
+        $sqlInc = "SELECT max(anio)as maxanio
+                    FROM
+                    (SELECT 
+                    gestion, nivel, ciclo, grado,
+                    case when ciclo = '1' and grado = '1' then '1' else
+                    case when ciclo = '1' and grado = '2' then '2' else 
+                    case when ciclo = '2' and grado = '1' then '3' else
+                    case when ciclo = '2' and grado = '2' then '4' else 
+                    case when ciclo = '2' and grado = '3' then '5' end end end end
+                    end as anio
+                    FROM (
+                    SELECT
+                    gestion_tipo_id_raep as gestion, superior_facultad_area_tipo_a as nivel, 
+                    superior_especialidad_tipo_id_a as ciclo, superior_acreditacion_tipo_id_a as grado
+                    FROM sp_genera_estudiante_historial('".$rudeinc."') 
+                    WHERE superior_facultad_area_tipo_a = 15
+                    ) a
+                    ) b";
+        $queryveraltInc = $em->getConnection()->prepare($sqlInc);
+        $queryveraltInc->execute();
+        $maxanioInc = $queryveraltInc->fetchAll();
+        if ($maxanioInc){
+            $maxInc = $maxanioInc[0]['maxanio'];
+        } else {
+            $maxInc = '0';
+        }
+
+        $sqlCor = "SELECT max(anio)as maxanio
+                    FROM
+                    (SELECT 
+                    gestion, nivel, ciclo, grado,
+                    case when ciclo = '1' and grado = '1' then '1' else
+                    case when ciclo = '1' and grado = '2' then '2' else 
+                    case when ciclo = '2' and grado = '1' then '3' else
+                    case when ciclo = '2' and grado = '2' then '4' else 
+                    case when ciclo = '2' and grado = '3' then '5' end end end end
+                    end as anio
+                    FROM (
+                    SELECT
+                    gestion_tipo_id_raep as gestion, superior_facultad_area_tipo_a as nivel, 
+                    superior_especialidad_tipo_id_a as ciclo, superior_acreditacion_tipo_id_a as grado
+                    FROM sp_genera_estudiante_historial('".$rudecor."') 
+                    WHERE superior_facultad_area_tipo_a = 15
+                    ) a
+                    ) b";
+        $queryveraltCor = $em->getConnection()->prepare($sqlCor);
+        $queryveraltCor->execute();
+        $maxanioCor = $queryveraltCor->fetchAll();
+        if ($maxanioCor){
+            $maxCor = $maxanioCor[0]['maxanio'];
+        } else {
+            $maxCor = '0';
+        }
+
+        if ($validado == '0'){
+            if (($maxInc != '0') && ($maxCor != '0'))
+                    {
+                    if ($maxanioCor < $maxanioInc){
+                        $message = "¡Proceso de dentenido! se ha detectado inconsistencia de datos :".$dataInscriptionJsonVerDipb[0]['subsistema']." ".$dataInscriptionJsonVerDipb[0]['observacion']." ".$dataInscriptionJsonVerDipb[0]['gestion'];
+                        $this->addFlash('notihistory', $message);
+                        $validado = 0;
+                    } else {
+                        $validado = 1;
+                    }
+                }
+        }   
 
         return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulthistorialescorinc.html.twig', array(                   
                     'validado' => $validado,

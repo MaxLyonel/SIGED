@@ -241,9 +241,15 @@ class InstitucioneducativaController extends Controller {
     }
     
     public function gessubsemAction() {
+
         $iesubsea = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getAllSucursalTipo($this->session->get('ie_id'));
+        //$iesubsea = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getAllSucursalTipo1($this->session->get('ie_id'),[2017,2018],'0',[2,3]);
         //dump($iesubsea);die;
-        return $this->render($this->session->get('pathSystem') . ':Centroeducativo:selgessubsem.html.twig', array('iesubsea' => $iesubsea));
+        //return $this->render($this->session->get('pathSystem') . ':Centroeducativo:selgessubsem.html.twig', array('iesubsea' => $iesubsea));
+        
+        return $this->render($this->session->get('pathSystem') . ':Centroeducativo:selgessubsem.html.twig', array(
+            'iesubsea' => $iesubsea,
+        ));
     }
 
     public function gessubsemopenAction(Request $request, $teid, $gestion, $subcea, $semestre, $idiesuc) {
@@ -1029,9 +1035,11 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
         $params = array();
         $stmt->execute($params);
         $po = $stmt->fetchAll();
-        
+        //dump($po);die;
         return $this->render($this->session->get('pathSystem') . ':Principal:distritolistaceas.html.twig', array(
                 'entities' => $po,
+        /*return $this->render($this->session->get('pathSystem') . ':Principal:listaceasdistrito.html.twig', array(
+                'entities' => $po,*/
             ));
     }
     
@@ -1041,11 +1049,17 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
         $sesion->set('ie_nombre', $ie_nombre);
         $sesion->set('ie_per_estado', '3');
         $sesion->set('ie_operativo', '¡En modo edición!');
-        return $this->redirect($this->generateUrl('principal_web'));
+        //return $this->redirect($this->generateUrl('principal_web'));
+        return $this->redirect($this->generateUrl('herramienta_ceducativa_seleccionar_cea'));
     }
     
     public function seleccionarceaAction() {
-        return $this->render($this->session->get('pathSystem') . ':Principal:seleccionarcea.html.twig');
+
+        $historialForm = $this->historialceasForm($this->session->get('roluser'),$this->session->get('ie_id'));
+        //dump($historialForm);die;
+        return $this->render($this->session->get('pathSystem') . ':Principal:seleccionarcea.html.twig',array(
+            'form'=>$historialForm->createView(),
+        ));
     }
     
     public function buscarceaAction(Request $request) {        
@@ -1059,21 +1073,66 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
         
         $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
         $query->bindValue(':user_id', $usuario_id);
-        $query->bindValue(':sie', $form['Inputcodsie']);
+        $query->bindValue(':sie', $form['codsie']);
         $query->bindValue(':rolId', $usuario_rol);
         $query->execute();
         $aTuicion = $query->fetchAll();        
 //        dump($usuario_id.' '.$idInstitucion.' '.$usuario_rol);
 //        die;
         if ($aTuicion[0]['get_ue_tuicion']) {
-            $ie = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['Inputcodsie']);
+            $ie = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['codsie']);
             if ($ie){
                 $sesion = $request->getSession();
-                $sesion->set('ie_id',$form['Inputcodsie']);
+                $sesion->set('ie_id',$form['codsie']);
                 $sesion->set('ie_nombre', $ie->getInstitucioneducativa());
                 $sesion->set('ie_per_estado', '3');
                 $sesion->set('ie_operativo', '¡En modo edición!');
-                return $this->redirect($this->generateUrl('principal_web'));
+                //return $this->redirect($this->generateUrl('principal_web'));
+                /***adicionado***/
+                /**historial segun opciones de seleccion******/
+                $ie_id = $form['codsie'];
+                $gestion = $form['gestion'];
+                $semestre = $form['semestre'];
+                $subcea = $form['subcea'];
+                if($gestion==""){
+                    $gestionesArray = array();
+                    $ges = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getGestionCea($ie_id);
+                    foreach ($ges as $i=>$ges) {
+                        $gestionesArray[$i] = $ges['gestion'];
+                    }
+                    $gestion = $gestionesArray;
+                }
+                if($subcea==""){
+                    if($form['gestion']=""){
+                        $subcea = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getSubceaGestion($ie_id,'');
+                    }else{
+                        $subcea = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getSubceaGestion($ie_id,$form['gestion']);
+                    }
+                    //dump($subcea);die;
+                    $subceasArray = array();
+    	            foreach ($subcea as $i=>$sc) {
+                        $subceasArray[$i] = $sc['sucursal'];
+                    }
+                    $subcea = $subceasArray;
+                    //dump($subcea);die;
+                }
+                if($semestre==""){
+                    $sem = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getSubceaSemestre($ie_id);
+                    //dump($sem);die;
+                    $semestreArray = array();
+                    //$provincia[-1] = '-Todos-';
+    	            foreach ($sem as $i=>$s) {
+                        //dump($sc);die;
+                        $semestreArray[$i] = $s['periodo'];
+                    }
+                    $semestre = $semestreArray;
+                }
+                $iesubsea = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getAllSucursalTipo1($ie_id,$gestion,$subcea,$semestre);
+                return $this->render($this->session->get('pathSystem') . ':Centroeducativo:tablahistorial.html.twig', array(
+                    'iesubsea' => $iesubsea,
+                ));
+                ///*****///////
+                //return $this->redirect($this->generateUrl('sie_alt_ges_sub_sem'));
             }
             else{           
                 $this->session->getFlashBag()->add('notfound', 'El código de institución educativa no se encuentra.');
@@ -1348,7 +1407,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                             inner join tramite_estado ff on ff.id = w.tramite_estado_id
                             inner join lugar_tipo k on k.id = lt.lugar_tipo_id
                             where z.gestion_tipo_id in (". $gestion .") 			    
-                            and w.tramite_estado_id not in (8,9,12,14)
+                            and w.tramite_estado_id not in (8,9,10,12,14)
                             and z.periodo_tipo_id in (2,3)
                             group by k.lugar, ie.id, ie.institucioneducativa, ff.tramite_estado, z.gestion_tipo_id, z.periodo_tipo_id, ff.id
                             order by k.lugar, ie.id
@@ -1413,7 +1472,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                                         inner join tramite_estado ff on ff.id = w.tramite_estado_id
                                         inner join lugar_tipo k on k.id = lt.lugar_tipo_id
                                         where z.gestion_tipo_id in (". $gestion .") 			    
-                                        and w.tramite_estado_id not in (8,9,12,14)
+                                        and w.tramite_estado_id not in (8,9,10,12,14)
                                         and z.periodo_tipo_id in (2,3)
                                         group by k.lugar, ie.id, ie.institucioneducativa, ff.tramite_estado, z.gestion_tipo_id, z.periodo_tipo_id, ff.id
                                         order by k.lugar, ie.id
@@ -1475,7 +1534,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                                         inner join tramite_estado ff on ff.id = w.tramite_estado_id
                                         inner join lugar_tipo k on k.id = lt.lugar_tipo_id
                                         where z.gestion_tipo_id in (". $gestion .") 			    
-                                        and w.tramite_estado_id not in (8,9,12,14)
+                                        and w.tramite_estado_id not in (8,9,10,12,14)
                                         and z.periodo_tipo_id in (2,3)
                                         group by k.lugar, ie.id, ie.institucioneducativa, ff.tramite_estado, z.gestion_tipo_id, z.periodo_tipo_id, ff.id
                                         order by k.lugar, ie.id
@@ -1536,11 +1595,11 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             //->setAction($this->generateUrl('herramientalt_ceducativa_estadistiscas_cierre'))
             if ($tipo =='operativo')
                 $form=$form
-                ->add('gestion','entity',array('label'=>'Gestión','required'=>false,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
+                ->add('gestion','entity',array('label'=>'Seleccione Gestión','required'=>false,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
                     return $g->createQueryBuilder('g')->orderBy('g.id','DESC');},'property'=>'gestion','empty_value' => 'Todas'));
             else{//ceas pendientes
                 $form=$form
-                ->add('gestion','entity',array('label'=>'Gestión','required'=>false,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
+                ->add('gestion','entity',array('label'=>'Seleccione Gestión','required'=>false,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
                     return $g->createQueryBuilder('g')->where('g.id >= 2017')->orderBy('g.id','DESC');},'property'=>'gestion','empty_value' => 'Todas'));
             }
             if($rol==8)
@@ -1557,6 +1616,45 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
 
         return $form;
     }
+
+    public function historialceasForm($rol,$ie_id)
+
+    {   
+        $form = $this->createFormBuilder();
+        if($rol==9 or $rol==10){
+            $gestion = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getGestionCea($ie_id);
+            $subcea = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getSubceaGestion($ie_id,'');
+            //dump($gestion);die;
+            $gestionesArray = array();
+            $subceasArray = array();
+            //$provincia[-1] = '-Todos-';
+    	    foreach ($gestion as $g) {
+                //dump($g);die;
+                $gestionesArray[$g['gestion']] = $g['gestion'];
+            }
+            foreach ($subcea as $sc) {
+                //dump($sc);die;
+                $subceasArray[$sc['sucursal']] = $sc['sucursal'];
+            }
+            $form=$form
+                ->add('codsie','text',array('label'=>'Cod. SIE','data'=>$ie_id,'read_only'=>true))
+                ->add('gestion','choice',array('label'=>'Gestión','required'=>true,'data'=>(new \DateTime())->format('Y'),'choices'=>$gestionesArray,'empty_value' => 'Todas'))
+                ->add('subcea','choice',array('label'=>'Sucursal','required'=>true,'choices'=>$subceasArray,'empty_value' => 'Todas'));
+        }else{
+            $form=$form
+                ->add('codsie','text',array('label'=>'Cod. SIE'))
+                ->add('gestion','choice',array('label'=>'Gestión','required'=>true,'empty_value' => 'Todas'))
+                ->add('subcea','choice',array('label'=>'Sucursal','required'=>true,'empty_value' => 'Todas'));
+        }
+        //->setAction($this->generateUrl('herramientalt_ceducativa_estadistiscas_cierre'))
+        $form=$form
+            ->add('semestre','entity',array('label'=>'Semestre','required'=>false,'class'=>'SieAppWebBundle:PeriodoTipo','query_builder'=>function(EntityRepository $p){
+                return $p->createQueryBuilder('p')->where('p.id=2 or p.id=3');},'property'=>'periodo','empty_value' => 'Todas'))
+            ->add('buscar', 'button', array('label'=> 'Buscar', 'attr'=>array('class'=>'btn btn-success', 'onclick'=>'buscarhistorial()')))
+            ->getForm();
+        return $form;
+    }
+
 
     
     //************* ESTADISTICAS DE CIERRE 
@@ -2032,6 +2130,44 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
         } catch (Exception $ex) {
             //$em->getConnection()->rollback();
         }
+    }
+    public function ceducativaListaGestionAction(Request $request) {
+        //dump($request);die;
+        $id_cea = $request->get('id_cea');
+        $gestion = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getGestionCea($id_cea);
+        $subcea = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getSubceaGestion($id_cea,'');
+        //dump($subcea);die;
+        $gestionesArray = array();
+        $subceasArray = array();
+        //$provincia[-1] = '-Todos-';
+    	foreach ($gestion as $g) {
+                //dump($g);die;
+                $gestionesArray[$g['gestion']] = $g['gestion'];
+        }
+        foreach ($subcea as $sc) {
+            //dump($sc);die;
+                $subceasArray[$sc['sucursal']] = $sc['sucursal'];
+        }
+        //dump($gestionesArray);die;
+    	$response = new JsonResponse();
+    	return $response->setData(array('gestion' => $gestionesArray,'subcea'=>$subceasArray));
+    }
+
+    public function ceducativaListaSubceaAction(Request $request) {
+        //dump($request);die;
+        $id_cea = $request->get('id_cea');
+        $gestion = $request->get('gestion');
+        $subcea = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getSubceaGestion($id_cea,$gestion);
+        //dump($subcea);die;
+        $subceasArray = array();
+        //$provincia[-1] = '-Todos-';
+    	foreach ($subcea as $sc) {
+            //dump($sc);die;
+                $subceasArray[$sc['sucursal']] = $sc['sucursal'];
+        }
+        //dump($subceasArray);die;
+    	$response = new JsonResponse();
+    	return $response->setData(array('subcea' => $subceasArray));
     }
 
 }

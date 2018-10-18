@@ -633,16 +633,17 @@ class EstudianteUpdateController extends Controller {
         
         if($form['ci']){
 
-            $answerSegip = $this->get('sie_app_web.segip')->verificarPersona(
-                $form['ci'],
-                $form['complemento'],
-                $form['paterno'],
-                $form['materno'],
-                $form['nombre'],
-                $form['fechaNacimiento'],
-                'prod', 'academico');
-            
+            $arrParametros = array(       'complemento'=>$form['complemento'],
+                'primer_apellido'=>$form['paterno'],
+                'segundo_apellido'=>$form['materno'],
+                'nombre'=>$form['nombre'],
+                'fecha_nacimiento'=>$form['fechaNacimiento']);
+
+            $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $form['ci'],$arrParametros,'prod', 'academico');
+
         }
+            
+        
     
         $student = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['id']);
         if($answerSegip===true){

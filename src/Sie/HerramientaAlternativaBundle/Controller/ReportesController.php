@@ -1304,7 +1304,8 @@ class ReportesController extends Controller {
         $tipo = $form['tipo']; 
         $rol = $form['rol']; 
         $gestion = $form['gestion1']; 
-        $id_usuario = $form['id_usuario']; 
+        $id_usuario = $form['id_usuario'];
+        $em = $this->getDoctrine()->getManager();
         if ($rol == 8 )
         {
             $departamento = $form['departamento1'];
@@ -1365,7 +1366,7 @@ class ReportesController extends Controller {
                 $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_DEPARTAMENTAL.'.$tipo));
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo . '.rptdesign&Departamento=' . $idlugarusuario . '&&__format='. $tipo . '&'));
             }
-        }elseif ($rolu == 10)//DISTRITO
+        }elseif ($rol == 10)//DISTRITO
         {
             $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$id_usuario,'rolTipo'=>$rol));
             $distrito = $usuariorol[0]->getLugarTipo()->getCodigo();
@@ -1395,6 +1396,7 @@ class ReportesController extends Controller {
         $rol = $form['rol']; 
         $gestion = $form['gestion1']; 
         $id_usuario = $form['id_usuario']; 
+        $em = $this->getDoctrine()->getManager();
         if ($rol == 8 )
         {
             $departamento = $form['departamento1'];
@@ -1451,7 +1453,7 @@ class ReportesController extends Controller {
                 $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum . '_DEPARTAMENTAL.'.$tipo));
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $nombre_archivo . '.rptdesign&Departamento=' . $idlugarusuario . '&&__format='. $tipo . '&'));
             }
-        }elseif ($rolu == 10)//DISTRITO
+        }elseif ($rol == 10)//DISTRITO
         {
             $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$id_usuario,'rolTipo'=>$rol));
             $distrito = $usuariorol[0]->getLugarTipo()->getCodigo();

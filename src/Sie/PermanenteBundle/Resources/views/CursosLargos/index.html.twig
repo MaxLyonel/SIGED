@@ -1,0 +1,948 @@
+{% extends 'layoutPermanente.html.twig' %}
+
+{% block contentoption %}
+
+    <div class="header-content" id="principal">
+
+
+        <h2><i class="fa fa-users"></i> Cursos y alumnos <span>Lista de cursos y alumnos del centro de educación permanente.</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="glyphicon glyphicon-leaf"></i>
+                    <a href="{{path('principal_web')}}">Bienvenida</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-th-large"></i>
+                    <a href="{{path('herramienta_per_ceducativa_menu_principal')}}">Menu Principal</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-child"></i>
+                    Cursos y alumnos
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>
+
+    {% if exist == 1 %}
+        <div class="body-content animated fadeIn">
+            <div class="row">
+                <div id= "mengestioncurso" class="col-md-12">
+                    {% for flashMessage in app.session.flashbag.get('deletecursomensaje') %}
+                        <div class="alert alert-warning alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="row">
+                <div id= "mengestioncurso" class="col-md-12">
+                    {% for flashMessage in app.session.flashbag.get('newOk') %}
+                        <div class="alert alert-success alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="row">
+                <div id= "mengestioncurso" class="col-md-12">
+                    {% for flashMessage in app.session.flashbag.get('newError') %}
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+
+            <div class="col-md-4">
+
+
+            <div class="tab">
+                <button class="tablinks" onclick="openCity(event, 'uno')" id="defaultOpen">Abiertos</button>
+                <button class="tablinks" onclick="openCity(event, 'dos')">Cerrados</button>
+                <button class="tablinks" onclick="openCity(event, 'tres')">Todos</button>
+            </div>
+
+            <div id="uno" class="tabcontent " >
+
+                    <small>
+                        <div class="tree well">
+                            {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo Curso">
+                                    <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoCurso();">
+                                        <i class="fa fa-cubes"></i> Nuevo Curso
+                                    </button>
+                                </div>
+                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Cursos">
+                                    <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="listaCurso();">
+                                        <i class="fa fa-list"></i> Listado de Cursos
+                                    </button>
+                                </div>
+                            {% endif%}
+
+                            {% for programaKey, dataPrograma in aInfoUnidadEductiva %}
+                            {% if (programaKey==1) %}
+                                    <ul>
+                                                {% for acreditacionKey, dataAcreditacion in dataPrograma %}
+                                                    <li>
+                                                        <span><i class="icon-minus-sign"></i>{{ acreditacionKey
+                                                            }}</span>
+                                                        <ul>
+                                                                        {% for cursolargoKey, dataCursolargo in dataAcreditacion %}
+                                                                            <li>
+                                                                                <span><i class="icon-minus-sign"></i>{{ cursolargoKey }}</span>
+                                                                                <ul>
+                                                                                    {% for iecidKey, dataIecid in dataCursolargo %}
+                                                                                        <li>
+                                                                                            <span><i class="icon-minus-sign"></i>{{ iecidKey }}</span>
+                                                                                            <ul>
+                                                                                                {% for idcursoKey, dataIdcurso in dataIecid %}
+                                                                                                    <li>
+
+
+
+                                                                                                    {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Editar Curso">
+                                                                                                            <button class="btn btn-circle btn-success btn-stroke" onclick="mostrarCurso('{{ dataIdcurso.infoUe}} ');">
+                                                                                                                <i class="fa fa-info"></i>
+                                                                                                            </button>
+                                                                                                        </div>
+                                                                                                    {% endif %}
+                                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Facilitadores">
+                                                                                                        <button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="getAreas( '{{ dataIdcurso.infoUe }}');">
+                                                                                                            <i class="fa fa-graduation-cap"></i>
+                                                                                                        </button>
+                                                                                                    </div>
+                                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">
+                                                                                                        <button class="btn btn-circle btn-success btn-stroke"  onclick="seeStudents('{{ dataIdcurso.infoUe}} ');">
+                                                                                                            <i class="fa fa-group"></i>
+                                                                                                            {#{{ iecidKey }}#}
+                                                                                                        </button>
+                                                                                                    </div>
+
+
+
+
+                                                                                                                                                                                   </li>
+                                                                                    {% endfor %}
+
+                                                                                </ul>
+                                                                            </li>
+                                                                                    {% endfor %}
+                                                                                </ul>
+                                                                            </li>
+                                                                        {% endfor %}
+
+                                                        </ul>
+                                                    </li>
+                                                {% endfor %}
+
+                                    </ul>
+                            {% endif %}
+                            {% endfor %}
+
+
+                        </div>
+                    </small>
+
+            </div>
+
+            <div id="dos" class="tabcontent">
+
+
+                <small>
+                    <div class="tree well">
+                        {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo Curso">
+                                <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoCurso();">
+                                    <i class="fa fa-cubes"></i> Nuevo Curso
+                                </button>
+                            </div>
+
+                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Cursos">
+                                <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="listaCurso();">
+                                    <i class="fa fa-list"></i> Listado de Cursos
+                                </button>
+                            </div>
+                        {% endif%}
+
+                        {% for programaKey, dataPrograma in aInfoUnidadEductiva %}
+                            {% if (programaKey==0) %}
+                                <ul>
+                                    {% for acreditacionKey, dataAcreditacion in dataPrograma %}
+                                        <li>
+                                                        <span><i class="icon-minus-sign"></i>{{ acreditacionKey
+                                                            }}</span>
+                                            <ul>
+                                                {% for cursolargoKey, dataCursolargo in dataAcreditacion %}
+                                                    <li>
+                                                        <span><i class="icon-minus-sign"></i>{{ cursolargoKey }}</span>
+                                                        <ul>
+                                                            {% for iecidKey, dataIecid in dataCursolargo %}
+                                                                <li>
+                                                                    <span><i class="icon-minus-sign"></i>{{ iecidKey }}</span>
+                                                                    <ul>
+                                                                        {% for idcursoKey, dataIdcurso in dataIecid %}
+                                                                            <li>
+                                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body">
+
+
+                                                                                    {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Editar Curso">
+                                                                                            <button class="btn btn-circle btn-success btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="editarCurso('{{ dataIdcurso.infoUe}} ');">
+                                                                                                <i class="fa fa-cube"></i>
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    {% endif %}
+                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Facilitadores">
+                                                                                        <button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoMaestro( '{{ dataIdcurso.infoUe }}');">
+                                                                                            <i class="fa fa-graduation-cap"></i>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">
+
+                                                                                        <button class="btn btn-circle btn-success btn-stroke"  onclick="seeStudents('{{ dataIdcurso.infoUe}} ');">
+                                                                                            <i class="fa fa-group"></i>
+                                                                                            {#{{ iecidKey }}#}
+                                                                                        </button>
+                                                                                    </div>
+
+
+                                                                                </div>
+
+                                                                            </li>
+                                                                        {% endfor %}
+
+                                                                    </ul>
+                                                                </li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    </li>
+                                                {% endfor %}
+
+                                            </ul>
+                                        </li>
+                                    {% endfor %}
+
+                                </ul>
+                            {% endif %}
+                        {% endfor %}
+
+
+                    </div>
+                </small>
+            </div>
+
+            <div id="tres" class="tabcontent">
+
+                <small>
+                    <div class="tree well">
+                        {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo Curso">
+                                <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoCurso();">
+                                    <i class="fa fa-cubes"></i> Nuevo Curso
+                                </button>
+                            </div>
+                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Cursos">
+                                <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="listaCurso();">
+                                    <i class="fa fa-list"></i> Listado de Cursos
+                                </button>
+                            </div>
+                        {% endif%}
+
+                        {% for programaKey, dataPrograma in aInfoUnidadEductiva %}
+
+                            <ul>
+                                {% for acreditacionKey, dataAcreditacion in dataPrograma %}
+                                    <li>
+                                                        <span><i class="icon-minus-sign"></i>{{ acreditacionKey
+                                                            }}</span>
+                                        <ul>
+                                            {% for cursolargoKey, dataCursolargo in dataAcreditacion %}
+                                                <li>
+                                                    <span><i class="icon-minus-sign"></i>{{ cursolargoKey }}</span>
+                                                    <ul>
+                                                        {% for iecidKey, dataIecid in dataCursolargo %}
+                                                            <li>
+                                                                <span><i class="icon-minus-sign"></i>{{ iecidKey }}</span>
+                                                                <ul>
+                                                                    {% for idcursoKey, dataIdcurso in dataIecid %}
+                                                                        <li>
+                                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body">
+
+
+                                                                                {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Editar Curso">
+                                                                                        <button class="btn btn-circle btn-success btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="editarCurso('{{ dataIdcurso.infoUe}} ');">
+                                                                                            <i class="fa fa-cube"></i>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                {% endif %}
+                                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Facilitadores">
+                                                                                    <button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoMaestro( '{{ dataIdcurso.infoUe }}');">
+                                                                                        <i class="fa fa-graduation-cap"></i>
+                                                                                    </button>
+                                                                                </div>
+                                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">
+
+                                                                                    <button class="btn btn-circle btn-success btn-stroke"  onclick="seeStudents('{{ dataIdcurso.infoUe}} ');">
+                                                                                        <i class="fa fa-group"></i>
+                                                                                        {#{{ iecidKey }}#}
+                                                                                    </button>
+                                                                                </div>
+
+
+                                                                            </div>
+
+                                                                        </li>
+                                                                    {% endfor %}
+
+                                                                </ul>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </li>
+                                            {% endfor %}
+
+                                        </ul>
+                                    </li>
+                                {% endfor %}
+
+                            </ul>
+
+                        {% endfor %}
+
+
+                    </div>
+                </small>
+
+            </div>
+
+            </div>
+
+            <div class='col-md-8'>
+                <div id="idstudents"></div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+            <!--/div-->
+            <!--/ End mail page -->
+        {#</div>#}
+    {% else %}
+        {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+            <div class="body-content animated fadeIn">
+                <div class="row">
+                    <div  class="col-md-12">
+                        <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoCurso();">
+                            <i class="fa fa-cubes"></i> Nuevo Curso
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {% endif%}
+    {% endif%}
+
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+
+    </div><
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        /**
+         * this is to the tree menu option
+         * @returns {undefined}.
+         * 0
+         */
+        $(function () {
+            $('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Contraer');
+            $('.tree li.parent_li > span').on('click', function (e) {
+                var children = $(this).parent('li.parent_li').find(' > ul > li');
+                if (children.is(":visible")) {
+                    children.hide('fast');
+                    $(this).attr('title', 'Ampliar').find(' > i').addClass('icon-plus-sign').removeClass('icon-minus-sign');
+                } else {
+                    children.show('fast');
+                    $(this).attr('title', 'Contraer').find(' > i').addClass('icon-minus-sign').removeClass('icon-plus-sign');
+                }
+                e.stopPropagation();
+            });
+        });
+
+        // New curso show
+        var nuevoCurso = function () {
+            $.ajax({
+                type: 'get',
+                url: "{{ path('herramienta_per_cursos_largos_new') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                    $('.chosen-select').chosen({allow_single_deselect: false});
+                },
+
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+//
+        var listaCurso = function () {
+            $.ajax({
+                type: 'get',
+                url: "{{ path('herramienta_per_list_curso_corto') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+        // New curso show
+
+        function openCity(evt, cityName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+
+
+        }
+        document.getElementById("defaultOpen").click();
+
+
+
+        var nuevoMaestro = function (infoUe) {
+
+            $.ajax({
+                type: 'post',
+                data: {infoUe: infoUe},
+                url: "{{ path('herramienta_per_cursos_cortos_show_maestro') }}",
+
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                 //   $('#modal').modal('show');
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+        var editarCurso = function (infoUe) {
+
+            $.ajax({
+                type: 'post',
+                data: {infoUe: infoUe},
+                url: "{{ path('herramienta_per_cursos_cortos_edit') }}",
+
+                beforeSend: function () {
+                    $('#modal').empty();
+
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                    $('.chosen-select').chosen({allow_single_deselect: false});
+                 //   $('#modal').modal('show');
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+        var mostrarCurso = function (infoUe) {
+
+            $.ajax({
+                type: 'get',
+                data: ({infoUe: infoUe}),
+                url: Routing.generate('herramienta_per_info_cursos_largos'),
+                beforeSend: function () {
+                    $("#idstudents").empty();
+                    $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $("#idstudents").empty();
+                    $("#idstudents").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+        var seeStudents = function (infoUe) {
+            $.ajax({
+                type: 'get',
+                data: ({infoUe: infoUe}),
+                url: Routing.generate('herramienta_per_info_estudianterequest_see_students'),
+                beforeSend: function () {
+                    $("#idstudents").empty();
+                    $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $("#idstudents").empty();
+                    $("#idstudents").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+        var getAreas = function (infoUe) {
+            $.ajax({
+                type: 'post',
+                data: ({infoUe: infoUe}),
+                url: "{{ path('permanente_areas_index') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+        var getStudents = function (infoUe) {
+            $.ajax({
+                type: 'get',
+                /*data: ({iecId: iecId, nivel: nivel, sie: sie, gestion: gestion, grado: grado, paralelo: paralelo, turno: turno, ciclo: ciclo}),*/
+                /*url: Routing.generate('inscription_ue_all_sie_get_students'),*/
+                data: ({infoUe: infoUe}),
+                url: Routing.generate('herramienta_alter_info_estudianterequest_get_students'),
+                beforeSend: function () {
+                    $("#idstudents").empty();
+                    $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $("#idstudents").empty();
+                    $("#idstudents").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+        var doInscription = function () {
+            var elem = document.getElementById('formStudentInscription').elements;
+            var sw = true;
+            for (var i = 0; i < elem.length; i++) {
+                if (elem[i].type == 'checkbox')
+                    if ((elem[i].checked))
+                        sw = false;
+            }
+            if (sw) {
+                alert('Tiene que Seleccionar por lo menos una Inscripción...');
+                return flase;
+            }
+            if(confirm('Esta seguro de realizar la inscripcion?')){
+                var formIns = $('#formStudentInscription').serialize();
+                $.ajax({
+                    type: 'post',
+                    data: formIns,
+                    url: Routing.generate('herramienta_alter_info_estudianterequest_inscription'),
+                    beforeSend: function () {
+                        $("#idstudents").empty();
+                        $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                    },
+                    success: function (data) {
+                        $("#idstudents").empty();
+                        $("#idstudents").append(data);
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+            }else{
+                return false;
+            }
+
+
+        };
+        var selectAllEle = function () {
+            $("#checkAll").on("change", function () {
+                $(this).closest("div").find("input:checkbox").prop("checked", $(this).prop("checked"));
+            });
+
+        };
+        var getTurnos = function (nivel, sie, gestion, nivelname, key) {
+            $.ajax({
+                type: 'post',
+                data: ({nivel: nivel, sie: sie, gestion: gestion, nivelname: nivelname}),
+                /*url: Routing.generate('inscription_ue_all_sie_get_turnos'),*/
+                url: "{{ path('herramienta_info_estudiante_get_turnos') }}",
+                beforeSend: function () {
+                    /* $("#idgrados").empty();
+                     $("#idparalelos").empty();
+                     $("#idstudents").empty();*/
+                    $("#idgrados_" + key).append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $("#idgrados_" + key).empty();
+                    $("#idgrados_" + key).append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+        var getParalelos = function (nivel, sie, gestion, turno, turnoname, nivelname, key) {
+
+            $.ajax({
+                type: 'post',
+                data: ({nivel: nivel, sie: sie, gestion: gestion, turno: turno, turnoname: turnoname, nivelname: nivelname}),
+                /*url: Routing.generate('inscription_ue_all_sie_get_paralelos'),*/
+                url: "{{ path('inscription_ue_all_sie_get_paralelos') }}",
+                beforeSend: function () {
+                    /* $("#idparalelos").empty();
+                     $("#idstudents").empty();*/
+                    $("#idparalelos_" + key).append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    /*$("#idstudents").empty();
+                     $("#idparalelos").empty();*/
+                    $("#idparalelos_" + key).append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+
+        var inscriptionWithRude = function (aData) {
+            //alert(aData);
+            //return false;
+            $.ajax({
+                type: 'post',
+                data: ({aData: aData}),
+                url: Routing.generate('herramienta_info_estudiante_with_rude'),
+                beforeSend: function () {
+                    $("#idstudents").empty();
+                    $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $("#idstudents").empty();
+                    $("#idstudents").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+
+        };
+        var doRudeInscription = function () {
+            //get data send
+            rude = $('#form_rude').val();
+            dataInscription = $('#form_dataInscription').val();
+            if (rude.length <= 0) {
+                alert('Necesita introducir codigo Rude');
+                return false;
+            }
+
+            $.ajax({
+                type: 'post',
+                data: ({rude: rude, dataInscription: dataInscription}),
+                url: Routing.generate('herramienta_info_estudiante_rude_inscription'),
+                beforeSend: function () {
+                    $("#resultfindrude").empty();
+                    $("#resultfindrude").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $("#resultfindrude").empty();
+                    $("#resultfindrude").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+
+        };
+
+        var exeInscription = function () {
+            //get data send
+            dataInscription = $('#form_dataInscription').val();
+            dataStudent = $('#form_dataStudent').val();
+
+            $.ajax({
+                type: 'post',
+                data: ({dataStudent: dataStudent, dataInscription: dataInscription}),
+                url: Routing.generate('inscription_ue_all_sie_exe_inscription'),
+                beforeSend: function () {
+                    $("#resultfindrude").empty();
+                    $("#resultfindrude").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $("#resultfindrude").empty();
+                    $("#resultfindrude").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+
+        };
+
+
+        var asignarCurso = function(){
+            if (xhr6 && xhr6.readyState != 4) {
+                xhr6.abort();
+            }
+            var formData = $('#formCursos').serialize();
+            xhr6 = $.ajax({
+                type: 'post',
+                data: formData,
+                url: "{{ path('herramienta_per_add_curso_nuevo') }}",
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    //$('#28030476'),append(data);
+                    var idco = data.ieco;
+
+//                    $('#'+idco).empty();
+                    $('#form_especialidad').append('<option value="' + data.curso.id + '">' + data.curso.nombre + '</option>');
+                    cerrarcurso(5);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+        function listarEspecialidades(progarea) {
+        //    alert("hola");
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('sie_per_listarespecialidades', {'progarea': progarea}),
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+
+                $("#form_especialidad").empty();
+                $("#form_especialidad").append('<option value="">Seleccionar...</option>');
+                $.each(data.especialidadlista, function (i, value) {
+                    $("#form_especialidad").append('<option value="' + i + '">' + value + '</option>');
+                });
+            }
+
+        });
+
+        }
+
+        function listarNiveles(espec) {
+            //    alert("hola");
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('sie_per_listarniveles', {'espec': espec}),
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+
+                    $("#form_nivel").empty();
+                    $("#form_nivel").append('<option value="">Seleccionar...</option>');
+                    $.each(data.nivellista, function (i, value) {
+                        $("#form_nivel").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+
+            });
+
+        }
+
+
+
+
+        var cerrarcurso = function(idco){
+            $("#"+idco).empty();
+            $('#'+idco).fadeOut();
+//            $('#before'+idco).fadeOut();
+//            $('#after'+idco).fadeOut();
+        }
+
+    </script>
+    <style>
+        body {font-family: Arial;}
+
+        /* Style the tab */
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+
+        /* Style the buttons inside the tab */
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 13px 15px;
+            transition: 0.3s;
+            font-size: 15px;
+        }
+
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+            background-color: #ddd;
+        }
+
+        /* Create an active/current tablink class */
+        .tab button.active {
+            background-color: #ccc;
+        }
+
+        /* Style the tab content */
+        .tabcontent {
+            display: none;
+
+            -webkit-animation: fadeEffect 1s;
+            animation: fadeEffect 1s;
+        }
+
+        /* Fade in tabs */
+        @-webkit-keyframes fadeEffect {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+
+        @keyframes fadeEffect {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+    </style>
+
+{%endblock%}

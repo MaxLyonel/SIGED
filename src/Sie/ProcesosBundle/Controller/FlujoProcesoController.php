@@ -65,7 +65,7 @@ class FlujoProcesoController extends Controller
             ->add('proceso','entity',array('label'=>'Proceso','required'=>true,'class'=>'SieAppWebBundle:FlujoTipo','property'=>'flujo','empty_value' => 'Seleccionar proceso'))
             ->add('tarea','entity',array('label'=>'Tarea','required'=>true,'class'=>'SieAppWebBundle:ProcesoTipo','property'=>'proceso_tipo','empty_value' => 'Seleccionar tarea'))
             ->add('rol','entity',array('label'=>'Tipo de rol','required'=>true,'class'=>'SieAppWebBundle:RolTipo','property'=>'rol','empty_value' => 'Seleccionar rol'))
-            ->add('observacion','text',array('label'=>'Observación'))
+            ->add('observacion','text',array('label'=>'Observación', 'required'=>false))
             ->add('asignacion','entity',array('label'=>'Tipo de asignación de tarea','required'=>true,'class'=>'SieAppWebBundle:WfAsignacionTareaTipo','property'=>'nombre','empty_value' => 'Seleccionar asignacion'))
             ->add('evaluacion','choice',array('label'=>'Evaluación','required'=>true,'choices'=>array(true => 'SI',false => 'NO'),'empty_value' => '¿Tiene evaluacion?'))
             ->add('varevaluacion','text',array('label'=>'Variable a evaluar','required'=>false))
@@ -213,9 +213,9 @@ class FlujoProcesoController extends Controller
     public function guardarPasosAction(Request $request )
     {
         //dump($request);die;
-        $flujoproceso=new FlujoProceso();
-        $wfpasostipo=new WfPasosTipo();
-        $wfpasosflujoproceso=new WfPasosFlujoProceso();
+        //$flujoproceso=new FlujoProceso();
+        //$wfpasostipo=new WfPasosTipo();
+        
         $form = $request->get('form');
         //dump($form);die;
         $em = $this->getDoctrine()->getManager();
@@ -227,22 +227,38 @@ class FlujoProcesoController extends Controller
                     ->getFlashBag()
                     ->add('error', $mensaje);
         }else{
-            $wfpasostipo=$em->getRepository('SieAppWebBundle:WfPasosTipo')->find($form['tipopaso']);
-            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('wf_pasos_flujo_proceso');")->execute();
-            $wfpasosflujoproceso->setWfPasosTipo($wfpasostipo);
-            $wfpasosflujoproceso->setFlujoProceso($flujoproceso);
-            $wfpasosflujoproceso->setNombre($form['nombre']);
-            $wfpasosflujoproceso->setPosicion((int)$form['posicion']);
-            //dump(wf)
-            $em->persist($wfpasosflujoproceso);
-            $em->flush();
-            $em->getConnection()->commit();
-            //dump($flujoproceso);die;
-            $mensaje = 'El Paso fué registrado con éxito';
-            $request->getSession()
-                ->getFlashBag()
-                ->add('exito', $mensaje);
-            //dump($request);die;
+            $wfpfp = $em->getRepository('SieAppWebBundle:WfPasosFlujoProceso')->createQueryBuilder('wfpfp')
+                ->select('wfpfp')
+                ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'WITH', 'wfpfp.flujoProceso = fp.id')
+                ->where('fp.id ='. $flujoproceso->getId() )
+                ->andWhere('wfpfp.posicion=' . $form['posicion'])
+                ->getQuery()
+                ->getResult();
+            //dump($wfpfp);die;
+            if($wfpfp){
+                $mensaje = 'La posición ' . $form['posicion'] . ', ya fué registrada para la tarea "'. $flujoproceso->getProceso()->getProcesoTipo() . '"';
+                $request->getSession()
+                    ->getFlashBag()
+                    ->add('error', $mensaje);    
+            }else{
+                $wfpasosflujoproceso=new WfPasosFlujoProceso();
+                $wfpasostipo=$em->getRepository('SieAppWebBundle:WfPasosTipo')->find($form['tipopaso']);
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('wf_pasos_flujo_proceso');")->execute();
+                $wfpasosflujoproceso->setWfPasosTipo($wfpasostipo);
+                $wfpasosflujoproceso->setFlujoProceso($flujoproceso);
+                $wfpasosflujoproceso->setNombre($form['nombre']);
+                $wfpasosflujoproceso->setPosicion((int)$form['posicion']);
+                //dump(wf)
+                $em->persist($wfpasosflujoproceso);
+                $em->flush();
+                $em->getConnection()->commit();
+                //dump($flujoproceso);die;
+                $mensaje = 'El Paso fué registrado con éxito';
+                $request->getSession()
+                    ->getFlashBag()
+                    ->add('exito', $mensaje);
+                //dump($request);die;
+            }
         }
         $data = $this->listarP($flujoproceso->getFlujoTipo()->getId());
         return $this->render('SieProcesosBundle:FlujoProceso:tablaPasos.html.twig',$data);
@@ -347,6 +363,7 @@ class FlujoProcesoController extends Controller
         //dump($request);die;
         $flujotipo = $request->get('flujotipo');
         $data = $this->listarP($flujotipo);
+        //dump($data);die;
         return $this->render('SieProcesosBundle:FlujoProceso:tablaPasos.html.twig',$data);
     }
     
@@ -410,8 +427,8 @@ class FlujoProcesoController extends Controller
         fp.orden,
         fp.es_evaluacion,
         fp.plazo,
-        fp.tarea_ant_id,
-        fp.tarea_sig_id,
+        pt_a.proceso_tipo as tarea_ant,
+        pt_s.proceso_tipo as tarea_sig,
         fp.variable_evaluacion,
         fp.rol_tipo_id,
         fp.wf_asignacion_tarea_tipo_id,
@@ -420,9 +437,13 @@ class FlujoProcesoController extends Controller
         rt.rol
         FROM
         flujo_proceso fp
-        INNER JOIN proceso_tipo pt ON fp.proceso_id = pt."id"
-        INNER JOIN rol_tipo rt ON fp.rol_tipo_id = rt."id"
-        LEFT JOIN wf_asignacion_tarea_tipo wfa ON fp.wf_asignacion_tarea_tipo_id = wfa."id"
+        INNER JOIN proceso_tipo pt ON fp.proceso_id = pt.id
+        INNER JOIN rol_tipo rt ON fp.rol_tipo_id = rt.id
+        LEFT JOIN wf_asignacion_tarea_tipo wfa ON fp.wf_asignacion_tarea_tipo_id = wfa.id
+	    left JOIN flujo_proceso fp_a ON fp.tarea_ant_id = fp_a.id
+	    left JOIN proceso_tipo pt_a ON fp_a.proceso_id = pt_a.id
+	    left JOIN flujo_proceso fp_s ON fp.tarea_sig_id = fp_s.id
+	    left JOIN proceso_tipo pt_s ON fp_s.proceso_id = pt_s.id
         WHERE fp.flujo_tipo_id='. $flujotipo . ' ORDER BY fp.id');
         $query->execute();
         $arrDataTareas = $query->fetchAll();
@@ -433,7 +454,8 @@ class FlujoProcesoController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare('SELECT
-        fp.id,
+        wffp.id,
+        fp.id as fp_id,
         pt.proceso_tipo,
         wffp.nombre as paso,
         wffp.posicion,
@@ -448,24 +470,29 @@ class FlujoProcesoController extends Controller
         $query->execute();
         $arrDataPasos = $query->fetchAll();
         $data['pasos']=$arrDataPasos;
+        //dump($data);die;
         return $data;
     }
     public function listarC($flujotipo)
     {
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare('SELECT
-        fp.id,
+        wftc.id,
+        fp.id as fp_id,
         pt.proceso_tipo,
         wftc.condicion,
-        wftc.condicion_tarea_siguiente,
+        ptc.proceso_tipo as condicion_tarea_sig,
         wfc.nombre as tipo_compuerta
         FROM flujo_proceso fp JOIN proceso_tipo pt ON fp.proceso_id = pt.id
         JOIN wf_tarea_compuerta wftc ON wftc.flujo_proceso_id = fp.id 
         JOIN wf_compuerta wfc ON wftc.wf_compuerta_id = wfc.id
+        JOIN flujo_proceso fpc ON wftc.condicion_tarea_siguiente = fpc.id
+    	JOIN proceso_tipo ptc ON fpc.proceso_id = ptc.id
         WHERE fp.flujo_tipo_id='. $flujotipo .' ORDER BY fp.id');
         $query->execute();
         $arrDataCondicion = $query->fetchAll();
         $data['condiciones']=$arrDataCondicion;
+        //dump($data);die;
         return $data;
     }
     public function listarF($flujotipo)
@@ -534,7 +561,7 @@ class FlujoProcesoController extends Controller
             ->setAction($this->generateUrl($form['ruta']))
             ->add($form['nombre'],$form['tipo'],array('label'=>$form['label']))
             ->getForm();
-        dump($formulario);die; 
+        //dump($formulario);die; 
         //$wfpasosflujoproceso = new WfPasosFlujoProceso();
         $em = $this->getDoctrine()->getManager();
         $wfpasosflujoproceso = $em->getRepository('SieAppWebBundle:WfPasosFlujoProceso')->find(1);
@@ -542,5 +569,451 @@ class FlujoProcesoController extends Controller
         $em->flush();
         return false;
     }
-    
+
+    function pasosDeleteAction(Request $request)
+    {   
+        $id = $request->get('id');
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:WfPasosFlujoProceso')->find($id);
+        if (!$entity) {
+            throw $this->createNotFoundException('No se puede encontrar la entidad WfPasosFlujoProceso.');
+        }
+        $repository = $em->getRepository('SieAppWebBundle:FlujoTipo');
+            $query = $repository->createQueryBuilder('ft')
+                ->select('ft')
+                ->where('ft.id = '. $entity->getFlujoProceso()->getFlujoTipo()->getId())
+                ->getQuery();
+        $flujotipo = $query->getResult();
+        //dump($flujotipo[0]->getObs());die;
+        //dump(strpos($flujotipo->getObs(),"ACTIVO"));die;
+        if(strpos($flujotipo[0]->getObs(),"ACTIVO")!==false)
+        {
+            $mensaje = 'No se puede eliminar el paso, pues tiene un proceso ACTIVO';
+            $request->getSession()
+                ->getFlashBag()
+                ->add('error', $mensaje);    
+        }else{
+                //dump($tramites);die;
+                $em->remove($entity);
+                $em->flush();
+                $mensaje = 'El paso se eliminó con éxito';
+                $request->getSession()
+                    ->getFlashBag()
+                    ->add('exito', $mensaje);
+            }
+        //return $this->redirect($this->generateUrl('flujotipo'));
+        $data = $this->listarP($flujotipo[0]->getId());
+        return $this->render('SieProcesosBundle:FlujoProceso:tablaPasos.html.twig',$data);
+        
+    }
+
+    function condicionDeleteAction(Request $request)
+    {   
+        $id = $request->get('id');
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:WfTareaCompuerta')->find($id);
+        if (!$entity) {
+            throw $this->createNotFoundException('No se puede encontrar la entidad WfTareaCompuerta.');
+        }
+        $repository = $em->getRepository('SieAppWebBundle:FlujoTipo');
+            $query = $repository->createQueryBuilder('ft')
+                ->select('ft')
+                ->where('ft.id = '. $entity->getFlujoProceso()->getFlujoTipo()->getId())
+                ->getQuery();
+        $flujotipo = $query->getResult();
+        //dump($flujotipo[0]->getObs());die;
+        //dump(strpos($flujotipo->getObs(),"ACTIVO"));die;
+        if(strpos($flujotipo[0]->getObs(),"ACTIVO")!==false)
+        {
+            $mensaje = 'No se puede eliminar la condición, pues tiene un proceso ACTIVO';
+            $request->getSession()
+                ->getFlashBag()
+                ->add('error', $mensaje);    
+        }else{
+                //dump($tramites);die;
+                $em->remove($entity);
+                $em->flush();
+                $mensaje = 'La condición se eliminó con éxito';
+                $request->getSession()
+                    ->getFlashBag()
+                    ->add('exito', $mensaje);
+            }
+        //return $this->redirect($this->generateUrl('flujotipo'));
+        $data = $this->listarC($flujotipo[0]->getId());
+        return $this->render('SieProcesosBundle:FlujoProceso:tablaCondicion.html.twig',$data);
+        
+    }
+
+    function tareaDeleteAction(Request $request)
+    {   
+        //dump($request);die;
+        $id = $request->get('id');
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($id);
+        if (!$entity) {
+            throw $this->createNotFoundException('No se puede encontrar la entidad WfTareaCompuerta.');
+        }
+        /*$repository = $em->getRepository('SieAppWebBundle:FlujoTipo');
+            $query = $repository->createQueryBuilder('ft')
+                ->select('ft')
+                ->where('ft.id = '. $entity->getFlujoTipo()->getId())
+                ->getQuery();
+        $flujotipo = $query->getResult();*/
+        //dump($flujotipo[0]->getObs());die;
+        //dump(strpos($flujotipo->getObs(),"ACTIVO"));die;
+        //dump($entity->getFlujoTipo());die;
+        $id_flujotipo = $entity->getFlujoTipo()->getId();
+        if(strpos($entity->getFlujoTipo()->getObs(),"ACTIVO")!==false)
+        {
+            $mensaje = 'No se puede eliminar la tarea, pues tiene un proceso ACTIVO';
+            $request->getSession()
+                ->getFlashBag()
+                ->add('error', $mensaje);    
+        }else{
+                //dump($tramites);die;
+                
+                $query = $em->getConnection()->prepare("delete from wf_tarea_compuerta where flujo_proceso_id in (select id from flujo_proceso where flujo_tipo_id=". $entity->getFlujoTipo()->getId() . " and orden>=". $entity->getOrden() .")");
+                $query->execute();
+                $query = $em->getConnection()->prepare("delete from wf_pasos_flujo_proceso where flujo_proceso_id in (select id from flujo_proceso where flujo_tipo_id=". $entity->getFlujoTipo()->getId() . " and orden>=". $entity->getOrden() .")");
+                $query->execute();
+                $query = $em->getConnection()->prepare("delete from flujo_proceso where flujo_tipo_id=". $entity->getFlujoTipo()->getId() . " and orden>=". $entity->getOrden());
+                $query->execute();
+                /*$em->remove($entity);
+                $em->flush();*/
+                $mensaje = 'Las tareas se elimaron con éxito';
+                $request->getSession()
+                    ->getFlashBag()
+                    ->add('exito', $mensaje);
+            }
+        //return $this->redirect($this->generateUrl('flujotipo'));
+        $data = $this->listarT($id_flujotipo);
+        //dump($data);die;
+        return $this->render('SieProcesosBundle:FlujoProceso:tablaTarea.html.twig',$data);
+        
+    }
+
+    function editarPasosAction(Request $request)
+    {   
+        //dump($request);die;
+        $id = $request->get('id');
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:WfPasosFlujoProceso')->find($id);
+        if (!$entity) {
+            throw $this->createNotFoundException('No se puede encontrar la entidad WfTareaCompuerta.');
+        }
+        $id_flujotipo = $entity->getFlujoProceso()->getFlujoTipo()->getId();
+        if(strpos($entity->getFlujoProceso()->getFlujoTipo()->getObs(),"ACTIVO")!==false)
+        {
+            $mensaje = 'No se puede modificar los datos, pues tiene un proceso ACTIVO';
+            $response = new JsonResponse();
+            return $response->setData(array('mensaje' => $mensaje));
+        }else{
+            $form = $this->editarPasosForm($entity);
+            return $this->render('SieProcesosBundle:FlujoProceso:editarPasos.html.twig',array(
+                'form'=>$form->createView()));
+        }
+        
+        
+    }
+    public function editarPasosForm($entity)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('SieAppWebBundle:FlujoProceso');
+        $query = $repository->createQueryBuilder('fp')
+            ->select('fp.id,pt.procesoTipo')
+            ->innerJoin('SieAppWebBundle:flujoTipo', 'ft', 'WITH', 'fp.flujoTipo = ft.id')
+            ->innerJoin('SieAppWebBundle:procesoTipo', 'pt', 'WITH', 'pt.id = fp.proceso')
+            ->where('ft.id = '. $entity->getFlujoProceso()->getFlujoTipo()->getId())
+            ->orderBy('fp.id','ASC')
+            ->getQuery();
+        $tarea = $query->getResult();
+        $query = $em->getRepository('SieAppWebBundle:WfPasosTipo')->createQueryBuilder('wfp')
+            ->select('wfp.id,wfp.nombre')
+            ->getQuery();
+        $pasos = $query->getResult();
+        $tareasArray = array();
+        $pasosArray = array();
+        //dump($tarea);die;
+        foreach($tarea as $t){
+            $tareasArray[$t['id']]=$t['procesoTipo'];
+        }
+        foreach($pasos as $p){
+            $pasosArray[$p['id']]=$p['nombre'];
+        }
+        //dump($entity->getWfPasosTipo()->getId());die;
+        $form = $this->createFormBuilder()
+            //->setAction($this->generateUrl('flujoproceso_guardar_pasos'))
+            ->add('id','hidden',array('data'=>$entity->getId()))
+            ->add('ptarea_edit','choice',array('label'=>'Tarea','required'=>true,'data'=>$entity->getFlujoProceso()->getId(),'choices'=>$tareasArray))
+            ->add('nombre_edit','text',array('label'=>'nombre','required'=>true, 'data'=>$entity->getNombre()))
+            ->add('posicion_edit','text',array('label'=>'posicion','required'=>true,'data'=>$entity->getPosicion()))
+            ->add('tipopaso_edit','choice',array('label'=>'Tipo de asignación de tarea','required'=>true,'data'=>$entity->getWfPasosTipo()->getId(),'choices'=>$pasosArray))
+            ->getForm();
+        return $form;
+    }
+    function updatePasosAction(Request $request)
+    {   
+        $form = $request->get('form');
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:WfPasosFlujoProceso')->find($form['id']);
+        //dump($entity);die;
+        if (!$entity) {
+            throw $this->createNotFoundException('No se puede encontrar la entidad WfPasosFlujoProceso.');
+        }
+        if(strpos($entity->getFlujoProceso()->getFlujoTipo()->getObs(),"ACTIVO")!==false)
+        {
+            $mensaje = 'No se puede modificar el paso, pues tiene un proceso ACTIVO';
+            $request->getSession()
+                ->getFlashBag()
+                ->add('error', $mensaje);    
+        }else{
+            //dump($entity->getFlujoProceso()->getId());die;
+            $wfpfp = $em->getRepository('SieAppWebBundle:WfPasosFlujoProceso')->createQueryBuilder('wfpfp')
+                ->select('wfpfp')
+                ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'WITH', 'wfpfp.flujoProceso = fp.id')
+                ->where('fp.id ='. $entity->getFlujoProceso()->getId())
+                ->andWhere('wfpfp.posicion=' . $form['posicion_edit'])
+                ->getQuery()
+                ->getResult();
+            //dump($wfpfp);die;
+            if($wfpfp){
+                $mensaje = 'La posición ' . $form['posicion_edit'] . ', ya fué registrada para la tarea "'. $entity->getFlujoProceso()->getProceso()->getProcesoTipo() . '"';
+                $request->getSession()
+                    ->getFlashBag()
+                    ->add('error', $mensaje);    
+            }else{
+                $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($form['ptarea_edit']);
+                $wfpasostipo = $em->getRepository('SieAppWebBundle:WfPasosTipo')->find($form['tipopaso_edit']);
+                //dump($wfpasostipo);die;
+                $entity->setNombre($form['nombre_edit']);
+                
+                $entity->setPosicion((int)$form['posicion_edit']);
+                //dump($entity);die;
+                $entity->setWfPasosTipo($wfpasostipo);
+                $entity->setFlujoProceso($flujoproceso);
+                //dump($entity);die;
+                $em->flush();
+                //dump($entity);die;
+                $mensaje = 'Los datos se modificaron con éxito';
+                $request->getSession()
+                    ->getFlashBag()
+                    ->add('exito', $mensaje);
+            }
+                //dump($entity);die;
+        }     
+        //return $this->redirect($this->generateUrl('flujotipo'));
+        $data = $this->listarP($entity->getFlujoProceso()->getFlujotipo()->getId());
+        return $this->render('SieProcesosBundle:FlujoProceso:tablaPasos.html.twig',$data);
+        
+    }
+    function editarTareaAction(Request $request)
+    {   
+        //dump($request);die;
+        $id = $request->get('id');
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($id);
+        //dump($entity->getProceso()->getProcesoTipo());die;
+        if (!$entity) {
+            throw $this->createNotFoundException('No se puede encontrar la entidad FlujoProceso.');
+        }
+        $id_flujotipo = $entity->getFlujoTipo()->getId();
+        if(strpos($entity->getFlujoTipo()->getObs(),"ACTIVO")!==false)
+        {
+            $mensaje = 'No se puede modificar los datos, pues tiene un proceso ACTIVO';
+            $response = new JsonResponse();
+            return $response->setData(array('mensaje' => $mensaje));   
+        }else{
+            $form = $this->editarTareaForm($entity);
+            return $this->render('SieProcesosBundle:FlujoProceso:editarTarea.html.twig',array(
+                'form'=>$form->createView()));
+        }
+    }
+
+    public function editarTareaForm($entity)
+    {
+        //dump($entity->getEsEvaluacion());die;
+        $em = $this->getDoctrine()->getManager();
+        $rol = $em->getRepository('SieAppWebBundle:RolTipo')->findBy(array(),array('rol' => 'ASC'));
+        $tipoasignacion = $em->getRepository('SieAppWebBundle:WfAsignacionTareaTipo')->findAll();
+        $rolArray = array();
+        $tipoasignacionArray = array();
+        //dump($rol);die;
+        foreach($rol as $r){
+            //dump($r);die;
+            $rolArray[$r->getId()]=$r->getRol();
+        }
+        //dump($rolArray);die;
+        foreach($tipoasignacion as $t){
+            $tipoasignacionArray[$t->getId()]=$t->getNombre();
+        }
+        //dump($tipoasignacionArray);die;
+        //dump($entity->getWfPasosTipo()->getId());die;
+        $form = $this->createFormBuilder()
+            //->setAction($this->generateUrl('flujoproceso_guardar_pasos'))
+            ->add('id','hidden',array('data'=>$entity->getId()))
+            ->add('rol_edit','choice',array('label'=>'Tipo de rol','required'=>true,'data'=>$entity->getRolTipo()->getId(),'choices'=>$rolArray))
+            ->add('observacion_edit','text',array('label'=>'Observación', 'required'=>false,'data'=>$entity->getObs()))
+            ->add('asignacion_edit','choice',array('label'=>'Tipo de asignación de tarea','required'=>true,'data'=>$entity->getWfAsignacionTareaTipo()->getId(),'choices'=>$tipoasignacionArray))
+            ->add('evaluacion_edit','choice',array('label'=>'Evaluación','required'=>true,'data'=>$entity->getEsEvaluacion(),'choices'=>array(true => 'SI',false => 'NO')))
+            ->add('varevaluacion_edit','text',array('label'=>'Variable a evaluar','required'=>false,'data'=>$entity->getVariableEvaluacion()))
+            ->add('plazo_edit','text',array('label'=>'Plazo','required'=>false,'data'=>$entity->getPlazo()))
+            ->getForm();
+            //dump($form);die;
+        
+            return $form;
+    }
+
+    function updateTareaAction(Request $request)
+    {   
+        $form = $request->get('form');
+        //dump($form);die;
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($form['id']);
+        if (!$entity) {
+            throw $this->createNotFoundException('No se puede encontrar la entidad FlujoProceso.');
+        }
+        if(strpos($entity->getFlujoTipo()->getObs(),"ACTIVO")!==false)
+        {
+            $mensaje = 'No se puede modificar el paso, pues tiene un proceso ACTIVO';
+            $request->getSession()
+                ->getFlashBag()
+                ->add('error', $mensaje);    
+        }else{
+                $rol = $em->getRepository('SieAppWebBundle:RolTipo')->find($form['rol_edit']);
+                //dump($rol);die;
+                $wfasignaciontareatipo = $em->getRepository('SieAppWebBundle:WfAsignacionTareaTipo')->find($form['asignacion_edit']);
+                //dump($rol);die;
+                $entity->setRolTipo($rol);
+                $entity->setObs($form['observacion_edit']);
+                if($form['plazo_edit']==""){
+                    $entity->setPlazo(null);    
+                }else{
+                    $entity->setPlazo((int)$form['plazo_edit']);
+                }
+                $entity->setWfAsignacionTareaTipo($wfasignaciontareatipo);
+                if($form['evaluacion_edit'] == 1){
+                    $entity->setVariableEvaluacion($form['varevaluacion_edit']);
+                }else{
+                    $entity->setVariableEvaluacion("");
+                    $query = $em->getConnection()->prepare("delete from wf_tarea_compuerta where flujo_proceso_id=" . $entity->getId());
+                    $query->execute();
+                }
+                $entity->setEsEvaluacion($form['evaluacion_edit']);
+                $em->flush();
+                //dump($entity);die;
+                $mensaje = 'Los datos se modificaron con éxito';
+                $request->getSession()
+                    ->getFlashBag()
+                    ->add('exito', $mensaje);
+            }
+        //return $this->redirect($this->generateUrl('flujotipo'));
+        $data = $this->listarT($entity->getFlujoTipo()->getId());
+        return $this->render('SieProcesosBundle:FlujoProceso:tablaTarea.html.twig',$data);
+        
+    }
+
+    function editarCondicionAction(Request $request)
+    {   
+        //dump($request);die;
+        $id = $request->get('id');
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:WfTareaCompuerta')->find($id);
+        //dump($entity);die;
+        if (!$entity) {
+            throw $this->createNotFoundException('No se puede encontrar la entidad WfTareaCompuerta.');
+        }
+        if(strpos($entity->getFlujoProceso()->getFlujoTipo()->getObs(),"ACTIVO")!==false)
+        {
+            $mensaje = 'No se puede modificar los datos, pues tiene un proceso ACTIVO';
+            $response = new JsonResponse();
+            return $response->setData(array('mensaje' => $mensaje));   
+        }else{
+            $form = $this->editarCondicionForm($entity);
+            return $this->render('SieProcesosBundle:FlujoProceso:editarCondicion.html.twig',array(
+                'form'=>$form->createView()));
+        }
+    }
+
+    public function editarCondicionForm($entity)
+    {
+        //dump($entity->getEsEvaluacion());die;
+        $ctareasArray = array();
+        $tareasArray = array();
+        $wfcompuertaArray = array();
+        $em = $this->getDoctrine()->getManager();
+        $ctarea = $em->getRepository('SieAppWebBundle:FlujoProceso')->createQueryBuilder('fp')
+            ->select('fp.id,pt.procesoTipo')
+            ->innerJoin('SieAppWebBundle:procesoTipo', 'pt', 'WITH', 'pt.id = fp.proceso')
+            ->innerJoin('SieAppWebBundle:FlujoTipo', 'ft', 'WITH', 'ft.id = fp.flujoTipo')
+            ->where('ft.id = '. $entity->getFlujoProceso()->getFlujoTipo()->getId())
+            ->andWhere('fp.esEvaluacion = true')
+            ->orderBy('fp.id','ASC')
+            ->getQuery()
+            ->getResult();
+        //dump($ctarea);die;
+        foreach($ctarea as $ct){
+            $ctareasArray[$ct['id']] = $ct['procesoTipo'];
+        }
+        //dump($ctareasArray);die;
+        $tarea = $em->getRepository('SieAppWebBundle:FlujoProceso')->createQueryBuilder('fp')
+            ->select('fp.id,pt.procesoTipo')
+            ->innerJoin('SieAppWebBundle:procesoTipo', 'pt', 'WITH', 'pt.id = fp.proceso')
+            ->innerJoin('SieAppWebBundle:FlujoTipo', 'ft', 'WITH', 'ft.id = fp.flujoTipo')
+            ->where('ft.id = '. $entity->getFlujoProceso()->getFlujoTipo()->getId())
+            ->orderBy('fp.id','ASC')
+            ->getQuery()
+            ->getResult();
+        //dump($tarea);die;
+        foreach($tarea as $t){
+            $tareasArray[$t['id']] = $t['procesoTipo'];
+        }
+        $wfcompuerta = $em->getRepository('SieAppWebBundle:WfCompuerta')->findAll();
+        foreach($wfcompuerta as $wfc){
+            $wfcompuertaArray[$wfc->getId()] = $wfc->getNombre();
+        }
+        $form = $this->createFormBuilder()
+            ->add('id','hidden',array('data'=>$entity->getId()))
+            ->add('ctarea_edit','choice',array('label'=>'Tarea','required'=>true,'data'=>$entity->getFlujoProceso()->getId(),'choices'=>$ctareasArray))
+            ->add('condiciones_edit','choice',array('label'=>'Condición','required'=>true,'data'=>$entity->getCondicion(),'choices'=>array('SI' => 'SI','NO' => 'NO')))
+            ->add('ctareasig_edit','choice',array('label'=>'Tarea','required'=>true,'data'=>$entity->getCondicionTareaSiguiente(),'choices'=>$tareasArray))
+            ->add('tipocondicion_edit','choice',array('label'=>'Tipo condición','required'=>true,'data'=>$entity->getWfCompuerta()->getId(),'choices'=>$wfcompuertaArray))
+            ->getForm();
+        return $form;
+    }
+
+    function updateCondicionAction(Request $request)
+    {   
+        $form = $request->get('form');
+        //dump($form);die;
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:WfTareaCompuerta')->find($form['id']);
+        if (!$entity) {
+            throw $this->createNotFoundException('No se puede encontrar la entidad FlujoProceso.');
+        }
+        if(strpos($entity->getFlujoProceso()->getFlujoTipo()->getObs(),"ACTIVO")!==false)
+        {
+            $mensaje = 'No se puede modificar el paso, pues tiene un proceso ACTIVO';
+            $request->getSession()
+                ->getFlashBag()
+                ->add('error', $mensaje);    
+        }else{
+                $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($form['ctarea_edit']);
+                //dump($rol);die;
+                $wfcompuerta = $em->getRepository('SieAppWebBundle:WfCompuerta')->find($form['tipocondicion_edit']);
+                //dump($rol);die;
+                $entity->setFlujoProceso($flujoproceso);
+                $entity->setWfCompuerta($wfcompuerta);
+                $entity->setCondicion($form['condiciones_edit']);
+                $entity->setCondicionTareaSiguiente($form['ctareasig_edit']);
+                $em->flush();
+                //dump($entity);die;
+                $mensaje = 'Los datos se modificaron con éxito';
+                $request->getSession()
+                    ->getFlashBag()
+                    ->add('exito', $mensaje);
+            }
+        //return $this->redirect($this->generateUrl('flujotipo'));
+        $data = $this->listarC($entity->getFlujoProceso()->getFlujoTipo()->getId());
+        return $this->render('SieProcesosBundle:FlujoProceso:tablaCondicion.html.twig',$data);
+    }
 }
