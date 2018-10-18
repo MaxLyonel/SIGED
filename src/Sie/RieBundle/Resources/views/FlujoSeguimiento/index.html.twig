@@ -38,9 +38,9 @@
 {% block javascripts %}
     {{parent()}}
 
-    <script src="{{ asset('webprocesos/raphael-min.js') }}"></script>
+    {#<script src="{{ asset('webprocesos/raphael-min.js') }}"></script>
     <script src="{{ asset('webprocesos/jquery.min.js') }}"></script>
-    <script src="{{ asset('webprocesos/flowchart-latest.js') }}"></script>
+    <script src="{{ asset('webprocesos/flowchart-latest.js') }}"></script>#}
     <script type="text/javascript">
         $('#buscar').click(function(){
             //alert('hola');
@@ -57,7 +57,7 @@
                 success: function (data) {
                     $('#flujo').empty();
                     $('#flujo').append(data);
-                    var btn = document.getElementById("run"),
+                    /*var btn = document.getElementById("run"),
                     cd = document.getElementById("code"),
                     chart;
                     var code = cd.value;
@@ -103,7 +103,7 @@
                         'approved' : { 'fill' : '#58C4A3', 'font-size' : 12, 'yes-text' : 'SI', 'no-text' : 'NO' },
                         'rejected' : { 'fill' : '#C45879', 'font-size' : 12, 'yes-text' : 'NO', 'no-text' : 'SI' }
                       }
-                    });
+                    });*/
                 },
             }); 
         });
