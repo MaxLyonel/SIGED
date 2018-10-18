@@ -1,6 +1,24 @@
 {% extends 'SieRieBundle:Default:rie.html.twig' %}
-
 {% block contentoption %}
+
+    <div id="mensajes">
+        {% if app.session.flashBag.has('exito') %}
+            <div class="alert alert-success">
+                {% for msg in app.session.flashBag.get('exito') %}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ msg }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if app.session.flashBag.has('error') %}
+            <div class="alert alert-danger">
+                {% for msg in app.session.flashBag.get('error') %}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ msg }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
 
     <div class="block-header">
         <h2>Lista de Trámites</h2>
@@ -14,34 +32,36 @@
                         Listado de Trámites
                     </h2>
                 </div>
-                <div class="body">
-                    <div class="row">
+                <div class="body" >
 
-                    </div>
                     <div class="table-responsive">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <!--<table class="table table-bordered table-striped table-hover js-exportable dataTable">-->
-                            <table class="table table-striped table-hover js-basic-example dataTable">
+                            <table class="table table-striped table-hover js-basic-example dataTable" id="tablaList">
                                 <thead>
                                 <tr>
-                                    <th>Nro. </th>
+                                    <th style="width: 5px">Acciones</th>
+                                    <th>Procedente</th>
+                                    <th>Cod. RITT</th>
+                                    <th>Denominación</th>
                                     <th>Nro. Trámite</th>
-                                    <th>Cod. RIE</th>
-                                    <th>Fecha de Registro</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
+                                    <th>Fecha de Solicitud</th>
+                                    {#<th>Estado de Solicitud</th>#}
 
                                 </tr>
                                 </thead>
 
                                 <tfoot>
                                 <tr>
-                                    <th>Nro. </th>
-                                    <th>Nro. Trámite</th>
+
+                                    <th style="width: 5px">Acciones</th>
+                                    <th>Procedente</th>
                                     <th>Cod. RITT</th>
-                                    <th>Fecha de Registro</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
+                                    <th>Denominación</th>
+                                    <th>Nro. Trámite</th>
+                                    <th>Fecha de Solicitud</th>
+                                    {#<th>Estado de Solicitud</th>#}
+
 
                                 </tr>
                                 </tfoot>
@@ -50,21 +70,30 @@
 
                                 {% for listaTramites in listaTramites %}
                                     <tr>
-                                        <td class="text-center">{{ loop.index }}</td>
-                                        <td class="text-center">{{ listaTramites.id }}</td>
-                                        <td>{{ listaTramites.tramite_tipo }}</td>
-                                        <td>{{ listaTramites.fecha_registro }}</td>
-                                        <td>{{ listaTramites.estado }}</td>
                                         <td>
                                             {#<button class="btn btn-success btn-xs"  onclick="updatesistema({{ sistema.id }})" class="btn btn-teal" data-toggle="modal" data-target=".bs-example-modal-table" title="Editar"><i class="fa fa-pencil"></i></button>#}
-                                            <input type="radio" id="si">SI
-                                            <input type="radio" id="no">NO
-                                            <button class="btn btn-danger btn-xs"  title="Imprimir"><i class="glyphicon glyphicon-print"></i></button>
+
+                                            <button id="btnRegistrar_{{ loop.index }}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" onclick="enviaInformacionRitt({{listaTramites.id }},{{ loop.index }})" title="Enviar Solicitud" style="display: none"><i class="material-icons">done</i></button>
                                         </td>
+                                        <td>
+                                            <input id="si_{{ loop.index }}" type="radio" onclick="obsoculta({{ loop.index }})"  name="radiotype_{{ loop.index }}" value="SI" >  <label for="si_{{ loop.index }}"><strong>Si</strong></label>
+                                            <input id="no_{{ loop.index }}" type="radio" onclick="obsmuestra({{ loop.index }})" name="radiotype_{{ loop.index }}"  value="NO" >  <label for="no_{{ loop.index }}"><strong>No</strong></label>
+                                            <textarea name="obs1_{{ loop.index }}" id="obs_{{ loop.index }}" cols="30" rows="5" style="display: none"></textarea>
+
+                                        </td>
+
+                                        <td >{{ listaTramites.codrie}}</td>
+                                        <td>{{ listaTramites.institucioneducativa}}</td>
+                                        <td class="text-center">{{ listaTramites.id }}</td>
+                                        <td class="text-center">{{ listaTramites.fecha_registro }}</td>
+                                        {#<td>{{ listaTramites.estado }}</td>#}
+
                                     </tr>
                                 {% endfor %}
                                 </tbody>
                             </table>
+                            <input type="text" id="obs_" name="obs1"  style="display: none" >
+
                         </div>
                     </div>
                 </div>
@@ -75,4 +104,56 @@
 
 
 
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+<script type="text/javascript">
+    function obsmuestra(idtxt) {
+        $('#btnRegistrar_'+idtxt).show();
+        var txt='obs_'+idtxt;
+            $('#'+txt).show();
+    }
+    function obsoculta(idtxt){
+        $('#btnRegistrar_'+idtxt).show();
+        var txt='obs_'+idtxt;
+        $('#'+txt).hide();
+    }
+    function enviaInformacionRitt(id,idtxt) {
+
+        var txt='obs_'+idtxt;
+        var RDSI='si_'+idtxt;
+        var obstxt= $('#'+txt).val();
+
+        if($('#'+RDSI).is(':checked')) {
+            var evaluacion  =$('#'+RDSI).val();
+        } else {
+            if(obstxt == ''){
+                alert("Debe introducir alguna observación");
+                return false;            }
+            var evaluacion  = "NO";
+        }
+        var formData = {id: id,obstxt:obstxt,evaluacion:evaluacion};
+          $.ajax({
+            type: 'post',
+            url: "{{ path('solicitud_ritt_guarda_tramite_nac') }}",
+            data: formData,
+            beforeSend: function () {
+                $("#tablaList").empty();
+            },
+            success: function (data) {
+                $("#tablaList").append(data);
+            },
+            statusCode: {
+                500: function () {
+                },
+                404: function () {
+                }
+            }
+        });
+    }
+
+    $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+        $(".alert").slideUp(1000);
+    });
+</script>
 {% endblock %}

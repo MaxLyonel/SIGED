@@ -52,25 +52,36 @@ class SolicitudRITTController extends Controller {
         $TramiteController->setContainer($this->container);
         // public function tramiteTarea($tarea_ant,$tarea_actual,$flujotipo,$usuario,$rol)
         $lista = $TramiteController->tramiteTareaRitt(22,22,5,$id_usuario,$id_rol);
-        dump($lista);die;
+      // dump($lista);die;
 
         return $this->render('SieRieBundle:SolicitudRITT:index.html.twig',array('listaTramites'=>$lista['tramites']));
     }
     public  function guardaTramiteAction(Request $request){
-        //dump($request);die;
         $id_rol= $this->session->get('roluser');
         $id_usuario= $this->session->get('userId');
-        $idlugar_tipo= $this->session->get('idlugar_tipo');
+        $idlugar_tipo= '';
         $idRie= $request->get('idRie');
+        if ($request->get('idTramite_'))
+        {$idTramite=$request->get('idTramite_');}
+        else{
+            $idTramite='';
+        }
         $flujotipo=5;//SOLICITUD RITT
         $tarea=22;//Registra la solicitur RITT
         $tabla = 'institucioneducativa';
         $id_tipoTramite=26;
         $TramiteController = new tramiteController();
         $TramiteController->setContainer($this->container);
-        //($usuario,$uDestinatario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,$varevaluacion,$idtramite,$datos)
-        $mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea,$tabla,$idRie,'',$id_tipoTramite,'','','',$idlugar_tipo);
-        dump($mensaje);die;
+                                                          //($usuario,$uDestinatario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,$varevaluacion,$idtramite,$datos)
+        $mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea,$tabla,$idRie,'',$id_tipoTramite,'',$idTramite,'','');
+
+        $mensajeEnvio="El trámite fue enviado correctamente";
+        $request->getSession()
+            ->getFlashBag()
+            ->add('exito', $mensajeEnvio);
+
+        return $this->redirectToRoute('solicitud_ritt_index');
+
     }
 
     public function ListaTramitesNacAction(Request $request){
@@ -79,11 +90,84 @@ class SolicitudRITTController extends Controller {
         $id_usuario= $this->session->get('userId');
         $TramiteController = new tramiteController();
         $TramiteController->setContainer($this->container);
-        // $lista = $TramiteController->tramiteTarea(59,60,11,$id_usuario,$id_rol);
-        // public function tramiteTarea($tarea_ant,$tarea_actual,$flujotipo,$usuario,$rol)
         $lista = $TramiteController->tramiteTareaRitt(22,23,5,$id_usuario,$id_rol);
         return $this->render('SieRieBundle:SolicitudRITT:listaTramitesNac.html.twig',array('listaTramites'=>$lista['tramites']));
-        //dump($lista);die;
+
+    }
+    public function guardaTramiteNacAction(Request $request){
+        //dump($request);die;
+        $id_rol= $this->session->get('roluser');
+        $id_usuario= $this->session->get('userId');
+        $idRie= $request->get('idRie');
+        $obs= $request->get('obstxt');
+        $evaluacion= $request->get('evaluacion');
+        $idTramite= $request->get('id');
+        $idlugar_tipo= '';
+        $flujotipo=5;//SOLICITUD RITT
+        $tarea=23;//RECEPCIONA Y VERIFICA
+        $tabla = 'institucioneducativa';
+        $id_tipoTramite=26;
+        $TramiteController = new tramiteController();
+        $TramiteController->setContainer($this->container);
+        //($usuario,$uDestinatario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,$varevaluacion,$idtramite,$datos)
+        $mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea,$tabla,$idRie,$obs,$id_tipoTramite,$evaluacion,$idTramite,'','');
+
+        if($evaluacion=='NO'){
+            $mensajeEnvio="Se realizó la devolución del trámite";
+            $request->getSession()
+                ->getFlashBag()
+                ->add('exito', $mensajeEnvio);
+        }
+        else{
+            $mensajeEnvio="El trámite es procedente";
+            $request->getSession()
+                ->getFlashBag()
+                ->add('exito', $mensajeEnvio);
+        }
+
+
+        $TramiteController = new tramiteController();
+        $TramiteController->setContainer($this->container);
+        $lista = $TramiteController->tramiteTareaRitt(22,23,5,$id_usuario,$id_rol);
+        return $this->render('SieRieBundle:SolicitudRITT:lisTramitesNac.html.twig',array('listaTramites'=>$lista['tramites']));
+
+        //return $this->redirectToRoute('solicitud_ritt_index');
+        //dump($mensaje);die;
+    }
+    public function ListaTramitesCertificadoNacAction(Request $request){
+        //dump($request);die;
+        $id_rol= $this->session->get('roluser');
+        $id_usuario= $this->session->get('userId');
+        $TramiteController = new tramiteController();
+        $TramiteController->setContainer($this->container);
+        $lista = $TramiteController->tramiteTareaRitt(23,24,5,$id_usuario,$id_rol);
+        return $this->render('SieRieBundle:SolicitudRITT:listaTramitesCertificadosNac.html.twig',array('listaTramites'=>$lista['tramites']));
+    }
+    public  function guardaTramiteNacImprimeAction(Request $request){
+        //dump($request);die;
+        $id_rol= $this->session->get('roluser');
+        $id_usuario= $this->session->get('userId');
+        $idRie= $request->get('idRie');
+        $obs= '';
+        $evaluacion= '';
+        $idTramite= $request->get('idTramite_');
+        $idlugar_tipo= '';
+        $flujotipo=5;//SOLICITUD RITT
+        $tarea=24;//EMITE CERTIFICADO
+        $tabla = 'institucioneducativa';
+        $id_tipoTramite=26;
+        $TramiteController = new tramiteController();
+        $TramiteController->setContainer($this->container);
+        //($usuario,$uDestinatario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,$varevaluacion,$idtramite,$datos)
+        $mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea,$tabla,$idRie,$obs,$id_tipoTramite,$evaluacion,$idTramite,'','');
+
+        $request->getSession()
+            ->getFlashBag()
+            ->add('exito', $mensaje);
+        //dump($mensaje);
+       return( $this->redirectToRoute('solicitud_ritt_certificados_Nac'));
+         //return($mensaje);
+
     }
 
 

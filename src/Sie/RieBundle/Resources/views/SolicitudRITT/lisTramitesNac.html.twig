@@ -1,0 +1,27 @@
+<thead>
+
+<tbody>
+
+{% for listaTramites in listaTramites %}
+    <tr>
+        <td>
+            {#<button class="btn btn-success btn-xs"  onclick="updatesistema({{ sistema.id }})" class="btn btn-teal" data-toggle="modal" data-target=".bs-example-modal-table" title="Editar"><i class="fa fa-pencil"></i></button>#}
+
+            <button id="btnRegistrar_{{ loop.index }}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" onclick="enviaInformacionRitt({{listaTramites.id }},{{ loop.index }})" title="Enviar Solicitud" style="display: none"><i class="material-icons">done</i></button>
+        </td>
+        <td>
+            <input id="si_{{ loop.index }}" type="radio" onclick="obsoculta({{ loop.index }})"  name="radiotype_{{ loop.index }}" value="SI" >  <label for="si_{{ loop.index }}"><strong>Si</strong></label>
+            <input id="no_{{ loop.index }}" type="radio" onclick="obsmuestra({{ loop.index }})" name="radiotype_{{ loop.index }}"  value="NO" >  <label for="no_{{ loop.index }}"><strong>No</strong></label>
+            <textarea name="obs1_{{ loop.index }}" id="obs_{{ loop.index }}" cols="30" rows="5" style="display: none"></textarea>
+            {#<input type="text" id="obs_{{ loop.index }}" name="obs1_{{ loop.index }}"  style="display: none" >#}
+        </td>
+
+        <td >{{ listaTramites.codrie}}</td>
+        <td>{{ listaTramites.institucioneducativa}}</td>
+        <td class="text-center">{{ listaTramites.id }}</td>
+        <td class="text-center">{{ listaTramites.fecha_registro }}</td>
+        <td>{{ listaTramites.estado }}</td>
+
+    </tr>
+{% endfor %}
+</tbody>

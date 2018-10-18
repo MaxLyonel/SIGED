@@ -10,6 +10,21 @@ solicitud_ritt_lista_Nac:
     path:     /rittListatramites
     defaults: { _controller: SieRieBundle:SolicitudRITT:ListaTramitesNac }
 
+solicitud_ritt_guarda_tramite_nac:
+    path:     /rittGuardaTramiteNac
+    defaults: { _controller: SieRieBundle:SolicitudRITT:guardaTramiteNac }
+
+solicitud_ritt_certificados_Nac:
+    path:     /rittListatramitesCertificados
+    defaults: { _controller: SieRieBundle:SolicitudRITT:ListaTramitesCertificadoNac }
+
+solicitud_ritt_guarda_tramite_imprime:
+    path:     /rittGuardaTramiteNacImprime
+    defaults: { _controller: SieRieBundle:SolicitudRITT:guardaTramiteNacImprime }
+
+
+
+
 
 
 
