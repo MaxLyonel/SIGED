@@ -247,6 +247,7 @@ class RegistroInstitucionEducativaController extends Controller {
     		$em->flush();
 
             //datos de sede y subsede del instituto tt
+            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('ttec_institucioneducativa_sede');")->execute();
             switch($form['idRieSede']){
                 case 0: //caso Sede
                         $sede = new TtecInstitucioneducativaSede();
