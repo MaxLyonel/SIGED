@@ -20,7 +20,7 @@
             </ol>
         </div><!-- /.breadcrumb-wrapper -->
     </div>  
-    <div class="row">
+   <div class="row">
         {% for flashMessage in app.session.flashbag.get('notfound') %}
                     <div class="alert alert-warning alert-dismissible" role="alert">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -48,7 +48,7 @@
                     <div class="row">
                         <div class="form-group col-lg-3 col-md-3" {% if app.session.get('roluser') == 9 or app.session.get('roluser') == 10 %} style="display:none"{% else %}style="display:block"{% endif %}>
                             {{ form_label(form.codsie)}}
-                            {{form_widget(form.codsie,{'attr':{'onchange':'gestion(this.value)'}}) }}
+                            {{form_widget(form.codsie,{'attr':{'onchange':'gestion(this.value)','class':'validar'}}) }}
                         </div>
                         <div class="form-group col-lg-3 col-md-3">
                             {{ form_label(form.gestion)}}
@@ -109,11 +109,18 @@
                     $("#lista").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
                 },
                 success: function (data) {
-                    $('#lista').empty();
-                    $('#lista').append(data);
-                    $( document ).ready(function() {
+                    if (data.msg){
+                        $('#lista').empty();
+                        $('#lista').append('<div class="alert alert-warning alert-dismissible" role="alert">'+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+                        '<strong><i class="fa fa-linux"></i></strong>'+data.msg+'</div>');
+                    }else{
+                        $('#lista').empty();
+                        $('#lista').append(data);
+                        $( document ).ready(function() {
                         cargatablas();
                     });
+                    }
                 },
                 statusCode: {
                     500: function () {
@@ -209,6 +216,13 @@
             });
             
         }
-
+        $(function(){
+            $(".validar").keydown(function(event){
+            //alert(event.keyCode);
+                if((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !==190  && event.keyCode !==110 && event.keyCode !==8 && event.keyCode !==9  ){
+                    return false;
+                }
+            });
+        });
     </script>
 {% endblock %} 
