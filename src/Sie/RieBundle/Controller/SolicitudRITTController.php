@@ -162,6 +162,8 @@ class SolicitudRITTController extends Controller {
             ->getFlashBag()
             ->add('exito', $mensaje);*/
 
+        //dump($this->container->getParameter('urlreportweb') .'rie_certificados_itt_v1_oyq.rptdesign&idCertificados='.$request->get('idRie').'&&__format=pdf&');die;
+
 
         $arch = 'CERTIFICADOS_'.'_' . date('YmdHis') . '.pdf';
         $response = new Response();
