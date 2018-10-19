@@ -35,6 +35,7 @@
                     </h2>
                 </div>
                 <div class="body">
+                    {% if app.session.get('roluser') == 7 %}
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
                             <a href="{{path('rie_new')}}" class="btn btn-md bg-orange waves-effect">
@@ -42,6 +43,7 @@
                             </a>
                         </div>
                     </div>                
+                    {% endif %}
                     <div class="table-responsive">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <!--<table class="table table-bordered table-striped table-hover js-exportable dataTable">-->
@@ -50,15 +52,14 @@
                                     <tr>
                                         <th>Acciones</th>                                    
                                         <th>Depto.</th>
-                                        <th>Cod. RIE</th>                                        
+                                        <th>Cod. RITT</th>                                     
                                         <th>Denominación</th>
                                         <th>Sede/Subsede</th>
                                         <th>R.M.</th>
                                         <th>Fecha R.M.</th>
                                         <th>Carácter<br>Jurídico</th>
                                         <th>Tipo<br>Institución</th>
-                                        <th>Cod. LE</th>
-                                        <th>Certificado</th>                                        
+                                        <th>Cod. LE</th>                                        
                                     </tr>
                                 </thead>
                                 
@@ -66,7 +67,7 @@
                                     <tr>
                                         <th>Acciones</th>                                    
                                         <th>Depto.</th>
-                                        <th>Cod. RIE</th>
+                                        <th>Cod. RITT</th>
                                         <th>Denominación</th>
                                         <th>Sede/Subsede</th>
                                         <th>R.M.</th>
@@ -74,7 +75,6 @@
                                         <th>Carácter<br>Jurídico</th>
                                         <th>Tipo<br>Institución</th>
                                         <th>Cod. LE</th>
-                                        <th>Certificado</th>
                                     </tr>
                                 </tfoot>
                                 
@@ -82,6 +82,7 @@
                                     {% for entity in entities %}
                                         <tr>
                                             <td>
+                                                {% if entity.institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario %}
                                                 {% if entity.institucioneducativa.id == entity.sede %}
                                                 <a href="{{path('rie_new_subsede', {'idRie': entity.institucioneducativa.id})}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Registrar Subsede">
                                                     <i class="material-icons">widgets</i>
@@ -90,13 +91,15 @@
                                                     <button class="btn btn-grey btn-circle waves-effect waves-circle waves-float" disabled="disabled">
                                                         <i class="material-icons">widgets</i></button>
                                                 {% endif %}
-
-                                                <a href="{{path('rie_edit', {'idRie': entity.institucioneducativa.id})}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Editar">
+                                                    <a href="{{path('rie_edit', {'idRie': entity.institucioneducativa.id})}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Editar">
                                                     <i class="material-icons">mode_edit</i>
-                                                </a>
-                                                <a href="{{path('rie_delete', {'idRie': entity.institucioneducativa.id})}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Eliminar">
+                                                    </a>
+                                                    <a href="{{path('rie_delete', {'idRie': entity.institucioneducativa.id})}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Eliminar">
                                                     <i class="material-icons">delete_forever</i>
-                                                </a>
+                                                    </a>
+                                                {% else %}
+                                                -
+                                                {% endif %}
                                             </td>
                                             <td>{{ entity.institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar }}</td>                                            
                                             <td>{{ entity.institucioneducativa.id }}</td> 
@@ -117,12 +120,12 @@
                                                 {{ entity.institucioneducativa.institucioneducativaTipo.descripcion }}
                                             </td>
                                             <td>{{ entity.institucioneducativa.leJuridicciongeografica.id }}</td>
-                                            <td>
+                                            {#<td>
                                                 <form action="{{path('reporte_rie_uno')}}" method="post">
                                                     <input type="hidden" name="idInstitucion" value="{{entity.institucioneducativa.id}}">
                                                     <button type="submit" class="btn btn-xs bg-blue waves-effect"><i class="fa fa-save"></i> Certificado</button>
                                                 </form>
-                                            </td>
+                                            </td>#}
                                         </tr>
                                     {% endfor %}
                                 </tbody>

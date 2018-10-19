@@ -75,6 +75,10 @@ class DatoHistoricoController extends Controller {
     public function listAction(Request $request){
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
+        $id_lugar = $sesion->get('roluserlugarid');
+        $em = $this->getDoctrine()->getManager();
+
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($id_lugar);
         if (!isset($id_usuario)){
             return $this->redirect($this->generateUrl('login'));
         }
@@ -87,7 +91,7 @@ class DatoHistoricoController extends Controller {
                                  ORDER BY a.fechaResolucion DESC');                       
         $query->setParameter('idRie', $request->get('idRie'));
         $historicos = $query->getResult();         
-        return $this->render('SieRieBundle:DatoHistorico:list.html.twig', array('entity' => $entity, 'historicos' => $historicos));        
+        return $this->render('SieRieBundle:DatoHistorico:list.html.twig', array('entity' => $entity, 'historicos' => $historicos, 'lugarUsuario' => intval($lugar->getCodigo())));        
     }
 
     /**
