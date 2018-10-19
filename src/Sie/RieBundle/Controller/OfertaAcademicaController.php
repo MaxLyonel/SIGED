@@ -153,6 +153,9 @@ class OfertaAcademicaController extends Controller {
             if($datoCarrera){
                 $this->get('session')->getFlashBag()->add('mensaje', 'La Carrera ya se encuentra registrada...');
             } else {
+
+                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('ttec_institucioneducativa_carrera_autorizada');");
+                $query->execute();
                 //Guardando carreras autorizadas
                 $entity = new TtecInstitucioneducativaCarreraAutorizada();
                 $entity->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idRie']));
@@ -163,6 +166,8 @@ class OfertaAcademicaController extends Controller {
                 $em->persist($entity);
                 $em->flush();     
 
+                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('ttec_resolucion_carrera');");
+                $query->execute();
                 //Guardando la resolucion de la carrera
                 $resolucion = new TtecResolucionCarrera();
                 $resolucion->setNumero($form['resolucion']);
