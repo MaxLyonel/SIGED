@@ -1124,7 +1124,7 @@ class ComisionController extends Controller {
                 left join prueba_tipo as pt on pt.id = ejd.prueba_tipo_id
                 left join disciplina_tipo as dt on dt.id =  pt.disciplina_tipo_id
                 left join genero_tipo as gtp on gtp.id = pt.genero_tipo_id
-                where ejd.gestion_tipo_id = ".$gestionActual." and ejd.carnet_identidad like '%".$cedulaRude."%' and ejd.fase_tipo_id = 4 and ct.nivel_tipo_id = 12
+                where ejd.gestion_tipo_id = ".$gestionActual." and ejd.carnet_identidad like '%".$cedulaRude."%' and ejd.fase_tipo_id = 4 and ct.nivel_tipo_id = 13
                 --and ejd.comision_tipo_id in (101,111,115,132,133,134,117,121,30,118,119,120,131,122,12,13,102,11,103,104,105,106,107,108,109,110)
                 union all
                 select eij.id, case eij.prueba_tipo_id when 0 then 111 else 101 end as comision_id, case eij.prueba_tipo_id when 0 then 'Estudiante - Danza' else 'Estudiante Deportista' end as comision, e.carnet_identidad||' - '||e.codigo_rude as documento, e.nombre||' '||e.paterno||' '||e.materno as nombre 
@@ -1134,7 +1134,7 @@ class ComisionController extends Controller {
                 inner join estudiante_inscripcion as ei on ei.id = eij.estudiante_inscripcion_id
                 inner join estudiante as e on e.id = ei.estudiante_id
                 inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
-                where eij.gestion_tipo_id = ".$gestionActual." and (e.codigo_rude like '%".$cedulaRude."%' or e.carnet_identidad like '%".$cedulaRude."%') and eij.fase_tipo_id = 4 and iec.nivel_tipo_id = 12
+                where eij.gestion_tipo_id = ".$gestionActual." and (e.codigo_rude like '%".$cedulaRude."%' or e.carnet_identidad like '%".$cedulaRude."%') and eij.fase_tipo_id = 4 and iec.nivel_tipo_id = 13
                 ) as v
                 order by id desc
             ");
@@ -1409,7 +1409,7 @@ class ComisionController extends Controller {
                 inner join disciplina_tipo as dt on dt.id =  pt.disciplina_tipo_id
                 inner join genero_tipo as gtp on gtp.id = pt.genero_tipo_id
                 where det.id = ".$codigoEntidad." and ejd.gestion_tipo_id = ".$gestion." and ejd.fase_tipo_id = 4 and (ejd.prueba_tipo_id is null or ejd.prueba_tipo_id = 0)
-                and ct.nivel_tipo_id = (case ft.esactivo_secundaria when 't' then 13 else 12 end)
+                and ct.nivel_tipo_id = 13 -- (case ft.esactivo_secundaria when 't' then 13 else 12 end)
                 order by dt.disciplina, pt.prueba, gtp.genero, nombre, paterno, materno
 
             ");
@@ -1439,7 +1439,7 @@ class ComisionController extends Controller {
                 inner join disciplina_tipo as dt on dt.id =  pt.disciplina_tipo_id
                 inner join genero_tipo as gtp on gtp.id = pt.genero_tipo_id
                 where det.id = ".$codigoEntidad." and ejd.gestion_tipo_id = ".$gestion." -- and ct.nivel_tipo_id in (13)
-                and dt.nivel_tipo_id = (case ft.esactivo_secundaria when 't' then 13 else 12 end)
+                and dt.nivel_tipo_id = 13 -- (case ft.esactivo_secundaria when 't' then 13 else 12 end)
                 order by dt.disciplina, pt.prueba, gtp.genero, nombre, paterno, materno
             ");
         $queryEntidad->execute();

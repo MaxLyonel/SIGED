@@ -50,6 +50,12 @@ class OfertaAcademicaController extends Controller {
      */
     public function listinstitutoAction(Request $request){
         $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');        
         $em = $this->getDoctrine()->getManager();
 
@@ -72,6 +78,11 @@ class OfertaAcademicaController extends Controller {
      * Muestra el listado de oferta académica
      */
      public function listAction(Request $request){
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
         $em = $this->getDoctrine()->getManager();
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
         $listado = $this->listadoOfertaAcademica($request->get('idRie'));
@@ -82,6 +93,11 @@ class OfertaAcademicaController extends Controller {
      * Muestra formulario de adición de oferta educativa
      */
     public function newAction(Request $request){
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
         $em = $this->getDoctrine()->getManager();
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
         $areasArray = $this->obtieneInstitucionAreaFormArray($request->get('idRie'));

@@ -76,6 +76,11 @@ class LocalEducativoController extends Controller {
      *
      */
     public function findleAction(Request $request){
+      $sesion = $request->getSession();
+      $id_usuario = $sesion->get('userId');
+      if (!isset($id_usuario)){
+          return $this->redirect($this->generateUrl('login'));
+      }
     	$form = $request->get('form');
         $em = $this->getDoctrine()->getManager();
 
@@ -162,7 +167,12 @@ class LocalEducativoController extends Controller {
     /* 
     * Formulario de nuevo local educativo
     */    
-    public function newAction(){
+    public function newAction(Request $request){
+      $sesion = $request->getSession();
+      $id_usuario = $sesion->get('userId');
+      if (!isset($id_usuario)){
+          return $this->redirect($this->generateUrl('login'));
+      }
     	$form = $this->createNewForm();
     	return $this->render('SieRieBundle:LocalEducativo:new.html.twig', array('form' => $form->createView()));
     }

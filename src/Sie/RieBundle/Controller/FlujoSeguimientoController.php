@@ -66,6 +66,11 @@ class FlujoSeguimientoController extends Controller
 
     public function verFlujoAction(Request $request )
     {
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
         //dump($request);die;
         $form = $request->get('form');
         //dump($id);die;
