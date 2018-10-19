@@ -2,22 +2,21 @@
 {% block contentoption %}
 
     <div id="mensajes">
-        {% if app.session.flashBag.has('exito') %}
-            <div class="alert alert-success">
-                {% for msg in app.session.flashBag.get('exito') %}
+
+            <div class="alert alert-success" id="exito" style="display: none">
+
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    {{ msg }}
-                {% endfor %}
+                  <span> El trámite es procedente</span>
             </div>
-        {% endif %}
-        {% if app.session.flashBag.has('error') %}
-            <div class="alert alert-danger">
-                {% for msg in app.session.flashBag.get('error') %}
+
+
+            <div class="alert alert-danger" id="error" style="display: none">
+
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    {{ msg }}
-                {% endfor %}
+                    <span> Se realizó la devolución del trámite </span>
+
             </div>
-        {% endif %}
+
     </div>
 
     <div class="block-header">
@@ -144,7 +143,24 @@
                     $("#tablaList").empty();
                 },
                 success: function (data) {
+                    console.log(data);
+
                     $("#tablaList").append(data);
+                    console.log($('#dd').val());
+                        if($('#dd').val()=='SI'){
+                            $('#exito').show();
+                            setTimeout(function () {
+                                $('#exito').hide();
+                            },2000)
+                        }
+                        else{
+                            $('#error').show();
+                            setTimeout(function () {
+                                $('#error').hide();
+                            },2000)
+                        }
+                    // alert(data.evaluacion);
+
                 },
                 statusCode: {
                     500: function () {
@@ -160,8 +176,6 @@
 
     }
 
-    $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
-        $(".alert").slideUp(1000);
-    });
+
 </script>
 {% endblock %}

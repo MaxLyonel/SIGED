@@ -58,7 +58,7 @@
                                         <th>Carácter<br>Jurídico</th>
                                         <th>Tipo<br>Institución</th>
                                         <th>Cod. LE</th>
-                                        <th>Certificado</th>                                        
+
                                     </tr>
                                 </thead>
                                 
@@ -74,7 +74,7 @@
                                         <th>Carácter<br>Jurídico</th>
                                         <th>Tipo<br>Institución</th>
                                         <th>Cod. LE</th>
-                                        <th>Certificado</th>
+
                                     </tr>
                                 </tfoot>
                                 
@@ -117,12 +117,7 @@
                                                 {{ entity.institucioneducativa.institucioneducativaTipo.descripcion }}
                                             </td>
                                             <td>{{ entity.institucioneducativa.leJuridicciongeografica.id }}</td>
-                                            <td>
-                                                <form action="{{path('reporte_rie_uno')}}" method="post">
-                                                    <input type="hidden" name="idInstitucion" value="{{entity.institucioneducativa.id}}">
-                                                    <button type="submit" class="btn btn-xs bg-blue waves-effect"><i class="fa fa-save"></i> Certificado</button>
-                                                </form>
-                                            </td>
+
                                         </tr>
                                     {% endfor %}
                                 </tbody>

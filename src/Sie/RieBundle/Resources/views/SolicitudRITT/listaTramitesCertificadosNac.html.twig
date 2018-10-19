@@ -103,11 +103,12 @@
 {% endblock %}
 {% block javascripts %}
     {{parent()}}
+
 <script type="text/javascript">
     function confirmar(){
         if(confirm('¿Estas segura/o de finalizar el trámite?'))
-        { location.reload();return true;
-
+        { setTimeout(function(){ location.reload();  },2000);
+           return true;
         }
         else
             return false;
