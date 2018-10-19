@@ -50,7 +50,8 @@
                                     <th>Nro. Trámite</th>
                                     <th>Fecha de Solicitud</th>
                                     <th>Estado de Solicitud</th>
-                                   <th>Observación</th>
+
+
                                 </tr>
                                 </thead>
                                 <tfoot>
@@ -61,13 +62,57 @@
                                     <th>Nro. Trámite</th>
                                     <th>Fecha de Solicitud</th>
                                     <th>Estado de Solicitud</th>
-                                    <th>Observación</th>
+
+
                                 </tr>
                                 </tfoot>
 
                                 <tbody>
 
                                 {% for listaTramites in listaTramites %}
+                                    <tr>
+
+                                        <td>
+
+                                            {% if ( listaTramites.estado =='ENVIADO') %}
+                                                <button class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" disabled>
+                                                    <i class="material-icons">done</i>
+                                                </button>
+                                            {% elseif (( listaTramites.estado =='')) %}
+                                                <a href="{{path('solicitud_ritt_guarda_tramite', {'idRie': listaTramites.institucioneducativa_id,'idTramite ':listaTramites.id })}}" onclick="return confirmar()" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Enviar Solicitud">
+                                                    <i class="material-icons">done</i>
+                                                </a>
+                                            {% elseif ( listaTramites.estado =='DEVUELTO') %}
+                                                <a href="{{path('solicitud_ritt_guarda_tramite', {'idRie': listaTramites.institucioneducativa_id,'idTramite ':listaTramites.id })}}" onclick="return confirmar()" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Enviar Solicitud">
+                                                    <i class="material-icons">done</i>
+                                                </a>
+                                                <button  onclick="return openModal({{ listaTramites.td_id }})" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Ver Observación">
+                                                    <i class="material-icons">visibility</i>
+                                                </button>
+                                            {% endif %}
+
+                                        </td>
+                                        <td >{{ listaTramites.institucioneducativa_id}}</td>
+                                        <td>{{ listaTramites.institucioneducativa}}</td>
+                                        <td class="text-center">{{ listaTramites.id }}</td>
+                                        <td class="text-center">{{ listaTramites.fecha_registro }}</td>
+                                        <td> {% if ( listaTramites.estado =='ENVIADO') %} <span class="label label-success">{{ listaTramites.estado }}</span> {% else %} <span class="label label-danger">{{ listaTramites.estado }}</span> {% endif %}</td>
+                                        {#<td><strong>{{ listaTramites.obs }}</strong></td>#}
+                                    </tr>
+
+                                {#{% if listaTramites.estado == 'ENVIADO' %}
+                                <tr style="background-color: #fae3e3 " >
+                                    <td>
+                                        <button type="button" class="btn btn-default btn-circle" disabled><i class="material-icons">done</i></button>
+                                    </td>
+                                    <td >{{ listaTramites.institucioneducativa_id}}</td>
+                                    <td>{{ listaTramites.institucioneducativa}}</td>
+                                    <td class="text-center">{{ listaTramites.id }}</td>
+                                    <td class="text-center">{{ listaTramites.fecha_registro }}</td>
+                                    <td><strong>{{ listaTramites.estado }}</strong></td>
+                                    <td><strong>{{ listaTramites.obs }}</strong></td>
+                                </tr>
+                                {% else %}
                                     <tr>
 
                                         <td>
@@ -83,52 +128,24 @@
                                         <td><strong>{{ listaTramites.estado }}</strong></td>
                                         <td><strong>{{ listaTramites.obs }}</strong></td>
                                     </tr>
-                                    {#{% if listaTramites.estado == 'ENVIADO' %}
-                                    <tr style="background-color: #fae3e3 " >
+                                {% endif %}
+                                    {% if listaTramites.estado == 'DEVUELTO' %}
+                                    <tr  style="background-color: #9cb0d3 " >
                                         <td>
-                                            <button type="button" class="btn btn-default btn-circle" disabled><i class="material-icons">done</i></button>
+                                            <a href="{{path('solicitud_ritt_guarda_tramite', {'idRie': listaTramites.institucioneducativa_id,'idTramite ':listaTramites.id })}}" onclick="return confirmar()" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Enviar Solicitud">
+                                                <i class="material-icons">done</i>
+                                            </a>
                                         </td>
                                         <td >{{ listaTramites.institucioneducativa_id}}</td>
                                         <td>{{ listaTramites.institucioneducativa}}</td>
                                         <td class="text-center">{{ listaTramites.id }}</td>
                                         <td class="text-center">{{ listaTramites.fecha_registro }}</td>
                                         <td><strong>{{ listaTramites.estado }}</strong></td>
-                                        <td><strong>{{ listaTramites.obs }}</strong></td>
+                                       <td><strong>{{ listaTramites.obs }}</strong></td>
                                     </tr>
-                                    {% else %}
-                                        <tr>
-
-                                            <td>
-                                                <a href="{{path('solicitud_ritt_guarda_tramite', {'idRie': listaTramites.institucioneducativa_id,'idTramite ':listaTramites.id })}}" onclick="return confirmar()" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Enviar Solicitud">
-                                                    <i class="material-icons">done</i>
-                                                </a>
-
-                                            </td>
-                                            <td >{{ listaTramites.institucioneducativa_id}}</td>
-                                            <td>{{ listaTramites.institucioneducativa}}</td>
-                                            <td class="text-center">{{ listaTramites.id }}</td>
-                                            <td class="text-center">{{ listaTramites.fecha_registro }}</td>
-                                            <td><strong>{{ listaTramites.estado }}</strong></td>
-                                            <td><strong>{{ listaTramites.obs }}</strong></td>
-                                        </tr>
-                                    {% endif %}
-                                        {% if listaTramites.estado == 'DEVUELTO' %}
-                                        <tr  style="background-color: #9cb0d3 " >
-                                            <td>
-                                                <a href="{{path('solicitud_ritt_guarda_tramite', {'idRie': listaTramites.institucioneducativa_id,'idTramite ':listaTramites.id })}}" onclick="return confirmar()" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Enviar Solicitud">
-                                                    <i class="material-icons">done</i>
-                                                </a>
-                                            </td>
-                                            <td >{{ listaTramites.institucioneducativa_id}}</td>
-                                            <td>{{ listaTramites.institucioneducativa}}</td>
-                                            <td class="text-center">{{ listaTramites.id }}</td>
-                                            <td class="text-center">{{ listaTramites.fecha_registro }}</td>
-                                            <td><strong>{{ listaTramites.estado }}</strong></td>
-                                           <td><strong>{{ listaTramites.obs }}</strong></td>
-                                        </tr>
 
 
-                                    {% endif %}#}
+                                {% endif %}#}
                                 {% endfor %}
                                 </tbody>
                             </table>
@@ -139,13 +156,71 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modal-id">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"> <i class="fa fa-search"></i> Observación </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            <textarea  id="obs" cols="70" rows="20" ></textarea>
 
+                        </div>
 
+                    </div>
+                    <hr>
+                    {#<div class="row">
+                        <div id="resultado" class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="text-align: center; color: #6B88B0; background:#EEEEEE; padding:10px; padding-left: 20px;">
+                            No hay resultados
+                        </div>
+                    </div>#}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                   {# <button id="btnGuardar" type="button" class="btn btn-primary" onclick="actualizarPersona()" style="display:none">Actualizar representante</button>#}
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
 {% block javascripts %}
     {{parent()}}
 <script type="text/javascript">
+
+    function openModal(td_id){
+
+      //alert(td_id);
+        var formData = {
+            td_id:td_id
+        };
+
+        $.ajax({
+            type: 'post',
+            url: "{{ path('solicitud_ritt_tramite_obs') }}",
+            data: formData,
+            beforeSend: function () {
+                //$("#modal-id").empty();
+            },
+            success: function (data) {
+                $('#modal-id').modal('show');
+                $('#obs').val(data);
+            },
+            statusCode: {
+                500: function () {
+                },
+                404: function () {
+                }
+            }
+        });
+
+       /* $('#modal-id').modal('show');
+        $('#obs').val(td_id);*/
+        //$('#btnGuardar').css('display','none');
+    }
 
     function confirmar(){
         if(confirm('¿Estas segura/o de Enviar la Solicitud?'))

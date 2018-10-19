@@ -29,7 +29,7 @@
             <div class="card">
                 <div class="header bg-blue-grey">
                     <h2>
-                        Listado de Trámites Aprobados
+                        Trámites Aprobados para Emitir Certificados
                     </h2>
                 </div>
                 <div class="body">
@@ -74,8 +74,8 @@
                                 {% for listaTramites in listaTramites %}
                                     <tr>
                                         <td style="width: 5%">
-                                        <a href="{{path('solicitud_ritt_guarda_tramite_imprime', {'idRie':listaTramites.codrie,'idTramite ':listaTramites.id })}}" onclick="return confirmar()" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Enviar Solicitud">
-                                            <i class="material-icons">done</i>
+                                        <a href="{{path('solicitud_ritt_guarda_tramite_imprime', {'idRie':listaTramites.codrie,'idTramite ':listaTramites.id })}}" onclick="return confirmar()" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Imprimir Certificado">
+                                            <i class="material-icons">print</i>
                                         </a>
                                         </td>
                                         <td>{{ listaTramites.codrie}}</td>
@@ -106,7 +106,9 @@
 <script type="text/javascript">
     function confirmar(){
         if(confirm('¿Estas segura/o de finalizar el trámite?'))
-            return true;
+        { location.reload();return true;
+
+        }
         else
             return false;
 

@@ -2,6 +2,7 @@
 
 namespace Sie\RieBundle\Controller;
 
+use Sie\EsquemaBundle\Entity\turnoSuperiorTipo;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +23,7 @@ use Sie\AppWebBundle\Entity\TtecRegimenEstudioTipo;
 use Sie\AppWebBundle\Entity\TtecEstadoCarreraTipo;
 
 use Sie\AppWebBundle\Form\InstitucioneducativaType;
-use Sie\ProcesosBundle\Controller\TramiteRueController as tramiteController;
+use Sie\ProcesosBundle\Controller\TramiteRueController ;
 
 /**
  * Institucioneducativa controller.
@@ -48,11 +49,11 @@ class SolicitudRITTController extends Controller {
         $id_rol= $this->session->get('roluser');
         $id_usuario= $this->session->get('userId');
         //Llamada a la funcion que lista los trámites registrados
-        $TramiteController = new tramiteController();
+
+        $TramiteController = new  TramiteRueController();
         $TramiteController->setContainer($this->container);
         // public function tramiteTarea($tarea_ant,$tarea_actual,$flujotipo,$usuario,$rol)
         $lista = $TramiteController->tramiteTareaRitt(22,22,5,$id_usuario,$id_rol);
-      // dump($lista);die;
 
         return $this->render('SieRieBundle:SolicitudRITT:index.html.twig',array('listaTramites'=>$lista['tramites']));
     }
@@ -70,7 +71,7 @@ class SolicitudRITTController extends Controller {
         $tarea=22;//Registra la solicitur RITT
         $tabla = 'institucioneducativa';
         $id_tipoTramite=26;
-        $TramiteController = new tramiteController();
+        $TramiteController = new  TramiteRueController();
         $TramiteController->setContainer($this->container);
                                                           //($usuario,$uDestinatario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,$varevaluacion,$idtramite,$datos)
         $mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea,$tabla,$idRie,'',$id_tipoTramite,'',$idTramite,'','');
@@ -88,7 +89,7 @@ class SolicitudRITTController extends Controller {
         //dump($request);die;
         $id_rol= $this->session->get('roluser');
         $id_usuario= $this->session->get('userId');
-        $TramiteController = new tramiteController();
+        $TramiteController = new  TramiteRueController();
         $TramiteController->setContainer($this->container);
         $lista = $TramiteController->tramiteTareaRitt(22,23,5,$id_usuario,$id_rol);
         return $this->render('SieRieBundle:SolicitudRITT:listaTramitesNac.html.twig',array('listaTramites'=>$lista['tramites']));
@@ -124,21 +125,17 @@ class SolicitudRITTController extends Controller {
                 ->getFlashBag()
                 ->add('exito', $mensajeEnvio);
         }
-
-
         $TramiteController = new tramiteController();
         $TramiteController->setContainer($this->container);
         $lista = $TramiteController->tramiteTareaRitt(22,23,5,$id_usuario,$id_rol);
-        return $this->render('SieRieBundle:SolicitudRITT:lisTramitesNac.html.twig',array('listaTramites'=>$lista['tramites']));
+        return $this->render('SieRieBundle:SolicitudRITT:lisTramitesNac.html.twig',array('listaTramites'=>$lista['tramites'],'mensajeEnvio'=>$mensajeEnvio));
 
-        //return $this->redirectToRoute('solicitud_ritt_index');
-        //dump($mensaje);die;
     }
     public function ListaTramitesCertificadoNacAction(Request $request){
         //dump($request);die;
         $id_rol= $this->session->get('roluser');
         $id_usuario= $this->session->get('userId');
-        $TramiteController = new tramiteController();
+        $TramiteController = new  TramiteRueController();
         $TramiteController->setContainer($this->container);
         $lista = $TramiteController->tramiteTareaRitt(23,24,5,$id_usuario,$id_rol);
         return $this->render('SieRieBundle:SolicitudRITT:listaTramitesCertificadosNac.html.twig',array('listaTramites'=>$lista['tramites']));
@@ -156,20 +153,38 @@ class SolicitudRITTController extends Controller {
         $tarea=24;//EMITE CERTIFICADO
         $tabla = 'institucioneducativa';
         $id_tipoTramite=26;
-        $TramiteController = new tramiteController();
+        $TramiteController = new  TramiteRueController();
         $TramiteController->setContainer($this->container);
         //($usuario,$uDestinatario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,$varevaluacion,$idtramite,$datos)
         $mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea,$tabla,$idRie,$obs,$id_tipoTramite,$evaluacion,$idTramite,'','');
 
-        $request->getSession()
+        /*$request->getSession()
             ->getFlashBag()
-            ->add('exito', $mensaje);
-        //dump($mensaje);
-       return( $this->redirectToRoute('solicitud_ritt_certificados_Nac'));
-         //return($mensaje);
+            ->add('exito', $mensaje);*/
+
+
+        $arch = 'CERTIFICADOS_'.'_' . date('YmdHis') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'rie_certificados_itt_v1_oyq.rptdesign&idCertificados='.$request->get('idRie').'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        //return ( $this->redirectToRoute('solicitud_ritt_guarda_tramite_imprime'));
+
+        return $response;
 
     }
-
+ public function TramiteObsAction(Request $request){
+     $id = $request->get('td_id')   ;
+     $em = $this->getDoctrine()->getManager();
+     $query = $em->getConnection()->prepare("SELECT tramite_detalle.obs from tramite_detalle where tramite_detalle.id=$id");
+     $query->execute();
+     $obs= $query->fetch();
+     return new Response($obs['obs']);
+ }
 
 
 

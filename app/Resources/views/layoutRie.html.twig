@@ -187,6 +187,7 @@
                             <span>Registro - Cursos</span>
                         </a>
                     </li>
+
          
                     {% if app.session.get('roluser') == 8 %}
                         <li>
@@ -219,30 +220,31 @@
                         <li>
                             <a href="{{path('solicitud_ritt_lista_Nac')}}">
                                 <i class="material-icons">card_travel</i>
-                                <span>Trámites -  RITT Recibidos</span>
+                                <span>Trámites - Recibidos RITT</span>
                             </a>
                         </li>
                         <li>
                             <a href="{{path('solicitud_ritt_certificados_Nac')}}">
+                                <i class="material-icons">receipt</i>
+                                <span>  Trámites - Emite Certificados RITT </span>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% if app.session.get('roluser')==7 %}
+                        <li>
+                            <a href="{{path('solicitud_ritt_index')}}">
                                 <i class="material-icons">card_travel</i>
-                                <span> RITT - CERTIFICADOS </span>
+                                <span>Trámites - Solicitud RITT</span>
                             </a>
                         </li>
                     {% endif %}
                     <li>
                         <a href="{{path('seguimiento_tramite')}}">
-                            <i class="material-icons">clear_all</i>
-                            <span>Seguimiento Trámite RITT</span>
+                            <i class="material-icons">donut_large</i>
+                            <span>Seguimiento - Trámites RITT</span>
                         </a>
                     </li>
-                    {% if app.session.get('roluser')==7 %}
-                        <li>
-                            <a href="{{path('solicitud_ritt_index')}}">
-                                <i class="material-icons">card_travel</i>
-                                <span>Trámites -  RITT</span>
-                            </a>
-                        </li>
-                    {% endif %}
                 </ul>
             </div>
             <!-- #Menu -->

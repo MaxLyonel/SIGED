@@ -22,6 +22,10 @@ solicitud_ritt_guarda_tramite_imprime:
     path:     /rittGuardaTramiteNacImprime
     defaults: { _controller: SieRieBundle:SolicitudRITT:guardaTramiteNacImprime }
 
+solicitud_ritt_tramite_obs:
+    path:     /rittGuardaTramiteNacObs
+    defaults: { _controller: SieRieBundle:SolicitudRITT:TramiteObs }
+
 
 
 

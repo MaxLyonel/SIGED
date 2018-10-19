@@ -74,6 +74,7 @@
                                             {#<button class="btn btn-success btn-xs"  onclick="updatesistema({{ sistema.id }})" class="btn btn-teal" data-toggle="modal" data-target=".bs-example-modal-table" title="Editar"><i class="fa fa-pencil"></i></button>#}
 
                                             <button id="btnRegistrar_{{ loop.index }}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" onclick="enviaInformacionRitt({{listaTramites.id }},{{ loop.index }})" title="Enviar Solicitud" style="display: none"><i class="material-icons">done</i></button>
+
                                         </td>
                                         <td>
                                             <input id="si_{{ loop.index }}" type="radio" onclick="obsoculta({{ loop.index }})"  name="radiotype_{{ loop.index }}" value="SI" >  <label for="si_{{ loop.index }}"><strong>Si</strong></label>
@@ -132,24 +133,31 @@
                 return false;            }
             var evaluacion  = "NO";
         }
-        var formData = {id: id,obstxt:obstxt,evaluacion:evaluacion};
-          $.ajax({
-            type: 'post',
-            url: "{{ path('solicitud_ritt_guarda_tramite_nac') }}",
-            data: formData,
-            beforeSend: function () {
-                $("#tablaList").empty();
-            },
-            success: function (data) {
-                $("#tablaList").append(data);
-            },
-            statusCode: {
-                500: function () {
+        if(confirm('¿Estas segura/o de realizar esta acción?'))
+        {
+            var formData = {id: id,obstxt:obstxt,evaluacion:evaluacion};
+            $.ajax({
+                type: 'post',
+                url: "{{ path('solicitud_ritt_guarda_tramite_nac') }}",
+                data: formData,
+                beforeSend: function () {
+                    $("#tablaList").empty();
                 },
-                404: function () {
+                success: function (data) {
+                    $("#tablaList").append(data);
+                },
+                statusCode: {
+                    500: function () {
+                    },
+                    404: function () {
+                    }
                 }
-            }
-        });
+            });
+        }
+        else
+            return false;
+
+
     }
 
     $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
