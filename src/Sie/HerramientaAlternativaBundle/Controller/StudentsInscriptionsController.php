@@ -263,7 +263,9 @@ class StudentsInscriptionsController extends Controller {
                     'infoUe' => $form['data'],
                     'etapaespecialidad' => $etapaespecialidad,
                     'dataUe'=> $dataUe['ueducativaInfo'],
-                    'totalInscritos'=>count($objStudents)
+                    'totalInscritos'=>count($objStudents),
+                     'swSetNameModIntEmer' => 'false',
+                    'primariaNuevo' => $this->get('funciones')->validatePrimariaCourse($dataUe['ueducativaInfoId']['iecId'])
         ));
       } catch (Exception $e) {
         $em->getConnection()->rollback();
