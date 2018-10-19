@@ -103,8 +103,25 @@ $('#t_ocupacion').on('change',function(){
     ocultart_ocupacionOtro();
 });
 
+$('#tb_sinCarnet').on('change', function(){
+    if($(this).prop('checked')){
+        $('#tb_carnet').attr('readonly', 'readonly');
+        $('#tb_complemento').attr('readonly', 'readonly');
+        $('#tb_carnet').val('');
+        $('#tb_complemento').val('');
+
+        $('#tb_paterno').focus();
+    }else{
+        $('#tb_carnet').removeAttr('readonly');
+        $('#tb_complemento').removeAttr('readonly');
+
+        $('#tb_carnet').focus();
+    }
+});
+
 // Buscar tutor
 var t_buscarTutor = function(){
+
     var t_carnet = $('#tb_carnet').val();
     var t_complemento = $('#tb_complemento').val();
     var t_paterno = $('#tb_paterno').val();
@@ -112,67 +129,99 @@ var t_buscarTutor = function(){
     var t_nombre = $('#tb_nombre').val();
     var t_fechaNacimiento = $('#tb_fechaNacimiento').val();
 
-    if(t_carnet != "" && t_nombre != ""){
 
-        $.ajax({
-            type: 'get',
-            url: Routing.generate('info_estudiante_rude_buscar_persona',{'carnet':t_carnet, 'complemento':t_complemento, 'paterno':t_paterno, 'materno': t_materno, 'nombre': t_nombre, 'fechaNacimiento': t_fechaNacimiento}),
-            beforeSend: function(){
+    if($('#tb_sinCarnet').prop('checked')){
+        var datos = {
+            carnet: t_carnet,
+            complemento: t_complemento,
+            paterno: t_paterno,
+            materno: t_materno,
+            nombre: t_nombre,
+            fecha_nacimiento: t_fechaNacimiento
+        };
+
+        if(t_fechaNacimiento != "" && t_nombre != ""){
+
+            t_cargarDatos(datos);    
+        }else{
+            $('#t_mensaje').empty();
+            t_cambiarFondoMensaje(3);
+            $('#t_mensaje').append('Debe completar los datos');
+
+            setTimeout(function(){
                 $('#t_mensaje').empty();
                 t_cambiarFondoMensaje(1);
-                $('#t_mensaje').append('Buscando...');
-            },
-            success: function(data){
+                $('#t_mensaje').append('Opciones');
+            }, 3000);
+        }
 
-                // Ponemos el id de tutor en nuevo
-                $('#t_idPersona').val('nuevo');
+        
 
-                if(data.status == 200){
-                    console.log('Encontrado');
-                    // Cargamos los datos devueltos por el servicio
-                    t_cargarDatos(data.persona);
+    }else{
+        if(t_carnet != "" && t_nombre != ""){
 
-                    // Ubicamos el cursor en el campo telefono
-                    $('#t_genero').focus();
-
-                    // Creamos el mensaje de la busqueda
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('info_estudiante_rude_buscar_persona',{'carnet':t_carnet, 'complemento':t_complemento, 'paterno':t_paterno, 'materno': t_materno, 'nombre': t_nombre, 'fechaNacimiento': t_fechaNacimiento}),
+                beforeSend: function(){
                     $('#t_mensaje').empty();
-                    t_cambiarFondoMensaje(2);
-                    $('#t_mensaje').append('La persona fue encontrada');
+                    t_cambiarFondoMensaje(1);
+                    $('#t_mensaje').append('Buscando...');
+                },
+                success: function(data){
 
-                }else{
-                    console.log('No encontrado');
-                    t_borrarDatos();
                     // Ponemos el id de tutor en nuevo
                     $('#t_idPersona').val('nuevo');
 
-                    // Creasmos el mensaje de la busqueda
+                    if(data.status == 200){
+                        console.log('Encontrado');
+                        // Cargamos los datos devueltos por el servicio
+                        t_cargarDatos(data.persona);
+
+                        // Ubicamos el cursor en el campo telefono
+                        $('#t_genero').focus();
+
+                        // Creamos el mensaje de la busqueda
+                        $('#t_mensaje').empty();
+                        t_cambiarFondoMensaje(2);
+                        $('#t_mensaje').append('La persona fue encontrada');
+
+                    }else{
+                        console.log('No encontrado');
+                        t_borrarDatos();
+                        // Ponemos el id de tutor en nuevo
+                        $('#t_idPersona').val('nuevo');
+
+                        // Creasmos el mensaje de la busqueda
+                        $('#t_mensaje').empty();
+                        t_cambiarFondoMensaje(3);
+                        $('#t_mensaje').append('La persona no fue encontrada');
+                    }
+
+                    // Verificar el parentesco con el estudiante
+                    setTimeout("t_validarParentesco()",3000);
+
+                },
+                error: function(data){
+
+                    // Ponemos el id de tutor en nuevo
+                    $('#t_idPersona').val('nuevo');
+
+                    t_borrarDatos();
+                    
                     $('#t_mensaje').empty();
-                    t_cambiarFondoMensaje(3);
-                    $('#t_mensaje').append('La persona no fue encontrada');
+                    t_cambiarFondoMensaje(4);
+                    $('#t_mensaje').append('Los datos introducidos son incorrectos o no hay conexion con el servicio.');
                 }
-
-                // Verificar el parentesco con el estudiante
-                setTimeout("t_validarParentesco()",3000);
-
-            },
-            error: function(data){
-
-                // Ponemos el id de tutor en nuevo
-                $('#t_idPersona').val('nuevo');
-
-                t_borrarDatos();
-                
-                $('#t_mensaje').empty();
-                t_cambiarFondoMensaje(4);
-                $('#t_mensaje').append('Los datos introducidos son incorrectos o no hay conexion con el servicio.');
-            }
-        });
-    }else{
-        $('#t_mensaje').empty();
-        t_cambiarFondoMensaje(3);
-        $('#t_mensaje').append('Complete los datos de carnet y fecha de nacimiento para realizar la busqueda');
+            });
+        }else{
+            $('#t_mensaje').empty();
+            t_cambiarFondoMensaje(3);
+            $('#t_mensaje').append('Complete los datos de carnet y fecha de nacimiento para realizar la busqueda');
+        }
     }
+
+    
 }
 
 // cargar los campos con los datos devueltos por el servicio
