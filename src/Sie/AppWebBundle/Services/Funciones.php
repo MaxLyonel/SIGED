@@ -845,6 +845,7 @@ class Funciones {
          
          $moduloIntEmer = $moduloIntEmer->getResult();
          $swSetNameModIntEmer = false;
+          $arrModIntEme = array('status'=>false);
          if($moduloIntEmer){
             if($moduloIntEmer[0]->getModulo()=='MÓDULO EMERGENTE'){
                 $arrModIntEme = array('status'=>false,'codMIE'=>$moduloIntEmer[0]->getId());

@@ -184,6 +184,7 @@
                                                             </li>
   
                                                     {% endif %}
+                                                {% endif %}
 
                                                     {#LIBRETAS SOLO EN MODO LECTURA Y AÑOS 2015,2016,2017#}
                                                     {% if (app.session.get('ie_per_estado') == '0') and ((app.session.get('ie_gestion') == '2015') or (app.session.get('ie_gestion') == '2016') or (app.session.get('ie_gestion') == '2017') or (app.session.get('ie_gestion') == '2018') or (app.session.get('ie_gestion') == '2019')) %}
