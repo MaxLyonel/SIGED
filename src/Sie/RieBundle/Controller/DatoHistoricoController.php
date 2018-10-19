@@ -46,7 +46,11 @@ class DatoHistoricoController extends Controller {
      * Muestra listado de institutos técnicos/tecnológicos
      */    
     public function listittAction(Request $request){
-
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');        
         $em = $this->getDoctrine()->getManager();
@@ -68,7 +72,12 @@ class DatoHistoricoController extends Controller {
     /**
      * Muestra listado de historicos del instituto
      */    
-    public function listAction(Request $request){    
+    public function listAction(Request $request){
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
         $em = $this->getDoctrine()->getManager(); 
         $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
         $query = $em->createQuery('SELECT a
@@ -85,6 +94,12 @@ class DatoHistoricoController extends Controller {
      * Formulario de Nuevo Registro de Historial
      */ 
      public function newAction(Request $request){
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
+        
         $em = $this->getDoctrine()->getManager(); 
         $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
         $form = $this->createFormBuilder()

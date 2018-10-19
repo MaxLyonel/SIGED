@@ -172,6 +172,11 @@ class RegistroInstitucionEducativaController extends Controller {
      * Muestra formulario de registro de Institución Educativa 
      */
     public function newAction(Request $request){
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
         $em = $this->getDoctrine()->getManager();
         // Obteniendo array de Dependencia(Caracter Juridico) | Estado | Tipo | Nivel | AreaFormacion
         $dependenciasArray = $this->obtieneDependenciaArray();
@@ -208,6 +213,13 @@ class RegistroInstitucionEducativaController extends Controller {
      */
     public function createAction(Request $request) {
     	try {
+
+            $sesion = $request->getSession();
+            $id_usuario = $sesion->get('userId');
+            if (!isset($id_usuario)){
+                return $this->redirect($this->generateUrl('login'));
+            }
+
     		$em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
     		$form = $request->get('form');
@@ -322,6 +334,12 @@ class RegistroInstitucionEducativaController extends Controller {
      * Muestra formulario de edicion de Institución Educativa 
      */
      public function editAction(Request $request) {
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
+        
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
 
