@@ -167,7 +167,7 @@ class LocalEducativoController extends Controller {
     /* 
     * Formulario de nuevo local educativo
     */    
-    public function newAction(Rewquest $request){
+    public function newAction(Request $request){
       $sesion = $request->getSession();
       $id_usuario = $sesion->get('userId');
       if (!isset($id_usuario)){

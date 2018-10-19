@@ -1,7 +1,7 @@
 {% extends 'SieRieBundle:Default:rie.html.twig' %}
 
 {% block contentoption %}
-    <div id="mensajes">
+    {#<div id="mensajes">
         {% if app.session.flashBag.has('exito') %}
             <div class="alert alert-success">
                 {% for msg in app.session.flashBag.get('exito') %}
@@ -18,7 +18,7 @@
                 {% endfor %}
             </div>
         {% endif %}
-    </div>
+    </div>#}
 
     <div class="block-header">
         <h2></h2>
@@ -103,11 +103,12 @@
 {% endblock %}
 {% block javascripts %}
     {{parent()}}
+
 <script type="text/javascript">
     function confirmar(){
-        if(confirm('¿Estas segura/o de finalizar el trámite?'))
-        { location.reload();return true;
-
+        if(confirm('¿Estas segura/o de finalizar  el trámite e Imprimir el certificado?'))
+        { setTimeout(function(){ location.reload();  },3000);
+           return true;
         }
         else
             return false;

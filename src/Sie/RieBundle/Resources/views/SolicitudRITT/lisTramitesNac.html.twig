@@ -1,4 +1,25 @@
-<thead>
+{#
+<div id="mensajes">
+    {% if app.session.flashBag.has('exito') %}
+        <div class="alert alert-success">
+            {% for msg in app.session.flashBag.get('exito') %}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                {{ msg }}
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if app.session.flashBag.has('error') %}
+        <div class="alert alert-danger">
+            {% for msg in app.session.flashBag.get('error') %}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                {{ msg }}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+#}
+
+
 
 <tbody>
 
@@ -25,3 +46,5 @@
     </tr>
 {% endfor %}
 </tbody>
+
+<input type="hidden" id="dd" value="{{ evaluacion }}" >
