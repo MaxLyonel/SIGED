@@ -75,7 +75,8 @@ class EstudianteController extends Controller
 //        dump($datbas);
 //        die;
         $em = $this->getDoctrine()->getManager();
-        $pt = $em->getRepository('SieAppWebBundle:PaisTipo')->findAll();
+        $pt = $em->getRepository('SieAppWebBundle:PaisTipo')->findBy([], ['id' => 'ASC']);
+        //$pt = $em->getRepository('SieAppWebBundle:PaisTipo')->findAll();
         return $this->render('SieUsuariosBundle:Estudiante:siguientedatos.html.twig', array(
                     'pt' => $pt, 'datbas' => $datbas));
     }
@@ -126,8 +127,7 @@ class EstudianteController extends Controller
         $data = $request->request->all();
         $form = $data['busquedaDatosTotForm'];
         $response = new JsonResponse();
-//        dump(date('Y'));
-//        die;        
+        //dump($form); die;
         $sieentiy = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['Sie']);
         if ($sieentiy){
             
@@ -143,7 +143,8 @@ class EstudianteController extends Controller
                 $codigorude = $query->fetchAll();            
                 $codigoRude = $codigorude[0]["get_estudiante_nuevo_rude"];
                 $estudiante->setCodigoRude($codigoRude);
-                $estudiante->setCarnetIdentidad($form['InputCi']);            
+                $estudiante->setCarnetIdentidad($form['InputCi']);
+                $estudiante->setComplemento($form['InputComplemento']);
                 $estudiante->setPaterno($form['Paterno']);
                 $estudiante->setMaterno($form['Materno']);
                 $estudiante->setNombre($form['Nombre']);                        
