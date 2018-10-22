@@ -22,7 +22,7 @@
                                         </div>
                                         <div class="col-lg-4">
                                             <label class="required">Complemento :</label>
-                                            <input type="text" class="form-control typeahead rounded" name="busquedaDatosTotForm[InputComplemento]" id="busquedaDatosTotForm_InputComplemento" placeholder="Complemento" onkeypress="return soloComplemento(event);" maxlength="2">
+                                            <input type="text" class="form-control typeahead rounded" name="busquedaDatosTotForm[InputComplemento]" id="busquedaDatosTotForm_InputComplemento" placeholder="Complemento" maxlength="2" onkeypress="return soloComplemento(event);">
                                         </div>
                                         <div class="col-lg-4">
                                             <label class="required">Genero :</label><br/>
@@ -103,6 +103,10 @@
     $('#busquedaDatosTotForm_Localidad').keyup(function() {
             this.value = this.value.toUpperCase();
     });
+
+    $('#busquedaDatosTotForm_InputComplemento').keyup(function() {
+            this.value = this.value.toUpperCase();
+        });
         
     $(function(){            
             $("#busquedaDatosTotForm_Pais").change(function(){                            
