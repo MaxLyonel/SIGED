@@ -48,8 +48,8 @@ sie_carreras_rie_main:
 
 sie_herramienta_solicitud_ritt:
     resource: "@SieRieBundle/Resources/config/routing/solicitudRITT.yml"
-    prefix:   /sie/solicitudRitt
+    prefix:   /acceso/solicitudRitt
 
 sie_herramienta_seguimiento_tramite:
     resource: "@SieRieBundle/Resources/config/routing/seguimientoTramite.yml"
-    prefix:   /sie/seguimientotramite
+    prefix:   /acceso/seguimientotramite
