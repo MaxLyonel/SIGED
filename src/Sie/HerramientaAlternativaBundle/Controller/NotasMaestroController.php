@@ -48,7 +48,8 @@ class NotasMaestroController extends Controller {
                                     sat.acreditacion,
                                     sespt.especialidad,
                                     st.id as sucursal,
-                                    spt.periodoSuperior
+                                    spt.periodoSuperior,
+                                    ies.id as idSucursal
                             ')
                             ->from('SieAppWebBundle:Persona','p')
                             ->innerJoin('SieAppWebBundle:MaestroInscripcion','mi','with','mi.persona = p.id')
@@ -99,11 +100,12 @@ class NotasMaestroController extends Controller {
         try {
             // $this->session->set('ie_per_estado', 2);
             $idCursoOferta = $request->get('idCursoOferta');
+            $idSucursal = $request->get('idSucursal');
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             $curso = $em->createQueryBuilder()
                         ->select('supet.especialidad,sat.acreditacion,smt.modulo,stt.turnoSuperior, sast.areaSuperior, pt.paralelo, ie.id as sie, ie.institucioneducativa, gt.gestion,
-                                spt.periodoSuperior, sfat.codigo as idNivel, iec.id as idCurso
+                                spt.periodoSuperior, sfat.codigo as idNivel, iec.id as idCurso, spt.id as idPeriodo
                         ')
                         ->from('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco')
                         ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ieco.insitucioneducativaCurso = iec.id')
@@ -133,6 +135,11 @@ class NotasMaestroController extends Controller {
                 if(!$asignatura){
                     $newAsignatura = new EstudianteAsignatura();
                     $newAsignatura->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($curso[0]['gestion']));
+                    $newAsignatura->setFechaRegistro(new \DateTime('now'));
+                    $newAsignatura->setEstudianteInscripcion($ins);
+                    $newAsignatura->setInstitucioneducativaCursoOferta($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($idCursoOferta));
+                    $em->persist($newAsignatura);
+                    $em->flush();
                 }
             }
 
@@ -152,11 +159,11 @@ class NotasMaestroController extends Controller {
                               ->getResult();
              //dump($curso[0]['idNivel']);die;
              //dump($estudiantes);die;
-             if($curso[0]['idNivel'] == 15){
-                 $idNotaTipo = 26;
-             }else{
-                 $idNotaTipo = 22;
-             }
+            if($curso[0]['idNivel'] == 15){
+                $idNotaTipo = 26;
+            }else{
+                $idNotaTipo = 22;
+            }
 
             $primariaNuevo = $this->get('funciones')->validatePrimariaCourse($curso[0]['idCurso']);
              //dump($idNotaTipo);die;
@@ -236,6 +243,25 @@ class NotasMaestroController extends Controller {
                                     ->from('SieAppWebBundle:EstudianteasignaturaEstado','eae')
                                     ->getQuery()
                                     ->getResult();
+
+            
+            /**
+             * VERIFICAMOS EL ESTADO EN EL CUAL SE ENCUENTRA LA UNIDAD EDUCATIVA
+             */
+            $sucursalTramite = $em->createQueryBuilder()
+                            ->select('iest')
+                            ->from('SieAppWebBundle:InstitucioneducativaSucursalTramite','iest')
+                            ->where('iest.institucioneducativaSucursal = :sucursal')
+                            ->setParameter('sucursal', $idSucursal)
+                            ->getQuery()
+                            ->getResult();
+
+            $estado = $sucursalTramite[0]->getTramiteEstado()->getId();
+            if($estado == 6 or $estado == 13){
+                $this->session->set('ie_per_estado', 2);
+            }else{
+                $this->session->set('ie_per_estado', 0);
+            }
 
             //dump('adsfadsf');die;
             $em->getConnection()->commit();

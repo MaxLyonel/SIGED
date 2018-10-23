@@ -324,6 +324,7 @@ class ReportesController extends Controller {
         $insobj = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($eInsId);        
         $estobjid = $insobj->getEstudiante()->getId();       
         $est = $em->getRepository('SieAppWebBundle:Estudiante')->findById($estobjid);
+        $idCurso = $insobj->getInstitucioneducativaCurso()->getId();
         
 //        dump($est[0]->getCodigoRude());
 //        die;
