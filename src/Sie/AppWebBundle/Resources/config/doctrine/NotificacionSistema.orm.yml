@@ -1,0 +1,33 @@
+Sie\AppWebBundle\Entity\NotificacionSistema:
+    type: entity
+    table: notificacion_sistema
+    
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE    
+    manyToOne:
+        notif:
+            targetEntity: Notificacion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                notif_id:
+                    referencedColumnName: id
+            orphanRemoval: false               
+        sistemaTipo:
+            targetEntity: SistemaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                sistema_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

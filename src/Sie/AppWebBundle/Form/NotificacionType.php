@@ -31,6 +31,14 @@ class NotificacionType extends AbstractType
                 'required' => false,
                 'label' => 'Grupo receptor'
             ))
+            ->add('sistemaTipo', 'entity', array(
+                'class' => 'Sie\AppWebBundle\Entity\SistemaTipo',
+                'property' => 'sistema',
+                'mapped' => false,
+                'multiple' => true,
+                'required' => false,
+                'label' => 'Sub Sistema'
+            ))
             ->add('usuarioId', 'hidden', array('label' => 'Creado por', 'read_only' => 'true'))
         ;
     }
