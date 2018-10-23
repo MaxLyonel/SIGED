@@ -142,13 +142,13 @@ class EstudianteController extends Controller
                 $query->execute();
                 $codigorude = $query->fetchAll();
                 
-                if ($codigorude[0]["get_estudiante_nuevo_rude"] == "") {
+                /*if ($codigorude[0]["get_estudiante_nuevo_rude"] == "") {
                     $query = $em->getConnection()->prepare('SELECT get_estudiante_nuevo_rude(:sie::VARCHAR,:gestion::VARCHAR)');
                     $query->bindValue(':sie', $form['Sie']);            
                     $query->bindValue(':gestion', $form['Year']);
                     $query->execute();
                     $codigorude = $query->fetchAll();
-                }
+                }*/
 
                 $codigoRude = $codigorude[0]["get_estudiante_nuevo_rude"];
                 //dump($codigorude[0]["get_estudiante_nuevo_rude"]);die;
