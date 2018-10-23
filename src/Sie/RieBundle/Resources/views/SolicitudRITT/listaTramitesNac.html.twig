@@ -1,0 +1,181 @@
+{% extends 'SieRieBundle:Default:rie.html.twig' %}
+{% block contentoption %}
+
+    <div id="mensajes">
+
+            <div class="alert alert-success" id="exito" style="display: none">
+
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <span> El trámite es procedente</span>
+            </div>
+
+
+            <div class="alert alert-danger" id="error" style="display: none">
+
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <span> Se realizó la devolución del trámite </span>
+
+            </div>
+
+    </div>
+
+    <div class="block-header">
+        <h2>Lista de Trámites</h2>
+    </div>
+
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header bg-blue-grey">
+                    <h2>
+                        Listado de Trámites
+                    </h2>
+                </div>
+                <div class="body" >
+
+                    <div class="table-responsive">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <!--<table class="table table-bordered table-striped table-hover js-exportable dataTable">-->
+                            <table class="table table-striped table-hover js-basic-example dataTable" id="tablaList">
+                                <thead>
+                                <tr>
+                                    <th style="width: 5px">Acciones</th>
+                                    <th>Procedente</th>
+                                    <th>Cod. RITT</th>
+                                    <th>Denominación</th>
+                                    <th>Nro. Trámite</th>
+                                    <th>Fecha de Solicitud</th>
+                                    {#<th>Estado de Solicitud</th>#}
+
+                                </tr>
+                                </thead>
+
+                                <tfoot>
+                                <tr>
+
+                                    <th style="width: 5px">Acciones</th>
+                                    <th>Procedente</th>
+                                    <th>Cod. RITT</th>
+                                    <th>Denominación</th>
+                                    <th>Nro. Trámite</th>
+                                    <th>Fecha de Solicitud</th>
+                                    {#<th>Estado de Solicitud</th>#}
+
+
+                                </tr>
+                                </tfoot>
+
+                                <tbody>
+
+                                {% for listaTramites in listaTramites %}
+                                    <tr>
+                                        <td>
+                                            {#<button class="btn btn-success btn-xs"  onclick="updatesistema({{ sistema.id }})" class="btn btn-teal" data-toggle="modal" data-target=".bs-example-modal-table" title="Editar"><i class="fa fa-pencil"></i></button>#}
+
+                                            <button id="btnRegistrar_{{ loop.index }}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" onclick="enviaInformacionRitt({{listaTramites.id }},{{ loop.index }})" title="Enviar Solicitud" style="display: none"><i class="material-icons">done</i></button>
+
+                                        </td>
+                                        <td>
+                                            <input id="si_{{ loop.index }}" type="radio" onclick="obsoculta({{ loop.index }})"  name="radiotype_{{ loop.index }}" value="SI" >  <label for="si_{{ loop.index }}"><strong>Si</strong></label>
+                                            <input id="no_{{ loop.index }}" type="radio" onclick="obsmuestra({{ loop.index }})" name="radiotype_{{ loop.index }}"  value="NO" >  <label for="no_{{ loop.index }}"><strong>No</strong></label>
+                                            <textarea name="obs1_{{ loop.index }}" id="obs_{{ loop.index }}" cols="30" rows="5" style="display: none"></textarea>
+
+                                        </td>
+
+                                        <td >{{ listaTramites.codrie}}</td>
+                                        <td>{{ listaTramites.institucioneducativa}}</td>
+                                        <td class="text-center">{{ listaTramites.id }}</td>
+                                        <td class="text-center">{{ listaTramites.fecha_registro }}</td>
+                                        {#<td>{{ listaTramites.estado }}</td>#}
+
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            <input type="text" id="obs_" name="obs1"  style="display: none" >
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+<script type="text/javascript">
+    function obsmuestra(idtxt) {
+        $('#btnRegistrar_'+idtxt).show();
+        var txt='obs_'+idtxt;
+            $('#'+txt).show();
+    }
+    function obsoculta(idtxt){
+        $('#btnRegistrar_'+idtxt).show();
+        var txt='obs_'+idtxt;
+        $('#'+txt).hide();
+    }
+    function enviaInformacionRitt(id,idtxt) {
+
+        var txt='obs_'+idtxt;
+        var RDSI='si_'+idtxt;
+        var obstxt= $('#'+txt).val();
+
+        if($('#'+RDSI).is(':checked')) {
+            var evaluacion  =$('#'+RDSI).val();
+        } else {
+            if(obstxt == ''){
+                alert("Debe introducir alguna observación");
+                return false;            }
+            var evaluacion  = "NO";
+        }
+        if(confirm('¿Estas segura/o de realizar esta acción?'))
+        {
+            var formData = {id: id,obstxt:obstxt,evaluacion:evaluacion};
+            $.ajax({
+                type: 'post',
+                url: "{{ path('solicitud_ritt_guarda_tramite_nac') }}",
+                data: formData,
+                beforeSend: function () {
+                    $("#tablaList").empty();
+                },
+                success: function (data) {
+                    console.log(data);
+
+                    $("#tablaList").append(data);
+                    console.log($('#dd').val());
+                        if($('#dd').val()=='SI'){
+                            $('#exito').show();
+                            setTimeout(function () {
+                                $('#exito').hide();
+                            },2000)
+                        }
+                        else{
+                            $('#error').show();
+                            setTimeout(function () {
+                                $('#error').hide();
+                            },2000)
+                        }
+                    // alert(data.evaluacion);
+
+                },
+                statusCode: {
+                    500: function () {
+                    },
+                    404: function () {
+                    }
+                }
+            });
+        }
+        else
+            return false;
+
+
+    }
+
+
+</script>
+{% endblock %}

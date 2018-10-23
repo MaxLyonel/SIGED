@@ -44,4 +44,12 @@ sie_areas_rie_main:
 
 sie_carreras_rie_main:
     resource: "@SieRieBundle/Resources/config/routing/carreras.yml"
-    prefix:   /acceso/carrerasrie   
+    prefix:   /acceso/carrerasrie
+
+sie_herramienta_solicitud_ritt:
+    resource: "@SieRieBundle/Resources/config/routing/solicitudRITT.yml"
+    prefix:   /acceso/solicitudRitt
+
+sie_herramienta_seguimiento_tramite:
+    resource: "@SieRieBundle/Resources/config/routing/seguimientoTramite.yml"
+    prefix:   /acceso/seguimientotramite

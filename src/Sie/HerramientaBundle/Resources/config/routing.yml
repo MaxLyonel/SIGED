@@ -125,3 +125,7 @@ sie_herramienta_estudiante_socieconomico:
 sie_herramienta_aca_multigrado:
     resource: "@SieHerramientaBundle/Resources/config/routing/acamultigrado.yml"
     prefix:   /sie/acamultigrado
+
+sie_herramienta_solicitud_bth:
+    resource: "@SieHerramientaBundle/Resources/config/routing/solicitudBTH.yml"
+    prefix:   /sie/solicitudbth

@@ -50,6 +50,11 @@ class CursoCapacitacionController extends Controller {
      */
     public function listinstitutoAction(Request $request){
         $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
+        $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');        
         $em = $this->getDoctrine()->getManager();
 
@@ -73,6 +78,11 @@ class CursoCapacitacionController extends Controller {
      * Muestra el listado de cursos de capacitacion
      */
      public function listAction(Request $request) {
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
         $em = $this->getDoctrine()->getManager();
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
         $listado = $this->listadoCursosCapacitacion($request->get('idRie'));
@@ -83,6 +93,12 @@ class CursoCapacitacionController extends Controller {
      * Muestra formulario de adición de oferta educativa
      */
     public function newAction(Request $request){
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
+        
         $em = $this->getDoctrine()->getManager();
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
         $regimenEstudioArray = $this->obtieneRegimenEstudio(); 
@@ -141,6 +157,7 @@ class CursoCapacitacionController extends Controller {
                 }
             }
             else{ //el curso debe ser registrado
+                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('ttec_carrera_tipo');")->execute();
                 $curso = new TtecCarreraTipo(); 
                 $curso->setNombre(strtoupper($form['ttecCarreraTipo']));
                 $curso->setFechaRegistro(new \DateTime('now'));
