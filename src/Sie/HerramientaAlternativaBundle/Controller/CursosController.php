@@ -599,6 +599,14 @@ class CursosController extends Controller {
             }
             $em->flush();
 
+              //step 4.1 delete socio economico data
+            $objSocioEco = $em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findBy(array('estudianteInscripcion' => $arrInfoStudent['eInsId'] ));
+            //dump($objSocioEco);die;
+            foreach ($objSocioEco as $element) {
+                $em->remove($element);
+            }
+            $em->flush();
+
             //step 5 delete apoderado_inscripcion data
             $objApoIns = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion' => $arrInfoStudent['eInsId'] ));
             //dump($objApoIns);die;
