@@ -317,20 +317,20 @@
                                     <ul>
                                         {% if app.session.get('roluser') == 10 %}
                                             {% set nro = 0 %}
-                                            <li><a href="{{ path('tramite_rue_recepcion_distrito')}}" id="22"></a></li>
-                                            <li><a href="{{ path('tramite_rue_informe_distrito')}}" id="23"></a></li>
+                                            <li><a href="{{ path('tramite_rue_recepcion_distrito')}}" id="25"></a></li>
+                                            <li><a href="{{ path('tramite_rue_informe_distrito')}}" id="26"></a></li>
                                         {% endif %}
                                         {% if app.session.get('roluser') == 7 %}
-                                            <li><a href="{{ path('tramite_rue_recepcion_departamental')}}" id="24"></a></li>
-                                            <li><a href="{{ path('tramite_rue_juridica_departamental')}}" id="25"></a></li>
-                                            <li><a href="{{ path('tramite_rue_notificacion_departamental')}}" id="26"></a></li>
-                                            <li><a href="{{ path('tramite_rue_resolucion_departamental')}}" id="27"></a></li>
-                                            <li><a href="{{ path('tramite_rue_formularios_departamental')}}" id="28"></a></li>
+                                            <li><a href="{{ path('tramite_rue_recepcion_departamental')}}" id="27"></a></li>
+                                            <li><a href="{{ path('tramite_rue_juridica_departamental')}}" id="28"></a></li>
+                                            <li><a href="{{ path('tramite_rue_notificacion_departamental')}}" id="29"></a></li>
+                                            <li><a href="{{ path('tramite_rue_resolucion_departamental')}}" id="30"></a></li>
+                                            <li><a href="{{ path('tramite_rue_formularios_departamental')}}" id=""></a></li>
                                         {% endif %}
                                         {% if app.session.get('roluser') == 8 %}
-                                            <li><a href="{{ path('tramite_rue_revisar_minedu')}}" id="29"></a></li>
-                                            <li><a href="{{ path('tramite_rue_notificacion_minedu')}}" id="30"></a></li>
-                                            <li><a href="{{ path('tramite_rue_registrar_minedu')}}" id="31"></a></li>
+                                            <li><a href="{{ path('tramite_rue_revisar_minedu')}}" id="31"></a></li>
+                                            <li><a href="{{ path('tramite_rue_notificacion_minedu')}}" id="32"></a></li>
+                                            <li><a href="{{ path('tramite_rue_registrar_minedu')}}" id="33"></a></li>
                                         {% endif %}
                                     </ul>
                                 </li>
@@ -1158,7 +1158,7 @@
             <!--/ END GOOGLE ANALYTICS -->
             <script>
                 $('#nro').click(function(){
-                    formData = {flujotipo: 5,rol: '{{app.session.get('roluser')}}',usuario: '{{app.session.get('userId')}}'};
+                    formData = {flujotipo: 6,rol: '{{app.session.get('roluser')}}',usuario: '{{app.session.get('userId')}}'};
                     //alert('{{app.session.get('roluser')}}');
                     $.ajax({
                         type: 'GET',

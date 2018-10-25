@@ -187,16 +187,13 @@
                             <span>Registro - Cursos</span>
                         </a>
                     </li>
-
-         
+                    <li>
+                        <a href="{{path('carrera_rie_list')}}">
+                            <i class="material-icons">view_comfy</i>
+                            <span>Catálogo de Carreras</span>
+                        </a>
+                    </li>
                     {% if app.session.get('roluser') == 8 %}
-                        <li>
-                            <a href="{{path('carrera_rie_list')}}">
-                                <i class="material-icons">view_comfy</i>
-                                <span>Catálogo de Carreras</span>
-                            </a>
-                        </li>
-
                         <li>
                             <a href="{{path('area_rie_list')}}">
                                 <i class="material-icons">view_agenda</i>

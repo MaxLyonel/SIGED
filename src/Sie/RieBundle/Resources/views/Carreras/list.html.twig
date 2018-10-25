@@ -24,7 +24,7 @@
                 <div class="body">
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
-                            <a href="{{path('carrera_rie_new')}}" class="btn btn-md bg-orange waves-effect">
+                            <a href="{{path('carrera_rie_new')}}" class="btn btn-md bg-orange waves-effect" {% if app.session.get('roluser') == 7 %}disabled="disabled" {% endif %}>
                                 <i class="material-icons">add_box</i>Nueva Carrera
                             </a>
                         </div>
@@ -45,7 +45,7 @@
                                     {% for carrera in carreras %}
                                         <tr>
                                             <td>
-                                                {% if carrera.cantidad > 0 %}
+                                                {% if (carrera.cantidad > 0 or  app.session.get('roluser') == 7)  %}
                                                     <button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" disabled="disabled" data-toggle="tooltip" data-placement="top" title="Carrera Autorizada, no puede modificar">
                                                         <i class="material-icons">mode_edit</i>
                                                     </button>    
@@ -57,7 +57,7 @@
                                             </td>
                                             <td>
                                                 
-                                                {% if carrera.cantidad > 0 %}
+                                                {% if carrera.cantidad > 0 or app.session.get('roluser') == 7 %}
                                                     <button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" disabled="disabled" data-toggle="tooltip" data-placement="top" title="Carrera Autorizada, no puede eliminar">
                                                         <i class="material-icons">delete_forever</i>
                                                     </button> 
