@@ -73,9 +73,10 @@ class FlujoSeguimientoController extends Controller
         $data = $this->listarF($form['proceso'],$form['tramite']);
         //dump($data);die;
         //if (($form['proceso'] == 5 && !$data['nombre']) || ($form['proceso'] == 14 && !$data['nombre_ie']) || ($form['proceso'] == 6 && !$data['estudiante']) || ($form['proceso'] == 7 && !$data['estudiante'])) 
+        //if (($form['proceso'] == 5 || $form['proceso'] == 6 || $form['proceso'] == 7 || $form['proceso'] == 14 )  && !$data['nombre']) 
         if (($form['proceso'] == 5 || $form['proceso'] == 6 || $form['proceso'] == 7 || $form['proceso'] == 14 )  && !$data['nombre']) 
         {
-            //dump($data['nombre_ie']);die;
+            //dump($data['nombre']);die;
             $mensaje = 'Número de tramite es incorrecto';
             $request->getSession()
                 ->getFlashBag()

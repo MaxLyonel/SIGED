@@ -102,7 +102,7 @@
                     <h4><small>ID DEL ARCHIVO CONSOLIDADO :</small><br>{{ datos.id }}</h4>                        
                 </div>
             </div>
-            {% endfor %}
+            
         </div>
     </div>
      </div>
@@ -146,7 +146,7 @@
                     {% for estudiante in estudiantes %}
                         <tr>
                             <td data-title="VerNota" class="text-center">
-                                <a href="#" onclick="SeeNotas('{{estudiante.inscripcion_id}}')" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>
+                                 <a href="#" onclick="SeeNotas('{{estudiante.inscripcion_id}}',{{ datos.id }})" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>
                             </td>
                             <td>{{ estudiante.codigo_rude }}</td>
                             <td>{{ estudiante.carnet_identidad }}{% if estudiante.complemento != '' %}-{{estudiante.complemento}}{% endif %}</td>
@@ -164,7 +164,7 @@
             </div>
         </div>
     </div>
-    
+    {% endfor %}
     <div class="modal modal-flex fade" id="ModalUser" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -271,11 +271,11 @@
         
     }
     
-    function SeeNotas(idinscripcion){
+    function SeeNotas(idinscripcion,id_curso){
         var formData = $('#formxls').serialize();
         $.ajax({
             type: 'get',
-            url: Routing.generate('sie_pnp_see_notas', {'idinscripcion': idinscripcion}),
+            url: Routing.generate('sie_pnp_see_notas', {'idinscripcion': idinscripcion,'id_curso': id_curso}),
             data: formData,
             beforeSend: function () {
                 $("#notasModal").empty();

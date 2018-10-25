@@ -101,6 +101,7 @@ class CarrerasController extends Controller {
             if($dato){
                 $this->get('session')->getFlashBag()->add('mensaje', 'Duplicidad al registrar la carrera.');
             }else{
+                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('ttec_carrera_tipo');")->execute();
                 $entity = new TtecCarreraTipo();
                 $entity->setNombre(strtoupper($form['carrera']));
                 $entity->setFechaRegistro(new \DateTime('now'));

@@ -50,6 +50,12 @@ class OfertaAcademicaController extends Controller {
      */
     public function listinstitutoAction(Request $request){
         $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');        
         $em = $this->getDoctrine()->getManager();
 
@@ -72,6 +78,11 @@ class OfertaAcademicaController extends Controller {
      * Muestra el listado de oferta académica
      */
      public function listAction(Request $request){
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
         $em = $this->getDoctrine()->getManager();
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
         $listado = $this->listadoOfertaAcademica($request->get('idRie'));
@@ -82,6 +93,11 @@ class OfertaAcademicaController extends Controller {
      * Muestra formulario de adición de oferta educativa
      */
     public function newAction(Request $request){
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
         $em = $this->getDoctrine()->getManager();
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
         $areasArray = $this->obtieneInstitucionAreaFormArray($request->get('idRie'));
@@ -137,6 +153,9 @@ class OfertaAcademicaController extends Controller {
             if($datoCarrera){
                 $this->get('session')->getFlashBag()->add('mensaje', 'La Carrera ya se encuentra registrada...');
             } else {
+
+                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('ttec_institucioneducativa_carrera_autorizada');");
+                $query->execute();
                 //Guardando carreras autorizadas
                 $entity = new TtecInstitucioneducativaCarreraAutorizada();
                 $entity->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idRie']));
@@ -147,6 +166,8 @@ class OfertaAcademicaController extends Controller {
                 $em->persist($entity);
                 $em->flush();     
 
+                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('ttec_resolucion_carrera');");
+                $query->execute();
                 //Guardando la resolucion de la carrera
                 $resolucion = new TtecResolucionCarrera();
                 $resolucion->setNumero($form['resolucion']);

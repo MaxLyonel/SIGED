@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sie\AppWebBundle\Entity\Notificacion;
 use Sie\AppWebBundle\Entity\NotificacionUsuario;
+use Sie\AppWebBundle\Entity\NotificacionSistema;
 use Sie\AppWebBundle\Entity\RolTipo;
 use Sie\AppWebBundle\Form\NotificacionType;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -76,6 +77,8 @@ class NotificacionController extends Controller {
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
+        //die('ddd');
+
         if ($form->isValid()) {
 
             if (null != $form->get('adjunto')->getData()) {
@@ -95,7 +98,7 @@ class NotificacionController extends Controller {
 
             $form_x = $request->get('sie_appwebbundle_notificacion');
             $multiple = $form_x['rolTipo'];
-
+            
             foreach ($multiple as $value) {
                 $nu = new NotificacionUsuario();
                 $nu->setNotif($entity);
@@ -103,6 +106,18 @@ class NotificacionController extends Controller {
                 $rt = $em->getRepository('SieAppWebBundle:RolTipo')->find($value);
                 $nu->setRolTipo($rt);
                 $em->persist($nu);
+                $em->flush();
+            }
+
+            $multiplesis = $form_x['sistemaTipo'];
+
+            foreach ($multiplesis as $valuesis) {
+                $nusis = new NotificacionSistema();
+                $nusis->setNotif($entity);
+
+                $rtsis = $em->getRepository('SieAppWebBundle:SistemaTipo')->find($valuesis);
+                $nusis->setSistemaTipo($rtsis);
+                $em->persist($nusis);
                 $em->flush();
             }
 
@@ -149,7 +164,7 @@ class NotificacionController extends Controller {
      * Displays a form to create a new Notificacion entity.
      *
      */
-    public function newAction() {
+    public function newAction() {        
         $id_usuario = $this->session->get('userId');
 
         if (!isset($id_usuario)) {
