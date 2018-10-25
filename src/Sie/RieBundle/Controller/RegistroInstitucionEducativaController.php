@@ -155,19 +155,19 @@ class RegistroInstitucionEducativaController extends Controller {
                                         'SELECT ie
                                            FROM SieAppWebBundle:Institucioneducativa ie
                                           WHERE UPPER(ie.institucioneducativa) LIKE :id
-                                            AND ie.institucioneducativaAcreditacionTipo = :ieAcreditacion
+                                            AND ie.institucioneducativaAcreditacionTipo IN (:ieAcreditacion)
                                        ORDER BY ie.id')
     		                ->setParameter('id','%' . strtoupper($form['institucioneducativa']) . '%')
-                        ->setParameter('ieAcreditacion', 1);
+                        ->setParameter('ieAcreditacion', array(2,3));
     	}else{
     		$query = $em->createQuery(
     				'SELECT ie
                             FROM SieAppWebBundle:Institucioneducativa ie
                             WHERE ie.id = :id
-                            and ie.institucioneducativaAcreditacionTipo = :ieAcreditacion
+                            and ie.institucioneducativaAcreditacionTipo IN (:ieAcreditacion)
                             ORDER BY ie.id')
     		                ->setParameter('id', $form['institucioneducativaId'])
-                            ->setParameter('ieAcreditacion', 1);
+                            ->setParameter('ieAcreditacion', array(2,3));
     	}
 
     	$entities = $query->getResult();
