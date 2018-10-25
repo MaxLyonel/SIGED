@@ -155,19 +155,19 @@ class RegistroInstitucionEducativaController extends Controller {
                                         'SELECT ie
                                            FROM SieAppWebBundle:Institucioneducativa ie
                                           WHERE UPPER(ie.institucioneducativa) LIKE :id
-                                            AND ie.institucioneducativaAcreditacionTipo IN (:ieAcreditacion)
+                                            AND ie.institucioneducativaAcreditacionTipo = :ieAcreditacion
                                        ORDER BY ie.id')
     		                ->setParameter('id','%' . strtoupper($form['institucioneducativa']) . '%')
-                        ->setParameter('ieAcreditacion', array(2,3));
+                        ->setParameter('ieAcreditacion', 2);
     	}else{
     		$query = $em->createQuery(
     				'SELECT ie
                             FROM SieAppWebBundle:Institucioneducativa ie
                             WHERE ie.id = :id
-                            and ie.institucioneducativaAcreditacionTipo IN (:ieAcreditacion)
+                            and ie.institucioneducativaAcreditacionTipo = :ieAcreditacion
                             ORDER BY ie.id')
     		                ->setParameter('id', $form['institucioneducativaId'])
-                            ->setParameter('ieAcreditacion', array(2,3));
+                            ->setParameter('ieAcreditacion', 2;
     	}
 
     	$entities = $query->getResult();
@@ -268,7 +268,7 @@ class RegistroInstitucionEducativaController extends Controller {
             $entity->setObsRue(mb_strtoupper($form['obsRue'], 'utf-8'));
     		$entity->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($form['leJuridicciongeograficaId']));
     		$entity->setOrgcurricularTipo($ieducativatipo->getOrgcurricularTipo());
-            $entity->setInstitucioneducativaAcreditacionTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaAcreditacionTipo')->find(1));
+            $entity->setInstitucioneducativaAcreditacionTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaAcreditacionTipo')->find(3));
             $em->persist($entity);
     		$em->flush();
 
