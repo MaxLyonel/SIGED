@@ -81,7 +81,20 @@ class SolicitudRITTController extends Controller {
             ->getFlashBag()
             ->add('exito', $mensajeEnvio);
 
-        return $this->redirectToRoute('solicitud_ritt_index');
+        /**imprime comprobante del envio de la solicitud */
+
+        $arch = 'CERTIFICADOS_'.'_' . date('YmdHis') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'rie_certificados_itt_v1_oyq.rptdesign&idCertificados='.$request->get('idRie').'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+
+        //return $this->redirectToRoute('solicitud_ritt_index');
 
     }
 
@@ -181,7 +194,7 @@ class SolicitudRITTController extends Controller {
 
     }
     public function TramiteObsAction(Request $request){
-//dump($request);
+        //dump($request);
         $id = $request->get('td_id')   ;
         $id_rie= $request->get('id_rie');
         $em = $this->getDoctrine()->getManager();

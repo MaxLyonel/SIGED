@@ -158,7 +158,6 @@
 {% block javascripts %}
     {{parent()}}
 <script type="text/javascript">
-
     function openModal(td_id,id_rie){
 
       //alert(td_id);
@@ -192,14 +191,15 @@
     }
 
     function confirmar(){
-        if(confirm('¿Estas segura/o de Enviar la Solicitud?'))
+        if(confirm('¿Estas segura/o de Enviar la Solicitud?')){
+            setTimeout(function(){ location.reload();  },3000);
             return true;
-        else
+        }else
             return false;
-
     }
     $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
         $(".alert").slideUp(1000);
     });
+    
 </script>
 {% endblock %}
