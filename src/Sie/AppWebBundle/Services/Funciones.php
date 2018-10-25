@@ -799,13 +799,22 @@ class Funciones {
     }
 
     public function validatePrimaria($sie,$gestion,$infoUe){
+       
         // get the send data
         $arrInfoUe = unserialize($infoUe);
+        // check if the Centro is on the avalable list
+        $centroAllowed = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array(
+          'institucioneducativaId'=>$sie,
+          'gestionTipoId'=>$gestion,
+          'institucioneducativaHumanisticoTecnicoTipo'=>10,
+  
+        ));
+
         //var to set true or false if the ue is primaria
         $swValidationPrimaria = false;
         
         // check if the course is PRIMARIA
-        if( 
+        if( $centroAllowed &&
             $gestion == 2018 &&
             $arrInfoUe['ueducativaInfoId']['sfatCodigo'] == 15 &&
             $arrInfoUe['ueducativaInfoId']['setId'] == 13 &&
@@ -813,7 +822,7 @@ class Funciones {
           ){
             $swValidationPrimaria=true;
         }else{
-            if(
+            if( $centroAllowed &&
                 $gestion >= 2019 &&
                 $arrInfoUe['ueducativaInfoId']['sfatCodigo'] == 15 &&
                 $arrInfoUe['ueducativaInfoId']['setId'] == 13 &&
@@ -860,7 +869,7 @@ class Funciones {
       public function validatePrimariaCourse($iecId){
         //look data about the course in a query
         $query = $this->em->createQueryBuilder()
-                    ->select('IDENTITY(iec.gestionTipo) as gestion,sfat.codigo as sfatCodigo, (seet.id) as setId, (ies.periodoTipoId) as periodoId')
+                    ->select('IDENTITY(iec.gestionTipo) as gestion,sfat.codigo as sfatCodigo, (seet.id) as setId, (ies.periodoTipoId) as periodoId, (ies.institucioneducativa) as sie')
                     ->from('SieAppWebBundle:InstitucioneducativaCurso', 'iec')
                     ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'siep', 'WITH', 'iec.superiorInstitucioneducativaPeriodo = siep.id')
                     ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion', 'siea', 'WITH', 'siep.superiorInstitucioneducativaAcreditacion = siea.id')
@@ -873,11 +882,19 @@ class Funciones {
                     ->getQuery();
 
         $objInfoCourse = $query->getResult();
+        
+        // get centroAllowed in the next query
+         $centroAllowed = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array(
+          'institucioneducativaId'=>$objInfoCourse[0]['sie'],
+          'gestionTipoId'=>$objInfoCourse[0]['gestion'],
+          'institucioneducativaHumanisticoTecnicoTipo'=>10,
+        ));
+
         //set values to validate PRIMARIA course
         $swValidationPrimaria = false;
         
         // check if the course is PRIMARIA
-        if( 
+        if( $centroAllowed &&
             $objInfoCourse[0]['gestion'] == 2018 &&
             $objInfoCourse[0]['sfatCodigo'] == 15 &&
             $objInfoCourse[0]['setId'] == 13 &&
@@ -885,7 +902,7 @@ class Funciones {
           ){
             $swValidationPrimaria=true;
         }else{
-            if(
+            if( $centroAllowed &&
                 $objInfoCourse[0]['gestion'] >= 2019 &&
                 $objInfoCourse[0]['sfatCodigo'] == 15 &&
                 $objInfoCourse[0]['setId'] == 13 &&

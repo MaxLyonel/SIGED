@@ -52,9 +52,7 @@ class StudentModuleController extends Controller {
       $arrCourseToSelected=array();
 
       //check data to set the new funcionalty and new way to load the curricula
-       if( $arrInfoUe['ueducativaInfoId']['sfatCodigo'] == 15 &&
-            $arrInfoUe['ueducativaInfoId']['setId'] == 13 &&
-            $arrInfoUe['ueducativaInfoId']['periodoId'] == 3
+      if( $this->get('funciones')->validatePrimaria($this->session->get('ie_id'),$this->session->get('currentyear'),$infoUe)
           ){
 
         $data = array('iecId'=>$arrInfoUe['ueducativaInfoId']['iecId'], 'eInsId'=>$arrInfoStudent['eInsId']);
