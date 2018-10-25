@@ -1135,13 +1135,18 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                 //return $this->redirect($this->generateUrl('sie_alt_ges_sub_sem'));
             }
             else{           
-                $this->session->getFlashBag()->add('notfound', 'El código de institución educativa no se encuentra.');
-                return $this->redirect($this->generateUrl('herramienta_ceducativa_seleccionar_cea'));
+                //$this->session->getFlashBag()->add('notfound', 'El código de institución educativa no se encuentra.');
+                //return $this->redirect($this->generateUrl('herramienta_ceducativa_seleccionar_cea'));
+                $response = new JsonResponse();
+                return $response->setData(array('msg' => 'El código de institución educativa no se encuentra.'));
+                
             }    
         }
         else{
-           $this->session->getFlashBag()->add('notfound', 'No tiene tuición sobre el Centro de Educación Alternativa.');
-           return $this->redirect($this->generateUrl('herramienta_ceducativa_seleccionar_cea')); 
+            //$this->session->getFlashBag()->add('notfound', 'No tiene tuición sobre el Centro de Educación Alternativa.');
+            //return $this->redirect($this->generateUrl('herramienta_ceducativa_seleccionar_cea'));
+            $response = new JsonResponse();
+            return $response->setData(array('msg' => 'No tiene tuición sobre el Centro de Educación Alternativa.'));
         }
     }
 
@@ -1642,7 +1647,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                 ->add('subcea','choice',array('label'=>'Sucursal','required'=>true,'choices'=>$subceasArray,'empty_value' => 'Todas'));
         }else{
             $form=$form
-                ->add('codsie','text',array('label'=>'Cod. SIE'))
+                ->add('codsie','text',array('label'=>'Cod. SIE', 'attr'=>array('maxlength' => '8')))
                 ->add('gestion','choice',array('label'=>'Gestión','required'=>true,'empty_value' => 'Todas'))
                 ->add('subcea','choice',array('label'=>'Sucursal','required'=>true,'empty_value' => 'Todas'));
         }
