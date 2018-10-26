@@ -683,3 +683,4 @@ class CursoCapacitacionController extends Controller {
     }
 
 }
+
