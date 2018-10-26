@@ -29,7 +29,7 @@
                 <div class="body">
                     <div class="row">
                         <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12 text-right">
-                            <a href="{{path('oac_new', {'idRie': institucion.id} )}}" class="btn btn-md bg-orange waves-effect">
+                            <a href="{{path('oac_new', {'idRie': institucion.id} )}}" class="btn btn-md bg-orange waves-effect" {% if esAcreditado == true %} disabled {% endif %}>
                                 <i class="material-icons">add_box</i>Nuevo
                             </a>
                         </div>
@@ -64,7 +64,7 @@
                                             </td>
                                             <td>
                                                 {% if app.session.get('roluser') == 8 %}
-                                                    <a href="{{path('oac_delete', {'idAutorizado': dato.id} )}}" onclick="return confirmar('{{dato.id}}')" class="btn btn-circle waves-effect waves-circle waves-float"  data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete_forever</i></a>
+                                                    <a href="{{path('oac_delete', {'idAutorizado': dato.id} )}}" onclick="return confirmar('{{dato.id}}')" class="btn btn-circle waves-effect waves-circle waves-float"  data-toggle="tooltip" data-placement="top" title="Eliminar" {% if esAcreditado == true %} disabled {% endif %}><i class="material-icons">delete_forever</i></a>
                                                 {% endif %}                                                    
                                             </td>
                                             

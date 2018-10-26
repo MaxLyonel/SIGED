@@ -35,7 +35,7 @@
                             <form action="{{path('oac_new_resolucion')}}" method="post" style="display:inline-block">
                                 <input type="hidden" name="idRie" value="{{institucion.id}}">
                                 <input type="hidden" name="idAutorizado" value="{{datAutorizado.id}}">
-                                <button type="submit" class="btn btn-md bg-orange waves-effect"><i class="material-icons">add_box</i>Nuevo</button>
+                                <button type="submit" class="btn btn-md bg-orange waves-effect" {% if esAcreditado == true %} disabled {% endif %}><i class="material-icons">add_box</i>Nuevo</button>
                             </form>                            
                         </div>
                     </div>                
@@ -64,12 +64,12 @@
                                                     <input type="hidden" name="idRie" value="{{institucion.id}}">
                                                     <input type="hidden" name="idAutorizado" value="{{datAutorizado.id}}">
                                                     <input type="hidden" name="idResolucion" value="{{dato.id}}">
-                                                    <button type="submit" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">edit</i></button>
+                                                    <button type="submit" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Editar" {% if esAcreditado == true %} disabled {% endif %}><i class="material-icons">edit</i></button>
                                                 </form>     
                                             </td>
                                             <td>
                                                 {% if app.session.get('roluser') == 8 %}
-                                                    <a href="{{path('oac_delete_resolucion', {'idResolucion': dato.id} )}}" onclick="return confirmar('{{dato.id}}')" class="btn btn-circle waves-effect waves-circle waves-float"  data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete_forever</i></a>
+                                                    <a href="{{path('oac_delete_resolucion', {'idResolucion': dato.id} )}}" onclick="return confirmar('{{dato.id}}')" class="btn btn-circle waves-effect waves-circle waves-float"  data-toggle="tooltip" data-placement="top" title="Eliminar" {% if esAcreditado == true %} disabled {% endif %}><i class="material-icons">delete_forever</i></a>
                                                 {% endif %}                                                    
                                             </td>
                                             <td>{{dato.numero}}</td>

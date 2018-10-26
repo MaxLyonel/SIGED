@@ -109,7 +109,7 @@ class RegistroInstitucionEducativaController extends Controller {
         // }
         
         $entities = $query->getResult();
-
+        
         return $this->render('SieRieBundle:RegistroInstitucionEducativa:list.html.twig', array(
             'entities' => $entities,
             'lugarUsuario' => intval($lugar->getCodigo())

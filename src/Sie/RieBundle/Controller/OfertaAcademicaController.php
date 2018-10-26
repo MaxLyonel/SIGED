@@ -86,7 +86,8 @@ class OfertaAcademicaController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
         $listado = $this->listadoOfertaAcademica($request->get('idRie'));
-        return $this->render('SieRieBundle:OfertaAcademica:list.html.twig', array('institucion' => $institucion, 'listado' => $listado));
+        $esAcreditado = $this->get('dgfunctions')->esAcreditadoRitt($request->get('idRie'));
+        return $this->render('SieRieBundle:OfertaAcademica:list.html.twig', array('institucion' => $institucion,'esAcreditado'=>$esAcreditado, 'listado' => $listado));
      }   
 
     /**
@@ -302,8 +303,8 @@ class OfertaAcademicaController extends Controller {
                                     ORDER BY a.fecha DESC');                       
         $query->setParameter('idCaAutorizada', $datAutorizado->getId());
         $resoluciones = $query->getResult(); 
-
-        return $this->render('SieRieBundle:OfertaAcademica:listresoluciones.html.twig', array('institucion' => $institucion, 'resoluciones' => $resoluciones, 'carrera' => $carrera, 'datAutorizado' =>$datAutorizado));
+        $esAcreditado = $this->get('dgfunctions')->esAcreditadoRitt($request->get('idRie'));
+        return $this->render('SieRieBundle:OfertaAcademica:listresoluciones.html.twig', array('institucion' => $institucion,'esAcreditado'=>$esAcreditado, 'resoluciones' => $resoluciones, 'carrera' => $carrera, 'datAutorizado' =>$datAutorizado));
     }
 
     /** 

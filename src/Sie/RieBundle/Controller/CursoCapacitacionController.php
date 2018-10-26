@@ -85,8 +85,9 @@ class CursoCapacitacionController extends Controller {
         }
         $em = $this->getDoctrine()->getManager();
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
+        $esAcreditado = $this->get('dgfunctions')->esAcreditadoRitt($request->get('idRie'));
         $listado = $this->listadoCursosCapacitacion($request->get('idRie'));
-        return $this->render('SieRieBundle:CursoCapacitacion:list.html.twig', array('institucion' => $institucion, 'listado' => $listado));
+        return $this->render('SieRieBundle:CursoCapacitacion:list.html.twig', array('institucion' => $institucion,'esAcreditado'=>$esAcreditado, 'listado' => $listado));
      }   
 
     /**
@@ -244,8 +245,8 @@ class CursoCapacitacionController extends Controller {
                                  ORDER BY a.fecha DESC');                       
         $query->setParameter('idCaAutorizada', $datAutorizado->getId());
         $resoluciones = $query->getResult(); 
-
-        return $this->render('SieRieBundle:CursoCapacitacion:listresoluciones.html.twig', array('institucion' => $institucion, 'resoluciones' => $resoluciones, 'curso' => $curso, 'datAutorizado' =>$datAutorizado));
+        $esAcreditado = $this->get('dgfunctions')->esAcreditadoRitt($request->get('idRie'));
+        return $this->render('SieRieBundle:CursoCapacitacion:listresoluciones.html.twig', array('institucion' => $institucion,'esAcreditado'=>$esAcreditado, 'resoluciones' => $resoluciones, 'curso' => $curso, 'datAutorizado' =>$datAutorizado));
     }
 
     /** 
@@ -680,6 +681,5 @@ class CursoCapacitacionController extends Controller {
         }
         
     }
-
 
 }

@@ -170,13 +170,23 @@ class SolicitudRITTController extends Controller {
         $TramiteController->setContainer($this->container);
         //($usuario,$uDestinatario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,$varevaluacion,$idtramite,$datos)
         $mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea,$tabla,$idRie,$obs,$id_tipoTramite,$evaluacion,$idTramite,'','');
-
+        /**
+         * acreaditar instituto y local educativo
+         */
+        $em = $this->getDoctrine()->getManager();
+        
+        $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($idRie);
+        $entityLe = $em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($entity->getLeJuridicciongeografica()->getId());
+        
+        $entity->setInstitucioneducativaAcreditacionTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaAcreditacionTipo')->find(2));
+        $entityLe->setJuridiccionAcreditacionTipo($em->getRepository('SieAppWebBundle:JurisdiccionGeograficaAcreditacionTipo')->find(2));
+        
+        $em->flush();
         /*$request->getSession()
             ->getFlashBag()
             ->add('exito', $mensaje);*/
 
         //dump($this->container->getParameter('urlreportweb') .'rie_certificados_itt_v1_oyq.rptdesign&idCertificados='.$request->get('idRie').'&&__format=pdf&');die;
-
 
         $arch = 'CERTIFICADOS_'.'_' . date('YmdHis') . '.pdf';
         $response = new Response();
