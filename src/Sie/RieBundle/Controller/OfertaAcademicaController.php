@@ -87,7 +87,9 @@ class OfertaAcademicaController extends Controller {
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
         $listado = $this->listadoOfertaAcademica($request->get('idRie'));
         $esAcreditado = $this->get('dgfunctions')->esAcreditadoRitt($request->get('idRie'));
-        return $this->render('SieRieBundle:OfertaAcademica:list.html.twig', array('institucion' => $institucion,'esAcreditado'=>$esAcreditado, 'listado' => $listado));
+        $id_lugar = $sesion->get('roluserlugarid');
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($id_lugar);
+        return $this->render('SieRieBundle:OfertaAcademica:list.html.twig', array('institucion' => $institucion,'esAcreditado'=>$esAcreditado, 'listado' => $listado,'lugarUsuario' => intval($lugar->getCodigo())));
      }   
 
     /**
@@ -291,6 +293,7 @@ class OfertaAcademicaController extends Controller {
      * Listado de resoluciones 
      */
     public function listresolucionesAction(Request $request){
+        $sesion = $request->getSession();
         $em = $this->getDoctrine()->getManager();
         $datAutorizado = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaCarreraAutorizada')
                                     ->findOneById($request->get('idAutorizado'));
@@ -304,7 +307,9 @@ class OfertaAcademicaController extends Controller {
         $query->setParameter('idCaAutorizada', $datAutorizado->getId());
         $resoluciones = $query->getResult(); 
         $esAcreditado = $this->get('dgfunctions')->esAcreditadoRitt($request->get('idRie'));
-        return $this->render('SieRieBundle:OfertaAcademica:listresoluciones.html.twig', array('institucion' => $institucion,'esAcreditado'=>$esAcreditado, 'resoluciones' => $resoluciones, 'carrera' => $carrera, 'datAutorizado' =>$datAutorizado));
+        $id_lugar = $sesion->get('roluserlugarid');
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($id_lugar);
+        return $this->render('SieRieBundle:OfertaAcademica:listresoluciones.html.twig', array('institucion' => $institucion,'esAcreditado'=>$esAcreditado, 'resoluciones' => $resoluciones, 'carrera' => $carrera, 'datAutorizado' =>$datAutorizado,'lugarUsuario' => intval($lugar->getCodigo())));
     }
 
     /** 

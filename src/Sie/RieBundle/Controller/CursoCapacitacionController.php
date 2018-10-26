@@ -84,10 +84,12 @@ class CursoCapacitacionController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
         $em = $this->getDoctrine()->getManager();
+        $id_lugar = $sesion->get('roluserlugarid');
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($id_lugar);
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
         $esAcreditado = $this->get('dgfunctions')->esAcreditadoRitt($request->get('idRie'));
         $listado = $this->listadoCursosCapacitacion($request->get('idRie'));
-        return $this->render('SieRieBundle:CursoCapacitacion:list.html.twig', array('institucion' => $institucion,'esAcreditado'=>$esAcreditado, 'listado' => $listado));
+        return $this->render('SieRieBundle:CursoCapacitacion:list.html.twig', array('institucion' => $institucion,'esAcreditado'=>$esAcreditado, 'listado' => $listado,'lugarUsuario' => intval($lugar->getCodigo())));
      }   
 
     /**
@@ -234,6 +236,7 @@ class CursoCapacitacionController extends Controller {
      * Listado de resoluciones 
      */
     public function listresolucionesAction(Request $request){
+        $sesion = $request->getSession();
         $em = $this->getDoctrine()->getManager();
         $datAutorizado = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaCarreraAutorizada')
                                     ->findOneById($request->get('idAutorizado'));
@@ -247,7 +250,9 @@ class CursoCapacitacionController extends Controller {
         $query->setParameter('idCaAutorizada', $datAutorizado->getId());
         $resoluciones = $query->getResult(); 
         $esAcreditado = $this->get('dgfunctions')->esAcreditadoRitt($request->get('idRie'));
-        return $this->render('SieRieBundle:CursoCapacitacion:listresoluciones.html.twig', array('institucion' => $institucion,'esAcreditado'=>$esAcreditado, 'resoluciones' => $resoluciones, 'curso' => $curso, 'datAutorizado' =>$datAutorizado));
+        $id_lugar = $sesion->get('roluserlugarid');
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($id_lugar);
+        return $this->render('SieRieBundle:CursoCapacitacion:listresoluciones.html.twig', array('institucion' => $institucion,'esAcreditado'=>$esAcreditado, 'resoluciones' => $resoluciones, 'curso' => $curso, 'datAutorizado' =>$datAutorizado,'lugarUsuario' => intval($lugar->getCodigo())));
     }
 
     /** 
