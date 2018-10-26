@@ -23,7 +23,7 @@
                     <div class="panel-body">
                         <div class="panel panel-success">
                             <div class="panel-heading">
-                                <h3 class="panel-title">1.- Personal Administrativo</h3>
+                                <h3 class="panel-title">1.- Personal Administrativo </h3>
                             </div><!-- /.panel-heading -->
                             <div class="panel-body">
                                 <div class="row">
@@ -79,11 +79,11 @@
                                             </div>
                                         </div>
                                         <br>
-                                        <div class="row">
+                                        {#<div class="row">
                                             <div class="col-md-12">
                                                 <strong>Sub Sistema</strong>
                                             </div>
-                                        </div>
+                                        </div>#}
                                     </div>
                                     <div class="col-md-9">
                                         <div class="row">
@@ -217,11 +217,12 @@
                                                 <thead>
                                                 <tr>
                                                     <th style="min-width: 10px"><strong>Nro.</strong></th>
-                                                    <th style="min-width: 10px"><strong>Nro. Tramite</strong></th>
-                                                    <th><strong>Tipo de Tramite</strong></th>
-                                                    <th><strong>Fecha de Registro</strong></th>
+                                                    <th style="min-width: 10px"><strong>Nro. Trámite</strong></th>
+                                                    <th><strong>Tipo de Trámite</strong></th>
+                                                    <th><strong>Fecha de Solicitud</strong></th>
                                                     <th><strong>Estado</strong></th>
-                                                    <th><strong>imprimir</strong></th>
+                                                    <th><strong>Observaciones</strong></th>
+                                                    <th><strong>Acciones</strong></th>
 
                                                 </tr>
                                                 </thead>
@@ -232,11 +233,12 @@
                                                         <td class="text-center">{{ loop.index }}</td>
                                                        <td class="text-center">{{ listatareas.id }}</td>
                                                         <td>{{ listatareas.tramite_tipo }}</td>
-                                                        <td>{{ listatareas.fecha_registro }}</td>
-                                                        <td>Enviado</td>
+                                                        <td>{{ listatareas.fecha_registro|date('d-m-Y') }}</td>
+                                                        <td>{{ listatareas.estado }}</td>
+                                                        <td>{{ listatareas.obs }}</td>
                                                         <td>
-                                                            {#<button class="btn btn-success btn-xs"  onclick="updatesistema({{ sistema.id }})" class="btn btn-teal" data-toggle="modal" data-target=".bs-example-modal-table" title="Editar"><i class="fa fa-pencil"></i></button>#}
-                                                            <button class="btn btn-danger btn-xs"  title="Imprimir"><i class="glyphicon glyphicon-print"></i></button>
+                                                            {#<a href="https://s5.eestatic.com/2018/04/13/corazon/celebrities/Casas_de_famosos-Mark_Zuckerberg-Facebook-California-Fortuna-Celebrities_299483508_73716761_1024x576.jpg" download>dasda</a>#}
+                                                           <a href="{{ path('solicitud_bth_imprimeDirector',{'idUE':institucion.id}) }}" class="btn btn-danger btn-xs"   title="Imprimir Formulario"><i class="glyphicon glyphicon-print"></i></a>
                                                         </td>
                                                     </tr>
                                                 {% endfor %}

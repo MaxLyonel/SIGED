@@ -7,12 +7,32 @@ solicitud_bth_nuevasolicitud:
 solicitud_bth_enviosolicitud:
     path:     bthenviosolicitud/
     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:guardasolicitud }
+solicitud_bth_imprimeDirector:
+    path:     bhtimprimeFormulario/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:imprimirDirector}
 solicitud_bth_distrital_index:
     path:     bthsolicitud/
     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:SolicitidBTHDis }
 solicitud_bth_solicitudBTHDis:
     path:     bthsolicitudBTHDis/
     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:VerSolicitudBTHDis }
+solicitud_bth_enviosolicitud_Dep:
+    path:     bthenviosolicitudDep/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:guardasolicitudDep }
+solicitud_bth_departamental_index:
+    path:     bthsolicitudDepartamental/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:SolicitidBTHDep }
+solicitud_bth_solicitudBTHDep:
+    path:     bthsolicitudBTHDep/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:VerSolicitudBTHDep }
+solicitud_bth_guarda_Dep:
+    path:     bthguardasolicitudDepartamental/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:guardasolicitudDepartamental }
+solicitud_bth_departamental_finaliza:
+    path:     bthsolicitudDepartamentalfinalizatramite/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:finalizatramiteBTHDep }
+
+
 
 
 

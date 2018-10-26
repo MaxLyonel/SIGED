@@ -1,7 +1,7 @@
 {% extends 'layoutHerramienta.html.twig' %}
 {% block contentoption %}
     <div class="header-content">
-        <h2><i class="fa fa-table animated fadeIn"></i> Nueva Solicitud BTH <span>Nueva Solicitud BTH </span></h2>
+        <h2><i class="fa fa-table animated fadeIn"></i> Nueva Solicitud BTH <span>Nueva Solicitud BTH  {{ ubicacion['codigo_distrito'] }}</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -61,6 +61,7 @@
                                     </div><!-- /.panel-heading -->
                                     <div class="panel-body">
                                         <div class="row">
+
                                             {% set iedu = ieducativa[0] %}
                                             {% set iedusu = ieducativa[1] %}
                                             <div class="col-md-3">
@@ -76,11 +77,11 @@
                                                     </div>
                                                 </div>
                                                 <br>
-                                                <div class="row">
+                                                {#<div class="row">
                                                     <div class="col-md-12">
                                                         <strong>Sub Sistema</strong>
                                                     </div>
-                                                </div>
+                                                </div>#}
                                             </div>
                                             <div class="col-md-9">
                                                 <div class="row">
@@ -201,47 +202,7 @@
 
                                         <div class="row">
                                             <div class="col-md-4">
-                                               <strong>3.1 Técnico Administrativo</strong>
-                                            </div>
-                                            <div class="col-md-4">
-                                                {#<div style="padding:10px; background: #ffffff">
-                                                    <div class="checkbox" style="margin-left: 30px">
-                                                        <label style="color:#3174C1">
-                                                            <input type="checkbox" required="required">
-                                                        </label>
-                                                    </div>
-                                                </div>#}
-                                                <div class="ckbox ckbox-theme">
-                                                    <input id="tecadmin"  type="checkbox">
-                                                    <label for="tecadmin"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <strong>3.2 Infraestructura y Equipamiento</strong>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="ckbox ckbox-theme">
-                                                    <input id="infra" type="checkbox">
-                                                    <label for="infra"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <strong>2.3 Desarrollo Curricular</strong>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="ckbox ckbox-theme">
-                                                    <input id="descurricular" type="checkbox">
-                                                    <label for="descurricular"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <strong>2.4 Informe</strong>
+                                                <strong>2.1 Informe</strong>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="ckbox ckbox-theme">
@@ -462,39 +423,6 @@
 
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <strong>3.1 Técnico Administrativo</strong>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="ckbox ckbox-theme">
-                                                    <input id="tecadminregularizacion" value="1" type="checkbox">
-                                                    <label for="tecadminregularizacion"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <strong>3.2 Infraestructura y Equipamiento</strong>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="ckbox ckbox-theme">
-                                                    <input id="infraregularizacion" value="1" type="checkbox">
-                                                    <label for="infraregularizacion"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <strong>2.3 Desarrollo Curricular</strong>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="ckbox ckbox-theme">
-                                                    <input id="descurricularregularizacion" value="1" type="checkbox">
-                                                    <label for="descurricularregularizacion"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
                                                 <strong>2.4 Informe</strong>
                                             </div>
                                             <div class="col-md-4">
@@ -704,6 +632,7 @@
                                                         {{ ubicacion['direccion'] }}
                                                     </div>
                                                 </div>
+
                                             </div>
                                         </div>
 
@@ -773,7 +702,6 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="pull-right">
-
                                                     <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicitudEspecialidadbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
                                                 </div>
                                             </div>
@@ -800,8 +728,6 @@
 {{ parent() }}
 <script>
 
-
-
     var campos_max  = 10;   //max de 10 campos
     var x = 0;
     $('#nueva_especialidad').click (function(e) {
@@ -825,24 +751,24 @@
     function cargarFormularioSolicitud() {
         var idsolicitud=$('#form_solicitud').val();
         switch (true){
-            case (idsolicitud == 44):
+            case (idsolicitud == 45):
                 document.getElementById("titulo").innerHTML= "Formulario de Registro Nuevo";
                 $('#form_regularizacion').hide();
                 $('#form_especialidad').hide();
                 $('#form_nuevo').show(2000);
                 break;
-            case (idsolicitud == 45):
-                document.getElementById("titulo").innerHTML= "Formulario de Regularización";
+            case (idsolicitud == 46):
+                document.getElementById("titulo").innerHTML= "Formulario de Ratificación";
                 $('#form_nuevo').hide();
                 $('#form_especialidad').hide();
                 $('#form_regularizacion').show(2000);
                 break;
-            case (idsolicitud == 46):
+            /*case (idsolicitud == 46):
                 document.getElementById("titulo").innerHTML= "Formulario de Nueva Especialidad";
                 $('#form_nuevo').hide();
                 $('#form_regularizacion').hide();
                 $('#form_especialidad').show(2000);
-                break;
+                break;*/
         }
 
     }
@@ -859,31 +785,18 @@
                 if (willDelete) {
                     var institucionid={{ institucion.id }}
                     var ip = [];
-                    if($('#tecadmin:checked').val())
-                        ip.push({ tecadmin : 1 });
-                    else ip.push({ tecadmin : 0 });;
-                    if($('#infra:checked').val())
-                        ip.push({ infra : 1});
-                    else ip.push({ infra : 0 });
-                    if($('#descurricular:checked').val())
-                        ip.push({ descurricular : 1});
-                    else ip.push({ descurricular : 0 });
                     if($('#informe:checked').val())
-                        ip.push({ informe : 1});
+                    ip.push({ informe : 1});
                     else ip.push({ informe : 0 });
                     ip.push({institucionid : institucionid});
-                    //ip.push({ institucioneducativa : })
                     ip.push({select_especialidad : $('#select_especialidad').val()});
-
                     var ipt=JSON.stringify(ip);
-                    alert(ipt);
-
                     var imagen = '{{ asset("img/loading96.gif") }}';
                     //alert(ipt);
                     $.ajax({
                         type: 'post',
                         url: "{{ path('solicitud_bth_enviosolicitud') }}",
-                        data:{ipt: ipt},
+                        data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }}},
                         dataType : 'json',
                         before: function () {
                             swal({
@@ -894,14 +807,13 @@
                             });
                         },
                         success: function (data) {
-                            $('#respuesta').append(data);
-                            //console.log(data);
-                           /* if (data==0){
+                            if (data==1){
                                 swal("Su formulario se ha enviado con éxito Muchas gracias");
+                                location.href = "{{ path('solicitud_bth_index') }}";
                             }
                             else{
-                                swal("Su formulario se ha enviado con éxito Muchas gracias");
-                            }*/
+                                swal("Su formulario no se envío correctamente");
+                            }
                         },
                         complete: function () {
                             swal.stopLoading();

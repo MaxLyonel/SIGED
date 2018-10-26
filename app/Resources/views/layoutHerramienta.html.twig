@@ -316,6 +316,10 @@
                                 <li><a href="{{ path('sie_herramienta_tramite_index')}}">Regularización U.E.</a></li>
                             </ul>
                             {% endif %}
+
+
+
+
                         </li>
                     {% endif %}
 
@@ -376,6 +380,10 @@
                                 <li><a href="{{ path('solicitud_bth_index')}}">Solicitud BTH</a></li>
 
                             </ul>
+                            <ul>
+                                <li><a href="{{ path('solicitud_bth_departamental_index')}}">Trámites - Seguimiento BTH</a></li>
+
+                            </ul>
                         </li>
                     {% endif %}
 
@@ -404,27 +412,8 @@
                             <li><a href="{{ path('bach_exc_rep_dis')}}">Generar Reporte</a></li>
                         </ul>
                     </li>
-                        <li class="submenu">
-                            <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-diamond"></i></span>
-                                <span class="text">Proceso BTH</span>
-                                <span class="arrow"></span>
-                            </a>
-                            <ul>
-                                <li><a href="{{ path('solicitud_bth_distrital_index')}}">Solicitud BTH</a></li>
 
-                            </ul>
-                        </li>
-                        <li class="submenu">
-                            <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-diamond"></i></span>
-                                <span class="text">Proceso RITT</span>
-                                <span class="arrow"></span>
-                            </a>
-                            <ul>
-                                <li><a href="{{ path('solicitud_ritt_inicio')}}">Solicitud RITT</a></li>
-                            </ul>
-                        </li>
+
                     {% endif %}
 
                     {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10 %}
@@ -440,6 +429,55 @@
                           <!--li><a href="{{ path('herramienta_apderado_estudiante_index')}}">Apoderado - Estudiante</a></li-->
                       </ul>
                     </li>
+                    {% endif %}
+                    {% if app.session.get('roluser')==10 %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-diamond"></i></span>
+                                <span class="text">Proceso BTH</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('solicitud_bth_distrital_index')}}">Támites - Solicitud BTH</a></li>
+                            </ul>
+                            <ul>
+                                <li><a href="{{ path('solicitud_bth_departamental_index')}}">Trámites - Seguimiento BTH</a></li>
+
+                            </ul>
+                        </li>
+                    {% endif %}
+                    {% if app.session.get('roluser')==7 %}
+
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-diamond"></i></span>
+                                <span class="text">Proceso BTH</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('solicitud_bth_departamental_index')}}">Trámites - Recibidos BTH</a></li>
+
+                            </ul>
+                            <ul>
+                                <li><a href="{{ path('solicitud_bth_departamental_index')}}">Trámites - Imprime BTH</a></li>
+
+                            </ul>
+                            <ul>
+                                <li><a href="{{ path('solicitud_bth_departamental_index')}}">Trámites - Seguimiento BTH</a></li>
+
+                            </ul>
+
+                        </li>
+                        {#<li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-diamond"></i></span>
+                                <span class="text">Proceso RITT</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('solicitud_ritt_inicio')}}">Solicitud RITT</a></li>
+                            </ul>
+                        </li>#}
                     {% endif %}
 <!--
                     <li class="submenu">
