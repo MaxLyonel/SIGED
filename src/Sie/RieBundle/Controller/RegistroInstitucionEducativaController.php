@@ -167,7 +167,7 @@ class RegistroInstitucionEducativaController extends Controller {
                             and ie.institucioneducativaAcreditacionTipo = :ieAcreditacion
                             ORDER BY ie.id')
     		                ->setParameter('id', $form['institucioneducativaId'])
-                            ->setParameter('ieAcreditacion', 2;
+                            ->setParameter('ieAcreditacion', 2);
     	}
 
     	$entities = $query->getResult();
