@@ -4461,6 +4461,7 @@ ciclo_tipo_id, grado_tipo_id
         }
             ///////////////// SI GESTION ES 0 ENTONCES HACEMOS EL REPORTE
         $reporte_c=array();
+        $reporte_departamento=array();
         if ($gestion==0){
             /////VEMOS EL ROL Y DEPENDIENDO HACEMOS EL QUERY///
             $q1=$q1w="";
@@ -4510,12 +4511,81 @@ ciclo_tipo_id, grado_tipo_id
             $reporte["cerrado"]=$cerrado_t;
             $reporte["total_c"]=$total_t;
             $reporte_c[]=$reporte;
+            //reporte por departamneto
+             $query = "
+            select gestion,
+            sum (case when id_lugar=31655 then abierto else 0 end) as lpz_a,
+            sum (case when id_lugar=31655 then cerrado else 0 end) as lpz_c,
+            sum (case when id_lugar=31657 then abierto else 0 end) as oru_a,
+            sum (case when id_lugar=31657 then cerrado else 0 end) as oru_c,
+            sum (case when id_lugar=31658 then abierto else 0 end) as pts_a,
+            sum (case when id_lugar=31658 then cerrado else 0 end) as pts_c,
+            sum (case when id_lugar=31656 then abierto else 0 end) as coc_a,
+            sum (case when id_lugar=31656 then cerrado else 0 end) as coc_c,
+            sum (case when id_lugar=31654 then abierto else 0 end) as chu_a,
+            sum (case when id_lugar=31654 then cerrado else 0 end) as chu_c,
+            sum (case when id_lugar=31659 then abierto else 0 end) as tar_a,
+            sum (case when id_lugar=31659 then cerrado else 0 end) as tar_c,
+            sum (case when id_lugar=31660 then abierto else 0 end) as stz_a,
+            sum (case when id_lugar=31660 then cerrado else 0 end) as stz_c,
+            sum (case when id_lugar=31661 then abierto else 0 end) as ben_a,
+            sum (case when id_lugar=31661 then cerrado else 0 end) as ben_c,
+            sum (case when id_lugar=31662 then abierto else 0 end) as pan_a,
+            sum (case when id_lugar=31662 then cerrado else 0 end) as pan_c
+            from (
+            select id_lugar,lugar,gestion,
+            sum (case when esactivo=true then cantidad end) as cerrado,
+            sum (case when esactivo=false then cantidad else 0 end) as abierto,
+            sum (cantidad) as total
+            from (
+            select lt3.id as id_lugar,lt3.lugar ,date_part('year', ic.fecha_fin) as gestion,icd.esactivo,count(*) as cantidad
+            from institucioneducativa_curso ic
+            join institucioneducativa_curso_datos icd on icd.institucioneducativa_curso_id=ic.id
+            join lugar_tipo lt1 on lt1.id=icd.lugar_tipo_id_seccion
+            join lugar_tipo lt2 on lt2.id=lt1.lugar_tipo_id
+            join lugar_tipo lt3 on lt3.id=lt2.lugar_tipo_id
+            GROUP BY id_lugar,lt3.lugar,gestion,esactivo
+            order by gestion,lugar
+            ) as t1
+            GROUP BY id_lugar,lugar,gestion
+            order by gestion
+            ) as t2
+            group by gestion
+                ";
+            $stmt = $db->prepare($query);
+            $params = array();
+            $stmt->execute($params);
+            $po = $stmt->fetchAll();
+            $reporte_dep=array();
+            foreach ($po as $p) {
+                $reporte_dep["gestion"] = $p["gestion"];
+                $reporte_dep["lpz_a"] = $p["lpz_a"];
+                $reporte_dep["lpz_c"] = $p["lpz_c"];
+                $reporte_dep["oru_a"] = $p["oru_a"];
+                $reporte_dep["oru_c"] = $p["oru_c"];
+                $reporte_dep["pts_a"] = $p["pts_a"];
+                $reporte_dep["pts_c"] = $p["pts_c"];
+                $reporte_dep["coc_a"] = $p["coc_a"];
+                $reporte_dep["coc_c"] = $p["coc_c"];
+                $reporte_dep["chu_a"] = $p["chu_a"];
+                $reporte_dep["chu_c"] = $p["chu_c"];
+                $reporte_dep["tar_a"] = $p["tar_a"];
+                $reporte_dep["tar_c"] = $p["tar_c"];
+                $reporte_dep["stz_a"] = $p["stz_a"];
+                $reporte_dep["stz_c"] = $p["stz_c"];
+                $reporte_dep["ben_a"] = $p["ben_a"];
+                $reporte_dep["ben_c"] = $p["ben_c"];
+                $reporte_dep["pan_a"] = $p["pan_a"];
+                $reporte_dep["pan_c"] = $p["pan_c"];
+                $reporte_departamento[] = $reporte_dep;
+            }
         }
        
           
         return $this->render('SiePnpBundle:Default:listararchivos_editnew.html.twig', array(
             'totales' => $filas,
             'reporte_c'=>$reporte_c,
+            'reporte_departamento'=>$reporte_departamento,
             'idd'=>$id,
             'gestion_ini_t'=>$gestion_ini_t,
             'gestion_fin_t'=>$gestion_fin_t,
