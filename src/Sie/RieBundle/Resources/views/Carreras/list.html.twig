@@ -10,8 +10,14 @@
         <li class="active">Nuevo</li>
     </ol>
 
-    {% for flashMessage in app.session.flashbag.get('mensaje') %}
+    {% for flashMessage in app.session.flashbag.get('mensajeError') %}
         <div class="alert alert-danger text-center">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ flashMessage }}
+        </div>
+    {% endfor %} 
+    {% for flashMessage in app.session.flashbag.get('mensajeOk') %}
+        <div class="alert alert-success text-center">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             {{ flashMessage }}
         </div>
