@@ -193,8 +193,7 @@
                             <span>Catálogo de Carreras</span>
                         </a>
                     </li>
-                    {% if app.session.get('roluser') == 8 %}
-                        <li>
+                    <li>
                             <a href="{{path('area_rie_list')}}">
                                 <i class="material-icons">view_agenda</i>
                                 <span>Admin-Areas</span>
@@ -214,6 +213,14 @@
                                 <span>Reportes</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="{{path('seguimiento_tramite')}}">
+                            <i class="material-icons">donut_large</i>
+                            <span>Seguimiento - Trámites RITT</span>
+                            </a>
+                        </li>
+                    {% if app.session.get('roluser') == 8 %}
+                        
                         <li>
                             <a href="{{path('solicitud_ritt_lista_Nac')}}">
                                 <i class="material-icons">card_travel</i>
@@ -236,12 +243,7 @@
                             </a>
                         </li>
                     {% endif %}
-                    <li>
-                        <a href="{{path('seguimiento_tramite')}}">
-                            <i class="material-icons">donut_large</i>
-                            <span>Seguimiento - Trámites RITT</span>
-                        </a>
-                    </li>
+                    
                 </ul>
             </div>
             <!-- #Menu -->

@@ -70,15 +70,18 @@
                                     {% for historico in historicos %}
                                         <tr>
                                             <td style="text-align:center">
-                                                {% if historico.institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario %}
+                                                {% if historico.institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario  and esAcreditado == false %}
                                                     <form action="{{path('historico_edit')}}" method="post" style="display:inline-block">
                                                         <input type="hidden" name="idRie" value="{{entity.id}}">
                                                         <input type="hidden" name="id" value="{{historico.id}}">
-                                                        <button type="submit" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Editar"  {% if esAcreditado == true %} disabled {% endif %}><i class="material-icons">edit</i></button>
+                                                        <button type="submit" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">mode_edit</i></button>
                                                     </form>
-                                                    <a href="{{path('historico_delete', {'idhistorico': historico.id} )}}" onclick="return confirmar('{{historico.id}}')" class="btn btn-circle waves-effect waves-circle waves-float"  data-toggle="tooltip" data-placement="top" title="Eliminar"  {% if esAcreditado == true %} disabled {% endif %}><i class="material-icons">delete_forever</i></a> 
+                                                    <a href="{{path('historico_delete', {'idhistorico': historico.id} )}}" onclick="return confirmar('{{historico.id}}')" class="btn btn-circle waves-effect waves-circle waves-float"  data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete_forever</i></a> 
                                                 {% else %}
-                                                    -
+                                                    <button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" disabled="disabled" data-toggle="tooltip" data-placement="top" title="">
+                                                        <i class="material-icons">mode_edit</i></button>
+                                                    <button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" disabled="disabled" data-toggle="tooltip" data-placement="top" title="">
+                                                        <i class="material-icons">delete_forever</i>
                                                 {% endif %}
                                             </td>
                                             <td>{{historico.nroResolucion}}</td>   
