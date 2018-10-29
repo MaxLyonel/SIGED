@@ -52,14 +52,15 @@
                                     <tr>
                                         <th>Acciones</th>                                    
                                         <th>Depto.</th>
-                                        <th>Cod. RITT</th>                                     
+                                        <th>Cód. RITT</th>                                     
                                         <th>Denominación</th>
+                                        <th>Acreditación</th>
                                         <th>Sede/Subsede</th>
                                         <th>R.M.</th>
                                         <th>Fecha R.M.</th>
                                         <th>Carácter<br>Jurídico</th>
                                         <th>Tipo<br>Institución</th>
-                                        <th>Cod. LE</th>
+                                        <th>Cód. LE</th>
                                     </tr>
                                 </thead>
                                 
@@ -67,14 +68,15 @@
                                     <tr>
                                         <th>Acciones</th>                                    
                                         <th>Depto.</th>
-                                        <th>Cod. RITT</th>
+                                        <th>Cód. RITT</th>
                                         <th>Denominación</th>
+                                        <th>Acreditación</th>
                                         <th>Sede/Subsede</th>
                                         <th>R.M.</th>
                                         <th>Fecha R.M.</th>
                                         <th>Carácter<br>Jurídico</th>
                                         <th>Tipo<br>Institución</th>
-                                        <th>Cod. LE</th>
+                                        <th>Cód. LE</th>
                                     </tr>
                                 </tfoot>
                                 
@@ -109,6 +111,17 @@
                                             <td>{{ entity.institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar }}</td>                                            
                                             <td>{{ entity.institucioneducativa.id }}</td> 
                                             <td>{{ entity.institucioneducativa.institucioneducativa }}</td> 
+                                            <td>
+                                                {% if entity.institucioneducativa.institucioneducativaAcreditacionTipo.id == 3 %}
+                                                    <span class="label label-danger">
+                                                        No acreditada
+                                                    </span>
+                                                {% elseif entity.institucioneducativa.institucioneducativaAcreditacionTipo.id == 2 %}
+                                                    <span class="label label-success">
+                                                        Acreditada
+                                                    </span>
+                                                {% endif %}
+                                            </td>
                                             <td>
                                                 {% if entity.institucioneducativa.id == entity.sede %}
                                                     SEDE

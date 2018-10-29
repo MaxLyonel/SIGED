@@ -35,7 +35,8 @@
                                     <th>Localidad</th>
                                     <th>Zona</th>
                                     <th>Dirección</th>
-                                    <th># IE asignados</th>
+                                    <th>Acreditación</th>
+                                    <th>#ITTs asignados</th>
                                 </tr>
                             </thead>
                             
@@ -50,7 +51,8 @@
                                     <th>Localidad</th>
                                     <th>Zona</th>
                                     <th>Dirección</th>
-                                    <th># IE asignados</th>
+                                    <th>Acreditación</th>
+                                    <th>#ITTs asignados</th>
                                 </tr>
                             </tfoot>
                             <tbody>
@@ -76,6 +78,13 @@
                                         <td>{{ entity.localidad }}</td>
                                         <td>{{ entity.zona }}</td>
                                         <td>{{ entity.direccion }}</td>
+                                        <td>
+                                            {% if entity.juridiccion_acreditacion_tipo_id == 2 %}
+                                                <span class="label label-success">Acreditada</span>
+                                            {% elseif entity.juridiccion_acreditacion_tipo_id == 3 %}
+                                                <span class="label label-danger">No acreditada</span>
+                                            {% endif %}
+                                        </td>
                                         <td>{{ entity.instituto }}</td>                                        
                                     </tr>
                                 {% endfor %}

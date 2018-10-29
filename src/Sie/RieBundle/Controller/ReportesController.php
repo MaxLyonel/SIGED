@@ -141,6 +141,7 @@ class ReportesController extends Controller {
                         INNER JOIN public.nivel_tipo AS nivt ON instnivaut.nivel_tipo_id = nivt.id
                         WHERE lt4.id = ".$dep." AND inst.institucioneducativa_tipo_id IN (7,8,9) 
                         AND estinst.id IN (10, 19)
+                        AND institucioneducativa_acreditacion_tipo_id = 2
                         GROUP BY
                         inst.id,
                         inst.institucioneducativa,
@@ -264,6 +265,7 @@ class ReportesController extends Controller {
                     INNER JOIN public.dependencia_tipo AS dept ON inst.dependencia_tipo_id = dept.id
                     WHERE lt4.id = '.$departamento.' AND inst.institucioneducativa_tipo_id IN (7,8,9) 
                     AND estinst.id IN (10) 
+                    AND institucioneducativa_acreditacion_tipo_id = 2
                     AND dept.id = '.$dependencia;
         $stmt = $db->prepare($query);
         $params = array();
