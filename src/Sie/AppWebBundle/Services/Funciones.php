@@ -809,16 +809,14 @@ class Funciones {
           'institucioneducativaHumanisticoTecnicoTipo'=>10,
   
         ));
-
         //var to set true or false if the ue is primaria
         $swValidationPrimaria = false;
-        
         // check if the course is PRIMARIA
         if( $centroAllowed &&
             $gestion == 2018 &&
             $arrInfoUe['ueducativaInfoId']['sfatCodigo'] == 15 &&
             $arrInfoUe['ueducativaInfoId']['setId'] == 13 &&
-            $arrInfoUe['ueducativaInfoId']['periodoId'] == 3
+            $arrInfoUe['ueducativaInfoId']['periodoId'] >= 2
           ){
             $swValidationPrimaria=true;
         }else{
@@ -898,7 +896,7 @@ class Funciones {
             $objInfoCourse[0]['gestion'] == 2018 &&
             $objInfoCourse[0]['sfatCodigo'] == 15 &&
             $objInfoCourse[0]['setId'] == 13 &&
-            $objInfoCourse[0]['periodoId'] == 3
+            $objInfoCourse[0]['periodoId'] >= 2
           ){
             $swValidationPrimaria=true;
         }else{
