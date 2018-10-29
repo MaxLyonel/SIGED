@@ -307,6 +307,7 @@ class OfertaAcademicaController extends Controller {
         $query->setParameter('idCaAutorizada', $datAutorizado->getId());
         $resoluciones = $query->getResult(); 
         $esAcreditado = $this->get('dgfunctions')->esAcreditadoRitt($request->get('idRie'));
+        //dump($esAcreditado);die;
         $id_lugar = $sesion->get('roluserlugarid');
         $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($id_lugar);
         return $this->render('SieRieBundle:OfertaAcademica:listresoluciones.html.twig', array('institucion' => $institucion,'esAcreditado'=>$esAcreditado, 'resoluciones' => $resoluciones, 'carrera' => $carrera, 'datAutorizado' =>$datAutorizado,'lugarUsuario' => intval($lugar->getCodigo())));
@@ -520,8 +521,11 @@ class OfertaAcademicaController extends Controller {
     public function obtieneRegimenEstudio(){
     $em = $this->getDoctrine()->getManager();
     $datosArray = array();
-    $datos = $em->getRepository('SieAppWebBundle:TtecRegimenEstudioTipo')->findAll();
+    $datos = $em->getRepository('SieAppWebBundle:TtecRegimenEstudioTipo')->findBy(array('id'=>array(1,2)));
+    //dump($datos);die;
+    //$datos = $em->getRepository('SieAppWebBundle:TtecRegimenEstudioTipo')->findAll();
         foreach($datos as $dato){
+            //dump($dato);die;
             $datosArray[$dato->getId()] = $dato->getRegimenEstudio();
         }
         return $datosArray;
