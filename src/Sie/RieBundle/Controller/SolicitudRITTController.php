@@ -217,6 +217,30 @@ class SolicitudRITTController extends Controller {
 
     }
 
-
+    public function listaTramitesConcluidosAction(Request $request){
+        //dump($request);die;
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("
+        SELECT t.id,ie.id as codrie,ie.institucioneducativa,tt.tramite_tipo,t.fecha_fin,'CONCLUIDO' as estado,lt4.lugar
+        FROM tramite t
+        JOIN institucioneducativa ie ON t.institucioneducativa_id=ie.id
+        JOIN jurisdiccion_geografica le ON ie.le_juridicciongeografica_id=le.id
+        LEFT JOIN lugar_tipo lt ON lt.id = le.lugar_tipo_id_localidad
+        LEFT JOIN lugar_tipo lt1 ON lt1.id = lt.lugar_tipo_id
+        LEFT JOIN lugar_tipo lt2 ON lt2.id = lt1.lugar_tipo_id
+        LEFT JOIN lugar_tipo lt3 ON lt3.id = lt2.lugar_tipo_id
+        LEFT JOIN lugar_tipo lt4 ON lt4.id = lt3.lugar_tipo_id
+        JOIN tramite_tipo tt ON t.tramite_tipo=tt.id
+        WHERE t.flujo_tipo_id=5 AND t.fecha_fin IS NOT NULL");
+        $query->execute();
+        $lista= $query->fetchAll();
+        //dump($lista);die;
+        return $this->render('SieRieBundle:SolicitudRITT:listaTramitesConcluidos.html.twig',array('listaTramites'=>$lista));
+    }
 
 }

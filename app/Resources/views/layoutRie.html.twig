@@ -233,6 +233,12 @@
                                 <span>  Trámites - Emite Certificados RITT </span>
                             </a>
                         </li>
+                         <li>
+                            <a href="{{path('solicitud_ritt_lista_concluidos')}}">
+                                <i class="material-icons">card_travel</i>
+                                <span>Trámites - Concluidos RITT</span>
+                            </a>
+                        </li>
                     {% endif %}
 
                     {% if app.session.get('roluser')==7 %}
