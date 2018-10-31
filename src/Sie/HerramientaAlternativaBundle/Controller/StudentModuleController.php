@@ -52,20 +52,20 @@ class StudentModuleController extends Controller {
       $arrCourseToSelected=array();
 
       //check data to set the new funcionalty and new way to load the curricula
-      if( $this->get('funciones')->validatePrimaria($this->session->get('ie_id'),$this->session->get('currentyear'),$infoUe)
-          ){
+      // if( $this->get('funciones')->validatePrimaria($this->session->get('ie_id'),$this->session->get('currentyear'),$infoUe)
+      //     ){
 
-        $data = array('iecId'=>$arrInfoUe['ueducativaInfoId']['iecId'], 'eInsId'=>$arrInfoStudent['eInsId']);
+      //   $data = array('iecId'=>$arrInfoUe['ueducativaInfoId']['iecId'], 'eInsId'=>$arrInfoStudent['eInsId']);
 
-        $objNewCurricula = $this->get('funciones')->setCurriculaStudent($data);
-        // $arrCourseToSelected = $this->get('funciones')->getCurriculaStudent($data);
-        $form=array();
-        $useTemplate = 'newcourseToSelected';
-       }else{
-          $form = $this->addModuloStudentForm($infoUe, $infoStudent, json_encode($arrCourseToSelected) )->createView();
-          $useTemplate = 'courseToSelected';
-       }
-
+      //   $objNewCurricula = $this->get('funciones')->setCurriculaStudent($data);
+      //   // $arrCourseToSelected = $this->get('funciones')->getCurriculaStudent($data);
+      //   $form=array();
+      //   $useTemplate = 'newcourseToSelected';
+      //  }else{
+      //     $form = $this->addModuloStudentForm($infoUe, $infoStudent, json_encode($arrCourseToSelected) )->createView();
+      //     $useTemplate = 'courseToSelected';
+      //  }
+      
          // all funcionality 
                   //get the modules per course
           $objModulesPerCourse = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findModulesByCourse($arrInfoUe);
@@ -87,7 +87,8 @@ class StudentModuleController extends Controller {
             $arrCourseToSelected[]=$course;
 
           }
-
+      $form = $this->addModuloStudentForm($infoUe, $infoStudent, json_encode($arrCourseToSelected) )->createView();
+      $useTemplate = 'courseToSelected';
         //get required info about the studens 
        //get the inscription info and set the student info
       $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($arrInfoStudent['eInsId']);
@@ -125,7 +126,7 @@ class StudentModuleController extends Controller {
           ->add('infoUe', 'hidden', array('data'=>$infoUe))
           ->add('infoStudent', 'hidden', array('data'=>$infoStudent))
           ->add('courses', 'hidden', array('data'=>$courses))
-          ->add('save', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-theme','onclick'=>'saveModulesToStudent()' )))
+          ->add('save', 'button', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-theme','onclick'=>'saveModulesToStudent()' )))
           ->getForm();
       return $form;
     }
