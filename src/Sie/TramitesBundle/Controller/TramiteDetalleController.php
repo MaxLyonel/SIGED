@@ -2081,6 +2081,7 @@ class TramiteDetalleController extends Controller {
         $tramiteController->setContainer($this->container);
 
         $rolPermitido = array(8,13);
+        // $rolPermitido = array(9);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
