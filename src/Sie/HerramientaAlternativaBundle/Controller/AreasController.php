@@ -46,10 +46,11 @@ class AreasController extends Controller {
           ){
             //set the All data about curricula on the course
             $createNewCurricula = $this->get('funciones')->loadCurriculaCurso($infoUe);
-            $templateToView = 'indexprimaria.html.twig';
+            // $templateToView = 'indexprimaria.html.twig';
         }else{
-            $templateToView = 'index.html.twig';
+            // $templateToView = 'index.html.twig';
         }
+        $templateToView = 'index.html.twig';
 
         $data = $this->getAreas($infoUe);
         return $this->render('SieHerramientaAlternativaBundle:Areas:'.$templateToView, $data);
