@@ -95,7 +95,15 @@
                                 <tr>
                                     <td class="text-center border-right">{{loop.index}}</td>
                                     <td>{{co.codigo}}</td>
-                                    <td>{{co.modulo}}</td>
+                                    <td>
+                                        <span id="modulo_{{co.smpid}}">{{co.modulo}}</span>
+                                        {% if co.codigo == '415' %}
+                                            <button class="btn" onclick="addpopEmergente({{co.smpid}})"><i class="fa fa-edit text-lilac"></i></button>
+                                            <div class="arrow-before" style="display:none; margin-left:10px;" id="emergente_before_{{co.smpid}}"></div><div class="arrow-after" style="display:none;margin-left:10px;" id="emergente_after_{{co.smpid}}"></div>
+                                            <div id="emergente_{{co.smpid}}" style="display:none; position:absolute; z-index:5; width:500px; margin-left:-350px; border:2px solid #906094; box-shadow: 7px 7px 4px #929292;" class="divEmergente">
+                                            </div>
+                                        {% endif %}
+                                    </td>
                                     <td>
                                         <button class="btn" onclick="addpop('{{co.iecoid}}', '{{ infoUe }}')"><i class="fa fa-users text-lilac"></i></button>
                                         <div class="arrow-before" style="display:none; margin-left:10px;" id=""></div><div class="arrow-after" style="display:none;margin-left:10px;" id=""></div>
@@ -290,5 +298,71 @@
             && (k != 9) //tab
         )            
         return false;
+    };
+
+    var addpopEmergente = function(smpid){
+        if ($('#emergente_'+smpid).is(':hidden')){
+            $.ajax({
+                type: 'post',
+                data: ({smpid: smpid}),
+                url: "{{ path('herramienta_alter_areas_emergente') }}",
+                beforeSend: function () {
+                    $('.divEmergente').hide();
+                    $('.arrow-before').hide();
+                    $('.arrow-after').hide();
+                    $("#emergente_"+smpid).empty();
+                    $('#emergente_before_'+smpid).fadeIn();
+                    $('#emergente_after_'+smpid).fadeIn();
+                    $('#emergente_'+smpid).fadeIn();
+                    $('#emergente_'+smpid).append("<div style='background:#906094; text-align:center; color:#FFFFFF'><div style='padding:10px 0px 10px 0px;'>Cargando materia emergente...<br><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></div></div>");
+                },
+                success: function (data) {
+                    $("#emergente_"+smpid).empty();
+                    $("#emergente_"+smpid).append(data);
+                    $('.chosen-select').chosen({allow_single_deselect: false});
+                    $('#emergente_'+smpid).fadeIn();
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }else{
+            $('#emergente_'+smpid).fadeOut();
+            $('#emergente_before_'+smpid).fadeOut();
+            $('#emergente_after_'+smpid).fadeOut();
+        }
+    };
+
+    var asignarEmergente = function(){
+        var formData = $('#formEmergente').serialize();
+        $.ajax({
+            type: 'post',
+            data: formData,
+            url: "{{ path('herramienta_alter_infoEstudianteAreas_emergente_asignar') }}",
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                var smpid = data.smpid;
+                $('#emergente_'+smpid).empty();
+                $('#modulo_'+smpid).empty();
+                $('#emergente_'+smpid).append("<div style='background:#906094; color:#FFFFFF; padding:5px; text-align:center;'>Cambios guardados</div>");
+                setTimeout("cerrarEmergente('"+smpid+"')",2000)
+                $('#modulo_'+smpid).append(data.emergente);
+            },
+            error: {
+            },
+        });
+    };
+
+    var cerrarEmergente = function(smpid){
+        $('#emergente_'+smpid).fadeOut();
+        $('#emergente_before_'+smpid).fadeOut();
+        $('#emergente_after_'+smpid).fadeOut();
     };
 </script>
