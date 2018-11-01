@@ -86,7 +86,7 @@ class SolicitudRITTController extends Controller {
             ->add('exito', $mensajeEnvio);
 
         /**imprime comprobante del envio de la solicitud */
-
+        
         $arch = 'TRAMITE_'.$tramite.'_'.$idRie.'.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
