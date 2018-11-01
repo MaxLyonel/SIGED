@@ -1,0 +1,76 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-table animated fadeIn"></i> Seguimiento de Trámites - BTH <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href={{ path('solicitud_bth_index') }}>Solicitud BTH</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <div class="body-content animated fadeIn">
+     <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel">
+                <div class="panel-body">
+                    <div class="panel panel-success">
+                          <div class="panel-heading">
+                             <h3 class="panel-title">Busquedad de Trámites</h3>
+                           </div>
+                    </div>
+                    <div class="form-group">
+                        {{ form_start(form,{ 'attr': {'id':'form_seguimiento'} } ) }}
+                        <label class="col-sm-2">Nro. de Trámite:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.tramite, {'attr':{'class':'form-control'} }) }}
+                        </div>
+                        {{ form_end(form) }}
+
+                        <div class="form-group">
+                            <button id="buscar" class="btn btn-primary" onclick="buscarTramite()">Buscar</button>
+                        </div>
+                    </div>
+                    <div id="flujo">
+                    </div>
+                </div>
+            </div>
+        </div>
+     </div>
+    </div>
+
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+
+<script>
+    function buscarTramite() {
+        if ($('#form_tramite').val()==""){
+            swal("Debe Ingresar un número de trámite"); return false;
+             }
+        formData = $('#form_seguimiento').serialize();
+        $.ajax({
+            type: 'POST',
+            url: "{{path('solicitud_bth_seguimiento_verflujo')}}",
+            data: formData,
+            beforeSend: function () {
+                $('#flujo').empty();
+                $('#flujo').append('<div style="text-align:center">Cargando datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+            },
+            success: function (data) {
+                $('#flujo').empty();
+                $('#flujo').append(data);
+
+            },
+        });
+    }
+
+</script>
+{% endblock %}

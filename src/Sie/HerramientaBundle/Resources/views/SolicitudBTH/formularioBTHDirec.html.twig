@@ -1,7 +1,7 @@
 {% extends 'layoutHerramienta.html.twig' %}
 {% block contentoption %}
     <div class="header-content">
-        <h2><i class="fa fa-table animated fadeIn"></i> Solicitudes BTH - Pendientes <span>Solicitud BTH </span></h2>
+        <h2><i class="fa fa-table animated fadeIn"></i> Formulario de <Solicitud></Solicitud> BTH  <span>Solicitud BTH </span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -24,7 +24,7 @@
 
                         <div class="panel panel-success">
                             <div class="panel-heading">
-                                <h3 class="panel-title"> Nro. Trámite: <strong>{{ id_tramite}}</strong>  - Formulario de Solicitud BTH </h3>
+                                <h3 class="panel-title">Nro. Trámite: <strong>{{ id_tramite}}</strong> Formulario de Solicitud BTH </h3>
                             </div><!-- /.panel-heading -->
                             <div class="panel-body">
                                 <div class="row">
@@ -229,9 +229,9 @@
 
                                                 </div>
                                                 <div class="col-md-5">
-                                                    <select data-placeholder="Seleccionar especialidad" id="select_especialidad" name="select_especialidad[]"  class="form-control" multiple  >
-                                                        {% for especialidadarray in especialidadarray %}#}
-                                                            <option value="{{ especialidadarray.id }}">{{ especialidadarray.especialidad }}</option>
+                                                    <select data-placeholder="Seleccionar especialidad"  id="select_especialidad" name="select_especialidad[]"  class="chosen-select" multiple="" tabindex="-1" style="display: none;">
+                                                        {% for especialidad in especialidad %}
+                                                            <option value="{{ especialidad.id }}">{{ especialidad.especialidad }}</option>
                                                         {% endfor %}
                                                     </select>
                                                 </div>
@@ -255,105 +255,10 @@
                                                     </select>
                                                 </div>
                                             </div>
-
-
-                                        </div><!-- /.panel-body -->
-                                    </div>
-
-                                    <div class="panel panel-success">
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title">6.- Evaluación Distrital</h3>
-                                        </div><!-- /.panel-heading -->
-                                        <div class="panel-body">
-
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <strong>¿Solicitud Procedente?</strong>
+                                            <div class="col-md-12">
+                                                <div class="pull-right">
+                                                    <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicitubthDis()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
                                                 </div>
-                                            </div>
-                                            <br>
-                                            <div class="row">
-                                                <div class="col-md-2">
-                                                    <div class="rdio rdio-theme circle">
-                                                        <input id="siprocede" type="radio" name="radiotype1"  checked = true  >
-                                                        <label for="siprocede"><strong>Si</strong></label>
-                                                    </div>
-
-                                                </div>
-                                                {#<div class="col-md-2">
-                                                    <div class="rdio rdio-theme circle">
-                                                        <input id="noprocede" type="radio" name="radiotype1" value="no" onclick="muestraobs()">
-                                                        <label for="noprocede"><strong>No</strong></label>
-                                                    </div>
-                                                </div>#}
-
-                                            </div>
-                                            <BR>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="pull-left">
-                                                        {#<button class="btn btn-sm btn-facebook"  title="Adjuntar Documento"><i class="glyphicon glyphicon-paperclip"></i>Adjuntar Documento</button>#}
-                                                       {# <input type="file" id="adjdocumento" title="Adjuntar Documento" >#}
-                                                    </div>
-                                                </div>
-                                                {#<div class="col-md-6">
-                                                    <div class="pull-right">
-                                                        <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicituDistritaldbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
-                                                    </div>
-                                                </div>#}
-
-                                            </div>
-
-
-                                        </div><!-- /.panel-body -->
-                                    </div>
-
-
-                                    <div class="panel panel-success">
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title">7.- Evaluación Departamental </h3>
-                                        </div><!-- /.panel-heading -->
-                                        <div class="panel-body">
-
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <strong>¿Autoriza Solicitud?</strong>
-                                                </div>
-                                            </div>
-                                            <br>
-                                            <div class="row">
-                                                <div class="col-md-2">
-                                                    <div class="rdio rdio-theme circle">
-                                                        <input id="siprocededep" type="radio" name="radiotypedep" value="si" onclick="muestraobs()" >
-                                                        <label for="siprocededep"><strong>Si</strong></label>
-                                                    </div>
-
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <div class="rdio rdio-theme circle">
-                                                        <input id="noprocededep" type="radio" name="radiotypedep" value="no" onclick="muestraobs()">
-                                                        <label for="noprocededep"><strong>No</strong></label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-8" id="obs">
-                                                    <textarea class="form-control" rows="5" id="obstxt"></textarea>
-                                                </div>
-                                            </div>
-                                            <BR>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="pull-left">
-                                                        {#<button class="btn btn-sm btn-facebook"  title="Adjuntar Documento"><i class="glyphicon glyphicon-paperclip"></i>Adjuntar Documento</button>#}
-                                                        <input type="file" id="adjdocumento" title="Adjuntar Documento" >
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="pull-right">
-                                                        <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicituDepartamentaldbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
-                                                    </div>
-                                                </div>
-
-
                                             </div>
 
 
@@ -375,28 +280,28 @@
     </div>
 {% endblock %}
 {% block javascripts%}
-{{ parent() }}
+    {{ parent() }}
     <script>
         $(document).ready(function(){
             var informe = {{ informe }}
-                if(informe==1){
-                    document.getElementById("informe").checked = true;
-                }
+            if(informe==1){
+                document.getElementById("informe").checked = true;
+            }
             $('#obs').hide();
         });
         function muestraobs(){
-            var respuesta=$('input:radio[name=radiotypedep]:checked').val();
+            var respuesta=$('input:radio[name=radiotype1]:checked').val();
             if(respuesta=='si'){
                 $('#obs').hide();
             }else {
                 $('#obs').show(2000);
             }
         }
-        
-        function  enviarSolicituDepartamentaldbth() {
+
+        function  enviarSolicitubthDis() {
             swal({
                 title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
-                text: "La información llenada será enviada a la instancia correspondiente.",
+                text: "La información llenada será enviada a la Direccion Distrital.",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
@@ -410,38 +315,24 @@
                             ip.push({ informe : 1});
                         else ip.push({ informe : 0 });
                         ip.push({institucionid : institucionid});
-                        ip.push({select_especialidad : $('#select_especialidad').val()});
+
+                        if($('#select_especialidad').val())
+                            ip.push({select_especialidad : $('#select_especialidad').val()});
+                        else
+                        {swal("Debe seleccionar al menos una especialidad."); return false;}
+
+
                         var obstxt=$('#obstxt').val();
-                        if($('#siprocede').is(':checked')) {
-                            ip.push({siprocededis: 1})
-                        } else {
-                            if(obstxt == ''){
-                                alert("Debe introducir alguna observación");
-                                return false;            }
-                            ip.push({noprocededis: 0})
-                        }
-                        if($('#siprocededep:checked').val())
-
-                        var evaluacion  ="SI";
-                        if($('#noprocededep:checked').val())
-
-                        var evaluacion  = "NO";
 
 
                         var ipt=JSON.stringify(ip);
+
                         var imagen = '{{ asset("img/loading96.gif") }}';
 
-                        //var formData = {evaluacion:evaluacion};
-                        //var formData =new FormData();
-                        //formData.append('evaluacion',evaluacion);
-                        //formData.append('ipt',ipt);
-                        //formData.append();
-
-                        //alert(ipt);
                         $.ajax({
                             type: 'post',
-                            url: "{{ path('solicitud_bth_guarda_Dep') }}",
-                            data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},evaluacion: evaluacion,institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},obstxt:obstxt },
+                            url: "{{ path('solicitud_bth_enviosolicitud') }}",
+                            data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}} },
                             dataType : 'json',
                             before: function () {
                                 swal({
@@ -454,8 +345,8 @@
                             success: function (data) {
 
                                 if (data==1){
-                                    swal("Su formulario se ha enviado con éxito Muchas gracias");
-                                    location.href = "{{ path('solicitud_bth_departamental_index') }}";
+                                    swal("Su formulario se ha enviado con éxito Muchas gracias.");
+                                    location.href = "{{ path('solicitud_bth_index') }}";
                                 }
                                 else{
                                     swal("Su formulario no se envío correctamente");

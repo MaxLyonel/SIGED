@@ -1,7 +1,7 @@
 {% extends 'layoutHerramienta.html.twig' %}
 {% block contentoption %}
     <div class="header-content">
-        <h2><i class="fa fa-table animated fadeIn"></i> Solicitud BTH <span>Solicitudes usuario</span></h2>
+        <h2><i class="fa fa-table animated fadeIn"></i> Solicitudes - BTH <span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -16,7 +16,6 @@
         </div><!-- /.breadcrumb-wrapper -->
     </div><!-- /.header-content -->
     <div class="body-content animated fadeIn">
-
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="panel">
@@ -234,11 +233,21 @@
                                                        <td class="text-center">{{ listatareas.id }}</td>
                                                         <td>{{ listatareas.tramite_tipo }}</td>
                                                         <td>{{ listatareas.fecha_registro|date('d-m-Y') }}</td>
-                                                        <td>{{ listatareas.estado }}</td>
+                                                        <td> {% if ( listatareas.estado =='ENVIADO') %}
+                                                                <span class="label label-success">{{ listatareas.estado }}</span>
+                                                            {% else %}
+                                                                <span class="label label-danger">{{ listatareas.estado }}</span>
+                                                            {% endif %}
+                                                        </td>
+
                                                         <td>{{ listatareas.obs }}</td>
                                                         <td>
-                                                            {#<a href="https://s5.eestatic.com/2018/04/13/corazon/celebrities/Casas_de_famosos-Mark_Zuckerberg-Facebook-California-Fortuna-Celebrities_299483508_73716761_1024x576.jpg" download>dasda</a>#}
-                                                           <a href="{{ path('solicitud_bth_imprimeDirector',{'idUE':institucion.id}) }}" class="btn btn-danger btn-xs"   title="Imprimir Formulario"><i class="glyphicon glyphicon-print"></i></a>
+                                                             {% if ( listatareas.estado =='DEVUELTO') %}
+                                                            {# <a href="{{ path('solicitud_bth_imprimeDirector',{'idUE':institucion.id}) }}" class="btn btn-danger btn-xs"   title="Imprimir Formulario"><i class="glyphicon glyphicon-print"></i></a>#}
+                                                             <a href="{{ path('solicitud_bth_formulario',{'idUE':institucion.id,'id_tramite':listatareas.id}) }}" class="btn btn-warning btn-xs"   title="Ver Formulario"><i class="fa fa-eye"></i></a>
+                                                            {% else %}
+                                                                <a href="{{ path('solicitud_bth_imprimeDirector',{'idUE':institucion.id,'tramite_id':listatareas.id}) }}" class="btn btn-danger btn-xs"   title="Imprimir Formulario"><i class="glyphicon glyphicon-print"></i></a>
+                                                             {% endif %}
                                                         </td>
                                                     </tr>
                                                 {% endfor %}

@@ -1,7 +1,7 @@
 {% extends 'layoutHerramienta.html.twig' %}
 {% block contentoption %}
     <div class="header-content">
-        <h2><i class="fa fa-table animated fadeIn"></i> Recepción de Solicitudes BTH --{{ id_tramite}} <span>Solicitud BTH </span></h2>
+        <h2><i class="fa fa-table animated fadeIn"></i> Recepción de Solicitudes BTH<span>Solicitud BTH </span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -24,7 +24,7 @@
 
                         <div class="panel panel-success">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Formulario de Solicitud BTH </h3>
+                                <h3 class="panel-title">Nro. trámite: <strong>{{ id_tramite}}</strong>  - Formulario de Solicitud BTH </h3>
                             </div><!-- /.panel-heading -->
                             <div class="panel-body">
                                 <div class="row">
@@ -207,7 +207,7 @@
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="ckbox ckbox-theme">
-                                                        <input id="informe"  type="checkbox">
+                                                        <input id="informe"  type="checkbox" disabled>
                                                         <label for="informe"></label>
                                                     </div>
                                                 </div>
@@ -229,11 +229,12 @@
 
                                                 </div>
                                                 <div class="col-md-5">
-                                                    <select data-placeholder="Seleccionar especialidad" id="select_especialidad" name="select_especialidad[]"  class="form-control" multiple  >
-                                                        {% for especialidadarray in especialidadarray %}#}
+                                                    <select data-placeholder="Seleccionar especialidad" id="select_especialidad" name="select_especialidad[]"  class="form-control" multiple=""  >
+                                                        {% for especialidadarray in especialidadarray %}
                                                             <option value="{{ especialidadarray.id }}">{{ especialidadarray.especialidad }}</option>
                                                         {% endfor %}
                                                     </select>
+
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -275,7 +276,7 @@
                                             <div class="row">
                                                 <div class="col-md-2">
                                                     <div class="rdio rdio-theme circle">
-                                                        <input id="siprocede" type="radio" name="radiotype1" value="si" onclick="muestraobs()" >
+                                                        <input id="siprocede" type="radio" name="radiotype1" value="si" onclick="muestraobs()" checked >
                                                         <label for="siprocede"><strong>Si</strong></label>
                                                     </div>
 
@@ -325,13 +326,13 @@
     </div>
 {% endblock %}
 {% block javascripts%}
-{{ parent() }}
+    {{ parent() }}
     <script>
         $(document).ready(function(){
             var informe = {{ informe }}
-                if(informe==1){
-                    document.getElementById("informe").checked = true;
-                }
+            if(informe==1){
+                document.getElementById("informe").checked = true;
+            }
             $('#obs').hide();
         });
         function muestraobs(){
@@ -342,10 +343,11 @@
                 $('#obs').show(2000);
             }
         }
-        
-        function  enviarSolicituDistritaldbth() {
+
+        function  enviarSolicituDistritaldbth(especialidadarray) {
+
             swal({
-                title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
+                title: "¿Está Segura/o de enviar la respuesta a la solicitud?",
                 text: "La información llenada será enviada a la instancia correspondiente.",
                 icon: "warning",
                 buttons: true,
@@ -360,36 +362,35 @@
                             ip.push({ informe : 1});
                         else ip.push({ informe : 0 });
                         ip.push({institucionid : institucionid});
-                        ip.push({select_especialidad : $('#select_especialidad').val()});
+
+                      ip.push({select_especialidad : $('#select_especialidad').val()});
+                       // ip.push({select_especialidad:  } );
+                        //console.error(ip);
                         var obstxt=$('#obstxt').val();
+
                         if($('#siprocede').is(':checked')) {
                             var evaluacion  ="SI";
                         } else {
                             if(obstxt == ''){
-                                alert("Debe introducir alguna observación");
+                                swal("Debe describir una observación.");
                                 return false;            }
                             var evaluacion  = "NO";
                         }
+
                         if($('#siprocede:checked').val())
-                        ip.push({siprocede: 1})
-                        if($('#noprocede:checked').val())
                             ip.push({siprocede: 1})
+                        if($('#noprocede:checked').val())
+                            ip.push({noprocede: 1})
+
 
 
                         var ipt=JSON.stringify(ip);
                         var imagen = '{{ asset("img/loading96.gif") }}';
 
-                        //var formData = {evaluacion:evaluacion};
-                        //var formData =new FormData();
-                        //formData.append('evaluacion',evaluacion);
-                        //formData.append('ipt',ipt);
-                        //formData.append();
-
-                        //alert(ipt);
                         $.ajax({
                             type: 'post',
                             url: "{{ path('solicitud_bth_enviosolicitud_Dep') }}",
-                            data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},evaluacion: evaluacion,institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}} },
+                            data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},evaluacion: evaluacion,institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},obstxt:obstxt },
                             dataType : 'json',
                             before: function () {
                                 swal({
@@ -402,11 +403,11 @@
                             success: function (data) {
 
                                 if (data==1){
-                                    swal("Su formulario se ha enviado con éxito Muchas gracias");
+                                    swal("Su respuesta se ha enviado con éxito Muchas gracias");
                                     location.href = "{{ path('solicitud_bth_distrital_index') }}";
                                 }
                                 else{
-                                    swal("Su formulario no se envío correctamente");
+                                    swal("Su respuesta no se envío correctamente");
                                 }
                             },
                             complete: function () {
