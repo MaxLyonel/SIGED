@@ -55,11 +55,6 @@ class SolicitudBTHController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $institucion = $request->getSession()->get('ie_id');
-        $gestion = $request->getSession()->get('idGestion');
-
-        //dump($institucion);
-
-
 
         $repository = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal');
 
@@ -168,7 +163,7 @@ class SolicitudBTHController extends Controller {
 
         $director = $query->getOneOrNullResult();
        $operativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToCollege($institucion, $gestion);
-        $notaTipo = $em->getRepository('SieAppWebBundle:NotaTipo')->findOneById($operativo);
+
 
         //llamada a la  funcion que devuelve las tareas pendientes
 
