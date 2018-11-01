@@ -200,7 +200,8 @@ class ReportesController extends Controller {
         
         if ($nivel == '15'){//CENTRALIZADOR HUMANISTICA
             // FUNCION PARA VERIFICAR SI EL CURSO DE PRIMARIA TRABAJA CON LA NUEVA CURRICULA
-            $primariaNuevo = $this->get('funciones')->validatePrimariaCourse($idCurso);
+            // $primariaNuevo = $this->get('funciones')->validatePrimariaCourse($idCurso);
+            $primariaNuevo = $this->get('funciones')->verificarMateriasPrimariaAlternativa($idCurso);
             if (
                 ($this->session->get('ie_gestion') == '2016') || ($this->session->get('ie_gestion') == '2017') ||
                 ($this->session->get('ie_gestion') == '2018') || ($this->session->get('ie_gestion') == '2019')
@@ -330,7 +331,9 @@ class ReportesController extends Controller {
 //        die;
         
         if ($nivel == '15'){
-            $primariaNuevo = $this->get('funciones')->validatePrimariaCourse($idCurso);
+            // $primariaNuevo = $this->get('funciones')->validatePrimariaCourse($idCurso);
+            $primariaNuevo = $this->get('funciones')->verificarMateriasPrimariaAlternativa($idCurso);
+            
             if($primariaNuevo){
                 $reporte = 'alt_libreta_electronica_v1_ma.rptdesign';
             }else{

@@ -118,8 +118,9 @@ class CursosController extends Controller {
             $etapaespecialidad = $aInfoUeducativa['ueducativaInfo']['grado'];
         }
 
+        $primariaNuevo = $this->get('funciones')->verificarMateriasPrimariaAlternativa($dataUe['ueducativaInfoId']['iecId']);
         //dump($objStudents); die;
-        $primariaNuevo = $this->get('funciones')->validatePrimariaCourse($dataUe['ueducativaInfoId']['iecId']);
+        // $primariaNuevo = $this->get('funciones')->validatePrimariaCourse($dataUe['ueducativaInfoId']['iecId']);
 
         return $this->render($this->session->get('pathSystem') . ':InfoEstudianteRequest:seeStudents.html.twig', array(
                     'objStudents' => $objStudents,

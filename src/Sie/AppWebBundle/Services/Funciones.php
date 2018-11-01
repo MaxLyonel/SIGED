@@ -916,4 +916,35 @@ class Funciones {
 
     }
 
+    public function verificarMateriasPrimariaAlternativa($idCurso){
+        $materias = $this->em->createQueryBuilder()
+                    ->select('smt.id as asignaturaId, smt.modulo as asignatura, smt.codigo')
+                    ->from('SieAppWebBundle:InstitucioneducativaCurso','iec')
+                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ieco.insitucioneducativaCurso = iec.id')
+                    ->innerJoin('SieAppWebBundle:SuperiorModuloPeriodo','smp','WITH','ieco.superiorModuloPeriodo = smp.id')
+                    ->innerJoin('SieAppWebBundle:SuperiorModuloTipo','smt','WITH','smp.superiorModuloTipo = smt.id')
+                    ->innerJoin('SieAppWebBundle:SuperiorAreaSaberesTipo','sast','with','smt.superiorAreaSaberesTipo = sast.id')
+                    // ->groupBy('smt.id, smt.modulo, smt.codigo, ea.id, eae.id, ieco.id, sast.id')
+                    ->where('iec.id = :idCurso')
+                    ->setParameter('idCurso',$idCurso)
+                    ->getQuery()
+                    ->getResult();
+
+        $nuevaModalidad = false;
+        if(count($materias) == 5){
+            $tieneEmergente = false;
+            foreach ($materias as $m) {
+                // dump($m['codigo']);
+                if($m['codigo'] == 415){
+                    $tieneEmergente = true;
+                }
+            }
+            if($tieneEmergente){
+                $nuevaModalidad = true;
+            }
+        }
+
+        return $nuevaModalidad;
+        }
+
 }

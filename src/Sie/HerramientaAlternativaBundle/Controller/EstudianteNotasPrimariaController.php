@@ -103,7 +103,10 @@ class EstudianteNotasPrimariaController extends Controller {
         // REGISTRO DE MATERIAS SI EL ESTUDIANTE NO CUENTA CON LAS MISMAS
         $data = array('iecId'=>$iecId, 'eInsId'=>$idInscripcion);
 
-        $objNewCurricula = $this->get('funciones')->setCurriculaStudent($data);
+        /**
+         * FUNCION QUE SETEA TODAS LAS MATERIAS DEL CURSO AL ESTUDIANTE
+         */
+        // $objNewCurricula = $this->get('funciones')->setCurriculaStudent($data);
         // $arrCourseToSelected = $this->get('funciones')->getCurriculaStudent($data);
 
 
