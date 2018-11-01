@@ -75,6 +75,10 @@ class SolicitudRITTController extends Controller {
         $TramiteController->setContainer($this->container);
         //($usuario,$uDestinatario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,$varevaluacion,$idtramite,$datos)
         $mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea,$tabla,$idRie,'',$id_tipoTramite,'',$idTramite,'','');
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:Tramite')->findBy(array('institucioneducativa'=>$idRie));
+        //dump($entity);die;
+        $tramite = $entity[0]->getId();
 
         $mensajeEnvio="El trámite fue enviado correctamente";
         $request->getSession()
@@ -83,11 +87,11 @@ class SolicitudRITTController extends Controller {
 
         /**imprime comprobante del envio de la solicitud */
 
-        $arch = 'CERTIFICADOS_'.'_' . date('YmdHis') . '.pdf';
+        $arch = 'TRAMITE_'.$tramite.'_'.$idRie.'.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'rie_certificados_itt_v1_oyq.rptdesign&idCertificados='.$request->get('idRie').'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'ritt_infoGral_porCodRitt_v1_afv.rptdesign&cod_ritt='.$idRie.'&nro_tramite='.$tramite.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
