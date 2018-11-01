@@ -207,7 +207,7 @@ class AreasController extends Controller {
         $infoUe = $request->get('infoUe');
         $coid = $request->get('idco');
         $smpid = $request->get('smpId');
-
+        
         // eliminamos el area del curso
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
@@ -223,6 +223,9 @@ class AreasController extends Controller {
             // $templateToView = 'index.html.twig';
         }
         
+        $smp = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($smpid);
+        $smt = $smp->getSuperiorModuloTipo();
+
         try {
             
             $iecoen = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($coid);
@@ -244,6 +247,10 @@ class AreasController extends Controller {
             }
 
             $em->remove($iecoen);
+            if ($smt->getCodigo() == '415') {
+                $em->remove($smp);
+                $em->remove($smt);
+            }
             
             $em->flush();
 
