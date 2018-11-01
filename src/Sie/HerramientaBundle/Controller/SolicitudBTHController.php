@@ -553,7 +553,7 @@ class SolicitudBTHController extends Controller {
         $TramiteController->setContainer($this->container);
 
         $lista = $TramiteController->tramiteTarea(34,35,7,$id_usuario,$id_rol,'');
-
+//dump($lista);die;
         return $this->render('SieHerramientaBundle:SolicitudBTH:inicioDistrital.html.twig',array('lista_tramites'=>$lista['tramites']));
     }
     public function  VerSolicitudBTHDisAction(Request $request){
