@@ -843,6 +843,7 @@ class Funciones {
                     ->from('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g')
                     ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo = g.id')
                     ->innerJoin('SieAppWebBundle:SuperiorModuloPeriodo', 'k', 'WITH', 'g.id = k.institucioneducativaPeriodo')
+                    ->innerjoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','k.id = ieco.superiorModuloPeriodo')
                     ->innerJoin('SieAppWebBundle:SuperiorModuloTipo', 'l', 'WITH', 'l.id = k.superiorModuloTipo ')
                     ->where('h.id = :idCurso')
                     ->andwhere('l.codigo = :codigo')
@@ -851,13 +852,14 @@ class Funciones {
                     ->getQuery();
          
          $moduloIntEmer = $moduloIntEmer->getResult();
+         
          $swSetNameModIntEmer = false;
-          $arrModIntEme = array('status'=>false);
+         $arrModIntEme = array('status'=>false,'codMIE'=>'');
          if($moduloIntEmer){
             if($moduloIntEmer[0]->getModulo()=='MÓDULO EMERGENTE'){
-                $arrModIntEme = array('status'=>false,'codMIE'=>$moduloIntEmer[0]->getId());
-            }else{
                 $arrModIntEme = array('status'=>true,'codMIE'=>$moduloIntEmer[0]->getId());
+            }else{
+                $arrModIntEme = array('status'=>false,'codMIE'=>'');
             }
          }
          

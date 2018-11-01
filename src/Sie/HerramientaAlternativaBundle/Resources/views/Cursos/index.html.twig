@@ -229,7 +229,7 @@
                     $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
                 },
                 success: function (data) {
-                    if(data.codMIE > 0){
+                    if(data.status){
                           bootbox.prompt({
                           // size: "small",
                           title: "Registrar Nombre del MÓDULO EMERGENTE",

@@ -87,7 +87,7 @@ class CursosController extends Controller {
             $jsonModIntEmer = $this->get('funciones')->validateModIntEmer($dataUe['ueducativaInfoId']['iecId']);
             $arrModIntEme = json_decode($jsonModIntEmer,true);
             // validate if the MIE has name
-            if(!$arrModIntEme['status']){
+            if($arrModIntEme['status']){
                 $response = new JsonResponse();
                 return $response->setData($arrModIntEme);
             }
