@@ -45,3 +45,9 @@ herramienta_alter_areas_registerNameModIntEmer:
     defaults: { _controller: "SieHerramientaAlternativaBundle:Areas:registerNameModIntEmer"}
     options:
          expose: true         
+
+herramienta_alter_area_emergente_add:
+    path:     /areaemergenteadd
+    defaults: { _controller: SieHerramientaAlternativaBundle:Areas:areaemergenteadd }
+    options:
+         expose: true            
