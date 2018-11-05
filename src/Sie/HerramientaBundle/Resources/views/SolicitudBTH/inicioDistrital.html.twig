@@ -34,23 +34,23 @@
                                                 <th class="text-center border-right" style="min-width: 10px">No. Trámite</th>
                                                 <th>Código RUE</th>
                                                 <th>Unidad Educativa</th>
+                                                <th>Tipo de Trámite</th>
                                                 <th>Remitente</th>
                                                 <th>Estado</th>
                                                 <th>observaciones</th>
                                                 <th>Acciones</th>
-
                                             </tr>
                                             </thead>
                                             <tfoot>
                                             <tr>
                                                 <th class="text-center border-right">No. Trámite</th>
-                                                <th>Código Rue</th>
+                                                <th>Código RUE</th>
                                                 <th>Unidad Educativa</th>
+                                                <th>Tipo de Trámite</th>
                                                 <th>Remitente</th>
                                                 <th>Estado</th>
                                                 <th>observaciones</th>
                                                 <th>Acciones</th>
-
                                             </tr>
                                             </tfoot>
                                             <tbody>
@@ -59,13 +59,18 @@
                                                     <td class="text-center border-right">{{ lista_tramites.id}}</td>
                                                     <td>{{ lista_tramites.cod_sie}}</td>
                                                     <td>{{ lista_tramites.institucioneducativa }}</td>
+                                                    <td>{{ lista_tramites.tramite_tipo }}</td>
                                                     <td>{{ lista_tramites.nombre }}</td>
                                                     <td>{% if(lista_tramites.estado=='ENVIADO') %}  <span class="label label-success">RECIBIDO</span>
                                                     {% else %} <span class="label label-danger">{{ lista_tramites.estado }}</span>{% endif %} </td>
                                                     <td>{{ lista_tramites.obs}} </td>
                                                     <td>
-                                                        <a  class="btn btn-xs btn-warning" href="{{ path('solicitud_bth_solicitudBTHDis',{'lista_tramites.id':lista_tramites.id}) }}" title="Ver Solicitud"><i class="fa fa-eye"></i></a>
-                                                       {# <button class="btn btn-danger btn-xs"  title="Imprimir"><i class="glyphicon glyphicon-print"></i></button>#}
+                                                        {% if(lista_tramites.estado=='ENVIADO') %}
+                                                            <a  class="btn btn-xs btn-warning" href="{{ path('solicitud_bth_solicitudBTHDis',{'lista_tramites.id':lista_tramites.id}) }}" title="Ver Solicitud"><i class="fa fa-eye"></i></a>
+                                                        {% else %}
+                                                            <a  class="btn btn-xs btn-warning" href="{{ path('solicitud_bth_formularioDis',{'lista_tramites.id':lista_tramites.id}) }}" title="Ver Solicitud"><i class="fa fa-eye"></i></a>
+                                                        {% endif %}
+                                                        {# <button class="btn btn-danger btn-xs"  title="Imprimir"><i class="glyphicon glyphicon-print"></i></button>#}
                                                     </td>
                                                 </tr>
                                             {% endfor %}

@@ -1,7 +1,7 @@
 {% extends 'layoutHerramienta.html.twig' %}
 {% block contentoption %}
     <div class="header-content">
-        <h2><i class="fa fa-table animated flip"></i> Lista de Solicitudes BTH -imprime <span>Solicitudes usuario</span></h2>
+        <h2><i class="fa fa-table animated flip"></i> Lista de Solicitudes BTH <span>Solicitudes usuario</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -23,7 +23,7 @@
                     <div class="panel-body">
                         <div class="panel panel-success">
                             <div class="panel-heading">
-                                <h3 class="panel-title">1.- Solicitudes Pendientes</h3>
+                                <h3 class="panel-title">Finalizar Trámites BTH</h3>
                             </div><!-- /.panel-heading -->
                             <div class="panel-body">
                                 <div class="row">
@@ -33,6 +33,9 @@
                                             <tr >
                                                 <th class="text-center border-right" style="min-width: 10px">No. Trámite</th>
                                                 <th>Código RUE</th>
+                                                <th>Unidad Educativa</th>
+                                                <th>Tipo de Trámite</th>
+                                                <th>Remitente</th>
                                                 <th>Estado</th>
                                                 <th>Acciones</th>
 
@@ -42,6 +45,9 @@
                                             <tr>
                                                 <th class="text-center border-right">No. Trámite</th>
                                                 <th>Código Rue</th>
+                                                <th>Unidad Educativa</th>
+                                                <th>Tipo de Trámite</th>
+                                                <th>Remitente</th>
                                                 <th>Estado</th>
                                                 <th>Acciones</th>
 
@@ -52,15 +58,13 @@
                                                 <tr>
                                                     <td class="text-center border-right">{{ lista_tramites.id}}</td>
                                                     <td>{{ lista_tramites.cod_sie}}</td>
+                                                    <td>{{ lista_tramites.institucioneducativa}}</td>
+                                                    <td>{{ lista_tramites.tramite_tipo}}</td>
+                                                    <td>{{ lista_tramites.nombre}}</td>
                                                     <td>{{ lista_tramites.estado}}  </td>
-
                                                     <td>
-
-                                                        <button  class="btn btn-xs btn-warning" onclick="enviarSolicituDepartamentaldbthImprime({{ lista_tramites.cod_sie }},{{ lista_tramites.id}})" ><i class="fa fa-print"></i></button>
-
+                                                        <button  class="btn btn-xs btn-warning" onclick="enviarSolicituDepartamentaldbthImprime({{ lista_tramites.cod_sie }},{{ lista_tramites.id}}, new String('{{ lista_tramites.institucioneducativa}}'))"  title="Finalizar Tramite"><i class="fa fa-check"></i></button>
                                                     </td>
-
-
                                                 </tr>
                                             {% endfor %}
                                             </tbody>
@@ -86,9 +90,10 @@
 {{ parent() }}
 <script>
 
-    function  enviarSolicituDepartamentaldbthImprime(codUe,id_tramite) {
+    function  enviarSolicituDepartamentaldbthImprime(codUe,id_tramite,nombreUE) {
+
         swal({
-            title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
+            title: "¿Está Segura/o de finalizar el trámite?",
             text: "Se dará por finalizado el trámite de solicitud - BTH .",
             icon: "warning",
             buttons: true,
@@ -103,7 +108,7 @@
                     $.ajax({
                         type: 'post',
                         url: "{{ path('solicitud_bth_departamental_imprime') }}",
-                        data:{codUe:codUe,id_tramite:id_tramite},
+                        data:{codUe:codUe,id_tramite:id_tramite,nombreUE:nombreUE},
 
                         before: function () {
                             swal({

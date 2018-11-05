@@ -243,7 +243,6 @@
                                                         <td>{{ listatareas.obs }}</td>
                                                         <td>
                                                              {% if ( listatareas.estado =='DEVUELTO') %}
-                                                            {# <a href="{{ path('solicitud_bth_imprimeDirector',{'idUE':institucion.id}) }}" class="btn btn-danger btn-xs"   title="Imprimir Formulario"><i class="glyphicon glyphicon-print"></i></a>#}
                                                              <a href="{{ path('solicitud_bth_formulario',{'idUE':institucion.id,'id_tramite':listatareas.id}) }}" class="btn btn-warning btn-xs"   title="Ver Formulario"><i class="fa fa-eye"></i></a>
                                                             {% else %}
                                                                 <a href="{{ path('solicitud_bth_imprimeDirector',{'idUE':institucion.id,'tramite_id':listatareas.id}) }}" class="btn btn-danger btn-xs"   title="Imprimir Formulario"><i class="glyphicon glyphicon-print"></i></a>

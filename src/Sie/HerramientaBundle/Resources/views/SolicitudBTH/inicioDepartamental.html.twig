@@ -34,6 +34,7 @@
                                                 <th class="text-center border-right" style="min-width: 10px">No. Trámite</th>
                                                 <th>Código RUE</th>
                                                 <th>Unidada Educativa</th>
+                                                <th>Tipo de Tramite</th>
                                                 <th>Remitente</th>
                                                 <th>Estado</th>
                                                 <th>Acciones</th>
@@ -45,6 +46,7 @@
                                                 <th class="text-center border-right">No. Trámite</th>
                                                 <th>Código Rue</th>
                                                 <th>Unidad Educativa</th>
+                                                <th>Tipo de Tramite</th>
                                                 <th>Remitente</th>
                                                 <th>Estado</th>
                                                 <th>Acciones</th>
@@ -57,13 +59,12 @@
                                                     <td class="text-center border-right">{{ lista_tramites.id}}</td>
                                                     <td>{{ lista_tramites.cod_sie}}</td>
                                                     <td>{{ lista_tramites.institucioneducativa }}</td>
+                                                    <td>{{ lista_tramites.tramite_tipo }}</td>
                                                     <td>{{ lista_tramites.nombre}}</td>
                                                     <td>{{ lista_tramites.estado}}  </td>
                                                     <td>
                                                         <a  class="btn btn-xs btn-warning" href="{{ path('solicitud_bth_solicitudBTHDep',{'lista_tramites.id':lista_tramites.id}) }}" ><i class="fa fa-eye"></i></a>
                                                     </td>
-
-
                                                 </tr>
                                             {% endfor %}
                                             </tbody>
