@@ -1,0 +1,23 @@
+wf_tramite_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:WfTramite:index }
+
+wf_tramite_nuevo:
+    path:     /{id}/nuevo
+    defaults: { _controller: SieHerramientaBundle:WfTramite:nuevo }
+
+wf_tramite_recibido:
+    path:     /recibidos
+    defaults: { _controller: SieHerramientaBundle:WfTramite:recibidos }
+
+wf_tramite_enviados:
+    path:     /enviados
+    defaults: { _controller: SieHerramientaBundle:WfTramite:enviados }
+
+wf_tramite_concluidos:
+    path:     /concluidos
+    defaults: { _controller: SieHerramientaBundle:WfTramite:concluidos }
+
+wf_tramite_seguimiento:
+    path:     /seguimiento
+    defaults: { _controller: SieHerramientaBundle:WfTramite:seguimiento }
