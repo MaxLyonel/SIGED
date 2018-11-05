@@ -237,7 +237,7 @@
 
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            {#<div class="row">
                                                 <div class="col-md-4">
                                                     <strong>Seleccionar Curso al que se Aplica</strong>
                                                 </div>
@@ -246,17 +246,16 @@
                                                 </div>
                                                 <div class="col-md-5">
                                                     <select data-placeholder="Seleccionar Curso" class="chosen-select" multiple="" tabindex="-1" style="display: none;">
-                                                        {#{% if cursos %}
-                                                            {% for cursos in cursos %}#}{#
+                                                        #}{#{% if cursos %}
+                                                            {% for cursos in cursos %}#}{##}{#
                                                                 <option value="{{ cursos.grado_tipo_id }}">{{ cursos.grado }}</option>
                                                             {% endfor %}
                                                         {% else %}
                                                             <option value="">U.E. sin cursos </option>
-                                                        {% endif %} #}
+                                                        {% endif %} #}{#
                                                     </select>
                                                 </div>
-                                            </div>
-
+                                            </div>#}
 
                                         </div><!-- /.panel-body -->
                                     </div>
@@ -296,33 +295,27 @@
                                                 <div class="col-md-6">
                                                     <div class="pull-left">
                                                         {#<button class="btn btn-sm btn-facebook"  title="Adjuntar Documento"><i class="glyphicon glyphicon-paperclip"></i>Adjuntar Documento</button>#}
-                                                        <input type="file" id="adjdocumento" title="Adjuntar Documento"  >
+                                                        <input type="file" id="adjdocumento" title="Adjuntar Documento" accept="application/pdf">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="pull-right">
                                                         <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicituDistritaldbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
                                                     </div>
+                                                   {# <div class="pull-right">
+                                                        <button class="btn btn-sm btn-facebook"  title="dsd" onclick="verespecialidades()"><i class="fa fa-pencil"></i> Enviar ver</button>
+                                                    </div>#}
                                                 </div>
-
-
                                             </div>
-
-
                                         </div><!-- /.panel-body -->
                                     </div>
                                 </div>
                             </div><!-- /.panel-body -->
                         </div>
-
                     </div>
                 </div>
-
             </div>
-
         </div>
-
-
     </div>
 {% endblock %}
 {% block javascripts%}
@@ -343,9 +336,17 @@
                 $('#obs').show(2000);
             }
         }
+/*function verespecialidades() {
+    var especialidades_id = [];
+    $("#select_especialidad").find("option").each(function(index, opc){
+        //console.log(opc);
+        especialidades_id.push(opc.value);
+    });
+    console.log(especialidades_id);
 
-        function  enviarSolicituDistritaldbth(especialidadarray) {
+}*/
 
+        function  enviarSolicituDistritaldbth() {
             swal({
                 title: "¿Está Segura/o de enviar la respuesta a la solicitud?",
                 text: "La información llenada será enviada a la instancia correspondiente.",
@@ -362,12 +363,13 @@
                             ip.push({ informe : 1});
                         else ip.push({ informe : 0 });
                         ip.push({institucionid : institucionid});
-
-                      ip.push({select_especialidad : $('#select_especialidad').val()});
-                       // ip.push({select_especialidad:  } );
+                        var especialidades_id = [];
+                        $("#select_especialidad").find("option").each(function(index, opc){
+                            especialidades_id.push(opc.value);
+                        });
+                        ip.push({"select_especialidad" : especialidades_id});
                         //console.error(ip);
                         var obstxt=$('#obstxt').val();
-
                         if($('#siprocede').is(':checked')) {
                             var evaluacion  ="SI";
                         } else {
@@ -378,20 +380,39 @@
                         }
 
                         if($('#siprocede:checked').val())
-                            ip.push({siprocede: 1})
+                        ip.push({siprocede: 1})
+
                         if($('#noprocede:checked').val())
-                            ip.push({noprocede: 1})
+                        ip.push({noprocede: 1})
+
+                        if($('#adjdocumento').val()=="")
+                        {swal("Debe adjuntar su informe.");
+                        return false;}
 
 
 
                         var ipt=JSON.stringify(ip);
-                        var imagen = '{{ asset("img/loading96.gif") }}';
 
+                        var imagen = '{{ asset("img/loading96.gif") }}';
+                        var fd = new FormData();
+                        fd.append('ipt', ipt);
+                        fd.append('id_distrito', {{ ubicacion['codigo_distrito'] }});
+                        fd.append('evaluacion', evaluacion);
+                        fd.append('institucionid', {{ institucion.id }});
+                        fd.append('id_tramite', {{ id_tramite}});
+                        fd.append('obstxt', obstxt);
+                        //fd.append('docpdf', $('#adjdocumento')[0]);
+                        var docpdf = document.getElementById('adjdocumento');
+                        fd.append('docpdf', docpdf.files[0]);
                         $.ajax({
                             type: 'post',
                             url: "{{ path('solicitud_bth_enviosolicitud_Dep') }}",
-                            data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},evaluacion: evaluacion,institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},obstxt:obstxt },
-                            dataType : 'json',
+                            data: fd, //{ipt: ipt, id_distrito: { ubicacion['codigo_distrito'] }}, evaluacion: evaluacion,institucionid:{ institucion.id }}, id_tramite:{ id_tramite}}, obstxt:obstxt },
+                            mimeType:"multipart/form-data",
+                            contentType: false,
+                            cache: false,
+                            processData:false,
+                            //dataType : 'json',
                             before: function () {
                                 swal({
                                     title: "Enviando...",
@@ -401,7 +422,6 @@
                                 });
                             },
                             success: function (data) {
-
                                 if (data==1){
                                     swal("Su respuesta se ha enviado con éxito Muchas gracias");
                                     location.href = "{{ path('solicitud_bth_distrital_index') }}";

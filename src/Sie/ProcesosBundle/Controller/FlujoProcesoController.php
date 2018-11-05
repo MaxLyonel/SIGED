@@ -289,8 +289,8 @@ class FlujoProcesoController extends Controller
             $wftareacompuerta->setFlujoProceso($flujoproceso);
             $wftareacompuerta->setWfCompuerta($wfcompuerta);
             $wftareacompuerta->setCondicion($form['condiciones']);
-            $wftareacompuerta->setCondicionTareaSiguiente($form['ctareasig']);
-            //dump(wf)
+            $wftareacompuerta->setCondicionTareaSiguiente($form['ctareasig']?$form['ctareasig']:null);
+            //dump($wftareacompuerta);die;
             $em->persist($wftareacompuerta);
             $em->flush();
             $em->getConnection()->commit();
@@ -486,8 +486,8 @@ class FlujoProcesoController extends Controller
         FROM flujo_proceso fp JOIN proceso_tipo pt ON fp.proceso_id = pt.id
         JOIN wf_tarea_compuerta wftc ON wftc.flujo_proceso_id = fp.id 
         JOIN wf_compuerta wfc ON wftc.wf_compuerta_id = wfc.id
-        JOIN flujo_proceso fpc ON wftc.condicion_tarea_siguiente = fpc.id
-    	JOIN proceso_tipo ptc ON fpc.proceso_id = ptc.id
+        LEFT JOIN flujo_proceso fpc ON wftc.condicion_tarea_siguiente = fpc.id
+    	LEFT JOIN proceso_tipo ptc ON fpc.proceso_id = ptc.id
         WHERE fp.flujo_tipo_id='. $flujotipo .' ORDER BY fp.id');
         $query->execute();
         $arrDataCondicion = $query->fetchAll();

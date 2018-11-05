@@ -74,7 +74,7 @@ class FlujoSeguimientoController extends Controller
         //dump($data);die;
         //if (($form['proceso'] == 5 && !$data['nombre']) || ($form['proceso'] == 14 && !$data['nombre_ie']) || ($form['proceso'] == 6 && !$data['estudiante']) || ($form['proceso'] == 7 && !$data['estudiante'])) 
         //if (($form['proceso'] == 5 || $form['proceso'] == 6 || $form['proceso'] == 7 || $form['proceso'] == 14 )  && !$data['nombre']) 
-        if (($form['proceso'] == 5 || $form['proceso'] == 6 || $form['proceso'] == 7 || $form['proceso'] == 14 )  && !$data['nombre']) 
+        if (($form['proceso'] == 5 || $form['proceso'] == 6 || $form['proceso'] == 7)  && !$data['nombre']) 
         {
             //dump($data['nombre']);die;
             $mensaje = 'Número de tramite es incorrecto';
@@ -92,7 +92,7 @@ class FlujoSeguimientoController extends Controller
         /**
          * TRAMITE RUE
          */
-        if($flujotipo == 5) 
+        if($flujotipo == 5 || $flujotipo == 6 || $flujotipo == 7) 
         {
             $query = $em->getConnection()->prepare('select p.id, p.flujo,d.institucioneducativa, p.proceso_tipo, p.orden, p.es_evaluacion,p.variable_evaluacion, p.condicion, p.nombre,d.valor_evaluacion, p.condicion_tarea_siguiente, p.plazo, p.tarea_ant_id, p.tarea_sig_id, p.rol_tipo_id,d.id as td_id,d.tramite_id, d.flujo_proceso_id,d.fecha_registro,d.usuario_remitente_id,d.usuario_destinatario_id
         from
@@ -144,7 +144,7 @@ class FlujoSeguimientoController extends Controller
         /**
          * TRAMITE PARA ESTUDIANTES
          */
-        if($flujotipo == 6 || $flujotipo == 7 )
+        if($flujotipo == 66 || $flujotipo == 27 )
         {
             $query = $em->getConnection()->prepare("select p.id, p.flujo,d.estudiante, p.proceso_tipo, p.orden, p.es_evaluacion,p.variable_evaluacion, p.condicion, p.nombre,d.valor_evaluacion, p.condicion_tarea_siguiente, p.plazo, p.tarea_ant_id, p.tarea_sig_id, p.rol_tipo_id,d.id as td_id,d.tramite_id, d.flujo_proceso_id,d.fecha_registro,d.usuario_remitente_id,d.usuario_destinatario_id
             from
@@ -172,11 +172,11 @@ class FlujoSeguimientoController extends Controller
         //dump($arrData);die;
         $data['flujo']=$arrData;
         $data['flujotipo'] = $flujotipo;
-        if($flujotipo == 5)
+        if($flujotipo == 5 || $flujotipo == 7)
         {
             $data['nombre']=$arrData[0]['institucioneducativa'];
 
-        }elseif($flujotipo == 6 || $flujotipo == 7 ){
+        }elseif($flujotipo == 6 || $flujotipo == 27 ){
             $data['nombre'] = $arrData[0]['estudiante'];
 
         }elseif($flujotipo == 14){
@@ -192,6 +192,7 @@ class FlujoSeguimientoController extends Controller
             $nombre_instituto = $datos[10]['nom_instituto'];
             $data['nombre'] = $nombre_instituto;
         }
+        //dump($data);die;
         return $data;
     }
     

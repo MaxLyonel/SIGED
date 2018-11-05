@@ -229,11 +229,21 @@
 
                                                 </div>
                                                 <div class="col-md-5">
+
+                                                    {% if (tipoTramite == 45)  %}
+
                                                     <select data-placeholder="Seleccionar especialidad"  id="select_especialidad" name="select_especialidad[]"  class="chosen-select" multiple="" tabindex="-1" style="display: none;">
                                                         {% for especialidad in especialidad %}
                                                             <option value="{{ especialidad.id }}">{{ especialidad.especialidad }}</option>
                                                         {% endfor %}
                                                     </select>
+                                                    {% else %}
+                                                    <select data-placeholder="Seleccionar especialidad" id="lista_select_especialidad" name="lista_select_especialidad[]"  class="form-control" multiple=""  >
+                                                        {% for especialidadarray in especialidadarray %}
+                                                            <option value="{{ especialidadarray.id }}">{{ especialidadarray.especialidad }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -241,18 +251,18 @@
                                                     <strong>Seleccionar Curso al que se Aplica</strong>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <strong><span class="label label-warning">Nivel: Secundaria</span></strong>
+
                                                 </div>
                                                 <div class="col-md-5">
-                                                    <select data-placeholder="Seleccionar Curso" class="chosen-select" multiple="" tabindex="-1" style="display: none;">
-                                                        {#{% if cursos %}
-                                                            {% for cursos in cursos %}#}{#
-                                                                <option value="{{ cursos.grado_tipo_id }}">{{ cursos.grado }}</option>
-                                                            {% endfor %}
-                                                        {% else %}
-                                                            <option value="">U.E. sin cursos </option>
-                                                        {% endif %} #}
-                                                    </select>
+                                                    <strong><span class="label label-warning">Nivel: Secundaria</span></strong>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <strong>Documento adjunto</strong>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <a href="{{asset('uploads/archivos/'~ documento )}}" target="_blank">Informe distrital</a>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
@@ -310,25 +320,34 @@
                 .then(function(willDelete)  {
                     if (willDelete) {
                         var institucionid={{ institucion.id }}
+                        var tipoTramite={{ tipoTramite }}
                         var ip = [];
                         if($('#informe:checked').val())
                             ip.push({ informe : 1});
                         else ip.push({ informe : 0 });
                         ip.push({institucionid : institucionid});
 
-                        if($('#select_especialidad').val())
-                            ip.push({select_especialidad : $('#select_especialidad').val()});
+
+                        if(tipoTramite == 45)//Registro Nuevo
+                        {
+                            if($('#select_especialidad').val())
+                                ip.push({select_especialidad : $('#select_especialidad').val()});
+                            else
+                            {swal("Debe seleccionar al menos una especialidad."); return false;}
+                        }
                         else
-                        {swal("Debe seleccionar al menos una especialidad."); return false;}
+                        {
+                            var especialidades_id = [];
+                            $("#lista_select_especialidad").find("option").each(function(index, opc){
+                                especialidades_id.push(opc.value);
+                            });
+                            ip.push({"select_especialidad" : especialidades_id});
+                        }
 
 
                         var obstxt=$('#obstxt').val();
-
-
                         var ipt=JSON.stringify(ip);
-
                         var imagen = '{{ asset("img/loading96.gif") }}';
-
                         $.ajax({
                             type: 'post',
                             url: "{{ path('solicitud_bth_enviosolicitud') }}",
@@ -343,9 +362,8 @@
                                 });
                             },
                             success: function (data) {
-
                                 if (data==1){
-                                    swal("Su formulario se ha enviado con éxito Muchas gracias.");
+                                    swal("Su formulario se ha enviado con éxito Muchas Gracias.");
                                     location.href = "{{ path('solicitud_bth_index') }}";
                                 }
                                 else{
