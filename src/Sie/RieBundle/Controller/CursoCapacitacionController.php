@@ -136,8 +136,10 @@ class CursoCapacitacionController extends Controller {
             //Buscamos si el curso existe
             $query = $em->createQuery('SELECT ca
                                          FROM SieAppWebBundle:TtecCarreraTipo ca
-                                        WHERE UPPER(ca.nombre) LIKE :nombreCarrera')
-                                    ->setParameter('nombreCarrera', trim(strtoupper($form['ttecCarreraTipo'])));        
+                                        WHERE UPPER(ca.nombre) LIKE :nombreCarrera
+                                        AND ca.ttecAreaFormacionTipo = :areaCurso')
+                                    ->setParameter('nombreCarrera', trim(strtoupper($form['ttecCarreraTipo'])))
+                                    ->setParameter('areaCurso', 200);        
             $dato = $query->getResult();   
             
             if($dato){ //El curso ya se encuentra en el catálogo
