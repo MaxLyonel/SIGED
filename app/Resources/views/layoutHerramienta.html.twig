@@ -366,7 +366,7 @@
                         <li><a href="{{ path('herramienta_info_maestro_migrar_index')}}">Personal Docente</a></li>
                       </ul>
                     </li>
-                        <li class="submenu">
+                        {#<li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
                                 <span class="text">Proceso BTH</span>
@@ -376,7 +376,7 @@
                                 <li><a href="{{ path('solicitud_bth_index')}}">Solicitud BTH</a></li>
 
                             </ul>
-                        </li>
+                        </li>#}
                     {% endif %}
 
                     {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10 or app.session.get('roluser') == 20 %}
@@ -404,7 +404,7 @@
                             <li><a href="{{ path('bach_exc_rep_dis')}}">Generar Reporte</a></li>
                         </ul>
                     </li>
-                        <li class="submenu">
+                        {#<li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
                                 <span class="text">Proceso BTH</span>
@@ -424,7 +424,7 @@
                             <ul>
                                 <li><a href="{{ path('solicitud_ritt_inicio')}}">Solicitud RITT</a></li>
                             </ul>
-                        </li>
+                        </li>#}
                     {% endif %}
 
                     {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10 %}
