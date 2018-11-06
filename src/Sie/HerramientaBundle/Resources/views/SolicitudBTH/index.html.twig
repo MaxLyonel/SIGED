@@ -17,7 +17,7 @@
     </div><!-- /.header-content -->
     <div class="body-content animated fadeIn">
         <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="col-md-6 col-sm-12 col-xs-12">
                 <div class="panel">
                     <div class="panel-body">
                         <div class="panel panel-success">
@@ -32,7 +32,7 @@
                                                 <strong>Director(a)</strong>
                                             </div>
                                         </div>
-                                        <br>
+
                                         <div class="row">
                                             <div class="col-md-12">
                                                <strong>Carnet de Identidad</strong>
@@ -46,7 +46,7 @@
 
                                             </div>
                                         </div>
-                                        <br>
+
                                         <div class="row">
                                             <div class="col-md-12">
                                                 {{ director.carnet }}
@@ -71,18 +71,14 @@
                                                 <strong>Código RUE</strong>
                                             </div>
                                         </div>
-                                        <br>
+
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <strong>Unidad Educativa</strong>
                                             </div>
                                         </div>
-                                        <br>
-                                        {#<div class="row">
-                                            <div class="col-md-12">
-                                                <strong>Sub Sistema</strong>
-                                            </div>
-                                        </div>#}
+
+
                                     </div>
                                     <div class="col-md-9">
                                         <div class="row">
@@ -90,24 +86,26 @@
                                                 {{ institucion.id }}
                                             </div>
                                         </div>
-                                        <br>
+
                                         <div class="row">
                                             <div class="col-md-12">
                                                 {{ iedu.institucioneducativa }}
                                             </div>
                                         </div>
 
-                                        <div class="row">
-                                            <div class="col-md-12">
 
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
 
 
                             </div><!-- /.panel-body -->
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12 col-xs-12">
+                <div class="panel">
+                    <div class="panel-body">
                         <div class="panel panel-success">
                             <div class="panel-heading">
                                 <h3 class="panel-title">3.- Localización</h3>
@@ -195,6 +193,15 @@
 
                             </div><!-- /.panel-body -->
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="panel">
+                    <div class="panel-body">
+
                         <div class="panel panel-success">
                             <div class="panel-heading">
                                 <h3 class="panel-title">4.- Solicitud BTH</h3>
@@ -230,7 +237,7 @@
                                                     <tr>
 
                                                         <td class="text-center">{{ loop.index }}</td>
-                                                       <td class="text-center">{{ listatareas.id }}</td>
+                                                        <td class="text-center">{{ listatareas.id }}</td>
                                                         <td>{{ listatareas.tramite_tipo }}</td>
                                                         <td>{{ listatareas.fecha_registro|date('d-m-Y') }}</td>
                                                         <td> {% if ( listatareas.estado =='ENVIADO') %}
@@ -242,11 +249,11 @@
 
                                                         <td>{{ listatareas.obs }}</td>
                                                         <td>
-                                                             {% if ( listatareas.estado =='DEVUELTO') %}
-                                                             <a href="{{ path('solicitud_bth_formulario',{'idUE':institucion.id,'id_tramite':listatareas.id}) }}" class="btn btn-warning btn-xs"   title="Ver Formulario"><i class="fa fa-eye"></i></a>
+                                                            {% if ( listatareas.estado =='DEVUELTO') %}
+                                                                <a href="{{ path('solicitud_bth_formulario',{'idUE':institucion.id,'id_tramite':listatareas.id}) }}" class="btn btn-warning btn-xs"   title="Ver Formulario"><i class="fa fa-eye"></i></a>
                                                             {% else %}
                                                                 <a href="{{ path('solicitud_bth_imprimeDirector',{'idUE':institucion.id,'tramite_id':listatareas.id}) }}" class="btn btn-danger btn-xs"   title="Imprimir Formulario"><i class="glyphicon glyphicon-print"></i></a>
-                                                             {% endif %}
+                                                            {% endif %}
                                                         </td>
                                                     </tr>
                                                 {% endfor %}
@@ -260,9 +267,7 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
 
     </div>
