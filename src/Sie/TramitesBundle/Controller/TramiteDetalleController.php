@@ -2080,8 +2080,8 @@ class TramiteDetalleController extends Controller {
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
-        $rolPermitido = array(8,13);
-        // $rolPermitido = array(9);
+        // $rolPermitido = array(8,13);
+        $rolPermitido = array(9);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -4043,7 +4043,8 @@ class TramiteDetalleController extends Controller {
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
-        $rolPermitido = array(8,13);
+        // $rolPermitido = array(8,13);
+        $rolPermitido = array(9);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -4157,7 +4158,8 @@ class TramiteDetalleController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $rolPermitido = array(8,13);
+        // $rolPermitido = array(8,13);
+        $rolPermitido = array(9);
 
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);

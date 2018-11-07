@@ -323,6 +323,7 @@
                                     <span class="selected"></span>
                                 </a>
                                 <ul>
+                                    {# if rol13 or rol8 #}
                                     {% if rol9 %}
                                         <li class=" "><a href="{{path('tramite_certificado_tecnico_registro_busca')}}">Registro</a></li>
                                     {% endif %}
@@ -338,6 +339,7 @@
                                     {% if (rol14 or rol8) and 1 == 2 %}
                                         <li><a href="{{path('tramite_detalle_certificado_tecnico_envio_busca')}}">Envío</a></li>
                                     {% endif %}
+                                    {# if rol13 or rol8 #}
                                     {% if rol9 %}
                                         <li><a href="{{path('tramite_detalle_certificado_tecnico_entrega_busca')}}">Entrega</a></li>
                                     {% endif %}
