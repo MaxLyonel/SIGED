@@ -1,9 +1,13 @@
 Sie\AppWebBundle\Entity\PermanentePoblacionTipo:
     type: entity
     table: permanente_poblacion_tipo
+    indexes:
+        IDX_5376CB341C75E25C:
+            columns:
+                - organizacion_tipo_id
     id:
         id:
-            type: integer
+            type: smallint
             nullable: false
             unsigned: false
             comment: ''
@@ -20,7 +24,17 @@ Sie\AppWebBundle\Entity\PermanentePoblacionTipo:
         obs:
             type: string
             nullable: true
-            length: 255
+            length: 1500
             fixed: false
             comment: ''
+    manyToOne:
+        organizacionTipo:
+            targetEntity: PermanenteOrganizacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                organizacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
     lifecycleCallbacks: {  }

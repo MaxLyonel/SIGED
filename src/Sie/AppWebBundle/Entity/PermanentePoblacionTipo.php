@@ -24,6 +24,11 @@ class PermanentePoblacionTipo
      */
     private $obs;
 
+    /**
+     * @var \Sie\AppWebBundle\Entity\PermanenteOrganizacionTipo
+     */
+    private $organizacionTipo;
+
 
     /**
      * Get id
@@ -79,5 +84,28 @@ class PermanentePoblacionTipo
     public function getObs()
     {
         return $this->obs;
+    }
+
+    /**
+     * Set organizacionTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\PermanenteOrganizacionTipo $organizacionTipo
+     * @return PermanentePoblacionTipo
+     */
+    public function setOrganizacionTipo(\Sie\AppWebBundle\Entity\PermanenteOrganizacionTipo $organizacionTipo = null)
+    {
+        $this->organizacionTipo = $organizacionTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get organizacionTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\PermanenteOrganizacionTipo 
+     */
+    public function getOrganizacionTipo()
+    {
+        return $this->organizacionTipo;
     }
 }

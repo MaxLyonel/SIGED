@@ -41,11 +41,12 @@
                                 <tr>
                                     <th style="width: 5px">Acciones</th>
                                     <th>Procedente</th>
+                                    <th>Depto.</th>
                                     <th>Cod. RITT</th>
                                     <th>Denominación</th>
                                     <th>Nro. Trámite</th>
                                     <th>Fecha de Solicitud</th>
-                                    {#<th>Estado de Solicitud</th>#}
+                                    <th>Usuario Remitente</th>
 
                                 </tr>
                                 </thead>
@@ -55,11 +56,12 @@
 
                                     <th style="width: 5px">Acciones</th>
                                     <th>Procedente</th>
+                                    <th>Depto.</th>
                                     <th>Cod. RITT</th>
                                     <th>Denominación</th>
                                     <th>Nro. Trámite</th>
                                     <th>Fecha de Solicitud</th>
-                                    {#<th>Estado de Solicitud</th>#}
+                                    <th>Usuario Remitente</th>
 
 
                                 </tr>
@@ -81,12 +83,12 @@
                                             <textarea name="obs1_{{ loop.index }}" id="obs_{{ loop.index }}" cols="30" rows="5" style="display: none"></textarea>
 
                                         </td>
-
+                                        <td>{{ listaTramites.lugar }}</td>
                                         <td >{{ listaTramites.codrie}}</td>
                                         <td>{{ listaTramites.institucioneducativa}}</td>
                                         <td class="text-center">{{ listaTramites.id }}</td>
                                         <td class="text-center">{{ listaTramites.fecha_registro }}</td>
-                                        {#<td>{{ listaTramites.estado }}</td>#}
+                                        <td>{{ listaTramites.nombre }}</td>
 
                                     </tr>
                                 {% endfor %}

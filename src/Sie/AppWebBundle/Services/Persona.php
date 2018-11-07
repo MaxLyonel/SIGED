@@ -19,7 +19,7 @@ class Persona {
     public function buscarPersona($carnet, $complemento, $extranjero) {
 
         /***NUEVO TOKEN A LA FECHA 25/09/2017*/
-        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTUwODk0NTUyNCwiZXhwIjoxNTQwNDgxNTI0fQ.uPQ2qUoB3NBA2zlOswQ8LLqEtQVGJts5jBHfhh_9kPU';
+        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTU0MDQ5MTY3OSwiZXhwIjoxNTcyMDI3Njc5fQ.lf233gXhht6PCcs29WmKN9a2Sy-sj_buKtJVsbM_CPc';
 
         /***NUEVO TOKEN A LA FECHA 16/6/2017*/
         
@@ -42,7 +42,7 @@ class Persona {
 
     public function BuscarPersonaPorCarnetComplementoFechaNacimiento($carnet, $complemento, $fechaNacimiento) {
         /***NUEVO TOKEN A LA FECHA 25/09/2017*/
-        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTUwODk0NTUyNCwiZXhwIjoxNTQwNDgxNTI0fQ.uPQ2qUoB3NBA2zlOswQ8LLqEtQVGJts5jBHfhh_9kPU';
+        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTU0MDQ5MTY3OSwiZXhwIjoxNTcyMDI3Njc5fQ.lf233gXhht6PCcs29WmKN9a2Sy-sj_buKtJVsbM_CPc';
 
         $client = new Client([
         // Base URI is used with relative requests
@@ -62,7 +62,7 @@ class Persona {
 
     public function registrarPersona($carnet, $complemento, $fechanacimiento, $paterno, $materno, $nombre, $genero) {
         /***NUEVO TOKEN A LA FECHA 25/09/2017*/
-        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTUwODk0NTUyNCwiZXhwIjoxNTQwNDgxNTI0fQ.uPQ2qUoB3NBA2zlOswQ8LLqEtQVGJts5jBHfhh_9kPU';
+        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTU0MDQ5MTY3OSwiZXhwIjoxNTcyMDI3Njc5fQ.lf233gXhht6PCcs29WmKN9a2Sy-sj_buKtJVsbM_CPc';
 
         $client = new Client([
         // Base URI is used with relative requests
@@ -82,7 +82,7 @@ class Persona {
 
     public function actualizarPersona($id, $carnet, $complemento, $fechanacimiento, $paterno, $materno, $nombre, $genero) {
         /***NUEVO TOKEN A LA FECHA 25/09/2017*/
-        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTUwODk0NTUyNCwiZXhwIjoxNTQwNDgxNTI0fQ.uPQ2qUoB3NBA2zlOswQ8LLqEtQVGJts5jBHfhh_9kPU';
+        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTU0MDQ5MTY3OSwiZXhwIjoxNTcyMDI3Njc5fQ.lf233gXhht6PCcs29WmKN9a2Sy-sj_buKtJVsbM_CPc';
 
         $client = new Client([
         // Base URI is used with relative requests

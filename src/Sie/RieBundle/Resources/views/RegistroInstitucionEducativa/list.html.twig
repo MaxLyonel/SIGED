@@ -52,14 +52,15 @@
                                     <tr>
                                         <th>Acciones</th>                                    
                                         <th>Depto.</th>
-                                        <th>Cod. RITT</th>                                     
+                                        <th>Cód. RITT</th>                                     
                                         <th>Denominación</th>
+                                        <th>Acreditación</th>
                                         <th>Sede/Subsede</th>
                                         <th>R.M.</th>
                                         <th>Fecha R.M.</th>
                                         <th>Carácter<br>Jurídico</th>
                                         <th>Tipo<br>Institución</th>
-                                        <th>Cod. LE</th>
+                                        <th>Cód. LE</th>
                                     </tr>
                                 </thead>
                                 
@@ -67,14 +68,15 @@
                                     <tr>
                                         <th>Acciones</th>                                    
                                         <th>Depto.</th>
-                                        <th>Cod. RITT</th>
+                                        <th>Cód. RITT</th>
                                         <th>Denominación</th>
+                                        <th>Acreditación</th>
                                         <th>Sede/Subsede</th>
                                         <th>R.M.</th>
                                         <th>Fecha R.M.</th>
                                         <th>Carácter<br>Jurídico</th>
                                         <th>Tipo<br>Institución</th>
-                                        <th>Cod. LE</th>
+                                        <th>Cód. LE</th>
                                     </tr>
                                 </tfoot>
                                 
@@ -82,28 +84,44 @@
                                     {% for entity in entities %}
                                         <tr>
                                             <td>
-                                                {% if entity.institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario %}
-                                                {% if entity.institucioneducativa.id == entity.sede %}
+                                                
+                                                {% if entity.institucioneducativa.id == entity.sede and entity.institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario %}
                                                 <a href="{{path('rie_new_subsede', {'idRie': entity.institucioneducativa.id})}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Registrar Subsede">
                                                     <i class="material-icons">widgets</i>
                                                 </a>
                                                 {% else %}
-                                                    <button class="btn btn-grey btn-circle waves-effect waves-circle waves-float" disabled="disabled">
+                                                    <button class="btn btn-grey btn-circle waves-effect waves-circle waves-float" disabled="disabled" title={% if entity.institucioneducativa.id != entity.sede %}"No puede registrar Subsede"{% else %}"Instituto fuera de su jurisdicción, no puede registrar Subsede"{% endif %}>
                                                         <i class="material-icons">widgets</i></button>
                                                 {% endif %}
-                                                    <a href="{{path('rie_edit', {'idRie': entity.institucioneducativa.id})}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Editar">
-                                                    <i class="material-icons">mode_edit</i>
-                                                    </a>
-                                                    <a href="{{path('rie_delete', {'idRie': entity.institucioneducativa.id})}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Eliminar">
-                                                    <i class="material-icons">delete_forever</i>
-                                                    </a>
+                                                {% if entity.institucioneducativa.institucioneducativaAcreditacionTipo.id == 3 and entity.institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario  %}
+                                                        <a href="{{path('rie_edit', {'idRie': entity.institucioneducativa.id})}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Editar" >
+                                                            <i cass="material-icons">mode_edit</i>
+                                                        </a>
+                                                        <a href="{{path('rie_delete', {'idRie': entity.institucioneducativa.id})}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Eliminar" {% if entity.institucioneducativa.institucioneducativaAcreditacionTipo.id == 2 %}disabled{% endif %}>
+                                                            <i class="material-icons">delete_forever</i>
+                                                        </a>
                                                 {% else %}
-                                                -
+                                                            <button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" disabled="disabled" data-toggle="tooltip" data-placement="top" title={% if entity.institucioneducativa.institucioneducativaAcreditacionTipo.id == 2 %}"Instituto Acreditado, no puede modificar"{% else %}"Instituto fuera de su jurisdicción, no puede modificar"{% endif %}>
+                                                                <i class="material-icons">mode_edit</i></button>
+                                                            <button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" disabled="disabled" data-toggle="tooltip" data-placement="top" title={% if entity.institucioneducativa.institucioneducativaAcreditacionTipo.id == 2 %}"Instituto Acreditado, no puede eliminar"{% else %}"Instituto fuera de su jurisdicción, no puede eliminar"{% endif %}>
+                                                                <i class="material-icons">delete_forever</i>
                                                 {% endif %}
+                                               
                                             </td>
                                             <td>{{ entity.institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar }}</td>                                            
                                             <td>{{ entity.institucioneducativa.id }}</td> 
                                             <td>{{ entity.institucioneducativa.institucioneducativa }}</td> 
+                                            <td>
+                                                {% if entity.institucioneducativa.institucioneducativaAcreditacionTipo.id == 3 %}
+                                                    <span class="label label-danger">
+                                                        No acreditada
+                                                    </span>
+                                                {% elseif entity.institucioneducativa.institucioneducativaAcreditacionTipo.id == 2 %}
+                                                    <span class="label label-success">
+                                                        Acreditada
+                                                    </span>
+                                                {% endif %}
+                                            </td>
                                             <td>
                                                 {% if entity.institucioneducativa.id == entity.sede %}
                                                     SEDE

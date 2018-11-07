@@ -40,6 +40,26 @@ class TtecDocentePersona
     private $esVigente;
 
     /**
+     * @var integer
+     */
+    private $item;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\FinanciamientoTipo
+     */
+    private $financiamientoTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\TtecCargoDesignacionTipo
+     */
+    private $ttecCargoDesignacionTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\GestionTipo
+     */
+    private $gestionTipo;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\Institucioneducativa
      */
     private $institucioneducativa;
@@ -176,85 +196,6 @@ class TtecDocentePersona
     }
 
     /**
-     * Set institucioneducativa
-     *
-     * @param \Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa
-     * @return TtecDocentePersona
-     */
-    public function setInstitucioneducativa(\Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa = null)
-    {
-        $this->institucioneducativa = $institucioneducativa;
-    
-        return $this;
-    }
-
-    /**
-     * Get institucioneducativa
-     *
-     * @return \Sie\AppWebBundle\Entity\Institucioneducativa 
-     */
-    public function getInstitucioneducativa()
-    {
-        return $this->institucioneducativa;
-    }
-
-    /**
-     * Set persona
-     *
-     * @param \Sie\AppWebBundle\Entity\Persona $persona
-     * @return TtecDocentePersona
-     */
-    public function setPersona(\Sie\AppWebBundle\Entity\Persona $persona = null)
-    {
-        $this->persona = $persona;
-    
-        return $this;
-    }
-
-    /**
-     * Get persona
-     *
-     * @return \Sie\AppWebBundle\Entity\Persona 
-     */
-    public function getPersona()
-    {
-        return $this->persona;
-    }
-    /**
-     * @var \Sie\AppWebBundle\Entity\GestionTipo
-     */
-    private $gestionTipo;
-
-
-    /**
-     * Set gestionTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\GestionTipo $gestionTipo
-     * @return TtecDocentePersona
-     */
-    public function setGestionTipo(\Sie\AppWebBundle\Entity\GestionTipo $gestionTipo = null)
-    {
-        $this->gestionTipo = $gestionTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get gestionTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\GestionTipo 
-     */
-    public function getGestionTipo()
-    {
-        return $this->gestionTipo;
-    }
-    /**
-     * @var integer
-     */
-    private $item;
-
-
-    /**
      * Set item
      *
      * @param integer $item
@@ -276,16 +217,6 @@ class TtecDocentePersona
     {
         return $this->item;
     }
-    /**
-     * @var \Sie\AppWebBundle\Entity\FinanciamientoTipo
-     */
-    private $financiamientoTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\TtecCargoDesignacionTipo
-     */
-    private $ttecCargoDesignacionTipo;
-
 
     /**
      * Set financiamientoTipo
@@ -331,5 +262,74 @@ class TtecDocentePersona
     public function getTtecCargoDesignacionTipo()
     {
         return $this->ttecCargoDesignacionTipo;
+    }
+
+    /**
+     * Set gestionTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\GestionTipo $gestionTipo
+     * @return TtecDocentePersona
+     */
+    public function setGestionTipo(\Sie\AppWebBundle\Entity\GestionTipo $gestionTipo = null)
+    {
+        $this->gestionTipo = $gestionTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get gestionTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\GestionTipo 
+     */
+    public function getGestionTipo()
+    {
+        return $this->gestionTipo;
+    }
+
+    /**
+     * Set institucioneducativa
+     *
+     * @param \Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa
+     * @return TtecDocentePersona
+     */
+    public function setInstitucioneducativa(\Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa = null)
+    {
+        $this->institucioneducativa = $institucioneducativa;
+    
+        return $this;
+    }
+
+    /**
+     * Get institucioneducativa
+     *
+     * @return \Sie\AppWebBundle\Entity\Institucioneducativa 
+     */
+    public function getInstitucioneducativa()
+    {
+        return $this->institucioneducativa;
+    }
+
+    /**
+     * Set persona
+     *
+     * @param \Sie\AppWebBundle\Entity\Persona $persona
+     * @return TtecDocentePersona
+     */
+    public function setPersona(\Sie\AppWebBundle\Entity\Persona $persona = null)
+    {
+        $this->persona = $persona;
+    
+        return $this;
+    }
+
+    /**
+     * Get persona
+     *
+     * @return \Sie\AppWebBundle\Entity\Persona 
+     */
+    public function getPersona()
+    {
+        return $this->persona;
     }
 }

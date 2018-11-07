@@ -1,0 +1,170 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel rounded shadow">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">1. NATURALEZA DE LA SOLICITUD</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+                {{ form_start(form_nuevo) }}
+                <div class="form-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group col-md-12">
+                                <div class="col-md-3">
+        	    		        {{ form_label(form_nuevo.dependenciaTipo) }}
+                                </div>
+                                <div class="col-md-9">
+                                    {{ form_widget(form_nuevo.dependenciaTipo) }}
+                                </div>
+                            </div>
+                            <div class="form-group  col-md-12">
+                                <div class="col-md-3">
+                                    {{ form_label(form_nuevo.turnotipo) }}
+                                </div>
+                                <div class="col-md-9">
+                                    {{ form_widget(form_nuevo.turnotipo) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <h5>1.3 NIVELES DE FORMACIÓN</h5>
+						    {% for r in form_nuevo.niveltipo %}
+                            <div class="card">
+                                {{ form_widget(r) }}
+                                {{ form_label(r) }}
+                            </div>
+                            {% endfor %}   
+					    </div>
+                        {% if tipoeducacion == 4 %}
+                        <div class="form-group col-md-4">
+                            <h5>ÁREAS DE FORMACIÓN</h5>
+						    {% for a in form_nuevo.areaEspecialTipo %}
+                            <div class="card">
+                                {{ form_widget(a) }}
+                                {{ form_label(a) }}
+                            </div>
+                            {% endfor %}   
+					    </div>
+                        {% endif %}
+                    </div>
+                </div>
+			</div><!-- /.panel-body -->
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel rounded shadow">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">2. IDENTIFICACIÓN GENERAL DE LA UNIDAD EDUCATIVA</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group col-md-12">
+                            <div class="col-md-3">
+        	    		        {{ form_label(form_nuevo.departamento) }}
+                            </div>
+                            <div class="col-md-9">
+                                {{ form_widget(form_nuevo.departamento) }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-3">
+                                {{ form_label(form_nuevo.provincia) }}
+                            </div>
+                            <div class="col-md-9">
+                                {{ form_widget(form_nuevo.provincia) }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-3">
+                                {{ form_label(form_nuevo.municipio) }}
+                            </div>
+                            <div class="col-md-9">
+                                {{ form_widget(form_nuevo.municipio) }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-3">
+                                {{ form_label(form_nuevo.canton) }}
+                            </div>
+                            <div class="col-md-9">
+                                {{ form_widget(form_nuevo.canton) }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-3">
+                                {{ form_label(form_nuevo.localidad) }}
+                            </div>
+                            <div class="col-md-9">
+                                {{ form_widget(form_nuevo.localidad) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-3">
+                                {{ form_label(form_nuevo.distrito) }}
+                            </div>
+                            <div class="col-md-9">
+                                {{ form_widget(form_nuevo.distrito) }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-3">
+                                {{ form_label(form_nuevo.institucionEducativa) }}
+                            </div>
+                            <div class="col-md-9">
+                                {{ form_widget(form_nuevo.institucionEducativa) }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-3">
+                                {{ form_label(form_nuevo.zona) }}
+                            </div>
+                            <div class="col-md-9">
+                                {{ form_widget(form_nuevo.zona) }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-3">
+                                {{ form_label(form_nuevo.direccion) }}
+                            </div>
+                            <div class="col-md-9">
+                                {{ form_widget(form_nuevo.direccion) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                            <h5>REQUISITOS</h5>
+						    {% for r in form_nuevo.requisitos %}
+                            <div class="card">
+                                {{ form_widget(r) }}
+                                {{ form_label(r) }}
+                            </div>
+                            {% endfor %}   
+					    </div>
+                    <div class="form-group col-md-6">
+						{{ form_label(form_nuevo.observacion) }}
+						{{ form_widget(form_nuevo.observacion, {'attr':{'class':'form-control'} }) }}
+					</div>
+                </div>
+                <div class="form-footer">
+                    <div class="form-group">
+						{{ form_widget(form_nuevo.guardar, {'label':'Guardar','attr':{'class':'btn btn-primary'} }) }}
+                        <a href="{{path('tramite_rue_recepcion_distrito')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
+					</div>
+                </div>
+                {{ form_end(form_nuevo) }}
+			</div><!-- /.panel-body -->
+        </div>
+    </div>
+</div>
+
