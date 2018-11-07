@@ -46,27 +46,52 @@
                     </div><!-- /.panel-heading -->
                     <!--/ End panel heading -->
                     <!-- Start panel content -->
-                    
                     <div class="panel-body">
                         <div class="row">
+							<div class="col-md-12">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-middle table-primary">
+                                <table class="table table-bordered table-striped table-primary" id="recepDep">
                                     <thead>
                                         <tr>
-                                            <th>No.</th>
+                                            <th class="text-center border-right" WIDTH="50">No. Tramite</th>
                                             <th>Trámite</th>
-                                            <th class="text-center"></th>
+                                            <th>Tipo de Trámite</th>
+                                            <th>Observación</th>
+                                            <th>Usuario Remitente</th>
+                                            <th>Estado</th>
+                                            <th>Fecha de estado</th>
+                                            <th>Acciones</th>
                                         </tr>
                                     </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th class="text-center border-right">No. Tramite</th>
+                                            <th>Trámite</th>
+                                            <th>Tipo de Trámite</th>
+                                            <th>Observación</th>
+                                            <th>Usuario Remitente</th>
+                                            <th>Estado</th>
+                                            <th>Fecha de estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </tfoot>
                                     <tbody>
                                         {% for entity in entities %}
                                         <tr>
-                                            <td class="text-center">
-                                                <strong>{{ loop.index }}</strong>
-                                            </td>
+                                            <td>{{ entity.id }}</a></td>
                                             <td>{{ entity.flujo }}</td>
-                                            <td class="text-center">
-                                                <a href="{{ path('wf_tramite_nuevo', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Nuevo Trámite">
+                                            <td>{{ entity.tramite_tipo }}</td>
+                                            <td>{{ entity.obs }}</a></td>
+                                            <td>{{ entity.nombre }}</td>
+                                            <td>{{ entity.tramite_estado }}</td>
+                                            <td>{{ entity.fecha_estado }}</a></td>
+                                            <td>
+                                            {% if entity.id_estado == 15 %} {#si esta enviado #}
+                                                <a href="{{ path('wf_tramite_recibido_guardar', { 'id': entity.id }) }}" class="btn btn-success btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Recibir">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+                                            {% endif %}
+                                                <a href="{{ path('wf_tramite_recibido_enviar', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="{{ entity.proceso_tipo }}">
                                                     <i class="fa fa-pencil"></i>
                                                 </a>
                                             </td>
@@ -74,6 +99,7 @@
                                         {% endfor %}
                                     </tbody>
                                 </table>
+                            </div>
                             </div>
                         </div>
                     </div><!-- /.panel-body -->
@@ -83,59 +109,36 @@
             </div>
         </div><!-- /.row -->
     </div>
+    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+    </div><!-- /.modal -->  
 {% endblock %}
 {% block javascripts %}
     {{parent()}}
     <script>
-        var registroConsol = function (gestionid) {
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('herramienta_especial_registro_consol', {'gestionid': gestionid}),
-                beforeSend: function () {
-                    $("#tableConsol").empty();
-                    $("#tableConsol").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" style="width: 80px;" /></div>');
-                },
-                success: function (data) {
-                    $("#listaConsol").remove();
-                    $("#tableConsol").empty();
-                    $("#tableConsol").append(data);
-                    cargatablas();
-                },
-                statusCode: {
-                    500: function () {
-
-                    },
-                    404: function () {
-
-                    }
-                }
-            });
-        };
-
+        $( document ).ready(function() {
+            cargatablas();
+        });
         var cargatablas = function (identif){
             // Setup - add a text input to each footer cell
-            $('#listaConsol tfoot th').each( function () {
+            $('#recepDep tfoot th').each( function () {
                 var title = $(this).text();
-                if(title.trim() === "" || title === "#"){
+                if(title.trim() === "" || title === "Acciones"){
                     $(this).html('');
                 } else {
                     $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
                 }
             } );
-
             // DataTable
-            var table = $('#listaConsol').DataTable( {
+            var table = $('#recepDep').DataTable( {
                     "order": [[ 0, "asc" ]],
                     "columnDefs": [
-                        { "orderable": false, "targets": [8,7,6,5] }
+                        { "orderable": false, "targets": [0] }
                     ],
                 }
             );
-
             // Apply the search
             table.columns().every( function () {
                 var that = this;
-
                 $( 'input', this.footer() ).on( 'keyup change', function () {
                     if ( that.search() !== this.value ) {
                         that
@@ -145,9 +148,5 @@
                 } );
             } );
         };
-
-        $(document).ready(function(){
-            cargatablas();
-        });
     </script>
 {% endblock %}

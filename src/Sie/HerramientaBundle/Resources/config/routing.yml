@@ -133,3 +133,7 @@ sie_herramienta_solicitud_bth:
 sie_herramienta_wf_tramite:
     resource: "@SieHerramientaBundle/Resources/config/routing/wftramite.yml"
     prefix:   /sie/tramite
+
+sie_herramienta_tramite_rue:
+    resource: "@SieHerramientaBundle/Resources/config/routing/tramiterue.yml"
+    prefix:   /tramiterue

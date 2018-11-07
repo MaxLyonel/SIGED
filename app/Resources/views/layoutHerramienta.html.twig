@@ -373,7 +373,7 @@
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
-                                <span class="text">Proceso BTH</span>
+                                <span class="text">Trámites - BTH</span>
                                 <span class="arrow"></span>
                             </a>
                             <ul>
@@ -396,16 +396,16 @@
                             <li><a href="{{ path('wf_tramite_index')}}">Nuevo Trámite</a></li>
                         </ul>
                         <ul>
-                            <li><a href="{{ path('wf_tramite_recibido')}}">Trámites Recibidos</a></li>
+                            <li><a href="{{ path('wf_tramite_recibido')}}">Recibidos</a></li>
                         </ul>
                         <ul>
-                            <li><a href="{{ path('wf_tramite_enviados')}}">Trámites Enviados</a></li>
+                            <li><a href="{{ path('wf_tramite_enviados')}}">Enviados</a></li>
                         </ul>
                         <ul>
-                            <li><a href="{{ path('wf_tramite_concluidos')}}">Trámites Concluidos</a></li>
+                            <li><a href="{{ path('wf_tramite_concluidos')}}">Concluidos</a></li>
                         </ul>
                         <ul>
-                            <li><a href="{{ path('wf_tramite_seguimiento')}}">Trámites Seguimiento</a></li>
+                            <li><a href="{{ path('wf_tramite_seguimiento')}}">Seguimiento</a></li>
                         </ul>
                     </li>
                     {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10 or app.session.get('roluser') == 20 %}

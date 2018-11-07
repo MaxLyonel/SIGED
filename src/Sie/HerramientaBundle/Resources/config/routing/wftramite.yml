@@ -10,6 +10,14 @@ wf_tramite_recibido:
     path:     /recibidos
     defaults: { _controller: SieHerramientaBundle:WfTramite:recibidos }
 
+wf_tramite_recibido_guardar:
+    path:     /{id}/recibidosguardar
+    defaults: { _controller: SieHerramientaBundle:WfTramite:recibidosGuardar }
+
+wf_tramite_recibido_enviar:
+    path:     /{id}/recibidosenviar
+    defaults: { _controller: SieHerramientaBundle:WfTramite:recibidosEnviar }
+
 wf_tramite_enviados:
     path:     /enviados
     defaults: { _controller: SieHerramientaBundle:WfTramite:enviados }

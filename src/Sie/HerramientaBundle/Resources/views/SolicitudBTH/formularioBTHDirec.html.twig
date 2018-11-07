@@ -257,12 +257,13 @@
                                                     <strong><span class="label label-warning">Nivel: Secundaria</span></strong>
                                                 </div>
                                             </div>
+                                            <br>
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <strong>Documento adjunto</strong>
-                                                </div>
-                                                <div class="col-md-8">
-                                                    <a href="{{asset('uploads/archivos/'~ documento )}}" target="_blank">Informe distrital</a>
+                                                    <strong>Documento adjunto</strong><br>
+                                                    <a  class="btn btn-lilac btn-xs btn-stroke" href="{{asset('uploads/archivos/'~ documento )}}" target="_blank">
+                                                        <i class="fa fa-file-pdf-o fa-2x" >  </i>   Informe Enviado por la Dirección Distrital
+                                                    </a>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
@@ -270,8 +271,6 @@
                                                     <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicitubthDis()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
                                                 </div>
                                             </div>
-
-
                                         </div><!-- /.panel-body -->
                                     </div>
 
@@ -343,8 +342,6 @@
                             });
                             ip.push({"select_especialidad" : especialidades_id});
                         }
-
-
                         var obstxt=$('#obstxt').val();
                         var ipt=JSON.stringify(ip);
                         var imagen = '{{ asset("img/loading96.gif") }}';
