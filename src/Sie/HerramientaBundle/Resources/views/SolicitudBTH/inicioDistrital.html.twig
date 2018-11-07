@@ -66,11 +66,11 @@
                                                     <td>{{ lista_tramites.obs}} </td>
                                                     <td>
                                                         {% if(lista_tramites.estado=='ENVIADO') %}
-                                                            <a  class="btn btn-xs btn-warning" href="{{ path('solicitud_bth_solicitudBTHDis',{'lista_tramites.id':lista_tramites.id}) }}" title="Ver Solicitud"><i class="fa fa-eye"></i></a>
+                                                            <a  class="btn btn-xs btn-warning" href="{{ path('solicitud_bth_solicitudBTHDis',{'lista_tramites.id':lista_tramites.id} )  }}" title="Ver Solicitud"><i class="fa fa-eye"></i></a>
                                                         {% else %}
                                                             <a  class="btn btn-xs btn-warning" href="{{ path('solicitud_bth_formularioDis',{'lista_tramites.id':lista_tramites.id}) }}" title="Ver Solicitud"><i class="fa fa-eye"></i></a>
                                                         {% endif %}
-                                                        {# <button class="btn btn-danger btn-xs"  title="Imprimir"><i class="glyphicon glyphicon-print"></i></button>#}
+
                                                     </td>
                                                 </tr>
                                             {% endfor %}

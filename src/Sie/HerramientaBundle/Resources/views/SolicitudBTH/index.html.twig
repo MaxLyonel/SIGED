@@ -22,7 +22,7 @@
                     <div class="panel-body">
                         <div class="panel panel-success">
                             <div class="panel-heading">
-                                <h3 class="panel-title">1.- Personal Administrativo </h3>
+                                <h3 class="panel-title"><strong>1.- Personal Administrativo </strong></h3>
                             </div><!-- /.panel-heading -->
                             <div class="panel-body">
                                 <div class="row">
@@ -35,7 +35,7 @@
 
                                         <div class="row">
                                             <div class="col-md-12">
-                                               <strong>Carnet de Identidad</strong>
+                                               <strong>C.I.</strong>
                                             </div>
                                         </div>
                                     </div>
@@ -59,7 +59,7 @@
                         </div>
                         <div class="panel panel-success">
                             <div class="panel-heading">
-                                <h3 class="panel-title">2.- Información General</h3>
+                                <h3 class="panel-title"><strong>2.- Información General</strong> </h3>
                             </div><!-- /.panel-heading -->
                             <div class="panel-body">
                                 <div class="row">
@@ -108,7 +108,7 @@
                     <div class="panel-body">
                         <div class="panel panel-success">
                             <div class="panel-heading">
-                                <h3 class="panel-title">3.- Localización</h3>
+                                <h3 class="panel-title"><strong>3.- Localización</strong></h3>
                             </div><!-- /.panel-heading -->
                             <div class="panel-body">
                                 <div class="row">
@@ -118,76 +118,67 @@
                                                 <strong>Departamento</strong>
                                             </div>
                                         </div>
-                                        <br>
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <strong>Cantón</strong>
                                             </div>
                                         </div>
-                                        <br>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <strong>Localidad</strong>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <strong>Zona</strong>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <strong>Dirección</strong>
+                                            </div>
+                                        </div>
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <strong>Distrito</strong>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-9">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 {{ ubicacion['departamento'] }}
                                             </div>
                                         </div>
-                                        <br>
                                         <div class="row">
                                             <div class="col-md-12">
                                                 {{ ubicacion['canton'] }}
                                             </div>
                                         </div>
-                                        <br>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                {{ ubicacion['distrito'] }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <strong>Localidad</strong>
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <strong>Zona</strong>
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <strong>Dirección</strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 {{ ubicacion['localidad'] }}
                                             </div>
                                         </div>
-                                        <br>
                                         <div class="row">
                                             <div class="col-md-12">
                                                 {{ ubicacion['zona'] }}
                                             </div>
                                         </div>
-                                        <br>
                                         <div class="row">
                                             <div class="col-md-12">
                                                 {{ ubicacion['direccion'] }}
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                {{ ubicacion['distrito'] }}
+                                            </div>
+                                        </div>
+
                                     </div>
+
                                 </div>
 
 
@@ -201,10 +192,9 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="panel">
                     <div class="panel-body">
-
                         <div class="panel panel-success">
                             <div class="panel-heading">
-                                <h3 class="panel-title">4.- Solicitud BTH</h3>
+                                <h3 class="panel-title"><strong>4.- Solicitud BTH</strong></h3>
                             </div><!-- /.panel-heading -->
                             <div class="panel-body">
                                 <div class="row">
@@ -218,9 +208,20 @@
                                 </div>
                                 <div class="row">
                                     <div id="solicitudes" class="body-content  animated fadeIn">
-                                        <div class="table-responsive">
-                                            <table id="myTable" class="table table-bordered table-hover cf dataTable table ">
+                                        <div class="table-responsive col-md-12">
+                                            <table class="table table-bordered table-striped table-default" id="listaSolicitudes" >
                                                 <thead>
+                                                <tr >
+                                                    <th style="min-width: 10px"><strong>Nro.</strong></th>
+                                                    <th style="min-width: 10px"><strong>Nro. Trámite</strong></th>
+                                                    <th><strong>Tipo de Trámite</strong></th>
+                                                    <th><strong>Fecha de Solicitud</strong></th>
+                                                    <th><strong>Estado</strong></th>
+                                                    <th><strong>Observaciones</strong></th>
+                                                    <th><strong>Acciones</strong></th>
+                                                </tr>
+                                                </thead>
+                                                <tfoot>
                                                 <tr>
                                                     <th style="min-width: 10px"><strong>Nro.</strong></th>
                                                     <th style="min-width: 10px"><strong>Nro. Trámite</strong></th>
@@ -229,9 +230,8 @@
                                                     <th><strong>Estado</strong></th>
                                                     <th><strong>Observaciones</strong></th>
                                                     <th><strong>Acciones</strong></th>
-
                                                 </tr>
-                                                </thead>
+                                                </tfoot>
                                                 <tbody>
                                                 {% for listatareas in listatareas %}
                                                     <tr>
@@ -260,6 +260,11 @@
                                                 </tbody>
                                             </table>
                                         </div>
+
+
+
+
+
                                     </div>
                                 </div>
 
@@ -271,4 +276,45 @@
         </div>
 
     </div>
+{% endblock %}
+{% block javascripts%}
+    {{ parent() }}
+    <script>
+        $( document ).ready(function() {
+            cargatablas();
+        });
+        var cargatablas = function (identif){
+            // Setup - add a text input to each footer cell
+            $('#listaSolicitudes tfoot th').each( function () {
+                var title = $(this).text();
+                if(title.trim() === "" || title === "No."){
+                    $(this).html('');
+                } else {
+                    $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+                }
+            } );
+
+            // DataTable
+            var table = $('#listaSolicitudes').DataTable( {
+                    "order": [[ 0, "asc" ]],
+                    "columnDefs": [
+                        { "orderable": false, "targets": [0] }
+                    ],
+                }
+            );
+
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        };
+    </script>
 {% endblock %}

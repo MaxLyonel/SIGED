@@ -86,7 +86,7 @@
                                             <div class="col-md-9">
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                        {#{{ institucion.id }}#}
+                                                        {{ institucion.id }}
                                                     </div>
                                                 </div>
                                                 <br>
@@ -237,7 +237,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <strong>Seleccionar Curso al que se Aplica</strong>
+                                                <strong>Nivel al que se Aplica</strong>
                                             </div>
                                             <div class="col-md-3">
 
@@ -252,7 +252,7 @@
                                                         <option value="">U.E. sin cursos </option>
                                                     {% endif %}
                                                 </select>#}
-                                                <strong><span class="label label-warning">Nivel: Secundaria</span></strong>
+                                                <strong><span class="label label-primary">Nivel: Secundaria</span></strong>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -297,12 +297,8 @@
                                                         <strong>Unidad Educativa</strong>
                                                     </div>
                                                 </div>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <strong>Sub Sistema</strong>
-                                                    </div>
-                                                </div>
+
+
                                             </div>
                                             <div class="col-md-9">
                                                 <div class="row">
@@ -440,12 +436,11 @@
                                     <div class="panel-body">
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <strong>Seleccionar las especialidades</strong>
+                                                <strong>Lista de Especialidades</strong>
                                             </div>
                                             <div class="col-md-3">
                                             </div>
                                             <div class="col-md-5">
-
                                                 <select  id="lista_especialidades_ratificacion" name="lista_especialidades_ratificacion[]"  class="form-control" multiple  >
 
                                                 </select>
@@ -453,11 +448,12 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <strong>Seleccionar Curso al que se Aplica</strong>
+                                                <strong>Curso al que se Aplica</strong>
                                             </div>
                                             <div class="col-md-3">
-                                                <strong><span class="label label-warning">Nivel: Secundaria</span></strong>
+                                                <strong><span class="label label-primary">Nivel: Secundaria</span> <span >Grado: {{ grado }}</span> </strong>
                                             </div>
+
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
@@ -507,7 +503,7 @@
         var idsolicitud=$('#form_solicitud').val();
         switch (true){
             case (idsolicitud == 45):
-                document.getElementById("titulo").innerHTML= "Formulario de Registro Nuevo";
+                document.getElementById("titulo").innerHTML = "Formulario de <strong><em>Registro Nuevo</em></strong>";
                 $('#form_regularizacion').hide();
                 $('#form_especialidad').hide();
                 $('#form_nuevo').show(2000);
@@ -536,9 +532,10 @@
 
     }
     function enviarSolicitudbth() {
+
         var idsolicitud=$('#form_solicitud').val();
         switch (true){
-            case (idsolicitud == 45):
+            case (idsolicitud == 45): //Registro Nuevo
                 swal({
                     title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
                     text:  "La información llenada será enviada a la Dirección Distrital.",
@@ -580,12 +577,14 @@
                                     });
                                 },
                                 success: function (data) {
-                                    if (data==1){
+                                    if (data==1 ){
                                         swal("Su formulario se ha enviado con éxito Muchas gracias");
                                         location.href = "{{ path('solicitud_bth_index') }}";
                                     }
-                                    else{
-                                        swal("Su formulario no se envío correctamente");
+                                    else if(data==2 ){
+                                        swal("Debe iniciar su trámite como 'Ratificacion'");
+                                    }else {
+                                        swal('Su formulario no se envío correctamente');
                                     }
                                 },
                                 complete: function () {
@@ -596,8 +595,8 @@
                         }
                     });
                 break;
-            case (idsolicitud == 46):
-                var idsolicitud=$('#form_solicitud').val();
+            case (idsolicitud == 46): //Ratificacion
+
                 swal({
                     title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
                     text:  "La información llenada será enviada a la Dirección Distrital.",
@@ -647,8 +646,10 @@
                                         swal("Su formulario se ha enviado con éxito Muchas gracias");
                                         location.href = "{{ path('solicitud_bth_index') }}";
                                     }
-                                    else{
-                                        swal("Debe realizar la solicitud como Nuevo BTH");
+                                    else if(data==3 ){
+                                        swal("Debe iniciar su trámite como 'Registro Nuevo'");
+                                    }else {
+                                        swal('Su formulario no se envío correctamente');
                                     }
                                 },
                                 complete: function () {

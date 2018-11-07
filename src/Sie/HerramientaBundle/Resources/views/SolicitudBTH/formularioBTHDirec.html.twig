@@ -233,10 +233,11 @@
                                                     {% if (tipoTramite == 45)  %}
 
                                                     <select data-placeholder="Seleccionar especialidad"  id="select_especialidad" name="select_especialidad[]"  class="chosen-select" multiple="" tabindex="-1" style="display: none;">
-                                                        {% for especialidad in especialidad %}
+                                                        {% for especialidad in especialidadlista %}
                                                             <option value="{{ especialidad.id }}">{{ especialidad.especialidad }}</option>
                                                         {% endfor %}
                                                     </select>
+
                                                     {% else %}
                                                     <select data-placeholder="Seleccionar especialidad" id="lista_select_especialidad" name="lista_select_especialidad[]"  class="form-control" multiple=""  >
                                                         {% for especialidadarray in especialidadarray %}
@@ -297,6 +298,10 @@
                 document.getElementById("informe").checked = true;
             }
             $('#obs').hide();
+//            setTimeout(function () {
+//                $('#select_especialidad').val(['2','1','6']);
+//            },1000);
+
         });
         function muestraobs(){
             var respuesta=$('input:radio[name=radiotype1]:checked').val();
@@ -308,72 +313,137 @@
         }
 
         function  enviarSolicitubthDis() {
-            swal({
-                title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
-                text: "La información llenada será enviada a la Direccion Distrital.",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-                buttons: ["Cancelar", "Continuar"],
-            })
-                .then(function(willDelete)  {
-                    if (willDelete) {
-                        var institucionid={{ institucion.id }}
-                        var tipoTramite={{ tipoTramite }}
-                        var ip = [];
-                        if($('#informe:checked').val())
-                            ip.push({ informe : 1});
-                        else ip.push({ informe : 0 });
-                        ip.push({institucionid : institucionid});
+            var idsolicitud={{ tipoTramite }};
+            switch (true) {
+                case (idsolicitud == 45)://Registro Nuevo
+                    swal({
+                        title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
+                        text: "La información llenada será enviada a la Direccion Distrital.",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                        buttons: ["Cancelar", "Continuar"],
+                    })
+                        .then(function(willDelete)  {
+                            if (willDelete) {
+                                var institucionid={{ institucion.id }}
+                                var tipoTramite={{ tipoTramite }}
+                                var ip = [];
+                                if($('#informe:checked').val())
+                                    ip.push({ informe : 1});
+                                else ip.push({ informe : 0 });
+                                ip.push({institucionid : institucionid});
+
+                                    if($('#select_especialidad').val())
+                                        ip.push({select_especialidad : $('#select_especialidad').val()});
+                                    else
+                                    {swal("Debe seleccionar al menos una especialidad."); return false;}
 
 
-                        if(tipoTramite == 45)//Registro Nuevo
-                        {
-                            if($('#select_especialidad').val())
-                                ip.push({select_especialidad : $('#select_especialidad').val()});
-                            else
-                            {swal("Debe seleccionar al menos una especialidad."); return false;}
-                        }
-                        else
-                        {
-                            var especialidades_id = [];
-                            $("#lista_select_especialidad").find("option").each(function(index, opc){
-                                especialidades_id.push(opc.value);
-                            });
-                            ip.push({"select_especialidad" : especialidades_id});
-                        }
-                        var obstxt=$('#obstxt').val();
-                        var ipt=JSON.stringify(ip);
-                        var imagen = '{{ asset("img/loading96.gif") }}';
-                        $.ajax({
-                            type: 'post',
-                            url: "{{ path('solicitud_bth_enviosolicitud') }}",
-                            data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}} },
-                            dataType : 'json',
-                            before: function () {
-                                swal({
-                                    title: "Enviando...",
-                                    text: "Espere un momento por favor",
-                                    icon: imagen,
-                                    buttons: false
+
+                                var obstxt=$('#obstxt').val();
+                                var ipt=JSON.stringify(ip);
+                                var imagen = '{{ asset("img/loading96.gif") }}';
+                                $.ajax({
+                                    type: 'post',
+                                    url: "{{ path('solicitud_bth_enviosolicitud') }}",
+                                    data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},idsolicitud:idsolicitud },
+                                    dataType : 'json',
+                                    before: function () {
+                                        swal({
+                                            title: "Enviando...",
+                                            text: "Espere un momento por favor",
+                                            icon: imagen,
+                                            buttons: false
+                                        });
+                                    },
+                                    success: function (data) {
+                                        console.log(data);
+                                        if (data==1 ){
+                                            swal("Su formulario se ha enviado con éxito Muchas gracias");
+                                            location.href = "{{ path('solicitud_bth_index') }}";
+                                        }
+                                        else if(data==2 ){
+                                            swal("Debe iniciar su trámite como 'Ratificacion'");
+                                        }else {
+                                            swal('Su formulario no se envío correctamente');
+                                        }
+                                    },
+                                    complete: function () {
+                                        swal.stopLoading();
+                                        swal.close();
+                                    }
                                 });
-                            },
-                            success: function (data) {
-                                if (data==1){
-                                    swal("Su formulario se ha enviado con éxito Muchas Gracias.");
-                                    location.href = "{{ path('solicitud_bth_index') }}";
-                                }
-                                else{
-                                    swal("Su formulario no se envío correctamente");
-                                }
-                            },
-                            complete: function () {
-                                swal.stopLoading();
-                                swal.close();
                             }
                         });
-                    }
-                });
+
+                    break;
+                case (idsolicitud == 46)://Ratificacion
+                    swal({
+                        title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
+                        text: "La información llenada será enviada a la Direccion Distrital.",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                        buttons: ["Cancelar", "Continuar"],
+                    })
+                        .then(function(willDelete)  {
+                            if (willDelete) {
+                                var institucionid={{ institucion.id }}
+                                var tipoTramite={{ tipoTramite }}
+                                var ip = [];
+                                if($('#informe:checked').val())
+                                    ip.push({ informe : 1});
+                                else ip.push({ informe : 0 });
+                                ip.push({institucionid : institucionid});
+
+                                    var especialidades_id = [];
+                                    $("#lista_select_especialidad").find("option").each(function(index, opc){
+                                        especialidades_id.push(opc.value);
+                                    });
+                                    ip.push({"select_especialidad" : especialidades_id});
+
+                                var obstxt=$('#obstxt').val();
+                                var ipt=JSON.stringify(ip);
+                                var imagen = '{{ asset("img/loading96.gif") }}';
+                                $.ajax({
+                                    type: 'post',
+                                    url: "{{ path('solicitud_bth_enviosolicitud') }}",
+                                    data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}} },
+                                    dataType : 'json',
+                                    before: function () {
+                                        swal({
+                                            title: "Enviando...",
+                                            text: "Espere un momento por favor",
+                                            icon: imagen,
+                                            buttons: false
+                                        });
+                                    },
+                                    success: function (data) {
+                                            if (data==1){
+                                                swal("Su formulario se ha enviado con éxito Muchas gracias");
+                                                location.href = "{{ path('solicitud_bth_index') }}";
+                                            }
+                                            else if(data==3 ){
+                                                swal("Debe iniciar su trámite como 'Registro Nuevo'");
+                                            }else {
+                                                swal('Su formulario no se envío correctamente');
+                                            }
+                                        },
+                                    complete: function () {
+                                        swal.stopLoading();
+                                        swal.close();
+                                    }
+                                });
+                            }
+                        });
+                    break;
+
+            }
+
+
+
+
         }
 
     </script>
