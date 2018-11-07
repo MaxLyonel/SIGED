@@ -46,57 +46,60 @@
                     </div><!-- /.panel-heading -->
                     <!--/ End panel heading -->
                     <!-- Start panel content -->
-                    
                     <div class="panel-body">
                         <div class="row">
-                            <div class="table-responsive col-md-12">
-                            <table class="table table-bordered table-striped table-primary" id="recepDep">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center border-right" WIDTH="50">No. Tramite</th>
-                                        <th>Trámite</th>
-                                        <th>Tipo de Trámite</th>
-                                        <th>Fecha de envio</th>
-                                        <th>Observación</th>
-                                        <th>Usuario Remitente</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tfoot>
-                                    <tr>
-                                        <th class="text-center border-right">No. Tramite</th>
-                                        <th>Trámite</th>
-                                        <th>Tipo de Trámite</th>
-                                        <th>Fecha de envio</th>
-                                        <th>Observación</th>
-                                        <th>Usuario Remitente</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </tfoot>
-                                <tbody>
-                                {% for entity in entities %}
-                                    <tr>
-                                        <td>{{ entity.id }}</a></td>
-                                        <td>{{ entity.flujo }}</td>
-                                        <td>{{ entity.tramite_tipo }}</td>
-                                        <td>{{ entity.fecha_envio }}</a></td>
-                                        <td>{{ entity.obs }}</a></td>
-                                        <td>{{ entity.nombre }}</td>
-                                        <td></td>
-                                        <td>
-                                            <a href="{{ path('wf_tramite_recibido_guardar', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Trámite recibido">
-                                                <i class="fa fa-pencil"></i>
-                                            </a>
-                                            <a href="{{ path('wf_tramite_recibido_enviar', { 'id': entity.id, 'flujo': entity.tramite.flujoTipo.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Trámite enviar">
-                                                <i class="fa fa-pencil"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
+							<div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-primary" id="recepDep">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center border-right" WIDTH="50">No. Tramite</th>
+                                            <th>Trámite</th>
+                                            <th>Tipo de Trámite</th>
+                                            <th>Observación</th>
+                                            <th>Usuario Remitente</th>
+                                            <th>Estado</th>
+                                            <th>Fecha de estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th class="text-center border-right">No. Tramite</th>
+                                            <th>Trámite</th>
+                                            <th>Tipo de Trámite</th>
+                                            <th>Observación</th>
+                                            <th>Usuario Remitente</th>
+                                            <th>Estado</th>
+                                            <th>Fecha de estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        {% for entity in entities %}
+                                        <tr>
+                                            <td>{{ entity.id }}</a></td>
+                                            <td>{{ entity.flujo }}</td>
+                                            <td>{{ entity.tramite_tipo }}</td>
+                                            <td>{{ entity.obs }}</a></td>
+                                            <td>{{ entity.nombre }}</td>
+                                            <td>{{ entity.tramite_estado }}</td>
+                                            <td>{{ entity.fecha_estado }}</a></td>
+                                            <td>
+                                            {% if entity.id_estado == 15 %} {#si esta enviado #}
+                                                <a href="{{ path('wf_tramite_recibido_guardar', { 'id': entity.id }) }}" class="btn btn-success btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Recibir">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+                                            {% endif %}
+                                                <a href="{{ path('wf_tramite_recibido_enviar', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="{{ entity.proceso_tipo }}">
+                                                    <i class="fa fa-pencil"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                             </div>
                         </div>
                     </div><!-- /.panel-body -->
@@ -106,6 +109,8 @@
             </div>
         </div><!-- /.row -->
     </div>
+    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+    </div><!-- /.modal -->  
 {% endblock %}
 {% block javascripts %}
     {{parent()}}

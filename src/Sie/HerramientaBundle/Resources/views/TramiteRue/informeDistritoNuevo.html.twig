@@ -1,5 +1,24 @@
-<div class="modal-dialog">
-    <div class="modal-content">
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> Tramite RUE<span>Nueva Recepción</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Trámite</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                         {% if app.session.flashBag.has('exito') %}
@@ -26,7 +45,8 @@
                     <div class="panel-body">
                         {{ form_start(form) }}
                         <div class="row">
-							<div class="form-group col-md-6">
+							<div class="col-md-12">
+                            <div class="form-group col-md-6">
 								{{ form_label(form.informe) }}
 								{{ form_widget(form.informe, {'attr':{'class':'form-control'} }) }}
 							</div>
@@ -36,9 +56,9 @@
 								{{ form_widget(form.fechainforme, {'attr':{'class':'form-control','autocomplete':'off'} }) }}
                                 </div>
 							</div>
-                         
+                            </div>
                             <div class="col-md-12">
-                            <div class="form-group col-md-12">
+                            <div class="form-group col-md-6">
 								{{ form_label(form.observacion) }}
 								{{ form_widget(form.observacion, {'attr':{'class':'form-control'} }) }}
 							</div>
@@ -46,17 +66,18 @@
                             <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
 								{{ form_label(form.guardar) }}
                                 {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary'} }) }}
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-                                {#<a href="{{path('tramite_rue_informe_distrito')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>#}
+                                {#<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>#}
+                                <a href="{{path('wf_tramite_recibido')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
 							</div>
                         </div>    
         			    {{ form_end(form) }}
 			        </div><!-- /.panel-body -->
                 </div>
+            </div>
+        </div>
     </div>
-</div>
- {% block javascripts %}
-
+{% endblock %}
+{% block javascripts %}
     <script>
         $('#sandbox-container input').datepicker({
             autoclose: true,
@@ -65,4 +86,4 @@
             language: "es"
         });
     </script>
-    {% endblock %}
+{% endblock %}

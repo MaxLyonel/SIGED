@@ -1,3 +1,24 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> Tramite RUE<span>Nueva Recepción</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Trámite</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
 {{ form_start(form_nuevo,{ 'attr': {'id':'form_nuevo','role': "form"}}) }}
 <div class="row">
     <div class="col-md-12">
@@ -615,5 +636,9 @@
     </div>
 </div>
 {{ form_end(form_nuevo) }}
+            </div>
+        </div>
+    </div>
+        
 
 

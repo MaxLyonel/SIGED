@@ -111,14 +111,20 @@ class WfTramiteController extends Controller
         
         $em = $this->getDoctrine()->getManager();
         
-        $query = $em->getConnection()->prepare("select t.id,ft.flujo,tt.tramite_tipo,td.fecha_envio,td.obs,p.nombre
+        $query = $em->getConnection()->prepare("select t.id,ft.flujo,case when te.id=3 then pt.proceso_tipo else ptsig.proceso_tipo end as proceso_tipo,tt.tramite_tipo,te.tramite_estado,case when te.id = 3 then td.fecha_recepcion else td.fecha_envio end as fecha_estado,te.id as id_estado,td.obs,p.nombre
         from tramite t
         join tramite_detalle td on cast(t.tramite as int)=td.id
+        join flujo_proceso fp on td.flujo_proceso_id=fp.id
+        left join flujo_proceso fpsig on fp.tarea_sig_id=fpsig.id
+        left join flujo_proceso fpant on fp.tarea_ant_id=fpant.id
+        left join proceso_tipo ptsig on fpsig.proceso_id=ptsig.id
+        join proceso_tipo pt on fp.proceso_id=pt.id
         join tramite_tipo tt on t.tramite_tipo=tt.id
+        join tramite_estado te on td.tramite_estado_id=te.id
         join flujo_tipo ft on t.flujo_tipo_id = ft.id
         join usuario u on td.usuario_remitente_id=u.id
         join persona p on p.id=u.persona_id
-        where ft.id>4 and t.fecha_fin is null and td.tramite_estado_id=15 and td.usuario_destinatario_id=".$usuario." order by ft.flujo,td.fecha_envio");
+        where ft.id>4 and t.fecha_fin is null and ((fpsig.rol_tipo_id=". $rol ." and te.id=15) or (fp.rol_tipo_id=". $rol ." and te.id=3) ) and td.usuario_destinatario_id=".$usuario." order by ft.flujo,td.fecha_envio");
         $query->execute();
         /*$tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->createQueryBuilder('td')
             ->select('td')
@@ -153,7 +159,7 @@ class WfTramiteController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($id);
-        $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDEtalle')->find((int)$tramite->getTramite());
+        $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
         $idtramite = $id;
         if($tramiteDetalle->getFlujoProceso()->getEsEvaluacion() == true){
             $t = $em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findBy(array('flujoProceso'=>$tramiteDetalle->getFlujoProceso()->getId(),'condicion'=>$tramiteDetalle->getValorEvaluacion()));
@@ -186,16 +192,21 @@ class WfTramiteController extends Controller
 
         $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($id);
         $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
+        //dump($tramiteDetalle);die;
         if($tramite->getFlujoTipo()->getId() == 6){
             switch ($tramiteDetalle->getFlujoProceso()->getId()) {
                 case 39:
-                    return $this->redirectToRoute('tramite_rue_informe_distrito_nuevo', array('idtramite' => $tramite->getId(),'idtarea'=>$tramiteDetalle->getFlujoProceso()->getId()));
+                    return $this->redirectToRoute('tramite_rue_informe_distrito_nuevo', array('id' => $tramite->getId()));
                     //return $this->redirectToRoute('wf_tramite_index');
                     break;
                 case 40:
-                    return $this->redirectToRoute('wf_tramite_index');
+                    return $this->redirectToRoute('tramite_rue_informe_distrito_nuevo', array('id' => $tramite->getId()));
+                    //return $this->redirectToRoute('wf_tramite_index');
                     break;
                 case 41:
+                    return $this->redirectToRoute('tramite_rue_recepcion_departamental_nuevo', array('id' => $tramite->getId()));
+                    break;
+                case 42:
                     break;
             }
 
@@ -213,7 +224,7 @@ class WfTramiteController extends Controller
             }
         }
 
-        return $this->redirectToRoute('wf_tramite_recibido');
+        //return $this->redirectToRoute('wf_tramite_recibido');
 
         //return $this->render('SieHerramientaBundle:WfTramite:recibidos.html.twig');
     }
@@ -327,6 +338,7 @@ class WfTramiteController extends Controller
         $tramiteDetalle->setTramiteEstado($tramiteestado);
         $tramiteDetalle->setFlujoProceso($flujoproceso);
         $tramiteDetalle->setUsuarioRemitente($usuario);
+        $tramiteDetalle->setUsuarioDestinatario($usuario);
         /**
          * Guardamos tarea anterior en tramite detalle  
          */
@@ -340,7 +352,7 @@ class WfTramiteController extends Controller
         return $mensaje;
     }
     
-    public function guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,$varevaluacion,$idtramite,$datos,$lugarTipo_id,$idtramiteestado)
+    public function guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos)
     {
 
         $em = $this->getDoctrine()->getManager();
@@ -348,7 +360,7 @@ class WfTramiteController extends Controller
         $em->getConnection()->prepare("select * from sp_reinicia_secuencia('tramite_detalle');")->execute();
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($tarea);
         $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($usuario);
-        $tramiteestado = $em->getRepository('SieAppWebBundle:TramiteEstado')->find($tramiteestado);
+        $tramiteestado = $em->getRepository('SieAppWebBundle:TramiteEstado')->find(15);
         $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
         /**
          * Modificacion de datos propios de la solicitud
@@ -390,7 +402,7 @@ class WfTramiteController extends Controller
         }else{
             if ($flujoproceso->getTareaSigId() != null){
                 $tarea_sig_id = $flujoproceso->getTareaSigId();
-                $uDestinatario = $this->obtieneUsuarioDestinatario($tarea_sig_id.$id_tabla.$tabla);
+                $uDestinatario = $this->obtieneUsuarioDestinatario($tarea_sig_id,$id_tabla,$tabla);
                 $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
             }
         }
@@ -409,10 +421,12 @@ class WfTramiteController extends Controller
         
         $flujoprocesoSiguiente = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($tarea_sig_id);
         $nivel = $flujoprocesoSiguiente->getRolTipo()->getLugarNivelTipo();
+        //dump($flujoprocesoSiguiente);die;
         switch ($tabla) {
             case 'institucioneducativa':
                 if ($id_tabla){
                     $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id_tabla);
+                    //dump($institucioneducativa);die;
                     switch ($nivel->getId()) {
                         case 7:   // Distrito
                             //dump($institucioneducativa);die;
@@ -424,8 +438,11 @@ class WfTramiteController extends Controller
                             //$uDestinatario = $em->getRepository('SieAppWebBundle:UsuarioFlujoProceso')->findBy(array('flujoProceso'=>$flujoprocesoSiguiente->getId(),'lugarTipoId'=>$lugar_tipo_distrito));
                             break;
                         case 6:   // Departamento
-                            $lugar_tipo_departamento = $institucioneducativa->getLeJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getLugraTipo()->getId();
-                            $query = $em->getConnection()->prepare("select * from wf_usuario_flujo_proceso where flujo_proceso_id=". $flujoprocesoSiguiente->getId()." and lugar_tipo_id=".$lugar_tipo_departamento);
+                        case 8:
+                            //dump();die;
+                            $lugar_tipo_departamento = $institucioneducativa->getleJuridicciongeografica()->getlugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getLugartipo()->getCodigo();
+                            //dump($lugar_tipo_departamento);die;
+                            $query = $em->getConnection()->prepare("select * from wf_usuario_flujo_proceso ufp join lugar_tipo lt on ufp.lugar_tipo_id=lt.id where ufp.flujo_proceso_id=". $flujoprocesoSiguiente->getId()." and cast(lt.codigo as int)=".$lugar_tipo_departamento);
                             $query->execute();
                             $uDestinatario = $query->fetchAll();
                             //$uDestinatario = $em->getRepository('SieAppWebBundle:UsuarioFlujoProceso')->findBy(array('flujoProceso'=>$flujoprocesoSiguiente->getId(),'lugarTipoId'=>$lugar_tipo_departamento));

@@ -306,19 +306,22 @@ class TramiteRueController extends Controller
         $rol = $this->session->get('roluser');
         $flujotipo = $form['flujotipo'];
         $tarea = $form['flujoproceso'];
-        $tramite = $form['tramite'];
+        $idtramite = $form['tramite'];
         $tabla = 'institucioneducativa';
         $id_tabla = $form['idrue'];
         $observacion = $form['observacion'];
         $uDestinatario = 13834044;
         $varevaluacion = "";
-        $mensaje = $this->guardarTramiteDetalle($usuario,$uDestinatario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,'',$varevaluacion,$tramite,$datos,'');
+        $WfTramiteController = new WfTramiteController();
+        $WfTramiteController->setContainer($this->container);
+        $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos);
         $request->getSession()
                 ->getFlashBag()
                 ->add('exito', $mensaje);
         //$response = new JsonResponse();
         //return $response->setData(array('mensaje' => $mensaje));   
-        return $this->redirect($this->generateUrl('tramite_rue_informe_distrito'));
+        return $this->redirectToRoute('wf_tramite_recibido');
+        //return $this->redirect($this->generateUrl('tramite_rue_informe_distrito'));
     }
 
     public function createRecepcionDepartamentalNuevoForm($ie,$idrue,$tipotramite,$estadoinstitucioneducativa,$idtramite)
@@ -327,10 +330,10 @@ class TramiteRueController extends Controller
         $tipoDoc = array('adjunto'=>'Adjunto','noadjunto'=>'No Adjunto','incompleto'=>'Incompleto');
         $form = $this->createFormBuilder()
         ->setAction($this->generateUrl('tramite_rue_recepcion_departamental_guardar'))
-        ->add('flujoproceso', 'hidden', array('data' =>25 ))
+        ->add('flujoproceso', 'hidden', array('data' =>41 ))
         ->add('flujotipo', 'hidden', array('data' =>6 ))
         ->add('tipoeducacion1', 'hidden', array('data' =>$tipoeducacion ))
-        ->add('tramitetipo1', 'hidden', array('data' =>$tramitetipo ))
+        ->add('tramitetipo1', 'hidden', array('data' =>$tipotramite ))
         ->add('observacion','textarea',array('label'=>'Observación','required'=>false))
     	->add('institucionEducativa', 'text', array('label' => 'Nombre de la Unidad Educativa','required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '69', 'style' => 'text-transform:uppercase')))
         ->add('dependenciaTipo','entity',array('label'=>'Dependencia','required'=>true,'class'=>'SieAppWebBundle:DependenciaTipo','query_builder'=>function(EntityRepository $dt){
@@ -455,7 +458,7 @@ class TramiteRueController extends Controller
         $tipotramite = $tramite->getTramiteTipo()->getTramiteTipo();
         $estadoinstitucioneducativa = $tramite->getInstitucioneducativa()->getEstadoinstitucionTipo()->getEstadoinstitucion();
 
-        $recepcionDepartamentalForm = $this->createRecepcionDepartamentalForm($ie,$idrue,$tipotramite,$estadoinstitucioneducativa,$id); 
+        $recepcionDepartamentalForm = $this->createRecepcionDepartamentalNuevoForm($ie,$idrue,$tipotramite,$estadoinstitucioneducativa,$id); 
         //return $this->render('SieHerramientaBundle:FlujoProceso:index1.html.twig');
         return $this->render('SieHerramientaBundle:TramiteRue:recepcionDepartamentalNuevo.html.twig', array(
             'form' => $recepcionDepartamentalForm->createView(),
