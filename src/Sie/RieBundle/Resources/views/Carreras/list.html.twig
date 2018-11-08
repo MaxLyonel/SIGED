@@ -52,29 +52,29 @@
                                 <tbody>
                                     {% for carrera in carreras %}
                                         <tr>
-                                            {% if ((carrera.cantidad > 0 and app.session.get('roluser') == 8)  or  app.session.get('roluser') == 7)  %}
-                                            <td>
-                                                <button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" disabled="disabled" data-toggle="tooltip" data-placement="top" title="Carrera Autorizada, no puede modificar">
-                                                        <i class="material-icons">mode_edit</i>
-                                                    </button>  
-                                            </td>
-                                            <td>
-                                                 <button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" disabled="disabled" data-toggle="tooltip" data-placement="top" title="Carrera Autorizada, no puede eliminar">
-                                                        <i class="material-icons">delete_forever</i>
-                                                    </button>
-                                            </td>  
-                                            {% else %}
-                                            <td>
+                                            {% if app.session.get('roluser') == 8 %}
+                                                <td>
                                                     <a href="{{path('carrera_rie_edit', {'idCarrera': carrera.id })}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Editar">
                                                         <i class="material-icons">mode_edit</i>
                                                     </a>
-                                            </td>
-                                            <td>
-                                                <a href="{{path('carrera_rie_delete', {'idCarrera': carrera.id} )}}" onclick="return confirmar('{{carrera.id}}')" class="btn btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Eliminar">
-                                                    <i class="material-icons">delete_forever</i></a>
-                                            </td>                                            
-                                            {% endif %}   
-                                            
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" disabled="disabled" data-toggle="tooltip" data-placement="top" title="Carrera Autorizada, no puede eliminar">
+                                                        <i class="material-icons">delete_forever</i>
+                                                    </button>
+                                                </td>  
+                                            {% else %}      
+                                                <td>
+                                                    <button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" disabled="disabled" data-toggle="tooltip" data-placement="top" title="Carrera Autorizada, no puede modificar">
+                                                        <i class="material-icons">mode_edit</i>
+                                                    </button>  
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" disabled="disabled" data-toggle="tooltip" data-placement="top" title="Carrera Autorizada, no puede eliminar">
+                                                        <i class="material-icons">delete_forever</i>
+                                                    </button>
+                                                </td>                                   
+                                            {% endif %}
                                             <td>{{carrera.nombre}}</td>  
                                             <td>{{carrera.area_formacion}}</td>  
                                         </tr>
