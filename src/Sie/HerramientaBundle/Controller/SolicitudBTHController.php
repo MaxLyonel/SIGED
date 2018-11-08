@@ -327,8 +327,9 @@ class SolicitudBTHController extends Controller {
 //dump($request);die;
         $id_Institucion = $request->get('institucionid');
         $gestion =  $request->getSession()->get('currentyear');
+       // dump($id_Institucion); dump($gestion);die;
         $em = $this->getDoctrine()->getManager();
-        $query = $em->getConnection()->prepare("SELECT ieht.id,ieht,gestion_tipo_id,ieht.gestion_tipo_id FROM institucioneducativa_humanistico_tecnico ieht  
+        $query = $em->getConnection()->prepare("SELECT ieht.id,ieht.gestion_tipo_id,ieht.gestion_tipo_id FROM institucioneducativa_humanistico_tecnico ieht  
                                                 WHERE ieht.institucioneducativa_id=$id_Institucion AND ieht.gestion_tipo_id = $gestion 
                                                 ORDER BY 1");
         $query->execute();
@@ -595,9 +596,8 @@ class SolicitudBTHController extends Controller {
         }
 
         //buscar y armar las especialidades
-//dump(count($datos[2]['select_especialidad']));die;
-
         $lista_especialidadRegNuearray = array();
+        //$especialidadifno = ();
         for($i=0;$i<count($datos[2]['select_especialidad']);$i++){
             $idespecialidad = $datos[2]['select_especialidad'][$i];
             $query = $em->getConnection()->prepare("SELECT eth.id,eth.especialidad FROM especialidad_tecnico_humanistico_tipo eth WHERE eth. id=$idespecialidad");
@@ -605,14 +605,14 @@ class SolicitudBTHController extends Controller {
             $especialidad = $query->fetch();
             $lista_especialidadRegNuearray[]=array('id'=>$especialidad['id'],'especialidad'=>$especialidad['especialidad'] );
             $especialidadifno[$i] = $idespecialidad;
+           // $especialidadifno.array_push($idespecialidad);
         }
-
+     // dump($especialidadifno);die;
         $query = $em->getConnection()->prepare("SELECT eth.id,eth.especialidad FROM especialidad_tecnico_humanistico_tipo eth ORDER BY 1 ");
         $query->execute();
         $especialidadlista = $query->fetchAll();
        // dump($especialidad);die;
         $tipoTramite    = $infoUE['tramite_tipo'];
-        //dump($tipoTramite);die;
 
                 return $this->render('SieHerramientaBundle:SolicitudBTH:formularioBTHDirec.html.twig',array(
                     'ieducativa' => $infoUe,
@@ -880,8 +880,6 @@ class SolicitudBTHController extends Controller {
           return  new Response($res);
 
       }
-
-
     function FormularioBTHDisAction(Request $request){
         //dump( $request);die;
         $id_tramite = $request->get('lista_tramites_id');//ID de Tramite
@@ -1332,7 +1330,7 @@ class SolicitudBTHController extends Controller {
             $entity->setInstitucioneducativa($request->get('nombreUE'));
             $entity->setEsimpreso(false);
             $entity->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find(3));
-
+            $entity->setFechaCreacion(new \DateTime($infoUE['fecha_tramite']));
             $entity->setInstitucioneducativaHumanisticoTecnicoTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnicoTipo')->find(7));
             $em->persist($entity);
             $em->flush();

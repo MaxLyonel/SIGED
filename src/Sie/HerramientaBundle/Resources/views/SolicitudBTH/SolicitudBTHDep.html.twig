@@ -443,14 +443,6 @@
                         return false;}
                         var ipt=JSON.stringify(ip);
                         var imagen = '{{ asset("img/loading96.gif") }}';
-
-                        //var formData = {evaluacion:evaluacion};
-                        //var formData =new FormData();
-                        //formData.append('evaluacion',evaluacion);
-                        //formData.append('ipt',ipt);
-                        //formData.append();
-
-                        //alert(ipt);
                         var fd = new FormData();
                         fd.append('ipt', ipt);
                         fd.append('id_distrito', {{ ubicacion['codigo_distrito'] }});
