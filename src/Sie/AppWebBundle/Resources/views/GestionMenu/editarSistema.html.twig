@@ -1,0 +1,136 @@
+                <div class="modal-dialog modal-lg modal-primary" id="sis">
+                    <div class="modal-content">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title"><i class="fa fa-pencil"></i> Modificar Sistema:<strong> <em> {{ sistema.sistema }}</em> </strong></h4>
+                            </div>
+                        </div>
+
+                            <div class="modal-body">
+                                {{form_start(form,{'attr':{'id':'formMenu'} })}}
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                    <span class="text-strong ">
+                                     Sistema
+                                    </span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Abreviatura</strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group has-primary">
+                                            {{form_widget(form.sistema)}}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group has-primary">
+                                            {{form_widget(form.abreviatura)}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>Bundle</strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group has-primary">
+                                            {{form_widget(form.bundle)}}
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <strong>Observaciones</strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group has-primary">
+                                            {{form_widget(form.observaciones)}}
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+                                {{form_end(form)}}
+                            </div>
+
+                            <div class="modal-footer">
+                                <div class="pull-right">
+                                    {{form_widget(form.guardar)}}
+                                </div>
+                            </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <!-- /.modal-dialog -->
+
+<script>
+
+    function guardarSistema() {
+        var sistema = $('#form_sistema').val();
+        var bundle  = $('#form_bundle').val();
+        var abreviatura  = $('#form_abreviatura').val();
+
+        if (sistema == '') {
+            alert('Debe Introducir un Sistema');
+            return false;
+        }
+        if (bundle == '') {
+            alert('Debe Introducir un Bundle');
+            return false;
+        }
+        if (abreviatura == '') {
+            alert('Debe Introducir una Abreviatura');
+            return false;
+        }
+
+
+        var formData = $('#formMenu').serialize();
+        $('#modal').modal('hide');
+
+        $.ajax({
+            type: 'post',
+            url: "{{ path('gestionmenu_administra_sistema_update') }}",
+            /*url: Routing.generate('gestionmenuprincipal_createprueba'),*/
+            data:formData,
+            beforeSend: function () {
+
+
+            },
+            success: function (data) {
+
+                $('#listasistemas').empty();
+                $('#listasistemas').append(data);
+                $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+                    $(".alert").slideUp(1000);
+                });
+
+
+            }
+        });
+    }
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+

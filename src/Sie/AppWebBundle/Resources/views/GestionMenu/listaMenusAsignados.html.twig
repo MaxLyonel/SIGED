@@ -1,0 +1,108 @@
+
+{% block stylesheets %}
+    <head>
+        <link href="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.css')}}" rel="stylesheet">
+        <link href="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/css/datatables.responsive.css')}}" rel="stylesheet">
+        <link href="{{asset('webherramienta/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
+    </head>
+{% endblock %}
+    {% if app.session.flashBag.has('exito') %}
+        <div class="alert alert-success">
+            {% for msg in app.session.flashBag.get('exito') %}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                {{ msg }}
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if app.session.flashBag.has('error') %}
+        <div class="alert alert-danger">
+            {% for msg in app.session.flashBag.get('error') %}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                {{ msg }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+
+    <body>
+    <div class="body-content  animated fadeIn">
+        <div class="row">
+            <div class="table-responsive">
+                <table id="myTable2" class="table table-bordered table-hover cf dataTable table-primary table-responsive">
+                    <thead>
+                    <tr>
+                       {# <th ><strong>No</strong>.</th>#}
+                        <th><strong>Detalle</strong></th>
+                        <th><strong>Icono</strong></th>
+                        <th><strong>Fecha Inicio</strong></th>
+                        <th><strong>Fecha Fin</strong></th>
+                        <th><strong>Opciones</strong></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for menusasignados in menusasignados %}
+                        <tr>
+                            {#<td data-title="No.">{{ loop.index }}</td>#}
+                            <td data-title="Detalle">{{ menusasignados.detalle_menu }}</td>
+                            <td class="text-center"><i class="fa {{ menusasignados.icono }}"></i></td>
+                            <td data-title="fecha_creacion" >{{ menusasignados.fecha_inicio|date('d-m-Y') }}</td>
+                            <td data-title="fecha_inicio" >{{ menusasignados.fecha_fin|date('d-m-Y') }}</td>
+
+                            <td data-title="Opciones">
+                                <button class="btn btn-success btn-xs"   onclick="editarMenusSistemaSelec({{ menusasignados.id }},{{ id_sistema }})"  class="btn btn-teal" data-toggle="modal" data-target=".bs-example-modal-table" title="Editar"><i class="fa fa-pencil"></i></button>
+                                <button class="btn btn-danger btn-xs"  onclick="elimina_menusistema({{ menusasignados.id }},{{id_sistema}});" title="Asignar"><i class="glyphicon glyphicon-share-alt"></i></button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    </body>
+
+
+<script>
+
+
+
+
+
+    function editarMenusSistemaSelec(idmenu,idsistema) {
+
+        //alert("edita");
+        var formData = {idmenu:idmenu,id_sistema:idsistema};
+        $.ajax({
+            type: 'post',
+            url: "{{ path('gestionmenu_editar_menus_sistema') }}" ,
+            data:formData,
+            beforeSend: function () {
+                $("#modal").empty();
+            },
+            success: function (data) {
+                $("#modal").empty();
+                $("#modal").append(data);
+            }
+        });
+    }
+    $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+        $(".alert").slideUp(1000);
+    });
+
+
+</script>
+
+
+    {% block javascripts %}
+
+        <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
+        <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script>
+        <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/datatables.responsive.js')}}"></script>
+        <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery.gritter/js/jquery.gritter.min.js') }}"></script>
+
+        <script src="{{asset('js/plugins/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
+
+
+    {% endblock %}
+
+

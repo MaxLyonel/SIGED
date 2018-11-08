@@ -1,0 +1,138 @@
+{% extends 'layoutGestmenu.html.twig' %}
+{% block contentoption %}
+
+    <div class="header-content">
+        <h2><i class="fa fa-pencil"></i> <strong>Lista de Menús</strong>  <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-pencil"></i>
+                    <a href="#">
+
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="container-fluid">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h5><strong>Asignar</strong></h5>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            {{form_start(form)}}
+                            <div class="col-md-4 col-md-offset-4">
+                                <h3><strong>Seleccionar Sistema</strong></h3>
+                                {{form_widget(form.sistema)}}
+                            </div>
+                            {{form_end(form)}}
+                        </div>
+
+
+                        <div id="listam">
+
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        /*$( document ).ready(function() {
+            cargatablas();
+        });*/
+        function cargarListaSistemaMenuRol () {
+            var id_sistema = $('#form_sistema').val();
+            var formData = {
+                id_sistema:id_sistema
+            };
+
+            $.ajax({
+                type: 'post',
+                url: "{{ path('gestionmenu_lista_sistema_menu_rol') }}",
+                data:formData,
+                beforeSend: function () {
+                    $("#listam").empty();
+                },
+                success: function (data) {
+
+                    $("#listam").empty();
+                    /*$("#tablalista").append( {#{% include 'SieAppWebBundle:GestionMenu:generaListaSistemamenuRol.html.twig' with {'listaSistemamenurol': data} %}#});*/
+                    $("#listam").append(data);
+
+                    $( document ).ready(function() {
+                        cargatablas();
+                    });
+
+                }
+            });
+
+        }
+
+
+
+
+
+        var cargatablas = function (identif){
+            // Setup - add a text input to each footer cell
+            $('#listaCeas tfoot th').each( function () {
+                var title = $(this).text();
+                if(title.trim() === "" || title === "No."){
+                    $(this).html('');
+                } else {
+                    $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+                }
+            } );
+
+            // DataTable
+            var table = $('#listaCeas').DataTable( {
+                    "order": [[ 0, "asc" ]],
+                    "columnDefs": [
+                        { "orderable": false, "targets": [0] }
+                    ],
+                }
+            );
+
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        };
+
+
+
+
+
+
+    </script>
+{% endblock %}

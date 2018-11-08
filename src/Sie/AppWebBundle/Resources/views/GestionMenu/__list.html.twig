@@ -1,0 +1,131 @@
+<div class="row">
+    <div class="col-md-12">
+        {% for flashMessage in app.session.flashbag.get('correcto') %}
+            <div class="alert alert-success" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+            </div>
+        {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('incorrecto') %}
+            <div class="alert alert-danger" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <i class="fa fa-warning"></i> {{ flashMessage }}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="col-lg-12"  >
+    <div class="pull-right">
+        <button class="btn btn-info" onclick="nuevomenu()" class="btn btn-teal" data-toggle="modal" data-target=".bs-example-modal-table"><i class="fa fa-plus"></i> Adicionar Menú</button>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <div id="no-more-tables">
+        <table id="myTable" class="table table-bordered table-hover cf dataTable">
+            <thead class="">
+            <tr class="">
+                <th>No.</th>
+                <th>Detalle</th>
+                <th>Ruta</th>
+                <th>icono</th>
+                <th>Id menuTipo</th>
+                <th>Opciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for menu in menu %}
+                <tr>
+                    <td data-title="No.">{{ loop.index }}</td>
+                    <td data-title="Detalle">{{ menu.detalle_menu }}</td>
+                    <td data-title="Ruta">{{ menu.ruta}}</td>
+                    <td data-title="Icono" >{{ menu.icono }}</td>
+                    <td data-title="Id" >{{ menu.id }}</td>
+                    <td data-title="Opciones">
+                        {#{{ path('gestionmenu_submenus', { 'id': menuObjeto.ruta }) }}#}
+                        {#<a href="{{ path('gestionmenu_submenus') }}" class="btn btn-xs btn-warning">Ver Sub Menús</a>#}
+                        <button class="btn btn-warning" onclick="verSubmenus({{ menu.id }})" ><i class="fa fa-plus"></i> Ver Sub Menú</button>
+                    </td>
+
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+
+    var nuevomenu = function(){
+        var idrol=  $('#id_rol').val();
+        var idsistema=  $('#id_sistema').val();
+        var formData = {
+            idrol:idrol,idsistema:idsistema
+        };
+        //alert(idrol);alert(idsistema);
+        $.ajax({
+            type: 'post',
+            url: "{{ path('gestion_menu_nuevo') }}",
+            data: formData,
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+                //$('.chosen-select').chosen({allow_single_deselect: false});
+            },
+            statusCode: {
+                500: function () {
+                },
+                404: function () {
+                }
+            }
+        });
+    }
+
+/*Boton "gestionar menu" que abre modal*/
+
+    var gestionarmenu = function(idmenu){
+        //alert(moid);
+        //alert(idot);
+        var idrol=  $('#id_rol').val();
+        var idsistema=  $('#id_sistema').val();
+        var formData = {
+            idrol:idrol,idsistema:idsistema,idmenu:idmenu
+        };
+
+        $.ajax({
+            type: 'get',
+            url: "{{ path('gestionmenuprincipal_muestramenus') }}",
+            data: formData,
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                //alert("hola");
+                $('#modal').empty();
+                $('#modal').append(data);
+                //$('.chosen-select').chosen({allow_single_deselect: false});
+            },
+            statusCode: {
+                500: function () {
+                },
+                404: function () {
+                }
+            }
+        });
+
+
+    }
+
+</script>
+
+
+

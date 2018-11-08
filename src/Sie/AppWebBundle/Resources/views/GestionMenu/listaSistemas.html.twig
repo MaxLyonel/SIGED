@@ -1,0 +1,74 @@
+{% if app.session.flashBag.has('exito') %}
+    <div class="alert alert-success">
+        {% for msg in app.session.flashBag.get('exito') %}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ msg }}
+        {% endfor %}
+    </div>
+{% endif %}
+    {% if app.session.flashBag.has('error') %}
+        <div class="alert alert-danger">
+            {% for msg in app.session.flashBag.get('error') %}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                {{ msg }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+ {% block stylesheets %}
+    <head>
+        <link href="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.css')}}" rel="stylesheet">
+        <link href="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/css/datatables.responsive.css')}}" rel="stylesheet">
+
+    </head>
+{% endblock %}
+
+<div id="listasistemas" class="body-content  animated fadeIn">
+    <div class="row">
+                        <div class="table-responsive">
+                            <table id="myTable" class="table table-bordered table-hover cf dataTable table-primary table-responsive">
+                                <thead>
+                                <tr>
+                                    <th style="min-width: 10px"><strong>Nro.</strong></th>
+                                    <th><strong>Sistemas Desarrollados</strong></th>
+                                    <th><strong>Abreviatura</strong></th>
+                                    <th><strong>Bundle</strong></th>
+                                    <th><strong>Observaciones</strong></th>
+                                    <th><strong>Actions</strong></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for listasistema in listasistema %}
+                                    <tr>
+                                        <td class="text-center">{{ loop.index }}</td>
+                                        <td>{{ listasistema.sistema }}</td>
+                                        <td>{{ listasistema.abreviatura }}</td>
+                                        <td>{{ listasistema.bundle }}</td>
+                                        <td>{{ listasistema.obs }}</td>
+                                        {# <td>{{ listasistema.nivel_sistema_tipo_id }}</td>#}
+                                        <td>
+                                            <button class="btn btn-success btn-xs"  onclick="updatesistema({{ listasistema.id }})" class="btn btn-teal" data-toggle="modal" data-target=".bs-example-modal-table" title="Editar"><i class="fa fa-pencil"></i></button>
+                                            <button class="btn btn-danger btn-xs"  onclick="eliminarSistema({{ listasistema.id }});" title="Eliminar"><i class="glyphicon glyphicon-trash"></i></button>
+
+                                        </td>
+
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+    </div>
+</div>
+
+
+
+
+
+{% block javascripts %}
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/datatables.responsive.js')}}"></script>
+    <script src="{{ asset('js/initialize.js')}}"></script>
+
+{% endblock %}

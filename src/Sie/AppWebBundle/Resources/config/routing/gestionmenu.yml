@@ -13,3 +13,350 @@ gestionmenu_list:
 gestionmenu_consol:
     path:     /consol
     defaults: { _controller: "SieAppWebBundle:GestionMenu:consolidar" }
+
+gestionmenuprincipal_gestion_nuevo:
+    path:     /nuevo{idrol}{idsistema}
+    defaults: { _controller: SieAppWebBundle:GestionMenu:nuevo }
+
+gestionmenuprincipal_new:
+    path:     /new/
+    defaults: { _controller: SieAppWebBundle:GestionMenu:nuevo }
+
+
+
+
+gestionmenuprincipal_editar:
+    path:     /{id}/editar
+    defaults: { _controller: SieAppWebBundle:GestionMenu:editar }
+
+gestionmenuprincipal_create_sm:
+    path:     /createsm
+    defaults: { _controller: SieAppWebBundle:GestionMenu:createsm}
+    methods:  POST
+
+gestionmenusubmenu_nuevo:
+    path:     /nuevosm
+    defaults: { _controller: SieAppWebBundle:GestionMenu:nuevosubmenu}
+    methods:  POST
+    options:
+      expose: true
+
+gestion_menu_sistemas_roles:
+    path:     /menuroles
+    defaults: { _controller: SieAppWebBundle:GestionMenu:menuroles}
+
+gestionmenuprincipal_genera_menu:
+    path:     /genera{id}{id_sis}
+    defaults: { _controller: SieAppWebBundle:GestionMenu:generamenus }
+
+
+
+
+
+
+gestion_listar_menus:
+    path:     /lista_menus/
+    defaults: { _controller: "SieAppWebBundle:GestionMenu:lista" }
+    options:
+         expose: true
+
+
+
+gestionmenuprincipal_createmenu:
+    path:     /nuevo{id_sis}{id}
+    defaults: { _controller: SieAppWebBundle:GestionMenu:createMenuPrueba}
+    methods:  POST
+
+gestionmenu_listaPrueba:
+    path:     /listaprueba
+    defaults: { _controller: SieAppWebBundle:GestionMenu:listaPrueba}
+    methods:  POST
+
+gestionmenuprincipal_muestramenus:
+    path:     /menu_submenus
+    defaults: { _controller: SieAppWebBundle:GestionMenu:listaMenusSubmenus}
+
+gestion_submenu_nuevo:
+    path:     /nuevosubmenu/
+    defaults: { _controller: SieAppWebBundle:GestionMenu:nuevosubmenu}
+
+
+gestionmenu_listSubMenu:
+    path:     /listMenu/{idmenu}/{idrol}/{idsistema}/
+    defaults: { _controller: "SieAppWebBundle:GestionMenu:listaSubMenu" }
+
+gestionmenu_editarsubmenu_:
+    path:     /geseditarsm/
+    defaults: { _controller: SieAppWebBundle:GestionMenu:editarsubmenu }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+gestionmenu_submenus:
+    path:     /SubMenus/
+    defaults: { _controller: SieAppWebBundle:GestionMenu:submenus }
+
+gestion_menu_nuevo:
+    path:     /nuevoMenuPrincipal/
+    defaults: { _controller: SieAppWebBundle:GestionMenu:nuevomenu }
+
+gestionmenuprincipal_createmenuprincipal:
+    path:     /create
+    defaults: { _controller: SieAppWebBundle:GestionMenu:createMenu}
+
+gestionmenu_editarmenu:
+   path:  /updatemenu
+   defaults:  {_controller: SieAppWebBundle:GestionMenu:updateMenu}
+
+gestionmenu_editmenu:
+  path: /editmenu
+  defaults: {_controller: SieAppWebBundle:GestionMenu:editmenu }
+
+gestionmenu_listMenu:
+    path:     /listMenuPrincipal/
+    defaults: { _controller: SieAppWebBundle:GestionMenu:listaMenusPrincipales }
+
+gestionmenu_elimina_principal:
+    path: /geseliminamenuprincipal
+    defaults: {_controller: SieAppWebBundle:GestionMenu:eliminamenu}
+
+gestion_sub_menu_nuevo:
+    path:     /nuevoSubMenuPrincipal/
+    defaults: { _controller: SieAppWebBundle:GestionMenu:nuevosubmenu }
+
+
+gestionmenuprincipal_createsubmenu:
+    path:     /createSubmenu/
+    defaults: { _controller: SieAppWebBundle:GestionMenu:createSubMenu}
+
+gestionmenu_editarsubmenu:
+    path:   /gesupdatessubmenus
+    defaults: { _controller: SieAppWebBundle:GestionMenu:updatesubMenu}
+
+gestionmenu_editsubmenu:
+    path:  /gesEditsubmenu
+    defaults: { _controller: SieAppWebBundle:GestionMenu:editsubmenu}
+
+gestionmenu_elimina_submenu:
+    path:  /gmEliminasubmenu
+    defaults: {_controller: SieAppWebBundle:GestionMenu:eliminasubmenu}
+
+gestionmenu_asignar_menu_sistema:
+    path:     /AsignacionMenuSistema/
+    defaults: { _controller: SieAppWebBundle:GestionMenu:asignamenusistema }
+
+gestionmenu_cargar_roles:
+    path:     /cargarRoles/{sistema}
+    defaults: { _controller: SieAppWebBundle:GestionMenu:cargarRoles}
+    options:
+      expose: true
+
+gestionmenu_cargar_menu:
+    path:     /menus/
+    defaults: { _controller: SieAppWebBundle:GestionMenu:cargarMenu}
+
+gestionmenu_guardar_menu_sistema:
+    path:     /gmguardamenuSistema/
+    defaults: { _controller: SieAppWebBundle:GestionMenu:nuevoMenuSistema}
+    options:
+      expose: true
+
+gestionmenu_eliminar_menu_sistema:
+    path:     /gmeliminamenuSistema/
+    defaults: { _controller: SieAppWebBundle:GestionMenu:eliminaMenuSistema}
+
+gestionmenu_editar_menus_sistema:
+    path:     /gmeditamenuSistema/
+    defaults: { _controller: SieAppWebBundle:GestionMenu:editaMenuSistema}
+
+
+gestionmenu_editmenusistemaasignado:
+    path:     /gmeditmenusistemaasignado/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:updatemenusistema}
+    options:
+      expose: true
+
+gestionmenu_asignar_menu_sistema_rol:
+    path:     /AsignacionMenuSistemaRol/
+    defaults: { _controller: SieAppWebBundle:GestionMenu:asignamenusistemarol }
+
+gestionmenu_cargar_sistema_menu:
+    path:     /SistemaMenu
+    defaults: { _controller: SieAppWebBundle:GestionMenu:cargasistemamenu}
+
+gestionmenu_cargar_sistema_menu_rol:
+    path:     /SistemaMenuRol
+    defaults: { _controller: SieAppWebBundle:GestionMenu:cargaSistemamenuRoles}
+
+gestionmenu_cargar_sistema_menu_rol_lista:
+    path:  /gmListasistemaRol/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:cargalistasistemamenuroles}
+
+gestionmenu_createasignacionmenurol:
+    path:     /gmcreatemenurol/
+    defaults: { _controller: SieAppWebBundle:GestionMenu:createMenuSistemaRol}
+    options:
+      expose: true
+
+gestionmenu_administra_sistema:
+    path:   /gmsistema/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:administraSistema}
+
+gestionmenu_administra_sistema_nuevo:
+    path:   /gmsistemanuevo/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:administraSistemanuevo}
+
+gestionmenu_administra_sistema_create:
+    path:  /gmcreacionsistema/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:administraSistemacreate}
+
+gestionmenu_administra_sistema_editar:
+    path:  /gmeditarsistema/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:administraSistemaedit}
+
+gestionmenu_administra_sistema_update:
+    path:  /gmupdatersistema/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:administraSistemaupdate}
+
+gestionmenu_administra_sistema_delete:
+    path:     /gmeliminarsistema/
+    defaults: { _controller: SieAppWebBundle:GestionMenu:administraSistemadelete }
+
+gestionmenu_verificasubmenus:
+    path:  /gmcuentasubmenus/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:verificasubmenus }
+gestionmenu_cargar_menus_asignados:
+    path:  /gmmenusasignados/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:menusasignados}
+
+gestionmenu_cargar_menus_noasignados:
+    path:  /gmmenusnoasignados/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:menusnoasignadossistema}
+
+gestionmenu_asiganar_rol_sistema:
+    path:     /gmrolsistema/
+    defaults: { _controller: SieAppWebBundle:GestionMenu:asignarrolsistema }
+
+gestionmenu_cargar_roles_asignados:
+    path:  /gmmrolesasignados/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:rolesasignados}
+
+gestionmenu_cargar_roles_disponible:
+    path:  /gmmrolesdisponibles/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:rolesnoasigandos}
+
+gestionmenu_guardar_rol_sistema:
+    path:  /gmguardarolSistema/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:nuevoRolSistema}
+
+gestionmenu_eliminar_rol_sistema:
+    path: /gmeliminarolSistema/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:eliminaRolSistema}
+
+gestionmenu_cambia_estado:
+    path: /gmcambiaestado/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:cambiaestado}
+
+gestionmenu_cambia_estado_create:
+    path: /gmcambiaestadocreate/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:cambiaestadocreate}
+
+gestionmenu_cambia_estado_read:
+    path: /gmcambiaestadocread/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:cambiaestadoread}
+
+gestionmenu_cambia_estado_update:
+    path: /gmcambiaestadocupdate/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:cambiaestadoupdate}
+
+gestionmenu_cambia_estado_delete:
+    path: /gmcambiaestadocdelete/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:cambiaestadodelete}
+
+gestionmenu_menu_sistema_rol_delete:
+    path: /gmeliminamenusistemarol/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:eliminamenusistemarol}
+
+gestionmenu_sistema_menu_rol:
+    path: /gmlistasistemamenurol/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:listasistemamenurol}
+
+gestionmenu_lista_sistema_menu_rol:
+    path: /gmgeneralistasistemamenurol/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:generalistasistemamenurol}
+
+gestionmenu_cambia_estado_sistema_menu_rol:
+    path: /gmcambiaestadolistasistemamenurol/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:cambiaestadolistasistemamenurol}
+
+gestionmenu_valida_roles_asignados:
+    path: /gmvalidarolesasignados/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:validarolesasigandos}
+
+gestionmenu_valida_menus_asignados:
+    path: /gmvalidamenusasignados/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:validamenusasigandos}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

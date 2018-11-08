@@ -1,0 +1,105 @@
+
+<div class="table-responsive col-md-12">
+        <table class="table table-bordered table-striped table-default" id="listaCeas" >
+            <thead>
+            <tr >
+                <th class="text-center border-right" style="min-width: 10px">No.</th>
+                <th>Menú</th>
+                <th>Icono</th>
+                <th>Ruta</th>
+                <th>Rol</th>
+                <th>Estado</th>
+
+            </tr>
+            </thead>
+            <tfoot>
+            <tr>
+                <th class="text-center border-right">No.</th>
+                <th>Menú</th>
+                <th>Icono</th>
+                <th>Ruta</th>
+                <th>Rol</th>
+                <th>Opciones</th>
+            </tr>
+            </tfoot>
+            <tbody>
+            {% for reg in listaSistemamenurol %}
+                <tr>
+                    <td class="text-center border-right">{{ loop.index }}</td>
+                    <td>{{ reg.detalle_menu }}</td>
+                    <td>{{ reg.icono }}</td>
+                    <td>{{ reg.ruta }}</td>
+                    <td>{{ reg.rol }}</td>
+                    <td>
+                    {% if reg.esactivo == 1 %}
+                        {#<a class="btn btn-xs btn-success" href="cambiaestadosistemamenurol, 'idSistema': sistema.id" onclick="return confirm('¿Está seguro/a de Eliminar el Sistema?')"   title="Eliminar"><i class="glyphicon glyphicon-trash"></i></a>#}
+                        <button onclick="cambiaestadosistemamenurol({{ reg.id }}, {{ id_sistema }})"  class="btn btn-xs btn-success">Activo</button>
+                    {% else %}
+                        <button  onclick="cambiaestadosistemamenurol({{ reg.id }}, {{ id_sistema }})"  class="btn btn-xs btn-danger">Inactivo</button>
+                    {% endif %}
+                        {#<button class="btn btn-danger btn-xs" onclick="elimina_menu_sistema_rol({{reg.id }},{{id_sistema}})"  title="Eliminar"><i class="glyphicon glyphicon-trash"></i></button>#}
+                    </td>
+
+
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+</div>
+
+<script>
+    function cambiaestadosistemamenurol(idmsr,idsis) {
+        if(confirm('¿Esta seguro(a) de realizar esta Acción?.')){
+            var formData = {idmsr:idmsr,idsis:idsis};
+
+            $.ajax({
+                type: 'post',
+                url: "{{ path('gestionmenu_cambia_estado_sistema_menu_rol') }}",
+                data:formData,
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    $("#listam").empty();
+                    $("#listam").append(data);
+                    $( document ).ready(function() {
+                        cargatablas();
+                    });
+                }
+            });
+        }
+    }
+    var cargatablas = function (identif){
+        // Setup - add a text input to each footer cell
+        $('#listaCeas tfoot th').each( function () {
+            var title = $(this).text();
+            if(title.trim() === "" || title === "No."){
+                $(this).html('');
+            } else {
+                $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+            }
+        } );
+
+        // DataTable
+        var table = $('#listaCeas').DataTable( {
+                "order": [[ 0, "asc" ]],
+                "columnDefs": [
+                    { "orderable": false, "targets": [0] }
+                ],
+            }
+        );
+
+        // Apply the search
+        table.columns().every( function () {
+            var that = this;
+
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+                if ( that.search() !== this.value ) {
+                    that
+                        .search( this.value )
+                        .draw();
+                }
+            } );
+        } );
+    };
+</script>
+

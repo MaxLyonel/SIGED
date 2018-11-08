@@ -1,0 +1,243 @@
+{% extends 'layoutGestmenu.html.twig' %}
+{% block contentoption %}
+    {{ parent() }}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-tag animated flip"></i> <strong>Asignación Menú - Sistema</strong><span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-pencil"></i>
+                    <a href="#">
+
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+    {% if app.session.flashBag.has('exito') %}
+        <div class="alert alert-success ">
+            {% for msg in app.session.flashBag.get('exito') %}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                {{ msg }}
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if app.session.flashBag.has('error') %}
+        <div class="alert alert-danger">
+            {% for msg in app.session.flashBag.get('error') %}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                {{ msg }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+<div class="body-content animated fadeIn">
+    <div class="row">
+
+        <div class="container-fluid">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="pull-left" >
+                        <h3 class="panel-title">Asiganción de Menú - Sistema</h3>
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="row">
+                    {{form_start(form,{'attr':{'id':'formMenu','onsubmit':'return validateFormulario()'} })}}
+                    <div class="col-md-4 col-md-offset-4">
+                        <h3><strong>Seleccionar Sistema</strong></h3>
+                        {{form_widget(form.sistema)}}
+                    </div>
+                    {{form_end(form)}}
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="panel panel-success rounded shadow">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title"><strong>Menús Asignados</strong> </h3>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <div id="menusasignados">
+                                    Menús Asignados
+                                </div>
+                            </div><!-- /.panel-body -->
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="panel panel-success rounded shadow">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title"><strong>Menús Disponibles</strong></h3>
+                                </div>
+                                 <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <div id="menusnoasignados">
+                                    Menus Disponibles
+                                </div>
+                            </div><!-- /.panel-body -->
+                        </div><!-- /.panel-body -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+    </div>
+
+
+{% endblock %}
+{% block javascripts%}
+{{ parent() }}
+<script>
+
+    function cargarMenus() {
+        var id_sistema = $('#form_sistema').val();
+        var id_menu = $('#form_menu').val();
+        var formData = {
+            id_sistema:id_sistema,id_menu:id_menu
+        };
+
+        if (id_sistema != '') {
+
+            $.ajax({
+                type: 'post',
+                url: "{{ path('gestionmenu_cargar_menu') }}",
+                data:formData,
+                beforeSend: function () {
+                    $("#myTable").empty();
+                    $("#myTable").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data) {
+                    $("#arbol").empty();
+                    $("#arbol").append(data);
+                }
+            });
+
+        }else{ alert('Debe seleccionar un Sistema para continuar');$("#form_menu").append('<option value="">Seleccionar...</option>'); }
+
+    }
+
+    function cargarMenusAsignados(){
+        var id_sistema = $('#form_sistema').val();
+        var formData = {
+            id_sistema:id_sistema
+        };
+       // alert(id_sistema);
+        $.ajax({
+                type: 'post',
+                url: "{{ path('gestionmenu_cargar_menus_asignados') }}",
+                data:formData,
+                beforeSend: function () {
+                    $("#menusasignados").empty();
+                },
+                success: function (data) {
+                    //alert("hola");
+                    $("#menusasignados").empty();
+                    $("#menusasignados").append(data);
+                }
+            });
+        $.ajax({
+            type: 'post',
+            url: "{{ path('gestionmenu_cargar_menus_noasignados') }}",
+            data:formData,
+            beforeSend: function () {
+                $("#menusnoasignados").empty();
+            },
+            success: function (data) {
+                $("#menusnoasignados").empty();
+                $("#menusnoasignados").append(data);
+            }
+        });
+    }
+
+
+    function elimina_menusistema(idmenu,id_sistema) {
+
+        swal({
+            title: "¿Está Segura/o de eliminar el Menú Asignado?",
+            //text: "El Sistema seleccionado será eliminado Permanentemente",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Continuar"],
+        })
+            .then(function(willDelete)  {
+                if (willDelete) {
+                    var imagen = '{{ asset("img/loading96.gif") }}';
+                    var formData = {idmenu: idmenu, id_sistema: id_sistema};
+                    $.ajax({
+                        type: 'post',
+                        url: "{{ path('gestionmenu_eliminar_menu_sistema') }}",
+                        data: formData,
+                        beforeSend: function () {
+                            swal({
+                                title: "Eliminando...",
+                                text: "Espere un momento por favor",
+                                icon: imagen,
+                                buttons: false
+                            });
+                        },
+                        success: function (data) {
+
+                            cargarMenusAsignados();
+                        },
+                        error: function () {
+                        },
+                        complete: function () {
+                            swal.stopLoading();
+                            swal.close();
+                            $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+                                $(".alert").slideUp(1000);
+                            });
+                        }
+                    });
+
+
+                }
+            });
+
+
+    }
+
+
+    function validateForm() {
+        var sistema = $('#form_sistema').val();
+        var id_menu = $('#form_menu').val();
+        //$('#sis').val(sistema);
+        //alert(rol);
+
+        if (sistema == '') {
+            alert('Debe seleccionar un Sistema');
+            return false;
+        }
+
+        if (id_menu == '') {
+            alert('Debe seleccionar un Menú');
+            return false;
+        }
+
+        if (xhr1 && xhr1.readyState != 4) {
+            xhr1.abort();
+        }
+
+        return false;
+    }
+
+
+</script>
+{% endblock %}
+
+
+

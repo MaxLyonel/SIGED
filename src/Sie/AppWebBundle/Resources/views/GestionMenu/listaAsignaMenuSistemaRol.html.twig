@@ -1,0 +1,229 @@
+{% block stylesheets %}
+    <head>
+        <link href="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.css')}}" rel="stylesheet">
+        <link href="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/css/datatables.responsive.css')}}" rel="stylesheet">
+
+    </head>
+{% endblock %}
+<body>
+<div class="body-content  animated fadeIn">
+    <div class="row">
+
+        <div class="table-responsive">
+            <table id="myTableMenus" class="table table-bordered table-hover cf dataTable table-primary table-responsive">
+
+                <thead class="">
+                <tr class="">
+                    <th style="min-width: 10px">No.</th>
+                    <th>Sistema</th>
+                    <th>Menú</th>
+                    <th>Rol</th>
+                    <th>Permisos</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for sistemamenupermiso in sistemamenupermiso %}
+                  <tr>
+                    <td class="text-center" >{{ loop.index }}</td>
+                    <td>{{ sistemamenupermiso.sistema }}</td>
+                    <td>{{ sistemamenupermiso.detalle_menu }}</td>
+                    <td>{{ sistemamenupermiso.rol  }}
+                    <td>
+                          {% if sistemamenupermiso._create == 1 %}
+                              <button {#onclick="cambiaestado_create({{ sistemamenupermiso.id }}, {{ id_sistema }})" #}  class="btn btn-xs btn-success">C</button>
+                          {% else %}
+                              <button {#onclick="cambiaestado_create({{ sistemamenupermiso.id }}, {{ id_sistema }})" #}   class="btn btn-xs btn-danger">C</button>
+                          {% endif %}
+                          {% if sistemamenupermiso._read == 1 %}
+                              <button  {#onclick="cambiaestado_read({{ sistemamenupermiso.id }}, {{ id_sistema }})" #} class="btn btn-xs btn-success">R</button>
+                          {% else %}
+                              <button {#onclick="cambiaestado_read({{ sistemamenupermiso.id }}, {{ id_sistema }})" #}  class="btn btn-xs btn-danger">R</button>
+                          {% endif %}
+                          {% if sistemamenupermiso._update == 1 %}
+                              <button {#onclick="cambiaestado_update({{ sistemamenupermiso.id }}, {{ id_sistema }})"#}  class="btn btn-xs btn-success">U</button>
+                          {% else %}
+                              <button {# onclick="cambiaestado_update({{ sistemamenupermiso.id }}, {{ id_sistema }})" #}   class="btn btn-xs btn-danger">U</button>
+                          {% endif %}
+                          {% if sistemamenupermiso._delete == 1 %}
+                              <button {# onclick="cambiaestado_delete({{ sistemamenupermiso.id }}, {{ id_sistema }})"#}  class="btn btn-xs btn-success">D</button>
+                          {% else %}
+                              <button {#onclick="cambiaestado_delete({{ sistemamenupermiso.id }}, {{ id_sistema }})" #} class="btn btn-xs btn-danger">D</button>
+                          {% endif %}
+
+
+                    </td>
+                    <td>
+                        {% if sistemamenupermiso.esactivo == 1 %}
+                        <button onclick="cambiaestado({{ sistemamenupermiso.id }}, {{ id_sistema }})"  class="btn btn-xs btn-success">Activo</button>
+                        {% else %}
+                        <button  onclick="cambiaestado({{ sistemamenupermiso.id }}, {{ id_sistema }})"  class="btn btn-xs btn-danger">Inactivo</button>
+                        {% endif %}
+                    </td>
+                      <td>
+                         {# <button class="btn btn-success btn-xs"  onclick="" class="btn btn-teal" data-toggle="modal" data-target=".bs-example-modal-table" title="Editar"><i class="fa fa-pencil"></i></button>#}
+                          <button class="btn btn-danger btn-xs" onclick="elimina_menu_sistema_rol({{sistemamenupermiso.id  }},{{id_sistema}})"  title="Eliminar"><i class="glyphicon glyphicon-trash"></i></button>
+
+                      </td>
+                  </tr>
+
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+
+<script>
+    function cambiaestado(idmsr,idsis) {
+
+        var formData = {idmsr:idmsr,idsis:idsis};
+
+        $.ajax({
+            type: 'post',
+            url: "{{ path('gestionmenu_cambia_estado') }}",
+            data:formData,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+
+                $("#listamenuroles").empty();
+                $("#listamenuroles").append(data);
+            }
+        });
+    }
+
+    function cambiaestado_create(idmsr,idsis) {
+        var formData = {idmsr:idmsr,idsis:idsis};
+
+        $.ajax({
+            type: 'post',
+            url: "{{ path('gestionmenu_cambia_estado_create') }}",
+            data:formData,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+
+                $("#listamenuroles").empty();
+                $("#listamenuroles").append(data);
+            }
+        });
+
+    }
+    function cambiaestado_read(idmsr,idsis) {
+        var formData = {idmsr:idmsr,idsis:idsis};
+
+        $.ajax({
+            type: 'post',
+            url: "{{ path('gestionmenu_cambia_estado_read') }}",
+            data:formData,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+
+                $("#listamenuroles").empty();
+                $("#listamenuroles").append(data);
+            }
+        });
+
+    }
+    function cambiaestado_update(idmsr,idsis) {
+        var formData = {idmsr:idmsr,idsis:idsis};
+
+        $.ajax({
+            type: 'post',
+            url: "{{ path('gestionmenu_cambia_estado_update') }}",
+            data:formData,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+
+                $("#listamenuroles").empty();
+                $("#listamenuroles").append(data);
+            }
+        });
+
+    }
+    function cambiaestado_delete(idmsr,idsis) {
+        var formData = {idmsr:idmsr,idsis:idsis};
+
+        $.ajax({
+            type: 'post',
+            url: "{{ path('gestionmenu_cambia_estado_delete') }}",
+            data:formData,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+
+                $("#listamenuroles").empty();
+                $("#listamenuroles").append(data);
+            }
+        });
+
+    }
+
+    function elimina_menu_sistema_rol (idmsr,id_sistema) {
+
+        swal({
+            title: "¿Está Segura/o de eliminar el Menú Asignado?",
+            //text: "El Sistema seleccionado será eliminado Permanentemente",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Continuar"],
+        })
+            .then(function(willDelete)  {
+                if (willDelete) {
+                    var imagen = '{{ asset("img/loading96.gif") }}';
+                    var formData = {idmsr:idmsr,id_sistema:id_sistema};
+                    $.ajax({
+                        type: 'post',
+                        url: "{{ path('gestionmenu_menu_sistema_rol_delete') }}",
+                        data:formData,
+                        beforeSend: function () {
+                            swal({
+                                title: "Eliminando...",
+                                text: "Espere un momento por favor",
+                                icon: imagen,
+                                buttons: false
+                            });
+                        },
+                        success: function (data) {
+                            $("#listamenuroles").empty();
+                            $("#listamenuroles").append(data);
+                        },
+
+                        complete: function () {
+                            swal.stopLoading();
+                            swal.close();
+                            $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+                                $(".alert").slideUp(1000);
+                            });
+                        }
+                    });
+
+
+                }
+            });
+
+    }
+</script>
+
+{% block javascripts %}
+
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/datatables.responsive.js')}}"></script>
+
+
+    <script src="{{ asset('js/initialize.js')}}"></script>
+
+{% endblock %}

@@ -1,0 +1,207 @@
+<div class="modal-dialog modal-lg" >
+    <div class="modal-content">
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title"><i class="fa fa-eye"></i> Datos de Menú  </h3>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Menú</th>
+                        <th>Icono</th>
+                        <th class="text-center">Orden</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="warning">
+                        <td>{{ menuseleccionado.objeto }}</td>
+                        <td>{{ menuseleccionado.icono }}</td>
+                        <td class="text-center">{{ menuseleccionado.orden }}</td>
+                      </tr>
+                    </tbody>
+                </table>
+
+                {{ idsistema }}-{{ idrol }}-{{ idmo }}-{{ idmenu }}
+
+                <div class="pull-right">
+                   {# aqui mandarle idsistema,idrol,idobjeto,idmenuObjeto#}
+                   {# onclick="gestionarmenu({{ menuObjeto.id }},{{ menuObjeto.idmo }})"#}
+                <button class="btn btn-warning" onclick="nuevosubmenu({{ idsistema }},{{ idrol }},{{ idmo }},{{ idmenu }})" class="btn btn-teal"{# data-toggle="modal" data-target=".bs-example-modal-table"#}><i class="fa fa-plus"></i> Adicionar Sub Menú</button>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="portlet portlet-blue">
+                            <div class="portlet-heading">
+                                <div class="portlet-widgets">
+                                    <a data-toggle="collapse" href="basic-form-elements.html#panelsubmenu"><i class="fa fa-plus"></i></a>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div id="panelsubmenu" class="panel-collapse collapse in">
+                                <div class="portlet-body">
+                                    <div id="divSubmenus">
+                                    Registrar Nuevo Menu
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row" >
+                    <div class="col-lg-12" id="listaSubMenus">
+                        <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                            <div class="portlet-heading" >
+                                <div class="pull-left">
+                                    <h4 class="portlet-title"><strong>Lista de Sub Menús</strong></h4>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="portlet-body">
+                                <div class="panel-body panel-primary">
+                                    {% if listamenusubmenu is not empty %}
+                                        <div id="no-more-tables" class="table-responsive">
+                                            <!--table class="table table-bordered table-hover cf dataTable" id="myTable"-->
+                                            <table class="table table-bordered cf dataTable" >
+                                                <thead>
+                                                <tr>
+                                                    <th >Nro.</th>
+                                                    <th >Nombre</th>
+                                                    <th >Ruta</th>
+                                                    <th >Icono</th>
+                                                    <th >Estado</th>
+                                                    <th >Obs</th>
+                                                    <th >Acciones</th>
+                                                </tr>
+
+                                                </thead>
+                                                {% for listamenusubmenu in listamenusubmenu %}
+
+                                                    <tr>
+                                                        <td data-title="N°">{{ loop.index }}</td>
+                                                        <td data-title="Nombre">{{ listamenusubmenu.nombre }}</td>
+                                                        <td data-title="Ruta">{{ listamenusubmenu.ruta }}</td>
+                                                        <td data-title="Icono">{{ listamenusubmenu.icono }}</td>
+                                                        <td data-title="Estado">
+                                                            {% if listamenusubmenu.esactivo == 1 %}
+                                                                <a href="{#{{ path('gestionmenu_estado', { 'id': menuObjeto.id }) }}#}" class="btn btn-xs btn-success">Activo</a>
+
+                                                            {% else %}
+                                                                <a href="{#{{ path('gestionmenu_estado', { 'id': menuObjeto.id }) }}#}" class="btn btn-xs btn-danger">Inactivo</a>
+
+                                                            {% endif %}
+                                                        </td>
+                                                        <td data-title="Obs">{{ listamenusubmenu.obs }}</td>
+                                                        <td data-title="Acciones">
+                                                            {#<a href="#}{#{{ path('gestionmenuprincipal_editar', { 'id': menuObjeto.ruta }) }}#}{#" class="btn btn-xs btn-warning"><i class="fa fa-edit"></i></a>#}
+                                                            <a href="{#{{ path('gestionmenuprincipal_editar', { 'id': menuObjeto.ruta }) }}#}" class="btn btn-xs btn-danger"><i class="fa fa-times"></i></a>
+                                                            <button class="btn btn-xs btn-warning" onclick="addpop({{listamenusubmenu.idmt}})"><i class="fa fa-edit"></i></button>
+                                                            <div class="arrow-before" style="display:none; margin-left:10px;" id="before{{listamenusubmenu.idmt}}"></div><div class="arrow-after" style="display:none;margin-left:10px;" id="after{{listamenusubmenu.idmt}}"></div>
+
+                                                            <div id="{{listamenusubmenu.idmt}}" style="display:none; position:absolute; z-index:5; width:500px; margin-left:-350px; border:2px solid #906094; box-shadow: 7px 7px 4px #929292;" class="divMaestros">
+                                                            </div>
+
+                                                        </td>
+
+                                                    </tr>
+                                                {% endfor %}
+                                            </table>
+                                        </div>
+                                    {% else %}
+                                        No hay menus
+                                    {% endif %}
+                                </div>
+                            </div><!-- /.panel-body -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<script>
+
+
+
+
+    function nuevosubmenu(idsistema,idrol,idmo,idmenu) {
+
+        var formData = {
+            idsistema:idsistema,idrol:idrol,idmo:idmo,idmenu:idmenu
+        };
+
+        $.ajax({
+            type: 'get',
+            /*url: Routing.generate('gestion_submenu_nuevo'),*/
+            url: "{{ path('gestion_submenu_nuevo') }}",
+            data: formData,
+            beforeSend: function () {
+                $("#divSubmenus").empty();
+                $("#divSubmenus").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+            },
+            success: function (data) {
+                $("#divSubmenus").empty();
+                $("#divSubmenus").append(data);
+
+                //$(".tooltips").tooltip();
+            },
+            error: function (data) {
+                $("#divSubmenus").empty();
+                $("#divSubmenus").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> El Sistema no existe o no hay conexion con el servidor</div>');
+            }
+        });
+        return false;
+    }
+
+
+
+    var addpop = function(idmt){
+
+        //alert("editar submenu");
+            xhr5 = $.ajax({
+                type: 'post',
+                data: ({idmt: idmt}),
+                url: "{{ path('gestionmenu_editarsubmenu') }}",
+                beforeSend: function () {
+
+                    $('.arrow-before').hide();
+                    $('.arrow-after').hide();
+                    $("#"+idmt).empty();
+                    $('#before'+idmt).fadeIn();
+                    $('#after'+idmt).fadeIn();
+                    $('#'+idmt).fadeIn();
+                    $('#'+idmt).append("<div style='background:#FFFFFF; text-align:center; color:#286AFB'><div style='padding:10px 0px 10px 0px;'>Cargando Formulario<br><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></div></div>");
+                },
+                success: function (data) {
+                    $("#"+idmt).empty();
+                    $("#"+idmt).append(data);
+
+                    $('#'+idmt).fadeIn();
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+
+    }
+
+
+
+
+</script>
