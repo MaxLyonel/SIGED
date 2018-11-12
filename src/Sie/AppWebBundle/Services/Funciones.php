@@ -438,7 +438,20 @@ class Funciones {
         return $objStatistics;
 
     }
-
-
+    public function controlaccesomenus($sistemaid, $rolid, $usuarioid, $rutamenu){
+        $query = $this->em->getConnection()->prepare("
+        SELECT msr.esactivo
+        FROM menu_sistema_rol  msr 
+        INNER JOIN sistema_rol sr ON msr.sistema_rol_id = sr.id
+        INNER JOIN menu_sistema ms ON msr.menu_sistema_id=ms.id
+        INNER JOIN menu_tipo mt ON ms.menu_tipo_id=mt.id
+        INNER JOIN sistema_tipo sti ON sti.id = ms.sistema_tipo_id
+        INNER JOIN rol_tipo rtip ON rtip.id =sr.rol_tipo_id   
+         INNER JOIN usuario_rol ur ON ur.rol_tipo_id = rtip.id  
+        WHERE sti.id = ".$sistemaid." and rtip.id=".$rolid." AND mt.ruta='".$rutamenu."' and ur.usuario_id=".$usuarioid);
+        $query->execute();
+        $respuesta = $query->fetchAll();
+        return $respuesta[0]['esactivo'];
+    }
 
 }
