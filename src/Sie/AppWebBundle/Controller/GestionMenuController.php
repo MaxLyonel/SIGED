@@ -80,6 +80,7 @@ class GestionMenuController extends Controller {
             ->add('abreviatura', 'text', array( 'attr' => array('class' => 'form-control','enabled' => true,'max_length' => 5)))
             ->add('observaciones', 'textarea', array( 'required' => false,'attr' => array('class' => 'form-control','enabled' => true)))
             ->add('bundle', 'text', array('attr' => array('class' => 'form-control','enabled' => true)))
+            ->add('url', 'text', array('attr' => array('class' => 'form-control','enabled' => true)))
             ->add('guardar', 'button', array('label'=> 'Guardar', 'attr'=>array('class'=>'btn btn-primary ','onclick'=>'guardarSistemanuevo()')))
             ->getForm();
         return $this->render('SieAppWebBundle:GestionMenu:nuevoSistema.html.twig',array(
@@ -96,6 +97,7 @@ class GestionMenuController extends Controller {
         $abreviatura             =strtoupper($abre);
         $sistemanombre           =strtoupper($sistemanom);
         $bundle                  = $form['bundle'];
+        $url                     = $form['url'];
         $em = $this->getDoctrine()->getManager();
         $sistema=new SistemaTipo();
         $em->getConnection()->prepare("select * from sp_reinicia_secuencia('sistema_tipo');")->execute();
@@ -113,6 +115,7 @@ class GestionMenuController extends Controller {
             $sistema->setAbreviatura($abreviatura);
             $sistema->setObs($observaciones);
             $sistema->setBundle($bundle);
+            $sistema->setUrl($url);
             $em->persist($sistema);
             $em->flush();
             $mensaje = 'El Sistema ' . $sistema->getSistema() . ' Fue Registrado con éxito';
@@ -121,7 +124,7 @@ class GestionMenuController extends Controller {
                 ->add('exito', $mensaje);
 
         }
-        $query = $em->getConnection()->prepare('SELECT sit.id,sistema,abreviatura,bundle,obs
+        $query = $em->getConnection()->prepare('SELECT sit.id,sistema,abreviatura,bundle,url,obs
                                                 FROM sistema_tipo sit 
                                                 ORDER BY 2');
         $query->execute();
@@ -146,12 +149,14 @@ class GestionMenuController extends Controller {
         $abreviatura    =$sistema->getAbreviatura();
         $obs            =$sistema->getObs();
         $bundle         =$sistema->getBundle();
+        $url            =$sistema->getUrl();
         $abr            =strtoupper($abreviatura);
         $nomsistema     =strtoupper($nomsis);
         $form = $this->createFormBuilder()
 
             ->add('sistema', 'text', array( 'data' =>$nomsistema , 'attr' => array('class' => 'form-control','enabled' => true)))
             ->add('bundle', 'text', array( 'data' =>$bundle , 'attr' => array('class' => 'form-control','enabled' => true)))
+            ->add('url', 'text', array( 'data' =>$url , 'attr' => array('class' => 'form-control','enabled' => true)))
             ->add('abreviatura', 'text', array( 'data' =>$abr ,'attr' => array('class' => 'form-control','enabled' => true)))
             ->add('observaciones', 'text', array(  'data' =>$obs , 'attr' => array('class' => 'form-control','enabled' => true)))
             ->add('idsistema', 'hidden', array(  'data' =>$idsistema , 'attr' => array('class' => 'form-control','enabled' => true)))
@@ -166,11 +171,12 @@ class GestionMenuController extends Controller {
 
     public function  administraSistemaupdateAction(Request $request){
         $form= $request->get('form');
-        $idsistema              =$form['idsistema'];
-        $sistemanom          = $form['sistema'];
+        $idsistema              = $form['idsistema'];
+        $sistemanom             = $form['sistema'];
         $observaciones          = $form['observaciones'];
         $abre                   = $form['abreviatura'];
-        $bundle                 =$form['bundle'];
+        $bundle                 = $form['bundle'];
+        $url                    = $form['url'];
         $em = $this->getDoctrine()->getManager();
         $sistematipo  = $em->getRepository('SieAppWebBundle:SistemaTipo')->find($idsistema);
 
@@ -192,6 +198,7 @@ class GestionMenuController extends Controller {
             $sistematipo->setAbreviatura($abre);
             $sistematipo->setObs($observaciones);
             $sistematipo->setBundle($bundle);
+            $sistematipo->setUrl($url);
             $em->persist($sistematipo);
             $em->flush();
 
@@ -201,7 +208,7 @@ class GestionMenuController extends Controller {
                 ->add('exito', $mensaje);
 
         }
-        $query = $em->getConnection()->prepare('SELECT sit.id,sistema,abreviatura,bundle,obs
+        $query = $em->getConnection()->prepare('SELECT sit.id,sistema,abreviatura,bundle,url,obs
                                                 FROM sistema_tipo sit 
                                                 ORDER BY 2
                                                ');
@@ -247,7 +254,7 @@ class GestionMenuController extends Controller {
                 ->add('exito', $mensaje);
 
         }
-        $query = $em->getConnection()->prepare('SELECT sit.id,sistema,abreviatura,bundle,obs
+        $query = $em->getConnection()->prepare('SELECT sit.id,sistema,abreviatura,bundle,url,obs
                                                 FROM sistema_tipo sit 
                                                 ORDER BY 2
                                                ');
