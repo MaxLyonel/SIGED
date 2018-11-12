@@ -1648,95 +1648,7 @@ ORDER BY 2,3,4");
                 else{
                     return new Response('');
                 }
-
-
         }
-
-
-
-     //  dump($menu_arboles);die;
-
-        /*$repository = $em->getRepository('SieAppWebBundle:MenuSistemaRol');
-        $query = $repository->createQueryBuilder('msr')
-             ->select('mt.id,sti.sistema, rtip.rol, ms.detalleMenu,mt.ruta,mt.icono,mt.id,mt1.id,msr.esactivo,mnt.id')
-            ->select('mt')
-            ->innerJoin('SieAppWebBundle:MenuTipo', 'mt1', 'WITH', 'mt.menuTipo = mt1.id')
-            ->innerJoin('SieAppWebBundle:MenuNivelTipo', 'mnt', 'WITH', 'mt.menuNivelTipo = mnt.id')
-
-            ->innerJoin('SieAppWebBundle:SistemaRol', 'sr', 'WITH', 'msr.sistemaRol = sr.id')
-            ->innerJoin('SieAppWebBundle:MenuSistema', 'ms', 'WITH', 'msr.menuSistema = ms.id')
-            ->innerJoin('SieAppWebBundle:MenuTipo', 'mt', 'WITH', 'ms.menuTipo=mt.id')
-            ->innerJoin('SieAppWebBundle:SistemaTipo', 'sti', 'WITH', 'sti.id = ms.sistemaTipo')
-            ->innerJoin('SieAppWebBundle:RolTipo', 'rtip', 'WITH', 'rtip.id =sr.rolTipo')
-            ->where('sti.id = :sistema')
-            ->andWhere('rtip.id IN (:roles)')
-            ->andWhere('msr.esactivo = TRUE')
-            ->setParameter('sistema', $idsistema)
-            ->setParameter('roles', $rolArray)
-            ->getQuery();
-        $resulatdo = $query->getResult();*/
-
-
-
-/*
- * Generacion de Menús
- * $em = $this->getDoctrine()->getManager();
-
-
-        $query = $em->getConnection()->prepare("SELECT mt.id,sti.sistema, rtip.rol, ms.detalle_menu,mt.ruta,mt.icono,mt.id,mt.menu_tipo_id,msr.esactivo,mt.menu_nivel_tipo_id
-                                                FROM menu_sistema_rol  msr
-                                                INNER JOIN sistema_rol sr ON msr.sistema_rol_id = sr.id
-                                                INNER JOIN menu_sistema ms ON msr.menu_sistema_id=ms.\"id\"
-                                                INNER JOIN menu_tipo mt ON ms.menu_tipo_id=mt.\"id\"
-                                                INNER JOIN sistema_tipo sti ON sti.id = ms.sistema_tipo_id
-                                                INNER JOIN rol_tipo rtip ON rtip.id =sr.rol_tipo_id
-                                                WHERE sti.\"id\" = $idsistema  and rtip.\"id\"=$rol_tipo_id
-                                                ORDER BY 7,8");
-        $query->execute();
-        $menu_arboles = $query->fetchAll();
-        //dump($menu_arboles);die;
-        $query = $em->getConnection()->prepare("SELECT TRIM(usuario_rol.sub_sistema)as sub_sistema
-                                                FROM usuario_rol
-                                                WHERE  usuario_rol.rol_tipo_id=$rol_tipo_id
-                                                AND usuario_rol.usuario_id=$userId");
-        $query->execute();
-        $subsistemas = $query->fetch();
-
-        $cadena=$subsistemas['sub_sistema'];
-        $sistemas = explode(",", $cadena);
-        //dump($sistemas);die;
-
-        $query = $em->getConnection()->prepare("SELECT TRIM(sistema_tipo.abreviatura) AS abreviatura from sistema_tipo WHERE sistema_tipo.\"id\"=$idsistema");
-        $query->execute();
-        $abreviatura = $query->fetch();
-
-        for ($i = 0; $i < count($sistemas); $i++) {
-           if($sistemas[$i] == $abreviatura['abreviatura'] OR  $sistemas[$i]=='*' OR $rol_tipo_id==8)
-           { $sw=1; break; }
-           else{$sw=0;
-                }
-        }
-
-        if($sw==1  )
-        {
-            if ($idsistema==1){
-                return $this->render(
-                    'SieAppWebBundle:GestionMenu:list_menu_siged.html.twig', array('menu_arboles' => $menu_arboles, 'rol_tipo_id' => $rol_tipo_id, 'sistema' => $idsistema)
-                );
-            }else{
-                return $this->render(
-                    'SieAppWebBundle:GestionMenu:list_menu.html.twig', array('menu_arboles' => $menu_arboles, 'rol_tipo_id' => $rol_tipo_id, 'sistema' => $idsistema)
-                );
-            }
-
-        }
-        else{
-            //return $this->redirect($this->generateUrl('login'));
-            return new Response('');
-            //return $this->redirect($this->generateUrl('principal_web'));
-        }
-
- * */
 
     }
 
@@ -1766,10 +1678,7 @@ ORDER BY 2,3,4");
     }
 
     public function generalistasistemamenurolAction(Request $request){
-        //dump($request->get('_route')); die;
-        //dump($this->getRequest()->get('_route'));die;
-        //$acceso = $this->get('sie_app_web.funciones')->controlaccesomenus(13,8,13851104,'olimtutor');
-        //dump($acceso);die;
+        
         $idsistema = $request->get('id_sistema');
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT msr.id,sti.sistema, ms.detalle_menu,mt.icono,mt.ruta,rtip.rol,mt.menu_nivel_tipo_id,msr.esactivo
