@@ -45,6 +45,7 @@ class DefaultController extends Controller {
         //settear variables a usar antes de la interfaz login
         switch ($request->server->get('HTTP_HOST')) {
             case '172.20.196.9:8011':
+            case '172.20.196.184':
             case 'siged.sie.gob.bo':
                 $sysname = 'REGULAR';
                 $sysporlet = 'blue';
@@ -52,6 +53,7 @@ class DefaultController extends Controller {
                 $layout = 'layoutRegular.html.twig';
                 $this->session->set('pathSystem', "SieRegularBundle");
                 break;
+            case '172.20.196.184':
             case '172.20.196.9:8015':
                 $sysname = 'ALTERNATIVA';
                 $sysporlet = 'green';
@@ -85,6 +87,7 @@ class DefaultController extends Controller {
                 break;
             case '172.20.196.9:8016':
             case 'www.herramientaalternativa.local':
+            case '172.20.196.184':
             case 'alternativa.sie.gob.bo':
                 $sysname = 'Herramienta Alternativa';
                 $sysporlet = 'blue';
@@ -254,6 +257,7 @@ class DefaultController extends Controller {
                 break;
             case '172.20.196.9:8030':
             case '172.20.196.7':
+            case '172.20.196.184':
             case 'olimpiada.sie.gob.bo':
                 $sysname = 'olimpiadas';
                 $sysporlet = 'blue';
@@ -268,12 +272,58 @@ class DefaultController extends Controller {
                 $layout = 'layoutRegular.html.twig';
                 $this->session->set('pathSystem', "SieRegularBundle");
                 $this->session->set('sistemaid', 1);
-                //$sysname = 'Herramienta Alternativa';
-                //$sysporlet = 'blue';
-                //$sysbutton = true;
-                //$layout = 'layoutHerramientaAlternativa.html.twig';
-                //$this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
                 break;
+                /*$sysname = 'PERMANENTE';
+                $sysporlet = 'green';
+                $sysbutton = false;
+                $layout = 'layoutPermanente.html.twig';
+                $this->session->set('pathSystem', "SiePermanenteBundle");
+                $this->session->set('sistemaid', 14);
+                break;*/
+
+               /* $sysname = 'olimpiadas';
+                $sysporlet = 'blue';
+                $sysbutton = true;
+                $layout = 'layoutOlimpiadas.html.twig';
+                $this->session->set('pathSystem', "SieOlimpiadasBundle");
+                $this->session->set('sistemaid', 13);
+                break;*/
+
+                /*$sysname = 'Herramienta';
+                $sysporlet = 'blue';
+                $sysbutton = true;
+                $layout = 'layoutHerramienta.html.twig';
+                $this->session->set('pathSystem', "SieHerramientaBundle");
+                break;*/
+                /*$sysname = 'DIPLOMAS';
+                $sysporlet = 'dpl';
+                $sysbutton = false;
+                $layout = 'layoutDiplomas.html.twig';
+                $this->session->set('pathSystem', "SieDiplomaBundle");
+                $this->session->set('sistemaid', 5);
+                break;*/
+
+                /*$sysname = 'Herramienta Alternativa';
+                $sysporlet = 'blue';
+                $sysbutton = true;
+                $layout = 'layoutHerramientaAlternativa.html.twig';
+                $this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
+                break;*/
+                /*$sysname = 'TRAMITES';
+                $sysporlet = 'green';
+                $sysbutton = false;
+                $layout = 'layoutCertification.html.twig';
+                $this->session->set('pathSystem', "SieTramitesBundle");
+                $this->session->set('sistemaid', 3);
+                break;*/
+
+                /*$sysname = 'Herramienta Alternativa';
+                $sysporlet = 'blue';
+                $sysbutton = true;
+                $layout = 'layoutHerramientaAlternativa.html.twig';
+                $this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
+                $this->session->set('sistemaid', 8);
+                break;*/
             case 'pnp.sie.gob.bo':
                 $sysname = 'PNP';
                 $sysporlet = 'blue';
@@ -296,6 +346,7 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieRegularBundle");
                 break;
             case 'herramientalt.local':
+            case '172.20.196.184':
                 $sysname = 'Herramienta Alternativa';
                 $sysporlet = 'blue';
                 $sysbutton = true;
