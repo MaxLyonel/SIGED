@@ -98,6 +98,22 @@
                 </button>
             </div-->
         {% endif %}
+        {% if primariaNuevo  %}
+        {#
+          print CERTIFICADOS To PRIMARIA
+        {% if (app.session.get('ie_per_estado') == '0') and primariaNuevo and ((app.session.get('ie_gestion') >= '2015')) %}
+        #}
+         <div class="col-md-3">
+                <form action="{{path('herramienta_alter_certificados_primaria')}}" method="post" style="">
+                    <input type="hidden" name="data" value="{{infoUe}}">
+                    <button type="submit" class="btn btn-primary btn-stroke">
+                        <i class="fa fa-cloud-download"></i> Imprimir Certificados
+                    </button>
+                </form>
+         </div>       
+        
+        {% endif %}
+        
       </div>
       <BR>
     {#<div class="row">
