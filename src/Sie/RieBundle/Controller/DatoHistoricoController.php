@@ -84,6 +84,7 @@ class DatoHistoricoController extends Controller {
         }
         $em = $this->getDoctrine()->getManager(); 
         $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
+        $esAcreditado = $this->get('dgfunctions')->esAcreditadoRitt($request->get('idRie'));
         $query = $em->createQuery('SELECT a
                                      FROM SieAppWebBundle:TtecInstitucioneducativaHistorico a 
                                      JOIN a.institucioneducativa b
@@ -91,7 +92,7 @@ class DatoHistoricoController extends Controller {
                                  ORDER BY a.fechaResolucion DESC');                       
         $query->setParameter('idRie', $request->get('idRie'));
         $historicos = $query->getResult();         
-        return $this->render('SieRieBundle:DatoHistorico:list.html.twig', array('entity' => $entity, 'historicos' => $historicos, 'lugarUsuario' => intval($lugar->getCodigo())));        
+        return $this->render('SieRieBundle:DatoHistorico:list.html.twig', array('entity' => $entity,'esAcreditado'=>$esAcreditado, 'historicos' => $historicos, 'lugarUsuario' => intval($lugar->getCodigo())));        
     }
 
     /**

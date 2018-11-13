@@ -9,7 +9,8 @@
 <div class="panel panel-success">
     <div class="panel-heading">
         {% if flujotipo == 5 %}
-            <div><h4>{{nombre}}</h4></div>
+            <div><h4>Cod Ritt: {{ codritt }}</h4></div>
+            <div><h4>Instituto: {{nombre}}</h4></div>
         {% endif %}
     </div>
     {% if (flujotipo == 5 and nombre != null) %} 
@@ -46,7 +47,7 @@
                                             <td>{{ f.fecha_registro }}</td>
                                             {% if f.fecha_registro %}
                                                 {% if f.tarea_sig_id == null %}
-                                                    <td bgcolor="green">TRAMITE CONCLUIDO</td>
+                                                    <td><span class="label label-success">TRAMITE CONCLUIDO</span></td>
                                                 {% else %}
                                                     <td>ENVIADO</td>
                                                 {% endif %}

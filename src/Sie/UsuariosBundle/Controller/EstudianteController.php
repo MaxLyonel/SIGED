@@ -171,7 +171,7 @@ class EstudianteController extends Controller
                     $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
                     $estudiante->setLocalidadNac('');
                 }
-                $estudiante->setComplemento('');
+                //$estudiante->setComplemento('');
                 $estudiante->setSegipId('11');
                 $em->persist($estudiante);
                 $em->flush();

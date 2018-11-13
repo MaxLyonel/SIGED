@@ -26,6 +26,9 @@ solicitud_ritt_tramite_obs:
     path:     /rittGuardaTramiteNacObs
     defaults: { _controller: SieRieBundle:SolicitudRITT:TramiteObs }
 
+solicitud_ritt_lista_concluidos:
+    path:     /rittListaTramitesConcluidos
+    defaults: { _controller: SieRieBundle:SolicitudRITT:listaTramitesConcluidos }
 
 
 

@@ -1,6 +1,6 @@
-Sie\AppWebBundle\Entity\TtecRegimenEstudioTipo:
+Sie\AppWebBundle\Entity\PermanenteOrganizacionTipo:
     type: entity
-    table: ttec_regimen_estudio_tipo
+    table: permanente_organizacion_tipo
     id:
         id:
             type: integer
@@ -11,17 +11,16 @@ Sie\AppWebBundle\Entity\TtecRegimenEstudioTipo:
             generator:
                 strategy: SEQUENCE
     fields:
-        regimenEstudio:
-            type: string
-            nullable: false
-            length: 150
-            fixed: false
-            comment: ''
-            column: regimen_estudio
-        descripcion:
+        organizacion:
             type: string
             nullable: true
-            length: 150
+            length: 255
+            fixed: false
+            comment: ''
+        observacion:
+            type: string
+            nullable: true
+            length: 255
             fixed: false
             comment: ''
     lifecycleCallbacks: {  }

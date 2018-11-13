@@ -41,19 +41,26 @@ class SolicitudRITTController extends Controller {
         $this->session = new Session();
     }
 
-
-    public function indexAction() {
+    /**
+     * Muestra formulario de Busqueda de la institución educativa
+     */
+    public function indexAction(Request $request) {
+        //dump($request);die;
         $id_rol= $this->session->get('roluser');
         $id_usuario= $this->session->get('userId');
         //Llamada a la funcion que lista los trámites registrados
+
         $TramiteController = new  TramiteRueController();
         $TramiteController->setContainer($this->container);
+        // public function tramiteTarea($tarea_ant,$tarea_actual,$flujotipo,$usuario,$rol)
         $lista = $TramiteController->tramiteTareaRitt(22,22,5,$id_usuario,$id_rol);
+        //dump($lista);die;
         return $this->render('SieRieBundle:SolicitudRITT:index.html.twig',array('listaTramites'=>$lista['tramites']));
     }
     public  function guardaTramiteAction(Request $request){
         $id_rol= $this->session->get('roluser');
         $id_usuario= $this->session->get('userId');
+        $idlugar_tipo= '';
         $idRie= $request->get('idRie');
         if ($request->get('idTramite_'))
         {$idTramite=$request->get('idTramite_');}
@@ -68,17 +75,35 @@ class SolicitudRITTController extends Controller {
         $TramiteController->setContainer($this->container);
         //($usuario,$uDestinatario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,$varevaluacion,$idtramite,$datos)
         $mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea,$tabla,$idRie,'',$id_tipoTramite,'',$idTramite,'','');
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:Tramite')->findBy(array('institucioneducativa'=>$idRie));
+        //dump($entity);die;
+        $tramite = $entity[0]->getId();
 
         $mensajeEnvio="El trámite fue enviado correctamente";
         $request->getSession()
             ->getFlashBag()
             ->add('exito', $mensajeEnvio);
 
-        return $this->redirectToRoute('solicitud_ritt_index');
+        /**imprime comprobante del envio de la solicitud */
+        
+        $arch = 'TRAMITE_'.$tramite.'_'.$idRie.'.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'ritt_infoGral_porCodRitt_v1_afv.rptdesign&cod_ritt='.$idRie.'&nro_tramite='.$tramite.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+
+        //return $this->redirectToRoute('solicitud_ritt_index');
 
     }
 
-    public function ListaTramitesNacAction(){
+    public function ListaTramitesNacAction(Request $request){
+        //dump($request);die;
         $id_rol= $this->session->get('roluser');
         $id_usuario= $this->session->get('userId');
         $TramiteController = new  TramiteRueController();
@@ -123,7 +148,8 @@ class SolicitudRITTController extends Controller {
         return $this->render('SieRieBundle:SolicitudRITT:lisTramitesNac.html.twig',array('listaTramites'=>$lista['tramites'],'evaluacion'=>$evaluacion));
 
     }
-    public function ListaTramitesCertificadoNacAction(){
+    public function ListaTramitesCertificadoNacAction(Request $request){
+        //dump($request);die;
         $id_rol= $this->session->get('roluser');
         $id_usuario= $this->session->get('userId');
         $TramiteController = new  TramiteRueController();
@@ -132,32 +158,57 @@ class SolicitudRITTController extends Controller {
         return $this->render('SieRieBundle:SolicitudRITT:listaTramitesCertificadosNac.html.twig',array('listaTramites'=>$lista['tramites']));
     }
     public  function guardaTramiteNacImprimeAction(Request $request){
+        //dump($request);die;
         $id_rol= $this->session->get('roluser');
         $id_usuario= $this->session->get('userId');
         $idRie= $request->get('idRie');
         $obs= '';
         $evaluacion= '';
         $idTramite= $request->get('idTramite_');
+        $idlugar_tipo= '';
         $flujotipo=5;//SOLICITUD RITT
         $tarea=24;//EMITE CERTIFICADO
         $tabla = 'institucioneducativa';
         $id_tipoTramite=26;
         $TramiteController = new  TramiteRueController();
         $TramiteController->setContainer($this->container);
+        //($usuario,$uDestinatario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,$varevaluacion,$idtramite,$datos)
         $mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea,$tabla,$idRie,$obs,$id_tipoTramite,$evaluacion,$idTramite,'','');
+        /**
+         * acreaditar instituto y local educativo
+         */
+        $em = $this->getDoctrine()->getManager();
+        
+        $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($idRie);
+        $entityLe = $em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($entity->getLeJuridicciongeografica()->getId());
+        
+        $entity->setInstitucioneducativaAcreditacionTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaAcreditacionTipo')->find(2));
+        $entityLe->setJuridiccionAcreditacionTipo($em->getRepository('SieAppWebBundle:JurisdiccionGeograficaAcreditacionTipo')->find(2));
+        
+        $em->flush();
+        /*$request->getSession()
+            ->getFlashBag()
+            ->add('exito', $mensaje);*/
+
         //dump($this->container->getParameter('urlreportweb') .'rie_certificados_itt_v1_oyq.rptdesign&idCertificados='.$request->get('idRie').'&&__format=pdf&');die;
-        $arch = 'CERTIFICADO_'.$request->get('idInstitucion').'_' . date('YmdHis') . '.pdf';
+
+        $arch = 'CERTIFICADOS_'.'_' . date('YmdHis') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'rie_cert_certificadottec_v2_afv.rptdesign&institucioneducativa_id='.$request->get('idRie').'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'rie_certificados_itt_v1_oyq.rptdesign&idCertificados='.$request->get('idRie').'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');
+
+        //return ( $this->redirectToRoute('solicitud_ritt_guarda_tramite_imprime'));
+
         return $response;
+
     }
     public function TramiteObsAction(Request $request){
+        //dump($request);
         $id = $request->get('td_id')   ;
         $id_rie= $request->get('id_rie');
         $em = $this->getDoctrine()->getManager();
@@ -170,6 +221,30 @@ class SolicitudRITTController extends Controller {
 
     }
 
-
+    public function listaTramitesConcluidosAction(Request $request){
+        //dump($request);die;
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("
+        SELECT t.id,ie.id as codrie,ie.institucioneducativa,tt.tramite_tipo,t.fecha_fin,'CONCLUIDO' as estado,lt4.lugar
+        FROM tramite t
+        JOIN institucioneducativa ie ON t.institucioneducativa_id=ie.id
+        JOIN jurisdiccion_geografica le ON ie.le_juridicciongeografica_id=le.id
+        LEFT JOIN lugar_tipo lt ON lt.id = le.lugar_tipo_id_localidad
+        LEFT JOIN lugar_tipo lt1 ON lt1.id = lt.lugar_tipo_id
+        LEFT JOIN lugar_tipo lt2 ON lt2.id = lt1.lugar_tipo_id
+        LEFT JOIN lugar_tipo lt3 ON lt3.id = lt2.lugar_tipo_id
+        LEFT JOIN lugar_tipo lt4 ON lt4.id = lt3.lugar_tipo_id
+        JOIN tramite_tipo tt ON t.tramite_tipo=tt.id
+        WHERE t.flujo_tipo_id=5 AND t.fecha_fin IS NOT NULL");
+        $query->execute();
+        $lista= $query->fetchAll();
+        //dump($lista);die;
+        return $this->render('SieRieBundle:SolicitudRITT:listaTramitesConcluidos.html.twig',array('listaTramites'=>$lista));
+    }
 
 }

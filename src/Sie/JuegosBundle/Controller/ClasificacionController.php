@@ -648,10 +648,10 @@ class ClasificacionController extends Controller {
         $query->execute();
         $faseTipoEntity = $query->fetchAll();
 
-        if (!$faseTipoEntity[0]['esactivo_secundaria']){
-            $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Secundaria concluyeron"));
-            return $this->redirectToRoute('sie_juegos_representacion_cultural_index');
-        }
+        //if (!$faseTipoEntity[0]['esactivo_secundaria']){
+        //    $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Secundaria concluyeron"));
+        //    return $this->redirectToRoute('sie_juegos_representacion_cultural_index');
+        //}
 
         $sesion = $request->getSession();
         $id_usuario = $this->session->get('userId');

@@ -97,7 +97,7 @@ class FlujoSeguimientoController extends Controller
          */
         if($flujotipo == 5) 
         {
-            $query = $em->getConnection()->prepare('select p.id, p.flujo,d.institucioneducativa, p.proceso_tipo, p.orden, p.es_evaluacion,p.variable_evaluacion, p.condicion, p.nombre,d.valor_evaluacion, p.condicion_tarea_siguiente, p.plazo, p.tarea_ant_id, p.tarea_sig_id, p.rol_tipo_id,d.id as td_id,d.tramite_id,d.obs, d.flujo_proceso_id,d.fecha_registro,d.usuario_remitente_id,d.usuario_destinatario_id
+            $query = $em->getConnection()->prepare('select p.id, p.flujo,d.institucioneducativa, p.proceso_tipo, p.orden, p.es_evaluacion,p.variable_evaluacion, p.condicion, p.nombre,d.valor_evaluacion, p.condicion_tarea_siguiente, p.plazo, p.tarea_ant_id, p.tarea_sig_id, p.rol_tipo_id,d.id as td_id,d.tramite_id,d.codritt,d.obs, d.flujo_proceso_id,d.fecha_registro,d.usuario_remitente_id,d.usuario_destinatario_id
         from
         (SELECT 
           fp.id, f.flujo, p.proceso_tipo, fp.orden, fp.es_evaluacion,fp.variable_evaluacion, wftc.condicion, wfc.nombre, wftc.condicion_tarea_siguiente, fp.plazo, fp.tarea_ant_id, fp.tarea_sig_id, fp.rol_tipo_id
@@ -110,7 +110,7 @@ class FlujoSeguimientoController extends Controller
            f.id='. $flujotipo .' order by fp.orden)p
         LEFT JOIN
         (SELECT 
-          t1.id,t1.obs,t1.tramite_id, t1.flujo_proceso_id,t1.fecha_registro,t1.usuario_remitente_id,t1.usuario_destinatario_id,i.institucioneducativa,t1.valor_evaluacion
+          t1.id,t1.obs,t1.tramite_id, t1.flujo_proceso_id,t1.fecha_registro,t1.usuario_remitente_id,t1.usuario_destinatario_id,i.institucioneducativa,i.id as codritt,t1.valor_evaluacion
         FROM 
           tramite_detalle t1 join tramite t on t1.tramite_id=t.id
           join institucioneducativa i on t.institucioneducativa_id=i.id
@@ -124,6 +124,7 @@ class FlujoSeguimientoController extends Controller
         $data['flujo']=$arrData;
         $data['flujotipo'] = $flujotipo;
         $data['nombre']=$arrData[0]['institucioneducativa'];
+        $data['codritt'] = $arrData[0]['codritt'];
         return $data;
     }
 }
