@@ -7624,6 +7624,59 @@ public function cambiar_facilitador_encontradoAction(Request $request,$ci,$compl
     */
     return $this->render('SiePnpBundle:Default:cambiar_facilitador_encontrado.html.twig',array('curso'=>$curso,'curso_existe'=>$curso_existe,'facilitador'=>$facilitador,'facilitador_existe'=>$facilitador_existe));
 }
+public function listar_depAction($val){
+    $em = $this->getDoctrine()->getManager();
+    $db = $em->getConnection();
+    $contador=0;
+    $query = "
+           SELECT 
+lt3.lugar as depto,lt1.lugar as  municipio,ic.id as id_curso,
+coalesce(p.nombre||' '||p.paterno||' '||p.materno) as facilitador,
+p.carnet,ic.ciclo_tipo_id as bloque, ic.grado_tipo_id as parte,
+count(*) as insc,
+SUM(CASE WHEN ei.estadomatricula_tipo_id=62
+            THEN 1
+            ELSE 0
+    END) as grad,
+ic.fecha_inicio,ic.fecha_fin
+FROM institucioneducativa_curso ic
+join institucioneducativa_curso_datos icd on ic.id=icd.institucioneducativa_curso_id
+join maestro_inscripcion mai on ic.maestro_inscripcion_id_asesor=mai.id
+join persona p on p.id=mai.persona_id
+join estudiante_inscripcion ei on ei.institucioneducativa_curso_id=ic.id
+join lugar_tipo lt1 on lt1.id=icd.lugar_tipo_id_seccion
+join lugar_tipo lt2 on lt2.id=lt1.lugar_tipo_id
+join lugar_tipo lt3 on lt3.id=lt2.lugar_tipo_id
+where ic.institucioneducativa_id=$val 
+GROUP BY lt3.lugar,lt1.lugar,ic.id,
+coalesce(p.nombre||' '||p.paterno||' '||p.materno),
+p.carnet,ic.ciclo_tipo_id, ic.grado_tipo_id,ic.fecha_inicio,ic.fecha_fin
+ORDER BY carnet,bloque,parte,fecha_inicio,municipio
+                ";
+    $stmt = $db->prepare($query);
+    $params = array();
+    $stmt->execute($params);
+    $po = $stmt->fetchAll();
+    $filas = array();
+    $datos_filas = array();
+    foreach ($po as $p) {
+        $contador++;
+        $datos_filas["num"] = $contador;
+        $datos_filas["depto"] = $p["depto"];
+        $datos_filas["municipio"] = $p["municipio"];
+        $datos_filas["id_curso"] = $p["id_curso"];
+        $datos_filas["facilitador"] = $p["facilitador"];
+        $datos_filas["carnet"] = $p["carnet"];
+        $datos_filas["bloque"] = $p["bloque"];
+        $datos_filas["parte"] = $p["parte"];
+        $datos_filas["insc"] = $p["insc"];
+        $datos_filas["grad"] = $p["grad"];
+        $datos_filas["fecha_inicio"] = $p["fecha_inicio"];
+        $datos_filas["fecha_fin"] = $p["fecha_fin"];
+        $filas[] = $datos_filas;
+    }    
+    return $this->render('SiePnpBundle:Default:listar_dep.html.twig',array('contador'=>$contador,'filas'=>$filas));
+}
 
 
 /////////////////////////////////busquedas//////////////////////
@@ -7756,4 +7809,6 @@ public function cambiar_facilitador_encontradoAction(Request $request,$ci,$compl
         return $filas;
     }
     //buscar archivos de 2015 para adelante
+
+  
 }

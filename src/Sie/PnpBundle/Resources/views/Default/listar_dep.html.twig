@@ -1,0 +1,75 @@
+cantidad: {{ contador }}
+<input type="button" value="Descargar en Excel" onclick="exportToExcel('exTable')" />
+
+<table id="exTable" border="1">
+	 <thead class="lockedRecordsBg">
+		<tr>
+			<th>NUM</th>
+			<th>DEPTO</th>
+			<th>MUNICIPIO</th>
+			<th>ID_CURSO</th>
+			<th>FACILITADOR</th>
+			<th>CARNET</th>
+			<th>BLOQUE</th>
+			<th>PARTE</th>
+			<th>INSC</th>
+			<th>GRAD</th>
+			<th>FECHA_INICIO</th>
+			<th>FECHA_FIN</th>
+		</tr>
+	</thead>
+	 <tbody>
+	
+		{% for fila in filas %}
+			<tr>
+				<td>{{fila.num}}</td>
+				<td>{{fila.depto}}</td>
+				<td>{{fila.municipio}}</td>
+				<td>{{fila.id_curso}}</td>
+				<td>{{fila.facilitador}}</td>
+				<td>{{fila.carnet}}</td>
+				<td>{{fila.bloque}}</td>
+				<td>{{fila.parte}}</td>
+				<td>{{fila.insc}}</td>
+				<td>{{fila.grad}}</td>
+				<td>{{fila.fecha_inicio}}</td>
+				<td>{{fila.fecha_fin}}</td>			
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+<script>
+function exportToExcel(tableID){
+    var tab_text="<table border='2px'><tr bgcolor='#87AFC6' style='height: 75px; text-align: center; width: 250px'>";
+    var textRange; var j=0;
+    tab = document.getElementById(tableID); // id of table
+    for(j = 0 ; j < tab.rows.length ; j++)
+    {
+        tab_text=tab_text;
+        tab_text=tab_text+tab.rows[j].innerHTML.toUpperCase()+"</tr>";
+        //tab_text=tab_text+"</tr>";
+    }
+    tab_text= tab_text+"</table>";
+    tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, ""); //remove if u want links in your table
+    tab_text= tab_text.replace(/<img[^>]*>/gi,""); //remove if u want images in your table
+    tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); //remove input params
+    var ua = window.navigator.userAgent;
+    var msie = ua.indexOf("MSIE ");
+    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+    {
+        txtArea1.document.open("txt/html","replace");
+        txtArea1.document.write( 'sep=,\r\n' + tab_text);
+        txtArea1.document.close();
+        txtArea1.focus();
+        sa=txtArea1.document.execCommand("SaveAs",true,"sudhir123.txt");
+    }
+    else {
+       sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+    }
+    
+    return (sa);
+}
+</script>
+
+
