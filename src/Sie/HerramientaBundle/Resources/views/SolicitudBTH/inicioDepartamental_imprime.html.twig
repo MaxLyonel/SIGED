@@ -121,7 +121,7 @@
                         success: function (data) {
 
                             if (data==1){
-                                swal("Se finalizó correctamente el Trámite");
+                                swal("Se finalizó correctamente el Trámite, con Nro:" + id_tramite );
                                 location.href = "{{ path('solicitud_bth_departamental_lista_imprime') }}";
                             }
                             else{

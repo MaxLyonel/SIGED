@@ -189,7 +189,7 @@ class SolicitudBTHController extends Controller {
 
     }
     public function nuevasolicitudAction(Request $request){
-
+        //dump($request);die;
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT tp.id,tp.tramite_tipo FROM tramite_tipo tp WHERE tp.obs='BTH' ");
         $query->execute();
@@ -324,7 +324,7 @@ class SolicitudBTHController extends Controller {
 
     }
     public function guardasolicitudAction(Request $request){
-//dump($request);die;
+        //dump($request);die;
         $id_Institucion = $request->get('institucionid');
         $gestion =  $request->getSession()->get('currentyear');
        // dump($id_Institucion); dump($gestion);die;
@@ -597,7 +597,7 @@ class SolicitudBTHController extends Controller {
 
         //buscar y armar las especialidades
         $lista_especialidadRegNuearray = array();
-        //$especialidadifno = ();
+        $especialidadifno1 = array();
         for($i=0;$i<count($datos[2]['select_especialidad']);$i++){
             $idespecialidad = $datos[2]['select_especialidad'][$i];
             $query = $em->getConnection()->prepare("SELECT eth.id,eth.especialidad FROM especialidad_tecnico_humanistico_tipo eth WHERE eth. id=$idespecialidad");
@@ -605,9 +605,8 @@ class SolicitudBTHController extends Controller {
             $especialidad = $query->fetch();
             $lista_especialidadRegNuearray[]=array('id'=>$especialidad['id'],'especialidad'=>$especialidad['especialidad'] );
             $especialidadifno[$i] = $idespecialidad;
-           // $especialidadifno.array_push($idespecialidad);
         }
-     // dump($especialidadifno);die;
+     //dump($especialidadifno);die;
         $query = $em->getConnection()->prepare("SELECT eth.id,eth.especialidad FROM especialidad_tecnico_humanistico_tipo eth ORDER BY 1 ");
         $query->execute();
         $especialidadlista = $query->fetchAll();
@@ -625,6 +624,7 @@ class SolicitudBTHController extends Controller {
                     'especialidad'=>$lista_especialidadRegNuearray,
                     'especialidadarray'=>$lista_especialidadarray,
                     'especialidadlista' =>$especialidadlista,
+                    'especialidadifno'=>$especialidadifno,
                     'informe'=>$informe,
                     'id_tramite'=>$id_tramite,
                     'documento'=>$documento,

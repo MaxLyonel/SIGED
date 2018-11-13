@@ -1,9 +1,9 @@
 {% extends 'layoutHerramienta.html.twig' %}
 {% block contentoption %}
     <div class="header-content">
-        <h2><i class="fa fa-table animated fadeIn"></i> Nueva Solicitud BTH <span>Nueva Solicitud BTH  {{ ubicacion['codigo_distrito'] }}</span></h2>
+        <h2><i class="fa fa-table animated fadeIn"></i> Nueva Solicitud BTH <span>Nueva Solicitud BTH </span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
-            <span class="label">Usted esta aquí:</span>
+            <span class="label">Usted esta aquí12312:</span>
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
@@ -547,6 +547,7 @@
                     .then(function(willDelete)  {
                         if (willDelete) {
                             var institucionid={{ institucion.id }}
+
                             var ip = [];
                             if($('#informe:checked').val())
                                 ip.push({ informe : 1});
@@ -578,7 +579,7 @@
                                 },
                                 success: function (data) {
                                     if (data==1 ){
-                                        swal("Su formulario se ha enviado con éxito Muchas gracias");
+                                        swal("Su formulario se ha enviado con éxito Nro Tramite:"+text);
                                         location.href = "{{ path('solicitud_bth_index') }}";
                                     }
                                     else if(data==2 ){
@@ -667,26 +668,13 @@
 
     }
 
-    function enviarSolicitudRegularizacionbth() {
-        var idsolicitud=$('#form_solicitud').val();
 
-
-
-
-    }
-    function enviarSolicitudEspecialidadbth() {
-
-        alert("Especialidad");
-
-    }
     $(document).ready(function(){
             $('#form_nuevo').hide();
             $('#form_regularizacion').hide();
             $('#form_especialidad').hide();
 
     });
-
-
 
 </script>
 {% endblock %}
