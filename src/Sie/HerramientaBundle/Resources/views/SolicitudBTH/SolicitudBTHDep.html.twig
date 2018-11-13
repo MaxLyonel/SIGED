@@ -472,7 +472,7 @@
                             success: function (data) {
 
                                 if (data==1){
-                                    swal("Su formulario se ha enviado con éxito Muchas gracias");
+                                    swal("Su formulario se ha enviado con éxito con Nro. de Trámite: "+ {{ id_tramite }} );
                                     location.href = "{{ path('solicitud_bth_departamental_index') }}";
                                 }
                                 else{

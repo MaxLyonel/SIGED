@@ -420,7 +420,7 @@
                             },
                             success: function (data) {
                                 if (data==1){
-                                    swal("Su respuesta se ha enviado con éxito Muchas gracias");
+                                    swal("Su respuesta se ha enviado con éxito, con Nro. de Trámite: "+ {{ id_tramite}});
                                     location.href = "{{ path('solicitud_bth_distrital_index') }}";
                                 }
                                 else{
