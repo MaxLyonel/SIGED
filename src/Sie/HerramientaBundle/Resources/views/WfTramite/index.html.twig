@@ -53,7 +53,7 @@
                                 <table class="table table-bordered table-middle table-primary">
                                     <thead>
                                         <tr>
-                                            <th>No.</th>
+                                            <th style="max-width: 5px">No.</th>
                                             <th>Trámite</th>
                                             <th class="text-center"></th>
                                         </tr>
@@ -61,7 +61,7 @@
                                     <tbody>
                                         {% for entity in entities %}
                                         <tr>
-                                            <td class="text-center">
+                                            <td class="text-center" style="max-width: 5px">
                                                 <strong>{{ loop.index }}</strong>
                                             </td>
                                             <td>{{ entity.flujo }}</td>

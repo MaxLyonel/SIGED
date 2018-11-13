@@ -2,7 +2,7 @@
 {% block contentoption %}
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> Tramite RUE:<span>Enviar notificación departamental</span></h2>
+        <h2><i class="fa fa-list-alt"></i> TRAMITE RUE: <span>ENVIAR FORMULARIOS SIE, RUE, INFRA Y LE DEPARTAMENTAL</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -20,7 +20,7 @@
     <div class="body-content animated fadeIn">
         <div class="row">
             <div class="col-12">
-                <div class="panel rounded shadow">
+                <div class="panel panel-primary">
                     <div class="panel-heading">
                         {% if app.session.flashBag.has('exito') %}
                             <div class="alert alert-success">
@@ -39,7 +39,7 @@
                             </div>
                         {% endif %}    
                         <div class="pull-left">
-                            <h3 class="panel-title"></h3>
+                            <h3 class="panel-title">TRÁMITE-{{idtramite}}</h3>
                         </div>
                         {#<div class="pull-left">
                             <label>Código RUE:</label>
@@ -50,8 +50,9 @@
                         </div>#}
                         <div class="clearfix"></div>
                     </div><!-- /.panel-heading -->
+                     {{ form_start(form) }}
                     <div class="panel-body">
-                        {{ form_start(form) }}
+                       
                         <div class="row">
 							<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
 								{{ form_label(form.idrue) }}
@@ -65,35 +66,52 @@
 								{{ form_label(form.tipotramite) }}
 								{{ form_widget(form.tipotramite, {'attr':{'class':'form-control'} }) }}
 							</div>
-                            {#<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
-								 {{ form_label(form.estadoinstitucioneducativa) }}
-								{{ form_widget(form.estadoinstitucioneducativa, {'attr':{'class':'form-control'} }) }}
-							</div>#}
-                            <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								{{ form_label(form.observacion) }}
-								{{ form_widget(form.observacion, {'attr':{'class':'form-control'} }) }}
+                            <div class="row"></br></br>
+                            <div class="form-group col-md-12">
+								<div class="col-md-12"><h5 class="panel-title">FORMULARIOS A ENVIAR</h5></div></br>
+                                {% for f in form.formularios %}
+                                <div class="card col-md-12">
+                                    {{ form_widget(f) }}
+                                    {{ form_label(f) }}
+                                </div>
+                                {% endfor %} 
 							</div>
-                            <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
-								{{ form_label(form.varevaluacion) }}
-								{{ form_widget(form.varevaluacion, {'attr':{'class':'form-control'} }) }}
-							</div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+    								{{ form_label(form.observacion) }}
+	    							{{ form_widget(form.observacion, {'attr':{'class':'form-control'} }) }}
+		        				</div>
+                            </div>
                             <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
 								{{ form_label(form.guardar) }}
                                 {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary'} }) }}
-                                <a href="{{path('tramite_rue_notificacion_minedu')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
+                                <a href="{{path('wf_tramite_recibido')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
 							</div>
                         </div>    
-        			    {{ form_end(form) }}
+        			    
 			        </div><!-- /.panel-body -->
                 </div>
             </div>
         </div>
-
+{{ form_end(form) }}
     </div>
 {% endblock %}
  {% block javascripts %}
     {{ parent() }} 
     <script>
-       
-    </script>
+       $('#form_varevaluacion1_1').click(function(){
+           //alert('entra');
+          if ($("#form_varevaluacion1_1").is(':checked')){
+              $('#informe').show();
+              $('#obs').hide();
+          }
+       });
+       $('#form_varevaluacion1_0').click(function(){
+           //alert('entra');
+          if ($("#form_varevaluacion1_0").is(':checked')){
+              $('#informe').hide();
+              $('#obs').show();
+          }
+       });
+    </script>   
     {% endblock %}

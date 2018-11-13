@@ -18,6 +18,14 @@ wf_tramite_recibido_enviar:
     path:     /{id}/recibidosenviar
     defaults: { _controller: SieHerramientaBundle:WfTramite:recibidosEnviar }
 
+wf_tramite_recibido_detalle:
+    path:     /recibidosdetalle
+    defaults: { _controller: SieHerramientaBundle:WfTramite:recibidosDetalle }
+
+wf_tramite_recibido_derivar:
+    path:     /recibidosderivar
+    defaults: { _controller: SieHerramientaBundle:WfTramite:recibidosDerivar }
+
 wf_tramite_enviados:
     path:     /enviados
     defaults: { _controller: SieHerramientaBundle:WfTramite:enviados }
@@ -28,4 +36,8 @@ wf_tramite_concluidos:
 
 wf_tramite_seguimiento:
     path:     /seguimiento
-    defaults: { _controller: SieHerramientaBundle:WfTramite:seguimiento }
+    defaults: { _controller: SieHerramientaBundle:WfTramite:seguimientoTramite }
+
+wf_tramite_seguimiento_verflujo:
+    path:     /verflujo
+    defaults: { _controller: "SieHerramientaBundle:WfTramite:verFlujo" }

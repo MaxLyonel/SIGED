@@ -1,0 +1,170 @@
+{% extends 'layoutProcesos.html.twig' %}
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> TRAMITE RUE: <span>VERIFICACIÓN JURÍDICA DEPARTAMENTAL</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Trámite</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+    
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        {% if app.session.flashBag.has('exito') %}
+                            <div class="alert alert-success">
+                                {% for msg in app.session.flashBag.get('exito') %}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    {{ msg }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        {% if app.session.flashBag.has('error') %}
+                            <div class="alert alert-danger">
+                                {% for msg in app.session.flashBag.get('error') %}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    {{ msg }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}    
+                        <div class="pull-left">
+                            <h3 class="panel-title">VERIFICAR INFORME-Tramite:{{ idtramite }}</h3>
+                        </div>
+                        {#<div class="pull-left">
+                            <label>Código RUE:</label>
+                            <input type="text" value="" id="idrue">
+                            <a href="#" class="btn btn-primary" id="buscar_rue">
+                                <i class="fa fa-plus"></i> Buscar
+                            </a>
+                        </div>#}
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                     {{ form_start(form) }}
+                    <div class="panel-body">
+                       
+                        <div class="row">
+							<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+								{{ form_label(form.idrue) }}
+								{{ form_widget(form.idrue, {'attr':{'class':'form-control'} }) }}
+							</div>
+                            <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+								{{ form_label(form.institucioneducativa) }}
+								{{ form_widget(form.institucioneducativa, {'attr':{'class':'form-control'} }) }}
+							</div>
+                            <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+								{{ form_label(form.tipotramite) }}
+								{{ form_widget(form.tipotramite, {'attr':{'class':'form-control'} }) }}
+							</div>
+                            <div class="row"></br></br>
+                            <div class="form-group col-md-12">
+								<div class="col-md-12"><h5 class="panel-title">OBSERVAR Y DEVOLVER</h5></div></br>
+                                {% for v1 in form.varevaluacion1 %}
+                                <div class="col-md-2">
+                                    {{ form_widget(v1) }}
+                                    {{ form_label(v1) }}
+                                </div>
+                                {% endfor %} 
+							</div>
+                            <div class="form-group col-md-12" id="obs" style="display:none">
+                                <div class="col-md-6">
+								    {{ form_label(form.observacion1) }}
+								    {{ form_widget(form.observacion1, {'attr':{'class':'form-control'} }) }}
+                                </div>
+							</div>
+                            </div>
+                            <div class="row" style="display:none" id="informe">
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-12"><h5 class="panel-title">INFORME PROCEDENTE</h5></div></br>
+                                    <div class="col-md-6">
+                                    {% for v2 in form.varevaluacion2 %}
+                                        <div class="form-group col-md-2">
+                                            {{ form_widget(v2) }}
+                                            {{ form_label(v2) }}
+                                        </div>
+                                    {% endfor %} 
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-6">
+								        {{ form_label(form.informejuridica) }}
+								        {{ form_widget(form.informejuridica, {'attr':{'class':'form-control'} }) }}
+							        </div>
+                                    <div class="col-md-6">
+								        {{ form_label(form.fechainformejuridica) }}
+								        {{ form_widget(form.fechainformejuridica, {'attr':{'class':'form-control'} }) }}
+							        </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                <div class="col-md-6">
+    								{{ form_label(form.observacion2) }}
+	    							{{ form_widget(form.observacion2, {'attr':{'class':'form-control'} }) }}
+		        				</div>
+                                </div>
+                                <div class="form-group col-md-12" id = "resol" style="display:none">
+                                    <div class="col-md-6">
+								        {{ form_label(form.resolucion) }}
+								        {{ form_widget(form.resolucion, {'attr':{'class':'form-control'} }) }}
+							        </div>
+                                    <div class="col-md-6">
+								        {{ form_label(form.fecharesolucion) }}
+								        {{ form_widget(form.fecharesolucion, {'attr':{'class':'form-control'} }) }}
+							        </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+								{{ form_label(form.guardar) }}
+                                {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary'} }) }}
+                                <a href="{{path('wf_tramite_recibido')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
+							</div>
+                        </div>    
+        			    
+			        </div><!-- /.panel-body -->
+                </div>
+            </div>
+        </div>
+{{ form_end(form) }}
+    </div>
+{% endblock %}
+ {% block javascripts %}
+    {{ parent() }} 
+    <script>
+        $('#form_varevaluacion1_1').click(function(){
+           //alert('entra');
+            if ($("#form_varevaluacion1_1").is(':checked')){
+                $('#informe').show();
+                $('#obs').hide();
+            }
+        });
+        $('#form_varevaluacion1_0').click(function(){
+           //alert('entra');
+            if ($("#form_varevaluacion1_0").is(':checked')){
+                $('#informe').hide();
+                $('#obs').show();
+            }
+        });
+        $('#form_varevaluacion2_0').click(function(){
+           //alert('entra');
+            if ($("#form_varevaluacion2_0").is(':checked')){
+                $('#resol').show();
+            }
+        });
+        $('#form_varevaluacion2_1').click(function(){
+           //alert('entra');
+            if ($("#form_varevaluacion2_1").is(':checked')){
+                $('#resol').hide();
+            }
+        });
+        
+    </script>   
+    {% endblock %}
