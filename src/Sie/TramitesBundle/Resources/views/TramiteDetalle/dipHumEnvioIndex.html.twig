@@ -97,7 +97,7 @@
                                             <td>{{ participante.nombre }}</td>
                                             <td>{{ participante.fecha_nacimiento }} - {{ participante.lugar_nacimiento }}</td>
                                             <td>
-                                                {% if participante.gestion_tipo_id != "now"|date("Y") %}
+                                                {% if participante.gestion_tipo_id == "now"|date("Y") %}
                                                   {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
                                                     <span class="label label-danger rounded">{{ participante.estadomatricula }}</span>
                                                   {% else %}
@@ -123,18 +123,18 @@
                                                 {% set registro = true %}
                                                 {% set anular = false %}
 
-                                                {% if participante.gestion_tipo_id != "now"|date("Y") %}
+                                                {% if participante.gestion_tipo_id == "now"|date("Y") %}
                                                   {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
-                                                    {% set anular = true %}
+                                                    {% set registro = false %}
                                                   {% endif %}
                                                 {% else %}
                                                   {% if participante.nivel_tipo_id == 13 %}
                                                     {% if participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
-                                                      {% set anular = true %}
+                                                      {% set registro = false %}
                                                     {% endif %}
                                                   {% else %}
                                                     {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
-                                                      {% set anular = true %}
+                                                      {% set registro = false %}
                                                     {% endif %}
                                                   {% endif %}
                                                 {% endif %}

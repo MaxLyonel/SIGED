@@ -32,7 +32,7 @@ Sie\AppWebBundle\Entity\TtecInstitucioneducativaSede:
         observacion:
             type: string
             nullable: true
-            length: 50
+            length: 200
             fixed: false
             comment: ''
         fechaRegistro:

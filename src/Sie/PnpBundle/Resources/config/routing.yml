@@ -259,6 +259,18 @@ sie_pnp_abrir_curso:
     defaults: { _controller: SiePnpBundle:Default:abrir_curso }
     options:
          expose: true
+
+sie_pnp_cerrar_curso:
+    path:     /pnp/cerrar_curso
+    defaults: { _controller: SiePnpBundle:Default:cerrar_curso }
+    options:
+         expose: true
+
+sie_pnp_cerrar_curso_encontrado:
+    path:     /pnp/cerrar_curso_encontrado/{ci}/{complemento}/{curso_id}
+    defaults: { _controller: SiePnpBundle:Default:cerrar_curso_encontrado, ci:0, complemento:0,curso_id:0 }
+    options:
+         expose: true
          
 sie_pnp_cambiar_facilitador:
     path:     /pnp/cambiar_facilitador
@@ -271,4 +283,3 @@ sie_pnp_cambiar_facilitador_encontrado:
     defaults: { _controller: SiePnpBundle:Default:cambiar_facilitador_encontrado, ci:0, complemento:0,curso_id:0 }
     options:
          expose: true
-

@@ -71,45 +71,9 @@ class RegistroInstitucionEducativaController extends Controller {
             ->setParameter('idTipo', array(7, 8, 9))
             ->setParameter('idEstado', 10)
             ->setParameter('estadoSede', TRUE);
-
-        // switch ($id_rol) {
-        //     case 7:
-        //         $query = $em->createQuery('SELECT se
-        //             FROM SieAppWebBundle:TtecInstitucioneducativaSede se
-        //             INNER JOIN se.institucioneducativa ie 
-        //             INNER JOIN ie.leJuridicciongeografica jg 
-        //             LEFT JOIN jg.lugarTipoLocalidad lt
-        //             LEFT JOIN lt.lugarTipo lt1
-        //             LEFT JOIN lt1.lugarTipo lt2
-        //             LEFT JOIN lt2.lugarTipo lt3
-        //             LEFT JOIN lt3.lugarTipo lt4
-        //             WHERE ie.institucioneducativaTipo in (:idTipo)
-        //             AND ie.estadoinstitucionTipo in (:idEstado)
-        //             AND se.estado = :estadoSede
-        //             AND lt4.codigo = :departamento
-        //             ORDER BY ie.id ')
-        //             ->setParameter('idTipo', array(7, 8, 9))
-        //             ->setParameter('idEstado', 10)
-        //             ->setParameter('estadoSede', TRUE)
-        //             ->setParameter('departamento', intval($lugar->getCodigo()));
-        //         break;
-            
-        //     case 8:
-        //         $query = $em->createQuery('SELECT se
-        //             FROM SieAppWebBundle:TtecInstitucioneducativaSede se
-        //             INNER JOIN se.institucioneducativa ie 
-        //             WHERE ie.institucioneducativaTipo in (:idTipo)
-        //             AND ie.estadoinstitucionTipo in (:idEstado)
-        //             AND se.estado = :estadoSede
-        //             ORDER BY ie.id ')
-        //             ->setParameter('idTipo', array(7, 8, 9))
-        //             ->setParameter('idEstado', 10)
-        //             ->setParameter('estadoSede', TRUE);  
-        //         break;
-        // }
         
         $entities = $query->getResult();
-
+        
         return $this->render('SieRieBundle:RegistroInstitucionEducativa:list.html.twig', array(
             'entities' => $entities,
             'lugarUsuario' => intval($lugar->getCodigo())
@@ -158,7 +122,7 @@ class RegistroInstitucionEducativaController extends Controller {
                                             AND ie.institucioneducativaAcreditacionTipo = :ieAcreditacion
                                        ORDER BY ie.id')
     		                ->setParameter('id','%' . strtoupper($form['institucioneducativa']) . '%')
-                        ->setParameter('ieAcreditacion', 1);
+                        ->setParameter('ieAcreditacion', 2);
     	}else{
     		$query = $em->createQuery(
     				'SELECT ie
@@ -167,7 +131,7 @@ class RegistroInstitucionEducativaController extends Controller {
                             and ie.institucioneducativaAcreditacionTipo = :ieAcreditacion
                             ORDER BY ie.id')
     		                ->setParameter('id', $form['institucioneducativaId'])
-                            ->setParameter('ieAcreditacion', 1);
+                            ->setParameter('ieAcreditacion', 2);
     	}
 
     	$entities = $query->getResult();
@@ -268,7 +232,7 @@ class RegistroInstitucionEducativaController extends Controller {
             $entity->setObsRue(mb_strtoupper($form['obsRue'], 'utf-8'));
     		$entity->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($form['leJuridicciongeograficaId']));
     		$entity->setOrgcurricularTipo($ieducativatipo->getOrgcurricularTipo());
-            $entity->setInstitucioneducativaAcreditacionTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaAcreditacionTipo')->find(1));
+            $entity->setInstitucioneducativaAcreditacionTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaAcreditacionTipo')->find(3));
             $em->persist($entity);
     		$em->flush();
 

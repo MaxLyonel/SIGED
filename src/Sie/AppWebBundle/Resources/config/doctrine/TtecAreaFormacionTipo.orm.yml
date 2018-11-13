@@ -7,7 +7,7 @@ Sie\AppWebBundle\Entity\TtecAreaFormacionTipo:
                 - institucioneducativa_tipo_id
     id:
         id:
-            type: smallint
+            type: integer
             nullable: false
             unsigned: false
             comment: ''

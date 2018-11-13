@@ -30,6 +30,16 @@ class TtecAdministrativoCarreraPersona
     private $fechaModificacion;
 
     /**
+     * @var integer
+     */
+    private $item;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\FinanciamientoTipo
+     */
+    private $financiamientoTipo;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\TtecCarreraTipo
      */
     private $ttecCarreraTipo;
@@ -132,6 +142,52 @@ class TtecAdministrativoCarreraPersona
     public function getFechaModificacion()
     {
         return $this->fechaModificacion;
+    }
+
+    /**
+     * Set item
+     *
+     * @param integer $item
+     * @return TtecAdministrativoCarreraPersona
+     */
+    public function setItem($item)
+    {
+        $this->item = $item;
+    
+        return $this;
+    }
+
+    /**
+     * Get item
+     *
+     * @return integer 
+     */
+    public function getItem()
+    {
+        return $this->item;
+    }
+
+    /**
+     * Set financiamientoTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\FinanciamientoTipo $financiamientoTipo
+     * @return TtecAdministrativoCarreraPersona
+     */
+    public function setFinanciamientoTipo(\Sie\AppWebBundle\Entity\FinanciamientoTipo $financiamientoTipo = null)
+    {
+        $this->financiamientoTipo = $financiamientoTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get financiamientoTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\FinanciamientoTipo 
+     */
+    public function getFinanciamientoTipo()
+    {
+        return $this->financiamientoTipo;
     }
 
     /**
@@ -247,61 +303,5 @@ class TtecAdministrativoCarreraPersona
     public function getGestionTipo()
     {
         return $this->gestionTipo;
-    }
-    /**
-     * @var \Sie\AppWebBundle\Entity\FinanciamientoTipo
-     */
-    private $financiamientoTipo;
-
-
-    /**
-     * Set financiamientoTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\FinanciamientoTipo $financiamientoTipo
-     * @return TtecAdministrativoCarreraPersona
-     */
-    public function setFinanciamientoTipo(\Sie\AppWebBundle\Entity\FinanciamientoTipo $financiamientoTipo = null)
-    {
-        $this->financiamientoTipo = $financiamientoTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get financiamientoTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\FinanciamientoTipo 
-     */
-    public function getFinanciamientoTipo()
-    {
-        return $this->financiamientoTipo;
-    }
-    /**
-     * @var integer
-     */
-    private $item;
-
-
-    /**
-     * Set item
-     *
-     * @param integer $item
-     * @return TtecAdministrativoCarreraPersona
-     */
-    public function setItem($item)
-    {
-        $this->item = $item;
-    
-        return $this;
-    }
-
-    /**
-     * Get item
-     *
-     * @return integer 
-     */
-    public function getItem()
-    {
-        return $this->item;
     }
 }

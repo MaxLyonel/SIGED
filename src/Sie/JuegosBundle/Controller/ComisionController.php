@@ -437,10 +437,10 @@ class ComisionController extends Controller {
                 $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Primario concluyeron")); 
                 return $this->redirectToRoute('sie_juegos_comision_departamental_lista_index');
             }
-            if($nivel == 13 and !$faseTipoEntity[0]['esactivo_secundaria']){
-                $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Secundaria concluyeron")); 
-                return $this->redirectToRoute('sie_juegos_comision_departamental_lista_index');
-            }
+            //if($nivel == 13 and !$faseTipoEntity[0]['esactivo_secundaria']){
+            //    $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Secundaria concluyeron")); 
+            //    return $this->redirectToRoute('sie_juegos_comision_departamental_lista_index');
+            //}
 
             $confirmaRegistro = $this->verificaCupoDelegadosDepartamentalesPorEntidad($codigoEntidad, $gestion, $fase, $comisionId);
 
@@ -530,80 +530,80 @@ class ComisionController extends Controller {
         $objEntidad = $this->buscaEntidadFase(4,$id_usuario);        
         $codigoEntidad = $objEntidad[0]['id'];
         $id = $request->get('id');
-        $comisionId = $request->get('comision');    
+        $comisionId = $request->get('comision'); 
 
         switch ($comisionId) {
             case 101:          
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_depotista_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_deportista_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 111:          
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_cultural_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_cultural_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 112:          
                 $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_cultural_v1.rptdesign&__format=pdf&id='.$id;
                 break;
             case 118:          
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_prensa_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_prensa_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 119:          
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_salud_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_salud_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 120:          
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_seguridad_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_seguridad_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 121:           
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_invitado_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_invitado_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 122:        
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_apoyo_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_apoyo_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 131:        
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_apoyo_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_apoyo_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 140:        
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 141:        
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 147:        
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 148:        
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 149:        
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 150:        
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 151:        
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 152:        
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 153:        
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 154:        
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 142:        
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 143:        
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 123:        
                 $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_apoyo_v1.rptdesign&__format=pdf&id='.$id;
                 break;
             case 146:          
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_organizador_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_organizador_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 115:          
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_organizador_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_organizador_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 10:          
                 $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_organizador_v1.rptdesign&__format=pdf&id='.$id;
@@ -618,7 +618,7 @@ class ComisionController extends Controller {
                 $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_organizador_v1.rptdesign&__format=pdf&id='.$id;
                 break;
             case 117:              
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_comitetecnico_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_comitetecnico_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 70:           
                 $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_invitado_v1.rptdesign&__format=pdf&id='.$id;
@@ -627,7 +627,7 @@ class ComisionController extends Controller {
                 $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_juez_v1.rptdesign&__format=pdf&id='.$id;
                 break;
             case 144:          
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_juez_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_juez_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 40:          
                 $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_prensa_v1.rptdesign&__format=pdf&id='.$id;
@@ -693,10 +693,10 @@ class ComisionController extends Controller {
                 $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_hospedaje_v1.rptdesign&__format=pdf&id='.$id;
                 break;
             case 155:         
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_hospedaje_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_hospedaje_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             case 156:         
-                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v1.rptdesign&__format=pdf&id='.$id;
+                $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_delegado_v2.rptdesign&__format=pdf&id='.$id;
                 break;
             default:           
                 $reporte = $this->container->getParameter('urlreportweb') . 'jdp_crd_depotista_v1.rptdesign&__format=pdf&id='.$id;
@@ -2740,10 +2740,10 @@ class ComisionController extends Controller {
             $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Primario concluyeron")); 
             return $this->redirectToRoute('sie_juegos_comision_entrenador_f'.$fase .'_lista_index');
         }
-        if(!$faseTipoEntity[0]['esactivo_secundaria'] and $nivelId == 13){
-            $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Secundaria concluyeron")); 
-            return $this->redirectToRoute('sie_juegos_comision_entrenador_f'.$fase .'_lista_index');
-        }
+        //if(!$faseTipoEntity[0]['esactivo_secundaria'] and $nivelId == 13){
+        //    $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Secundaria concluyeron")); 
+        //    return $this->redirectToRoute('sie_juegos_comision_entrenador_f'.$fase .'_lista_index');
+        //}
                 
         $em->getConnection()->beginTransaction();
 

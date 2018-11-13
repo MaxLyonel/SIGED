@@ -511,6 +511,7 @@ class PrincipalController extends Controller {
                     INNER JOIN public.dependencia_tipo AS dept ON inst.dependencia_tipo_id = dept.id
                     WHERE lt4.id = '.$departamento.' AND inst.institucioneducativa_tipo_id IN (7,8,9) 
                     AND estinst.id IN (10) 
+                    AND inst.institucioneducativa_acreditacion_tipo_id = 2
                     AND dept.id = '.$dependencia;
         $stmt = $db->prepare($query);
         $params = array();

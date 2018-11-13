@@ -263,6 +263,7 @@
                 <!-- Start left navigation - menu -->
                 <ul class="sidebar-menu">
                     {% set rol8 = false %}    <!-- rol distrito -->
+                    {% set rol9 = false %}    <!-- rol cea -->
                     {% set rol10 = false %}    <!-- rol distrito -->
                     {% set rol12 = false %}    <!-- rol recepcion unidad educativa -->
                     {% set rol13 = false %}    <!-- rol recepcion distrito -->
@@ -274,6 +275,8 @@
                     {% for item in app.session.get('roluser') %}
                         {% if item.id == 8 %}
                             {% set rol8 = true %}
+                        {% elseif item.id == 9 %}
+                            {% set rol9 = true %}
                         {% elseif item.id == 10 %}
                             {% set rol10 = true %}
                         {% elseif item.id == 12 %}
@@ -311,7 +314,7 @@
                                 </ul>
                             </li>
                         {% endif %}
-                        {% if (rol13 or rol14 or rol15 or rol16 or rol17 or rol8) %}
+                        {% if (rol13 or rol14 or rol15 or rol16 or rol17 or rol8 or rol9) %}
                             <li class="submenu">
                                 <a href="javascript:void(0);">
                                     <span class="icon"><i class="fa fa-pencil"></i></span>
@@ -320,7 +323,8 @@
                                     <span class="selected"></span>
                                 </a>
                                 <ul>
-                                    {% if rol13 or rol8 %}
+                                    {# if rol13 or rol8 #}
+                                    {% if rol9 %}
                                         <li class=" "><a href="{{path('tramite_certificado_tecnico_registro_busca')}}">Registro</a></li>
                                     {% endif %}
                                     {% if (rol14 or rol8) and 1 == 2 %}
@@ -335,7 +339,8 @@
                                     {% if (rol14 or rol8) and 1 == 2 %}
                                         <li><a href="{{path('tramite_detalle_certificado_tecnico_envio_busca')}}">Envío</a></li>
                                     {% endif %}
-                                    {% if rol13 or rol8 %}
+                                    {# if rol13 or rol8 #}
+                                    {% if rol9 %}
                                         <li><a href="{{path('tramite_detalle_certificado_tecnico_entrega_busca')}}">Entrega</a></li>
                                     {% endif %}
                                     {% if rol16 or rol8 %}
