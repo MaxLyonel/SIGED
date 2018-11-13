@@ -52,6 +52,7 @@ class WfTramiteController extends Controller
         $flujotipo = $em->getRepository('SieAppWebBundle:FlujoTipo')->createQueryBuilder('ft')
                 ->select('ft')
                 ->where('ft.id > 4')
+                ->andWhere("ft.obs like '%ACTIVO%'")
                 ->getQuery()
                 ->getResult();
         //dump($flujotipo);die;
@@ -603,7 +604,7 @@ class WfTramiteController extends Controller
         
         $em = $this->getDoctrine()->getManager();
         
-        $query = $em->getConnection()->prepare("select t.id,ft.flujo,tt.tramite_tipo,t.fecha_fin,t.fecha_registro,t.fecha_fin-t.fecha_registro as duracion,case when ie.id is not null then 'Institucion Educativa: '||ie.institucioneducativa when ei.id is not null then 'Estudiante: '||e.nombre||' '||e.paterno||' '||e.materno when mi.id is not null then 'Maestro: '||p.nombre||' '||p.paterno||' '||p.materno when ai.id is not null then 'Apoderado: '||pa.nombre||' '||pa.paterno||' '||pa.materno end as nombre,'CONCLUIDO' as estado
+        $query = $em->getConnection()->prepare("select t.id,ft.id as idflujo,ft.flujo,tt.tramite_tipo,t.fecha_fin,t.fecha_registro,t.fecha_fin-t.fecha_registro as duracion,case when ie.id is not null then 'Institucion Educativa: '||ie.institucioneducativa when ei.id is not null then 'Estudiante: '||e.nombre||' '||e.paterno||' '||e.materno when mi.id is not null then 'Maestro: '||p.nombre||' '||p.paterno||' '||p.materno when ai.id is not null then 'Apoderado: '||pa.nombre||' '||pa.paterno||' '||pa.materno end as nombre,'CONCLUIDO' as estado
         from tramite t
         join tramite_tipo tt on t.tramite_tipo=tt.id
         join flujo_tipo ft on t.flujo_tipo_id = ft.id
@@ -911,24 +912,66 @@ class WfTramiteController extends Controller
 
         $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
         $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
+        //dump($tramiteDetalle->getFlujoProceso()->getTareaSigId());die;
+        if($tramiteDetalle->getFlujoProceso()->getEsEvaluacion() == true){
+            $t = $em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findBy(array('flujoProceso'=>$tramiteDetalle->getFlujoProceso()->getId(),'condicion'=>$tramiteDetalle->getValorEvaluacion()));
+            $tarea = $t[0]->getCondicionTareaSiguiente();
+        }else{
+            $tarea = $tramiteDetalle->getFlujoProceso()->getTareaSigId();
+        }
         //$usuarios = $em->getRepository('SieAppWebBundle:WfUsuarioFlujoProceso')->findBy('flujoProceso'=>1);
-        //$usuarios = $em->getRepository('SieAppWebBundle:WfUsuarioFlujoProceso')->findBy(array('flujoProceso'=>$tramiteDetalle->getFlujoProceso()->getId(),'lugarTipoId'=>$lugarTipoUsuario));
-        $usuarios = $em->getRepository('SieAppWebBundle:WfUsuarioFlujoProceso')->findBy(array('flujoProceso'=>48,'lugarTipoId'=>1));
+        $usuarios = $em->getRepository('SieAppWebBundle:WfUsuarioFlujoProceso')->findBy(array('flujoProceso'=>$tarea,'lugarTipoId'=>$lugarTipoUsuario));
+        //$usuarios = $em->getRepository('SieAppWebBundle:WfUsuarioFlujoProceso')->findBy(array('flujoProceso'=>48,'lugarTipoId'=>1));
         //dump($usuarios);die;
         
+        $usuario = array();
+    	foreach($usuarios as $u){
+            $usuario[$u->getUsuario()->getid()] = $u->getUsuario()->getPersona()->getNombre()." ".$u->getUsuario()->getPersona()->getPaterno()." ".$u->getUsuario()->getPersona()->getMaterno();
+        }
+        //dump($usuario);die;
+
         $form = $this->createFormBuilder()
-            ->setAction($this->generateUrl('wf_recibido_derivar_guardar'))
-            ->add('usuario','choice',array('label'=>'Usuario','required'=>true,'attr' => array('class' => 'form-control'),'empty_value' => 'Seleccione usuario'))
-            ->add('idtramite','hidden',array('data'=>$idtramite))
-            ->add('idtd','hidden',array('data'=>$tramiteDetalle->getId()))
+            ->setAction($this->generateUrl('wf_tramite_recibido_derivar_guardar'))
+            //->add('varevaluacion','choice',array('label'=>'¿Procedente?','expanded'=>true,'multiple'=>false,'required'=>true,'choices'=>array('SI' => 'SI','NO' => 'NO')))
+            ->add('usuario','choice',array('label'=>'Usuario:','required'=>true,'choices'=>$usuario,'empty_value' => 'Seleccione usuario','attr' => array('class' => 'form-control')))
+            ->add('idtramite','hidden',array('data'=>$idtramite,'required'=>false))
+            ->add('idtd','hidden',array('data'=>$tramiteDetalle->getId(),'required'=>false))
+            ->add('guardar','submit',array('label'=>'Derivar'))
             ->getForm();
         
         return $this->render('SieHerramientaBundle:WfTramite:derivar.html.twig', array(
-            'usuarios' => $usuarios,'idtramite'=>$idtramite,
+            'form' => $form->createView(),'idtramite'=>$idtramite,
         ));
         
     }
     
+    public function recibidosDerivarGuardarAction(Request $request)
+    {
+        $this->session = $request->getSession();
+        //dump($this->session);die;
+        $id_usuario = $this->session->get('userId');
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        $form = $request->get('form');
+        $id_td = $form['idtd'];
+        $idtramite = $form['idtramite'];
+        $id_usuario = $form['usuario'];
+        $em = $this->getDoctrine()->getManager();
+
+        $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find($id_td);
+        $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($id_usuario);
+        $tramiteDetalle->setUsuariodestinatario($usuario);
+        $em->flush();
+
+        $request->getSession()
+                ->getFlashBag()
+                ->add('exito', "El Tramite Nro.:". $idtramite ." fué Derivado a: ".$usuario->getPersona()->getNombre()." ".$usuario->getPersona()->getPaterno()." ".$usuario->getPersona()->getMaterno());
+        return $this->redirectToRoute('wf_tramite_recibido');
+        
+    }
+
     public function seguimientoTramiteAction(Request $request)
     {
         $this->session = $request->getSession();

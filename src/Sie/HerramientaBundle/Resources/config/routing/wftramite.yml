@@ -26,6 +26,10 @@ wf_tramite_recibido_derivar:
     path:     /recibidosderivar
     defaults: { _controller: SieHerramientaBundle:WfTramite:recibidosDerivar }
 
+wf_tramite_recibido_derivar_guardar:
+    path:     /recibidosderivarguardar
+    defaults: { _controller: SieHerramientaBundle:WfTramite:recibidosDerivarGuardar }
+
 wf_tramite_enviados:
     path:     /enviados
     defaults: { _controller: SieHerramientaBundle:WfTramite:enviados }

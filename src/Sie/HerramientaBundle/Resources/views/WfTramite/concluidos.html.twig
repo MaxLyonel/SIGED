@@ -50,6 +50,7 @@
                         <div class="row">
 							<div class="col-md-12">
                             <div class="table-responsive">
+                                <div class="col-md-12">
                                 <table class="table table-bordered table-striped table-primary" id="recepDep">
                                     <thead>
                                         <tr>
@@ -61,6 +62,7 @@
                                             <th>Fecha de fin</th>
                                             <th>Duración del trámite(días)</th>
                                             <th>Esdado</th>
+                                            <th>Detalle</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -73,6 +75,7 @@
                                             <th>Fecha de fin</th>
                                             <th>Duración del trámite(días)</th>
                                             <th>Esdado</th>
+                                            <th>Detalle</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
@@ -86,10 +89,16 @@
                                             <td>{{ entity.fecha_fin }}</td>
                                             <td>{{ entity.duracion }}</td>
                                             <td>{{ entity.estado }}</td>
+                                            <td class="text-center">
+                                                <a class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal" data-placement="top" title="Ver Detalle" onclick="detalle({{entity.id}},{{entity.idflujo}})">
+                                                    <i class="fa fa-list"></i>
+                                                </a>
+                                            </td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>
                                 </table>
+                                </div>
                             </div>
                             </div>
                         </div>
@@ -139,5 +148,24 @@
                 } );
             } );
         };
+
+        function detalle(id,flujo){
+            //confirm('¿Esta suguro de eliminar?');
+            //alert(id);
+            formData = {id: id,flujo:flujo};
+            $.ajax({
+                type: 'POST',
+                url: "{{path('wf_tramite_recibido_detalle')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#modal').empty();
+                    $('#modal').append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+            });
+        }
     </script>
 {% endblock %}
