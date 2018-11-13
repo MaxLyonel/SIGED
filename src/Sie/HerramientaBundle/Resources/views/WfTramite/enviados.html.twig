@@ -4,7 +4,7 @@
 
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> Trámites <span>Recibidos</span></h2>
+        <h2><i class="fa fa-list-alt"></i> Trámites <span>Enviádos</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -56,15 +56,14 @@
                                             <th class="text-center" style="max-width: 5px">No. Trámite</th>
                                             <th>Trámite</th>
                                             <th>Tipo de Trámite</th>
+                                            <th>Tarea</th>
                                             <th>Observación</th>
-                                            <th>Tarea actual</th>
                                             <th>Estado</th>
-                                            <th>Fecha de estado</th>
+                                            <th>Fecha de recepción</th>
                                             <th>Plazo(días)</th>
+                                            <th>Fecha de envío</th>
                                             <th>Fecha Vencimiento</th>
                                             <th>Usuario Remitente</th>
-                                            <th>Detalle</th>
-                                            <th>Acciones</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -72,15 +71,14 @@
                                             <th class="text-center" style="max-width: 5px">No. Trámite</th>
                                             <th>Trámite</th>
                                             <th>Tipo de Trámite</th>
+                                            <th>Tarea</th>
                                             <th>Observación</th>
-                                            <th>Tarea actual</th>
                                             <th>Estado</th>
-                                            <th>Fecha de estado</th>
+                                            <th>Fecha de recepción</th>
                                             <th>Plazo(días)</th>
+                                            <th>Fecha de envío</th>
                                             <th>Fecha Vencimiento</th>
                                             <th>Usuario Remitente</th>
-                                            <th>Detalle</th>
-                                            <th>Acciones</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
@@ -89,32 +87,14 @@
                                             <td>{{ entity.id }}</td>
                                             <td>{{ entity.flujo }}</td>
                                             <td>{{ entity.tramite_tipo }}</td>
+                                            <td>{{ entity.proceso_tipo }}</td>
                                             <td>{{ entity.obs }}</td>
-                                            <td>{{ entity.tarea_actual }}</td>
                                             <td>{{ entity.tramite_estado }}</td>
-                                            <td>{{ entity.fecha_estado }}</td>
+                                            <td>{{ entity.fecha_recepcion }}</td>
                                             <td>{{ entity.plazo }}</td>
+                                            <td>{{ entity.fecha_envio }}</td>
                                             <td>{{ entity.fecha_vencimiento }}</td>
                                             <td>{{ entity.nombre }}</td>
-                                            <td class="text-center">
-                                                <a class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal" data-placement="top" title="Ver Detalle" onclick="detalle({{entity.id}},{{entity.idflujo}})">
-                                                    <i class="fa fa-list"></i>
-                                                </a></td>
-                                            <td>
-                                            {% if entity.id_estado == 15 %} {#si esta enviado #}
-                                                <a href="{{ path('wf_tramite_recibido_guardar', { 'id': entity.id }) }}" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="top" title="Recibir">
-                                                    <i class="glyphicon glyphicon-check"></i>
-                                                </a>
-                                            {% endif %}
-                                            {% if entity.id_estado == 3 %} {#si esta recibido #}
-                                                <a href="{{ path('wf_tramite_recibido_enviar', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="{{ entity.proceso_tipo }}">
-                                                    <i class="fa fa-pencil"></i>
-                                                </a>
-                                                <a class="btn btn-success btn-xs" data-toggle="modal" data-target="#modal" data-placement="top" title="derivar Tarea" onclick="derivar({{entity.id}},{{entity.idflujo}})">
-                                                    <i class="glyphicon glyphicon-share-alt"></i>
-                                                </a>
-                                            {% endif %}
-                                            </td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>
@@ -168,42 +148,5 @@
                 } );
             } );
         };
-        function detalle(id,flujo){
-            //confirm('¿Esta suguro de eliminar?');
-            //alert(id);
-            formData = {id: id,flujo:flujo};
-            $.ajax({
-                type: 'POST',
-                url: "{{path('wf_tramite_recibido_detalle')}}",
-                data: formData,
-                beforeSend: function () {
-                    $('#modal').empty();
-                    $('#modal').append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
-                },
-                success: function (data) {
-                    $('#modal').empty();
-                    $('#modal').append(data);
-                },
-            });
-        }
-
-        function derivar(id,flujo){
-            //confirm('¿Esta suguro de eliminar?');
-            //alert(id);
-            formData = {id: id,flujo:flujo};
-            $.ajax({
-                type: 'POST',
-                url: "{{path('wf_tramite_recibido_derivar')}}",
-                data: formData,
-                beforeSend: function () {
-                    $('#modal').empty();
-                    $('#modal').append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
-                },
-                success: function (data) {
-                    $('#modal').empty();
-                    $('#modal').append(data);
-                },
-            });
-        }
     </script>
 {% endblock %}

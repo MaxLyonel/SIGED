@@ -1,0 +1,32 @@
+<div class="modal-dialog modal-xs">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Reasignar Trámite: {{ idtramite }}</h4>
+        </div><!-- /.panel-heading -->
+        <div class="modal-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="max-width: 5px">Nro.</th>
+                        <th>Usuario</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{usuario.usuario.persona.nombre}} {{usuario.usuario.persona.paterno}} {{usuario.usuario.persona.materno}}</td>
+                            <td><input type="radio" name="usuario" id="{{usuario.usuario.id}}"></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        <div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-sm" >Asignar</button>
+            <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cancelar</button>
+        </div>
+    </div>
+</div>
