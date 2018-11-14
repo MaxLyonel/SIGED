@@ -354,7 +354,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="pull-right">
-                                                        <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicituDepartamentaldbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
+                                                        <button class="btn btn-sm btn-facebook" id="btn_accion" title="Finalizar Solicitud" onclick="enviarSolicituDepartamentaldbth()"><i class="fa fa-pencil"></i> Finalizar Solicitud</button>
                                                     </div>
                                                 </div>
 
@@ -388,13 +388,21 @@
                     document.getElementById("informe").checked = true;
                 }
             $('#obs').hide();
+
         });
         function muestraobs(){
             var respuesta=$('input:radio[name=radiotypedep]:checked').val();
             if(respuesta=='si'){
                 $('#obs').hide();
+                $('#btn_accion').text("Finalizar Solicitud");
+                $('#btn_accion').prop('title','Finalizar Solicitud');
+                //$('#btn_accion').prop('class','btn btn-sm btn-danger')
+
             }else {
                 $('#obs').show(2000);
+                $('#btn_accion').text("Enviar Solicitud");
+                $('#btn_accion').prop('title','Enviar Solicitud');
+                //$('#btn_accion').prop('class','btn btn-sm btn-facebook')
             }
         }
         
@@ -409,7 +417,8 @@
             })
                 .then(function(willDelete)  {
                     if (willDelete) {
-                        var institucionid={{ institucion.id }}
+                        var institucionid={{ institucion.id }};
+
                         var ip = [];
                         if($('#informe:checked').val())
                             ip.push({ informe : 1});
@@ -450,6 +459,7 @@
                         fd.append('institucionid', {{ institucion.id }});
                         fd.append('id_tramite', {{ id_tramite}});
                         fd.append('obstxt', obstxt);
+
                         var docpdf = document.getElementById('adjdocumento');
                         fd.append('docpdf', docpdf.files[0]);
                         $.ajax({
@@ -472,7 +482,7 @@
                             success: function (data) {
 
                                 if (data==1){
-                                    swal("Su formulario se ha enviado con éxito con Nro. de Trámite: "+ {{ id_tramite }} );
+                                    swal("Su respuesta se ha enviado con éxito, con Nro. de Trámite: "+ {{ id_tramite }} );
                                     location.href = "{{ path('solicitud_bth_departamental_index') }}";
                                 }
                                 else{
