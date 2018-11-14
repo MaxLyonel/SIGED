@@ -1,55 +1,51 @@
-sie_rie_homepage:
-    path:     /hello
-    defaults: { _controller: SieRieBundle:Default:index }
-
 sie_rie_main:
     resource: "@SieRieBundle/Resources/config/routing/rie.yml"
-    prefix:   /acceso/rie
+    prefix:   /rittsie/rie
 
 sie_cap_main:
     resource: "@SieRieBundle/Resources/config/routing/cap.yml"
-    prefix:   /acceso/cap    
+    prefix:   /rittsie/cap    
 
 sie_historico_main:
     resource: "@SieRieBundle/Resources/config/routing/historico.yml"
-    prefix:   /acceso/historico   
+    prefix:   /rittsie/historico   
 
 sie_lei_main:
     resource: "@SieRieBundle/Resources/config/routing/lei.yml"
-    prefix:   /acceso/lei
+    prefix:   /rittsie/lei
 
 sie_oac_main:
     resource: "@SieRieBundle/Resources/config/routing/oac.yml"
-    prefix:   /acceso/oac
+    prefix:   /rittsie/oac
 
 sie_consulta_rie_main:
     resource: "@SieRieBundle/Resources/config/routing/consultaRie.yml"
-    prefix:   /acceso/consultapublica  
+    prefix:   /rittsie/consultapublica  
 
 sie_consultains_rie_main:
     resource: "@SieRieBundle/Resources/config/routing/consultaIns.yml"
-    prefix:   /acceso/consultainstituto  
+    prefix:   /rittsie/consultainstituto  
 
 sie_certificado_rie_main:
     resource: "@SieRieBundle/Resources/config/routing/certificadoRie.yml"
-    prefix:   /acceso/certificadorie  
+    prefix:   /rittsie/certificadorie  
 
 sie_reportes_rie_main:
     resource: "@SieRieBundle/Resources/config/routing/reporte.yml"
-    prefix:   /acceso/reporterie
+    prefix:   /rittsie/reporterie
 
 sie_areas_rie_main:
     resource: "@SieRieBundle/Resources/config/routing/areas.yml"
-    prefix:   /acceso/areasrie      
+    prefix:   /rittsie/areasrie      
 
 sie_carreras_rie_main:
     resource: "@SieRieBundle/Resources/config/routing/carreras.yml"
-    prefix:   /acceso/carrerasrie
+    prefix:   /rittsie/carrerasrie
 
 sie_herramienta_solicitud_ritt:
     resource: "@SieRieBundle/Resources/config/routing/solicitudRITT.yml"
-    prefix:   /acceso/solicitudRitt
+    prefix:   /rittsie/solicitudRitt
 
 sie_herramienta_seguimiento_tramite:
     resource: "@SieRieBundle/Resources/config/routing/seguimientoTramite.yml"
-    prefix:   /acceso/seguimientotramite
+    prefix:   /rittsie/seguimientotramite
