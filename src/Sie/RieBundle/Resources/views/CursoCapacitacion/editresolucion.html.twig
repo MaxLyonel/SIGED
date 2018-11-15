@@ -56,7 +56,8 @@
                             <label class="form-label">{{form_label(form.regimenEstudio)}}</label>
                             <div class="form-group">
                                 <div class="form-line">
-                                    {{form_widget(form.regimenEstudio,{'attr':{'onchange':'cargarTiempoEstudio()'}}) }}
+                                    {#{{form_widget(form.regimenEstudio,{'attr':{'onchange':'cargarTiempoEstudio()'}}) }}#}
+                                    {{form_widget(form.regimenEstudio) }}
                                 </div>
                             </div>                                                                                    
 

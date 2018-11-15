@@ -75,7 +75,8 @@ class EstudianteController extends Controller
 //        dump($datbas);
 //        die;
         $em = $this->getDoctrine()->getManager();
-        $pt = $em->getRepository('SieAppWebBundle:PaisTipo')->findAll();
+        $pt = $em->getRepository('SieAppWebBundle:PaisTipo')->findBy([], ['id' => 'ASC']);
+        //$pt = $em->getRepository('SieAppWebBundle:PaisTipo')->findAll();
         return $this->render('SieUsuariosBundle:Estudiante:siguientedatos.html.twig', array(
                     'pt' => $pt, 'datbas' => $datbas));
     }
@@ -126,8 +127,7 @@ class EstudianteController extends Controller
         $data = $request->request->all();
         $form = $data['busquedaDatosTotForm'];
         $response = new JsonResponse();
-//        dump(date('Y'));
-//        die;        
+        //dump($form); die;
         $sieentiy = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['Sie']);
         if ($sieentiy){
             
@@ -140,10 +140,21 @@ class EstudianteController extends Controller
                 $query->bindValue(':sie', $form['Sie']);            
                 $query->bindValue(':gestion', date('Y'));
                 $query->execute();
-                $codigorude = $query->fetchAll();            
+                $codigorude = $query->fetchAll();
+                
+                /*if ($codigorude[0]["get_estudiante_nuevo_rude"] == "") {
+                    $query = $em->getConnection()->prepare('SELECT get_estudiante_nuevo_rude(:sie::VARCHAR,:gestion::VARCHAR)');
+                    $query->bindValue(':sie', $form['Sie']);            
+                    $query->bindValue(':gestion', $form['Year']);
+                    $query->execute();
+                    $codigorude = $query->fetchAll();
+                }*/
+
                 $codigoRude = $codigorude[0]["get_estudiante_nuevo_rude"];
+                //dump($codigorude[0]["get_estudiante_nuevo_rude"]);die;
                 $estudiante->setCodigoRude($codigoRude);
-                $estudiante->setCarnetIdentidad($form['InputCi']);            
+                $estudiante->setCarnetIdentidad($form['InputCi']);
+                $estudiante->setComplemento($form['InputComplemento']);
                 $estudiante->setPaterno($form['Paterno']);
                 $estudiante->setMaterno($form['Materno']);
                 $estudiante->setNombre($form['Nombre']);                        
@@ -160,7 +171,7 @@ class EstudianteController extends Controller
                     $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
                     $estudiante->setLocalidadNac('');
                 }
-                $estudiante->setComplemento('');
+                //$estudiante->setComplemento('');
                 $estudiante->setSegipId('11');
                 $em->persist($estudiante);
                 $em->flush();

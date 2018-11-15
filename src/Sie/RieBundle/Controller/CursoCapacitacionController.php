@@ -50,6 +50,11 @@ class CursoCapacitacionController extends Controller {
      */
     public function listinstitutoAction(Request $request){
         $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
+        $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');        
         $em = $this->getDoctrine()->getManager();
 
@@ -73,16 +78,30 @@ class CursoCapacitacionController extends Controller {
      * Muestra el listado de cursos de capacitacion
      */
      public function listAction(Request $request) {
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
         $em = $this->getDoctrine()->getManager();
+        $id_lugar = $sesion->get('roluserlugarid');
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($id_lugar);
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
+        $esAcreditado = $this->get('dgfunctions')->esAcreditadoRitt($request->get('idRie'));
         $listado = $this->listadoCursosCapacitacion($request->get('idRie'));
-        return $this->render('SieRieBundle:CursoCapacitacion:list.html.twig', array('institucion' => $institucion, 'listado' => $listado));
+        return $this->render('SieRieBundle:CursoCapacitacion:list.html.twig', array('institucion' => $institucion,'esAcreditado'=>$esAcreditado, 'listado' => $listado,'lugarUsuario' => intval($lugar->getCodigo())));
      }   
 
     /**
      * Muestra formulario de adición de oferta educativa
      */
     public function newAction(Request $request){
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
+        
         $em = $this->getDoctrine()->getManager();
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
         $regimenEstudioArray = $this->obtieneRegimenEstudio(); 
@@ -92,8 +111,9 @@ class CursoCapacitacionController extends Controller {
                             ->setAction($this->generateUrl('cap_create'))
                             ->add('idRie', 'hidden', array('data' => $request->get('idRie')))
                             ->add('ttecCarreraTipo', 'text', array('label' => 'Curso de Capacitación', 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '200', 'style' => 'text-transform:uppercase') ))        
-                            ->add('tiempoEstudio', 'choice', array('label' => 'Tiempo de Estudio(meses)', 'required' => true, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))
-                            ->add('cargaHoraria', 'text', array('label' => 'Carga Horaria (Sólo números)', 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '4') ))
+                            ->add('tiempoEstudio', 'text', array('label' => 'Tiempo de Estudio (Sólo números)', 'required' => true, 'attr' => array('class' => 'form-control validar','maxlength' => '2')))
+                            //->add('tiempoEstudio', 'choice', array('label' => 'Tiempo de Estudio', 'required' => true, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))
+                            ->add('cargaHoraria', 'text', array('label' => 'Carga Horaria (Sólo números)', 'required' => true, 'attr' => array('class' => 'form-control validar', 'maxlength' => '4') ))
                             ->add('regimenEstudio', 'choice', array('label' => 'Regimen de Estudio', 'required' => true,'choices'=>$regimenEstudioArray ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))             
                             ->add('resolucion', 'text', array('label' => 'Resolución','required' => true, 'attr' => array('data-mask'=>'0000/0000', 'placeholder'=>'0000/YYYY', 'class' => 'form-control', 'maxlength' => '69', 'style' => 'text-transform:uppercase')))
                             ->add('fechaResolucion', 'text', array('label' => 'Fecha de resolución','required' => true, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
@@ -116,8 +136,10 @@ class CursoCapacitacionController extends Controller {
             //Buscamos si el curso existe
             $query = $em->createQuery('SELECT ca
                                          FROM SieAppWebBundle:TtecCarreraTipo ca
-                                        WHERE UPPER(ca.nombre) LIKE :nombreCarrera')
-                                    ->setParameter('nombreCarrera', trim(strtoupper($form['ttecCarreraTipo'])));        
+                                        WHERE UPPER(ca.nombre) LIKE :nombreCarrera
+                                        AND ca.ttecAreaFormacionTipo = :areaCurso')
+                                    ->setParameter('nombreCarrera', trim(strtoupper($form['ttecCarreraTipo'])))
+                                    ->setParameter('areaCurso', 200);        
             $dato = $query->getResult();   
             
             if($dato){ //El curso ya se encuentra en el catálogo
@@ -141,6 +163,7 @@ class CursoCapacitacionController extends Controller {
                 }
             }
             else{ //el curso debe ser registrado
+                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('ttec_carrera_tipo');")->execute();
                 $curso = new TtecCarreraTipo(); 
                 $curso->setNombre(strtoupper($form['ttecCarreraTipo']));
                 $curso->setFechaRegistro(new \DateTime('now'));
@@ -215,6 +238,7 @@ class CursoCapacitacionController extends Controller {
      * Listado de resoluciones 
      */
     public function listresolucionesAction(Request $request){
+        $sesion = $request->getSession();
         $em = $this->getDoctrine()->getManager();
         $datAutorizado = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaCarreraAutorizada')
                                     ->findOneById($request->get('idAutorizado'));
@@ -227,8 +251,10 @@ class CursoCapacitacionController extends Controller {
                                  ORDER BY a.fecha DESC');                       
         $query->setParameter('idCaAutorizada', $datAutorizado->getId());
         $resoluciones = $query->getResult(); 
-
-        return $this->render('SieRieBundle:CursoCapacitacion:listresoluciones.html.twig', array('institucion' => $institucion, 'resoluciones' => $resoluciones, 'curso' => $curso, 'datAutorizado' =>$datAutorizado));
+        $esAcreditado = $this->get('dgfunctions')->esAcreditadoRitt($request->get('idRie'));
+        $id_lugar = $sesion->get('roluserlugarid');
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($id_lugar);
+        return $this->render('SieRieBundle:CursoCapacitacion:listresoluciones.html.twig', array('institucion' => $institucion,'esAcreditado'=>$esAcreditado, 'resoluciones' => $resoluciones, 'curso' => $curso, 'datAutorizado' =>$datAutorizado,'lugarUsuario' => intval($lugar->getCodigo())));
     }
 
     /** 
@@ -247,8 +273,9 @@ class CursoCapacitacionController extends Controller {
         ->add('idRie', 'hidden', array('data' => $institucion->getId()))
         ->add('idAutorizado', 'hidden', array('data' => $datAutorizado->getId()))
         ->add('ttecCarreraTipo', 'text', array('label' => 'Carrera', 'data' => $datAutorizado->getTtecCarreraTipo()->getNombre(), 'attr' => array('class' => 'form-control jupper', 'readonly'=>true)))
-        ->add('tiempoEstudio', 'choice', array('label' => 'Tiempo de Estudio(meses)', 'required' => true, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))
-        ->add('cargaHoraria', 'text', array('label' => 'Carga Horaria (Sólo números)', 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '4') ))
+        ->add('tiempoEstudio', 'text', array('label' => 'Tiempo de Estudio (Sólo números)', 'required' => true, 'attr' => array('class' => 'form-control validar','maxlength' => '2')))
+        //->add('tiempoEstudio', 'choice', array('label' => 'Tiempo de Estudio', 'required' => true, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))
+        ->add('cargaHoraria', 'text', array('label' => 'Carga Horaria (Sólo números)', 'required' => true, 'attr' => array('class' => 'form-control validar', 'maxlength' => '4') ))
         ->add('regimenEstudio', 'choice', array('label' => 'Regimen de Estudio', 'required' => true,'choices'=>$regimenEstudioArray ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))             
         ->add('resolucion', 'text', array('label' => 'Resolución','required' => true, 'attr' => array('data-mask'=>'0000/0000', 'placeholder'=>'0000/YYYY', 'class' => 'form-control', 'maxlength' => '69')))
         ->add('fechaResolucion', 'text', array('label' => 'Fecha de resolución','required' => true, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
@@ -320,8 +347,9 @@ class CursoCapacitacionController extends Controller {
         ->add('idAutorizado', 'hidden', array('data' => $datAutorizado->getId()))
         ->add('idResolucion', 'hidden', array('data' => $datResolucion->getId()))
         ->add('ttecCarreraTipo', 'text', array('label' => 'Carrera', 'data' => $datAutorizado->getTtecCarreraTipo()->getNombre(), 'attr' => array('class' => 'form-control jupper', 'readonly'=>true)))
-        ->add('tiempoEstudio', 'choice', array('label' => 'Tiempo de Estudio(meses)', 'data' => $datResolucion->getTiempoEstudio(), 'required' => true,'choices'=>$tiempoEstArray, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))
-        ->add('cargaHoraria', 'text', array('label' => 'Carga Horaria (Sólo números)', 'data' => $datResolucion->getCargaHoraria(), 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '4') ))
+        ->add('tiempoEstudio', 'text', array('label' => 'Tiempo de Estudio (Sólo números)', 'data' => $datResolucion->getTiempoEstudio(), 'required' => true, 'attr' => array('class' => 'form-control validar','maxlength' => '2')))
+        //->add('tiempoEstudio', 'choice', array('label' => 'Tiempo de Estudio', 'data' => $datResolucion->getTiempoEstudio(), 'required' => true,'choices'=>$tiempoEstArray, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))
+        ->add('cargaHoraria', 'text', array('label' => 'Carga Horaria (Sólo números)', 'data' => $datResolucion->getCargaHoraria(), 'required' => true, 'attr' => array('class' => 'form-control validar', 'maxlength' => '4') ))
         ->add('regimenEstudio', 'choice', array('label' => 'Regimen de Estudio', 'data' => $datResolucion->getTtecRegimenEstudioTipo()->getId(), 'required' => true,'choices'=>$regimenEstudioArray ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))             
         ->add('resolucion', 'text', array('label' => 'Resolución', 'data' => $datResolucion->getNumero(), 'required' => true, 'attr' => array('data-mask'=>'0000/0000', 'placeholder'=>'0000/YYYY', 'class' => 'form-control', 'maxlength' => '69')))
         ->add('fechaResolucion', 'text', array('label' => 'Fecha de resolución', 'data' => $datResolucion->getFecha()->format('d-m-Y'),'required' => true, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
@@ -415,8 +443,9 @@ class CursoCapacitacionController extends Controller {
             ->add('idresolucion', 'hidden', array('data' => $request->get('idresolucion')))
             ->add('ttecAreaFormacion', 'text', array('label' => 'Area de Formación', 'data' => $datAutorizado->getTtecCarreraTipo()->getTtecAreaFormacionTipo()->getAreaFormacion(), 'attr' => array('class' => 'form-control jupper', 'readonly'=>true)))
             ->add('ttecCarreraTipo', 'text', array('label' => 'Carrera', 'data' => $datAutorizado->getTtecCarreraTipo()->getNombre(), 'attr' => array('class' => 'form-control jupper', 'readonly'=>true)))
-            ->add('tiempoEstudio', 'choice', array('label' => 'Tiempo de Estudio(meses)', 'data'=> $datResolucion->getTiempoEstudio(), 'required' => true,'choices'=>$tiempoEstArray ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))
-            ->add('cargaHoraria', 'text', array('label' => 'Carga Horaria (Sólo números)', 'data'=>$datResolucion->getCargaHoraria(), 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '4') ))
+            ->add('tiempoEstudio', 'text', array('label' => 'Tiempo de Estudio (Sólo números)', 'data' => $datResolucion->getTiempoEstudio(), 'required' => true, 'attr' => array('class' => 'form-control validar','maxlength' => '2')))
+            //->add('tiempoEstudio', 'choice', array('label' => 'Tiempo de Estudio', 'data'=> $datResolucion->getTiempoEstudio(), 'required' => true,'choices'=>$tiempoEstArray ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))
+            ->add('cargaHoraria', 'text', array('label' => 'Carga Horaria (Sólo números)', 'data'=>$datResolucion->getCargaHoraria(), 'required' => true, 'attr' => array('class' => 'form-control validar', 'maxlength' => '4') ))
             ->add('nivelTipo', 'choice', array('label' => 'Nivel de Formación', 'data'=>$datResolucion->getNivelTipo()->getId(), 'required' => true,'choices'=>$nivelesArray ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper'))) 
             ->add('regimenEstudio', 'choice', array('label' => 'Regimen de Estudio', 'data'=>$datResolucion->getTtecRegimenEstudioTipo()->getId(), 'required' => true,'choices'=>$regimenEstudioArray ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))             
             ->add('resolucion', 'text', array('label' => 'Resolución', 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '69', 'style' => 'text-transform:uppercase')))
@@ -547,8 +576,12 @@ class CursoCapacitacionController extends Controller {
     public function obtieneRegimenEstudio(){
         $em = $this->getDoctrine()->getManager();
         $datosArray = array();
-        $datos = $em->getRepository('SieAppWebBundle:TtecRegimenEstudioTipo')->findOneById(3);
-        $datosArray[$datos->getId()] = $datos->getRegimenEstudio();
+        //$datos = $em->getRepository('SieAppWebBundle:TtecRegimenEstudioTipo')->findOneById(3);
+        $datos = $em->getRepository('SieAppWebBundle:TtecRegimenEstudioTipo')->findAll();
+        foreach($datos as $dato) {
+            $datosArray[$dato->getId()] = $dato->getRegimenEstudio();
+        }
+        //$datosArray[$datos->getId()] = $datos->getRegimenEstudio();
         return $datosArray;
     }
 
@@ -664,5 +697,5 @@ class CursoCapacitacionController extends Controller {
         
     }
 
-
 }
+

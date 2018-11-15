@@ -30,6 +30,21 @@ class TtecParaleloMateria
     private $cupo;
 
     /**
+     * @var boolean
+     */
+    private $esVigente;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaRegistroVigente;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaRegistroNoVigente;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\TtecPeriodoTipo
      */
     private $ttecPeriodoTipo;
@@ -132,6 +147,75 @@ class TtecParaleloMateria
     public function getCupo()
     {
         return $this->cupo;
+    }
+
+    /**
+     * Set esVigente
+     *
+     * @param boolean $esVigente
+     * @return TtecParaleloMateria
+     */
+    public function setEsVigente($esVigente)
+    {
+        $this->esVigente = $esVigente;
+    
+        return $this;
+    }
+
+    /**
+     * Get esVigente
+     *
+     * @return boolean 
+     */
+    public function getEsVigente()
+    {
+        return $this->esVigente;
+    }
+
+    /**
+     * Set fechaRegistroVigente
+     *
+     * @param \DateTime $fechaRegistroVigente
+     * @return TtecParaleloMateria
+     */
+    public function setFechaRegistroVigente($fechaRegistroVigente)
+    {
+        $this->fechaRegistroVigente = $fechaRegistroVigente;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaRegistroVigente
+     *
+     * @return \DateTime 
+     */
+    public function getFechaRegistroVigente()
+    {
+        return $this->fechaRegistroVigente;
+    }
+
+    /**
+     * Set fechaRegistroNoVigente
+     *
+     * @param \DateTime $fechaRegistroNoVigente
+     * @return TtecParaleloMateria
+     */
+    public function setFechaRegistroNoVigente($fechaRegistroNoVigente)
+    {
+        $this->fechaRegistroNoVigente = $fechaRegistroNoVigente;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaRegistroNoVigente
+     *
+     * @return \DateTime 
+     */
+    public function getFechaRegistroNoVigente()
+    {
+        return $this->fechaRegistroNoVigente;
     }
 
     /**
@@ -247,89 +331,5 @@ class TtecParaleloMateria
     public function getGestionTipo()
     {
         return $this->gestionTipo;
-    }
-    /**
-     * @var boolean
-     */
-    private $esVigente;
-
-    /**
-     * @var \DateTime
-     */
-    private $fechaRegistroVigente;
-
-    /**
-     * @var \DateTime
-     */
-    private $fechaRegistroNoVigente;
-
-
-    /**
-     * Set esVigente
-     *
-     * @param boolean $esVigente
-     * @return TtecParaleloMateria
-     */
-    public function setEsVigente($esVigente)
-    {
-        $this->esVigente = $esVigente;
-    
-        return $this;
-    }
-
-    /**
-     * Get esVigente
-     *
-     * @return boolean 
-     */
-    public function getEsVigente()
-    {
-        return $this->esVigente;
-    }
-
-    /**
-     * Set fechaRegistroVigente
-     *
-     * @param \DateTime $fechaRegistroVigente
-     * @return TtecParaleloMateria
-     */
-    public function setFechaRegistroVigente($fechaRegistroVigente)
-    {
-        $this->fechaRegistroVigente = $fechaRegistroVigente;
-    
-        return $this;
-    }
-
-    /**
-     * Get fechaRegistroVigente
-     *
-     * @return \DateTime 
-     */
-    public function getFechaRegistroVigente()
-    {
-        return $this->fechaRegistroVigente;
-    }
-
-    /**
-     * Set fechaRegistroNoVigente
-     *
-     * @param \DateTime $fechaRegistroNoVigente
-     * @return TtecParaleloMateria
-     */
-    public function setFechaRegistroNoVigente($fechaRegistroNoVigente)
-    {
-        $this->fechaRegistroNoVigente = $fechaRegistroNoVigente;
-    
-        return $this;
-    }
-
-    /**
-     * Get fechaRegistroNoVigente
-     *
-     * @return \DateTime 
-     */
-    public function getFechaRegistroNoVigente()
-    {
-        return $this->fechaRegistroNoVigente;
     }
 }

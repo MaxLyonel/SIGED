@@ -307,6 +307,7 @@ class FlujoTipoController extends Controller
         $query->execute();
         $arrDataCondicion = $query->fetchAll();
         $data['flujo']=$arrDataCondicion;
+        //dump($data);die;
         if($arrDataCondicion)
         {
             $data['nombre']=$arrDataCondicion[0]['flujo'];

@@ -16,11 +16,15 @@
                             <form id="busquedaDatosTotForm" name="busquedaDatosTotForm" method="get" class="navbar-form" onsubmit="return enviaformdatostotal();">
                                 <div class="form-group has-feedback">                                           
                                     <div class="row">
-                                        <div class="col-lg-6">
+                                        <div class="col-lg-4">
                                             <label class="required">C.I :</label>
                                             <input type="text" class="form-control typeahead rounded" name="busquedaDatosTotForm[InputCi]" id="busquedaDatosTotForm_InputCi" placeholder="Carnet de identidad" onkeypress="return soloNumeros(event);">                                                    
                                         </div>
-                                        <div class="col-lg-6">
+                                        <div class="col-lg-4">
+                                            <label class="required">Complemento :</label>
+                                            <input type="text" class="form-control typeahead rounded" name="busquedaDatosTotForm[InputComplemento]" id="busquedaDatosTotForm_InputComplemento" placeholder="Complemento" maxlength="2" onkeypress="return soloComplemento(event);">
+                                        </div>
+                                        <div class="col-lg-4">
                                             <label class="required">Genero :</label><br/>
                                             <select class="form-control" id="busquedaDatosTotForm_Genero" name="busquedaDatosTotForm[Genero]">                                                            
                                                 <option value="-999">...</option> 
@@ -33,7 +37,7 @@
                                         <div class="col-lg-12">
                                             <label class="required">País :</label><br/>
                                             <select class="form-control" class="form-control" id="busquedaDatosTotForm_Pais" name="busquedaDatosTotForm[Pais]">
-                                                {#<option value="-999">...</option>#}
+                                                <!--<option value="-999">...</option>-->
                                                 {% for pais in pt %}
                                                    <option value="{{pais.id}}">{{pais.pais}}</option>
                                                 {% endfor %}                                               
@@ -99,6 +103,10 @@
     $('#busquedaDatosTotForm_Localidad').keyup(function() {
             this.value = this.value.toUpperCase();
     });
+
+    $('#busquedaDatosTotForm_InputComplemento').keyup(function() {
+            this.value = this.value.toUpperCase();
+        });
         
     $(function(){            
             $("#busquedaDatosTotForm_Pais").change(function(){                            
@@ -162,6 +170,7 @@
     
     function valcampos() {            
             var carnet = $('#busquedaDatosTotForm_InputCi').val();
+            var complemento = $('#busquedaDatosTotForm_InputComplemento').val();
             var genero = $('#busquedaDatosTotForm_Genero').val();
             var pais = $('#busquedaDatosTotForm_Pais').val();
             var depto = $('#busquedaDatosTotForm_Depto').val();
@@ -176,12 +185,14 @@
                 stop = false;                
             }*/
             
-            /*if ((carnet.length < 6) && (stop == true)){
-                alert('El número carnet debe tener un minimo de 6 caracteres.');
-                stop = false;
-            }*/
+            if (carnet.length > 3){
+                if (complemento.length == 1){
+                    alert('El complemento debe tener 2 caracteres.');
+                    stop = false;
+                }
+            }
             
-            if ((genero == '-999') && (stop == true)){                
+            if ((genero == '-999') && (stop == true)){ 
                 alert('Debe seleccionar un genero.');
                 stop = false;
             }
@@ -247,6 +258,7 @@
                     },
                     success: function (data) {
                         $("#busquedaDatosTotForm_InputCi").prop("disabled", true );
+                        $("#busquedaDatosTotForm_InputComplemento").prop("disabled", true );
                         $("#busquedaDatosTotForm_Genero").prop("disabled", true );
                         $("#busquedaDatosTotForm_Pais").prop("disabled", true );
                         $("#busquedaDatosTotForm_Depto").prop("disabled", true );

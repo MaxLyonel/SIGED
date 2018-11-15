@@ -101,6 +101,7 @@ class CarrerasController extends Controller {
             if($dato){
                 $this->get('session')->getFlashBag()->add('mensaje', 'Duplicidad al registrar la carrera.');
             }else{
+                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('ttec_carrera_tipo');")->execute();
                 $entity = new TtecCarreraTipo();
                 $entity->setNombre(strtoupper($form['carrera']));
                 $entity->setFechaRegistro(new \DateTime('now'));
@@ -144,23 +145,27 @@ class CarrerasController extends Controller {
     	try {
             $em = $this->getDoctrine()->getManager();
             $form = $request->get('form');
+
             $carrera = $em->getRepository('SieAppWebBundle:TtecCarreraTipo')->findOneById($form['idCarrera']);
 
             //buscando la carrera
             $query = $em->createQuery('SELECT ca
                                          FROM SieAppWebBundle:TtecCarreraTipo ca
-                                        WHERE UPPER(ca.nombre) LIKE :nombreCarrera')
-                            ->setParameter('nombreCarrera', trim(strtoupper($form['carrera'])));        
+                                        WHERE UPPER(ca.nombre) LIKE :nombreCarrera
+                                        AND ca.ttecAreaFormacionTipo = :ttecArea')
+                            ->setParameter('nombreCarrera', trim(strtoupper($form['carrera'])))
+                            ->setParameter('ttecArea', $form['ttecAreaFormacionTipo']);        
             $dato = $query->getResult(); 
 
             if($dato){
-                $this->get('session')->getFlashBag()->add('mensaje', 'Duplicidad al modificar la carrera.');
+                $this->get('session')->getFlashBag()->add('mensajeError', 'Duplicidad al modificar la carrera.');
             }else{
                 $carrera->setNombre(strtoupper($form['carrera']));
                 $carrera->setFechaModificacion(new \DateTime('now'));
                 $carrera->setTtecAreaFormacionTipo($em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findOneById($form['ttecAreaFormacionTipo']));
                 $em->persist($carrera);
                 $em->flush();   
+                $this->get('session')->getFlashBag()->add('mensajeOk', 'Registro actualizado correctamente.');
             }    
                 
             //Validando los datos

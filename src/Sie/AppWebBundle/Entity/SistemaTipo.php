@@ -29,6 +29,15 @@ class SistemaTipo
      */
     private $abreviatura;
 
+    /**
+     * @var string
+     */
+    private $bundle;
+
+    /**
+     * @var string
+     */
+    private $url;
 
     /**
      * Get id
@@ -108,4 +117,51 @@ class SistemaTipo
     {
         return $this->abreviatura;
     }
+
+    /**
+     * Set bundle
+     *
+     * @param string $bundle
+     * @return SistemaTipo
+     */
+    public function setBundle($bundle)
+    {
+        $this->bundle = $bundle;
+    
+        return $this;
+    }
+
+    /**
+     * Get bundle
+     *
+     * @return string 
+     */
+    public function getBundle()
+    {
+        return $this->bundle;
+    }
+
+    /**
+     * Set url
+     *
+     * @param string $url
+     * @return SistemaTipo
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    
+        return $this;
+    }
+
+    /**
+     * Get url
+     *
+     * @return string 
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
 }

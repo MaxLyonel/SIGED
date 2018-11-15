@@ -1,0 +1,7 @@
+seguimiento_tramite:
+    path:     /
+    defaults: { _controller: "SieRieBundle:FlujoSeguimiento:index" }
+
+seguimiento_tramite_verflujo:
+    path:     /verflujorie
+    defaults: { _controller: "SieRieBundle:FlujoSeguimiento:verFlujo" }

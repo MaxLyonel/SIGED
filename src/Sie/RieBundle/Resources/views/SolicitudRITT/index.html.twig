@@ -1,0 +1,197 @@
+{% extends 'SieRieBundle:Default:rie.html.twig' %}
+
+{% block contentoption %}
+
+    <div id="mensajes">
+        {% if app.session.flashBag.has('exito') %}
+            <div class="alert alert-success">
+                {% for msg in app.session.flashBag.get('exito') %}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ msg }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if app.session.flashBag.has('error') %}
+            <div class="alert alert-danger">
+                {% for msg in app.session.flashBag.get('error') %}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ msg }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="block-header">
+        <h2></h2>
+    </div>
+
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header bg-blue-grey">
+                    <h2>
+                        Listado de Trámites
+                    </h2>
+                </div>
+                <div class="body">
+                    <div class="row">
+
+                    </div>
+                    <div class="table-responsive">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <!--<table class="table table-bordered table-striped table-hover js-exportable dataTable">-->
+                            <table class="table table-striped table-hover js-basic-example dataTable">
+                                <thead>
+                                <tr>
+
+                                    <th width="5%">Acciones</th>
+                                    <th>Cod. RITT</th>
+                                    <th>Denominación</th>
+                                    <th>Nro. Trámite</th>
+                                    <th>Fecha de Solicitud</th>
+                                    <th>Estado de Solicitud</th>
+
+
+                                </tr>
+                                </thead>
+                                <tfoot>
+                                <tr>
+                                    <th width="5%">Acciones</th>
+                                    <th>Cod. RITT</th>
+                                    <th>Denominación</th>
+                                    <th>Nro. Trámite</th>
+                                    <th>Fecha de Solicitud</th>
+                                    <th>Estado de Solicitud</th>
+
+
+                                </tr>
+                                </tfoot>
+
+                                <tbody>
+
+                                {% for listaTramites in listaTramites %}
+                                    <tr>
+
+                                        <td>
+
+                                            {% if ( listaTramites.estado =='ENVIADO') %}
+                                                <button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" disabled title="Tramite enviado">
+                                                    <i class="material-icons">done</i>
+                                                </button>
+                                            {% elseif (( listaTramites.estado =='')) %}
+                                                <a href="{{path('solicitud_ritt_guarda_tramite', {'idRie': listaTramites.institucioneducativa_id,'idTramite ':listaTramites.id })}}" onclick="return confirmar()" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Enviar Solicitud">
+                                                    <i class="material-icons">done</i>
+                                                </a>
+                                            {% elseif ( listaTramites.estado =='DEVUELTO') %}
+                                                <a href="{{path('solicitud_ritt_guarda_tramite', {'idRie': listaTramites.institucioneducativa_id,'idTramite ':listaTramites.id })}}" onclick="return confirmar()" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Enviar Solicitud">
+                                                    <i class="material-icons">done</i>
+                                                </a>
+                                                <button  onclick="return openModal({{ listaTramites.td_id }},{{ listaTramites.institucioneducativa_id}})" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Ver Observación">
+                                                    <i class="material-icons">visibility</i>
+                                                </button>
+                                            {% endif %}
+
+                                        </td>
+                                        <td >{{ listaTramites.institucioneducativa_id}}</td>
+                                        <td>{{ listaTramites.institucioneducativa}}</td>
+                                        <td class="text-center">{{ listaTramites.id }}</td>
+                                        <td class="text-center">{{ listaTramites.fecha_registro }}</td>
+                                        <td> {% if ( listaTramites.estado =='ENVIADO') %} <span class="label label-success">{{ listaTramites.estado }}</span> {% else %} <span class="label label-danger">{{ listaTramites.estado }}</span> {% endif %}</td>
+
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-id">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"> <i class="fa fa-search"></i> Información de Trámite </h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped table-hover">
+                        <tr>
+                            <th>Nro. de Trámite:</th>
+                            <td><span id="nrot" class="text-primary"></span></td>
+                        </tr>
+                        <tr>
+                            <th>Codigo RITT:</th>
+                            <td><span id="id_rie" class="text-primary"></span></td>
+                        </tr>
+                        <tr>
+                            <th>Fecha de Solicitud:</th>
+                            <td><span id="fechat" class="text-primary"></span></td>
+                        </tr>
+                    </table>
+                    <h4>Observación:</h4>
+                    <div class="row">
+                        <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <p id="obs" class="text-danger"></p>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+<script type="text/javascript">
+    function openModal(td_id,id_rie){
+
+      //alert(td_id);
+        var formData = {
+            td_id:td_id,id_rie:id_rie
+        };
+
+        $.ajax({
+            type: 'post',
+            url: "{{ path('solicitud_ritt_tramite_obs') }}",
+            data: formData,
+            beforeSend: function () {
+                //$("#modal-id").empty();
+            },
+            success: function (data) {
+                $('#modal-id').modal('show');
+
+                $('#obs').html(data.obs);
+                $('#nrot').html(data.idtram);
+                $('#fechat').html(data.fecha);
+                $('#id_rie').html(data.idrie);
+            },
+            statusCode: {
+                500: function () {
+                },
+                404: function () {
+                }
+            }
+        });
+
+    }
+
+    function confirmar(){
+        if(confirm('¿Estas segura/o de Enviar la Solicitud?')){
+            setTimeout(function(){ location.reload();  },5000);
+            return true;
+        }else
+            return false;
+    }
+    $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+        $(".alert").slideUp(1000);
+    });
+    
+</script>
+{% endblock %}

@@ -46,7 +46,11 @@ class DatoHistoricoController extends Controller {
      * Muestra listado de institutos técnicos/tecnológicos
      */    
     public function listittAction(Request $request){
-
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');        
         $em = $this->getDoctrine()->getManager();
@@ -68,9 +72,19 @@ class DatoHistoricoController extends Controller {
     /**
      * Muestra listado de historicos del instituto
      */    
-    public function listAction(Request $request){    
+    public function listAction(Request $request){
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        $id_lugar = $sesion->get('roluserlugarid');
+        $em = $this->getDoctrine()->getManager();
+
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($id_lugar);
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
         $em = $this->getDoctrine()->getManager(); 
         $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
+        $esAcreditado = $this->get('dgfunctions')->esAcreditadoRitt($request->get('idRie'));
         $query = $em->createQuery('SELECT a
                                      FROM SieAppWebBundle:TtecInstitucioneducativaHistorico a 
                                      JOIN a.institucioneducativa b
@@ -78,13 +92,19 @@ class DatoHistoricoController extends Controller {
                                  ORDER BY a.fechaResolucion DESC');                       
         $query->setParameter('idRie', $request->get('idRie'));
         $historicos = $query->getResult();         
-        return $this->render('SieRieBundle:DatoHistorico:list.html.twig', array('entity' => $entity, 'historicos' => $historicos));        
+        return $this->render('SieRieBundle:DatoHistorico:list.html.twig', array('entity' => $entity,'esAcreditado'=>$esAcreditado, 'historicos' => $historicos, 'lugarUsuario' => intval($lugar->getCodigo())));        
     }
 
     /**
      * Formulario de Nuevo Registro de Historial
      */ 
      public function newAction(Request $request){
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
+        
         $em = $this->getDoctrine()->getManager(); 
         $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
         $form = $this->createFormBuilder()
@@ -107,7 +127,10 @@ class DatoHistoricoController extends Controller {
             $form = $request->get('form');
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idRie']);
-            $nombre_pdf = $this->subirArchivo($request->files->get('form')['archivo']);
+            // $nombre_pdf = $this->subirArchivo($request->files->get('form')['archivo']);
+            $nombre_pdf = $this->upFileToServer($_FILES);
+            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('ttec_institucioneducativa_historico');");
+            $query->execute();
             $historico = new TtecInstitucioneducativaHistorico();
             $historico->setInstitucioneducativa($entity);
             $historico->setNroResolucion($form['nroResolucion']); 
@@ -167,9 +190,10 @@ class DatoHistoricoController extends Controller {
             //Validando el archivo
             if($request->files->get('form')['archivo']){
                 if($historico->getArchivo() != ''){
-                    unlink('%kernel.root_dir%/../uploads/archivos/'.$historico->getArchivo());
+                    unlink($this->get('kernel')->getRootDir().'/../web/uploads/archivos/'.$historico->getArchivo());    
                 }  
-                $nombre_pdf = $this->subirArchivo($request->files->get('form')['archivo']);
+                // $nombre_pdf = $this->subirArchivo($request->files->get('form')['archivo']);
+                $nombre_pdf = $this->upFileToServer($_FILES);
                 $historico->setArchivo($nombre_pdf);
             }   
             $em->persist($historico);
@@ -193,7 +217,8 @@ class DatoHistoricoController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $historico = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaHistorico')->findOneById($request->get('idhistorico'));
             if($historico->getArchivo() != ''){
-                unlink('%kernel.root_dir%/../uploads/archivos/'.$historico->getArchivo());
+                // unlink('%kernel.root_dir%/../uploads/archivos/'.$historico->getArchivo());
+                unlink($this->get('kernel')->getRootDir().'/../web/uploads/archivos/'.$historico->getArchivo());    
             }             
             $idRie = $historico->getInstitucioneducativa()->getId();
             $em->remove($historico);
@@ -205,6 +230,15 @@ class DatoHistoricoController extends Controller {
             $this->get('session')->getFlashBag()->add('mensaje', 'Error al eliminar el dato histórico');
             return $this->redirect($this->generateUrl('historico_new', array('idRie'=>$idRie)));
         }                
+
+    }
+
+    public function upFileToServer($archivo){
+
+        $dirfile = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/';
+        move_uploaded_file($archivo['form']['tmp_name']['archivo'],$dirfile.$archivo['form']['name']['archivo']);
+
+        return $archivo['form']['name']['archivo'];
 
     }
 
