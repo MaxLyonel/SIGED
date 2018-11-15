@@ -1,0 +1,24 @@
+<form action="" id="formEmergente">
+    <table class="table table-lilac table-striped">
+        <thead>
+            <tr>
+                <th>Módulo Emergente</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <input type="hidden" name="smpid" value="{{smpid}}">
+                    <input type="hidden" name="smtid" value="{{modulo.id}}">
+                    <input type="text" name="emergente" value="{% if modulo %}{{modulo.modulo}}{% endif %}" class="form-control input-md" style="text-transform:uppercase" autocomplete="off" {% if app.session.get('ie_per_estado') == '0' %}disabled{% endif %}>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div style="background:#EEEEEE; text-align:right; padding:5px;">
+        <button type="button" class="btn btn-default" onclick="cerrarEmergente({{smpid}})">Cerrar</button>
+        {% if app.session.get('ie_per_estado') != '0' %}
+            <button type="button" class="btn btn-success" onclick="asignarEmergente();">Guardar Cambios</button>
+        {% endif %}
+    </div>
+</form>
