@@ -64,7 +64,7 @@ class DesunificationRudeController extends Controller {
         $val = 0;
 
         //VERIFICANDO QUE LOS RUDE NO TENGA TRAMITES EN DIPLOMAS
-        $sqla = "select * from tramite a 
+        /*$sqla = "select * from tramite a 
         inner join estudiante_inscripcion b on a.estudiante_inscripcion_id = b.id
         inner join estudiante c on b.estudiante_id = c.id
         where c.codigo_rude = '$rudea'
@@ -84,7 +84,7 @@ class DesunificationRudeController extends Controller {
         
         if ((count($dataInscriptionJsonVerDipa) > 0) || (count($dataInscriptionJsonVerDipb) > 0)) {
             $val = 2;
-        }
+        }*/
 
         $queryver = $em->getConnection()->prepare("select * from get_estudiantes_verificacion_historiales('" . $rude . "','" . $rude2 . "');");
         $queryver->execute();
