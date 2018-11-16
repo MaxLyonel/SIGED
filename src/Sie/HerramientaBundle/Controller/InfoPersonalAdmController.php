@@ -475,20 +475,11 @@ class InfoPersonalAdmController extends Controller {
             $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idInstitucion'));
             $maestroInscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('id' => $request->get('idMaestroInscripcion'), 'gestionTipo' => $gestion, 'institucioneducativa' => $institucion));
 
+            $maestroInscripcion->setEsVigenteAdministrativo(1 - $maestroInscripcion->getEsVigenteAdministrativo());
 
-            if ($request->get('idCargo') == 1 || $request->get('idCargo') == 12) {
-                $maestroInscripcion_aux = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findBy(array('cargoTipo' => $request->get('idCargo'), 'gestionTipo' => $gestion, 'institucioneducativa' => $institucion));
-                foreach ($maestroInscripcion_aux as $aux) {
-                    $aux->setEsVigenteAdministrativo(1 - $aux->getEsVigenteAdministrativo());
-                    $em->persist($aux);
-                    $em->flush();
-                }
-            } else {
-                $maestroInscripcion->setEsVigenteAdministrativo(1 - $maestroInscripcion->getEsVigenteAdministrativo());
+            $em->persist($maestroInscripcion);
+            $em->flush();
 
-                $em->persist($maestroInscripcion);
-                $em->flush();
-            }
             $em->getConnection()->commit();
 
             return $this->redirect($this->generateUrl('herramienta_info_personal_adm_index'));
