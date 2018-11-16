@@ -319,7 +319,7 @@ class ConsolidationSieController extends Controller {
                 $aDataExtractFileUE = explode('|', $fileInfoContent[3]);
                 $aFileInfoSie = explode('|', $fileInfoContent[1]);
 
-                $objAllowUEQa = $this->get('seguimiento')->getAllObservationQA(array('sie'=>$aFileInfoSie[2], 'gestion'=>$aFileInfoSie[1],'reglas'=>'1,2,3,10,12,13,16'));
+                $objAllowUEQa = $this->get('seguimiento')->getAllObservationQA(array('sie'=>$aFileInfoSie[2], 'gestion'=>$aFileInfoSie[1],'reglas'=>'1,2,3,10,12,13,16,27'));
                 if($objAllowUEQa){
                   $session->getFlashBag()->add('warningcons', 'El archivo con código Sie ' . $aDataExtractFileUE[1] . ' tiene observaciones de control de calidad, favor solucionar para poder descargar el archivo ');
                   system('rm -fr ' . $dirtmp);
