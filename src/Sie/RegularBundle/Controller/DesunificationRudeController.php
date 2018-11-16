@@ -84,14 +84,14 @@ class DesunificationRudeController extends Controller {
         
         if ((count($dataInscriptionJsonVerDipa) > 0) || (count($dataInscriptionJsonVerDipb) > 0)) {
             $val = 2;
-        }*/
+        }
 
         $queryver = $em->getConnection()->prepare("select * from get_estudiantes_verificacion_historiales('" . $rude . "','" . $rude2 . "');");
         $queryver->execute();
         $dataInscriptionJsonVer = $queryver->fetchAll();
         if (count($dataInscriptionJsonVer) > 0){
            $val = 1; 
-        }
+        }*/
         
         $query = $em->getConnection()->prepare("select * from get_estudiante_historial_json('" . $rude . "');");
         $query->execute();
