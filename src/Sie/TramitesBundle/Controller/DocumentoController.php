@@ -619,7 +619,10 @@ class DocumentoController extends Controller {
                     $lugarNacimiento = $entityDocumentoGenerado['departamentonacimiento']." - ".$entityDocumentoGenerado['paisnacimiento'];
                 } else {
                     $lugarNacimiento = $entityDocumentoGenerado['paisnacimiento'];
-                }            
+                }    
+                
+                $dateNacimiento = date_create($entityDocumentoGenerado['fechanacimiento']);
+                $dateEmision = date_create($entityDocumentoGenerado['fechaemision']);
             
                 $datos = array(
                     'inscripcion'=>$entityDocumentoGenerado['estudianteInscripcionId'],
@@ -632,10 +635,10 @@ class DocumentoController extends Controller {
                     'paterno'=>$entityDocumentoGenerado['paterno'],
                     'materno'=>$entityDocumentoGenerado['materno'],
                     'nacimientolugar'=>$lugarNacimiento,
-                    'nacimientofecha'=>($entityDocumentoGenerado['fechanacimiento']),
+                    'nacimientofecha'=>date_format($dateNacimiento, 'd/m/Y'),
                     'cedulaidentidad'=>$entityDocumentoGenerado['carnetIdentidad'],
                     'emisiondepartamento'=>$entityDocumentoGenerado['departamentoemision'],
-                    'emisionfecha'=>($entityDocumentoGenerado['fechaemision']),
+                    'emisionfecha'=>date_format($dateEmision, 'd/m/Y'),
                     'tokenfirma'=>base64_encode($getDocumentoFirma['tokenfirma'])
                 );
                 $keys = $this->getEncodeRSA($datos);
