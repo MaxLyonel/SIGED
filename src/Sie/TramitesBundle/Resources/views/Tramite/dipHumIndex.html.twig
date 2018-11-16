@@ -201,6 +201,7 @@
             var numeroSerie = document.getElementById('numeroSerie');
             var serie = document.getElementById('serie');
             var fechaSerie = document.getElementById('fechaSerie');
+            var firma = document.getElementById('firma');
             var estado = false;
             var estadoAll = true;
 
@@ -234,7 +235,7 @@
                 }
             }
 
-            if((numeroSerie.value === "" || fechaSerie.value === "") && estado === true){
+            if((numeroSerie.value === "" || fechaSerie.value === "" || firma.value === "") && estado === true){
                 estado = false;
             }
 
