@@ -176,20 +176,27 @@ class DefaultController extends Controller {
                 $layout = 'layoutCertification.html.twig';
                 $this->session->set('pathSystem', "SieTramitesBundle");
                 break;
-            case '172.20.196.17':
+            case '172.20.196.17a':
                 $sysname = 'JUEGOS';
                 $sysporlet = 'jdp';
                 $sysbutton = false;
                 $layout = 'layoutJuegos.html.twig';
                 $this->session->set('pathSystem', "SieJuegosBundle");
                 break;
-            case '172.20.196.17a':
+            case '172.20.196.17':
                 $sysname = 'TRAMITES';
                 $sysporlet = 'green';
                 $sysbutton = false;
                 $layout = 'layoutTramites.html.twig';
                 $this->session->set('pathSystem', "SieTramitesBundle");
                 break;
+            case 'tramite.sie.gob.bo':
+                    $sysname = 'TRAMITE';
+                    $sysporlet = 'green';
+                    $sysbutton = false;
+                    $layout = 'layoutTramites.html.twig';
+                    $this->session->set('pathSystem', "SieTramitesBundle");
+                    break;
             case 'juegos.minedu.gob.bo':
                 $sysname = 'JUEGOS';
                 $sysporlet = 'jdp';
