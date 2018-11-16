@@ -5,15 +5,15 @@ Sie\AppWebBundle\Entity\FlujoProceso:
         IDX_C5263C38FE1D168D:
             columns:
                 - flujo_tipo_id
+        IDX_C5263C38640D1D53:
+            columns:
+                - proceso_id
         IDX_C5263C38EF3F27EB:
             columns:
                 - rol_tipo_id
         IDX_C5263C38655835A3:
             columns:
                 - wf_asignacion_tarea_tipo_id
-        IDX_C5263C38640D1D53:
-            columns:
-                - proceso_id
     id:
         id:
             type: integer
@@ -41,7 +41,7 @@ Sie\AppWebBundle\Entity\FlujoProceso:
             comment: ''
             column: es_evaluacion
         plazo:
-            type: integer
+            type: smallint
             nullable: true
             unsigned: false
             comment: ''
@@ -60,10 +60,17 @@ Sie\AppWebBundle\Entity\FlujoProceso:
         variableEvaluacion:
             type: string
             nullable: true
-            length: null
+            length: 50
             fixed: false
             comment: ''
             column: variable_evaluacion
+        rutaFormulario:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: ruta_formulario
     manyToOne:
         flujoTipo:
             targetEntity: FlujoTipo
@@ -72,6 +79,15 @@ Sie\AppWebBundle\Entity\FlujoProceso:
             inversedBy: null
             joinColumns:
                 flujo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        proceso:
+            targetEntity: ProcesoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                proceso_id:
                     referencedColumnName: id
             orphanRemoval: false
         rolTipo:
@@ -90,15 +106,6 @@ Sie\AppWebBundle\Entity\FlujoProceso:
             inversedBy: null
             joinColumns:
                 wf_asignacion_tarea_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        proceso:
-            targetEntity: ProcesoTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                proceso_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

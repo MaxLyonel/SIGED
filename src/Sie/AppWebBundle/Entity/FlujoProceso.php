@@ -332,4 +332,32 @@ class FlujoProceso
     {
         return $this->wfAsignacionTareaTipo;
     }
+    /**
+     * @var string
+     */
+    private $rutaFormulario;
+
+
+    /**
+     * Set rutaFormulario
+     *
+     * @param string $rutaFormulario
+     * @return FlujoProceso
+     */
+    public function setRutaFormulario($rutaFormulario)
+    {
+        $this->rutaFormulario = $rutaFormulario;
+    
+        return $this;
+    }
+
+    /**
+     * Get rutaFormulario
+     *
+     * @return string 
+     */
+    public function getRutaFormulario()
+    {
+        return $this->rutaFormulario;
+    }
 }
