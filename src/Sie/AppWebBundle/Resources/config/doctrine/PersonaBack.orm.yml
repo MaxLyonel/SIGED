@@ -1,0 +1,164 @@
+Sie\AppWebBundle\Entity\PersonaBack:
+    type: entity
+    table: persona_back
+    uniqueConstraints:
+        uniq2_carnet:
+            columns:
+                - carnet
+                - complemento
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        idiomaMaternoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: idioma_materno_id
+        generoTipoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: genero_tipo_id
+        sangreTipoId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: sangre_tipo_id
+        estadocivilTipoId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: estadocivil_tipo_id
+        carnet:
+            type: string
+            nullable: false
+            length: 15
+            fixed: false
+            comment: ''
+            default: '0'
+        rda:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+        libretaMilitar:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+            column: libreta_militar
+        pasaporte:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        paterno:
+            type: string
+            nullable: true
+            length: 75
+            fixed: false
+            comment: ''
+        materno:
+            type: string
+            nullable: true
+            length: 75
+            fixed: false
+            comment: ''
+        nombre:
+            type: string
+            nullable: true
+            length: 75
+            fixed: false
+            comment: ''
+        fechaNacimiento:
+            type: date
+            nullable: false
+            comment: ''
+            column: fecha_nacimiento
+        segipId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: segip_id
+        complemento:
+            type: string
+            nullable: false
+            length: 2
+            fixed: false
+            comment: ''
+            default: ''
+        activo:
+            type: boolean
+            nullable: true
+            comment: ''
+        correo:
+            type: string
+            nullable: true
+            length: 40
+            fixed: false
+            comment: ''
+        foto:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        celular:
+            type: string
+            nullable: true
+            length: 10
+            fixed: false
+            comment: ''
+        direccion:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        esvigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+        esvigenteApoderado:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: esvigente_apoderado
+        countEdit:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: count_edit
+        obsSegip:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: obs_segip
+        esExtranjero:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: es_extranjero
+    lifecycleCallbacks: {  }

@@ -1,0 +1,88 @@
+Sie\AppWebBundle\Entity\DocumentoFirmaAutorizada:
+    type: entity
+    table: documento_firma_autorizada
+    indexes:
+        IDX_6F5E9466F5F88DB9:
+            columns:
+                - persona_id
+        IDX_6F5E9466DB38439E:
+            columns:
+                - usuario_id
+        IDX_6F5E94667C9FBE9A:
+            columns:
+                - documento_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: documento_firma_autorizada_id_seq
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        maximo:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+        usado:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+        fechaInicio:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_inicio
+        fechaCierre:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_cierre
+        esactivo:
+            type: boolean
+            nullable: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+    manyToOne:
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        documentoTipo:
+            targetEntity: DocumentoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                documento_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
