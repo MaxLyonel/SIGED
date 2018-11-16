@@ -632,10 +632,10 @@ class DocumentoController extends Controller {
                     'paterno'=>$entityDocumentoGenerado['paterno'],
                     'materno'=>$entityDocumentoGenerado['materno'],
                     'nacimientolugar'=>$lugarNacimiento,
-                    'nacimientofecha'=>($entityDocumentoGenerado['fechanacimiento'])->format('d/m/Y'),
+                    'nacimientofecha'=>($entityDocumentoGenerado['fechanacimiento']),
                     'cedulaidentidad'=>$entityDocumentoGenerado['carnetIdentidad'],
                     'emisiondepartamento'=>$entityDocumentoGenerado['departamentoemision'],
-                    'emisionfecha'=>($entityDocumentoGenerado['fechaemision'])->format('d/m/Y'),
+                    'emisionfecha'=>($entityDocumentoGenerado['fechaemision']),
                     'tokenfirma'=>base64_encode($getDocumentoFirma['tokenfirma'])
                 );
                 $keys = $this->getEncodeRSA($datos);
