@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="page-title">
-                <h1 class="glyphicon glyphicon glyphicon-edit"> CAMBIAR FACILITADOR</h1>
+                <h1 class="glyphicon glyphicon-home"> CERRAR CURSO(S)</h1>
                 <ol class="breadcrumb">
                     
 
@@ -30,7 +30,7 @@
                         <strong>¡Advertencia!</strong> {{ flashMessage }}
                     </div>
                 {% endfor %}
-            
+            <form action="{{ path('sie_pnp_cerrar_curso') }}" method="POST">
             <!-- Website Stats  Widget -->
             <div class="container-fluid">
                 <div class="row">
@@ -38,24 +38,21 @@
                         <div class="panel panel-icon panel-primary">
                             <div class="panel-heading">
                                 <div class="portlet-title">
-                                    Buscar Curso y Facilitador
+                                    Inserte Datos
                                 </div>
                             </div>
-                            <div class="panel-body">                              
+                            <div class="panel-body">
                                 <div class="row">
                                     <form class="form-inline">
-                                        <div class="col-md-3" align="center">
+                                        <div class="col-md-7" align="center">
                                             <div class="form-group">  
-                                                <label for="exampleInputName2">ID Curso</label>
-                                                <input name="curso_id" id="curso_id" class="form-control" minlength="7" maxlength="10"  pattern="[0-9]{7,10}" title="Identificador del curso" required="required" placeholder="ID DEL CURSO" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;">
+                                                <label for="exampleInputName2">Digitar los Id de los cursos Ej: (ID,ID,ID)</label>
+                                               <textarea name="curso_id" id="curso_id" class="form-control" required="required"></textarea>
                                             </div>
-                                        </div>
-                                        <div class="col-md-1" align="center">
-                                            <div> <h2 class="glyphicon glyphicon-arrow-right"></h2></div>
                                         </div>
                                         <div class="col-md-3" align="center">
                                             <div class="form-group">          
-                                                <label for="exampleInputEmail2">CI del Facilitador Nuevo</label>
+                                                <label for="exampleInputEmail2">CI del Informátcio Departamental</label>
                                                  <input name="ci" id="ci" class="form-control" minlength="6" maxlength="9"  pattern="[0-9]{6,9}" title="Ci facilitador" required="required" placeholder="Ci FACILITADOR" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;">
                                             </div>
                                         </div>
@@ -68,19 +65,26 @@
                                         <div class="col-md-2">
                                             <div>&nbsp;</div>
                                             <a role="button" onclick="return SeeBuscar()" class="btn btn-primary" href="#" > Buscar</a><br/><br/>
-                                        </div> 
-                                    </form>                                     
+                                        </div>
+                                    </form>
                                 </div>
+
                             </div>
                         </div>
+
                     </div>
                 </div>
-                <div id="facilitador"></div>
+            </div>
+           <div id="facilitador"></div>
+
+
             <!-- End of Website Stats Widget -->
+
         </div>
     </div>
-{% endblock %}
 
+
+{% endblock %}
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
@@ -90,18 +94,16 @@
         var complemento = document.getElementById("complemento").value;
         var curso_id = document.getElementById("curso_id").value;
 
-        //alert(opcion);
         if (ci=="" || curso_id==""){
             alert("el ID del curso y/o CI estan vacios");
             return false;
         }
         if (complemento=="")complemento=0;
         
-
         var formData = $('#formxls').serialize();
         $.ajax({
             type: 'get',
-            url: Routing.generate('sie_pnp_cambiar_facilitador_encontrado', {'ci': ci,'complemento':complemento,'curso_id': curso_id}),
+            url: Routing.generate('sie_pnp_cerrar_curso_encontrado', {'ci': ci,'complemento':complemento,'curso_id': curso_id}),
             data: formData,
             beforeSend: function () {
                 $("#facilitador").empty();

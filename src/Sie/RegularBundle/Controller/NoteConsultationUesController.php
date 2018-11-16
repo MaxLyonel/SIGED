@@ -75,7 +75,8 @@ class NoteConsultationUesController extends Controller {
         $objCourses = array();
         $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
         $exist = true;
-        //check if the data exist
+
+         //check if the data exist
         if ($objUe) {
             //look for inscription data
             $objCourses = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getCoursesPerUe($sie, $gestion);
@@ -91,11 +92,93 @@ class NoteConsultationUesController extends Controller {
             $exist = false;
         }
 
+          /***********************************\
+          * *
+          * Validacion tipo de Unidad Educativa
+          * send codigo sie *
+          * return type of UE *
+          * *
+          \************************************/
+          $objUeVal = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($sie);
+          
+          if($objUeVal[0]['tipoUe']!=1){
+              $message = 'Unidad Educativa no pertenece al sistema de Educación  Regular';
+                $this->addFlash('warningconsultaue', $message);
+                $exist = false;
+          }
+
+        $arrValidation = array();
+        if($exist){
+
+
+            // added new validation to download the reports files
+            // validation UE QA
+              // $query = $em->getConnection()->prepare('select * from sp_verificar_duplicados_ue(:gestion, :sie)');
+              // $query->bindValue(':gestion', $gestion);
+              // $query->bindValue(':sie', $sie);
+              // $query->execute();
+              // $inconsistenciaReviewQa = $query->fetchAll();  
+
+              //  valiation IG off
+              //first validations calidad
+              /***********************************\
+              * *
+              * validatin of QA
+              * send array => sie, gestion, reglas *
+              * return observations UE *
+              * *
+              \************************************/          
+              //the rule to donwload file with validations\
+              $arrDataVal = array(
+                'sie' => $sie,
+                'gestion' => $gestion,
+                'reglas' => '1,2,3,10,12,13,16,27'
+              );
+            
+              $objObsQA = $this->get('funciones')->appValidationQuality($arrDataVal);
+              
+              // dump($objObsQA);
+              if ($objObsQA) {  
+                  $message = 'Unidad Educativa  presenta observaciones de calidad' ;
+                  $this->addFlash('warningconsultaue', $message);
+                  $exist = false;
+                  $arrValidation['observaciones_calidad'] = $objObsQA;
+              }
+
+              // validation UE data
+              /***********************************\
+              * *
+              * Validacion Unidades Educativas: MODULAR, PLENAS,TEC-TEG, NOCTURNAS
+              * send array => sie, gestion, reglas *
+              * return type of UE *
+                * *
+              \************************************/
+              $query = $em->getConnection()->prepare('select * from sp_validacion_regular_web(:gestion, :sie, :periodo)');
+              $query->bindValue(':gestion', $gestion);
+              $query->bindValue(':sie', $sie);
+              $query->bindValue(':periodo', 4);
+              $query->execute();
+              $inconsistencia = $query->fetchAll();
+              
+              if ($inconsistencia) {
+                 $message = 'Unidad Educativa presenta observaciones de incosistencia';
+                  $this->addFlash('warningconsultaue', $message);
+                  $exist = false;
+                  $arrValidation['observaciones_incosistencia'] = $inconsistencia;
+              }
+             
+        }
+
+
+
+       
+
         return $this->render($this->session->get('pathSystem') . ':NoteConsultationUes:result.html.twig', array(
                     'unidadEducativa' => $objUe,
                     'courses' => $objCourses,
                     'exist' => $exist,
-                    'gestionSelected' => $gestion
+                    'gestionSelected' => $gestion,
+                    'arrValidation' => $arrValidation
         ));
     }
 

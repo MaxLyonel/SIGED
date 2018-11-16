@@ -53,30 +53,8 @@
                         <p>{{gradoParaleloCurso}}</p>
                     </div>
                 </div>
-                    {% if (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2') %}
-                        {% if primaria %}
-                            <button type="button" class="btn btn-default" style="float:right" onclick="newEmergente('{{infoUe}}')">
-                                Agregar Área Emergente
-                            </button>
-                        {% endif %}
-                        <div class="btn-group" style="width:650px; float:right;">
-
-                            <button type="button" class="btn btn-wordpress dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="float:right">
-                                Agregar Área <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-right animated flipInX" role="menu">
-                                {% if asignaturas|length > 0 %}
-                                    {% for a in asignaturas %}                                    
-                                        <li><button onclick="newArea({{a.smpId}},'{{infoUe}}')" class="btn-link">{{a.codigo}} - {{a.modulo}}</button></li>
-                                    {% endfor %}
-                                {% else %}
-                                    <li style="margin:5px;"><span class="text-warning">No hay asignaturas disponibles</span></li>
-                                {% endif %}
-                            </ul>
-                        </div>
-                    {% endif %}    
-                    <br>
-                <h4>Áreas actuales del curso</h4>
+                   
+                <h4>Áreas actuales del cursos</h4>
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
@@ -85,9 +63,6 @@
                                 <th>Código</th>
                                 <th>Área</th>
                                 <th>Maestro(s)</th>
-                                {% if (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2')%}
-                                    <th class="text-center">Eliminar</th>
-                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
@@ -110,11 +85,6 @@
                                         <div id="{{co.iecoid}}" style="display:none; position:absolute; z-index:5; width:500px; margin-left:-250px; border:2px solid #906094; box-shadow: 7px 7px 4px #929292;" class="divMaestros">
                                         </div>
                                     </td>
-                                    {% if (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '2')%}
-                                        <td class="text-center">
-                                            <button onclick="deleteArea({{co.iecoid}},'{{infoUe}}',new String('{{co.modulo}}'),{{co.smpid}})" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></button>
-                                        </td> 
-                                    {% endif %}
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -127,7 +97,6 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-            {#<button type="button" class="btn btn-theme" data-dismiss="modal">Guardar Cambios</button>#}
         </div>
     </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->
@@ -139,34 +108,6 @@
                 type: 'post',
                 data: ({ida:ida, infoUe: infoUe}),
                 url: "{{ path('herramienta_alter_areas_add') }}",
-                beforeSend: function () {
-                    $('#mensajeModal').empty();
-                    $('#mensajeModal').append("<div style='text-align:center; color:#5C9FFB'>Agregando área... <img src='{{asset('img/loading-sm.gif')}}'></div>");
-                },
-                success: function (data) {
-                    $('#mensajeModal').empty();
-                    $('#modal').empty();
-                    $('#modal').append(data);
-                },
-                statusCode: {
-                    500: function () {
-                        $('#mensajeModal').empty();
-                        $('#mensajeModal').append("<div class='alert alert-danger'>Ocurrió un error al agregar el área.</div>");
-                    },
-                    404: function () {
-
-                    }
-                }
-            });
-        }
-    };
-
-    var newEmergente = function(infoUe) {
-        if(confirm('¿Realmente desea adicionar el área emergente?\nPresione aceptar para confirmar.')){
-            $.ajax({
-                type: 'post',
-                data: ({infoUe: infoUe}),
-                url: "{{ path('herramienta_alter_area_emergente_add') }}",
                 beforeSend: function () {
                     $('#mensajeModal').empty();
                     $('#mensajeModal').append("<div style='text-align:center; color:#5C9FFB'>Agregando área... <img src='{{asset('img/loading-sm.gif')}}'></div>");

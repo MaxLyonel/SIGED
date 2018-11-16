@@ -87,6 +87,15 @@
                                                     <input class="chesubsist{{ rollugar.usuariorolid }}" type="checkbox" value="CER">CER<br>    
                                                 {% endif %}
                                             </div>                                        
+                                        </div>
+                                        <div class="row">                                        
+                                            <div class="col-xs-6">
+                                                {% if 'RIE' in rollugar.subSistema %}
+                                                    <input class="chesubsist{{ rollugar.usuariorolid }}" type="checkbox" checked="checked" value="RIE">RIE<br>
+                                                {% else %}
+                                                    <input class="chesubsist{{ rollugar.usuariorolid }}" type="checkbox" value="RIE">RIE<br>    
+                                                {% endif %}
+                                            </div>                                       
                                         </div>                                    
                                         <div class="row">
                                             <div class="col-xs-12" id="div_subsistema_guardar{{ rollugar.usuariorolid }}">

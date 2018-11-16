@@ -98,6 +98,23 @@
                 </button>
             </div-->
         {% endif %}
+        
+        {#
+          print CERTIFICADOS To PRIMARIA
+          #}
+        {% if (app.session.get('ie_per_estado') == '0') and primariaNuevo and ((app.session.get('ie_gestion') >= '2018')) %}
+        
+         <div class="col-md-3">
+                <form action="{{path('herramienta_alter_certificados_primaria')}}" method="post" style="">
+                    <input type="hidden" name="data" value="{{infoUe}}">
+                    <button type="submit" class="btn btn-primary btn-stroke">
+                        <i class="fa fa-cloud-download"></i> Imprimir Certificados
+                    </button>
+                </form>
+         </div>       
+        
+        {% endif %}
+        
       </div>
       <BR>
     {#<div class="row">
@@ -169,23 +186,22 @@
                                                 <ul class="dropdown-menu">
                                                     {#SE CONTROLA EL ACESSO EN LA PANTALLA DE NOTAS POR ESO ESTA ACTIVO PARA TODOS LO ESTADOS MENOS INCRIPCIONES#}
                                                     {% if (app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '0') %}
-                                                        <li>
-                                                          <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}', '{{jsnInfoStudent}}');" >
-                                                            <span class="label label-primary"><i class="fa fa-list"></i> Registro de Notas</span>
-                                                          </a>
-                                                        </li>
 
-                                                        {# <li>
-                                                          <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotasPrimaria('{{infoUe}}', '{{jsnInfoStudent}}');" >
-                                                            <span class="label label-default"><i class="fa fa-list"></i> Registro de Notas Primaria</span>
-                                                          </a>
-                                                        </li> #}
-
-
-
-
-
+                                                        {% if primariaNuevo %}
+                                                            <li>
+                                                              <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotasPrimaria('{{infoUe}}', '{{jsnInfoStudent}}');" >
+                                                                <span class="label label-primary"><i class="fa fa-list"></i> Registro de Notas</span>
+                                                              </a>
+                                                            </li>
+                                                        {% else %}
+                                                            <li>
+                                                              <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}', '{{jsnInfoStudent}}');" >
+                                                                <span class="label label-primary"><i class="fa fa-list"></i> Registro de Notas</span>
+                                                              </a>
+                                                            </li>
+  
                                                     {% endif %}
+                                                {% endif %}
 
                                                     {#LIBRETAS SOLO EN MODO LECTURA Y AÑOS 2015,2016,2017#}
                                                     {% if (app.session.get('ie_per_estado') == '0') and ((app.session.get('ie_gestion') == '2015') or (app.session.get('ie_gestion') == '2016') or (app.session.get('ie_gestion') == '2017') or (app.session.get('ie_gestion') == '2018') or (app.session.get('ie_gestion') == '2019')) %}

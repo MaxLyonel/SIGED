@@ -125,7 +125,6 @@ class StudentsInscriptionsController extends Controller {
       $form= $request->get('form');
       $aInfoUeducativa = unserialize($form['data']);
 
-
     //set the validate year
     $validateYear = false;
     //if not checked, so validate the studens olds year
@@ -223,7 +222,15 @@ class StudentsInscriptionsController extends Controller {
           $em->persist($estudianteInscripcionAlternativaExcepcionalObjNew);
           $em->flush();
         }
-
+        // check if the course is PRIMARIA
+          if( $aInfoUeducativa['ueducativaInfoId']['sfatCodigo'] == 15 &&
+            $aInfoUeducativa['ueducativaInfoId']['setId'] == 13 &&
+            $aInfoUeducativa['ueducativaInfoId']['periodoId'] == 3
+          ){
+            //set the new curricula to the student
+             $data = array('iecId'=>$aInfoUeducativa['ueducativaInfoId']['iecId'], 'eInsId'=>$studentInscription->getId());
+            $objNewCurricula = $this->get('funciones')->setCurriculaStudent($data);
+         }
         //to do the submit data into DB
         //do the commit in DB
         $em->getConnection()->commit();
@@ -256,7 +263,9 @@ class StudentsInscriptionsController extends Controller {
                     'infoUe' => $form['data'],
                     'etapaespecialidad' => $etapaespecialidad,
                     'dataUe'=> $dataUe['ueducativaInfo'],
-                    'totalInscritos'=>count($objStudents)
+                    'totalInscritos'=>count($objStudents),
+                     'swSetNameModIntEmer' => 'false',
+                    'primariaNuevo' => $this->get('funciones')->validatePrimariaCourse($dataUe['ueducativaInfoId']['iecId'])
         ));
       } catch (Exception $e) {
         $em->getConnection()->rollback();

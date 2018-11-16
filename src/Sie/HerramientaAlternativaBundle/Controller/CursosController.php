@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sie\AppWebBundle\Entity\EstudianteInscripcion;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Sie\AppWebBundle\Entity\EstudianteAsignatura;
+use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * EstudianteInscripcion controller.
  *
@@ -39,7 +40,7 @@ class CursosController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $objUeducativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getAlterCursosBySieGestSubPer($this->session->get('ie_id'), $this->session->get('ie_gestion'), $this->session->get('ie_subcea'), $this->session->get('ie_per_cod'));
-//dump($objUeducativa);die;
+// dump($objUeducativa);die;
         $exist = true;
         $aInfoUnidadEductiva = array();
         if ($objUeducativa) {
@@ -47,7 +48,7 @@ class CursosController extends Controller {
 
                 $sinfoUeducativa = serialize(array(
                     'ueducativaInfo' => array('ciclo' => $uEducativa['ciclo'], 'nivel' => $uEducativa['nivel'], 'grado' => $uEducativa['grado'], 'paralelo' => $uEducativa['paralelo'], 'turno' => $uEducativa['turno']),
-                    'ueducativaInfoId' => array('nivelId' => $uEducativa['nivelId'], 'cicloId' => $uEducativa['cicloId'], 'gradoId' => $uEducativa['gradoId'], 'turnoId' => $uEducativa['turnoId'], 'paraleloId' => $uEducativa['paraleloId'], 'iecId' => $uEducativa['iecId'], 'setCodigo'=>$uEducativa['setCodigo'], 'satCodigo'=>$uEducativa['satCodigo'])
+                    'ueducativaInfoId' => array('nivelId' => $uEducativa['nivelId'], 'cicloId' => $uEducativa['cicloId'], 'gradoId' => $uEducativa['gradoId'], 'turnoId' => $uEducativa['turnoId'], 'paraleloId' => $uEducativa['paraleloId'], 'iecId' => $uEducativa['iecId'], 'setCodigo'=>$uEducativa['setCodigo'], 'satCodigo'=>$uEducativa['satCodigo'],'sfatCodigo'=>$uEducativa['sfatCodigo'],'setId'=>$uEducativa['setId'],'periodoId'=>$uEducativa['periodoId'],)
                 ));
 
                 $aInfoUnidadEductiva[$uEducativa['turno']][$uEducativa['ciclo']][$uEducativa['grado']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa, 'nivelId' => $uEducativa['nivelId']);
@@ -58,7 +59,7 @@ class CursosController extends Controller {
             $this->addFlash('warninresult', $message);
             $exist = false;
         }
-//        dump($aInfoUnidadEductiva);die;
+       // dump($aInfoUnidadEductiva);die;
 //        dump($objUeducativa);
 //        die;
         return $this->render($this->session->get('pathSystem') . ':Cursos:index.html.twig', array(
@@ -76,7 +77,22 @@ class CursosController extends Controller {
         $exist = true;
         $objStudents = array();
         $dataUe=(unserialize($infoUe));
-//        dump($dataUe); die;
+        // dump($infoUe);
+       // dump($dataUe); die;
+        $swSetNameModIntEmer = false;
+        // validate if the course is PRIMARIA
+        if( $this->get('funciones')->validatePrimaria($this->session->get('ie_id'),$this->session->get('currentyear'),$infoUe)
+          ){
+            //get the values about its module integrado emergente
+            $jsonModIntEmer = $this->get('funciones')->validateModIntEmer($dataUe['ueducativaInfoId']['iecId']);
+            $arrModIntEme = json_decode($jsonModIntEmer,true);
+            // validate if the MIE has name
+            if($arrModIntEme['status']){
+                $response = new JsonResponse();
+                return $response->setData($arrModIntEme);
+            }
+        }
+        
         $objStudents = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getListStudentPerCourseAlter($aInfoUeducativa['ueducativaInfoId']['iecId']);
 //        dump($aInfoUeducativa['ueducativaInfoId']['iecId']);
 //        die;
@@ -102,7 +118,9 @@ class CursosController extends Controller {
             $etapaespecialidad = $aInfoUeducativa['ueducativaInfo']['grado'];
         }
 
+        $primariaNuevo = $this->get('funciones')->verificarMateriasPrimariaAlternativa($dataUe['ueducativaInfoId']['iecId']);
         //dump($objStudents); die;
+        // $primariaNuevo = $this->get('funciones')->validatePrimariaCourse($dataUe['ueducativaInfoId']['iecId']);
 
         return $this->render($this->session->get('pathSystem') . ':InfoEstudianteRequest:seeStudents.html.twig', array(
                     'objStudents' => $objStudents,
@@ -112,7 +130,9 @@ class CursosController extends Controller {
                     'infoUe' => $infoUe,
                     'etapaespecialidad' => $etapaespecialidad,
                     'dataUe'=> $dataUe['ueducativaInfo'],
-                    'totalInscritos'=>count($objStudents)
+                    'totalInscritos'=>count($objStudents),
+                    'swSetNameModIntEmer' => $swSetNameModIntEmer,
+                    'primariaNuevo' => $primariaNuevo
         ));
     }
 
@@ -574,6 +594,14 @@ class CursosController extends Controller {
 
             //step 4 delete socio economico data
             $objSocioEco = $em->getRepository('SieAppWebBundle:SocioeconomicoRegular')->findBy(array('estudianteInscripcion' => $arrInfoStudent['eInsId'] ));
+            //dump($objSocioEco);die;
+            foreach ($objSocioEco as $element) {
+                $em->remove($element);
+            }
+            $em->flush();
+
+              //step 4.1 delete socio economico data
+            $objSocioEco = $em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findBy(array('estudianteInscripcion' => $arrInfoStudent['eInsId'] ));
             //dump($objSocioEco);die;
             foreach ($objSocioEco as $element) {
                 $em->remove($element);
