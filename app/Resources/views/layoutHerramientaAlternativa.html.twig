@@ -555,7 +555,7 @@
                                 <li><a href="{{path('sie_alt_reportes_search')}}">Reportes Educación Alternativa </a></li>
                             </ul>
                         </li>
-                        {#<li class="submenu">
+                        <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
                                 <span class="text">Bachiller de Excelencia</span>
@@ -564,7 +564,7 @@
                             <ul>
                                 <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>
                             </ul>
-                        </li>#}
+                        </li>
                     {% endif %}
                     {% if app.session.get('roluser') == 10 %} {#DISTRITAL#}
                         <li class="submenu">
@@ -606,7 +606,7 @@
                                 <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
                             </ul>
                         </li>
-                        {#<li class="submenu">
+                        <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
                                 <span class="text">Bachiller de Excelencia</span>
@@ -619,7 +619,7 @@
                                 <li><a href="{{ path('bach_exc_alt_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>
 
                             </ul>
-                        </li>#}
+                        </li>
                     {% endif %}
                 </ul><!-- /.sidebar-menu -->
                 <!--/ End left navigation - menu -->
