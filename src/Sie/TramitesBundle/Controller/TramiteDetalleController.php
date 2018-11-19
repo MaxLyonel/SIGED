@@ -3397,7 +3397,6 @@ class TramiteDetalleController extends Controller {
                                 // $documentoController->setContainer($this->container);
                                 
                                 $msgContenidoDocumento = $documentoController->getDocumentoValidación($numCarton, $serCarton, $fechaCarton, $id_usuario, $rolPermitido, $documentoTipoId);
-                                $numCarton = $numCarton + 1;
                             }
 
                             if($msgContenido != ""){
@@ -3433,7 +3432,7 @@ class TramiteDetalleController extends Controller {
                         } else {
                             $messageError = ($messageError == "") ? $msg[1] : $messageError.'; '.$msg[1];
                         }
-                        $numeroCarton = $numeroCarton + 1;
+                        $numCarton = $numCarton + 1;
                     }
                 } else {
                     $messageError = $valFirmaDisponible[1];
