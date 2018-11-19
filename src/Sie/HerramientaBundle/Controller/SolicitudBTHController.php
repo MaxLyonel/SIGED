@@ -588,22 +588,22 @@ class SolicitudBTHController extends Controller {
 
         //buscar y armar las especialidades
         $lista_especialidadRegNuearray = array();
-        $especialidadifno1 = array();
+        $especialidadifno = array();
         for($i=0;$i<count($datos[2]['select_especialidad']);$i++){
             $idespecialidad = $datos[2]['select_especialidad'][$i];
             $query = $em->getConnection()->prepare("SELECT eth.id,eth.especialidad FROM especialidad_tecnico_humanistico_tipo eth WHERE eth. id=$idespecialidad");
             $query->execute();
             $especialidad = $query->fetch();
             $lista_especialidadRegNuearray[]=array('id'=>$especialidad['id'],'especialidad'=>$especialidad['especialidad'] );
-            $especialidadifno[$i] = $idespecialidad;
+            //$especialidadifno[$i] = $idespecialidad;
+            array_push($especialidadifno, $idespecialidad);
         }
      //dump($especialidadifno);die;
         $query = $em->getConnection()->prepare("SELECT eth.id,eth.especialidad FROM especialidad_tecnico_humanistico_tipo eth ORDER BY 1 ");
         $query->execute();
         $especialidadlista = $query->fetchAll();
-       // dump($especialidad);die;
         $tipoTramite    = $infoUE['tramite_tipo'];
-
+//enviar $especialidadinfo
                 return $this->render('SieHerramientaBundle:SolicitudBTH:formularioBTHDirec.html.twig',array(
                     'ieducativa' => $infoUe,
                     'institucion' => $institucion,

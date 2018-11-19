@@ -231,19 +231,11 @@
                                                 <div class="col-md-5">
 
                                                     {% if (tipoTramite == 45)  %}
-
-                                                    {#<select data-placeholder="Seleccionar especialidad"  id="select_especialidad" name="select_especialidad[]"  class="chosen-select" multiple="" tabindex="-1" style="display: none;">
-                                                        {% for especialidad in especialidadlista %}
-                                                            <option value="{{ especialidad.id }}">{{ especialidad.especialidad }}</option>
-                                                        {% endfor %}
-                                                    </select>#}
-
-                                                        <select  id="select_especialidad" name="select_especialidad[]"  class="form-control js-example-basic-multiple" class="chosen-select" multiple=""   >
+                                                        <select  id="select_especialidade" name="select_especialidade[]" class="chosen-select" multiple="" tabindex="-1" style="display: none;">
                                                             {% for especialidad in especialidadlista %}
                                                                 <option value="{{ especialidad.id }}">{{ especialidad.especialidad }}</option>
                                                             {% endfor %}
                                                         </select>
-
                                                     {% else %}
                                                     <select data-placeholder="Seleccionar especialidad" id="lista_select_especialidad" name="lista_select_especialidad[]"  class="form-control" multiple=""  >
                                                         {% for especialidadarray in especialidadarray %}
@@ -304,10 +296,9 @@
                 document.getElementById("informe").checked = true;
             }
             $('#obs').hide();
-
-            {#{{ especialidadifno }}#}
-            $('#select_especialidad').val(['2','1','6']);
-            //$("#especialidades").val(['1','2','3','4']).trigger("change");
+            setTimeout(function () {
+                $("#select_especialidade").val(['1','2','3','4']).trigger('chosen:updated');
+            },1000);
         });
         function muestraobs(){
             var respuesta=$('input:radio[name=radiotype1]:checked').val();
