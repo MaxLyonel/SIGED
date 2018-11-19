@@ -22,6 +22,10 @@ sie_tramite_documento:
     resource: "@SieTramitesBundle/Resources/config/routing/tramiteDocumento.yml"
     prefix:   /tramite/documento
 
+sie_tramite_documento_firma:
+    resource: "@SieTramitesBundle/Resources/config/routing/tramiteDocumentoFirma.yml"
+    prefix:   /tramite/documento/firma
+
 sie_tramite_homologacion:
     resource: "@SieTramitesBundle/Resources/config/routing/tramiteHomologacion.yml"
     prefix:   /tramite/homologacion

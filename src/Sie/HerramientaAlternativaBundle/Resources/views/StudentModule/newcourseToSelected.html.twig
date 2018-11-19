@@ -2,10 +2,7 @@
     <div class="modal-content">
 
 
-        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'id':'moduleToStudentForm'} } )}}
-        {{form_widget(form.infoUe)}}
-        {{form_widget(form.infoStudent)}}
-        {{form_widget(form.courses)}}
+      
 
 
         <div class="panel panel-lilac">
@@ -52,25 +49,19 @@
                            Módulo
                       </div>
                     </th>
-                    <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="Office">Selecionar
-                      </br>
-                      <!-- select all boxes -->
-                      <input type="checkbox" name="select-all" id="select-all" />Todo
-                    </th>
+                    <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="Office">Selecionar</th>
                   </tr>
                   </thead>
 
                   <tfoot><tr></tr></tfoot>
                   <tbody>
-                    {% for  modules in arrCourseToSelected %}
+                     {% for  modules in arrCourseToSelected %}
                     <tr role="row" class="odd">
                       <td>{{modules.modulo}}</td>
                       <td class="dt-body-center">
                         <div class="ckbox ckbox-lilac">
-                            <div class="ckbox ckbox-primary">
-                              <input id="form_{{modules.iecoId}}" {{modules.takeModulo}}  name="form[modules][{{modules.iecoId}}]" type="checkbox" value="{{modules.iecoId}}" class="display-hide">
-                              <label for="form_{{modules.iecoId}}"></label>
-                            </div>
+                            <input id="checkbox-disabled-checked2" checked="checked" type="checkbox" disabled="disabled">
+                            <label for="checkbox-disabled-checked2"></label>
                         </div>
                       </td>
                     </tr>
@@ -81,13 +72,13 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-            {{form_widget(form.save)}}
+            
         </div>
 
     </div><!-- /.modal-content -->
 
 	<!--/form-->
-  {{form_end(form)}}
+  
 </div><!-- /.modal-dialog -->
 <script>
   $(document).ready( function(){
@@ -179,19 +170,4 @@
 
 
   };
-
-
-
-  $('#select-all').click(function(event) {   
-    if(this.checked) {
-        // Iterate each checkbox
-        $(':checkbox').each(function() {
-            this.checked = true;                        
-        });
-    } else {
-        $(':checkbox').each(function() {
-            this.checked = false;                       
-        });
-    }
-});
 </script>

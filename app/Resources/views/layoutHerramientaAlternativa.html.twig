@@ -621,6 +621,18 @@
                             </ul>
                         </li>
                     {% endif %}
+                    {% if app.session.get('roluser') == 2 %}{#MAESTRO#}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-users"></i></span>
+                                <span class="text">Gestión</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{path('herramienta_alter_notas_maestro_index')}}">Registro de Notas </a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
                 </ul><!-- /.sidebar-menu -->
                 <!--/ End left navigation - menu -->
 

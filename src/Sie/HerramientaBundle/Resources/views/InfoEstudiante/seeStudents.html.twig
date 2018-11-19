@@ -172,7 +172,8 @@
 
                                 </td>
                                 <td  align="">
-                                  
+
+
                                   {% set styleButton = 'info' %}
                                       {% if data.registroFinalizado %}
                                         {% set styleButton = 'success' %}
@@ -198,13 +199,12 @@
                                             (app.session.get('ue_humanistica_web') and app.session.get('ue_humanistica') ) or
                                             (app.session.get('ue_modular') and app.session.get('ue_humanistica') or false )
                                           %}
-                                            {# DESCOMENTAR PARA VER EL NUEVO MODULO RUDE
 
                                              <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
                                                 <button type="button" class="btn btn-circle btn-warning " data-toggle="modal" data-target=".bs-example-modal-table" onclick="rude('{{infoUe}}','{{jsnInfoStudent}}',0);" >
                                                     <i class="fa fa-user"></i>
                                                 </button>
-                                            </div> #}
+                                            </div>
                                           {% endif %}
 
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">

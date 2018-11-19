@@ -15,6 +15,8 @@ use Sie\TramitesBundle\Controller\DefaultController as defaultTramiteController;
 use Sie\TramitesBundle\Controller\TramiteController as tramiteController;
 use Sie\TramitesBundle\Controller\DocumentoController as documentoController;
 
+
+
 class TramiteDetalleController extends Controller {
 
     /**
@@ -1678,7 +1680,8 @@ class TramiteDetalleController extends Controller {
                     if ($msg[0]) {
                         if ($flujoSeleccionado == 'Adelante'){
                             $tramiteDetalleId = $this->setProcesaTramiteSiguiente($tramiteId, $id_usuario, $obs, $em);
-                            $msgContenidoDocumento = $documentoController->setDocumento($tramiteId, $id_usuario, $documentoTipoId, $numCarton, $serCarton, $fechaCarton);
+                            $documentoFirmaId = 0;
+                            $msgContenidoDocumento = $documentoController->setDocumento($tramiteId, $id_usuario, $documentoTipoId, $numCarton, $serCarton, $fechaCarton, $documentoFirmaId);
                         }
 
                         if ($flujoSeleccionado == 'Atras'){
@@ -3193,7 +3196,7 @@ class TramiteDetalleController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-
+        
         if ($request->isMethod('POST')) {
             $form = $request->get('form');
             if ($form) {
@@ -3231,9 +3234,14 @@ class TramiteDetalleController extends Controller {
                     $documentoController = new documentoController();
                     $documentoController->setContainer($this->container);
 
+                    $documentoTipoId = 1;
+                    $rolPermitido = 16;
+                    $departamentoCodigo = $documentoController->getCodigoLugarRol($id_usuario,$rolPermitido);
+                    $entityFirma = $documentoController->getPersonaFirmaAutorizada($departamentoCodigo,$documentoTipoId);
+
                     $entityDocumentoSerie = $documentoController->getSerieTipo('1');
                     $entituDocumentoGestion = $documentoController->getGestionTipo('1');
-
+                    
                     $datosBusqueda = base64_encode(serialize($form));
 
                     return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:dipHumImpresionIndex.html.twig', array(
@@ -3241,6 +3249,7 @@ class TramiteDetalleController extends Controller {
                         'titulo' => 'Impresión',
                         'subtitulo' => 'Diploma Humanístico',
                         'listaParticipante' => $entityParticipantes,
+                        'listaFirma' => $entityFirma,
                         'series' => $entityDocumentoSerie,
                         'gestiones' => $entituDocumentoGestion,
                         'infoAutorizacionUnidadEducativa' => $entityAutorizacionInstitucionEducativa,
@@ -3299,6 +3308,9 @@ class TramiteDetalleController extends Controller {
 
         $info = $request->get('_info');
         $form = unserialize(base64_decode($info));
+
+        $institucionEducativaId = $form['sie'];
+        $gestionId = $form['gestion'];
         
         if ($request->isMethod('POST')) {
             $em = $this->getDoctrine()->getManager();
@@ -3319,6 +3331,8 @@ class TramiteDetalleController extends Controller {
                 }
                 $numeroCarton = $request->get('numeroSerie');
                 $serieCarton = $request->get('serie');
+                $documentoFirmaId = base64_decode($request->get('firma'));
+                //dump($request->get('firma'));die;
                 //$gestionCarton = $request->get('gestion');
                 $fechaCarton = new \DateTime($request->get('fechaSerie'));
                 //$fechaCarton = $fechaActual;
@@ -3329,83 +3343,99 @@ class TramiteDetalleController extends Controller {
                     return $this->redirectToRoute('tramite_detalle_diploma_humanistico_impresion_lista');
                 }
 
+                $documentoController = new documentoController();
+                $documentoController->setContainer($this->container);
+
+                if ($serieCarton == 'A' or $serieCarton == 'A1' or $serieCarton == 'B' or $serieCarton == 'C' or $serieCarton == 'C1' or $serieCarton == 'D'){
+                    $numCarton =$numeroCarton;
+                } else {
+                    $numCarton = str_pad($numeroCarton, 6, "0", STR_PAD_LEFT);
+                }
+                $serCarton = $serieCarton;
+                
+                $entidadDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->findOneBy(array('id' => $documentoFirmaId));
+                //dump($documentoFirmaId);die;
+                if (count($entidadDocumentoFirma)>0) {
+                    $firmaPersonaId = $entidadDocumentoFirma->getPersona()->getId();    
+                    // $departamentoCodigo = $documentoController->getCodigoLugarRol($id_usuario,$rolPermitido);
+                    $valFirmaDisponible =  $documentoController->verFirmaAutorizadoDisponible($firmaPersonaId,count($tramites),$documentoTipoId);
+
+                } else {
+                    $valFirmaDisponible = array(0 => true, 1 => '');
+                    // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No se encontro la firma ingresada, intente nuevamente'));
+                    // return $this->redirectToRoute('tramite_detalle_diploma_humanistico_impresion_lista');
+                }
+                
                 $tramiteController = new tramiteController();
                 $tramiteController->setContainer($this->container);
 
                 $messageCorrecto = "";
                 $messageError = "";
-                
-                foreach ($tramites as $tramite) {
-                    $tramiteId = (Int) base64_decode($tramite);
-                    $entidadTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $tramiteId));
-                    $estudianteInscripcionId = $entidadTramite->getEstudianteInscripcion()->getId();
-                    $entidadEstudianteInscripcion = $entidadTramite->getEstudianteInscripcion();
-                    //$entidadEstudianteInscripcion = $em->getRepository('SieAppWebBundle:estudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
-                    $msgContenido = "";
-                    $msgContenidoDocumento = "";
-                    if(count($entidadEstudianteInscripcion)>0){
-                        $participante = trim($entidadEstudianteInscripcion->getEstudiante()->getPaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getMaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getNombre());
-                        $participanteId =  $entidadEstudianteInscripcion->getEstudiante()->getId();
-                        $institucionEducativaId = $form['sie'];
-                        $gestionId = $form['gestion'];
+                if ($valFirmaDisponible[0]){
+                    foreach ($tramites as $tramite) {
+                        $tramiteId = (Int) base64_decode($tramite);
+                        $entidadTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $tramiteId));
+                        $estudianteInscripcionId = $entidadTramite->getEstudianteInscripcion()->getId();
+                        $entidadEstudianteInscripcion = $entidadTramite->getEstudianteInscripcion();
+                        //$entidadEstudianteInscripcion = $em->getRepository('SieAppWebBundle:estudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
+                        $msgContenido = "";
+                        $msgContenidoDocumento = "";
+                        if(count($entidadEstudianteInscripcion)>0){
+                            $participante = trim($entidadEstudianteInscripcion->getEstudiante()->getPaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getMaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getNombre());
+                            $participanteId =  $entidadEstudianteInscripcion->getEstudiante()->getId();
 
-                        $msg = array('0'=>true, '1'=>$participante);
+                            $msg = array('0'=>true, '1'=>$participante);
 
-                        if ($flujoSeleccionado == 'Adelante'){
-                            // VALIDACION DE SOLO UN DIPLOMA BACHILLER HUMANISTICO POR ESTUDIANTE (RUDE)
-                            $valDocumentoEstudiante = $tramiteController->getDipHumDocumentoEstudiante($participanteId);
-                            if(count($valDocumentoEstudiante) > 0){
-                                $msgContenido = 'ya cuenta con el Diploma de Bachiller Humanístico '.$valDocumentoEstudiante[0]['documento_serie_id'];
+                            if ($flujoSeleccionado == 'Adelante'){
+                                // VALIDACION DE SOLO UN DIPLOMA BACHILLER HUMANISTICO POR ESTUDIANTE (RUDE)
+                                $valDocumentoEstudiante = $tramiteController->getDipHumDocumentoEstudiante($participanteId);
+                                if(count($valDocumentoEstudiante) > 0){
+                                    $msgContenido = 'ya cuenta con el Diploma de Bachiller Humanístico '.$valDocumentoEstudiante[0]['documento_serie_id'];
+                                }
+
+                                // $documentoController = new documentoController();
+                                // $documentoController->setContainer($this->container);
+                                
+                                $msgContenidoDocumento = $documentoController->getDocumentoValidación($numCarton, $serCarton, $fechaCarton, $id_usuario, $rolPermitido, $documentoTipoId);
                             }
 
-                            $documentoController = new documentoController();
-                            $documentoController->setContainer($this->container);
-
-                            if ($serieCarton == 'A' or $serieCarton == 'A1' or $serieCarton == 'B' or $serieCarton == 'C' or $serieCarton == 'C1' or $serieCarton == 'D'){
-                                $numCarton =$numeroCarton;
+                            if($msgContenido != ""){
+                                if($msgContenidoDocumento != ""){
+                                    $msg = array('0'=>false, '1'=>$participante.' ('.$msgContenido.', '.$msgContenidoDocumento.')');
+                                } else {
+                                    $msg = array('0'=>false, '1'=>$participante.' ('.$msgContenido.')');
+                                }
                             } else {
-                                $numCarton = str_pad($numeroCarton, 6, "0", STR_PAD_LEFT);
-                            }
-                            $serCarton = $serieCarton;
-                            
-                            $msgContenidoDocumento = $documentoController->getDocumentoValidación($numCarton, $serCarton, $fechaCarton, $id_usuario, $rolPermitido, $documentoTipoId);
-                            
-                        }
-
-                        if($msgContenido != ""){
-                            if($msgContenidoDocumento != ""){
-                                $msg = array('0'=>false, '1'=>$participante.' ('.$msgContenido.', '.$msgContenidoDocumento.')');
-                            } else {
-                                $msg = array('0'=>false, '1'=>$participante.' ('.$msgContenido.')');
+                                if($msgContenidoDocumento != ""){
+                                    $msg = array('0'=>false, '1'=>$participante.' ('.$msgContenidoDocumento.')');
+                                }
                             }
                         } else {
-                            if($msgContenidoDocumento != ""){
-                                $msg = array('0'=>false, '1'=>$participante.' ('.$msgContenidoDocumento.')');
+                            $msg = array('0'=>false, '1'=>'Estudiante no encontrado');
+                        }
+
+                        if ($msg[0]) {
+                            if ($flujoSeleccionado == 'Adelante'){
+                                $tramiteDetalleId = $this->setProcesaTramiteSiguiente($tramiteId, $id_usuario, $obs, $em);
+                                $msgContenidoDocumento = $documentoController->setDocumento($tramiteId, $id_usuario, $documentoTipoId, $numCarton, $serCarton, $fechaCarton, $documentoFirmaId);
                             }
+
+                            if ($flujoSeleccionado == 'Atras'){
+                                $tramiteDetalleId = $this->setProcesaTramiteAnterior($tramiteId, $id_usuario, $obs, $em);
+                            }
+
+                            if ($flujoSeleccionado == 'Anular'){
+                                $tramiteDetalleId = $this->setProcesaTramiteAnula($tramiteId, $id_usuario, $obs, $em);
+                            }
+
+                            $messageCorrecto = ($messageCorrecto == "") ? $msg[1] : $messageCorrecto.'; '.$msg[1];
+                        } else {
+                            $messageError = ($messageError == "") ? $msg[1] : $messageError.'; '.$msg[1];
                         }
-                    } else {
-                        $msg = array('0'=>false, '1'=>'Estudiante no encontrado');
+                        $numCarton = $numCarton + 1;
                     }
-
-                    if ($msg[0]) {
-                        if ($flujoSeleccionado == 'Adelante'){
-                            $tramiteDetalleId = $this->setProcesaTramiteSiguiente($tramiteId, $id_usuario, $obs, $em);
-                            $msgContenidoDocumento = $documentoController->setDocumento($tramiteId, $id_usuario, $documentoTipoId, $numCarton, $serCarton, $fechaCarton);
-                        }
-
-                        if ($flujoSeleccionado == 'Atras'){
-                            $tramiteDetalleId = $this->setProcesaTramiteAnterior($tramiteId, $id_usuario, $obs, $em);
-                        }
-
-                        if ($flujoSeleccionado == 'Anular'){
-                            $tramiteDetalleId = $this->setProcesaTramiteAnula($tramiteId, $id_usuario, $obs, $em);
-                        }
-
-                        $messageCorrecto = ($messageCorrecto == "") ? $msg[1] : $messageCorrecto.'; '.$msg[1];
-                    } else {
-                        $messageError = ($messageError == "") ? $msg[1] : $messageError.'; '.$msg[1];
-                    }
-                    $numeroCarton = $numeroCarton + 1;
+                } else {
+                    $messageError = $valFirmaDisponible[1];
                 }
                 if($messageCorrecto!=""){
                     $em->getConnection()->commit();
@@ -3511,7 +3541,7 @@ class TramiteDetalleController extends Controller {
                 $sie = $form['sie'];
                 $ges = $form['gestion'];
             }
-            
+          
             $tipLis = 5;
             $ids = "";
             $rolPermitido = 16;
@@ -3533,6 +3563,9 @@ class TramiteDetalleController extends Controller {
             $response->headers->set('Content-Transfer-Encoding', 'binary');
             $response->headers->set('Pragma', 'no-cache');
             $response->headers->set('Expires', '0');
+
+            //dump($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&');die;
+            
             return $response;
         } catch (\Doctrine\ORM\NoResultException $exc) {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al generar el listado, intente nuevamente'));

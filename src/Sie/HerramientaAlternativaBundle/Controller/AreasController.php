@@ -10,6 +10,8 @@ use Sie\AppWebBundle\Entity\SuperiorModuloPeriodo;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOfertaMaestro;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sie\AppWebBundle\Entity\EstudianteAsignatura;
+use Sie\AppWebBundle\Entity\AltModuloemergente;
+use Sie\AppWebBundle\Entity\SuperiorModuloTipo;
 
 /**
  * EstudianteInscripcion controller.
@@ -34,24 +36,56 @@ class AreasController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
+        //get the send values
         $infoUe = $request->get('infoUe');
-        $data = $this->getAreas($infoUe);
+        $arrInfoUe = unserialize($infoUe);
+        
+        // dump($arrInfoUe);die;
+        // check if the course is PRIMARIA
+        if( $this->get('funciones')->validatePrimaria($this->session->get('ie_id'),$this->session->get('currentyear'),$infoUe)
+          ){
+            $primaria = true;
+            //set the All data about curricula on the course
+            //$createNewCurricula = $this->get('funciones')->loadCurriculaCurso($infoUe);
+            // $templateToView = 'indexprimaria.html.twig';
+        }else{
+            $primaria = false;
+            // $templateToView = 'index.html.twig';
+        }
+        $templateToView = 'index.html.twig';
 
-        return $this->render('SieHerramientaAlternativaBundle:Areas:index.html.twig', $data);
+        $data = $this->getAreas($infoUe);
+        $data['primaria'] = $primaria;
+        
+        return $this->render('SieHerramientaAlternativaBundle:Areas:'.$templateToView, $data);
+
+        
     }
 
     public function areasaddAction(Request $request) {
+
         $infoUe = $request->get('infoUe');
         $idAsignatura = $request->get('ida');
         $gestion = $this->session->get('ie_gestion');
 
         $aInfoUeducativa = unserialize($infoUe);
+
         $idCurso = $aInfoUeducativa['ueducativaInfoId']['iecId'];
         
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
 //        dump($idCurso);
 //        die('f');
+        if( $this->get('funciones')->validatePrimaria($this->session->get('ie_id'),$this->session->get('currentyear'),$infoUe)
+          ){
+            $primaria = true;
+            //set the All data about curricula on the course
+            //$createNewCurricula = $this->get('funciones')->loadCurriculaCurso($infoUe);
+            // $templateToView = 'indexprimaria.html.twig';
+        }else{
+            $primaria = false;
+            // $templateToView = 'index.html.twig';
+        }
         try {
             $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($idCurso);
             //$sip = $curso->getSuperiorInstitucioneducativaPeriodo();
@@ -75,6 +109,93 @@ class AreasController extends Controller {
             $em->getConnection()->commit();
             // Mostramos nuevamente las areas del curso
             $data = $this->getAreas($infoUe);
+            $data['primaria'] = $primaria;
+            return $this->render('SieHerramientaAlternativaBundle:Areas:index.html.twig', $data);
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+            return $response->setData(array('mensaje' => 'Proceso detenido! se ha detectado inconsistencia de datos!' . $ex));
+        }
+    }
+
+    public function areaemergenteaddAction(Request $request) {
+
+        $infoUe = $request->get('infoUe');
+        $gestion = $this->session->get('ie_gestion');
+
+        $aInfoUeducativa = unserialize($infoUe);
+        $idCurso = $aInfoUeducativa['ueducativaInfoId']['iecId'];
+        
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+
+        if( $this->get('funciones')->validatePrimaria($this->session->get('ie_id'),$this->session->get('currentyear'),$infoUe)
+          ){
+            $primaria = true;
+            //set the All data about curricula on the course
+            //$createNewCurricula = $this->get('funciones')->loadCurriculaCurso($infoUe);
+            // $templateToView = 'indexprimaria.html.twig';
+        }else{
+            $primaria = false;
+            // $templateToView = 'index.html.twig';
+        }
+
+        try {
+            $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($idCurso);
+            
+            $sip = $curso->getSuperiorInstitucioneducativaPeriodo();
+
+            $moduloPeriodo = $em->createQueryBuilder()
+                ->select('l')
+                ->from('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo = g.id')
+                ->innerJoin('SieAppWebBundle:SuperiorModuloPeriodo', 'k', 'WITH', 'g.id = k.institucioneducativaPeriodo')
+                ->innerJoin('SieAppWebBundle:SuperiorModuloTipo', 'l', 'WITH', 'l.id = k.superiorModuloTipo ')
+                ->where('h.id = :idCurso')
+                ->setParameter('idCurso', $idCurso)
+                ->getQuery()
+                ->getResult();
+
+            $sw = false;
+            foreach ($moduloPeriodo as $key => $value) {
+                if ($value->getCodigo() == '415') {
+                    $sw = true;
+                }
+            }
+                
+            if(!$sw){
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_tipo');")->execute();
+                $newSuperiorModuloTipo = new SuperiorModuloTipo();
+                $newSuperiorModuloTipo->setModulo('MÓDULO EMERGENTE');
+                $newSuperiorModuloTipo->setObs('');
+                $newSuperiorModuloTipo->setCodigo('415');
+                $newSuperiorModuloTipo->setSigla('MIE');
+                $newSuperiorModuloTipo->setOficial(1);
+                $newSuperiorModuloTipo->setSuperiorAreaSaberesTipo($em->getRepository('SieAppWebBundle:SuperiorAreaSaberesTipo')->find(1));
+                $em->persist($newSuperiorModuloTipo);
+                $em->flush();
+
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
+                $smp = new SuperiorModuloPeriodo();
+                $smp->setSuperiorModuloTipo($newSuperiorModuloTipo);
+                $smp->setInstitucioneducativaPeriodo($sip);
+                $smp->setHorasModulo(0);
+                $em->persist($smp);
+                $em->flush();
+
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
+                $ieco = new InstitucioneducativaCursoOferta();
+                $ieco->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find('0'));
+                $ieco->setInsitucioneducativaCurso($curso);
+                $ieco->setSuperiorModuloPeriodo($smp);
+                $ieco->setHorasmes(0);
+                $em->persist($ieco);
+                $em->flush();
+            }
+
+            $em->getConnection()->commit();
+            // Mostramos nuevamente las areas del curso
+            $data = $this->getAreas($infoUe);
+            $data['primaria'] = $primaria;
             return $this->render('SieHerramientaAlternativaBundle:Areas:index.html.twig', $data);
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
@@ -86,10 +207,25 @@ class AreasController extends Controller {
         $infoUe = $request->get('infoUe');
         $coid = $request->get('idco');
         $smpid = $request->get('smpId');
-
+        
         // eliminamos el area del curso
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
+
+        if( $this->get('funciones')->validatePrimaria($this->session->get('ie_id'),$this->session->get('currentyear'),$infoUe)
+          ){
+            $primaria = true;
+            //set the All data about curricula on the course
+            //$createNewCurricula = $this->get('funciones')->loadCurriculaCurso($infoUe);
+            // $templateToView = 'indexprimaria.html.twig';
+        }else{
+            $primaria = false;
+            // $templateToView = 'index.html.twig';
+        }
+        
+        $smp = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($smpid);
+        $smt = $smp->getSuperiorModuloTipo();
+
         try {
             
             $iecoen = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($coid);
@@ -111,12 +247,17 @@ class AreasController extends Controller {
             }
 
             $em->remove($iecoen);
+            if ($smt->getCodigo() == '415') {
+                $em->remove($smp);
+                $em->remove($smt);
+            }
             
             $em->flush();
 
             $em->getConnection()->commit();
             // Mostramos nuevamente las areas del curso
             $data = $this->getAreas($infoUe);
+            $data['primaria'] = $primaria;
             return $this->render('SieHerramientaAlternativaBundle:Areas:index.html.twig', $data);
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
@@ -125,7 +266,7 @@ class AreasController extends Controller {
         }
     }
 
-    public function getAreas($infoUe) {        
+    public function getAreas($infoUe) {
         $aInfoUeducativa = unserialize($infoUe);
         $iecId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
         //$iecId = '';
@@ -207,6 +348,7 @@ class AreasController extends Controller {
                 ->innerJoin('SieAppWebBundle:SuperiorModuloTipo', 'k', 'WITH', 'k.id = l.superiorModuloTipo')              
                 ->where('h.id = :idCurso')
                 ->setParameter('idCurso', $iecId)
+                ->orderBy('k.id', 'ASC')
                 ->getQuery()
                 ->getResult();
         
@@ -309,7 +451,7 @@ class AreasController extends Controller {
         $gestion = $this->session->get('ie_gestion');
         $sucursal = $this->session->get('ie_suc_id');
         $periodo = $this->session->get('ie_per_cod');
-        
+
         $em = $this->getDoctrine()->getManager();
 
         $cursoOferta = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($ieco);
@@ -428,6 +570,76 @@ class AreasController extends Controller {
         }
         $response = new JsonResponse();
         return $response->setData(array('ieco'=>$ieco[0]));
+    }
+
+    public function areaEmergenteAction(Request $request) {
+        $smpid = $request->get('smpid');
+
+        $sie = $this->session->get('ie_id');
+        $gestion = $this->session->get('ie_gestion');
+        $sucursal = $this->session->get('ie_suc_id');
+        $periodo = $this->session->get('ie_per_cod');
+
+        $em = $this->getDoctrine()->getManager();
+
+        $superiorModuloPeriodo = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($smpid);
+
+        $superiorModuloTipo = $superiorModuloPeriodo->getSuperiorModuloTipo();
+
+        return $this->render($this->session->get('pathSystem') . ':Areas:emergente.html.twig', array(
+                'smpid' => $smpid,
+                'modulo' => $superiorModuloTipo,
+            )
+        );
+    }
+
+    public function emergenteAsignarAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $id_usuario = $this->session->get('userId');
+        $smpid = $request->get('smpid');
+        $smtid = $request->get('smtid');
+        $emergente = mb_strtoupper($request->get('emergente'), 'utf-8');
+        
+        $moduloEmergente = $em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find($smtid);
+
+        if($moduloEmergente){
+            $moduloEmergente->setModulo($emergente);
+            $em->persist($moduloEmergente);
+            $em->flush();
+        }
+
+        $response = new JsonResponse();
+        return $response->setData(array(
+            'smpid'=>$smpid,
+            'smtid'=>$smtid,
+            'emergente'=>$emergente
+        ));
+    }
+
+    public function registerNameModIntEmerAction(Request $request){
+        // get the send values
+        $infoUe = $request->get('infoUe');
+        $nameModIntEmer = $request->get('nameModIntEmer');
+        $codMIE = $request->get('codMIE');
+        try {
+            $em =  $this->getDoctrine()->getManager();
+            $objSupModTipo = $em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find($codMIE);
+            if($objSupModTipo){
+                $objSupModTipo->setModulo(mb_strtoupper(trim($nameModIntEmer), 'UTF-8'));
+                $em->persist($objSupModTipo);
+                $em->flush();
+                $arrResponse = array('status'=>true, 'message'=>'changed');
+            }else{
+                $arrResponse = array('status'=>false, 'message'=>'NO changed');
+            }
+            
+        } catch (Exception $e) {
+            
+        }
+        
+        $response = new JsonResponse();
+        return $response->setData($arrResponse);
+        
     }
 
 }
