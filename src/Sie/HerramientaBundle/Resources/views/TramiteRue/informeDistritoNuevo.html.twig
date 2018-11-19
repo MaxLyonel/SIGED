@@ -51,11 +51,9 @@
 								{{ form_widget(form.informe, {'attr':{'class':'form-control'} }) }}
 							</div>
                             <div class="form-group col-md-6">
-                                <div id='sandbox-container'>
                                 {{ form_label(form.fechainforme) }}
-								{{ form_widget(form.fechainforme, {'attr':{'class':'form-control','autocomplete':'off'} }) }}
-                                </div>
-							</div>
+								{{ form_widget(form.fechainforme, {'attr':{'class':'form-control'} }) }}
+                            </div>
                             </div>
                             <div class="col-md-12">
                             <div class="form-group col-md-6">
@@ -79,11 +77,10 @@
 {% endblock %}
 {% block javascripts %}
     <script>
-        $('#sandbox-container input').datepicker({
-            autoclose: true,
-            todayHighlight: true,
-            format: 'dd-mm-yyyy',
-            language: "es"
-        });
+       $(function() {
+    $('#datetimepicker4').datetimepicker({
+      pickTime: false
+    });
+  });
     </script>
 {% endblock %}

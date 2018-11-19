@@ -18,7 +18,7 @@ use Sie\AppWebBundle\Entity\Tramite;
 use Sie\AppWebBundle\Entity\TramiteDetalle;
 use Sie\AppWebBundle\Entity\WfSolicitudTramite;
 use Sie\AppWebBundle\Entity\WfUsuarioFlujoProceso;
-use Sie\HerramientaBundle\Controller\WfTramiteController;
+use Sie\AppWebBundle\Controller\WfTramiteController;
 
 
 
@@ -112,6 +112,7 @@ class TramiteRueController extends Controller
         ->setAction($this->generateUrl('tramite_rue_recepcion_distrito_guardar'))
         ->add('flujoproceso', 'hidden', array('data' =>$tarea ))
         ->add('flujotipo', 'hidden', array('data' =>$flujotipo ))
+        //->add('idlugarusuario', 'hidden', array('data' =>$idlugarusuario ))
        ->add('tipoeducacion','entity',array('label'=>'Tipo de educación','required'=>true,'class'=>'SieAppWebBundle:InstitucioneducativaTipo','query_builder'=>function(EntityRepository $e){
             return $e->createQueryBuilder('e')->where('e.id not in (:id)')->setParameter('id',array(0,3,7,8,9,10))->orderBy('e.id','ASC');},'property'=>'descripcion','empty_value' => 'Seleccione tipo de educación'))
         ->add('tramitetipo','entity',array('label'=>'Tipo de trámite','required'=>true,'class'=>'SieAppWebBundle:TramiteTipo','query_builder'=>function(EntityRepository $tr){
@@ -130,26 +131,12 @@ class TramiteRueController extends Controller
         return $form;
     }
         
-    /*public function recepcionDistritoAction(Request $request)
-    {
-        $this->session = $request->getSession();
-        //dump($this->session);die;
-        $usuario = $this->session->get('userId');
-        $rol = $this->session->get('roluser');
-        //validation if the user is logged
-        if (!isset($usuario)) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-
-        $data = $this->tramiteTarea(39,39,6,$usuario,$rol,'');
-        return $this->render('SieHerramientaBundle:TramiteRue:recepcionDistrito.html.twig', $data);
-    }*/
-
     public function recepcionDistritoNuevoAction(Request $request,$id)
     {
         $this->session = $request->getSession();
         //dump($this->session);die;
         $id_usuario = $this->session->get('userId');
+        $idlugarusuario = $this->session->get('roluserlugarid');
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -161,28 +148,12 @@ class TramiteRueController extends Controller
         $flujotipo = $flujoproceso[0]->getFlujoTipo()->getId();
         $tarea = $flujoproceso[0]->getId();
         $recepcionForm = $this->createRecepcionForm($flujotipo,$tarea); 
+        //dump($recepcionForm);die;
         //return $this->render('SieHerramientaBundle:FlujoProceso:index1.html.twig');
         return $this->render('SieHerramientaBundle:TramiteRue:recepcionDistritoNuevo.html.twig', array(
             'form' => $recepcionForm->createView(),
         ));
     }
-
-    /*public function formNuevoAction(Request $request)
-    {
-        //dump($request);die;
-        $this->session = $request->getSession();
-        //dump($this->session);die;
-        $id_usuario = $this->session->get('userId');
-        //validation if the user is logged
-        if (!isset($id_usuario)) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-        $recepcionFormNuevo = $this->createRecepcionForm1($request->get('tramitetipo'),$request->get('tipoeducacion')); 
-        return $this->render('SieHerramientaBundle:TramiteRue:recepcionDistritoFormNuevo.html.twig', array(
-            'form_nuevo' => $recepcionFormNuevo->createView(),'tipoeducacion'=>$request->get('tipoeducacion')
-        ));
-        
-    }*/
 
     public function recepcionDistritoGuardarAction(Request $request)
     {
@@ -193,12 +164,13 @@ class TramiteRueController extends Controller
         $datos = json_encode($form);
         $usuario = $this->session->get('userId');
         $rol = $this->session->get('roluser');
-        $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$usuario,'rolTipo'=>$rol));            
-        $idlugarusuario = $usuariorol[0]->getLugarTipo()->getId();
-        //dump($idlugarusuario);die;
+        //$usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$usuario,'rolTipo'=>$rol));            
+        $ie_lugardistrito = $this->session->get('roluserlugarid');
+        $ie_lugarlocalidad = "";
         if ($form['idrue']){
             $ie = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['idrue']);
-            $ie_lugardistrito = $ie->getLeJuridicciongeografica()->getLugarTipoIdDistrito();
+            //$ie_lugardistrito = $ie->getLeJuridicciongeografica()->getLugarTipoIdDistrito();
+            $ie_lugarlocalidad = $ie->getLeJuridicciongeografica()->getLugarTipoLocalidad()->getId();
         }
         //dump($ie_lugardistrito);die;
         if (!$form['idrue'] or ($ie_lugardistrito == $idlugarusuario)){
@@ -212,21 +184,17 @@ class TramiteRueController extends Controller
             //dump($datos);die;
             $WfTramiteController = new WfTramiteController();
             $WfTramiteController->setContainer($this->container);
-            $mensaje = $WfTramiteController->guardarTramiteNuevo($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,'','',$datos,$idlugarusuario);
+            $mensaje = $WfTramiteController->guardarTramiteNuevo($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,'','',$datos,$ie_lugarlocalidad,$ie_lugardistrito);
             $request->getSession()
                 ->getFlashBag()
                 ->add('exito', $mensaje);
         }else{
-
             $request->getSession()
                 ->getFlashBag()
                 ->add('error', "La unidad educativa no es de su jurisdicción");
         }
-        
-        //$recepcionForm = $this->createRecepcionForm(); 
-        //return $this->render('SieHerramientaBundle:FlujoProceso:index1.html.twig');
         return $this->redirectToRoute('wf_tramite_index');
-        //return $this->redirect($this->generateUrl('tramite_rue_recepcion_distrito'));
+    
     }
     /*public function informeDistritoAction(Request $request)
     {
@@ -257,6 +225,14 @@ class TramiteRueController extends Controller
         $em = $this->getDoctrine()->getManager();
         $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($id);
         $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
+        $wfdatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
+                ->select('wfd')
+                ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
+                ->where('td.tramite='.$tramite->getId())
+                ->andWhere("wfd.esValido=true")
+                ->getQuery()
+                ->getResult();
+        //dump($wfdatos);die;
         if ($tramite->getInstitucioneducativa()){
             $ie=$tramite->getInstitucioneducativa()->getInstitucioneducativa();
             $idrue = $tramite->getInstitucioneducativa()->getId();
@@ -264,16 +240,18 @@ class TramiteRueController extends Controller
             $dependenciatipo = $tramite->getInstitucioneducativa()->getDependenciaTipo()->getId();
             
         }else{
-            $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->findBy(array('tramite'=>$id));
-            $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
-            //sdump($datos);die;
-            $ie = $datos['institucionEducativa'];
-            $idrue = "";
-            $tipoeducacion = $datos['tipoeducacion'];
-            $dependenciatipo = $datos['dependenciaTipo'];
-            
+            //$wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->findBy(array('tramiteDetalle'=>$tramiteDetalle->getId(),'esValido'=>true));
+            foreach($wfdatos as $d){
+                if ($d->getTramiteDetalle()->getFlujoProceso()->getOrden()==1){
+                    $datos = json_decode($d->getDatos(),true);
+                    //dump($datos);die;
+                    $ie = $datos['institucionEducativa'];
+                    $idrue = "";
+                    $tipoeducacion = $datos['tipoeducacion'];
+                    $dependenciatipo = $datos['dependenciaTipo'];
+                }
+            }
         }
-        
         //dump($flujoproceso);die;
         $flujotipo = $tramite->getFlujoTipo()->getId();
         $tarea = $tramiteDetalle->getFlujoProceso()->getId();
@@ -293,12 +271,7 @@ class TramiteRueController extends Controller
             ->add('flujoproceso', 'hidden', array('data' =>$tarea ))
             ->add('flujotipo', 'hidden', array('data' =>$flujotipo ))
             ->add('tramite', 'hidden', array('data' =>$idtramite ))
-            ->add('institucioneducativa','hidden',array('label'=>'Unidad educativa','data'=>$ie,'read_only'=>true))
-            ->add('idrue','hidden',array('label'=>'Código RUE','data'=>$idrue,'read_only'=>true))
-            ->add('tipotramite','hidden',array('label'=>'Tipo de Tramite','data'=>$tipotramite,'read_only'=>true))
-            ->add('tipoeducacion','hidden',array('label'=>'Tipo de Educación','data'=>$tipoeducacion,'read_only'=>true))
-            ->add('dependenciaTipo','hidden',array('label'=>'Dependencia','data'=>$dependenciatipo,'read_only'=>true))
-            //->add('requisitos','choice',array('label'=>'Requisitos','required'=>false,'read_only'=>true, 'multiple' => true,'expanded' => true,'choices'=>array('legal' => 'Legal','administrativo' => 'Administrativo','pedagogico' => 'Técnico pedagógico','infra'=>'Infraestructura')))
+            ->add('idrue','hidden',array('data'=>$idrue))
             ->add('informe','text',array('label'=>'Nro. de Informe','attr' => array('data-mask'=>'0000/0000', 'placeholder'=>'0000/YYYY','maxlength' => '9')))
             ->add('fechainforme', 'text', array('label' => 'Fecha de Informe','required' => true, 'attr' => array('placeholder' => 'dd-mm-yyyy')))
             ->add('observacion','textarea',array('label'=>'Observación'))
@@ -307,8 +280,33 @@ class TramiteRueController extends Controller
         return $form;
     }
  
+    public function obtienelugar($idtramite)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
+        $lugar = array();
+        if ($tramite->getInstitucioneducativa()){
+            $lugar['idlugarlocalidad'] = $tramite->getInstitucioneducativa()->getLeJuridicciongeografica()->getLugarTipoLocalidad()->getId();
+            $lugar['idlugardistrito'] = $tramite->getInstitucioneducativa()->getLeJuridicciongeografica()->getLugarTipoIdDistrito();
+            
+        }else{
+            $wfdatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
+                ->select('wfd')
+                ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
+                ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'fp.id = td.flujoProceso')
+                ->where('td.tramite='.$tramite->getId())
+                ->andWhere('wfd.esValido=true')
+                ->andWhere('fp.orden=1')
+                ->getQuery()
+                ->getResult();
+            $lugar['idlugarlocalidad'] = $wfdatos[0]->getLugarTipoLocalidadId();
+            $lugar['idlugardistrito'] = $wfdatos[0]->getLugarTipoDistritoId();
+        }
+        return $lugar;
+    }
     public function informeDistritoGuardarAction(Request $request)
     {
+        
         $form = $request->get('form');
         $em = $this->getDoctrine()->getManager();
         $datos = json_encode($form);
@@ -322,9 +320,10 @@ class TramiteRueController extends Controller
         $id_tabla = $form['idrue'];
         $observacion = $form['observacion'];
         $varevaluacion = "";
+        $lugar = $this->obtienelugar($idtramite);
         $WfTramiteController = new WfTramiteController();
         $WfTramiteController->setContainer($this->container);
-        $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos);
+        $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
         $request->getSession()
                 ->getFlashBag()
                 ->add('exito', $mensaje);
@@ -334,7 +333,7 @@ class TramiteRueController extends Controller
         //return $this->redirect($this->generateUrl('tramite_rue_informe_distrito'));
     }
 
-    public function createRecepcionDepartamentalNuevoForm($flujotipo,$tarea,$ie,$idrue,$tipotramite,$tipoeducacion,$dependenciatipo,$dependenciatiponombre,$idtramite,$informe,$fechainforme)
+    public function createRecepcionDepartamentalNuevoForm($flujotipo,$tarea,$ie,$idrue,$tipotramite,$tipoeducacion,$dependenciatipo,$dependenciatiponombre,$idtramite)
     {
      //dump($tramitetipo);die;
         $tipoDoc = array('adjunto'=>'Adjunto','noadjunto'=>'No Adjunto','incompleto'=>'Incompleto');
@@ -351,8 +350,6 @@ class TramiteRueController extends Controller
         ->add('dependenciaTipo','hidden',array('label'=>'Dependencia','data'=>$dependenciatipo,'read_only'=>true))
         ->add('dependenciaTipoNombre','text',array('label'=>'Dependencia','data'=>$dependenciatiponombre,'read_only'=>true))
         //->add('requisitos','choice',array('label'=>'Requisitos','required'=>false,'read_only'=>true, 'multiple' => true,'expanded' => true,'choices'=>array('legal' => 'Legal','administrativo' => 'Administrativo','pedagogico' => 'Técnico pedagógico','infra'=>'Infraestructura')))
-        ->add('informe','hidden',array('data'=>$informe))
-        ->add('fechainforme', 'hidden', array('data'=>$fechainforme))
         ->add('observacion', 'textarea', array('label' => 'Observación','required'=>false,'attr' => array('class' => 'form-control')))
         /*->add('convenioTipo','entity',array('label'=>'Convenio','required'=>true,'class'=>'SieAppWebBundle:ConvenioTipo','query_builder'=>function(EntityRepository $ct){
             return $ct->createQueryBuilder('ct')->where('ct.id not in (:id)')->setParameter('id',array(0,99))->orderBy('ct.id','ASC');},'property'=>'convenio','empty_value' => 'Seleccione convenio'))*/
@@ -387,21 +384,21 @@ class TramiteRueController extends Controller
             'Director Distrital de Educación a nombre del estado'=>'Director Distrital de Educación a nombre del estado',
             'Sociedad Anónima o Sociedad de Responsabilidad Limitada'=>'Sociedad Anónima o Sociedad de Responsabilidad Limitada',
             'Sociedades Cooperativas'=>'Sociedades Cooperativas',
-            'Asociaciones o Fundaciones sin Fines de Lucro','Asociaciones o Fundaciones sin Fines de Lucro',
+            'Asociaciones o Fundaciones sin Fines de Lucro'=>'Asociaciones o Fundaciones sin Fines de Lucro',
             'Empresas Unipersonales'=>'Empresas Unipersonales',
-            'Iglesia','Iglesia'),'attr' => array('class' => 'form-control')))
+            'Iglesia'=>'Iglesia'),'attr' => array('class' => 'form-control')))
         ->add('solicitante_otro', 'text', array('label' => 'Otro:','attr' => array('class' => 'form-control')))
-        ->add('acta', 'choice', array('label' => 'Copia Notariada del Acta de Constitución','choices'=>$tipoDoc,'empty_value' => 'Seleccione','attr' => array('class' => 'form-control')))
-        ->add('estatutos', 'choice', array('label' => 'Copia Notariada de los estatutos de la U.E./CEA','choices'=>$tipoDoc,'empty_value' => 'Seleccione','attr' => array('class' => 'form-control')))
-        ->add('resolucion', 'choice', array('label' => 'Copia legalizada de la Resolución que otorga la personeria jurídica','choices'=>$tipoDoc,'empty_value' => 'Seleccione','attr' => array('class' => 'form-control')))
-        ->add('fundaempresa', 'choice', array('label' => 'Fotocopia legalizada de la matricula y resolucion de FUNDAEMPRESA','choices'=>$tipoDoc,'empty_value' => 'Seleccione','attr' => array('class' => 'form-control')))
-        ->add('nit', 'choice', array('label' => 'Fotocopia legalizada del NIT','choices'=>$tipoDoc,'empty_value' => 'Seleccione','attr' => array('class' => 'form-control')))
-        ->add('ci', 'choice', array('label' => 'Fotocopia legalizada del carnet de identidad del propietario','choices'=>$tipoDoc,'empty_value' => 'Seleccione','attr' => array('class' => 'form-control')))
-        ->add('balance', 'choice', array('label' => 'Balance de Apertura Sellado por el Servicio de Impuestos Nacionales','choices'=>$tipoDoc,'empty_value' => 'Seleccione','attr' => array('class' => 'form-control')))
-        ->add('ultimobalance', 'choice', array('label' => 'Último Balance Sellado por el Servicio de Impuestos Nacionales','choices'=>$tipoDoc,'empty_value' => 'Seleccione','attr' => array('class' => 'form-control')))
-        ->add('acreditacion', 'choice', array('label' => 'Acreditación del representante legal','choices'=>$tipoDoc,'empty_value' => 'Seleccione','attr' => array('class' => 'form-control')))
-        ->add('padron', 'choice', array('label' => 'Fotocopia legalizada del Padrón de funcionamiento municipal','choices'=>$tipoDoc,'empty_value' => 'Seleccione','attr' => array('class' => 'form-control')))
-        ->add('funcionamientoculto', 'choice', array('label' => 'Resolución de funcionamiento del Ministerio de Relaciones Exteriores y Culto','choices'=>$tipoDoc,'empty_value' => 'Seleccione','attr' => array('class' => 'form-control')))
+        ->add('acta', 'choice', array('label' => 'Copia Notariada del Acta de Constitución','multiple' => false,'expanded' => true,'choices'=>$tipoDoc,'empty_value' => 'Seleccione','attr' => array('class' => 'form-control')))
+        ->add('estatutos', 'choice', array('label' => 'Copia Notariada de los estatutos de la U.E./CEA','multiple' => false,'expanded' => true,'choices'=>$tipoDoc,'empty_value' => 'Seleccione','attr' => array('class' => 'form-control')))
+        ->add('resolucion', 'choice', array('label' => 'Copia legalizada de la Resolución que otorga la personeria jurídica','multiple' => false,'expanded' => true,'choices'=>$tipoDoc,'empty_value' => 'Seleccione','attr' => array('class' => 'form-control')))
+        ->add('fundaempresa', 'choice', array('label' => 'Fotocopia legalizada de la matricula y resolucion de FUNDAEMPRESA','multiple' => false,'expanded' => true,'choices'=>$tipoDoc,'empty_value' => 'Seleccione','attr' => array('class' => 'form-control')))
+        ->add('nit', 'choice', array('label' => 'Fotocopia legalizada del NIT','multiple' => false,'expanded' => true,'choices'=>$tipoDoc,'empty_value' => 'Seleccione','attr' => array('class' => 'form-control')))
+        ->add('ci', 'choice', array('label' => 'Fotocopia legalizada del carnet de identidad del propietario','multiple' => false,'expanded' => true,'choices'=>$tipoDoc,'empty_value' => 'Seleccione','attr' => array('class' => 'form-control')))
+        ->add('balance', 'choice', array('label' => 'Balance de Apertura Sellado por el Servicio de Impuestos Nacionales','multiple' => false,'expanded' => true,'choices'=>$tipoDoc,'empty_value' => 'Seleccione','attr' => array('class' => 'form-control')))
+        ->add('ultimobalance', 'choice', array('label' => 'Último Balance Sellado por el Servicio de Impuestos Nacionales','multiple' => false,'expanded' => true,'choices'=>$tipoDoc,'empty_value' => 'Seleccione','attr' => array('class' => 'form-control')))
+        ->add('acreditacion', 'choice', array('label' => 'Acreditación del representante legal','multiple' => false,'expanded' => true,'choices'=>$tipoDoc,'empty_value' => 'Seleccione','attr' => array('class' => 'form-control')))
+        ->add('padron', 'choice', array('label' => 'Fotocopia legalizada del Padrón de funcionamiento municipal','multiple' => false,'expanded' => true,'choices'=>$tipoDoc,'empty_value' => 'Seleccione','attr' => array('class' => 'form-control')))
+        ->add('funcionamientoculto', 'choice', array('label' => 'Resolución de funcionamiento del Ministerio de Relaciones Exteriores y Culto','multiple' => false,'expanded' => true,'choices'=>$tipoDoc,'empty_value' => 'Seleccione','attr' => array('class' => 'form-control')))
         ->add('nombrerepresentante', 'text', array('label' => 'Nombre del representante legal','attr' => array('class' => 'form-control')))
         ->add('direccionrepresentante', 'text', array('label' => 'Dirección del representante legal','attr' => array('class' => 'form-control')))
         ->add('requisitos','choice',array('label'=>'Requisitos','required'=>false, 'multiple' => true,'expanded' => true,'choices'=>array('legal' => 'Legal','administrativo' => 'Administrativo','pedagogico' => 'Técnico pedagógico','infra'=>'Infraestructura')))
@@ -441,23 +438,7 @@ class TramiteRueController extends Controller
         return $form;
     }
 
-   /* public function recepcionDepartamentalAction(Request $request)
-    {
-        $this->session = $request->getSession();
-        //dump($this->session);die;
-        $usuario = $this->session->get('userId');
-        $rol = $this->session->get('roluser');
-        //validation if the user is logged
-        if (!isset($usuario)) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-
-        $data = $this->tramiteTarea(40,41,6,$usuario,$rol,'');
-        //
-        //dump($data);die;
-        return $this->render('SieHerramientaBundle:TramiteRue:recepcionDepartamental.html.twig', $data);
-    }*/
-    public function recepcionDepartamentalNuevoAction(Request $request,$id)
+   public function recepcionDepartamentalNuevoAction(Request $request,$id)
     {
         $this->session = $request->getSession();
         //dump($this->session);die;
@@ -471,8 +452,14 @@ class TramiteRueController extends Controller
         $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($id);
         $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
         $tipotramite = $tramite->getTramiteTipo()->getId();
-        $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->findBy(array('tramite'=>$id));
-        $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
+        $wfdatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
+                ->select('wfd')
+                ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
+                ->where('td.tramite='.$tramite->getId())
+                ->andWhere("wfd.esValido=true")
+                ->getQuery()
+                ->getResult();
+
         if ($tramite->getInstitucioneducativa()){
             $ie=$tramite->getInstitucioneducativa()->getInstitucioneducativa();
             $idrue = $tramite->getInstitucioneducativa()->getId();
@@ -481,19 +468,21 @@ class TramiteRueController extends Controller
             $dependenciatiponombre = $tramite->getInstitucioneducativa()->getDependenciaTipo()->getDependencia();
             
         }else{
-            
-            //sdump($datos);die;
-            $ie = $datos['institucionEducativa'];
-            $idrue = "";
-            $tipoeducacion = $datos['tipoeducacion'];
-            $dependenciatipo = $datos['dependenciaTipo'];
+            foreach($wfdatos as $d){
+                if ($d->getTramiteDetalle()->getFlujoProceso()->getOrden()==1){
+                    $datos = json_decode($d->getDatos(),true);
+                    //dump($datos);die;
+                    $ie = $datos['institucionEducativa'];
+                    $idrue = "";
+                    $tipoeducacion = $datos['tipoeducacion'];
+                    $dependenciatipo = $datos['dependenciaTipo'];
+                }
+            }
             
         }
         $flujotipo = $tramite->getFlujoTipo()->getId();
         $tarea = $tramiteDetalle->getFlujoProceso()->getId();
-        $informe = $datos['informe'];
-        $fechainforme = $datos['fechainforme'];
-        $recepcionDepartamentalForm = $this->createRecepcionDepartamentalNuevoForm($flujotipo,$tarea,$ie,$idrue,$tipotramite,$tipoeducacion,$dependenciatipo,$dependenciatiponombre,$id,$informe,$fechainforme); 
+        $recepcionDepartamentalForm = $this->createRecepcionDepartamentalNuevoForm($flujotipo,$tarea,$ie,$idrue,$tipotramite,$tipoeducacion,$dependenciatipo,$dependenciatiponombre,$id); 
         //return $this->render('SieHerramientaBundle:FlujoProceso:index1.html.twig');
         return $this->render('SieHerramientaBundle:TramiteRue:recepcionDepartamentalNuevo.html.twig', array(
             'form' => $recepcionDepartamentalForm->createView(),'tipoeducacion'=>$tipoeducacion
@@ -515,9 +504,10 @@ class TramiteRueController extends Controller
         $observacion = $form['observacion'];
         $varevaluacion = '';
         $datos = json_encode($form);
+        $lugar = $this->obtienelugar($idtramite);
         $WfTramiteController = new WfTramiteController();
         $WfTramiteController->setContainer($this->container);
-        $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos);
+        $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
         $request->getSession()
                 ->getFlashBag()
                 ->add('exito', $mensaje);
@@ -920,428 +910,28 @@ class TramiteRueController extends Controller
         return $this->redirect($this->generateUrl('wf_tramite_recibido'));
     }
     
-    /*public function createResolucionDepartamentalForm($ie,$idrue,$tipotramite,$estadoinstitucioneducativa,$idtramite)
-    {
-        $form = $this->createFormBuilder()
-            ->setAction($this->generateUrl('tramite_rue_resolucion_departamental_guardar'))
-            ->add('flujoproceso', 'hidden', array('data' =>27 ))
-            ->add('flujotipo', 'hidden', array('data' =>5 ))
-            ->add('tramite', 'hidden', array('data' =>$idtramite ))
-            ->add('institucioneducativa','text',array('label'=>'Unidad educativa','data'=>$ie,'read_only'=>true))
-            ->add('idrue','text',array('label'=>'Código RUE','data'=>$idrue,'read_only'=>true))
-            ->add('tipotramite','text',array('label'=>'Tramite','data'=>$tipotramite,'read_only'=>true))
-            ->add('observacion','text',array('label'=>'Observación'))
-            //->add('estadoinstitucioneducativa','text',array('label'=>'Estado Unidad educativa','data'=>$estadoinstitucioneducativa))
-            ->add('varevaluacion','choice',array('label'=>'¿Procedente?','expanded'=>true,'required'=>true,'choices'=>array('SI' => 'SI','NO' => 'NO'),'empty_value' => '¿Tiene evaluacion?'))
-            ->add('guardar','submit',array('label'=>'Guardar'))
-            ->getForm();
-        return $form;
-    }
-    public function resolucionDepartamentalAction(Request $request)
-    {
-        $this->session = $request->getSession();
-        //dump($this->session);die;
-        $usuario = $this->session->get('userId');
-        $rol = $this->session->get('roluser');
-        //validation if the user is logged
-        if (!isset($usuario)) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-
-        $data = $this->tramiteTarea(25,27,5,$usuario,$rol,'');
-        //
-        //dump($data);die;
-        return $this->render('SieHerramientaBundle:TramiteRue:resolucionDepartamental.html.twig', $data);
-    }
-    public function resolucionDepartamentalNuevoAction(Request $request,$id)
-    {
-        $this->session = $request->getSession();
-        //dump($id);die;
-        $usuario = $this->session->get('userId');
-        $rol = $this->session->get('roluser');
-        //validation if the user is logged
-        if (!isset($usuario)) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-        $em = $this->getDoctrine()->getManager();
-        $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($id);
-        $ie=$tramite->getInstitucioneducativa()->getInstitucioneducativa();
-        $idrue = $tramite->getInstitucioneducativa()->getId();
-        $tipotramite = $tramite->getTramiteTipo()->getTramiteTipo();
-        $estadoinstitucioneducativa = $tramite->getInstitucioneducativa()->getEstadoinstitucionTipo()->getEstadoinstitucion();
-
-        $resolucionDepartamentalForm = $this->createResolucionDepartamentalForm($ie,$idrue,$tipotramite,$estadoinstitucioneducativa,$id); 
-        //return $this->render('SieHerramientaBundle:FlujoProceso:index1.html.twig');
-        return $this->render('SieHerramientaBundle:TramiteRue:resolucionDepartamentalNuevo.html.twig', array(
-            'form' => $resolucionDepartamentalForm->createView(),
-        ));
-
-    }
-
-    public function resolucionDepartamentalGuardarAction(Request $request)
-    {
-        $form = $request->get('form');
-        //dump($form);die;
-        $usuario = $this->session->get('userId');
-        $rol = $this->session->get('roluser');
-        $flujotipo = $form['flujotipo'];
-        $tarea = $form['flujoproceso'];
-        $tramite = $form['tramite'];
-        $tabla = 'institucioneducativa';
-        $id_tabla = $form['idrue'];
-        $observacion = $form['observacion'];
-        $uDestinatario = 13834044;
-        $varevaluacion = $form['varevaluacion'];
-        $datos= '{"rojo":"#f00","verde":"#0f0","azul":"#00f","cyan":"#0ff","magenta":"#f0f","amarillo":"#ff0","negro":"#000"}';
-        $mensaje = $this->guardarTramiteDetalle($usuario,$uDestinatario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,'',$varevaluacion,$tramite,$datos);
-        $request->getSession()
-                ->getFlashBag()
-                ->add('exito', $mensaje);
-        return $this->redirect($this->generateUrl('tramite_rue_resolucion_departamental'));
-    }
-
-    public function createFormulariosDepartamentalForm($ie,$idrue,$tipotramite,$estadoinstitucioneducativa,$idtramite)
-    {
-        $form = $this->createFormBuilder()
-            ->setAction($this->generateUrl('tramite_rue_formularios_departamental_guardar'))
-            ->add('flujoproceso', 'hidden', array('data' =>28 ))
-            ->add('flujotipo', 'hidden', array('data' =>5 ))
-            ->add('tramite', 'hidden', array('data' =>$idtramite ))
-            ->add('institucioneducativa','text',array('label'=>'Unidad educativa','data'=>$ie,'read_only'=>true))
-            ->add('idrue','text',array('label'=>'Código RUE','data'=>$idrue,'read_only'=>true))
-            ->add('tipotramite','text',array('label'=>'Tramite','data'=>$tipotramite,'read_only'=>true))
-            ->add('observacion','text',array('label'=>'Observación'))
-            //->add('estadoinstitucioneducativa','text',array('label'=>'Estado Unidad educativa','data'=>$estadoinstitucioneducativa))
-            ->add('varevaluacion','choice',array('label'=>'¿Procedente?','expanded'=>true,'required'=>true,'choices'=>array('SI' => 'SI','NO' => 'NO'),'empty_value' => '¿Tiene evaluacion?'))
-            ->add('guardar','submit',array('label'=>'Guardar'))
-            ->getForm();
-        return $form;
-    }
-    public function formulariosDepartamentalAction(Request $request)
-    {
-        $this->session = $request->getSession();
-        //dump($this->session);die;
-        $usuario = $this->session->get('userId');
-        $rol = $this->session->get('roluser');
-        //validation if the user is logged
-        if (!isset($usuario)) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-
-        $data = $this->tramiteTarea(27,28,5,$usuario,$rol,'');
-        //
-        //dump($data);die;
-        return $this->render('SieHerramientaBundle:TramiteRue:formulariosDepartamental.html.twig', $data);
-    }
-    public function formulariosDepartamentalNuevoAction(Request $request,$id)
-    {
-        $this->session = $request->getSession();
-        //dump($id);die;
-        $usuario = $this->session->get('userId');
-        $rol = $this->session->get('roluser');
-        //validation if the user is logged
-        if (!isset($usuario)) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-        $em = $this->getDoctrine()->getManager();
-        $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($id);
-        $ie=$tramite->getInstitucioneducativa()->getInstitucioneducativa();
-        $idrue = $tramite->getInstitucioneducativa()->getId();
-        $tipotramite = $tramite->getTramiteTipo()->getTramiteTipo();
-        $estadoinstitucioneducativa = $tramite->getInstitucioneducativa()->getEstadoinstitucionTipo()->getEstadoinstitucion();
-
-        $formulariosDepartamentalForm = $this->createFormulariosDepartamentalForm($ie,$idrue,$tipotramite,$estadoinstitucioneducativa,$id); 
-        //return $this->render('SieHerramientaBundle:FlujoProceso:index1.html.twig');
-        return $this->render('SieHerramientaBundle:TramiteRue:formulariosDepartamentalNuevo.html.twig', array(
-            'form' => $formulariosDepartamentalForm->createView(),
-        ));
-
-    }
-
-    public function formulariosDepartamentalGuardarAction(Request $request)
-    {
-        $form = $request->get('form');
-        //dump($form);die;
-        $usuario = $this->session->get('userId');
-        $rol = $this->session->get('roluser');
-        $flujotipo = $form['flujotipo'];
-        $tarea = $form['flujoproceso'];
-        $tramite = $form['tramite'];
-        $tabla = 'institucioneducativa';
-        $id_tabla = $form['idrue'];
-        $observacion = $form['observacion'];
-        $uDestinatario = 13834044;
-        $varevaluacion = $form['varevaluacion'];
-        $datos= '{"rojo":"#f00","verde":"#0f0","azul":"#00f","cyan":"#0ff","magenta":"#f0f","amarillo":"#ff0","negro":"#000"}';
-        $mensaje = $this->guardarTramiteDetalle($usuario,$uDestinatario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,'',$varevaluacion,$tramite,$datos);
-        $request->getSession()
-                ->getFlashBag()
-                ->add('exito', $mensaje);
-        return $this->redirect($this->generateUrl('tramite_rue_formularios_departamental'));
-    }
-
-    public function createRevisarMineduForm($ie,$idrue,$tipotramite,$estadoinstitucioneducativa,$idtramite)
-    {
-        $form = $this->createFormBuilder()
-            ->setAction($this->generateUrl('tramite_rue_reviar_minedu_guardar'))
-            ->add('flujoproceso', 'hidden', array('data' =>29 ))
-            ->add('flujotipo', 'hidden', array('data' =>5 ))
-            ->add('tramite', 'hidden', array('data' =>$idtramite ))
-            ->add('institucioneducativa','text',array('label'=>'Unidad educativa','data'=>$ie,'read_only'=>true))
-            ->add('idrue','text',array('label'=>'Código RUE','data'=>$idrue,'read_only'=>true))
-            ->add('tipotramite','text',array('label'=>'Tramite','data'=>$tipotramite,'read_only'=>true))
-            ->add('observacion','text',array('label'=>'Observación'))
-            //->add('estadoinstitucioneducativa','text',array('label'=>'Estado Unidad educativa','data'=>$estadoinstitucioneducativa))
-            ->add('varevaluacion','choice',array('label'=>'¿Procedente?','expanded'=>true,'required'=>true,'choices'=>array('SI' => 'SI','NO' => 'NO'),'empty_value' => '¿Tiene evaluacion?'))
-            ->add('guardar','submit',array('label'=>'Guardar'))
-            ->getForm();
-        return $form;
-    }
-    public function revisarMineduAction(Request $request)
-    {
-        $this->session = $request->getSession();
-        //dump($this->session);die;
-        $usuario = $this->session->get('userId');
-        $rol = $this->session->get('roluser');
-        //validation if the user is logged
-        if (!isset($usuario)) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-
-        $data = $this->tramiteTarea(28,29,5,$usuario,$rol,'');
-        //
-        //dump($data);die;
-        return $this->render('SieHerramientaBundle:TramiteRue:revisarMinedu.html.twig', $data);
-    }
-    public function revisarMineduNuevoAction(Request $request,$id)
-    {
-        $this->session = $request->getSession();
-        //dump($id);die;
-        $usuario = $this->session->get('userId');
-        $rol = $this->session->get('roluser');
-        //validation if the user is logged
-        if (!isset($usuario)) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-        $em = $this->getDoctrine()->getManager();
-        $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($id);
-        $ie=$tramite->getInstitucioneducativa()->getInstitucioneducativa();
-        $idrue = $tramite->getInstitucioneducativa()->getId();
-        $tipotramite = $tramite->getTramiteTipo()->getTramiteTipo();
-        $estadoinstitucioneducativa = $tramite->getInstitucioneducativa()->getEstadoinstitucionTipo()->getEstadoinstitucion();
-
-        $revisarMineduForm = $this->createrevisarMineduForm($ie,$idrue,$tipotramite,$estadoinstitucioneducativa,$id); 
-        //return $this->render('SieHerramientaBundle:FlujoProceso:index1.html.twig');
-        return $this->render('SieHerramientaBundle:TramiteRue:revisarMineduNuevo.html.twig', array(
-            'form' => $revisarMineduForm->createView(),
-        ));
-
-    }
-
-    public function revisarMineduGuardarAction(Request $request)
-    {
-        $form = $request->get('form');
-        //dump($form);die;
-        $usuario = $this->session->get('userId');
-        $rol = $this->session->get('roluser');
-        $flujotipo = $form['flujotipo'];
-        $tarea = $form['flujoproceso'];
-        $tramite = $form['tramite'];
-        $tabla = 'institucioneducativa';
-        $id_tabla = $form['idrue'];
-        $observacion = $form['observacion'];
-        $uDestinatario = 13834044;
-        $varevaluacion = $form['varevaluacion'];
-        $datos= '{"rojo":"#f00","verde":"#0f0","azul":"#00f","cyan":"#0ff","magenta":"#f0f","amarillo":"#ff0","negro":"#000"}';
-        $mensaje = $this->guardarTramiteDetalle($usuario,$uDestinatario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,'',$varevaluacion,$tramite,$datos);
-        $request->getSession()
-                ->getFlashBag()
-                ->add('exito', $mensaje);
-        return $this->redirect($this->generateUrl('tramite_rue_revisar_minedu'));
-    }
-
-    public function createNotificacionMineduForm($flujotipo,$tarea,$ie,$idrue,$tipotramite,$estadoinstitucioneducativa,$idtramite)
-    {
-        $form = $this->createFormBuilder()
-            ->setAction($this->generateUrl('tramite_rue_notificacion_minedu_guardar'))
-            ->add('flujoproceso', 'hidden', array('data' =>30 ))
-            ->add('flujotipo', 'hidden', array('data' =>5 ))
-            ->add('tramite', 'hidden', array('data' =>$idtramite ))
-            ->add('institucioneducativa','text',array('label'=>'Unidad educativa','data'=>$ie,'read_only'=>true))
-            ->add('idrue','text',array('label'=>'Código RUE','data'=>$idrue,'read_only'=>true))
-            ->add('tipotramite','text',array('label'=>'Tramite','data'=>$tipotramite,'read_only'=>true))
-            ->add('observacion','text',array('label'=>'Observación'))
-            //->add('estadoinstitucioneducativa','text',array('label'=>'Estado Unidad educativa','data'=>$estadoinstitucioneducativa))
-            ->add('varevaluacion','choice',array('label'=>'¿Procedente?','expanded'=>true,'required'=>true,'choices'=>array('SI' => 'SI','NO' => 'NO'),'empty_value' => '¿Tiene evaluacion?'))
-            ->add('guardar','submit',array('label'=>'Guardar'))
-            ->getForm();
-        return $form;
-    }
-    public function notificacionMineduAction(Request $request)
-    {
-        $this->session = $request->getSession();
-        //dump($this->session);die;
-        $usuario = $this->session->get('userId');
-        $rol = $this->session->get('roluser');
-        //validation if the user is logged
-        if (!isset($usuario)) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-
-        $data = $this->tramiteTarea(29,30,5,$usuario,$rol,'');
-        //
-        //dump($data);die;
-        return $this->render('SieHerramientaBundle:TramiteRue:notificacionMinedu.html.twig', $data);
-    }
-    public function notificacionMineduNuevoAction(Request $request,$id)
-    {
-        $this->session = $request->getSession();
-        //dump($id);die;
-        $usuario = $this->session->get('userId');
-        $rol = $this->session->get('roluser');
-        //validation if the user is logged
-        if (!isset($usuario)) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-        $em = $this->getDoctrine()->getManager();
-        $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($id);
-        $ie=$tramite->getInstitucioneducativa()->getInstitucioneducativa();
-        $idrue = $tramite->getInstitucioneducativa()->getId();
-        $tipotramite = $tramite->getTramiteTipo()->getTramiteTipo();
-        $estadoinstitucioneducativa = $tramite->getInstitucioneducativa()->getEstadoinstitucionTipo()->getEstadoinstitucion();
-
-        $notificacionMineduForm = $this->createNotificacionMineduForm($ie,$idrue,$tipotramite,$estadoinstitucioneducativa,$id); 
-        //return $this->render('SieHerramientaBundle:FlujoProceso:index1.html.twig');
-        return $this->render('SieHerramientaBundle:TramiteRue:notificacionMineduNuevo.html.twig', array(
-            'form' => $notificacionMineduForm->createView(),
-        ));
-
-    }
-
-    public function notificacionMineduGuardarAction(Request $request)
-    {
-        $form = $request->get('form');
-        //dump($form);die;
-        $usuario = $this->session->get('userId');
-        $rol = $this->session->get('roluser');
-        $flujotipo = $form['flujotipo'];
-        $tarea = $form['flujoproceso'];
-        $tramite = $form['tramite'];
-        $tabla = 'institucioneducativa';
-        $id_tabla = $form['idrue'];
-        $observacion = $form['observacion'];
-        $uDestinatario = 13834044;
-        $varevaluacion = $form['varevaluacion'];
-        $datos= '{"rojo":"#f00","verde":"#0f0","azul":"#00f","cyan":"#0ff","magenta":"#f0f","amarillo":"#ff0","negro":"#000"}';
-        $mensaje = $this->guardarTramiteDetalle($usuario,$uDestinatario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,'',$varevaluacion,$tramite,$datos);
-        $request->getSession()
-                ->getFlashBag()
-                ->add('exito', $mensaje);
-        return $this->redirect($this->generateUrl('tramite_rue_notificacion_minedu'));
-    }
-
-    public function createRegistrarMineduForm($ie,$idrue,$tipotramite,$estadoinstitucioneducativa,$idtramite)
-    {
-        $form = $this->createFormBuilder()
-            ->setAction($this->generateUrl('tramite_rue_notificacion_minedu_guardar'))
-            ->add('flujoproceso', 'hidden', array('data' =>31 ))
-            ->add('flujotipo', 'hidden', array('data' =>5 ))
-            ->add('tramite', 'hidden', array('data' =>$idtramite ))
-            ->add('institucioneducativa','text',array('label'=>'Unidad educativa','data'=>$ie,'read_only'=>true))
-            ->add('idrue','text',array('label'=>'Código RUE','data'=>$idrue,'read_only'=>true))
-            ->add('tipotramite','text',array('label'=>'Tramite','data'=>$tipotramite,'read_only'=>true))
-            ->add('observacion','text',array('label'=>'Observación'))
-            //->add('estadoinstitucioneducativa','text',array('label'=>'Estado Unidad educativa','data'=>$estadoinstitucioneducativa))
-            ->add('varevaluacion','choice',array('label'=>'¿Procedente?','expanded'=>true,'required'=>true,'choices'=>array('SI' => 'SI','NO' => 'NO'),'empty_value' => '¿Tiene evaluacion?'))
-            ->add('guardar','submit',array('label'=>'Guardar'))
-            ->getForm();
-        return $form;
-    }
-    public function registrarMineduAction(Request $request)
-    {
-        $this->session = $request->getSession();
-        //dump($this->session);die;
-        $usuario = $this->session->get('userId');
-        $rol = $this->session->get('roluser');
-        //validation if the user is logged
-        if (!isset($usuario)) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-
-        $data = $this->tramiteTarea(29,31,5,$usuario,$rol,'');
-        //
-        //dump($data);die;
-        return $this->render('SieHerramientaBundle:TramiteRue:registrarMinedu.html.twig', $data);
-    }
-    
-    public function registrarMineduNuevoAction(Request $request,$id)
-    {
-        $this->session = $request->getSession();
-        //dump($id);die;
-        $usuario = $this->session->get('userId');
-        $rol = $this->session->get('roluser');
-        //validation if the user is logged
-        if (!isset($usuario)) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-        $em = $this->getDoctrine()->getManager();
-        $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($id);
-        $ie=$tramite->getInstitucioneducativa()->getInstitucioneducativa();
-        $idrue = $tramite->getInstitucioneducativa()->getId();
-        $tipotramite = $tramite->getTramiteTipo()->getTramiteTipo();
-        $estadoinstitucioneducativa = $tramite->getInstitucioneducativa()->getEstadoinstitucionTipo()->getEstadoinstitucion();
-
-        $registrarMineduForm = $this->createRegistrarMineduForm($ie,$idrue,$tipotramite,$estadoinstitucioneducativa,$id); 
-        //return $this->render('SieHerramientaBundle:FlujoProceso:index1.html.twig');
-        return $this->render('SieHerramientaBundle:TramiteRue:registrarMineduNuevo.html.twig', array(
-            'form' => $registrarMineduForm->createView(),
-        ));
-
-    }
-
-    public function registrarMineduGuardarAction(Request $request)
-    {
-        $form = $request->get('form');
-        //dump($form);die;
-        $usuario = $this->session->get('userId');
-        $rol = $this->session->get('roluser');
-        $flujotipo = $form['flujotipo'];
-        $tarea = $form['flujoproceso'];
-        $tramite = $form['tramite'];
-        $tabla = 'institucioneducativa';
-        $id_tabla = $form['idrue'];
-        $observacion = $form['observacion'];
-        $uDestinatario = 13834044;
-        $varevaluacion = $form['varevaluacion'];
-        $datos= '[{"rojo":"#f00","verde":"#0f0","azul":"#00f","cyan":"#0ff","magenta":"#f0f","amarillo":"#ff0","negro":"#000"}]';
-        $mensaje = $this->guardarTramiteDetalle($usuario,$uDestinatario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,'',$varevaluacion,$tramite,$datos);
-        $request->getSession()
-                ->getFlashBag()
-                ->add('exito', $mensaje);
-        return $this->redirect($this->generateUrl('tramite_rue_registrar_minedu'));
-    }*/
-
     public function buscarRueAction(Request $request)
     {
         //dump($request);die;
         $idrue=$request->get('idrue');
         $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery(
-            'SELECT ie
-        FROM SieAppWebBundle:Institucioneducativa ie
-        WHERE ie.id = :id
-        and ie.institucioneducativaAcreditacionTipo = :ieAcreditacion
-        ORDER BY ie.id')
-                    ->setParameter('id', $idrue)
-                ->setParameter('ieAcreditacion', 1)
-                ;
+        $query = $em->createQuery('SELECT ie
+                FROM SieAppWebBundle:Institucioneducativa ie
+                WHERE ie.id = :id
+                AND ie.institucioneducativaAcreditacionTipo = :ieAcreditacion')
+                ->setParameter('id', $idrue)
+                ->setParameter('ieAcreditacion', 1);
         $entities = $query->getResult();
-        $ie=$entities[0]->getInstitucioneducativa();
-        $dep=$entities[0]->getDependenciaTipo()->getId();
-        //dump($entities);die;
         $response = new JsonResponse();
-        $response->setData(array('ie'=>$ie,'dep'=>$dep));
-        //$response->setData(array('ue' => array('ie'=>$ie,'dep'=>$dep,'tipo'=>$tipo)));
+
+        if($entities){
+            $ie=$entities[0]->getInstitucioneducativa();
+            $dep=$entities[0]->getDependenciaTipo()->getId();
+            $tipo=$entities[0]->getInstitucioneducativaTipo()->getId();
+            $response->setData(array('ie'=>$ie,'dep'=>$dep,'ietipo'=>$tipo));
+        }else{
+            $response->setData(array('msg'=>'El codigo SIE es incorrecto'));
+        }
         return $response;
     }
 

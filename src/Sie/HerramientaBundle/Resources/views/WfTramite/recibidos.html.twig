@@ -96,7 +96,7 @@
                                             <td>{{ entity.tramite_estado }}</td>
                                             <td>{{ entity.fecha_estado }}</td>
                                             <td>{{ entity.plazo }}</td>
-                                            <td>{{ entity.fecha_vencimiento }}</td>
+                                            <td class="text-danger">{{ entity.fecha_vencimiento }}</td>
                                             <td>{{ entity.nombre }}</td>
                                             <td class="text-center">
                                                 <a class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal" data-placement="top" title="Ver Detalle" onclick="detalle({{entity.id}},{{entity.idflujo}})">
@@ -128,7 +128,7 @@
                         </div>
                     </div><!-- /.panel-body -->
                     <!--/ End panel content -->
-                </div><!-- /.panel -->
+                </div><!-- /.panel -->  
                 <!--/ End default panel -->
             </div>
         </div><!-- /.row -->

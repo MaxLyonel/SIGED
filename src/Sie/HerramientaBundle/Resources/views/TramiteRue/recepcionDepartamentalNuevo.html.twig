@@ -22,7 +22,7 @@
 {{ form_start(form,{ 'attr': {'id':'form_nuevo','role': "form"}}) }}
 <div class="row">
     <div class="col-md-12">
-        <div class="panel panel-lilac">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="pull-left">
                     <h3 class="panel-title">1. NATURALEZA DE LA SOLICITUD</h3>
@@ -96,7 +96,7 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <div class="panel panel-lilac">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="pull-left">
                     <h3 class="panel-title">2. IDENTIFICACIÓN GENERAL DE LA UNIDAD EDUCATIVA</h3>
@@ -190,7 +190,7 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <div class="panel panel-lilac">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="pull-left">
                     <h3 class="panel-title">3. INFORMACIÓN LEGAL</h3>
@@ -217,92 +217,122 @@
                     </div>
                     <div class="form-group  col-md-12">
                         <h5>PRESENTACIÓN DE REQUISITOS LEGALES (Privadas)</h5>
-                        <div class="col-md-6">
-                            {{ form_label(form.acta) }}
-                        </div>
+                        <div class="col-md-6">Copia Notariada del Acta de Constitución</div>
                         <div class="col-md-3">
-                                {{ form_widget(form.acta) }}
-                            </div>
+                            {% for a in form.acta %}
+                                {{ form_widget(a) }}
+                                {{ form_label(a) }}
+                            {% endfor %}
                         </div>
                     </div>
                     <div class="form-group  col-md-12">
                         <div class="col-md-6">
-                            {{ form_label(form.estatutos) }}
+                            Copia Notariada de los estatutos de la U.E./CEA
                         </div>
                         <div class="col-md-3">
-                            {{ form_widget(form.estatutos) }}
+                            {% for a in form.estatutos %}
+                                {{ form_widget(a) }}
+                                {{ form_label(a) }}
+                            {% endfor %}
                         </div>
                     </div>
                     <div class="form-group  col-md-12">
                         <div class="col-md-6">
-                            {{ form_label(form.resolucion) }}
+                            Copia legalizada de la Resolución que otorga la personeria jurídica
                         </div>
                         <div class="col-md-3">
-                            {{ form_widget(form.resolucion) }}
+                            {% for a in form.resolucion %}
+                                {{ form_widget(a) }}
+                                {{ form_label(a) }}
+                            {% endfor %}
                         </div>
                     </div>
                     <div class="form-group  col-md-12">
                         <div class="col-md-6">
-                            {{ form_label(form.fundaempresa) }}
+                            Fotocopia legalizada de la matricula y resolucion de FUNDAEMPRESA
                         </div>
                         <div class="col-md-3">
-                            {{ form_widget(form.fundaempresa) }}
+                            {% for a in form.fundaempresa %}
+                                {{ form_widget(a) }}
+                                {{ form_label(a) }}
+                            {% endfor %}
                         </div>
                     </div>
                     <div class="form-group  col-md-12">
                         <div class="col-md-6">
-                            {{ form_label(form.nit) }}
+                            Fotocopia legalizada del NIT
                         </div>
                         <div class="col-md-3">
-                            {{ form_widget(form.nit) }}
+                            {% for a in form.nit %}
+                                {{ form_widget(a) }}
+                                {{ form_label(a) }}
+                            {% endfor %}
                         </div>
                     </div>
                     <div class="form-group  col-md-12">
                         <div class="col-md-6">
-                            {{ form_label(form.ci) }}
+                            Fotocopia legalizada del carnet de identidad del propietario
                         </div>
                         <div class="col-md-3">
-                            {{ form_widget(form.ci) }}
+                            {% for a in form.ci %}
+                                {{ form_widget(a) }}
+                                {{ form_label(a) }}
+                            {% endfor %}
                         </div>
                     </div>
                     <div class="form-group  col-md-12">
                         <div class="col-md-6">
-                            {{ form_label(form.balance) }}
+                            Balance de Apertura Sellado por el Servicio de Impuestos Nacionales
                         </div>
                         <div class="col-md-3">
-                            {{ form_widget(form.balance) }}
+                            {% for a in form.balance %}
+                                {{ form_widget(a) }}
+                                {{ form_label(a) }}
+                            {% endfor %}
                         </div>
                     </div>
                     <div class="form-group  col-md-12">
                         <div class="col-md-6">
-                            {{ form_label(form.ultimobalance) }}
+                            Último Balance Sellado por el Servicio de Impuestos Nacionales
                         </div>
                         <div class="col-md-3">
-                            {{ form_widget(form.ultimobalance) }}
+                            {% for a in form.ultimobalance %}
+                                {{ form_widget(a) }}
+                                {{ form_label(a) }}
+                            {% endfor %}
                         </div>
                     </div>
                     <div class="form-group  col-md-12">
                         <div class="col-md-6">
-                            {{ form_label(form.acreditacion) }}
+                            Acreditación del representante legal
                         </div>
                         <div class="col-md-3">
-                            {{ form_widget(form.acreditacion) }}
+                            {% for a in form.acreditacion %}
+                                {{ form_widget(a) }}
+                                {{ form_label(a) }}
+                            {% endfor %}
                         </div>
                     </div>
                     <div class="form-group  col-md-12">
                         <div class="col-md-6">
-                            {{ form_label(form.padron) }}
+                            Fotocopia legalizada del Padrón de funcionamiento municipal
                         </div>
                         <div class="col-md-3">
-                            {{ form_widget(form.padron) }}
+                            {% for a in form.padron %}
+                                {{ form_widget(a) }}
+                                {{ form_label(a) }}
+                            {% endfor %}
                         </div>
                     </div>
                     <div class="form-group  col-md-12">
                         <div class="col-md-6">
-                            {{ form_label(form.funcionamientoculto) }}
+                            Resolución de funcionamiento del Ministerio de Relaciones Exteriores y Culto
                         </div>
                         <div class="col-md-3">
-                            {{ form_widget(form.funcionamientoculto) }}
+                            {% for a in form.funcionamientoculto %}
+                                {{ form_widget(a) }}
+                                {{ form_label(a) }}
+                            {% endfor %}
                         </div>
                     </div>
                     <div class="form-group  col-md-12">
@@ -330,7 +360,7 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <div class="panel panel-lilac">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="pull-left">
                     <h3 class="panel-title">4. ÁREAS DEL TERRENO</h3>
@@ -398,7 +428,7 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <div class="panel panel-lilac">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="pull-left">
                     <h3 class="panel-title">5. REQUISITOS CURRICULARES</h3>
