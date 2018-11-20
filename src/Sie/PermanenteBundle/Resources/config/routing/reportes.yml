@@ -25,3 +25,12 @@ permanente_reporte_cert_participantes_curso_corto:
 permanente_reporte_cursos_cortos_por_fecha:
     path:     /reportcursoscortosfecha
     defaults: { _controller: SiePermanenteBundle:Reportes:reportCursosCortosFecha }
+
+permanente_reporte_participantes_curso_largo:
+    path:     /reportparticipantescl
+    defaults: { _controller: SiePermanenteBundle:Reportes:reportParticipantesCL }
+
+permanente_reporte_centralizador_curso_largo:
+    path:     /reportcentralizadorcl
+    defaults: { _controller: SiePermanenteBundle:Reportes:reportCentralizadorCL }
+

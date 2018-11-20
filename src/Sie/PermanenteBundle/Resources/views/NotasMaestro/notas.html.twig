@@ -1,0 +1,228 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+
+{% block contentoption %}
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Registro de Calificaciones <span>Notas Cuantitativas</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="glyphicon glyphicon-leaf"></i>
+                        <a href="{{path('principal_web')}}">Bienvenida</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-table"></i>
+                        <a href="{{path('herramienta_alter_notas_maestro_index')}}">Lista de materias</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Registro de notas</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <div class="body-content animated fadeIn">
+        <div class="col-md-12">
+			<div class="panel panel-white">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Datos del curso</h3>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+                    <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                        <tr>
+                            <th>Centro</th><td>{{curso[0].sie}} - {{curso[0].institucioneducativa}}</td>
+                            <th>Gestión</th><td>{{curso[0].gestion}}</td>
+                        </tr>
+                        <tr>
+                            <th>Sucursal</th><td>0</td>
+                            <th>Periodo</th><td>{{curso[0].periodoSuperior|upper}}</td>
+                        </tr>
+                        <tr>
+                            <th>{% if curso[0].idNivel != 15 %}Area{% endif %}</th><td>{% if curso[0].idNivel != 15 %}{{curso[0].areaSuperior}}{% endif %}</td>
+                            <th>Turno</th><td>{{curso[0].turnoSuperior}}</td>
+                        </tr>
+                        <tr>
+                            <th>Nivel / Especialidad</th><td>{{curso[0].especialidad}}</td>
+                            <th>Etapa / Acreditación</th><td>{{curso[0].acreditacion}}</td>
+                        </tr>
+                        <tr>
+                            <th>Asignatura / Módulo</th><td class="text-primary"><b>{{curso[0].modulo}}</b></td>
+                            <th>Paralelo</th><td>{{curso[0].paralelo}}</td>
+                        </tr>
+                    </table>
+                    <ul>
+                    	<h4 class="text-primary"></h4>
+						<h5 class="text-lilac"></h5>
+						<h5 class="text-inverse"></h5>
+                    </ul>
+                </div><!-- /.panel-body -->
+            </div>
+            <!-- Start repeater -->
+            <div class="panel rounded shadow no-overflow">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Lista de Estudiantes</h3>
+                    </div>
+                    <div class="pull-right">
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+                    {% if estudiantes|length > 0 %}
+                        {% if app.session.get('ie_per_estado') == 2 or app.session.get('ie_per_estado') == 3 %}
+    					<form action="{{path('herramienta_alter_notas_maestro_createUpdate')}}" method="post">
+                        {% endif %}
+    	                    <table class="table">
+    							<thead>
+    	                        	<tr>
+    	                        		<th>Nro</th>
+    									<th>Paterno</th>
+    									<th>Materno</th>
+    									<th>Nombre(s)</th>
+    									<th>Nota</th>
+    									<th style="width:250px">Estado</th>
+    	                        	</tr>
+    							</thead>
+    							<tbody>
+    								{% for e in estudiantes %}
+    									<tr>
+    										<td>{{loop.index}}</td>
+    										<td>{{e.paterno}}</td>
+    										<td>{{e.materno}}</td>
+    										<td>{{e.nombre}}</td>
+    										<td align="center">
+                                                {% if app.session.get('ie_per_estado') == 2 or app.session.get('ie_per_estado') == 3 %}
+        											<input type="hidden" name="idAsignatura[]" value="{{e.idEstudianteAsignatura}}">
+        											<input type="hidden" name="idNota[]" value="{{e.idNota}}">
+        											<input type="hidden" name="idNotaTipo[]" value="{{e.idNotaTipo}}">
+        											<input name="notas[]" type="text" size="3" style="width:50px" value="{{e.nota}}" maxlength="3" onkeypress="return validarNota(event)" onkeyup="notaVerificar(this,{{e.idEstudianteAsignatura}})" onblur="notaCero(this,{{e.idEstudianteAsignatura}})" class="form-control input-sm {{e.idEstudianteAsignatura}} nota" autocomplete="off">
+                                                {% else %}
+                                                    <input type="text" size="3" style="width:50px" value="{{e.nota}}" class="form-control input-sm {{e.idEstudianteAsignatura}} nota" disabled="disabled">
+                                                {% endif %}
+                                            </td>
+    										<td>
+                                                <select id="{{e.idEstudianteAsignatura}}" class="form-control input-sm estados" name="idEstados[]" disabled required="true" onclick="this.blur()">
+                                                  <option value="">Estado...</option>
+                                                  {% for ea in estadosAsignatura %}
+                                                    {% if e.idEstadoAsignatura == ea.id %}
+                                                        {% set selected = 'selected' %}
+                                                    {% else %}
+                                                        {% set selected = '' %}
+                                                    {% endif %}
+                                                    <option value="{{ea.id}}" {{selected}}>{{ea.estado}}</option>
+                                                  {% endfor %}
+                                                </select>
+    										</td>
+    									</tr>
+    								{% endfor %}
+    								<tr>
+    									<td colspan="6" align="right">
+    										<a href="{{path('herramienta_alter_notas_maestro_index')}}" class="btn btn-stroke btn-danger">Cancelar</a>
+                                            {% if app.session.get('ie_per_estado') == 2 or app.session.get('ie_per_estado') == 3 %}
+    										    <button type="submit" class="btn btn-stroke btn-success">Registrar Notas</button>
+                                            {% endif %}
+    									</td>
+    								</tr>
+    							</tbody>
+    	                    </table>
+                        {% if app.session.get('ie_per_estado') == 2 or app.session.get('ie_per_estado') == 3 %}
+    					</form>
+                        {% endif %}
+                    {% else %}
+                        <div class="alert alert-info">
+                            <i class="fa fa-info-circle"></i> No hay estudiantes registrados en esta asignatura y/o módulo!!!
+                        </div>
+                    {% endif %}
+                </div><!-- /.panel-body -->
+            </div><!-- /.panel -->
+            <!--/ End repeater -->
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+	{{parent()}}
+	<script>
+		$(document).ready( function(){
+			$(".estados").each(function (index) {
+			  if($(this).val() == ""){
+			     $(this).val(3);
+			  }
+			});
+		});
+		var notaVerificar = function(control,clase){
+			if(control.value < 0){ control.value = 0; }
+			if(control.value > 100){ control.value = 100; }
+            if(control.value != "" && control.value != 0){
+                control.value = Math.round(control.value);
+            }
+	    	cambiarEstado(control.value,clase);
+		}
+
+	  	var notaCero = function(control,clase){
+			if(control.value == ""){ control.value = 0; }
+	    	cambiarEstado(control.value,clase);
+		}
+
+	  	var cambiarEstado = function(nota,clase){
+	    	var clase = clase.toString();
+		    if(nota == 0){
+		      $('select#'+clase).val(3);
+			  $('select#'+clase).css('color','#900000');
+		    }
+		    if(nota>=1 && nota<=50){
+		      $('select#'+clase).val(25);
+		    }
+		    if(nota>=51 && nota<=100){
+		      $('select#'+clase).val(5);
+		    }
+	  	}
+
+		var validarNota = function(e){
+			var key = e || window.event;
+			var k = key.charCode || key.keyCode;
+			if ((k < 48 || k > 57) //NUmeros
+			  && (k != 13) //ENTER
+			  && (k != 8) //retroceso
+			  && (k != 9) //tab
+			)
+			return false;
+	  	}
+
+	    var registrarNotas = function(){
+		    var enviar = true;
+
+		  	$(".nota").each(function (index) {
+		        if($(this).val() == 0){
+		        	enviar = true;//false;
+		        }
+		    });
+
+		    if(enviar == false){
+		    	alert('Las notas no pueden ser cero');
+		    }
+
+		    if(enviar == true){
+		    	var formData = $('#formNotas').serialize();
+			    $.ajax({
+			        type: 'post',
+			        url: Routing.generate('herramienta_alter_infoEstudianteNotas_create_update'),
+			        data: formData,
+			        beforeSend: function () {
+			            $('#modal-body').empty();
+			            $('.modal-footer').empty();
+			            $('#modal-body').append("<div style='text-align:center; padding:10px; color:#6ECBFF; font-size:15px'><img src='{{asset('img/loading-sm.gif')}}'><br>Espere mientras se procesan los cambios...</div>");
+			        },
+			        success: function (data) {
+		              //alert(data);
+			            $('#modal').modal('hide');
+			        },
+			        error: function (data) {
+
+			        }
+			    });
+		    }
+		}
+	</script>
+{% endblock %}
