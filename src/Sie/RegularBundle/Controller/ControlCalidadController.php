@@ -220,7 +220,7 @@ class ControlCalidadController extends Controller {
         }
         
         $lista_inconsistencias = $query->getResult();
-        dump($lista_inconsistencias);die;
+
         return $this->render('SieRegularBundle:ControlCalidad:list.html.twig', array(
                     'lista_inconsistencias' => $lista_inconsistencias,
                     'entidad' => $entidad,
