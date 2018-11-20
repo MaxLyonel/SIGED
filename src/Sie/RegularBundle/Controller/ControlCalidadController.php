@@ -423,6 +423,17 @@ class ControlCalidadController extends Controller {
                 $query->execute();
                 $resultado = $query->fetchAll();
                 break;
+            
+            case 27://PROMEDIOS
+                $query = $em->getConnection()->prepare('select * from persona limit 1');//sp_sist_calidad_prom_fisquim(:algo, :algo, :algo, :sie, :gestion);');
+                // $query->bindValue(':algo', '2');
+                // $query->bindValue(':algo', '2');
+                // $query->bindValue(':algo', $form['llave']);
+                // $query->bindValue(':sie', $form['institucionEducativa']);
+                // $query->bindValue(':gestion', $form['gestion']);
+                $query->execute();
+                $resultado = $query->fetchAll();
+                break;
         }
 
         $message = 'Se realizó la validación satisfactoriamente para la observación: ' . $vproceso->getObs();

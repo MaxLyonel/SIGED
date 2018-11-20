@@ -36,9 +36,9 @@ class PromedioCalidadController extends Controller {
         $llave = $form['llave'];
         $parametros = explode('|', $llave);
 
-        $idInscripcion = $parametros[0];//$request->get('idInscripcion');
-        $idNota = $parametros[1];//$request->get('idNota');
-        $idNotaTipo = $parametros[2];//$request->get('idNotaTipo');
+        $idInscripcion = $parametros[0];
+        $idNota = $parametros[1];
+        $idNotaTipo = $parametros[2];
         $promedio = $parametros[3];
 
         $em = $this->getDoctrine()->getManager();
@@ -92,10 +92,7 @@ class PromedioCalidadController extends Controller {
     /*
      * Save cambios 
      */
-
     public function saveAction(Request $request) {
-
-        // dump($request);die;
         $idNota = $request->get('idNota');
         $promedio = $request->get('promedio');
         $acuerdo = $request->get('acuerdo');
@@ -118,6 +115,11 @@ class PromedioCalidadController extends Controller {
             $em->flush();
         }
 
-        return $this->redirectToRoute('ccalidad_index');
+        $message = 'Se realizó la validación satisfactoriamente para la observación: ' . $observacion->getObs();
+        $this->addFlash('success', $message);
+        return $this->redirect($this->generateUrl('ccalidad_list', array(
+            'id' => $observacion->getValidacionReglaTipo()->getValidacionReglaEntidadTipo()->getId(),
+            'gestion' => $observacion->getGestionTipo()->getId()
+        )));
     }
 }
