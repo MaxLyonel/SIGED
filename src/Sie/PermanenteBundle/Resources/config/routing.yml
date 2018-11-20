@@ -31,9 +31,18 @@ sie_permanente_cursos_cortos:
     resource: "@SiePermanenteBundle/Resources/config/routing/cursosCortos.yml"
     prefix:   /persie/cursosCortos
 
+sie_permanente_cursos_largos:
+    resource: "@SiePermanenteBundle/Resources/config/routing/cursosLargos.yml"
+    prefix:   /persie/cursosLargos
+
 sie_permanente_estudiante_main:
     resource: "@SiePermanenteBundle/Resources/config/routing/estudiante.yml"
     prefix:   /persie/estudiante
 
+sie_permanente_areas:
+    resource: "@SiePermanenteBundle/Resources/config/routing/areas.yml"
+    prefix:   /persie/areasper
 
-
+sie_herramienta_alternativa_socioeconomico:
+    resource: "@SiePermanenteBundle/Resources/config/routing/socioeconomico.yml"
+    prefix:   /persie/socioeconomicoper
