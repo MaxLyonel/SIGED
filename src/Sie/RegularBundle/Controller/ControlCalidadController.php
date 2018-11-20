@@ -173,11 +173,13 @@ class ControlCalidadController extends Controller {
                     ->andWhere('vp.lugarTipoIdDistrito = :lugarDistrito')
                     ->andWhere('vp.gestionTipo = :gestion')
                     ->andWhere('vrt.esActivo = :esActivo')
+                    ->andWhere('vrt.id != :fisquim')
                     ->setParameter('reglaEntidad', $id)
                     ->setParameter('esactivo', 'f')
                     ->setParameter('lugarDistrito', $usuario_lugar)
                     ->setParameter('gestion', $gestion)
                     ->setParameter('esActivo', true)
+                    ->setParameter('fisquim', 27)
                     ->getQuery();
                 break;
             case 9://unidad educativa
@@ -188,11 +190,13 @@ class ControlCalidadController extends Controller {
                     ->andWhere('vp.institucionEducativaId = :sie')
                     ->andWhere('vp.gestionTipo = :gestion')
                     ->andWhere('vrt.esActivo = :esActivo')
+                    ->andWhere('vrt.id != :fisquim')
                     ->setParameter('reglaEntidad', $id)
                     ->setParameter('esactivo', 'f')
                     ->setParameter('sie', $this->session->get('ie_id'))
                     ->setParameter('gestion', $gestion)
                     ->setParameter('esActivo', true)
+                    ->setParameter('fisquim', 27)
                     ->getQuery();
                 break;
             case 7://departamento
@@ -204,17 +208,19 @@ class ControlCalidadController extends Controller {
                     ->andWhere('lt.lugarTipo = :lugarDepartamento')
                     ->andWhere('vp.gestionTipo = :gestion')
                     ->andWhere('vrt.esActivo = :esActivo')
+                    ->andWhere('vrt.id != :fisquim')
                     ->setParameter('reglaEntidad', $id)
                     ->setParameter('esactivo', 'f')
                     ->setParameter('lugarDepartamento', $usuario_lugar)
                     ->setParameter('gestion', $gestion)
                     ->setParameter('esActivo', true)
+                    ->setParameter('fisquim', 27)
                     ->getQuery();
                 break;
         }
         
         $lista_inconsistencias = $query->getResult();
-        
+        dump($lista_inconsistencias);die;
         return $this->render('SieRegularBundle:ControlCalidad:list.html.twig', array(
                     'lista_inconsistencias' => $lista_inconsistencias,
                     'entidad' => $entidad,
