@@ -351,3 +351,7 @@ sie_app_web_listainscritosestudiantesolim:
 sie_app_web_downloadrudefile:
     resource: "@SieRegularBundle/Resources/config/routing/downloadrudefile.yml"
     prefix:   /sie/downloadrudefile
+
+sie_regular_promedio_calidad:
+    resource: "@SieRegularBundle/Resources/config/routing/promedioCalidad.yml"
+    prefix:   /sie/promedioCalidad

@@ -1,0 +1,8 @@
+promedio_calidad:
+    path:     /
+    defaults: { _controller: SieRegularBundle:PromedioCalidad:index }
+
+promedio_calidad_save:
+    path:     /save/
+    defaults: { _controller: SieRegularBundle:PromedioCalidad:save }
+    methods:  POST
