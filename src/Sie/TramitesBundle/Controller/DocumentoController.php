@@ -288,7 +288,7 @@ class DocumentoController extends Controller {
           select distinct
           case
           when ds.documento_tipo_id in (1,2,3,4,5)  then (case ds.gestion_id when 2010 then right(ds.id,2) when 2013 then right(ds.id,2) else right(ds.id,1) end)
-          when ds.documento_tipo_id in (6,7,8) then left(right(ds.id,4),3)
+          when ds.documento_tipo_id in (6,7,8) then (case when ds.gestion_id >= 2018 then left(right(ds.id,1),1) else left(right(ds.id,4),3) end)  
           when ds.documento_tipo_id in (9) then right(ds.id,2)
           else right(ds.id,1)
           end as serie, gestion_id
@@ -772,14 +772,20 @@ class DocumentoController extends Controller {
         
         $departamentoCodigo = $this->getCodigoLugarRol($usuarioId,$rolId);
         
-        if ($departamentoCodigo == 0 and $msgContenido == ""){
-            $msgContenido = ($msgContenido=="") ? "el usuario no cuenta con autorizacion para los documentos" : $msgContenido.", "."el usuario no cuenta con autorizacion para los el documentos ";
-        } else {
-            // VALIDACION DE TUICION DEL CARTON
-            $valSerieTuicion = $this->validaNumeroSerieTuicion($serie, $departamentoCodigo);
-            if($valSerieTuicion != "" and $msgContenido == ""){
-                $msgContenido = ($msgContenido=="") ? $valSerieTuicion : $msgContenido.", ".$valSerieTuicion;
-            }
+        //if ($departamentoCodigo == 0 and $msgContenido == ""){
+        //    $msgContenido = ($msgContenido=="") ? "el usuario no cuenta con autorizacion para los documentos" : $msgContenido.", "."el usuario no cuenta con autorizacion para los el documentos ";
+        //} else {
+        //    // VALIDACION DE TUICION DEL CARTON
+        //    $valSerieTuicion = $this->validaNumeroSerieTuicion($serie, $departamentoCodigo);
+        //    if($valSerieTuicion != "" and $msgContenido == ""){
+        //        $msgContenido = ($msgContenido=="") ? $valSerieTuicion : $msgContenido.", ".$valSerieTuicion;
+        //    }
+        //}
+
+        // VALIDACION DE TUICION DEL CARTON
+        $valSerieTuicion = $this->validaNumeroSerieTuicion($serie, $departamentoCodigo);
+        if($valSerieTuicion != "" and $msgContenido == ""){
+            $msgContenido = ($msgContenido=="") ? $valSerieTuicion : $msgContenido.", ".$valSerieTuicion;
         }
 
         return $msgContenido;
