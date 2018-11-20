@@ -423,6 +423,22 @@ class ControlCalidadController extends Controller {
                 $query->execute();
                 $resultado = $query->fetchAll();
                 break;
+            
+            case 27://PROMEDIOS
+                $llave = $form['llave'];
+                $parametros = explode('|', $llave);
+                $idInscripcion = $parametros[0];
+                $idNotaTipo = $parametros[1];
+
+                $query = $em->getConnection()->prepare('select * from sp_sist_calidad_prom_fisquim(:param, :idInscripcion, :idNotaTipo, :sie, :gestion);');
+                $query->bindValue(':param', '2');
+                $query->bindValue(':idInscripcion', $idInscripcion);
+                $query->bindValue(':idNotaTipo', $idNotaTipo);
+                $query->bindValue(':sie', $form['institucionEducativa']);
+                $query->bindValue(':gestion', $form['gestion']);
+                $query->execute();
+                $resultado = $query->fetchAll();
+                break;
         }
 
         $message = 'Se realizó la validación satisfactoriamente para la observación: ' . $vproceso->getObs();
