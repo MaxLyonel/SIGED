@@ -47,9 +47,9 @@ sie_rue:
     resource: "@SieRueBundle/Resources/config/routing.yml"
     prefix:   /
 
-# sie_rie:
-#     resource: "@SieRieBundle/Resources/config/routing.yml"
-#     prefix:   /
+sie_rie:
+    resource: "@SieRieBundle/Resources/config/routing.yml"
+    prefix:   /
 
 sie_dgesttla:
     resource: "@SieDgesttlaBundle/Resources/config/routing.yml"

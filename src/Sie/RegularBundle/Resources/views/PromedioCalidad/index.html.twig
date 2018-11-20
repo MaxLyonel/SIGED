@@ -1,0 +1,154 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption%}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Validación promedio Fisica - Química ({{gestion}})
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="#">Validar promedio</a></li>
+    
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Datos del estudiante</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelestudiante"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelestudiante" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            <table class="table">
+                                <tr>
+                                    <th>Rude</th><td>{{inscripcion.estudiante.codigoRude}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Nombre</th><td>{{inscripcion.estudiante.nombre}} {{inscripcion.estudiante.paterno}} {{inscripcion.estudiante.materno}}</td>
+                                </tr>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Datos del inscripción</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelestudiante"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelestudiante" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            <table class="table">
+                                <tr>
+                                    <th>Gestión</th><td>{{inscripcion.institucioneducativaCurso.gestionTipo.gestion}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Sie</th><td>{{inscripcion.institucioneducativaCurso.institucioneducativa.id}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Nivel</th><td>{{inscripcion.institucioneducativaCurso.nivelTipo.nivel}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Grado</th><td>{{inscripcion.institucioneducativaCurso.gradoTipo.grado}}</td>
+                                </tr>
+
+                                <tr>
+                                    <th>Paralelo</th><td>{{inscripcion.institucioneducativaCurso.paraleloTipo.paralelo}}</td>
+                                </tr>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+
+                    <div class="portlet portlet-blue">
+                        <div class="portlet-heading">
+                            <div class="portlet-title">
+                                <h4>Notas</h4>
+                            </div>
+                            <div class="portlet-widgets">
+                                <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelnotas"><i class="fa fa-chevron-down"></i></a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div id="panelnotas" class="panel-collapse collapse in">
+                            <div class="portlet-body">
+                                <div class="panel-body panel-primary">
+                                    <div class="alert alert-danger">
+                                        Debe verificar y validar el promedio de Fisica - Quimica en el {{bimestre}}º bimestre para la gestión {{gestion}}, en la unidad educativa: {{sie}}
+                                    </div>
+                                    <form action="{{path('promedio_calidad_save')}}" method="post">
+                                        <input type="hidden" name="idObservacion" value="{{idObservacion}}">
+                                        <input type="hidden" name="idNota" value="{{nota.id}}">
+                                        <input type="hidden" name="promedio" value="{{promedio}}">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Materia</th>
+                                                    <th>Promedio</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for n in notas %}
+                                                    <tr {% if n.codigo == 1051 %} class="text-primary" {% endif %}
+                                                    >
+                                                        <td>{{n.asignatura}}</td>
+                                                        <td>
+                                                            {% if n.codigo == 1051 %}
+                                                                <strong>{{ promedio }} &nbsp;&nbsp; <label class="label label-primary"> Calculado por el sistema</label></strong>
+                                                            {% else %}
+                                                                {{ n.notaCuantitativa }}
+                                                            {% endif %}    
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                        <hr>
+                                        <div class="well well-lg">
+                                            <p>¿Está de acuerdo con el promedio calculado por el sistema?</p>
+                                            <div class="radio">
+                                                <label><input type="radio" name="acuerdo" checked value="1"> Si estoy de acuerdo.</label>
+                                            </div>
+                                            <div class="radio">
+                                                <label><input type="radio" name="acuerdo" value="0"> No estoy de acuerdo.</label>
+                                            </div>
+                                            <br>
+                                            <button type="submit" class="btn btn-primary"> Validar</button>
+                                        </div>
+                                        
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+    </div>
+
+    
+{% endblock %}

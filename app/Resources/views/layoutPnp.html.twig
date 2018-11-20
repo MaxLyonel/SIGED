@@ -241,6 +241,9 @@
                                 {% if ('8' == app.session.get('roluser')) %}
                                     <li><a href="{{path('sie_pnp_abrir_curso')}}">
                                         <i class="fa fa-angle-double-right"></i> Abrir Cursos</a>
+                                     </li>
+                                     <li><a href="{{path('sie_pnp_cerrar_curso')}}">
+                                        <i class="fa fa-angle-double-right"></i> Cerrar Cursos</a>
                                      </li> 
                                 {% endif %}
                                 {% if ('8' == app.session.get('roluser')) or ('21' == app.session.get('roluser')) %}

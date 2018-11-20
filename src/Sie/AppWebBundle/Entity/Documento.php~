@@ -276,4 +276,172 @@ class Documento
     {
         return $this->documentoEstado;
     }
+    /**
+     * @var string
+     */
+    private $tokenPrivado;
+
+    /**
+     * @var string
+     */
+    private $tokenPublico;
+
+    /**
+     * @var string
+     */
+    private $url;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\Usuario
+     */
+    private $usuario;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\DocumentoFirma
+     */
+    private $documentoFirma;
+
+
+    /**
+     * Set tokenPrivado
+     *
+     * @param string $tokenPrivado
+     * @return Documento
+     */
+    public function setTokenPrivado($tokenPrivado)
+    {
+        $this->tokenPrivado = $tokenPrivado;
+    
+        return $this;
+    }
+
+    /**
+     * Get tokenPrivado
+     *
+     * @return string 
+     */
+    public function getTokenPrivado()
+    {
+        return $this->tokenPrivado;
+    }
+
+    /**
+     * Set tokenPublico
+     *
+     * @param string $tokenPublico
+     * @return Documento
+     */
+    public function setTokenPublico($tokenPublico)
+    {
+        $this->tokenPublico = $tokenPublico;
+    
+        return $this;
+    }
+
+    /**
+     * Get tokenPublico
+     *
+     * @return string 
+     */
+    public function getTokenPublico()
+    {
+        return $this->tokenPublico;
+    }
+
+    /**
+     * Set url
+     *
+     * @param string $url
+     * @return Documento
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    
+        return $this;
+    }
+
+    /**
+     * Get url
+     *
+     * @return string 
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * Set usuario
+     *
+     * @param \Sie\AppWebBundle\Entity\Usuario $usuario
+     * @return Documento
+     */
+    public function setUsuario(\Sie\AppWebBundle\Entity\Usuario $usuario = null)
+    {
+        $this->usuario = $usuario;
+    
+        return $this;
+    }
+
+    /**
+     * Get usuario
+     *
+     * @return \Sie\AppWebBundle\Entity\Usuario 
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * Set documentoFirma
+     *
+     * @param \Sie\AppWebBundle\Entity\DocumentoFirma $documentoFirma
+     * @return Documento
+     */
+    public function setDocumentoFirma(\Sie\AppWebBundle\Entity\DocumentoFirma $documentoFirma = null)
+    {
+        $this->documentoFirma = $documentoFirma;
+    
+        return $this;
+    }
+
+    /**
+     * Get documentoFirma
+     *
+     * @return \Sie\AppWebBundle\Entity\DocumentoFirma 
+     */
+    public function getDocumentoFirma()
+    {
+        return $this->documentoFirma;
+    }
+    /**
+     * @var string
+     */
+    private $tokenImpreso;
+
+
+    /**
+     * Set tokenImpreso
+     *
+     * @param string $tokenImpreso
+     * @return Documento
+     */
+    public function setTokenImpreso($tokenImpreso)
+    {
+        $this->tokenImpreso = $tokenImpreso;
+    
+        return $this;
+    }
+
+    /**
+     * Get tokenImpreso
+     *
+     * @return string 
+     */
+    public function getTokenImpreso()
+    {
+        return $this->tokenImpreso;
+    }
 }

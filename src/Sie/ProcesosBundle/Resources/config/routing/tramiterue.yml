@@ -10,6 +10,10 @@ tramite_rue_recepcion_distrito:
     path:     /recepciondistrito
     defaults: { _controller: "SieProcesosBundle:TramiteRue:recepcionDistrito" }
 
+tramite_rue_form_nuevo:
+    path:     /nuevoform
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:formNuevo" }
+
 tramite_rue_buscar_rue:
     path:     /buscarrue
     defaults: { _controller: "SieProcesosBundle:TramiteRue:buscarRue" }

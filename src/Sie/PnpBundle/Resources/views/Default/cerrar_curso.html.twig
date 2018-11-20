@@ -1,0 +1,123 @@
+{% extends 'layoutPnp.html.twig' %}
+
+{% block body -%}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1 class="glyphicon glyphicon-home"> CERRAR CURSO(S)</h1>
+                <ol class="breadcrumb">
+                    
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('notice') %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Bien!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('error') %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>¡Advertencia!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+            <form action="{{ path('sie_pnp_cerrar_curso') }}" method="POST">
+            <!-- Website Stats  Widget -->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 col-lg-12">
+                        <div class="panel panel-icon panel-primary">
+                            <div class="panel-heading">
+                                <div class="portlet-title">
+                                    Inserte Datos
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <form class="form-inline">
+                                        <div class="col-md-7" align="center">
+                                            <div class="form-group">  
+                                                <label for="exampleInputName2">Digitar los Id de los cursos Ej: (ID,ID,ID)</label>
+                                               <textarea name="curso_id" id="curso_id" class="form-control" required="required"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3" align="center">
+                                            <div class="form-group">          
+                                                <label for="exampleInputEmail2">CI del Informátcio Departamental</label>
+                                                 <input name="ci" id="ci" class="form-control" minlength="6" maxlength="9"  pattern="[0-9]{6,9}" title="Ci facilitador" required="required" placeholder="Ci FACILITADOR" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2" align="center">
+                                            <div class="form-group">          
+                                                <label for="exampleInputEmail2">Complemento</label>
+                                                 <input name="complemento" id="complemento" class="form-control" minlength="2" maxlength="2" title="Complemento del facilitador" placeholder="Complemento" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div>&nbsp;</div>
+                                            <a role="button" onclick="return SeeBuscar()" class="btn btn-primary" href="#" > Buscar</a><br/><br/>
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+           <div id="facilitador"></div>
+
+
+            <!-- End of Website Stats Widget -->
+
+        </div>
+    </div>
+
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+ function SeeBuscar(){
+        
+        var ci = document.getElementById("ci").value;
+        var complemento = document.getElementById("complemento").value;
+        var curso_id = document.getElementById("curso_id").value;
+
+        if (ci=="" || curso_id==""){
+            alert("el ID del curso y/o CI estan vacios");
+            return false;
+        }
+        if (complemento=="")complemento=0;
+        
+        var formData = $('#formxls').serialize();
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('sie_pnp_cerrar_curso_encontrado', {'ci': ci,'complemento':complemento,'curso_id': curso_id}),
+            data: formData,
+            beforeSend: function () {
+                $("#facilitador").empty();
+                $("#facilitador").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+            },
+            success: function (data) {
+                $("#facilitador").empty();
+                $("#facilitador").append(data);
+            },
+            error: function(data){
+                $("#facilitador").empty();
+                $("#facilitador").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+            }
+        });
+    }
+    </script>
+{% endblock %}

@@ -55,20 +55,29 @@ class RegistroInstitucionEducativaController extends Controller {
     public function listAction(Request $request){
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');        
+        $id_lugar = $sesion->get('roluserlugarid');
+        $id_rol = $sesion->get('roluser');        
         $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery('SELECT se
-                                     FROM SieAppWebBundle:TtecInstitucioneducativaSede se
-                                     JOIN se.institucioneducativa ie 
-                                    WHERE ie.institucioneducativaTipo in (:idTipo)
-                                      AND ie.estadoinstitucionTipo in (:idEstado)
-                                      AND se.estado = :estadoSede
-                                ORDER BY ie.id ')
-                                    ->setParameter('idTipo', array(7, 8, 9))
-                                    ->setParameter('idEstado', 10)
-                                    ->setParameter('estadoSede', TRUE);        
-        $entities = $query->getResult(); 
 
-        return $this->render('SieRieBundle:RegistroInstitucionEducativa:list.html.twig', array('entities' => $entities));
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($id_lugar);
+
+        $query = $em->createQuery('SELECT se
+            FROM SieAppWebBundle:TtecInstitucioneducativaSede se
+            INNER JOIN se.institucioneducativa ie 
+            WHERE ie.institucioneducativaTipo in (:idTipo)
+            AND ie.estadoinstitucionTipo in (:idEstado)
+            AND se.estado = :estadoSede
+            ORDER BY ie.id ')
+            ->setParameter('idTipo', array(7, 8, 9))
+            ->setParameter('idEstado', 10)
+            ->setParameter('estadoSede', TRUE);
+        
+        $entities = $query->getResult();
+        
+        return $this->render('SieRieBundle:RegistroInstitucionEducativa:list.html.twig', array(
+            'entities' => $entities,
+            'lugarUsuario' => intval($lugar->getCodigo())
+        ));
     }
 
     /**
@@ -113,7 +122,7 @@ class RegistroInstitucionEducativaController extends Controller {
                                             AND ie.institucioneducativaAcreditacionTipo = :ieAcreditacion
                                        ORDER BY ie.id')
     		                ->setParameter('id','%' . strtoupper($form['institucioneducativa']) . '%')
-                        ->setParameter('ieAcreditacion', 1);
+                        ->setParameter('ieAcreditacion', 2);
     	}else{
     		$query = $em->createQuery(
     				'SELECT ie
@@ -122,7 +131,7 @@ class RegistroInstitucionEducativaController extends Controller {
                             and ie.institucioneducativaAcreditacionTipo = :ieAcreditacion
                             ORDER BY ie.id')
     		                ->setParameter('id', $form['institucioneducativaId'])
-                            ->setParameter('ieAcreditacion', 1);
+                            ->setParameter('ieAcreditacion', 2);
     	}
 
     	$entities = $query->getResult();
@@ -141,6 +150,11 @@ class RegistroInstitucionEducativaController extends Controller {
      * Muestra formulario de registro de Institución Educativa 
      */
     public function newAction(Request $request){
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
         $em = $this->getDoctrine()->getManager();
         // Obteniendo array de Dependencia(Caracter Juridico) | Estado | Tipo | Nivel | AreaFormacion
         $dependenciasArray = $this->obtieneDependenciaArray();
@@ -159,7 +173,7 @@ class RegistroInstitucionEducativaController extends Controller {
         ->add('dependenciaTipo', 'choice', array('label' => 'Carácter Jurídico', 'disabled' => false,'choices' => $dependenciasArray, 'attr' => array('class' => 'form-control')))
         ->add('institucionEducativaTipo', 'choice', array('label' => 'Tipo de Institución', 'disabled' => false,'choices' => $tiposArray, 'attr' => array('class' => 'form-control')))
         ->add('obsRue', 'text', array('label' => 'Observación', 'required' => false, 'attr' => array('class' => 'form-control', 'maxlength'=>'190')))
-        ->add('leJuridicciongeograficaId', 'text', array('label' => 'Código LE','required' => true, 'attr' => array('placeholder'=>'########', 'class' => 'form-control', 'pattern' => '[0-9]{8,17}', 'maxlength' => '8')))
+        ->add('leJuridicciongeograficaId', 'text', array('label' => 'Código LE','required' => true, 'attr' => array('listactplaceholder'=>'########', 'class' => 'form-control', 'pattern' => '[0-9]{8,17}', 'maxlength' => '8')))
         ->add('departamento', 'text', array('label' => 'Departamento', 'disabled' => true, 'attr' => array('class' => 'form-control')))
         ->add('provincia', 'text', array('label' => 'Provincia', 'disabled' => true, 'attr' => array('class' => 'form-control')))
         ->add('municipio', 'text', array('label' => 'Municipio', 'disabled' => true, 'attr' => array('class' => 'form-control')))
@@ -177,10 +191,19 @@ class RegistroInstitucionEducativaController extends Controller {
      */
     public function createAction(Request $request) {
     	try {
+
+            $sesion = $request->getSession();
+            $id_usuario = $sesion->get('userId');
+            if (!isset($id_usuario)){
+                return $this->redirect($this->generateUrl('login'));
+            }
+
     		$em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
     		$form = $request->get('form');
-
+            
+            $form['fechaResolucion']=date("Y-m-d",strtotime($form['fechaResolucion']));
+            
             $buscar_institucion = $this->validarInstitucionEducativa($form);
     		if($buscar_institucion != 99){ // En caso de existir el instituto no se puede guardar
     			$this->get('session')->getFlashBag()->add('msgSearch', 'La institución educativa se encuentra registrada, con código(s) RIE : '.$buscar_institucion);
@@ -192,6 +215,7 @@ class RegistroInstitucionEducativaController extends Controller {
     		$query->bindValue(':codle', $form['leJuridicciongeograficaId']);
     		$query->execute();
     		$codigoue = $query->fetchAll();
+
     		$entity = new Institucioneducativa();
     		$entity->setId($codigoue[0]["get_genera_codigo_ue"]);
             $ieducativatipo = $em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->findOneById($form['institucionEducativaTipo']);
@@ -208,11 +232,12 @@ class RegistroInstitucionEducativaController extends Controller {
             $entity->setObsRue(mb_strtoupper($form['obsRue'], 'utf-8'));
     		$entity->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($form['leJuridicciongeograficaId']));
     		$entity->setOrgcurricularTipo($ieducativatipo->getOrgcurricularTipo());
-            $entity->setInstitucioneducativaAcreditacionTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaAcreditacionTipo')->find(1));
+            $entity->setInstitucioneducativaAcreditacionTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaAcreditacionTipo')->find(3));
             $em->persist($entity);
     		$em->flush();
 
             //datos de sede y subsede del instituto tt
+            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('ttec_institucioneducativa_sede');")->execute();
             switch($form['idRieSede']){
                 case 0: //caso Sede
                         $sede = new TtecInstitucioneducativaSede();
@@ -287,6 +312,12 @@ class RegistroInstitucionEducativaController extends Controller {
      * Muestra formulario de edicion de Institución Educativa 
      */
      public function editAction(Request $request) {
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        if (!isset($id_usuario)){
+            return $this->redirect($this->generateUrl('login'));
+        }
+        
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
 

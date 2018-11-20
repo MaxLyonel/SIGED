@@ -1,0 +1,35 @@
+solicitud_bth_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:index }
+solicitud_bth_nuevasolicitud:
+    path:     bthnuevasolicitud/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:nuevasolicitud }
+solicitud_bth_enviosolicitud:
+    path:     bthenviosolicitud/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:guardasolicitud }
+solicitud_bth_distrital_index:
+    path:     bthsolicitud/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:SolicitidBTHDis }
+solicitud_bth_solicitudBTHDis:
+    path:     bthsolicitudBTHDis/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:VerSolicitudBTHDis }
+
+
+
+
+
+solicitud_ritt_inicio:
+    path:     /RITTinicio/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:InicioRITTDep }
+
+solicitud_ritt_solicitudRITT:
+    path:     /RITTsolicitud/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:SolicitudRITT }
+solicitud_ritt_enviosolicitudRITT:
+    path:     rittenviosolicitud/
+    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:guardasolicitudRitt }
+
+
+
+
+

@@ -22,13 +22,15 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="body">
+                {% if app.session.get('roluser') == 8 %}
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
                             <a href="{{path('area_rie_new')}}" class="btn btn-md bg-orange waves-effect">
                                 <i class="material-icons">add_box</i>Nuevo
                             </a>
                         </div>
-                    </div>                 
+                    </div>  
+                {% endif %}               
                     <div class="table-responsive">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <!-- <table class="table table-bordered table-striped table-hover js-basic-example dataTable"> -->
@@ -45,6 +47,7 @@
                                 <tbody>
                                     {% for area in areas %}
                                         <tr>
+                                            {% if app.session.get('roluser') == 8  %}
                                             <td>
                                                 <a href="{{path('area_rie_edit', {'idArea': area.id })}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Editar">
                                                     <i class="material-icons">mode_edit</i>
@@ -53,6 +56,18 @@
                                             <td>
                                                 <a href="{{path('area_rie_delete', {'idArea': area.id} )}}" onclick="return confirmar('{{area.id}}')" class="btn btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete_forever</i></a>                                                 
                                             </td>
+                                            {% else %}
+                                            <td>
+                                                <button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" disabled="disabled" data-toggle="tooltip" data-placement="top" title="Carrera Autorizada, no puede modificar">
+                                                        <i class="material-icons">mode_edit</i>
+                                                    </button>  
+                                            </td>
+                                            <td>
+                                                 <button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" disabled="disabled" data-toggle="tooltip" data-placement="top" title="Carrera Autorizada, no puede eliminar">
+                                                        <i class="material-icons">delete_forever</i>
+                                                    </button>
+                                            </td>
+                                            {% endif %}
                                             <td>{{area.institucioneducativaTipo.descripcion}}</td>
                                             <td>{{area.areaFormacion}}</td>
                                         </tr>
@@ -60,6 +75,7 @@
 
                                     {% for area in areas1 %}
                                         <tr>
+                                            {% if app.session.get('roluser') == 8  %}
                                             <td>
                                                 <a href="{{path('area_rie_edit', {'idArea': area.id })}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Editar">
                                                     <i class="material-icons">mode_edit</i>
@@ -68,6 +84,18 @@
                                             <td>
                                                 <a href="{{path('area_rie_delete', {'idArea': area.id} )}}" onclick="return confirmar('{{area.id}}')" class="btn btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete_forever</i></a>    
                                             </td>
+                                            {% else %}
+                                            <td>
+                                                <button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" disabled="disabled" data-toggle="tooltip" data-placement="top" title="Carrera Autorizada, no puede modificar">
+                                                        <i class="material-icons">mode_edit</i>
+                                                    </button>  
+                                            </td>
+                                            <td>
+                                                 <button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" disabled="disabled" data-toggle="tooltip" data-placement="top" title="Carrera Autorizada, no puede eliminar">
+                                                        <i class="material-icons">delete_forever</i>
+                                                    </button>
+                                            </td>
+                                            {% endif %}
                                             <td>{{area.institucioneducativaTipo.descripcion}}</td>
                                             <td>{{area.areaFormacion}}</td>
                                         </tr>

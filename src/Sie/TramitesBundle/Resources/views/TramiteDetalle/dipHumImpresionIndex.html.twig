@@ -11,7 +11,7 @@
                 <div class="panel">
                     <div class="panel-heading">
                         <div class="pull-left">
-                            <h4 class="panel-title">U.E.: {{infoAutorizacionUnidadEducativa.institucioneducativa}}</h4>
+                            <h4 class="panel-title">{{infoAutorizacionUnidadEducativa.institucioneducativa}}</h4>
                         </div>
                         <div class="pull-right">
                             <button class="btn btn-danger" id="botonModalDevolver" name="botonModalDevolver" data-action="search" data-toggle="tooltip" data-placement="top" data-title="Devolver" data-original-title="" title="Devolver" disabled="true" >Devolver</button>
@@ -39,20 +39,30 @@
                             </div>
                             <div class="clearfix">
                                 <div class="row">
-                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                                         Nro. Serie Inicial: <input type="number" name="numeroSerie" id="numeroSerie" min="1" max="999999" class="form-control" onKeyDown="validarFormImpresion(this)" onKeyUp="validarFormImpresion(this)" onchange="validarFormImpresion(this)"/>
                                     </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                                         Serie:
-                                        <select class="form-control" name="serie" id="serie">
+                                        <select class="form-control" name="serie" id="serie" onchange="validarFormImpresion(this)">
                                             {% for serie in series %}
                                                 <option value="{{serie.serie}}">{{serie.serie}}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                    Fecha de emisión
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                        Fecha de emisión
                                         <input name="fechaSerie" id="fechaSerie" class="form-control date-range-picker-single" value="{{ "now"|date("d/m/Y", "America/La_Paz") }}" type="text">
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                        Firma:
+                                        <select class="form-control" name="firma" id="firma" onchange="validarFormImpresion(this)">
+                                            <option value="">Seleccione la persona que firmara</option>
+                                            {% for firma in listaFirma %}
+                                                <option value="{{ firma.documento_firma_id|base64_encode }}">{{firma.nombre}} {{firma.paterno}} {{firma.materno}}</option>
+                                            {% endfor %}
+                                            <option value="{{ 0|base64_encode }}">SIN FIRMA EN EL DOCUMENTO</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -119,7 +129,7 @@
                                             <td>{{ participante.nombre }}</td>
                                             <td>{{ participante.fecha_nacimiento }} - {{ participante.lugar_nacimiento }}</td>
                                             <td>
-                                                {% if participante.gestion_tipo_id != "now"|date("Y") %}
+                                                {% if participante.gestion_tipo_id == "now"|date("Y") %}
                                                   {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
                                                     <span class="label label-danger rounded">{{ participante.estadomatricula }}</span>
                                                   {% else %}
@@ -145,18 +155,18 @@
                                                 {% set registro = true %}
                                                 {% set anular = false %}
 
-                                                {% if participante.gestion_tipo_id != "now"|date("Y") %}
+                                                {% if participante.gestion_tipo_id == "now"|date("Y") %}
                                                   {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
-                                                    {% set anular = true %}
+                                                    {% set registro = false %}
                                                   {% endif %}
                                                 {% else %}
                                                   {% if participante.nivel_tipo_id == 13 %}
                                                     {% if participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
-                                                      {% set anular = true %}
+                                                      {% set registro = false %}
                                                     {% endif %}
                                                   {% else %}
                                                     {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
-                                                      {% set anular = true %}
+                                                      {% set registro = false %}
                                                     {% endif %}
                                                   {% endif %}
                                                 {% endif %}

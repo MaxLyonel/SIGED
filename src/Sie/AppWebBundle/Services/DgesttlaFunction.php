@@ -225,6 +225,16 @@ class DgesttlaFunction {
 
   }
 
+  public function esAcreditadoRitt($idritt)
+  {
+      $institucion = $this->em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($idritt);
+      if ($institucion->getInstitucioneducativaAcreditacionTipo()->getId() == 2){
+          return TRUE;
+      }else{
+          return FALSE;
+      }
+  }
+
 }
 
  ?>

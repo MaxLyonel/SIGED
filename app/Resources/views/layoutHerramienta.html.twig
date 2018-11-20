@@ -38,6 +38,9 @@
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/jasny-bootstrap-fileinput/css/jasny-bootstrap-fileinput.min.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.min.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
+
 
 
             <link href="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
@@ -67,9 +70,7 @@
             <link href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
             <link href="{{ asset('webherramienta/assets/global/plugins/bower_components/jquery.gritter/css/jquery.gritter.css') }}" rel="stylesheet" />
             <link href="{{asset('css/plugins/bootstrap-datepicker/datepicker3.css')}}" rel="stylesheet">
-
-            <link href="{{asset('css/style.css')}}" rel="stylesheet">
-        </head
+        </head>
     {%endblock%}
     <!--/ END HEAD -->
 
@@ -320,9 +321,9 @@
                             <span class="arrow"></span>
                         </a>
                         <ul>
-                            {#<li><a href="{{ path('bach_exc_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li>#}
+                            <li><a href="{{ path('bach_exc_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li>
                             <li><a href="{{ path('bach_exc_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li>
-                            {#<li><a href="{{ path('bach_exc')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>#}
+                            <li><a href="{{ path('bach_exc')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>
                             <li><a href="{{ path('bach_exc_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>
                         </ul>
                     </li>
@@ -359,6 +360,17 @@
                         <li><a href="{{ path('herramienta_info_maestro_migrar_index')}}">Personal Docente</a></li>
                       </ul>
                     </li>
+                        {#<li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-diamond"></i></span>
+                                <span class="text">Proceso BTH</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('solicitud_bth_index')}}">Solicitud BTH</a></li>
+
+                            </ul>
+                        </li>#}
                     {% endif %}
 
                     {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10 or app.session.get('roluser') == 20 %}
@@ -380,12 +392,33 @@
                             <span class="arrow"></span>
                         </a>
                         <ul>
-                        {#% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 %}
+                        {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 %}
                            <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>
-                        {% endif %#}
+                        {% endif %}
                             <li><a href="{{ path('bach_exc_rep_dis')}}">Generar Reporte</a></li>
                         </ul>
                     </li>
+                        {#<li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-diamond"></i></span>
+                                <span class="text">Proceso BTH</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('solicitud_bth_distrital_index')}}">Solicitud BTH</a></li>
+
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-diamond"></i></span>
+                                <span class="text">Proceso RITT</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('solicitud_ritt_inicio')}}">Solicitud RITT</a></li>
+                            </ul>
+                        </li>#}
                     {% endif %}
 
                     {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10 %}
@@ -1220,6 +1253,11 @@
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap-maxlength/bootstrap-maxlength.min.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery-autosize/jquery.autosize.min.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.jquery.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/js/fuelux.min.js')}}"></script>
+
 
             <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
             <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.min.js')}}"></script>
@@ -1249,7 +1287,10 @@
             <script src="{{ asset('webherramienta/assets/global/plugins/bower_components/jquery.gritter/js/jquery.gritter.min.js') }}"></script>
 
             <script src="{{asset('js/plugins/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
+
             <script src="{{ asset('js/initialize.js')}}"></script>
+            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
             <!--/ END GOOGLE ANALYTICS -->
 
             <script src="{{ asset('js/highcharts/highcharts.js')}}"></script>

@@ -1478,4 +1478,31 @@ class ReportesController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
     }
+
+     public function reportCertificadosPrimariaAction(Request $request) {
+        
+
+      //get the data send to the report
+        $infoUe = $request->get('data');
+        $aInfoUeducativa = unserialize($infoUe);
+        
+        $sie = $this->session->get('ie_id');
+        $idCurso = $aInfoUeducativa['ueducativaInfoId']['iecId'];
+        $gestion = $this->session->get('ie_gestion');
+        $subcea = $this->session->get('ie_subcea');
+        $periodo = 4;
+      
+      
+        //get the values of report
+        //create the response object to down load the file
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'certificadoMID_' . $sie . '_' . $gestion . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_cert_capacitacion_v1_ma.rptdesign&Sie=' . $sie . '&Gestion=' . $gestion . '&Periodo=' . $periodo . '&Subcea=' . $subcea . '&Idcurso=' . $idCurso . '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
 }

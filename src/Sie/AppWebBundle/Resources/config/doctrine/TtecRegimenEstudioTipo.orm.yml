@@ -14,14 +14,14 @@ Sie\AppWebBundle\Entity\TtecRegimenEstudioTipo:
         regimenEstudio:
             type: string
             nullable: false
-            length: 45
+            length: 150
             fixed: false
             comment: ''
             column: regimen_estudio
         descripcion:
             type: string
             nullable: true
-            length: 45
+            length: 150
             fixed: false
             comment: ''
     lifecycleCallbacks: {  }

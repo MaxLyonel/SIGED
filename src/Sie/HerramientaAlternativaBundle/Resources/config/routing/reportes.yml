@@ -147,3 +147,7 @@ sie_alt_lista_ceaspendientes:
 sie_alt_lista_operativos:
     path:     /reportesCeasOperativos
     defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportesCeasOperativos} 
+
+herramienta_alter_certificados_primaria:
+    path:     /siealtcertificados
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportCertificadosPrimaria }             

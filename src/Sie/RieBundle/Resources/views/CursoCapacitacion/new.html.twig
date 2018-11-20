@@ -55,7 +55,7 @@
                             <label class="form-label">{{form_label(form.regimenEstudio)}}</label>
                             <div class="form-group">
                                 <div class="form-line">
-                                    {{form_widget(form.regimenEstudio,{'attr':{'onchange':'cargarTiempoEstudio()'}}) }}
+                                    {{form_widget(form.regimenEstudio) }}
                                 </div>
                             </div>                                                                                    
 
@@ -93,7 +93,14 @@
 {% block javascripts %}
     {{parent()}}
     <script>
-        
+        $(function(){
+            $(".validar").keydown(function(event){
+            //alert(event.keyCode);
+                if((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !==190  && event.keyCode !==110 && event.keyCode !==8 && event.keyCode !==9  ){
+                    return false;
+                }
+            });
+        });
         function cargarTiempoEstudio(){
             regimen = $("#form_regimenEstudio").val();
             //Anual = 1; Semestral=2; modular = 3

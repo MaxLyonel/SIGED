@@ -15,6 +15,8 @@ use Sie\TramitesBundle\Controller\DefaultController as defaultTramiteController;
 use Sie\TramitesBundle\Controller\TramiteDetalleController as tramiteProcesoController;
 use Sie\TramitesBundle\Controller\TramiteController as tramiteController;
 
+use phpseclib\Crypt\RSA;
+
 class DocumentoController extends Controller {
 
     /**
@@ -34,7 +36,7 @@ class DocumentoController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $entityDocumento = $em->getRepository('SieAppWebBundle:Documento');
         $query = $entityDocumento->createQueryBuilder('d')
-                ->select("d.id as id, t.id as tramite, ds.id as serie, d.fechaImpresion as fechaemision, dept.departamento as departamentoemision, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documentoTipo as documentoTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad, tt.tramiteTipo as tramiteTipo")
+                ->select("d.id as id, t.id as tramite, ei.id as estudianteInscripcionId, ds.id as serie, d.fechaImpresion as fechaemision, dept.id as departamentoemisionid, dept.departamento as departamentoemision, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documentoTipo as documentoTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad, tt.tramiteTipo as tramiteTipo")
                 ->leftJoin('SieAppWebBundle:DocumentoEstado', 'de', 'WITH', 'de.id = d.documentoEstado')
                 ->innerJoin('SieAppWebBundle:DocumentoTipo', 'dt', 'WITH', 'dt.id = d.documentoTipo')
                 ->innerJoin('SieAppWebBundle:DocumentoSerie', 'ds', 'WITH', 'ds.id = d.documentoSerie')
@@ -286,7 +288,7 @@ class DocumentoController extends Controller {
           select distinct
           case
           when ds.documento_tipo_id in (1,2,3,4,5)  then (case ds.gestion_id when 2010 then right(ds.id,2) when 2013 then right(ds.id,2) else right(ds.id,1) end)
-          when ds.documento_tipo_id in (6,7,8) then left(right(ds.id,4),3)
+          when ds.documento_tipo_id in (6,7,8) then (case when ds.gestion_id >= 2018 then left(right(ds.id,1),1) else left(right(ds.id,4),3) end)  
           when ds.documento_tipo_id in (9) then right(ds.id,2)
           else right(ds.id,1)
           end as serie, gestion_id
@@ -560,7 +562,7 @@ class DocumentoController extends Controller {
     // PARAMETROS: tramiteId, usuarioId, documentoTipo, numeroSerie, tipoSerie, fecha
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function setDocumento($tramiteId, $usuarioId, $documentoTipo, $numeroSerie, $tipoSerie, $fecha) {
+    public function setDocumento($tramiteId, $usuarioId, $documentoTipo, $numeroSerie, $tipoSerie, $fecha, $documentoFirmaId) {
         /*
          * Define la zona horaria y halla la fecha actual
          */
@@ -568,7 +570,6 @@ class DocumentoController extends Controller {
         $fechaActual = new \DateTime(date('Y-m-d'));
         //$fecha = new \DateTime($fecha);
         $em = $this->getDoctrine()->getManager();
-
         /*
          * Define el conjunto de valores a ingresar - Documento
          */
@@ -577,19 +578,94 @@ class DocumentoController extends Controller {
         $entityDocumentoTipo = $em->getRepository('SieAppWebBundle:DocumentoTipo')->findOneBy(array('id' => $documentoTipo));
         $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->findOneBy(array('id' => $numeroSerie.$tipoSerie));
         $entityDocumentoEstado = $em->getRepository('SieAppWebBundle:DocumentoEstado')->findOneBy(array('id' => 1));
+        $entityUsuario = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('id' => $usuarioId));
         $entityDocumento = new Documento();
         $entityDocumento->setDocumento('');
         $entityDocumento->setDocumentoTipo($entityDocumentoTipo);
         $entityDocumento->setObs($entityDocumentoTipo->getDocumentoTipo() . ' generado');
         $entityDocumento->setDocumentoSerie($entityDocumentoSerie);
-        $entityDocumento->setUsuarioId($usuarioId);
+        $entityDocumento->setUsuario($entityUsuario);
         $entityDocumento->setFechaImpresion($fecha);
         $entityDocumento->setFechaRegistro($fechaActual);
         $entityDocumento->setTramite($entityTramite);
         $entityDocumento->setDocumentoEstado($entityDocumentoEstado);
         $em->persist($entityDocumento);
         $em->flush();
-        return $entityDocumento->getId();
+
+        $documentoId = $entityDocumento->getId();
+        if($documentoTipo == 1 or $documentoTipo == 2){
+            if ($documentoFirmaId != 0 and $documentoFirmaId != ""){
+                $entityDocumentoGenerado = $this->getDocumento($documentoId);
+
+                $entityDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->findOneBy(array('id' => $documentoFirmaId));
+
+                $personaTipoId = 0;
+                switch ($documentoTipo) {
+                    case 1:
+                        $personaTipoId = 1;
+                        break;
+                    case 2:
+                        $personaTipoId = 2;
+                        break;
+                    default:
+                        $personaTipoId = 0;
+                }
+
+                $getDocumentoFirma = $this->getDocumentoFirmaLugar($entityDocumentoFirma->getPersona()->getId(), $entityDocumentoGenerado['departamentoemisionid'], $personaTipoId);
+               
+                // dump($getDocumentoFirma);die;
+                $lugarNacimiento = "";
+                if($entityDocumentoGenerado['departamentonacimiento'] == ""){
+                    $lugarNacimiento = $entityDocumentoGenerado['departamentonacimiento']." - ".$entityDocumentoGenerado['paisnacimiento'];
+                } else {
+                    $lugarNacimiento = $entityDocumentoGenerado['paisnacimiento'];
+                }    
+                
+                $dateNacimiento = date_create($entityDocumentoGenerado['fechanacimiento']);
+                $dateEmision = date_create($entityDocumentoGenerado['fechaemision']);
+            
+                $datos = array(
+                    'inscripcion'=>$entityDocumentoGenerado['estudianteInscripcionId'],
+                    'tramite'=>$entityDocumentoGenerado['tramite'],
+                    'serie'=>$entityDocumentoGenerado['serie'],
+                    'codigorude'=>$entityDocumentoGenerado['rude'],
+                    'sie'=>$entityDocumentoGenerado['sie'],
+                    'gestionegreso'=>$entityDocumentoGenerado['gestion'],
+                    'nombre'=>$entityDocumentoGenerado['nombre'],
+                    'paterno'=>$entityDocumentoGenerado['paterno'],
+                    'materno'=>$entityDocumentoGenerado['materno'],
+                    'nacimientolugar'=>$lugarNacimiento,
+                    'nacimientofecha'=>date_format($dateNacimiento, 'd/m/Y'),
+                    'cedulaidentidad'=>$entityDocumentoGenerado['carnetIdentidad'],
+                    'emisiondepartamento'=>$entityDocumentoGenerado['departamentoemision'],
+                    'emisionfecha'=>date_format($dateEmision, 'd/m/Y'),
+                    'tokenfirma'=>base64_encode($getDocumentoFirma['tokenfirma'])
+                );
+                $keys = $this->getEncodeRSA($datos);
+
+                // registro de la firma en el documento generado
+                $entityDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->findOneBy(array('id' => $getDocumentoFirma['id']));
+                $entityDocumento->setDocumentoFirma($entityDocumentoFirma);
+                $entityDocumento->setTokenPublico($keys['keyPublica']);
+                $entityDocumento->setTokenPrivado($keys['keyPrivada']);
+                $entityDocumento->setTokenImpreso($keys['token']);
+                $em->persist($entityDocumento);
+                $em->flush();
+
+                // dump($entityDocumento);dump($entityDocumentoFirma);dump($datos);die;    
+                
+                // incremento de la firma usada en la tabla de parametros documentoFirmaAutorizada
+                $documentoFirmaAutorizadaId = $this->getDocumentoFirmaAutorizadaIncrementar($entityDocumentoFirma->getPersona()->getId(), $documentoTipo);
+                $entityDocumentoFirmaAutorizada = $em->getRepository('SieAppWebBundle:DocumentoFirmaAutorizada')->findOneBy(array('id' => $documentoFirmaAutorizadaId));
+                $cantidadIncremento = ($entityDocumentoFirmaAutorizada->getUsado()) + 1;
+                $entityDocumentoFirmaAutorizada->setUsado($cantidadIncremento);
+                $em->persist($entityDocumentoFirmaAutorizada);
+                $em->flush();
+            } 
+
+            // $entityDocumentoFirmaAutorizada = $em->getRepository('SieAppWebBundle:DocumentoFirmaAutorizada')->findOneBy(array('id' => $documentoFirmaAutorizadaId['id']));
+        }
+        return $documentoId;
     }
 
     //****************************************************************************************************
@@ -696,14 +772,20 @@ class DocumentoController extends Controller {
         
         $departamentoCodigo = $this->getCodigoLugarRol($usuarioId,$rolId);
         
-        if ($departamentoCodigo == 0 and $msgContenido == ""){
-            $msgContenido = ($msgContenido=="") ? "el usuario no cuenta con autorizacion para los documentos" : $msgContenido.", "."el usuario no cuenta con autorizacion para los el documentos ";
-        } else {
-            // VALIDACION DE TUICION DEL CARTON
-            $valSerieTuicion = $this->validaNumeroSerieTuicion($serie, $departamentoCodigo);
-            if($valSerieTuicion != "" and $msgContenido == ""){
-                $msgContenido = ($msgContenido=="") ? $valSerieTuicion : $msgContenido.", ".$valSerieTuicion;
-            }
+        //if ($departamentoCodigo == 0 and $msgContenido == ""){
+        //    $msgContenido = ($msgContenido=="") ? "el usuario no cuenta con autorizacion para los documentos" : $msgContenido.", "."el usuario no cuenta con autorizacion para los el documentos ";
+        //} else {
+        //    // VALIDACION DE TUICION DEL CARTON
+        //    $valSerieTuicion = $this->validaNumeroSerieTuicion($serie, $departamentoCodigo);
+        //    if($valSerieTuicion != "" and $msgContenido == ""){
+        //        $msgContenido = ($msgContenido=="") ? $valSerieTuicion : $msgContenido.", ".$valSerieTuicion;
+        //    }
+        //}
+
+        // VALIDACION DE TUICION DEL CARTON
+        $valSerieTuicion = $this->validaNumeroSerieTuicion($serie, $departamentoCodigo);
+        if($valSerieTuicion != "" and $msgContenido == ""){
+            $msgContenido = ($msgContenido=="") ? $valSerieTuicion : $msgContenido.", ".$valSerieTuicion;
         }
 
         return $msgContenido;
@@ -1055,7 +1137,8 @@ class DocumentoController extends Controller {
                     } else {
                         $em->getConnection()->beginTransaction();
                         try {
-                            $idDocumento = $this->setDocumento($entity[0]["tramite_id"], $usuarioId, 2, $entity[0]["serie"], "", $fechaActual);
+                            $documentoFirmaId = 0;
+                            $idDocumento = $this->setDocumento($entity[0]["tramite_id"], $usuarioId, 2, $entity[0]["serie"], "", $fechaActual, $documentoFirmaId);
                             $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'El documento con numero de serie "'.$entity[0]["serie"].'" fue legalizado'));
                             $em->getConnection()->commit();        
                             $formBusqueda = array('serie'=>$entity[0]["serie"]);      
@@ -1143,20 +1226,65 @@ class DocumentoController extends Controller {
 
         $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
-        $rolPermitido = array(8,17);
+        $rolPermitido = 17;
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
+        $documentoTipoId = 2;
+        $departamentoCodigo = $this->getCodigoLugarRol($id_usuario,$rolPermitido);
+
+        $entityFirma = $this->getPersonaFirmaAutorizada($departamentoCodigo,$documentoTipoId);
+
+        $arrayFirma = array(''=>'Seleccione la persona que firmara');
+        if (count($entityFirma)>0){
+            foreach ($entityFirma as $registro)
+            {
+                $arrayFirma[base64_encode($registro['documento_firma_id'])] = $registro['nombre']." ".$registro['paterno']." ".$registro['materno'];
+            }
+        }
+        $arrayFirma['0'] = 'SIN FIRMA EN EL DOCUMENTO';
+                
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
             return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
         return $this->render($this->session->get('pathSystem') . ':Documento:legalizaInstitucionEducativaIndex.html.twig', array(
-            'form' => $this->creaFormBuscaInstitucionEducativa('tramite_documento_legalizacion_institucion_educativa_pdf', '',$gestionActual)->createView()
+            'form' => $this->creaFormBuscaInstitucionEducativaFirma('tramite_documento_legalizacion_institucion_educativa_pdf', '',$gestionActual, $arrayFirma)->createView()
             , 'titulo' => 'Legalización'
             , 'subtitulo' => 'Documentos'
         ));
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que genera un formulario par ala busqueda de instituciones educativas por gestion
+    // PARAMETROS: institucionEducativaId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function creaFormBuscaInstitucionEducativaFirma($routing, $institucionEducativaId, $gestionId, $firma) {
+        $em = $this->getDoctrine()->getManager();
+        $entidadGestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id' => $gestionId));
+        if($institucionEducativaId==0){
+            $institucionEducativaId = "";
+        }
+        $form = $this->createFormBuilder()
+                ->setAction($this->generateUrl($routing))
+                ->add('sie', 'number', array('label' => 'SIE', 'attr' => array('value' => $institucionEducativaId, 'class' => 'form-control', 'placeholder' => 'Código de institución educativa', 'onInput' => 'valSie()', ' onchange' => 'valSieFocusOut()', 'pattern' => '[0-9]{6,8}', 'maxlength' => '8', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
+                ->add('gestion', 'entity', array('data' => $entidadGestionTipo, 'empty_value' => 'Seleccione Gestión', 'attr' => array('class' => 'form-control'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
+                    'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('gt')
+                                ->where('gt.id > 2008')
+                                ->orderBy('gt.id', 'DESC');
+                    },
+                ))
+                ->add('firma','choice',
+                      array('label' => 'Firma',
+                            'choices' => $firma,
+                            'data' => '', 'attr' => array('class' => 'form-control')))
+                ->add('search', 'submit', array('label' => 'Legalizar', 'attr' => array('class' => 'btn btn-blue')))
+                ->getForm();
+        return $form;
     }
 
     //****************************************************************************************************
@@ -1212,6 +1340,7 @@ class DocumentoController extends Controller {
             if ($form){  
                 $sie = $form['sie'];  
                 $ges = $form['gestion']; 
+                $documentoFirmaId = base64_decode($form['firma']); 
 
                 $tramiteController = new tramiteController();
                 $tramiteController->setContainer($this->container);
@@ -1224,11 +1353,59 @@ class DocumentoController extends Controller {
                     return $this->redirectToRoute('tramite_documento_legalizacion_institucion_educativa');
                 }
 
+                // validar cantidad de firmas
+                $em = $this->getDoctrine()->getManager();
+
+                $entityDocumentoInstitucionEducativa = $this->getDocumentoInstitucionEducativaGestion($sie, $ges, '1');
+                
+                $cantidadSolicitada = count($entityDocumentoInstitucionEducativa);
+                
+                $entityDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->findOneBy(array('id' => $documentoFirmaId));
+                //dump($cantidadSolicitada);die;
+                if (count($entityDocumentoFirma)>0) {
+                    $firmaPersonaId = $entityDocumentoFirma->getPersona()->getId();     
+                    // $departamentoCodigo = $documentoController->getCodigoLugarRol($id_usuario,$rolPermitido);
+                    $valFirmaDisponible =  $this->verFirmaAutorizadoDisponible($firmaPersonaId,$cantidadSolicitada,2);
+                    //dump($valFirmaDisponible);die;
+                    if($valFirmaDisponible[0]){
+                        // incremento de la firma usada en la tabla de parametros documentoFirmaAutorizada
+                        
+                        $cantidadSolicitadaParcial = $cantidadSolicitada;
+                        while ($cantidadSolicitadaParcial > 0) {
+                            $documentoFirmaAutorizadaId = $this->getDocumentoFirmaAutorizadaIncrementar($entityDocumentoFirma->getPersona()->getId(), 2);
+                            $entityDocumentoFirmaAutorizada = $em->getRepository('SieAppWebBundle:DocumentoFirmaAutorizada')->findOneBy(array('id' => $documentoFirmaAutorizadaId));
+                            $maximo = $entityDocumentoFirmaAutorizada->getMaximo();
+                            $usado = $entityDocumentoFirmaAutorizada->getUsado();
+                            $disponible = $maximo - $usado;
+                            if(($disponible - $cantidadSolicitadaParcial)<0){
+                                $cantidadSolicitadaParcial = $cantidadSolicitadaParcial - $disponible;
+                                $cantidadIncremento = ($usado) + $disponible;
+                            } else {
+                                $cantidadIncremento = ($usado) + $cantidadSolicitadaParcial;
+                                $cantidadSolicitadaParcial = 0;
+                            }       
+                            $entityDocumentoFirmaAutorizada->setUsado($cantidadIncremento);
+                            $em->persist($entityDocumentoFirmaAutorizada);
+                            $em->flush();
+                        }
+                    } else {
+                        $formBusqueda = array('sie'=>$sie,'gestion'=>$ges);
+                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $valFirmaDisponible[1]));
+                        return $this->redirectToRoute('tramite_documento_legalizacion_institucion_educativa', ['form' => $formBusqueda], 307);
+                    }
+                } else {
+                    $valFirmaDisponible = array(0 => true, 1 => '');
+                    // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No se encontro la firma ingresada, intente nuevamente'));
+                    // return $this->redirectToRoute('tramite_detalle_diploma_humanistico_impresion_lista');
+                }
+
+
+
                 $arch = $sie.'_'.$ges.'_legalizacion'.date('YmdHis').'.pdf';
                 $response = new Response();
                 $response->headers->set('Content-type', 'application/pdf');
                 $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_Estudiantelegalizacion_ue_v1.rptdesign&sie='.$sie.'&gestion='.$ges.'&&__format=pdf&'));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_Estudiantelegalizacion_ue_v2.rptdesign&sie='.$sie.'&gestion='.$ges.'&firma='.$documentoFirmaId.'&&__format=pdf&'));
                 $response->setStatusCode(200);
                 $response->headers->set('Content-Transfer-Encoding', 'binary');
                 $response->headers->set('Pragma', 'no-cache');
@@ -1429,7 +1606,8 @@ class DocumentoController extends Controller {
                     $msgContenidoDocumento = $this->getDocumentoValidación($numeroSerieSupletorio, '', $fechaActual, $id_usuario, $rolPermitido, 9);
                     
                     if($msgContenidoDocumento == ""){
-                        $idDocumento = $this->setDocumento($codTramite, $id_usuario, 9, $numeroSerieSupletorio, '', $fechaActual); 
+                        $documentoFirmaId = 0;
+                        $idDocumento = $this->setDocumento($codTramite, $id_usuario, 9, $numeroSerieSupletorio, '', $fechaActual, $documentoFirmaId); 
                         $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'El certificado supletorio con numero de serie "'.$numeroSerieSupletorio.'" fue generado'));
                         $em->getConnection()->commit();
                     } else {
@@ -1584,5 +1762,194 @@ class DocumentoController extends Controller {
                 ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-blue')))
                 ->getForm();
         return $form;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que extrae una firma activa de forma aleatoria de una persona
+    // PARAMETROS: id
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getDocumentoFirmaLugar($personaId, $lugarCodigo, $personaTipoId) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+            select df.id as id, df.firma as imagen, df.obs, df.fecha_registro as fechaRegistro, df.token_firma as tokenFirma, p.nombre, p.paterno, p.materno, lt.id as lugarId, lt.codigo, lt.lugar 
+            from documento_firma as df
+            inner join persona as p on p.id = df.persona_id
+            inner join persona_tipo as pt on pt.id = df.persona_tipo_id
+            inner join lugar_tipo as lt on lt.id = df.lugar_tipo_id
+            where lt.codigo = '".$lugarCodigo."' and p.id = ".$personaId." and pt.id = ".$personaTipoId." and df.esactivo = true
+            order by random() limit 1
+        ");
+        $queryEntidad->execute();
+        $entityDocumentoFirma = $queryEntidad->fetchAll();
+        if(count($entityDocumentoFirma)>0){
+            return $entityDocumentoFirma[0];
+        } else {
+            return $entityDocumentoFirma;
+        }
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que encripta un texto mediante una llave pública
+    // PARAMETROS: texto, llave, 
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getEncodeRSA($datos) {
+        
+        $datos = (serialize($datos));      
+        // $salt = '123456'.'abc';   
+
+        $rsa = new RSA;
+        $key = $rsa->createkey(2048); 
+        $keyPublica = $key['publickey'];   
+        $keyPrivada = $key['privatekey'];   
+
+        $rsa->loadKey($keyPublica);
+        // $text = implode("|",($datos));
+        $datosEncrypt = $rsa->encrypt($datos);
+        $datosEncryptEncode = base64_encode($datosEncrypt);
+        
+        return array('token'=>$datosEncryptEncode, 'keyPublica'=>$keyPublica, 'keyPrivada'=>$keyPrivada);
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que desencripta un texto con una llave privada
+    // PARAMETROS: texto, llave, 
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getDecodeRSA($datos, $keyPrivada) {
+        $datosEncryptDecode = base64_decode($datos);
+        $rsa = new RSA;
+        $rsa->loadKey($keyPrivada);
+        $datos = $rsa1->decrypt($datosEncryptDecode);
+        // explode("|",$datos)
+        return $datos;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que verifica si aun cuenta con firmas para usarse según el propietario (persona) y la cantidad maxima parametrizada
+    // PARAMETROS: id
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function verFirmaAutorizadoDisponible($personaId,$cantidadSolicitado,$documentoTipoId) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+            select dfa.persona_id, df1.lugar_tipo_id, sum(dfa.maximo) as cupo, sum(dfa.usado) as cantidad 
+            from documento_firma_autorizada as dfa
+            inner join persona as p on p.id = dfa.persona_id
+            inner join (select distinct on (df.persona_id, df.lugar_tipo_id) df.id, df.persona_id, df.lugar_tipo_id from documento_firma as df inner join persona as p on p.id = df.persona_id inner join lugar_tipo as lt on lt.id = df.lugar_tipo_id where df.persona_id = ".$personaId." and df.esactivo = true order by df.persona_id, df.lugar_tipo_id) as df1 on df1.persona_id = dfa.persona_id
+            inner join lugar_tipo as lt on lt.id = df1.lugar_tipo_id
+            where dfa.esactivo = true and dfa.documento_tipo_id = ".$documentoTipoId."
+            group by dfa.persona_id, df1.lugar_tipo_id
+            ");
+        $queryEntidad->execute();
+        $entity = $queryEntidad->fetchAll();
+
+        $cantidadDisponible = 0;
+        if(count($entity)>0){
+            $cupo = $entity[0]['cupo'];
+            $cantidad = $entity[0]['cantidad'];
+            $cantidadDisponible = $cupo - $cantidad;
+        } else {
+            $cupo = 0;
+            $cantidad = 0;
+            $cantidadDisponible = 0;
+        }
+        
+        if (($cantidadDisponible - $cantidadSolicitado)>=0){
+            return array('0'=>true, '1'=>'');
+        } else {
+            if($cantidadDisponible == 0){
+                return array('0'=>false, '1'=>'Ya no cuenta con firmas autorizadas para la(s) '.$cantidadSolicitado.' firma(s) solicitada(s)');
+            } else {
+                return array('0'=>false, '1'=>'Solo cuenta con '.$cantidadDisponible.' firma(s) autorizada(s) para la(s) '.$cantidadSolicitado.' firma(s) solicitada(s)');
+            }
+        }
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que lista las personasc que firman segun el departamento y tipo de documento
+    // PARAMETROS: lugarCodigo, documentoTipoId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getPersonaFirmaAutorizada($lugarCodigo,$documentoTipoId) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+        select distinct df1.id as documento_firma_id, p.id as persona_id, p.nombre, p.paterno, p.materno, lt.id as lugarId, lt.codigo as lugarCodigo, lt.lugar as cantidad 
+            from documento_firma_autorizada as dfa
+            inner join persona as p on p.id = dfa.persona_id
+            inner join (select distinct on (df.persona_id, df.lugar_tipo_id) df.id, df.persona_id, df.lugar_tipo_id from documento_firma as df inner join persona as p on p.id = df.persona_id inner join lugar_tipo as lt on lt.id = df.lugar_tipo_id where lt.codigo = '".$lugarCodigo."' and df.esactivo = true order by df.persona_id, df.lugar_tipo_id) as df1 on df1.persona_id = dfa.persona_id
+            inner join lugar_tipo as lt on lt.id = df1.lugar_tipo_id
+            where dfa.esactivo = true and dfa.documento_tipo_id = ".$documentoTipoId."
+        ");
+        $queryEntidad->execute();
+        $entity = $queryEntidad->fetchAll();
+       
+        if(count($entity)>0){
+            return $entity;
+        } else {
+            return array();
+        }
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que controla las firmas utilizadas según el propietario (persona)
+    // PARAMETROS: id
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getDocumentoFirmaAutorizadaIncrementar($personaId, $documentoTipoId) {
+        $em = $this->getDoctrine()->getManager();
+        $entidadDocumentoFirmaAutorizada = $em->getRepository('SieAppWebBundle:DocumentoFirmaAutorizada')->findBy(array('persona' => $personaId, 'esactivo' => true, 'documentoTipo' => $documentoTipoId), array('id' => 'ASC'));
+        $cantidadAutorizada = 0;
+        $cantidadUtilizada = 0;
+        $documentoFirmaAutorizadaId = 0;
+        foreach ($entidadDocumentoFirmaAutorizada as $dato)
+        {
+            $cantidadAutorizada = $dato->getMaximo();
+            $cantidadUtilizada = $dato->getUsado();
+            if(($cantidadAutorizada - $cantidadUtilizada) > 0 and $documentoFirmaAutorizadaId == 0){
+                $documentoFirmaAutorizadaId = $dato->getId();
+            }
+        }
+        return $documentoFirmaAutorizadaId;
+    }
+
+
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que lista las autorizaciones de una persona siempre y cuando cuente con firmas
+    // PARAMETROS: id
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getFirmaAutorizada($personaId) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+            select dfa.id, dfa.maximo, dfa.usado, dfa.fecha_registro, dfa.obs, dfa.esactivo, dt.documento_tipo, p.nombre, p.paterno, p.materno, lt.id as lugar_id, lt.codigo as lugar_codigo, lt.lugar, pt.persona
+            from documento_firma_autorizada as dfa
+            inner join persona as p on p.id = dfa.persona_id
+            inner join documento_tipo as dt on dt.id = dfa.documento_tipo_id
+            inner join (select distinct on (df.persona_id, df.lugar_tipo_id) df.id, df.persona_id, df.lugar_tipo_id, df.persona_tipo_id from documento_firma as df inner join persona as p on p.id = df.persona_id inner join lugar_tipo as lt on lt.id = df.lugar_tipo_id where df.persona_id = ".$personaId." and df.esactivo = true order by df.persona_id, df.lugar_tipo_id) as df1 on df1.persona_id = dfa.persona_id
+            inner join lugar_tipo as lt on lt.id = df1.lugar_tipo_id
+            inner join persona_tipo as pt on pt.id = df1.persona_tipo_id
+            -- where dfa.esactivo = true
+            order by dfa.fecha_registro desc, dfa.id desc
+        ");
+        $queryEntidad->execute();
+        $entity = $queryEntidad->fetchAll();
+        
+        if (count($entity)>0){
+            $entity = $entity;
+        } else {
+            $entity = array();
+        }
+
+        return $entity;
     }
 }

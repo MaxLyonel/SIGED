@@ -15,6 +15,8 @@ use Sie\TramitesBundle\Controller\DefaultController as defaultTramiteController;
 use Sie\TramitesBundle\Controller\TramiteDetalleController as tramiteProcesoController;
 use Sie\TramitesBundle\Controller\DocumentoController as documentoController;
 
+use phpseclib\Crypt\RSA;
+
 class TramiteController extends Controller {
 
     /**
@@ -34,7 +36,7 @@ class TramiteController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SieAppWebBundle:Tramite');
         $query = $entity->createQueryBuilder('t')
-                ->select("t.id as id, t.id as tramite, ds.id as serie, d.fechaImpresion as fechaemision, dept.departamento as departamentoemision, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documentoTipo as documentoTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad, tt.tramiteTipo as tramiteTipo")
+                ->select("t.id as id, t.id as tramite, ei.id as estudianteInscripcionId, ds.id as serie, d.fechaImpresion as fechaemision, dept.departamento as departamentoemision, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documentoTipo as documentoTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad, tt.tramiteTipo as tramiteTipo")
                 ->innerJoin('SieAppWebBundle:TramiteTipo', 'tt', 'WITH', 'tt.id = t.tramiteTipo')
                 ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'ei.id = t.estudianteInscripcion')
                 ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'e.id = ei.estudiante')
@@ -47,7 +49,7 @@ class TramiteController extends Controller {
                 ->leftJoin('SieAppWebBundle:DocumentoEstado', 'de', 'WITH', 'de.id = d.documentoEstado AND de.id = 1')
                 ->leftJoin('SieAppWebBundle:DocumentoTipo', 'dt', 'WITH', 'dt.id = d.documentoTipo')
                 ->leftJoin('SieAppWebBundle:DocumentoSerie', 'ds', 'WITH', 'ds.id = d.documentoSerie')
-                ->leftJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = ds.gestion')
+                ->leftJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = iec.gestionTipo')
                 ->leftJoin('SieAppWebBundle:DepartamentoTipo', 'dept', 'WITH', 'dept.id = ds.departamentoTipo')
                 ->where('t.id = :codTramite')
                 ->setParameter('codTramite', $tramite);
@@ -82,6 +84,38 @@ class TramiteController extends Controller {
                 ->leftJoin('SieAppWebBundle:DepartamentoTipo', 'dept', 'WITH', 'dept.id = ds.departamentoTipo')
                 ->where('e.codigoRude = :codRude')
                 ->setParameter('codRude', $rude);
+        $entity = $query->getQuery()->getResult();
+        return $entity;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que lista un tramite activo en funcion al id del estudiante
+    // PARAMETROS: id
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getTramiteActivo($estudianteId) {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:Tramite');
+        $query = $entity->createQueryBuilder('t')
+                ->select("t.id as id, t.id as tramite, ds.id as serie, d.fechaImpresion as fechaemision, dept.departamento as departamentoemision, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documentoTipo as documentoTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad, tt.tramiteTipo as tramiteTipo")
+                ->innerJoin('SieAppWebBundle:TramiteTipo', 'tt', 'WITH', 'tt.id = t.tramiteTipo')
+                ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'ei.id = t.estudianteInscripcion')
+                ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'e.id = ei.estudiante')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')
+                ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = iec.institucioneducativa')
+                ->innerJoin('SieAppWebBundle:PaisTipo', 'pt', 'WITH', 'pt.id = e.paisTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp    .lugarTipo')
+                ->leftJoin('SieAppWebBundle:Documento', 'd', 'WITH', 'd.tramite = t.id and d.documentoEstado = 1 and d.documentoTipo in (1,3,4,5,6,7,8,9)')
+                ->leftJoin('SieAppWebBundle:DocumentoEstado', 'de', 'WITH', 'de.id = d.documentoEstado')
+                ->leftJoin('SieAppWebBundle:DocumentoTipo', 'dt', 'WITH', 'dt.id = d.documentoTipo')
+                ->leftJoin('SieAppWebBundle:DocumentoSerie', 'ds', 'WITH', 'ds.id = d.documentoSerie')
+                ->leftJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = ds.gestion')
+                ->leftJoin('SieAppWebBundle:DepartamentoTipo', 'dept', 'WITH', 'dept.id = ds.departamentoTipo')
+                ->where('e.id = :id')
+                ->andWhere('t.esactivo = true')
+                ->setParameter('id', $estudianteId);
         $entity = $query->getQuery()->getResult();
         return $entity;
     }
@@ -145,7 +179,8 @@ class TramiteController extends Controller {
 
         $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
-        $rolPermitido = array(8,10,13);
+        // $rolPermitido = array(8,13);
+        $rolPermitido = array(9);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -340,6 +375,7 @@ class TramiteController extends Controller {
         $institucioneducativaId = 0;
         $gestionId = $gestionActual->format('Y');
         $especialidadId = 0;
+        $periodoId = 3;
         $nivelId = 0;
         $flujoTipoId = 4;
         $tramiteTipoId = 0;
@@ -372,11 +408,17 @@ class TramiteController extends Controller {
                         $nivelId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getAcreditacionEspecialidad()->getSuperiorAcreditacionTipo()->getCodigo();
                         $especialidadId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getAcreditacionEspecialidad()->getSuperiorEspecialidadTipo()->getId();
                         $institucionEducativaId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getInstitucioneducativa()->getId();
-                        $gestionId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getInstitucioneducativaSucursal()->getGestionTipo()->getId();
 
+                        $entidadSucursal = $this->getInstitucionEducativaPeriodoGestionActual($institucionEducativaId, $gestionId);
+
+                        if(count($entidadSucursal) > 0){
+                            $periodoId = $entidadSucursal[0]['periodo_tipo_id'];
+                        } else {
+                            $gestionId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getInstitucioneducativaSucursal()->getGestionTipo()->getId();
+                        }
                         $msg = array('0'=>true, '1'=>$participante);
-                        $msgContenido = $this->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
-
+                        $msgContenido = $this->getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId);
+                        //dump($msgContenido);die;
                         // VALIDACION DE SOLO UN TRAMITE POR ESTUDIANTE (RUDE)
                         $valCertTecTramiteEspNivel = $this->getCertTecTramiteEspecialidadNivelEstudiante($participanteId, $especialidadId, $nivelId);
                         if(count($valCertTecTramiteEspNivel) > 0){
@@ -1035,6 +1077,23 @@ class TramiteController extends Controller {
         return $objEntidad;
     }
 
+    
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que despliega el ultimo periodo de un CEA en la getion actualcreateQueryBuilder
+    // PARAMETROS: institucionEducativaId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    private function getInstitucionEducativaPeriodoGestionActual($institucionEducativaId, $gestionId) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+                select * from institucioneducativa_sucursal where institucioneducativa_id = ".$institucionEducativaId." and gestion_tipo_id = ".$gestionId." order by gestion_tipo_id desc, periodo_tipo_id desc limit 1
+            ");
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+        return $objEntidad;
+    }
+
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
     // Funcion que despliega un listado de bachilleres registrados en educacion regular humanistica
@@ -1289,7 +1348,69 @@ class TramiteController extends Controller {
     public function getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, $nivelId) {
         $msg = array('0'=>true, '1'=>'');
         $nivel = '';
+        
+        // $entityTramite = this->getTramiteActivo($participanteId);
+
         $objCargaHoraria = $this->getCertTecCargaHorariaEspecialidadNivel($participanteId, $especialidadId, $nivelId);
+
+
+        if ($nivelId == 1) {
+            $nivel = 'Técnico Básico';
+        } elseif ($nivelId == 2) {
+            $nivel = 'Técnico Auxiliar';
+        } elseif ($nivelId == 3) {
+            $nivel = 'Técnico Medio';
+        } else {
+            $nivel = '';
+        }
+
+
+        if(count($objCargaHoraria)>0){
+            $cargaHoraria = $objCargaHoraria[0]['carga_horaria'];
+            $verCargaHorariaNivel = $this->certTecCargaHorariaNivelMinimo($nivelId,$cargaHoraria);
+            if ($verCargaHorariaNivel != "") {
+                $msg = array('0'=>false, '1'=>$verCargaHorariaNivel);
+            } else {
+                $cargaHoraria = $this->certTecCargaHorariaNivelExcedente($nivelId,$cargaHoraria);
+                $msg = array('0'=>true, '1'=>$cargaHoraria);
+            }
+        } else {
+            // homologacion
+            $objCargaHorariaHomologacion = $this->getCertTecCargaHorariaHomologadoEstudiante($participanteId, $especialidadId, $nivelId);
+
+
+            if(count($objCargaHorariaHomologacion)>0){
+                $cargaHoraria = $objCargaHorariaHomologacion[0]['carga_horaria'];
+                $verCargaHorariaNivel = $this->certTecCargaHorariaNivelMinimo($nivelId,$cargaHoraria);
+                if ($verCargaHorariaNivel!="") {
+                    $msg = array('0'=>false, '1'=>$participante.$verCargaHorariaNivel);
+                }  else {
+                    $cargaHoraria = $this->certTecCargaHorariaNivelExcedente($nivelId,$cargaHoraria);
+                    $msg = array('0'=>true, '1'=>$cargaHoraria);
+                }
+            } else {
+                $msg = array('0'=>false, '1'=>'No cuenta con carga horaria en el nivel '.$nivel);
+            }
+        }
+
+        return $msg;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que valida la carga horaria de un participante, especialidad y nivel sin notas de promocion de los modulos que se estan cursando en periodo y gestion vigente
+    // PARAMETROS: participanteId, especialidadId, nivelId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getCertTecCargaHorariaGestionPeriodoEstudiante($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId) {
+        $msg = array('0'=>true, '1'=>'');
+        $nivel = '';
+        
+        // $entityTramite = this->getTramiteActivo($participanteId);
+
+        $objCargaHoraria = $this->getCertTecCargaHorariaEspecialidadNivelGestionPeriodo($participanteId, $especialidadId, $nivelId , $gestionId, $periodoId);
+
+
         if ($nivelId == 1) {
             $nivel = 'Técnico Básico';
         } elseif ($nivelId == 2) {
@@ -1624,6 +1745,46 @@ class TramiteController extends Controller {
         return $objEntidad;
     }
 
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que halla la carga horaria  de un estudiante segun su especialidad y nivel
+    // PARAMETROS: participanteId, especialidadId, nivelId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getCertTecCargaHorariaEspecialidadNivelGestionPeriodo($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+                select estudiante_id, codigo_rude, participante, especialidad_id, especialidad, nivel_id, acreditacion, string_agg(distinct modulo, ',') as modulos, sum(horas_modulo) as carga_horaria from (
+                        select e.id as estudiante_id, e.codigo_rude, e.paterno||' '||e.materno||' '||e.nombre as participante, sest.id as especialidad_id, sest.especialidad, sat.codigo as nivel_id, sat.acreditacion
+                        , smp.horas_modulo, smt.modulo
+                        from superior_facultad_area_tipo as sfat
+                        inner join superior_especialidad_tipo as sest on sfat.id = sest.superior_facultad_area_tipo_id
+                        inner join superior_acreditacion_especialidad as sae on sest.id = sae.superior_especialidad_tipo_id
+                        inner join superior_acreditacion_tipo as sat on sae.superior_acreditacion_tipo_id=sat.id
+                        inner join superior_institucioneducativa_acreditacion as siea on siea.acreditacion_especialidad_id = sae.id
+                        inner join institucioneducativa_sucursal as ies on siea.institucioneducativa_sucursal_id = ies.id
+                        inner join superior_institucioneducativa_periodo as siep on siep.superior_institucioneducativa_acreditacion_id = siea.id
+                        inner join institucioneducativa_curso as iec on iec.superior_institucioneducativa_periodo_id = siep.id
+                        inner join estudiante_inscripcion as ei on iec.id=ei.institucioneducativa_curso_id
+                        inner join (select * from estudiante where id = ".$participanteId.") as e on ei.estudiante_id=e.id
+                        inner join superior_modulo_periodo as smp ON smp.institucioneducativa_periodo_id = siep.id
+                        inner join superior_modulo_tipo smt ON smt.id = smp.superior_modulo_tipo_id
+                        inner join institucioneducativa_curso_oferta as ieco on ieco.superior_modulo_periodo_id = smp.id and ieco.insitucioneducativa_curso_id = iec.id
+                        inner join estudiante_asignatura as ea on ea.institucioneducativa_curso_oferta_id = ieco.id and ea.estudiante_inscripcion_id = ei.id
+                        inner join periodo_tipo as pet on pet.id = ies.periodo_tipo_id
+                        left join estudiante_nota as en on en.estudiante_asignatura_id = ea.id
+                        where sest.id = ".$especialidadId." and sat.codigo = ".$nivelId."
+                        and case when ies.gestion_tipo_id = date_part('year',current_date) and pet.id = ".$periodoId." then true else en.nota_tipo_id::integer = 22 AND CASE WHEN ies.gestion_tipo_id <= 2015::double precision THEN en.nota_cuantitativa >=36 ELSE en.nota_cuantitativa >=51 END end
+                    group by e.id, e.codigo_rude, e.paterno, e.materno, e.nombre, sest.id, sest.especialidad, sat.codigo, sat.acreditacion
+                    , smp.horas_modulo, smt.modulo having count(*) < 2
+                ) as v
+                group by estudiante_id, codigo_rude, participante, especialidad_id, especialidad, nivel_id, acreditacion
+        ");
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+        return $objEntidad;
+    }
+
 
 
     //****************************************************************************************************
@@ -1636,7 +1797,7 @@ class TramiteController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
             select e.id as estudiante_id, e.codigo_rude, e.paterno||' '||e.materno||' '||e.nombre as participante, sest.id as especialidad_id, sest.especialidad, sat.codigo as nivel_id, sat.acreditacion
-            , smp.horas_modulo, smt.modulo, en.nota_cuantitativa, ies.gestion_tipo_id as gestion, pt.periodo as periodo, ie.id as institucioneducativa_id, ie.institucioneducativa
+            , smp.horas_modulo, smt.modulo, COALESCE(en.nota_cuantitativa,0) as nota_cuantitativa, ies.gestion_tipo_id as gestion, pt.periodo as periodo, ie.id as institucioneducativa_id, ie.institucioneducativa
             from superior_facultad_area_tipo as sfat
             inner join superior_especialidad_tipo as sest on sfat.id = sest.superior_facultad_area_tipo_id
             inner join superior_acreditacion_especialidad as sae on sest.id = sae.superior_especialidad_tipo_id
@@ -1651,10 +1812,10 @@ class TramiteController extends Controller {
             inner join superior_modulo_tipo smt ON smt.id = smp.superior_modulo_tipo_id
             inner join institucioneducativa_curso_oferta as ieco on ieco.superior_modulo_periodo_id = smp.id and ieco.insitucioneducativa_curso_id = iec.id
             inner join estudiante_asignatura as ea on ea.institucioneducativa_curso_oferta_id = ieco.id and ea.estudiante_inscripcion_id = ei.id
-            inner join estudiante_nota as en on en.estudiante_asignatura_id = ea.id
             inner join periodo_tipo as pt on pt.id = ies.periodo_tipo_id
             inner join institucioneducativa as ie on ie.id = iec.institucioneducativa_id
-            where sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and en.nota_tipo_id::integer = 22
+            left join estudiante_nota as en on en.estudiante_asignatura_id = ea.id and en.nota_tipo_id::integer = 22
+            where sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." 
             order by smt.id
         ");
         $queryEntidad->execute();
@@ -2161,6 +2322,108 @@ class TramiteController extends Controller {
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
+    // Funcion que valida el proceso de registro de un trámite certificado tecnico alternativa segun el participante, especialidad y nivel, sin cosiderar las notas del actual emestreperiodo
+    // PARAMETROS: estudianteId, gestionId, especialidadId, nivelId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId) {
+        $msgContenido = "";
+        $cargaHorariaTotal = 0;
+
+        if ($nivelId == 1) {
+            $nivel = 'Técnico Básico';
+        } elseif ($nivelId == 2) {
+            $nivel = 'Técnico Auxiliar';
+        } elseif ($nivelId == 3) {
+            $nivel = 'Técnico Medio';
+        } else {
+            $nivel = '';
+        }
+
+        // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
+        $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, $nivelId);
+        if(count($objModulosObservados)>0){
+            $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en ".$nivel.": ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
+        }
+
+        // VALIDACION DE CARGA HORARIA POR ESTUDIANTE SEGUN MODULOS APROBADOS (MAYORES A 36 O 51)
+        $valCertTecCargaHoraria = $this->getCertTecCargaHorariaGestionPeriodoEstudiante($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId);
+        $cargaHoraria = 0;
+        if(!$valCertTecCargaHoraria[0]){
+            $msgContenido = ($msgContenido=="") ? $valCertTecCargaHoraria[1] : $msgContenido.', '.$valCertTecCargaHoraria[1];
+        } else {
+            $cargaHoraria = $valCertTecCargaHoraria[1];
+        }
+
+        // VALIDACION DE UNA CERTIFICACION ANTERIOR PARA CONTINUAR CON EL SIGUIENTE NIVEL
+        // TECNICO MEDIO
+        if($nivelId == 3){
+            $valCertTecCargaHorariaAuxiliar = $this->getCertTecCargaHorariaGestionPeriodoEstudiante($participanteId, $especialidadId, 2, $gestionId, $periodoId);
+            // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
+            $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 2);
+            if(count($objModulosObservados)>0){
+                $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel auxiliar: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
+            }
+            $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaGestionPeriodoEstudiante($participanteId, $especialidadId, 1, $gestionId, $periodoId);
+            // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
+            $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 1);
+            if(count($objModulosObservados)>0){
+                $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel básico: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
+            }
+            $cargaHorariaAuxiliar = 0;
+            $cargaHorariaBasico = 0;
+            if(!$valCertTecCargaHorariaAuxiliar[0]){
+                $msgContenido = ($msgContenido=="") ? $valCertTecCargaHorariaAuxiliar[1] : $msgContenido.', '.$valCertTecCargaHorariaAuxiliar[1];
+            } else {
+                $cargaHorariaAuxiliar = $valCertTecCargaHorariaAuxiliar[1];
+            }
+            if(!$valCertTecCargaHorariaBasico[0]){
+                $msgContenido = ($msgContenido=="") ? $valCertTecCargaHorariaBasico[1] : $msgContenido.', '.$valCertTecCargaHorariaBasico[1];
+            }  else {
+                $cargaHorariaBasico = $valCertTecCargaHorariaBasico[1];
+            }
+
+            $cargaHorariaTotal = $cargaHoraria + $cargaHorariaAuxiliar + $cargaHorariaBasico;
+            $valCertTecCargaHorarianivel = $this->certTecCargaHorariaNivel($nivelId,$cargaHorariaTotal);
+            if ($valCertTecCargaHorarianivel == ''){
+                $msgContenido = ($msgContenido=="") ? $valCertTecCargaHorarianivel : $msgContenido.', '.$valCertTecCargaHorarianivel;
+            }
+        }
+
+        // TECNICO AUXILIAR
+        if($nivelId == 2){
+            $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 1);
+            // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
+            $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 1);
+            if(count($objModulosObservados)>0){
+                $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel básico: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
+            }
+            $cargaHorariaBasico = 0;
+            if(!$valCertTecCargaHorariaBasico[0]){
+                $msgContenido = ($msgContenido=="") ? $valCertTecCargaHorariaBasico[1] : $msgContenido.', '.$valCertTecCargaHorariaBasico[1];
+            }  else {
+                $cargaHorariaBasico = $valCertTecCargaHorariaBasico[1];
+            }
+
+            $cargaHorariaTotal = $cargaHoraria + $cargaHorariaBasico;
+
+            $valCertTecCargaHorarianivel = $this->certTecCargaHorariaNivel($nivelId,$cargaHorariaTotal);
+            if ($valCertTecCargaHorarianivel == ''){
+                $msgContenido = ($msgContenido=="") ? $valCertTecCargaHorarianivel : $msgContenido.', '.$valCertTecCargaHorarianivel;
+            }
+        }
+
+        // VALIDACION DE SOLO UN TIPO DE CERTIFICACION POR ESTUDIANTE (RUDE)
+        $valCertTecDocumentoEspNivel = $this->getCertTecDocumentoEspecialidadNivelEstudiante($participanteId, $especialidadId, $nivelId, $gestionId);
+        if(count($valCertTecDocumentoEspNivel) > 0){
+            $msgContenido = ($msgContenido=="") ? 'ya cuenta con la '.$valCertTecDocumentoEspNivel[0]['documento_tipo'] : $msgContenido.', ya cuenta con la '.$valCertTecDocumentoEspNivel[0]['documento_tipo'];
+        }
+
+        return $msgContenido;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
     // Funcion que valida el proceso de registro de un trámite diploma humanistico regular segun el participante y gestion
     // PARAMETROS: estudianteId, gestionId
     // AUTOR: RCANAVIRI
@@ -2502,7 +2765,6 @@ class TramiteController extends Controller {
             $defaultTramiteController = new defaultTramiteController();
             $defaultTramiteController->setContainer($this->container);
             $rolOpcionTramite = 0;
-
             $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($usuarioId,8);
             if($esValidoUsuarioRol and $rolOpcionTramite == 0){
                 $rolOpcionTramite = 8;
@@ -2522,6 +2784,10 @@ class TramiteController extends Controller {
             $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($usuarioId,13);
             if($esValidoUsuarioRol and $rolOpcionTramite == 0){
                 $rolOpcionTramite = 13;
+            }
+            $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($usuarioId,9);
+            if($esValidoUsuarioRol and $rolOpcionTramite == 0){
+                $rolOpcionTramite = 9;
             }
             $query->bindValue(':roluser', $rolOpcionTramite);
         } else {
@@ -3004,7 +3270,8 @@ class TramiteController extends Controller {
                         // $error = $this->procesaTramite($tramiteId, $id_usuario, 'Adelante','');
                         $tramiteDetalleId = $tramiteProcesoController->setProcesaTramiteInicio($tramiteId, $id_usuario, 'REGISTRO DEL TRÁMITE', $em);
 
-                        $idDocumento = $documentoController->setDocumento($tramiteId, $id_usuario, $tipoDiploma, $serie, '', $fechaActual); 
+                        $documentoFirmaId = 0;
+                        $idDocumento = $documentoController->setDocumento($tramiteId, $id_usuario, $tipoDiploma, $serie, '', $fechaActual, $documentoFirmaId); 
 
                         $em->getConnection()->commit();
                         $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'Diploma Técnico Registrado'));

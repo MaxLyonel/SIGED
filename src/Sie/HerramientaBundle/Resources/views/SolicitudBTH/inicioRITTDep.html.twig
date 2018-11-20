@@ -1,0 +1,81 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-table animated fadeIn"></i> Solicitud BTH <span>Solicitudes usuario</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href={{ path('solicitud_bth_index') }}>Solicitud BTH</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Procesos RITT</h3>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="pull-right">
+                                        <a href="{{ path('solicitud_ritt_solicitudRITT') }}" class="btn btn-info">Nuevo</a>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div id="solicitudes" class="body-content  animated fadeIn">
+                                        <div class="table-responsive">
+                                            <table id="myTable" class="table table-bordered table-hover cf dataTable table ">
+                                                <thead>
+                                                <tr>
+                                                    <th style="min-width: 10px"><strong>Nro.</strong></th>
+                                                    <th style="min-width: 10px"><strong>Nro. Tramite</strong></th>
+                                                    <th><strong>Tipo de Tramite</strong></th>
+                                                    <th><strong>Fecha de Registro</strong></th>
+                                                    <th><strong>Estado</strong></th>
+                                                    <th><strong>imprimir</strong></th>
+
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {#{% for listaRITT in listaRITT %}
+                                                    <tr>
+
+                                                        <td class="text-center">{{ loop.index }}</td>
+                                                        <td class="text-center">{{ listaRITT.id }}</td>
+                                                        <td>{{ listaRITT.tramite_tipo }}</td>
+                                                        <td>{{ listaRITT.fecha_registro }}</td>
+                                                        <td>{{ listaRITT.estado }}</td>
+                                                        <td>
+                                                            <button class="btn btn-success btn-xs"  onclick="updatesistema({{ sistema.id }})" class="btn btn-teal" data-toggle="modal" data-target=".bs-example-modal-table" title="Editar"><i class="fa fa-pencil"></i></button>
+                                                            <button class="btn btn-danger btn-xs"  title="Imprimir"><i class="glyphicon glyphicon-print"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %#}}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /.panel-body -->
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+{% endblock %}

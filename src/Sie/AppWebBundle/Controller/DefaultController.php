@@ -60,7 +60,6 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieAlternativaBundle");
                 break;
             case '172.20.16.239a':
-            case '172.20.196.7':
                 $sysname = 'Herramienta';
                 $sysporlet = 'blue';
                 $sysbutton = true;
@@ -177,20 +176,27 @@ class DefaultController extends Controller {
                 $layout = 'layoutCertification.html.twig';
                 $this->session->set('pathSystem', "SieTramitesBundle");
                 break;
-            case '172.20.196.17':
+            case '172.20.196.17a':
                 $sysname = 'JUEGOS';
                 $sysporlet = 'jdp';
                 $sysbutton = false;
                 $layout = 'layoutJuegos.html.twig';
                 $this->session->set('pathSystem', "SieJuegosBundle");
                 break;
-            case '172.20.196.17a':
+            case '172.20.196.17':
                 $sysname = 'TRAMITES';
                 $sysporlet = 'green';
                 $sysbutton = false;
                 $layout = 'layoutTramites.html.twig';
                 $this->session->set('pathSystem', "SieTramitesBundle");
                 break;
+            case 'tramite.sie.gob.bo':
+                    $sysname = 'TRAMITE';
+                    $sysporlet = 'green';
+                    $sysbutton = false;
+                    $layout = 'layoutTramites.html.twig';
+                    $this->session->set('pathSystem', "SieTramitesBundle");
+                    break;
             case 'juegos.minedu.gob.bo':
                 $sysname = 'JUEGOS';
                 $sysporlet = 'jdp';
@@ -236,7 +242,14 @@ class DefaultController extends Controller {
                 $layout = 'layoutPnp.html.twig';
                 $this->session->set('pathSystem', "SiePnpBundle");
                 break;
-            case '172.20.196.4':
+            case 'ritt.local':
+            case 'ritt.sie.gob.bo':
+                $sysname = 'RITT';
+                $sysporlet = 'blue';
+                $sysbutton = true;
+                $layout = 'layoutRie.html.twig';
+                $this->session->set('pathSystem', "SieRieBundle");
+                break;
             case '172.20.196.9:8024':
             case 'www.dgesttla.local':
             case 'dgesttla.sie.gob.bo':
@@ -247,7 +260,7 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieDgesttlaBundle");
                 break;
             case '172.20.196.9:8030':
-            // case '172.20.196.7':
+            case '172.20.196.7':
             case 'olimpiada.sie.gob.bo':
                 $sysname = 'olimpiadas';
                 $sysporlet = 'blue';

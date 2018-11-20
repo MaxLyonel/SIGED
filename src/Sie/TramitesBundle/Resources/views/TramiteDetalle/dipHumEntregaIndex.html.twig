@@ -12,7 +12,7 @@
                     <div class="panel">
                         <div class="panel-heading">
                             <div class="pull-left">
-                                <h4 class="panel-title">C.E.A.: {{infoAutorizacionUnidadEducativa.institucioneducativa}}</h4>
+                                <h4 class="panel-title">{{infoAutorizacionUnidadEducativa.institucioneducativa}}</h4>
                             </div>
                             <div class="pull-right">
                                 <button class="btn btn-danger" id="botonModalDevolver" name="botonModalDevolver" data-action="search" data-toggle="tooltip" data-placement="top" data-title="Devolver" data-original-title="" title="Devolver" disabled="true" >Devolver</button>
@@ -100,7 +100,7 @@
                                             <td>{{ participante.nombre }}</td>
                                             <td>{{ participante.fecha_nacimiento }} - {{ participante.lugar_nacimiento }}</td>
                                             <td>
-                                                {% if participante.gestion_tipo_id != "now"|date("Y") %}
+                                                {% if participante.gestion_tipo_id == "now"|date("Y") %}
                                                   {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
                                                     <span class="label label-danger rounded">{{ participante.estadomatricula }}</span>
                                                   {% else %}
@@ -126,18 +126,18 @@
                                                 {% set registro = true %}
                                                 {% set anular = false %}
 
-                                                {% if participante.gestion_tipo_id != "now"|date("Y") %}
+                                                {% if participante.gestion_tipo_id == "now"|date("Y") %}
                                                   {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
-                                                    {% set anular = true %}
+                                                    {% set registro = false %}
                                                   {% endif %}
                                                 {% else %}
                                                   {% if participante.nivel_tipo_id == 13 %}
                                                     {% if participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
-                                                      {% set anular = true %}
+                                                      {% set registro = false %}
                                                     {% endif %}
                                                   {% else %}
                                                     {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
-                                                      {% set anular = true %}
+                                                      {% set registro = false %}
                                                     {% endif %}
                                                   {% endif %}
                                                 {% endif %}
