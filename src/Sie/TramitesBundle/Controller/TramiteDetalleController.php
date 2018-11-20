@@ -1269,6 +1269,21 @@ class TramiteDetalleController extends Controller {
                 $especialidad = $form['especialidad'];
                 $nivel = $form['nivel'];
 
+                $nivelCertificacionId = 0;
+                switch ($nivel) {
+                    case 1:
+                        $nivelCertificacionId = 6;
+                        break;
+                    case 2:
+                        $nivelCertificacionId = 7;
+                        break;
+                    case 3:
+                        $nivelCertificacionId = 8;
+                        break;
+                    default:
+                        $nivelCertificacionId = 0;
+                }
+
                 $tramiteController = new tramiteController();
                 $tramiteController->setContainer($this->container);
 
@@ -1283,7 +1298,7 @@ class TramiteDetalleController extends Controller {
                     $documentoController = new documentoController();
                     $documentoController->setContainer($this->container);
 
-                    $entityDocumentoSerie = $documentoController->getSerieTipo('6,7,8');
+                    $entityDocumentoSerie = $documentoController->getSerieTipo($nivelCertificacionId);
                     $entituDocumentoGestion = $documentoController->getGestionTipo('6,7,8');
 
                     $datosBusqueda = base64_encode(serialize($form));
@@ -1657,7 +1672,12 @@ class TramiteDetalleController extends Controller {
                             $documentoController->setContainer($this->container);
 
                             $numCarton = str_pad($numeroCarton, 6, "0", STR_PAD_LEFT);
-                            $serCarton = $serieCarton.$documentoTipoSerie;
+                            if ($serieCarton == 'ALT'){
+                                $serCarton = $serieCarton.$documentoTipoSerie;
+                            } else {
+                                $serCarton = $serieCarton;
+                            }
+                            
 
                             $msgContenidoDocumento = $documentoController->getDocumentoValidación($numCarton, $serCarton, $fechaCarton, $id_usuario, $rolPermitido, $documentoTipoId);
                         }
