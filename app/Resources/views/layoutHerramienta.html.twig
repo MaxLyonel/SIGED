@@ -70,13 +70,7 @@
             <link href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
             <link href="{{ asset('webherramienta/assets/global/plugins/bower_components/jquery.gritter/css/jquery.gritter.css') }}" rel="stylesheet" />
             <link href="{{asset('css/plugins/bootstrap-datepicker/datepicker3.css')}}" rel="stylesheet">
-
-<<<<<<< HEAD
         </head>
-=======
-            <link href="{{asset('css/style.css')}}" rel="stylesheet">
-        </head
->>>>>>> f6112716c133987219f03a6da5a7ed3d5800eb9f
     {%endblock%}
     <!--/ END HEAD -->
 
@@ -327,9 +321,9 @@
                             <span class="arrow"></span>
                         </a>
                         <ul>
-                            {#<li><a href="{{ path('bach_exc_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li>#}
+                            <li><a href="{{ path('bach_exc_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li>
                             <li><a href="{{ path('bach_exc_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li>
-                            {#<li><a href="{{ path('bach_exc')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>#}
+                            <li><a href="{{ path('bach_exc')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>
                             <li><a href="{{ path('bach_exc_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>
                         </ul>
                     </li>
@@ -398,9 +392,9 @@
                             <span class="arrow"></span>
                         </a>
                         <ul>
-                        {#% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 %}
+                        {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 %}
                            <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>
-                        {% endif %#}
+                        {% endif %}
                             <li><a href="{{ path('bach_exc_rep_dis')}}">Generar Reporte</a></li>
                         </ul>
                     </li>

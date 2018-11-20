@@ -40,24 +40,6 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        return $this->redirect($this->generateUrl('principal_web'));
-
-        $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
-
-        $query = $repository->createQueryBuilder('i')
-                ->select('jg')
-                ->innerJoin('SieAppWebBundle:JurisdiccionGeografica', 'jg', 'WITH', 'i.leJuridicciongeografica = jg.id')
-                ->where('i.id = :institucion')
-                ->setParameter('institucion', $ie_id)
-                ->getQuery();
-
-        $distritoBloqueado = $query->getResult()[0];
-
-        if(!($distritoBloqueado->getDistritoTipo()->getId() == 2006 || $distritoBloqueado->getDistritoTipo()->getId() == 5001))
-        {
-            return $this->redirect($this->generateUrl('principal_web'));
-        }
-
         $form = $this->createSearchIeForm();
 
         return $this->render('SieAppWebBundle:BachillerExcelencia:index.html.twig', array(
@@ -92,24 +74,6 @@ class BachillerExcelenciaController extends Controller {
 
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
-        }
-
-        return $this->redirect($this->generateUrl('principal_web'));
-
-        $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
-
-        $query = $repository->createQueryBuilder('i')
-                ->select('jg')
-                ->innerJoin('SieAppWebBundle:JurisdiccionGeografica', 'jg', 'WITH', 'i.leJuridicciongeografica = jg.id')
-                ->where('i.id = :institucion')
-                ->setParameter('institucion', $ie_id)
-                ->getQuery();
-
-        $distritoBloqueado = $query->getResult()[0];
-
-        if(!($distritoBloqueado->getDistritoTipo()->getId() == 2006 || $distritoBloqueado->getDistritoTipo()->getId() == 5001))
-        {
-            return $this->redirect($this->generateUrl('principal_web'));
         }
 
         $form = $this->createSearchIeDirForm();
@@ -179,7 +143,7 @@ class BachillerExcelenciaController extends Controller {
               "public".institucioneducativa
               INNER JOIN "public".institucioneducativa_curso ON "public".institucioneducativa_curso.institucioneducativa_id = "public".institucioneducativa."id"
               WHERE
-              "public".institucioneducativa."id" = 80730808 and "public".institucioneducativa_curso.nivel_tipo_id = 13 and "public".institucioneducativa_curso.gestion_tipo_id = 2017 and "public".institucioneducativa_curso.grado_tipo_id = 6
+              "public".institucioneducativa."id" = 80730808 and "public".institucioneducativa_curso.nivel_tipo_id = 13 and "public".institucioneducativa_curso.gestion_tipo_id = 2018 and "public".institucioneducativa_curso.grado_tipo_id = 6
              */
 
             $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
@@ -326,7 +290,7 @@ class BachillerExcelenciaController extends Controller {
             $maestroinscripcionId = $form_aux['maestroInscripcion'];
             $institucioneducativaId = $form_aux['institucioneducativa'];
             $cargoTipoId = $form_aux['cargoTipo'];
-            $gestion = 2017;
+            $gestion = 2018;
 
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
@@ -487,7 +451,7 @@ class BachillerExcelenciaController extends Controller {
               "public".institucioneducativa
               INNER JOIN "public".institucioneducativa_curso ON "public".institucioneducativa_curso.institucioneducativa_id = "public".institucioneducativa."id"
               WHERE
-              "public".institucioneducativa."id" = 80730808 and "public".institucioneducativa_curso.nivel_tipo_id = 13 and "public".institucioneducativa_curso.gestion_tipo_id = 2017 and "public".institucioneducativa_curso.grado_tipo_id = 6
+              "public".institucioneducativa."id" = 80730808 and "public".institucioneducativa_curso.nivel_tipo_id = 13 and "public".institucioneducativa_curso.gestion_tipo_id = 2018 and "public".institucioneducativa_curso.grado_tipo_id = 6
              */
 
             $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
@@ -638,22 +602,6 @@ class BachillerExcelenciaController extends Controller {
 
             $em = $this->getDoctrine()->getManager();
 
-            //added validation to dist potosi and achacachi
-            $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
-            $query = $repository->createQueryBuilder('i')
-             ->select('jg')
-             ->innerJoin('SieAppWebBundle:JurisdiccionGeografica', 'jg', 'WITH', 'i.leJuridicciongeografica = jg.id')
-             ->where('i.id = :institucion')
-             ->setParameter('institucion', $formulario['institucioneducativa'])
-             ->getQuery();
-
-            $distritoBloqueado = $query->getResult()[0];
-
-            if(!($distritoBloqueado->getDistritoTipo()->getId() == 2006 || $distritoBloqueado->getDistritoTipo()->getId() == 5001)){
-              return $this->redirect($this->generateUrl('principal_web'));
-            }
-
-
             /*
             * verificamos si tiene tuicion
             */
@@ -726,7 +674,7 @@ class BachillerExcelenciaController extends Controller {
                 ->where('m.institucioneducativa = :institucion')
                 ->andWhere('m.gestionTipo = :gestion')
                 ->setParameter('institucion', $ie)
-                ->setParameter('gestion', 2017)
+                ->setParameter('gestion', 2018)
                 ->getQuery();
 
         $directores = $query->getResult();
@@ -760,7 +708,7 @@ class BachillerExcelenciaController extends Controller {
                 ->andWhere('ed.id = :destacado')
                 ->andWhere('ed.generoTipo = :genero')
                 ->setParameter('institucion', $ie)
-                ->setParameter('gestion', 2017)
+                ->setParameter('gestion', 2018)
                 ->setParameter('destacado', $ed)
                 ->setParameter('genero', $g)
                 ->getQuery();
@@ -788,7 +736,7 @@ class BachillerExcelenciaController extends Controller {
                 ->andWhere('ed.gestionTipo = :gestion')
                 ->andWhere('ed.generoTipo = :genero')
                 ->setParameter('institucion', $ie)
-                ->setParameter('gestion', 2017)
+                ->setParameter('gestion', 2018)
                 ->setParameter('genero', $g)
                 ->getQuery();
 
@@ -876,7 +824,7 @@ class BachillerExcelenciaController extends Controller {
                     ->andWhere('e.generoTipo = :genero')
                     ->andWhere('e.esoficial = :esoficial')
                     ->setParameter('institucion', $institucioneducativaId)
-                    ->setParameter('gestion', 2017)
+                    ->setParameter('gestion', 2018)
                     ->setParameter('genero', $generoTipoId)
                     ->setParameter('esoficial', 't')
                     ->getQuery();
@@ -891,7 +839,7 @@ class BachillerExcelenciaController extends Controller {
             $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($estudianteInscripcionId);
             $ieducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($institucioneducativaId);
             $genero = $em->getRepository('SieAppWebBundle:GeneroTipo')->find($generoTipoId);
-            $gestion = $em->getRepository('SieAppWebBundle:GestionTipo')->find(2017);
+            $gestion = $em->getRepository('SieAppWebBundle:GestionTipo')->find(2018);
 
             $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(55));
 
@@ -953,7 +901,7 @@ class BachillerExcelenciaController extends Controller {
                 ->setParameter('institucion', $arrSieInfo['id'])
                 ->setParameter('nivel', 13)
                 ->setParameter('grado', 6)
-                ->setParameter('gestion', 2017)
+                ->setParameter('gestion', 2018)
                 ->getQuery();
 
         $sexto = $query->getResult();
@@ -972,7 +920,7 @@ class BachillerExcelenciaController extends Controller {
                 ->andWhere('m.gestionTipo = :gestion')
                 ->andWhere('m.esoficial = :esoficial')
                 ->setParameter('institucion', $arrSieInfo['id'])
-                ->setParameter('gestion', 2017)
+                ->setParameter('gestion', 2018)
                 ->setParameter('esoficial', 't')
                 ->getQuery();
 
@@ -988,7 +936,7 @@ class BachillerExcelenciaController extends Controller {
                 ->andWhere('ed.gestionTipo = :gestion')
                 ->andWhere('ed.esoficial = :esoficial')
                 ->setParameter('institucion', $arrSieInfo['id'])
-                ->setParameter('gestion', 2017)
+                ->setParameter('gestion', 2018)
                 ->setParameter('esoficial', 't')
                 ->getQuery();
 
@@ -1057,7 +1005,7 @@ class BachillerExcelenciaController extends Controller {
                 ->setParameter('institucion', $arrSieInfo['id'])
                 ->setParameter('nivel', 13)
                 ->setParameter('grado', 6)
-                ->setParameter('gestion', 2017)
+                ->setParameter('gestion', 2018)
                 ->getQuery();
 
         $sexto = $query->getResult();
@@ -1077,7 +1025,7 @@ class BachillerExcelenciaController extends Controller {
                 ->andWhere('m.gestionTipo = :gestion')
                 ->setParameter('institucion', $arrSieInfo['id'])
                 ->setParameter('esoficial', 't')
-                ->setParameter('gestion', 2017)
+                ->setParameter('gestion', 2018)
                 ->getQuery();
 
         $director = $query->getOneOrNullResult();
@@ -1105,7 +1053,7 @@ class BachillerExcelenciaController extends Controller {
                 ->where('m.institucioneducativa = :institucion')
                 ->andWhere('m.gestionTipo = :gestion')
                 ->setParameter('institucion', $arrSieInfo['id'])
-                ->setParameter('gestion', 2017)
+                ->setParameter('gestion', 2018)
                 ->getQuery();
 
         $directores = $query->getResult();
