@@ -6,3 +6,7 @@ promedio_calidad_save:
     path:     /save/
     defaults: { _controller: SieRegularBundle:PromedioCalidad:save }
     methods:  POST
+
+promedio_calidad_lista:
+    path:     /list/
+    defaults: { _controller: SieRegularBundle:PromedioCalidad:list }

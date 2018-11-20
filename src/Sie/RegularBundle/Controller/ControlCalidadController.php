@@ -425,12 +425,17 @@ class ControlCalidadController extends Controller {
                 break;
             
             case 27://PROMEDIOS
-                $query = $em->getConnection()->prepare('select * from persona limit 1');//sp_sist_calidad_prom_fisquim(:algo, :algo, :algo, :sie, :gestion);');
-                // $query->bindValue(':algo', '2');
-                // $query->bindValue(':algo', '2');
-                // $query->bindValue(':algo', $form['llave']);
-                // $query->bindValue(':sie', $form['institucionEducativa']);
-                // $query->bindValue(':gestion', $form['gestion']);
+                $llave = $form['llave'];
+                $parametros = explode('|', $llave);
+                $idInscripcion = $parametros[0];
+                $idNotaTipo = $parametros[1];
+
+                $query = $em->getConnection()->prepare('select * from sp_sist_calidad_prom_fisquim(:param, :idInscripcion, :idNotaTipo, :sie, :gestion);');
+                $query->bindValue(':param', '2');
+                $query->bindValue(':idInscripcion', $idInscripcion);
+                $query->bindValue(':idNotaTipo', $idNotaTipo);
+                $query->bindValue(':sie', $form['institucionEducativa']);
+                $query->bindValue(':gestion', $form['gestion']);
                 $query->execute();
                 $resultado = $query->fetchAll();
                 break;

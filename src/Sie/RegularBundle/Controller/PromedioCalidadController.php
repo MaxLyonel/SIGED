@@ -25,6 +25,55 @@ class PromedioCalidadController extends Controller {
         $this->session = new Session();
     }
 
+    public function listAction(Request $request) {
+
+        $id_usuario = $this->session->get('userId');
+        $gestion = $this->session->get('currentyear');
+        $id = 27;
+
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $rol_usuario = $this->session->get('roluser');
+
+        if ($rol_usuario != '9') {
+            return $this->redirect($this->generateUrl('principal_web'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $regla = $em->getRepository('SieAppWebBundle:ValidacionReglaTipo')->findOneById($id);
+
+        $roluserlugarid = $this->session->get('roluserlugarid');
+        
+        $usuario_lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
+
+        $repository = $em->getRepository('SieAppWebBundle:ValidacionReglaTipo');
+
+        $query = $repository->createQueryBuilder('vrt')
+            ->select('vp')->distinct()
+            ->innerJoin('SieAppWebBundle:ValidacionProceso', 'vp', 'WITH', 'vrt.id = vp.validacionReglaTipo')
+            ->where('vrt.id = :reglaTipo')
+            ->andWhere('vp.esActivo = :esactivo')
+            ->andWhere('vp.institucionEducativaId = :sie')
+            ->andWhere('vp.gestionTipo = :gestion')
+            ->setParameter('reglaTipo', $id)
+            ->setParameter('esactivo', 'f')
+            ->setParameter('sie', $this->session->get('ie_id'))
+            ->setParameter('gestion', $gestion)
+            ->addOrderBy('vp.gestionTipo', 'desc')
+            ->getQuery();
+
+        $lista_detalle = $query->getResult();
+
+        return $this->render('SieRegularBundle:PromedioCalidad:lista.html.twig', array(
+            'lista_detalle' => $lista_detalle,
+            'regla' => $regla,
+            'gestion' => $gestion
+        ));
+    }
+
     /**
      * Datos del estudiante y de sus materias fisica quimica
      */
