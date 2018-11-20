@@ -37,8 +37,8 @@ class PromedioCalidadController extends Controller {
         $parametros = explode('|', $llave);
 
         $idInscripcion = $parametros[0];
-        $idNota = $parametros[1];
-        $idNotaTipo = $parametros[2];
+        $idNotaTipo = $parametros[1];
+        $idNota = $parametros[2];
         $promedio = $parametros[3];
 
         $em = $this->getDoctrine()->getManager();
