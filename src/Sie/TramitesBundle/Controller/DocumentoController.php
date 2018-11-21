@@ -639,7 +639,7 @@ class DocumentoController extends Controller {
                     'cedulaidentidad'=>$entityDocumentoGenerado['carnetIdentidad'],
                     'emisiondepartamento'=>$entityDocumentoGenerado['departamentoemision'],
                     'emisionfecha'=>date_format($dateEmision, 'd/m/Y'),
-                    'tokenfirma'=>base64_encode($getDocumentoFirma['tokenfirma'])
+                    'tokenfirma'=>base64_encode($getDocumentoFirma['id'])
                 );
                 $keys = $this->getEncodeRSA($datos);
 

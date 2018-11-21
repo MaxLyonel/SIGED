@@ -3366,11 +3366,7 @@ class TramiteDetalleController extends Controller {
                 $documentoController = new documentoController();
                 $documentoController->setContainer($this->container);
 
-                if ($serieCarton == 'A' or $serieCarton == 'A1' or $serieCarton == 'B' or $serieCarton == 'C' or $serieCarton == 'C1' or $serieCarton == 'D'){
-                    $numCarton =$numeroCarton;
-                } else {
-                    $numCarton = str_pad($numeroCarton, 6, "0", STR_PAD_LEFT);
-                }
+                $numCarton =$numeroCarton;
                 $serCarton = $serieCarton;
                 
                 $entidadDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->findOneBy(array('id' => $documentoFirmaId));
@@ -3393,6 +3389,11 @@ class TramiteDetalleController extends Controller {
                 $messageError = "";
                 if ($valFirmaDisponible[0]){
                     foreach ($tramites as $tramite) {
+                        if ($serieCarton == 'A' or $serieCarton == 'A1' or $serieCarton == 'B' or $serieCarton == 'C' or $serieCarton == 'C1' or $serieCarton == 'D'){
+                            $numCarton =$numCarton;
+                        } else {
+                            $numCarton = str_pad($numCarton, 6, "0", STR_PAD_LEFT);
+                        }
                         $tramiteId = (Int) base64_decode($tramite);
                         $entidadTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $tramiteId));
                         $estudianteInscripcionId = $entidadTramite->getEstudianteInscripcion()->getId();

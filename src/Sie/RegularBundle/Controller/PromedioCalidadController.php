@@ -103,7 +103,8 @@ class PromedioCalidadController extends Controller {
 
         $idObservacion = $request->get('idObservacion');
         $observacion = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($idObservacion);
-
+        $observacionAnterior = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($idObservacion);
+        
         if($acuerdo == "1"){
             $nota = $em->getRepository('SieAppWebBundle:EstudianteNota')->find(intval($idNota));
             $nota->setNotaCuantitativa($promedio);
@@ -116,6 +117,20 @@ class PromedioCalidadController extends Controller {
             $observacion->setSolucionTipoId(1);
             $em->flush();
         }
+
+        /**
+         * Registro de log transaccion
+         */
+        $this->get('funciones')->setLogTransaccion(
+            $observacion->getId(),
+            'validacion_proceso',
+            'U',
+            'Update Observación de Promedio FISICA-QUIMICA',
+            $observacion,
+            $observacionAnterior,
+            'SIGED',
+            json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+        );
 
         $message = 'Se realizó la validación satisfactoriamente para la observación: ' . $observacion->getObs();
         $this->addFlash('success', $message);
@@ -240,15 +255,11 @@ class PromedioCalidadController extends Controller {
         $promedio = $request->get('promedio');
         $acuerdo = $request->get('acuerdo');
 
-        // for ($i=0; $i < count($acuerdo); $i++) { 
-        //     dump($acuerdo[$idValidacion[$i]]);
-        // }
-        // die;
-
         $em = $this->getDoctrine()->getManager();
 
         for ($i=0; $i < count($idValidacion); $i++) { 
             $validacion = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($idValidacion[$i]);
+            $validacionAnterior = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($idValidacion[$i]);
             if($acuerdo[$idValidacion[$i]] == "1"){
                 $nota = $em->getRepository('SieAppWebBundle:EstudianteNota')->find(intval($idNota[$i]));
                 $nota->setNotaCuantitativa($promedio[$i]);
@@ -261,6 +272,19 @@ class PromedioCalidadController extends Controller {
                 $validacion->setSolucionTipoId(1);
                 $em->flush();
             }
+            /**
+             * Registro de log transaccion
+             */
+            $this->get('funciones')->setLogTransaccion(
+                $validacion->getId(),
+                'validacion_proceso',
+                'U',
+                'Update Observación de Promedio FISICA-QUIMICA',
+                $validacion,
+                $validacionAnterior,
+                'SIGED',
+                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+            );
         }
 
         $message = 'Se realizó la validación satisfactoriamente, aquellos casos que fueron marcados con la opcion no debe solucionarlos';
