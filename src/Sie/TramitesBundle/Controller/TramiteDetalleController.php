@@ -3580,7 +3580,7 @@ class TramiteDetalleController extends Controller {
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
             // $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&'));
-            $response->setContent(file_get_contents('http://100.0.100.71:8080/birt-viewer/frameset?__report=siged/' . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&'));
             $response->setStatusCode(200);
             $response->headers->set('Content-Transfer-Encoding', 'binary');
             $response->headers->set('Pragma', 'no-cache');
