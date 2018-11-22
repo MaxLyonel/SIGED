@@ -317,6 +317,7 @@ class TramiteDetalleController extends Controller {
          */
         $entityTramiteEstadoSiguiente = $em->getRepository('SieAppWebBundle:TramiteEstado')->findOneBy(array('id' => $tramiteEstadoSiguienteId));
 
+        //dump($entityTramiteEstadoSiguiente);die;
 
         /*
          * Extrae la posicion del flujo que debe seguir
@@ -1688,6 +1689,7 @@ class TramiteDetalleController extends Controller {
                             }
                             $msg = array('0'=>true, '1'=>$participante);
                             $msgContenido = $tramiteController->getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId);
+                            
                             // $msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
 
                             $documentoController = new documentoController();
