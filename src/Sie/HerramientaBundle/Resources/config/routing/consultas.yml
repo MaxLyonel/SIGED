@@ -1,0 +1,25 @@
+consultas_maestros_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:Consultas:index }
+consulta_Maestro_institucioneducativa:
+    path:     /busquedaInstEdu
+    defaults: { _controller: SieHerramientaBundle:Consultas:buscarInstitucioneducativa }
+consulta_Maestro_fichamaestro:
+    path:     /fichamaestro
+    defaults: { _controller: SieHerramientaBundle:Consultas:fichapersonal }
+consulta_Maestro_materias:
+    path:     /fichamaestro_materias
+    defaults: { _controller: SieHerramientaBundle:Consultas:fichapersonal_materias }
+
+
+
+
+
+
+
+
+
+
+
+
+
