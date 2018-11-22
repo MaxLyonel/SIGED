@@ -21,8 +21,8 @@ class Segip {
 
         /*TOKEN DE CONEXIÓN*/
         $this->sistemas_dev = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI0M2t2ZVlDUmRxWGpFMW5QRHZYVWs1MW05OWEyOTJvQSIsInVzZXIiOiJzaXN0ZW1hc19kZXYiLCJleHAiOjE2MjUzNTAwMjB9.GmV5nakrvPSdrQq3TUAVwATtr4icHGE2Y2bj7w4qwSc';
-
         $this->sieacademico = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJXREdHc3VvQ1dVS1VFdDgxWFdnRk9NSnlBdzVRZDBxQyIsInVzZXIiOiJzaWVhY2FkZW1pY28iLCJleHAiOjE2MjUyMzg0MjB9.mZAIX3k76FkMxLKH8BlJ5CiGPlKEyKAFrsLTYG21Bqs';
+        $this->siealternativa = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ5U0JFcTBQNHVxeFR0UkNoczUxalg4WExaMWVybzJ6YiIsInVzZXIiOiJzaWVhbHRlcm5hdGl2YSIsImV4cCI6MTYzNzU5MDI2MH0.yOcs6xVNlFgUQPjYd3F8OCxUB7uARgeiVDyiO043lQE';
         /*TOKEN DE CONEXIÓN*/
     }
     
@@ -203,6 +203,10 @@ class Segip {
                 case 'academico':
                     $token = $this->sieacademico;
                     break;
+
+                case 'alternativa':
+                    $token = $this->siealternativa;
+                    break;                    
                 
                 default:
                     $token = $this->sistemas_dev;
