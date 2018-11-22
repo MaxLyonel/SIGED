@@ -1086,7 +1086,9 @@ class TramiteDetalleController extends Controller {
 
         $institucioneducativaId = 0;
         $gestionId = $gestionActual->format('Y');
+        $gestionActual = $gestionActual->format('Y');
         $especialidadId = 0;
+        $periodoId = 3;
         $nivelId = 0;
         $tramiteTipoId = 0;
         $flujoSeleccionado = '';
@@ -1134,7 +1136,16 @@ class TramiteDetalleController extends Controller {
                         $tramiteController->setContainer($this->container);
 
                         if ($flujoSeleccionado == 'Adelante'){
-                            $msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
+                            $entidadSucursal = $tramiteController->getInstitucionEducativaPeriodoGestionActual($institucionEducativaId, $gestionActual);
+
+                            if(count($entidadSucursal) > 0){
+                                $periodoId = $entidadSucursal[0]['periodo_tipo_id'];
+                            } else {
+                                $gestionId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getInstitucioneducativaSucursal()->getGestionTipo()->getId();
+                            }
+                            $msg = array('0'=>true, '1'=>$participante);
+                            $msgContenido = $tramiteController->getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId);
+                            // $msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
                         }
 
                         if($msgContenido != ""){
@@ -1589,6 +1600,8 @@ class TramiteDetalleController extends Controller {
 
         $institucioneducativaId = 0;
         $gestionId = $gestionActual->format('Y');
+        $gestionActual = $gestionActual->format('Y');
+        $periodoId = 3;
         $especialidadId = 0;
         $nivelId = 0;
         $tramiteTipoId = 0;
@@ -1666,7 +1679,16 @@ class TramiteDetalleController extends Controller {
                         }
 
                         if ($flujoSeleccionado == 'Adelante'){
-                            $msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
+                            $entidadSucursal = $tramiteController->getInstitucionEducativaPeriodoGestionActual($institucionEducativaId, $gestionActual);
+
+                            if(count($entidadSucursal) > 0){
+                                $periodoId = $entidadSucursal[0]['periodo_tipo_id'];
+                            } else {
+                                $gestionId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getInstitucioneducativaSucursal()->getGestionTipo()->getId();
+                            }
+                            $msg = array('0'=>true, '1'=>$participante);
+                            $msgContenido = $tramiteController->getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId);
+                            // $msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
 
                             $documentoController = new documentoController();
                             $documentoController->setContainer($this->container);
@@ -2343,7 +2365,7 @@ class TramiteDetalleController extends Controller {
                         $tramiteController->setContainer($this->container);
 
                         if ($flujoSeleccionado == 'Adelante'){
-                            //$msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
+                            $msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
                         }
 
                         if($msgContenido != ""){

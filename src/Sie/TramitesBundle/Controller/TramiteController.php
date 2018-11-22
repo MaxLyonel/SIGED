@@ -1697,7 +1697,7 @@ class TramiteController extends Controller {
             else (n1 is null or n1 = 0 or n2 is null or n2 = 0 or n3 is null or n3 = 0 or n4 is null or n4 = 0)
             end
           else
-            true
+            false
           end
           group by v.codigo_rude, v.paterno, v.materno, v.nombre
         ");
