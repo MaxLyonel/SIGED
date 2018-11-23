@@ -476,6 +476,8 @@ class TramiteRueController extends Controller
                     $idrue = "";
                     $tipoeducacion = $datos['tipoeducacion'];
                     $dependenciatipo = $datos['dependenciaTipo'];
+                    $dependencia = $em->getRepository('SieAppWebBundle:DependenciaTipo')->find($dependenciatipo);
+                    $dependenciatiponombre = $dependencia->getDependencia();
                 }
             }
             
@@ -514,7 +516,7 @@ class TramiteRueController extends Controller
         return $this->redirect($this->generateUrl('wf_tramite_recibido'));
     }
 
-    public function createVerificaSubdireccionDepartamentalForm($flujotipo,$tarea,$ie,$idrue,$tipotramite,$tipoeducacion,$dependenciatipo,$dependenciatiponombre,$idtramite,$informe,$fechainforme)
+    public function createVerificaSubdireccionDepartamentalForm($flujotipo,$tarea,$ie,$idrue,$tipotramite,$tipoeducacion,$dependenciatipo,$dependenciatiponombre,$idtramite)
     {
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl('tramite_rue_verifica_subdireccion_departamental_guardar'))
@@ -565,29 +567,38 @@ class TramiteRueController extends Controller
         $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($id);
         $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
         $tipotramite = $tramite->getTramiteTipo()->getId();
-        $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->findBy(array('tramite'=>$id));
-        $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
+        $wfdatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
+                ->select('wfd')
+                ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
+                ->where('td.tramite='.$tramite->getId())
+                ->andWhere("wfd.esValido=true")
+                ->getQuery()
+                ->getResult();
+
         if ($tramite->getInstitucioneducativa()){
             $ie=$tramite->getInstitucioneducativa()->getInstitucioneducativa();
             $idrue = $tramite->getInstitucioneducativa()->getId();
             $tipoeducacion = $tramite->getInstitucioneducativa()->getInstitucioneducativaTipo()->getId();
             $dependenciatipo = $tramite->getInstitucioneducativa()->getDependenciaTipo()->getId();
-            $dependenciatiponombre = $tramite->getInstitucioneducativa()->getDependenciaTipo()->getDependencia();
+            //$dependenciatiponombre = $tramite->getInstitucioneducativa()->getDependenciaTipo()->getDependencia();
             
         }else{
-            
-            //sdump($datos);die;
-            $ie = $datos['institucionEducativa'];
-            $idrue = "";
-            $tipoeducacion = $datos['tipoeducacion'];
-            $dependenciatipo = $datos['dependenciaTipo'];
-            
+            foreach($wfdatos as $d){
+                if ($d->getTramiteDetalle()->getFlujoProceso()->getOrden()==1){
+                    $datos = json_decode($d->getDatos(),true);
+                    //dump($datos);die;
+                    $ie = $datos['institucionEducativa'];
+                    $idrue = "";
+                    $tipoeducacion = $datos['tipoeducacion'];
+                    $dependenciatipo = $datos['dependenciaTipo'];
+                    $dependencia = $em->getRepository('SieAppWebBundle:DependenciaTipo')->find($dependenciatipo);
+                    $dependenciatiponombre = $dependencia->getDependencia();
+                }
+            }
         }
         $flujotipo = $tramite->getFlujoTipo()->getId();
         $tarea = $tramiteDetalle->getFlujoProceso()->getId();
-        $informe = $datos['informe'];
-        $fechainforme = $datos['fechainforme'];
-        $verificasubdireccionDepartamentalForm = $this->createVerificaSubdireccionDepartamentalForm($flujotipo,$tarea,$ie,$idrue,$tipotramite,$tipoeducacion,$dependenciatipo,$dependenciatiponombre,$id,$informe,$fechainforme); 
+        $verificasubdireccionDepartamentalForm = $this->createVerificaSubdireccionDepartamentalForm($flujotipo,$tarea,$ie,$idrue,$tipotramite,$tipoeducacion,$dependenciatipo,$dependenciatiponombre,$id); 
         //return $this->render('SieHerramientaBundle:FlujoProceso:index1.html.twig');
         return $this->render('SieHerramientaBundle:TramiteRue:verificaSubdireccionDepartamentalNuevo.html.twig', array(
             'form' => $verificasubdireccionDepartamentalForm->createView(),
@@ -609,15 +620,16 @@ class TramiteRueController extends Controller
         $varevaluacion1 = $form['varevaluacion1'];
         $observacion1 = $form['observacion1'];
         $datos = json_encode($form);
+        $lugar = $this->obtienelugar($idtramite);
         $WfTramiteController = new WfTramiteController();
         $WfTramiteController->setContainer($this->container);
-        $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion1,$varevaluacion1,$idtramite,$datos);
+        $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion1,$varevaluacion1,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
         if($varevaluacion1=="SI"){
             $varevaluacion2 = $form['varevaluacion2'];
             $observacion2 = $form['observacion2'];
             $tarea = 43;
             $mensaje = $WfTramiteController->guardarTramiteRecibido($usuario,$tarea,$idtramite);
-            $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion2,$varevaluacion2,$idtramite,$datos);
+            $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion2,$varevaluacion2,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
         }
         $request->getSession()
                 ->getFlashBag()
@@ -625,7 +637,7 @@ class TramiteRueController extends Controller
         return $this->redirect($this->generateUrl('wf_tramite_recibido'));
     }
 
-    public function createVerificaJuridicaDepartamentalForm($flujotipo,$tarea,$ie,$idrue,$tipotramite,$tipoeducacion,$dependenciatipo,$dependenciatiponombre,$idtramite,$informe,$fechainforme)
+    public function createVerificaJuridicaDepartamentalForm($flujotipo,$tarea,$ie,$idrue,$tipotramite,$tipoeducacion,$dependenciatipo,$dependenciatiponombre,$idtramite)
     {
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl('tramite_rue_verifica_juridica_departamental_guardar'))
@@ -662,8 +674,14 @@ class TramiteRueController extends Controller
         $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($id);
         $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
         $tipotramite = $tramite->getTramiteTipo()->getId();
-        $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->findBy(array('tramite'=>$id));
-        $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
+        $wfdatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
+                ->select('wfd')
+                ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
+                ->where('td.tramite='.$tramite->getId())
+                ->andWhere("wfd.esValido=true")
+                ->getQuery()
+                ->getResult();
+
         if ($tramite->getInstitucioneducativa()){
             $ie=$tramite->getInstitucioneducativa()->getInstitucioneducativa();
             $idrue = $tramite->getInstitucioneducativa()->getId();
@@ -672,19 +690,22 @@ class TramiteRueController extends Controller
             $dependenciatiponombre = $tramite->getInstitucioneducativa()->getDependenciaTipo()->getDependencia();
             
         }else{
-            
-            //sdump($datos);die;
-            $ie = $datos['institucionEducativa'];
-            $idrue = "";
-            $tipoeducacion = $datos['tipoeducacion'];
-            $dependenciatipo = $datos['dependenciaTipo'];
-            
+            foreach($wfdatos as $d){
+                if ($d->getTramiteDetalle()->getFlujoProceso()->getOrden()==1){
+                    $datos = json_decode($d->getDatos(),true);
+                    //dump($datos);die;
+                    $ie = $datos['institucionEducativa'];
+                    $idrue = "";
+                    $tipoeducacion = $datos['tipoeducacion'];
+                    $dependenciatipo = $datos['dependenciaTipo'];
+                    $dependencia = $em->getRepository('SieAppWebBundle:DependenciaTipo')->find($dependenciatipo);
+                    $dependenciatiponombre = $dependencia->getDependencia();
+                }
+            }
         }
         $flujotipo = $tramite->getFlujoTipo()->getId();
         $tarea = $tramiteDetalle->getFlujoProceso()->getId();
-        $informe = $datos['informesubdireccion'];
-        $fechainforme = $datos['fechainformesubdireccion'];
-        $verificaJuridicaDepartamentalForm = $this->createVerificaJuridicaDepartamentalForm($flujotipo,$tarea,$ie,$idrue,$tipotramite,$tipoeducacion,$dependenciatipo,$dependenciatiponombre,$id,$informe,$fechainforme); 
+        $verificaJuridicaDepartamentalForm = $this->createVerificaJuridicaDepartamentalForm($flujotipo,$tarea,$ie,$idrue,$tipotramite,$tipoeducacion,$dependenciatipo,$dependenciatiponombre,$id); 
         //return $this->render('SieHerramientaBundle:FlujoProceso:index1.html.twig');
         return $this->render('SieHerramientaBundle:TramiteRue:verificaJuridicaDepartamentalNuevo.html.twig', array(
             'form' => $verificaJuridicaDepartamentalForm->createView(),'idtramite'=>$id
@@ -706,21 +727,22 @@ class TramiteRueController extends Controller
         $varevaluacion1 = $form['varevaluacion1'];
         $observacion1 = $form['observacion1'];
         $datos = json_encode($form);
+        $lugar = $this->obtienelugar($idtramite);
         $WfTramiteController = new WfTramiteController();
         $WfTramiteController->setContainer($this->container);
-        $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion1,$varevaluacion1,$idtramite,$datos);
+        $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion1,$varevaluacion1,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
         if($varevaluacion1=="SI"){
             $varevaluacion2 = $form['varevaluacion2'];
             $observacion2 = $form['observacion2'];
             $tarea = 45;
             $mensaje = $WfTramiteController->guardarTramiteRecibido($usuario,$tarea,$idtramite);
-            $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion2,$varevaluacion2,$idtramite,$datos);
+            $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion2,$varevaluacion2,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
             if($varevaluacion2 == "SI"){
                 $tarea = 46;
                 $varevaluacion = "";
                 $observacion = "";
                 $mensaje = $WfTramiteController->guardarTramiteRecibido($usuario,$tarea,$idtramite);
-                $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos);
+                $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
             }
         }
         $request->getSession()
@@ -761,9 +783,13 @@ class TramiteRueController extends Controller
         $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
         //dump($tramiteDetalle);die;
         $tipotramite = $tramite->getTramiteTipo()->getId();
-        $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->findBy(array('tramite'=>$id));
-        //dump($wfSolicitudTramite);die;
-        $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
+        $wfdatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
+                ->select('wfd')
+                ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
+                ->where('td.tramite='.$tramite->getId())
+                ->andWhere("wfd.esValido=true")
+                ->getQuery()
+                ->getResult();
         //dump($datos);die;
         if ($tramite->getInstitucioneducativa()){
             $ie=$tramite->getInstitucioneducativa()->getInstitucioneducativa();
@@ -773,18 +799,21 @@ class TramiteRueController extends Controller
             $dependenciatiponombre = $tramite->getInstitucioneducativa()->getDependenciaTipo()->getDependencia();
             
         }else{
-            
-            //sdump($datos);die;
-            $ie = $datos['institucionEducativa'];
-            $idrue = "";
-            $tipoeducacion = $datos['tipoeducacion'];
-            $dependenciatipo = $datos['dependenciaTipo'];
-            
+            foreach($wfdatos as $d){
+                if ($d->getTramiteDetalle()->getFlujoProceso()->getOrden()==1){
+                    $datos = json_decode($d->getDatos(),true);
+                    //dump($datos);die;
+                    $ie = $datos['institucionEducativa'];
+                    $idrue = "";
+                    $tipoeducacion = $datos['tipoeducacion'];
+                    $dependenciatipo = $datos['dependenciaTipo'];
+                    $dependencia = $em->getRepository('SieAppWebBundle:DependenciaTipo')->find($dependenciatipo);
+                    $dependenciatiponombre = $dependencia->getDependencia();
+                }
+            }
         }
         $flujotipo = $tramite->getFlujoTipo()->getId();
         $tarea = $tramiteDetalle->getFlujoProceso()->getId();
-        //$informe = $datos['informejuridica'];
-        //$fechainforme = $datos['fechainformejuridica'];
         $enviaFormulariosDepartamentalForm = $this->createEnviaFormulariosDepartamentalForm($flujotipo,$tarea,$ie,$idrue,$tipotramite,$id); 
         //return $this->render('SieHerramientaBundle:FlujoProceso:index1.html.twig');
         return $this->render('SieHerramientaBundle:TramiteRue:enviaFormulariosDepartamentalNuevo.html.twig', array(
@@ -807,9 +836,10 @@ class TramiteRueController extends Controller
         $varevaluacion1 = "";
         $observacion1 = $form['observacion'];
         $datos = json_encode($form);
+        $lugar = $this->obtienelugar($idtramite);
         $WfTramiteController = new WfTramiteController();
         $WfTramiteController->setContainer($this->container);
-        $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion1,$varevaluacion1,$idtramite,$datos);
+        $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion1,$varevaluacion1,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
         $request->getSession()
                 ->getFlashBag()
                 ->add('exito', $mensaje);
@@ -849,8 +879,14 @@ class TramiteRueController extends Controller
         $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($id);
         $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
         $tipotramite = $tramite->getTramiteTipo()->getId();
-        $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->findBy(array('tramite'=>$id));
-        $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
+        $wfdatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
+                ->select('wfd')
+                ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
+                ->where('td.tramite='.$tramite->getId())
+                ->andWhere("wfd.esValido=true")
+                ->getQuery()
+                ->getResult();
+
         if ($tramite->getInstitucioneducativa()){
             $ie=$tramite->getInstitucioneducativa()->getInstitucioneducativa();
             $idrue = $tramite->getInstitucioneducativa()->getId();
@@ -859,13 +895,18 @@ class TramiteRueController extends Controller
             $dependenciatiponombre = $tramite->getInstitucioneducativa()->getDependenciaTipo()->getDependencia();
             
         }else{
-            
-            //sdump($datos);die;
-            $ie = $datos['institucionEducativa'];
-            $idrue = "";
-            $tipoeducacion = $datos['tipoeducacion'];
-            $dependenciatipo = $datos['dependenciaTipo'];
-            
+            foreach($wfdatos as $d){
+                if ($d->getTramiteDetalle()->getFlujoProceso()->getOrden()==1){
+                    $datos = json_decode($d->getDatos(),true);
+                    //dump($datos);die;
+                    $ie = $datos['institucionEducativa'];
+                    $idrue = "";
+                    $tipoeducacion = $datos['tipoeducacion'];
+                    $dependenciatipo = $datos['dependenciaTipo'];
+                    $dependencia = $em->getRepository('SieAppWebBundle:DependenciaTipo')->find($dependenciatipo);
+                    $dependenciatiponombre = $dependencia->getDependencia();
+                }
+            }
         }
         $flujotipo = $tramite->getFlujoTipo()->getId();
         $tarea = $tramiteDetalle->getFlujoProceso()->getId();
@@ -893,15 +934,16 @@ class TramiteRueController extends Controller
         $varevaluacion = $form['varevaluacion'];
         $observacion = $form['observacion'];
         $datos = json_encode($form);
+        $lugar = $this->obtienelugar($idtramite);
         $WfTramiteController = new WfTramiteController();
         $WfTramiteController->setContainer($this->container);
-        $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos);
+        $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
         if($varevaluacion=="SI"){
             $tarea = 49; //tarea siguiente
             $varevaluacion = "";
             $observacion = "";
             $mensaje = $WfTramiteController->guardarTramiteRecibido($usuario,$tarea,$idtramite);
-            $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos);
+            $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
         }
         
         $request->getSession()

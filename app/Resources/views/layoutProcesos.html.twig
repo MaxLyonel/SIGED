@@ -284,8 +284,6 @@
                                 
                             </ul>
                         </li>
-                    {% endif %}
-                    {% if app.session.get('roluser') == 8 %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-bars"></i></span>
@@ -295,6 +293,16 @@
                             <ul>
                                 <li><a href="{{ path('flujorol')}}">Buscar por proceso</a></li>
                                 <li><a href="{{ path('flujoproceso_rol')}}">Buscar por rol</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-bars"></i></span>
+                                <span class="text">Usuarios</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('flujousuarios_listado')}}">Gestion de usuarios</a></li>
                             </ul>
                         </li>
                     {% endif %}

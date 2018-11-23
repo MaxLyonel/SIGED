@@ -8,39 +8,45 @@
             <div class="panel-body">
                 {{ form_start(form,{ 'attr': {'class': 'tab-content form-horizontal','id':'form_edit_tarea','onsubmit':'return false;'} } ) }}
                 <div class="form-group">
-                    <label class="col-sm-6">Rol</label>
-                    <div class="col-sm-4">
+                    <label class="col-sm-4">Rol</label>
+                    <div class="col-sm-8">
                         {{ form_widget(form.rol_edit, {'attr':{'class':'form-control'} }) }}
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-6">Observación</label>
-                    <div class="col-sm-4">
+                    <label class="col-sm-4">Observación</label>
+                    <div class="col-sm-8">
                         {{ form_widget(form.observacion_edit, {'attr':{'class':'form-control'} }) }}                                                       
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-6">Tipo de asignación de tarea</label>
-                    <div class="col-sm-4">
+                    <label class="col-sm-4">Tipo de asignación de tarea</label>
+                    <div class="col-sm-8">
                         {{ form_widget(form.asignacion_edit, {'attr':{'class':'form-control'} }) }}
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-6">Evaluación</label>
-                    <div class="col-md-2">
+                    <label class="col-sm-4">Evaluación</label>
+                    <div class="col-md-8">
                         {{ form_widget(form.evaluacion_edit, {'attr':{'class':'form-control'} }) }}
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-6">Variable de valuación</label>
-                    <div class="col-sm-4">
+                    <label class="col-sm-4">Variable de valuación</label>
+                    <div class="col-sm-8">
                         {{ form_widget(form.varevaluacion_edit, {'attr':{'class':'form-control'} }) }}
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-6">Plazo</label>
-                    <div class="col-md-1">
-                        {{ form_widget(form.plazo_edit, {'attr':{'class':'validar'} }) }}
+                    <label class="col-sm-4">Plazo</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.plazo_edit, {'attr':{'class':'form-control validar'} }) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4">Ruta de la tarea</label>
+                    <div class="col-md-8">
+                        {{ form_widget(form.ruta_edit, {'attr':{'class':'form-control'} }) }}
                     </div>
                 </div>
                 {{ form_end(form) }}  

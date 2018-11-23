@@ -75,13 +75,13 @@
                                     <td>{{ entity.obs }}</td>
                                     <td>
                                         <a href="{{ path('flujotipo_edit', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Editar">
-                                            <i class="fa fa-pencil"></i>
+                                            <i class="glyphicon glyphicon-pencil"></i>
                                         </a>
                                         <a href="{{ path('flujotipo_ver', { 'id': entity.id }) }}" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" title="Ver">
                                             <i class="fa fa-eye"></i>
                                         </a>
                                         <a href="{{ path('flujotipo_delete', { 'id': entity.id }) }}" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="return confirm('¿Esta suguro de eliminar?')">
-                                            <i class="fa fa-times"></i>
+                                            <i class="glyphicon glyphicon-trash"></i>
                                         </a>
                                     </td>
                                 </tr>

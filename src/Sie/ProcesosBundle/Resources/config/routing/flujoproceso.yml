@@ -81,3 +81,7 @@ flujoproceso_condicion_editar:
 flujoproceso_condicion_update:
     path:     /condicion_update
     defaults: { _controller: "SieProcesosBundle:FlujoProceso:updateCondicion" }
+
+flujoproceso_buscar_usuarios:
+    path:     /buscar_usuarios
+    defaults: { _controller: "SieProcesosBundle:FlujoProceso:buscarUsuarios" }

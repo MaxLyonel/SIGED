@@ -1,0 +1,35 @@
+flujousuarios:
+    path:     /
+    defaults: { _controller: "SieProcesosBundle:FlujoUsuarios:index" }
+
+flujousuarios_buscar_tareas:
+    path:     /buscartareas
+    defaults: { _controller: "SieProcesosBundle:FlujoUsuarios:buscarTareas" }
+
+flujousuarios_buscar_usuarios:
+    path:     /buscarusuarios
+    defaults: { _controller: "SieProcesosBundle:FlujoUsuarios:buscarUsuarios" }
+
+flujousuarios_guardar_usuarios:
+    path:     /guardarusuarios
+    defaults: { _controller: "SieProcesosBundle:FlujoUsuarios:guardarUsuarios" }
+
+flujousuarios_listado:
+    path:     /listausuariosflujoproceso
+    defaults: { _controller: "SieProcesosBundle:FlujoUsuarios:listaUsuariosFlujoProceso" }
+
+flujousuarios_usuarios:
+    path:     /usuariosflujoproceso
+    defaults: { _controller: "SieProcesosBundle:FlujoUsuarios:listaUsuarios" }
+
+flujousuarios_derivar_tramites:
+    path:     /derivartramites
+    defaults: { _controller: "SieProcesosBundle:FlujoUsuarios:derivarTramites" }
+
+flujousuarios_eliminar_usuario:
+    path:     /eliminar_usuario
+    defaults: { _controller: "SieProcesosBundle:FlujoUsuarios:eliminarUsuario" }
+
+flujousuarios_derivar_tramites_guardar:
+    path:     /derivartramitesguardar
+    defaults: { _controller: "SieProcesosBundle:FlujoUsuarios:derivarTramitesGuardar" }
