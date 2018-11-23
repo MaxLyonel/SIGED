@@ -82,13 +82,15 @@ class WfTramiteController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findBy(array('flujoTipo'=>$id,'orden'=>1));
-        if($flujoproceso->getRolTipo()->getId()!= 9){
+        //dump($flujoproceso);die;
+        if($flujoproceso[0]->getRolTipo()->getId()!= 9){
             $wfusuario = $em->getRepository('SieAppWebBundle:WfUsuarioFlujoProceso')->createQueryBuilder('wfufp')
                 ->select('wfufp')
                 ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'fp.id = wfufp.flujoProceso')
                 ->where('fp.orden=1')
                 ->andWhere('fp.flujoTipo='.$id)
                 ->andWhere('wfufp.usuario='.$usuario)
+                ->andWhere('wfufp.esactivo=true')
                 ->andWhere('fp.rolTipo='.$rol)
                 ->getQuery()
                 ->getResult();
@@ -101,7 +103,7 @@ class WfTramiteController extends Controller
                 return $this->redirectToRoute('wf_tramite_index');
             }    
         }else{
-            if($rol == $flujoproceso->getRolTipo()->getId()){
+            if($rol == $flujoproceso[0]->getRolTipo()->getId()){
                 return $this->redirectToRoute($flujoproceso[0]->getRutaFormulario(),array('id'=>$id));    
             }else{
                 $request->getSession()
