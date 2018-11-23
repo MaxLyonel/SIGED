@@ -234,7 +234,7 @@ class PromedioCalidadController extends Controller {
                 'turno'=>$inscripcion->getInstitucioneducativaCurso()->getTurnoTipo()->getTurno(),
                 'notas'=>$notas,
                 'idNota'=>$idNota,
-                'promedio'=>$promedio,
+                'promedio'=>$promedioCalculado,
                 'notaTipo'=>$notaTipo
             );
         }
