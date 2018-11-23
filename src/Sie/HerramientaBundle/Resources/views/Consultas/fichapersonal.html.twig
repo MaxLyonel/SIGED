@@ -65,7 +65,7 @@
                 <div class="tab-content">
                     <div class="tab-pane fade active in" id="tab3-1">
                         <div class="content"></div>
-                        <h4>Información Personla del maestro(a)</h4>
+                        <h4>Información Personal del maestro(a)</h4>
                         <br>
                         <div class="row">
                             <div class="col-md-4"><strong>Nombres</strong>  </div>
@@ -90,8 +90,6 @@
                             <div class="col-md-4">{% if (maestro.genero_tipo_id == 1 )  %} Másculino {% elseif (maestro.genero_tipo_id == 2) %} Femenino {% else %} S/D {% endif %}</div>
 
                         </div>
-
-
                     </div>
                     <div class="tab-pane fade" id="tab3-2">
                         <h4>Información Referencial</h4>
@@ -116,6 +114,7 @@
                     </div>
                     <div class="tab-pane fade" id="tab3-3">
                         <h4>Información Académica</h4>
+
                         {% for id_institucioneducactivas in id_institucioneducactivas  %}
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
@@ -129,14 +128,12 @@
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="panel-body">
-
-
-                                    <div id="infomaterias">
+                                    <div id="infomaterias_{{ id_institucioneducactivas.institucioneducativa_id }}">
                                     </div>
                                 </div>
                             </div>
-
                         {% endfor %}
+
 
                     </div>
 
@@ -179,8 +176,8 @@
                 success: function (data) {
 
 
-                    $('#infomaterias').empty();
-                    $('#infomaterias').append(data);
+                    $('#infomaterias_'+institucioneducativa_id).empty();
+                    $('#infomaterias_'+institucioneducativa_id).append(data);
 
                     /*var id_sie = data.data.maestros[0]['institucioneducativa_id'];
                     $('#sie_').val(id_sie);
