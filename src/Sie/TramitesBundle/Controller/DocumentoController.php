@@ -1802,7 +1802,7 @@ class DocumentoController extends Controller {
         // $salt = '123456'.'abc';   
 
         $rsa = new RSA;
-        $key = $rsa->createkey(2048); 
+        $key = $rsa->createkey(1024); 
         $keyPublica = $key['publickey'];   
         $keyPrivada = $key['privatekey'];   
 
