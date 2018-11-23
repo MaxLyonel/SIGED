@@ -78,7 +78,7 @@ class Funciones {
             }
         }
 
-        if( in_array($this->session->get('roluser'), array(7,8,10)) or $gestion < $this->session->get('currentyear')){
+        if( in_array($this->session->get('roluser'), array(7,10)) or $gestion < $this->session->get('currentyear')){
             $operativo = $operativo - 1;
         }
 
@@ -966,5 +966,25 @@ class Funciones {
 
           return $objobsQA;
         }
+
+    public function verificarGradoCerrado($sie,$gestion){
+        $repositorio = $this->em->getRepository('SieAppWebBundle:RegistroConsolidacion');
+        $regConsol = $repositorio->createQueryBuilder('rc')
+                ->where('rc.unidadEducativa = :ue')
+                ->andWhere('rc.gestion = :gestion')
+                ->setParameter('ue',$sie)
+                ->setParameter('gestion',$gestion)
+                ->getQuery()
+                ->getResult();
+
+        $response = false;
+        // Verificamos si se realizo el cierre de sexto grado
+        if($regConsol[0]->getCierreSextosec() != null){
+            $response = true;
+        }
+        
+        return $response;
+
+    }
 
 }
