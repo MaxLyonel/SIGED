@@ -525,10 +525,14 @@ class WfTramiteController extends Controller
         /**
          * si el tramite es devuelto
          */
-        if($tarea_sig_id > $flujoproceso->getId() or $flujoproceso->getTareaSigId() == null){
-            $tramiteestado = $em->getRepository('SieAppWebBundle:TramiteEstado')->find(15); //enviado
+        if ($flujoproceso->getTareaSigId() != null){
+            if($tarea_sig_id > $flujoproceso->getId()){
+                $tramiteestado = $em->getRepository('SieAppWebBundle:TramiteEstado')->find(15); //enviado
+            }else{
+                $tramiteestado = $em->getRepository('SieAppWebBundle:TramiteEstado')->find(16); //devuelto
+            }
         }else{
-            $tramiteestado = $em->getRepository('SieAppWebBundle:TramiteEstado')->find(16); //devuelto
+            $tramiteestado = $em->getRepository('SieAppWebBundle:TramiteEstado')->find(15); //enviado
         }
 
          /**
