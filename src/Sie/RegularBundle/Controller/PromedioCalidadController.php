@@ -278,6 +278,7 @@ class PromedioCalidadController extends Controller {
 
             }else{
                 $validacion->setSolucionTipoId(1);
+                $validacion->setEsActivo(true);
                 $em->flush();
             }
             /**
