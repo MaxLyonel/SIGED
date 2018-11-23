@@ -70,3 +70,12 @@ alt_cta_banc_dir_rst:
 bach_exc_alt_pf_rst:    
     path:     /{ie}/{ed}/{g}/estado-be
     defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:beRst" }    
+
+bach_exc_alt_rep_dis:
+    path:     /index-repdis
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:indexReporteDistrito" }
+
+bach_exc_alt_rep_dist_search:
+    path:     /repdis-search
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:resultSearchDistRep" }
+    methods:  POST    

@@ -40,6 +40,13 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
+        $fechaActual = new \DateTime('now');
+        $fechaCorte = new \DateTime('2018-11-26');
+
+        if($fechaActual > $fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
+        }
+
         $form = $this->createSearchIeForm();
 
         return $this->render('SieAppWebBundle:BachillerExcelencia:index.html.twig', array(
@@ -76,6 +83,13 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
+        $fechaActual = new \DateTime('now');
+        $fechaCorte = new \DateTime('2018-11-26');
+
+        if($fechaActual > $fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
+        }
+
         $form = $this->createSearchIeDirForm();
 
         return $this->render('SieAppWebBundle:BachillerExcelencia:index_dir.html.twig', array(
@@ -105,6 +119,13 @@ class BachillerExcelenciaController extends Controller {
 
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
+        }
+
+        $fechaActual = new \DateTime('now');
+        $fechaCorte = new \DateTime('2018-11-26');
+
+        if($fechaActual > $fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
         }
 
         $form = $this->createSearchIeDirForm();
@@ -275,6 +296,13 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
+        $fechaActual = new \DateTime('now');
+        $fechaCorte = new \DateTime('2018-11-26');
+
+        if($fechaActual > $fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
+        }
+
         $response = new JsonResponse();
         try {
             $form_aux = $request->get('sie_appwebbundle_maestrocuentabancaria');
@@ -381,7 +409,12 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        //return $this->redirect($this->generateUrl('bach_exc_rep_dis'));
+        $fechaActual = new \DateTime('now');
+        $fechaCorte = new \DateTime('2018-11-25');
+
+        if($fechaActual > $fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
+        }
 
         $form = $this->createSearchIeRstForm();
 
@@ -413,6 +446,13 @@ class BachillerExcelenciaController extends Controller {
 
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
+        }
+
+        $fechaActual = new \DateTime('now');
+        $fechaCorte = new \DateTime('2018-11-26');
+
+        if($fechaActual > $fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
         }
 
         $form = $this->createSearchIeForm();
@@ -593,6 +633,13 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
+        $fechaActual = new \DateTime('now');
+        $fechaCorte = new \DateTime('2018-11-25');
+
+        if($fechaActual > $fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
+        }
+
         $form = $this->createSearchIeRstForm();
         $form->handleRequest($request);
 
@@ -666,6 +713,13 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
+        $fechaActual = new \DateTime('now');
+        $fechaCorte = new \DateTime('2018-11-25');
+
+        if($fechaActual > $fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         $repository = $em->getRepository('SieAppWebBundle:MaestroCuentabancaria');
@@ -696,6 +750,13 @@ class BachillerExcelenciaController extends Controller {
 
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
+        }
+
+        $fechaActual = new \DateTime('now');
+        $fechaCorte = new \DateTime('2018-11-25');
+
+        if($fechaActual > $fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -764,6 +825,13 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
+        $fechaActual = new \DateTime('now');
+        $fechaCorte = new \DateTime('2018-11-26');
+
+        if($fechaActual > $fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
+        }
+
         $form = $this->createForm(new EstudianteDestacadoType(), null, array(
             //'action' => $this->generateUrl('bach_exc_create'),
             'method' => 'POST',
@@ -800,6 +868,13 @@ class BachillerExcelenciaController extends Controller {
 
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
+        }
+
+        $fechaActual = new \DateTime('now');
+        $fechaCorte = new \DateTime('2018-11-26');
+
+        if($fechaActual > $fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
         }
 
         $response = new JsonResponse();

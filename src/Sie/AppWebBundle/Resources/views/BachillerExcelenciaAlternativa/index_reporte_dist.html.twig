@@ -3,9 +3,9 @@
 {% block contentoption %}
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-table"></i> Restablecer registros <span>Bachiller de Excelencia</span></h2>
+        <h2><i class="fa fa-table"></i> Reporte por distrito <span>Bachiller de Excelencia</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
-            <span class="label">Usted esta aqui:</span>
+            <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
@@ -15,7 +15,7 @@
                     <i class="fa fa-angle-right"></i>
                 </li>
 
-                <li class="active">Restablecer registros</li>
+                <li class="active">Generar reporte</li>
             </ol>
         </div><!-- /.breadcrumb-wrapper -->
     </div><!-- /.header-content -->
@@ -35,7 +35,7 @@
         <div class="col-md-12">
             <div class="alert alert-warning" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <i class="fa fa-info-circle"></i> Ingresar el código SIE de la Unidad Educativa y presionar sobre el botón "Buscar"
+                <i class="fa fa-info-circle"></i> Ingresar el código de distrito y presionar sobre el botón "Reporte por distrito".
             </div>
         </div>
         <div class="col-md-12">
@@ -70,9 +70,9 @@
                         <div class="panel-body panel-primary">
                             {{form_start(form, { 'attr': {'data-toggle': 'validator', 'role': "form", 'class':'form-horizontal'} } )}}
                             <div class="form-group">
-                                <label for="form_institucioneducativa" class="col-sm-2 control-label">{{ form_label(form.institucioneducativa) }}</label>
+                                <label for="form_institucioneducativa" class="col-sm-2 control-label">Distrito</label>
                                 <div class="col-sm-10">
-                                    {{ form_widget(form.institucioneducativa, { 'attr': {'class': 'form-control', 'placeholder': 'Introduzca el código SIE'}  }) }}
+                                    {{ form_widget(form.institucioneducativa, { 'attr': {'class': 'form-control', 'placeholder': 'Introduzca el código de distrito'}  }) }}
                                     <div class="help-block with-errors">{{ form_errors(form.institucioneducativa) }}</div>
                                 </div>
                             </div>
