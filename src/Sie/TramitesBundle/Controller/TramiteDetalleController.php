@@ -1437,7 +1437,11 @@ class TramiteDetalleController extends Controller {
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_tec_basico_tec_auxiliar_v2_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+            if ($ges >= 2018){
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_v3_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+            } else {
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_v2_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+            }
             $response->setStatusCode(200);
             $response->headers->set('Content-Transfer-Encoding', 'binary');
             $response->headers->set('Pragma', 'no-cache');
@@ -1508,7 +1512,11 @@ class TramiteDetalleController extends Controller {
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_tec_basico_tec_auxiliar_ci_v2_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+            if ($ges >= 2018){
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_ci_v3_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+            } else {
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_ci_v2_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+            }            
             $response->setStatusCode(200);
             $response->headers->set('Content-Transfer-Encoding', 'binary');
             $response->headers->set('Pragma', 'no-cache');
@@ -1624,8 +1632,8 @@ class TramiteDetalleController extends Controller {
                 $numeroCarton = $request->get('numeroSerie');
                 $serieCarton = $request->get('serie');
                 //$gestionCarton = $request->get('gestion');
-                //$fechaCarton = $request->get('fecha');
-                $fechaCarton = $fechaActual;
+                $fechaCarton = new \DateTime($request->get('fecha'));
+                //$fechaCarton = $fechaActual;
 
                 $token = $request->get('_token');
                 if (!$this->isCsrfTokenValid('imprimir', $token)) {
