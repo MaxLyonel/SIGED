@@ -317,6 +317,7 @@ class TramiteDetalleController extends Controller {
          */
         $entityTramiteEstadoSiguiente = $em->getRepository('SieAppWebBundle:TramiteEstado')->findOneBy(array('id' => $tramiteEstadoSiguienteId));
 
+        //dump($entityTramiteEstadoSiguiente);die;
 
         /*
          * Extrae la posicion del flujo que debe seguir
@@ -1086,7 +1087,9 @@ class TramiteDetalleController extends Controller {
 
         $institucioneducativaId = 0;
         $gestionId = $gestionActual->format('Y');
+        $gestionActual = $gestionActual->format('Y');
         $especialidadId = 0;
+        $periodoId = 3;
         $nivelId = 0;
         $tramiteTipoId = 0;
         $flujoSeleccionado = '';
@@ -1134,7 +1137,16 @@ class TramiteDetalleController extends Controller {
                         $tramiteController->setContainer($this->container);
 
                         if ($flujoSeleccionado == 'Adelante'){
-                            $msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
+                            $entidadSucursal = $tramiteController->getInstitucionEducativaPeriodoGestionActual($institucionEducativaId, $gestionActual);
+
+                            if(count($entidadSucursal) > 0){
+                                $periodoId = $entidadSucursal[0]['periodo_tipo_id'];
+                            } else {
+                                $gestionId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getInstitucioneducativaSucursal()->getGestionTipo()->getId();
+                            }
+                            $msg = array('0'=>true, '1'=>$participante);
+                            $msgContenido = $tramiteController->getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId);
+                            // $msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
                         }
 
                         if($msgContenido != ""){
@@ -1589,6 +1601,8 @@ class TramiteDetalleController extends Controller {
 
         $institucioneducativaId = 0;
         $gestionId = $gestionActual->format('Y');
+        $gestionActual = $gestionActual->format('Y');
+        $periodoId = 3;
         $especialidadId = 0;
         $nivelId = 0;
         $tramiteTipoId = 0;
@@ -1666,7 +1680,17 @@ class TramiteDetalleController extends Controller {
                         }
 
                         if ($flujoSeleccionado == 'Adelante'){
-                            $msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
+                            $entidadSucursal = $tramiteController->getInstitucionEducativaPeriodoGestionActual($institucionEducativaId, $gestionActual);
+
+                            if(count($entidadSucursal) > 0){
+                                $periodoId = $entidadSucursal[0]['periodo_tipo_id'];
+                            } else {
+                                $gestionId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getInstitucioneducativaSucursal()->getGestionTipo()->getId();
+                            }
+                            $msg = array('0'=>true, '1'=>$participante);
+                            $msgContenido = $tramiteController->getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId);
+                            
+                            // $msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
 
                             $documentoController = new documentoController();
                             $documentoController->setContainer($this->container);
@@ -2343,7 +2367,7 @@ class TramiteDetalleController extends Controller {
                         $tramiteController->setContainer($this->container);
 
                         if ($flujoSeleccionado == 'Adelante'){
-                            //$msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
+                            $msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
                         }
 
                         if($msgContenido != ""){
@@ -3579,6 +3603,7 @@ class TramiteDetalleController extends Controller {
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+            // $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&'));
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&'));
             $response->setStatusCode(200);
             $response->headers->set('Content-Transfer-Encoding', 'binary');

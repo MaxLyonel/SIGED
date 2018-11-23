@@ -1084,7 +1084,7 @@ class TramiteController extends Controller {
     // PARAMETROS: institucionEducativaId, gestionId
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    private function getInstitucionEducativaPeriodoGestionActual($institucionEducativaId, $gestionId) {
+    public function getInstitucionEducativaPeriodoGestionActual($institucionEducativaId, $gestionId) {
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
                 select * from institucioneducativa_sucursal where institucioneducativa_id = ".$institucionEducativaId." and gestion_tipo_id = ".$gestionId." order by gestion_tipo_id desc, periodo_tipo_id desc limit 1
@@ -1697,7 +1697,7 @@ class TramiteController extends Controller {
             else (n1 is null or n1 = 0 or n2 is null or n2 = 0 or n3 is null or n3 = 0 or n4 is null or n4 = 0)
             end
           else
-            true
+            false
           end
           group by v.codigo_rude, v.paterno, v.materno, v.nombre
         ");
