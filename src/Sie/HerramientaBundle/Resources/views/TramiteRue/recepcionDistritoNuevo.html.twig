@@ -20,111 +20,105 @@
     <div class="body-content animated fadeIn">
         <div class="row">
             <div class="col-12">
+                {% if app.session.flashBag.has('exito') %}
+                    <div class="alert alert-success">
+                        {% for msg in app.session.flashBag.get('exito') %}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            {{ msg }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if app.session.flashBag.has('error') %}
+                    <div class="alert alert-danger">
+                        {% for msg in app.session.flashBag.get('error') %}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            {{ msg }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <div id="msg"></div>
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        {% if app.session.flashBag.has('exito') %}
-                            <div class="alert alert-success">
-                                {% for msg in app.session.flashBag.get('exito') %}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    {{ msg }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                        {% if app.session.flashBag.has('error') %}
-                            <div class="alert alert-danger">
-                                {% for msg in app.session.flashBag.get('error') %}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    {{ msg }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}    
                         <div class="pull-left">
                             <h3 class="panel-title">DATOS DE LA SOLICITUD</h3>
                         </div>
                         <div class="clearfix"></div>
                     </div><!-- /.panel-heading -->
                     <div class="panel-body">
-                            {{ form_start(form) }}
-
-                                <div class="form-group col-md-6">
-								    <div class="col-md-2">
-                                        {{ form_label(form.tramitetipo) }}
-                                    </div>
-                                    <div class="col-sm-10">
-								        {{ form_widget(form.tramitetipo) }}
-                                    </div>
-							    </div>
-                                <div class="form-group col-md-3">
-                                    <div class="col-md-3">
-								        {{ form_label(form.tipoeducacion) }}
-                                    </div>
-								    <div class="col-md-9">
-                                        {{ form_widget(form.tipoeducacion) }}
-                                    </div>
-							    </div>
-                                <div class="form-group col-md-3" style="display:none" id="codrue">
-								    <div class="col-md-3">
-                                        {{ form_label(form.idrue) }}
-                                    </div>
-                                    <div class="col-md-9">
-								        {{ form_widget(form.idrue) }}
-                                    </div>
-							    </div>
-                                <div class="form-group col-md-2">
-							        {{ form_widget(form.buscar, {'attr':{'class':'btn btn-primary','style':'display:none'} }) }}
-							    </div>
-                                <div class="form-group  col-md-12">
-                                    <div class="col-md-3">
-                                        {{ form_label(form.institucionEducativa) }}
-                                    </div>
-                                    <div class="col-md-6">
-                                        {{ form_widget(form.institucionEducativa) }}
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-3">
-        	    		                {{ form_label(form.dependenciaTipo) }}
-                                    </div>
-                                    <div class="col-md-9">
-                                        {{ form_widget(form.dependenciaTipo) }}
-                                    </div>
-                                </div>
-                                {#<div class="form-group  col-md-12">
-                                    <div class="col-md-3">
-                                        {{ form_label(form.turnotipo) }}
-                                    </div>
-                                    <div class="col-md-9">
-                                        {{ form_widget(form.turnotipo) }}
-                                    </div>
-                                </div>#}
-                                <div class="form-group col-md-12">
-                                      <div class="panel-primary">
-                                        <h4>REQUISITOS</h4>
-                                      </div>
-                                    {% for r in form.requisitos %}
-                                        <div class="card">
-                                            {{ form_widget(r) }}
-                                            {{ form_label(r) }}
-                                        </div>
-                                    {% endfor %}   
-				                </div>
-                                <div class="form-group col-md-6">
-					                {{ form_label(form.observacion) }}
-					                {{ form_widget(form.observacion, {'attr':{'class':'form-control'} }) }}
-				                </div>
-                                <div class="form-group col-md-12">
-                                    {{ form_label(form.guardar) }}
-                                    {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary'} }) }}
-                                    <a href="{{path('tramite_rue_recepcion_distrito')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
-                                </div>
+                        {{ form_start(form) }}
+                        <div class="form-group col-md-12">
+							<div class="col-md-3">
+                                {{ form_label(form.tramitetipo) }}
+                            </div>
+                            <div class="col-sm-9">
+								{{ form_widget(form.tramitetipo) }}
+                            </div>
+						</div>
+                        <div class="form-group col-md-12" style="display:none" id="codrue">
+							<div class="col-md-3">
+                                {{ form_label(form.idrue) }}
+                            </div>
+                            <div class="col-md-9">
+								{{ form_widget(form.idrue, {'attr':{'class':'validar'} }) }}
+                                {{ form_widget(form.buscar, {'attr':{'class':'btn btn-primary'} }) }}
+                            </div>
+						</div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-3">
+                                {{ form_label(form.institucionEducativa) }}
+                            </div>
+                            <div class="col-md-9">
+                                {{ form_widget(form.institucionEducativa) }}
+                            </div>
                         </div>
-        			    
-			        </div><!-- /.panel-body -->
+                        <div class="form-group col-md-12">
+                            <div class="col-md-3">
+								{{ form_label(form.tipoeducacion) }}
+                            </div>
+							<div class="col-md-9">
+                                {{ form_widget(form.tipoeducacion) }}
+                            </div>
+						</div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-3">
+        	    		        {{ form_label(form.dependenciaTipo) }}
+                            </div>
+                            <div class="col-md-9">
+                                {{ form_widget(form.dependenciaTipo) }}
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label class="col-md-3">Requisitos presentados</label>
+                            <div class="col-md-9">
+                            {% for r in form.requisitos %}
+                                <div class="ckbox ckbox-primary">
+                                    {{ form_widget(r) }}
+                                    {{ form_label(r) }}
+                                </div>
+                            {% endfor %}   
+                            </div>
+				        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-3">
+                                {{ form_label(form.observacion) }}
+                            </div>
+                            <div class="col-md-9">
+                                {{ form_widget(form.observacion) }}
+                            </div>
+                        </div>
+                    </div><!-- /.panel-body -->
+                    <div class="panel-footer">
+                        <div class="form-group col-md-12">
+                            {{ form_label(form.guardar) }}
+                            {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary'} }) }}
+                            <a href="{{path('wf_tramite_recibido')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
+                        </div>
+                        <div class="clearfix"></div>
+			        </div>
                     {{ form_end(form) }}
                 </div>
             </div>
         </div>
-
     </div>
 {% endblock %}
 {% block javascripts %}
@@ -143,46 +137,28 @@
                 $('#form_idrue').val('');
             }
         });
-        /*$('#form_tipoeducacion').click(function(){
-            if($('#form_tramitetipo').val()!=27){
-                $('#codrue').show();
-                $('#form_buscar').show();
-            }else{
-                
-                var formData = {tramitetipo:$('#form_tramitetipo').val(),tipoeducacion:$('#form_tipoeducacion').val()};
-                $.ajax({
-                type: 'GET',
-                url: "{{path('tramite_rue_form_nuevo')}}",
-                data: formData,
-                beforeSend: function () {
-                    $('#div_formulario').empty();
-                    $('#div_formulario').append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
-                },
-                success: function (data) {
-                    $('#div_formulario').empty();
-                    $('#div_formulario').append(data);
-                },
 
-            });
-
-            }
-        });*/
         $('#form_buscar').click(function(){
             var formData = {idrue: $('#form_idrue').val()};
             $.ajax({
                 type: 'GET',
                 url: "{{path('tramite_rue_buscar_rue')}}",
                 data: formData,
-                   beforeSend: function () {
-
+                beforeSend: function () {
+                    $('#form_institucionEducativa').val('');
+                    $("#form_dependenciaTipo").val('');
+                    $("#form_tipoeducacion").val('');
                 },
                 success: function (data) {
-                    $('#form_institucionEducativa').val(data.ie);
-                    $("#form_dependenciaTipo").val(data.dep);
+                    if (data.msg){
+                        $("#msg").append('<div class="alert alert-danger"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+data.msg+'</div>');
+                    }else{
+                        $('#form_institucionEducativa').val(data.ie);
+                        $("#form_dependenciaTipo").val(data.dep);
+                        $("#form_tipoeducacion").val(data.ietipo);
+                    }
                 },
-
             });
-
         }); 
         function provincia(d) {
             //alert(d);
@@ -288,7 +264,14 @@
                 $("#form_localidad").selectpicker('refresh');
             }
         });
-    }    
+    } 
+    $(function(){
+        $(".validar").keydown(function(event){
+            if((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !==190  && event.keyCode !==110 && event.keyCode !==8 && event.keyCode !==9  ){
+                return false;
+            }
+        });
+    }); 
     
     /*function guardar(){
         //alert('entra');

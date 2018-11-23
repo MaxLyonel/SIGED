@@ -15,7 +15,7 @@ tramite_rue_buscar_rue:
     defaults: { _controller: "SieHerramientaBundle:TramiteRue:buscarRue" }
 
 tramite_rue_recepcion_distrito_guardar:
-    path:     /recepciondistritoguardar
+    path:     /recepciondistritoguardar1
     defaults: { _controller: "SieHerramientaBundle:TramiteRue:recepcionDistritoGuardar" }
 
 tramite_rue_recepcion_distrito_nuevo:

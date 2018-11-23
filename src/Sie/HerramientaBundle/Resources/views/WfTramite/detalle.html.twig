@@ -12,7 +12,9 @@
                         <th>Pasos del trámite</th>
                         <th>Fecha de recepción</th>
                         <th>Fecha de envío</th>
+                        <th>Fecha de vencimiento</th>
                         <th>Tiempo duración</th>
+                        <th>Plazo</th>
                         <th>Estado</th>
                         <th>Observación</th>
                         <th>Usuario remitente</th>
@@ -26,7 +28,9 @@
                             <td>{{ d.proceso_tipo }}</td>
                             <td>{{ d.fecha_recepcion }}</td>
                             <td>{{ d.fecha_envio }}</td>
+                            <td class="text-danger">{{ d.fecha_vencimiento }}</td>
                             <td>{{ d.duracion }}</td>
+                            <td>{{ d.plazo }}</td>
                             {% if d.tramite_estado %}
                                 {% if d.tarea_sig_id == null %}
                                     <td ><span class="label label-success">TRAMITE CONCLUIDO</span></td>
