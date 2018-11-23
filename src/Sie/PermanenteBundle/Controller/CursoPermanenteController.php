@@ -4,6 +4,8 @@ namespace Sie\PermanenteBundle\Controller;
 
 use Sie\AppWebBundle\Entity\PermanenteAreaTematicaTipo;
 use Sie\AppWebBundle\Entity\PermanenteProgramaTipo;
+use Sie\AppWebBundle\Entity\SuperiorAcreditacionEspecialidad;
+use Sie\AppWebBundle\Entity\SuperiorEspecialidadTipo;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
@@ -676,11 +678,7 @@ class CursoPermanenteController extends Controller
             'areatematicaper' => $areatematica,
             'form' => $form->createView()
         ));
-
-
     }
-
-
 
     public function addProgramaAction(Request $request)
     {
@@ -773,6 +771,7 @@ class CursoPermanenteController extends Controller
 
 
     }
+
     public function addCursoNuevoAction(Request $request)
     {
 
@@ -820,6 +819,7 @@ class CursoPermanenteController extends Controller
 //            'curso' => array('id'=>$idcurso, 'nombre'=>$nombrecurso),
 //        ));
     }
+
     public function showCursoEditAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
@@ -1103,9 +1103,450 @@ class CursoPermanenteController extends Controller
             'form' => $form->createView()
 
         ));
+    }
 
+    public function adminEspecialidadesAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $query = " 	select ---sae.id, 
+                      sest.id, sest.especialidad,
+                                sum (case when sat.id = 1 then 1 else 0 end) tecnicobasico,
+                                sum (case when sat.id = 20 then 1 else 0 end) tecnicoauxiliar,
+                                sum (case when sat.id = 32 then 1 else 0 end) tecnicomedio
+                            from superior_acreditacion_especialidad sae
+		                      inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
+			                    inner join 	superior_especialidad_tipo sest on sae.superior_especialidad_tipo_id =sest.id
+				                    inner join superior_facultad_area_tipo sfat on sest.superior_facultad_area_tipo_id = sfat.id
+					        where sat.id in (1,20,32) and sfat.id=40
+                            group by 
+                            sest.id, sest.especialidad
+                            order by sest.especialidad ";
+        $especialidades = $db->prepare($query);
+        $params = array();
+        $especialidades->execute($params);
+        $esp = $especialidades->fetchAll();
+
+        if (count($esp) > 0){
+            $existesp = true;
+        }
+        else {
+            $existesp = false;
+        }
+        // dump($esp);die;
+        return $this->render('SiePermanenteBundle:CursoPermanente:adminespecialidades.html.twig', array(
+            'especialidades' => $esp,
+            'cantesp'=>count($esp),
+            'existeesp'=>$existesp
+
+        ));
+    }
+
+
+
+
+    public function showEspecialidadNuevoAction(Request $request)
+    {
+        $form = $this->createFormBuilder()
+           // ->setAction($this->generateUrl('herramienta_per_add_areatem'))
+
+            ->add('especialidad', 'text', array('required' => true, 'attr' => array('class' => 'form-control', 'enabled' => true,'style' => 'text-transform:uppercase')))
+            ->add('tecbas', 'checkbox', array('label' => 'Tecnico Basico','required'=>false))
+            ->add('tecaux', 'checkbox', array('label' => 'Tecnico Auxiliar','required'=>false))
+            ->add('tecmed', 'checkbox', array('label' => 'Tecnico Medio','required'=>false))
+            ->add('guardar', 'button', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary', 'enabled' => true, 'onclick'=>'guardarEspecialidadP();')))
+            ->getForm();
+        return $this->render('SiePermanenteBundle:CursoPermanente:nuevaespecialidad.html.twig', array(
+
+            'form' => $form->createView()
+
+        ));
+    }
+
+    public function createEspecialidadNuevoAction(Request $request)
+    {
+              //  dump($request);die;
+        $form = $request->get('form');
+      //  dump($form);
+        if (isset($form['tecbas'])){
+            $tecbas = 1;
+        }else{
+            $tecbas = 0;
+        }
+        if (isset($form['tecaux'])){
+            $tecaux = 1;
+        }else{
+            $tecaux = 0;
+        }
+        if (isset($form['tecmed'])){
+            $tecmed = 1;
+        }else{
+            $tecmed = 0;
+        }
+        $especialidad = strtoupper($form['especialidad']);     // dump($tecbas); dump($tecaux); dump($tecmed);die;
+
+        try{
+            $em = $this->getDoctrine()->getManager();
+            $em->getConnection()->beginTransaction();
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_especialidad_tipo');")->execute();
+            $especialidadTipo = new SuperiorEspecialidadTipo();
+            $especialidadTipo ->setCodigo(50);
+            $especialidadTipo ->setEspecialidad($especialidad);
+            $especialidadTipo ->setSuperiorFacultadAreaTipo($em->getRepository('SieAppWebBundle:SuperiorFacultadAreaTipo')->find(40));
+            $em->persist($especialidadTipo);
+            $em->flush($especialidadTipo);
+
+           //dump($especialidadTipo);die;
+            if($tecbas==1)
+            {
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_acreditacion_especialidad');")->execute();
+                $acreditacionEspecialidad= new SuperiorAcreditacionEspecialidad();
+                $acreditacionEspecialidad ->setSuperiorEspecialidadTipo($especialidadTipo);
+                $acreditacionEspecialidad ->setSuperiorAcreditacionTipo($em->getRepository('SieAppWebBundle:SuperiorAcreditacionTipo')->find(1));
+                $em->persist($acreditacionEspecialidad);
+                $em->flush($acreditacionEspecialidad);
+
+            }
+            if($tecaux==1)
+            {
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_acreditacion_especialidad');")->execute();
+                $acreditacionEspecialidad= new SuperiorAcreditacionEspecialidad();
+                $acreditacionEspecialidad ->setSuperiorEspecialidadTipo($especialidadTipo);
+                $acreditacionEspecialidad ->setSuperiorAcreditacionTipo($em->getRepository('SieAppWebBundle:SuperiorAcreditacionTipo')->find(20));
+                $em->persist($acreditacionEspecialidad);
+                $em->flush($acreditacionEspecialidad);
+            }
+            if($tecmed==1)
+            {
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_acreditacion_especialidad');")->execute();
+                $acreditacionEspecialidad= new SuperiorAcreditacionEspecialidad();
+                $acreditacionEspecialidad ->setSuperiorEspecialidadTipo($especialidadTipo);
+                $acreditacionEspecialidad ->setSuperiorAcreditacionTipo($em->getRepository('SieAppWebBundle:SuperiorAcreditacionTipo')->find(32));
+                $em->persist($acreditacionEspecialidad);
+                $em->flush($acreditacionEspecialidad);
+            }
+
+            $em->getConnection()->commit();
+            $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron actualizados correctamente.');
+            $db = $em->getConnection();
+            $query = " 	select ---sae.id, 
+                      sest.id, sest.especialidad,
+                                sum (case when sat.id = 1 then 1 else 0 end) tecnicobasico,
+                                sum (case when sat.id = 20 then 1 else 0 end) tecnicoauxiliar,
+                                sum (case when sat.id = 32 then 1 else 0 end) tecnicomedio
+                            from superior_acreditacion_especialidad sae
+		                      inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
+			                    inner join 	superior_especialidad_tipo sest on sae.superior_especialidad_tipo_id =sest.id
+				                    inner join superior_facultad_area_tipo sfat on sest.superior_facultad_area_tipo_id = sfat.id
+					        where sat.id in (1,20,32) and sfat.id=40
+                            group by 
+                            sest.id, sest.especialidad
+                            order by sest.especialidad ";
+            $especialidades = $db->prepare($query);
+            $params = array();
+            $especialidades->execute($params);
+            $esp = $especialidades->fetchAll();
+
+            if (count($esp) > 0){
+                $existesp = true;
+            }
+            else {
+                $existesp = false;
+            }
+            // dump($esp);die;
+            return $this->render('SiePermanenteBundle:CursoPermanente:listEspecialidades.html.twig', array(
+                'especialidades' => $esp,
+                'cantesp'=>count($esp),
+                'existeesp'=>$existesp
+
+            ));
+
+
+//            return $this->redirect($this->generateUrl('herramienta_per_cursos_cortos_index'));
+
+        }
+        catch(Exception $ex)
+        {
+            $em->getConnection()->rollback();
+            $this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron guardados.');
+            return $this->redirect($this->generateUrl('herramienta_permanente_admin'));
+        }
+//dump($especialidad);die;
+        // return $this->render('SiePermanenteBundle:CursoPermanente:nuevaespecialidad.html.twig', array(
+
+           // 'form' => $form->createView()
+
+     //   ));
+    }
+
+    public function showEspecialidadEditAction(Request $request)
+    {  $em = $this->getDoctrine()->getManager();
+       // dump($request);die;
+        $idesp = $request->get('idesp');
+        $especialidad=$em->getRepository('SieAppWebBundle:SuperiorEspecialidadTipo')->findOneById($idesp);
+
+        $esp=$especialidad->getEspecialidad();
+        //dump($esp);die;
+        $tecbas = $request->get('tecbas');
+        $tecaux = $request->get('tecaux');
+        $tecmed = $request->get('tecmed');
+        if($tecbas==1){$tb=true;}else{$tb=false;}
+        if($tecaux==1){$ta=true;}else{$ta=false;}
+        if($tecmed==1){$tm=true;}else{$tm=false;}
+
+        $form = $this->createFormBuilder()
+            // ->setAction($this->generateUrl('herramienta_per_add_areatem'))
+
+            ->add('especialidad', 'text', array('required' => true,'data' => $especialidad->getEspecialidad(), 'attr' => array('class' => 'form-control', 'enabled' => true,'style' => 'text-transform:uppercase')))
+            ->add('tecbas', 'checkbox', array('label' => 'Tecnico Basico','data'=>$tb,'required'=>false))
+            ->add('tecaux', 'checkbox', array('label' => 'Tecnico Auxiliar','data'=>$ta,'required'=>false))
+            ->add('tecmed', 'checkbox', array('label' => 'Tecnico Medio','data'=>$tm,'required'=>false))
+            ->add('guardar', 'button', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary', 'enabled' => true, 'onclick'=>'updateEspecialidad();')))
+            ->add('idesp', 'hidden', array('data' => $idesp))
+            ->getForm();
+        return $this->render('SiePermanenteBundle:CursoPermanente:editarespecialidad.html.twig', array(
+
+            'form' => $form->createView()
+
+        ));
+    }
+
+    public function updateEspecialidadEditAction(Request $request)
+    {
+        //  dump($request);die;
+        $form = $request->get('form');
+        // dump($form);
+        if (isset($form['tecbas'])){
+            $tecbas = 1;
+        }else{
+            $tecbas = 0;
+        }
+        if (isset($form['tecaux'])){
+            $tecaux = 1;
+        }else{
+            $tecaux = 0;
+        }
+        if (isset($form['tecmed'])){
+            $tecmed = 1;
+        }else{
+            $tecmed = 0;
+        }
+        $especialidad = strtoupper($form['especialidad']);     // dump($tecbas); dump($tecaux); dump($tecmed);die;
+
+     //   dump($especialidad);
+        try{
+            $em = $this->getDoctrine()->getManager();
+            $em->getConnection()->beginTransaction();
+            $especialidadTipo = $em->getRepository('SieAppWebBundle:SuperiorEspecialidadTipo')->findOneBy(array('id' => $form['idesp']));
+          //  dump($especialidadTipo);die;
+          //  $especialidadTipo ->getEspecialidadTipo ($em->getRepository('SieAppWebBundle:SuperiorEspecialidadTipo')->findOneBy(array('id' => $form['idesp'])));
+           // $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_especialidad_tipo');")->execute();
+       //  dump($especialidadTipo);die;
+           // $especialidadTipo = new SuperiorEspecialidadTipo();
+            $especialidadTipo ->setEspecialidad($especialidad);
+            $em->persist($especialidadTipo);
+            $em->flush($especialidadTipo);
+
+         //   dump($especialidadTipo);
+            $em = $this->getDoctrine()->getManager();
+            $db = $em->getConnection();
+            $query = " 	select ---sae.id, 
+                      sest.id, sest.especialidad,
+                                sum (case when sat.id = 1 then 1 else 0 end) tecnicobasico,
+                                sum (case when sat.id = 20 then 1 else 0 end) tecnicoauxiliar,
+                                sum (case when sat.id = 32 then 1 else 0 end) tecnicomedio
+                            from superior_acreditacion_especialidad sae
+		                      inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
+			                    inner join 	superior_especialidad_tipo sest on sae.superior_especialidad_tipo_id =sest.id
+				                    inner join superior_facultad_area_tipo sfat on sest.superior_facultad_area_tipo_id = sfat.id
+					        where sat.id in (1,20,32) and sfat.id=40 and sest.id= ".$form['idesp']."
+                            group by 
+                            sest.id, sest.especialidad
+                            order by sest.especialidad ";
+            $especialidades = $db->prepare($query);
+            $params = array();
+            $especialidades->execute($params);
+            $esp = $especialidades->fetch();
+
+          //  dump($esp);die;
+
+            if($tecbas!=$esp['tecnicobasico'])
+            {
+                if($tecbas==1)// dehe hacer un insert
+                {
+                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_acreditacion_especialidad');")->execute();
+                    $acreditacionEspecialidad= new SuperiorAcreditacionEspecialidad();
+                    $acreditacionEspecialidad ->setSuperiorEspecialidadTipo($especialidadTipo);
+                    $acreditacionEspecialidad ->setSuperiorAcreditacionTipo($em->getRepository('SieAppWebBundle:SuperiorAcreditacionTipo')->find(1));
+                    $em->persist($acreditacionEspecialidad);
+                    $em->flush($acreditacionEspecialidad);
+                }else // debe hacer un delete
+                {
+                    $query = " select * from  superior_acreditacion_especialidad 
+                                where superior_especialidad_tipo_id = ".$form['idesp']."
+                                and superior_acreditacion_tipo_id=1
+				";
+                    $acred = $db->prepare($query);
+                    $params = array();
+                    $acred->execute($params);
+                    $acreditacionesp = $acred->fetch();
+                    $acreditacionEspecialidad = $em->getRepository('SieAppWebBundle:SuperiorAcreditacionEspecialidad')->findOneBy(array('id' => $acreditacionesp['id']));
+                    $em->remove($acreditacionEspecialidad);
+                    $em->flush();
+
+                }
+            }
+            if($tecaux!=$esp['tecnicoauxiliar'])
+            {
+                if($tecaux==1)// dehe hacer un insert
+                {
+                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_acreditacion_especialidad');")->execute();
+                    $acreditacionEspecialidad= new SuperiorAcreditacionEspecialidad();
+                    $acreditacionEspecialidad ->setSuperiorEspecialidadTipo($especialidadTipo);
+                    $acreditacionEspecialidad ->setSuperiorAcreditacionTipo($em->getRepository('SieAppWebBundle:SuperiorAcreditacionTipo')->find(20));
+                    $em->persist($acreditacionEspecialidad);
+                    $em->flush($acreditacionEspecialidad);
+                }else // debe hacer un delete
+                {
+                    $query = " select * from  superior_acreditacion_especialidad 
+                                where superior_especialidad_tipo_id = ".$form['idesp']."
+                                and superior_acreditacion_tipo_id=20
+				";
+                    $acred = $db->prepare($query);
+                    $params = array();
+                    $acred->execute($params);
+                    $acreditacionesp = $acred->fetch();
+                    $acreditacionEspecialidad = $em->getRepository('SieAppWebBundle:SuperiorAcreditacionEspecialidad')->findOneBy(array('id' => $acreditacionesp['id']));
+                    $em->remove($acreditacionEspecialidad);
+                    $em->flush();
+
+                }
+            }
+            if($tecmed!=$esp['tecnicomedio'])
+            {
+                if($tecmed==1)// dehe hacer un insert
+                {
+                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_acreditacion_especialidad');")->execute();
+                    $acreditacionEspecialidad= new SuperiorAcreditacionEspecialidad();
+                    $acreditacionEspecialidad ->setSuperiorEspecialidadTipo($especialidadTipo);
+                    $acreditacionEspecialidad ->setSuperiorAcreditacionTipo($em->getRepository('SieAppWebBundle:SuperiorAcreditacionTipo')->find(32));
+                    $em->persist($acreditacionEspecialidad);
+                    $em->flush($acreditacionEspecialidad);
+                }else // debe hacer un delete
+                {
+                    $query = " select * from  superior_acreditacion_especialidad 
+                                where superior_especialidad_tipo_id = ".$form['idesp']."
+                                and superior_acreditacion_tipo_id=32
+				";
+                    $acred = $db->prepare($query);
+                    $params = array();
+                    $acred->execute($params);
+                    $acreditacionesp = $acred->fetch();
+                    $acreditacionEspecialidad = $em->getRepository('SieAppWebBundle:SuperiorAcreditacionEspecialidad')->findOneBy(array('id' => $acreditacionesp['id']));
+                    $em->remove($acreditacionEspecialidad);
+                    $em->flush();
+
+                }
+            }
+
+            $em->getConnection()->commit();
+            $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron actualizados correctamente.');
+            $db = $em->getConnection();
+            $query = " 	select ---sae.id, 
+                      sest.id, sest.especialidad,
+                                sum (case when sat.id = 1 then 1 else 0 end) tecnicobasico,
+                                sum (case when sat.id = 20 then 1 else 0 end) tecnicoauxiliar,
+                                sum (case when sat.id = 32 then 1 else 0 end) tecnicomedio
+                            from superior_acreditacion_especialidad sae
+		                      inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
+			                    inner join 	superior_especialidad_tipo sest on sae.superior_especialidad_tipo_id =sest.id
+				                    inner join superior_facultad_area_tipo sfat on sest.superior_facultad_area_tipo_id = sfat.id
+					        where sat.id in (1,20,32) and sfat.id=40
+                            group by 
+                            sest.id, sest.especialidad
+                            order by sest.especialidad ";
+            $especialidades = $db->prepare($query);
+            $params = array();
+            $especialidades->execute($params);
+            $esp = $especialidades->fetchAll();
+
+            if (count($esp) > 0){
+                $existesp = true;
+            }
+            else {
+                $existesp = false;
+            }
+            // dump($esp);die;
+            return $this->render('SiePermanenteBundle:CursoPermanente:listEspecialidades.html.twig', array(
+                'especialidades' => $esp,
+                'cantesp'=>count($esp),
+                'existeesp'=>$existesp
+
+            ));
+
+
+//            return $this->redirect($this->generateUrl('herramienta_per_cursos_cortos_index'));
+
+        }
+        catch(Exception $ex)
+        {
+            $em->getConnection()->rollback();
+            $this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron guardados.');
+            return $this->redirect($this->generateUrl('herramienta_permanente_admin'));
+        }
+//dump($especialidad);die;
+        // return $this->render('SiePermanenteBundle:CursoPermanente:nuevaespecialidad.html.twig', array(
+
+        // 'form' => $form->createView()
+
+        //   ));
+    }
+
+    public function deleteEspAction(Request $request)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        $idc = $request->get('form');
+
+
+        $reinicio = true;
+
+        $query = $em->getConnection()->prepare('
+        select * from permanente_institucioneducativa_cursocorto where areatematica_tipo_id =:area
+        ');
+
+        $query->bindValue(':area', $idc);
+        $query->execute();
+        $areafinal = $query->fetchAll();
+        //   dump($programafinal);die;
+
+        if($areafinal==null || $areafinal=='')
+        {
+            $areas=$em->getRepository('SieAppWebBundle:PermanenteAreaTematicaTipo')->find($idc);
+
+            $em->remove($areas);
+            $em->flush();
+            $em->getConnection()->commit();
+
+            $response = new JsonResponse();
+            return $response->setData(array('mensaje' => 'Area Tematica Eliminada',
+                'reinicio' => $reinicio));
+        }
+        else
+        {
+//
+            $reinicio = false;
+            $response = new JsonResponse();
+            return $response->setData(array('mensaje' => 'Error al eliminar el area tematica, Verifique que no se este utilizando por un CEA',
+                'reinicio' => $reinicio));
+        }
 
     }
+
+
+
+
     public function addAreaTemNuevoAction(Request $request)
     {
 
