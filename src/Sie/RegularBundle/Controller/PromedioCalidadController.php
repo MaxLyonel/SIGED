@@ -152,14 +152,12 @@ class PromedioCalidadController extends Controller {
         }
 
         // redireccionamos si se excedio la fecha de corte del modulo
-        $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2018-11-24');
+        // $fechaActual = new \DateTime('now');
+        // $fechaCorte = new \DateTime('2018-11-24');
 
-        if($fechaActual > $fechaCorte) {
-            return $this->redirect($this->generateUrl('principal_web'));
-        }
-
-
+        // if($fechaActual > $fechaCorte) {
+        //     return $this->redirect($this->generateUrl('principal_web'));
+        // }
 
         $rol_usuario = $this->session->get('roluser');
 
@@ -280,6 +278,7 @@ class PromedioCalidadController extends Controller {
 
             }else{
                 $validacion->setSolucionTipoId(1);
+                $validacion->setEsActivo(true);
                 $em->flush();
             }
             /**
