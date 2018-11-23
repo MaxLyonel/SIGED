@@ -365,8 +365,8 @@ class WfTramiteController extends Controller
             $wfSolicitudTramite->setDatos($datos);
             $wfSolicitudTramite->setEsValido(true);
             $wfSolicitudTramite->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));
-            $wfSolicitudTramite->setLugarTipoLocalidadId($lugarTipoLocalidad_id?$lugarTipoLocalidad_id:null);
-            $wfSolicitudTramite->setLugarTipoDistritoId($lugarTipoDistrito_id?$lugarTipoDistrito_id:null);
+            $wfSolicitudTramite->setLugarTipoLocalidadId((int)$lugarTipoLocalidad_id?$lugarTipoLocalidad_id:null);
+            $wfSolicitudTramite->setLugarTipoDistritoId((int)$lugarTipoDistrito_id?$lugarTipoDistrito_id:null);
             //dump($wfSolicitudTramite);die;
             $em->persist($wfSolicitudTramite);
             $em->flush();
@@ -490,8 +490,8 @@ class WfTramiteController extends Controller
             $wfSolicitudTramite->setDatos($datos);
             $wfSolicitudTramite->setEsValido(true);
             $wfSolicitudTramite->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));
-            $wfSolicitudTramite->setLugarTipoLocalidadId($lugarTipoLocalidad_id);
-            $wfSolicitudTramite->setLugarTipoDistritoId($lugarTipoDistrito_id);
+            $wfSolicitudTramite->setLugarTipoLocalidadId($lugarTipoLocalidad_id?(int)$lugarTipoLocalidad_id:null);
+            $wfSolicitudTramite->setLugarTipoDistritoId($lugarTipoDistrito_id?(int)$lugarTipoDistrito_id:null);
             $em->persist($wfSolicitudTramite);
             $em->flush();
         }
