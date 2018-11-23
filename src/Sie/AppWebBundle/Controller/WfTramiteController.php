@@ -107,6 +107,7 @@ class WfTramiteController extends Controller
                 return $this->redirectToRoute($flujoproceso[0]->getRutaFormulario(),array('id'=>$id));    
             }else{
                 $request->getSession()
+
                     ->getFlashBag()
                     ->add('error', "No tiene tuición para un nuevo tramite");
                     return $this->redirectToRoute('wf_tramite_index');    
@@ -524,7 +525,7 @@ class WfTramiteController extends Controller
         /**
          * si el tramite es devuelto
          */
-        if($tarea_sig_id > $flujoproceso->getId()){
+        if($tarea_sig_id > $flujoproceso->getId() or $flujoproceso->getTareaSigId() == null){
             $tramiteestado = $em->getRepository('SieAppWebBundle:TramiteEstado')->find(15); //enviado
         }else{
             $tramiteestado = $em->getRepository('SieAppWebBundle:TramiteEstado')->find(16); //devuelto
