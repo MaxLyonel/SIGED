@@ -81,8 +81,9 @@ class WfTramiteController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        //$flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findBy(array('flujoTipo'=>$id,'orden'=>1));
-        $wfusuario = $em->getRepository('SieAppWebBundle:WfUsuarioFlujoProceso')->createQueryBuilder('wfufp')
+        $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findBy(array('flujoTipo'=>$id,'orden'=>1));
+        if($flujoproceso->getRolTipo()->getId()!= 9){
+            $wfusuario = $em->getRepository('SieAppWebBundle:WfUsuarioFlujoProceso')->createQueryBuilder('wfufp')
                 ->select('wfufp')
                 ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'fp.id = wfufp.flujoProceso')
                 ->where('fp.orden=1')
@@ -91,16 +92,26 @@ class WfTramiteController extends Controller
                 ->andWhere('fp.rolTipo='.$rol)
                 ->getQuery()
                 ->getResult();
+            if($wfusuario){
+                return $this->redirectToRoute($flujoproceso[0]->getRutaFormulario(),array('id'=>$id));
+            }else{
+                $request->getSession()
+                        ->getFlashBag()
+                        ->add('error', "No tiene tuición para un nuevo tramite");
+                return $this->redirectToRoute('wf_tramite_index');
+            }    
+        }else{
+            if($rol == $flujoproceso->getRolTipo()->getId()){
+                return $this->redirectToRoute($flujoproceso[0]->getRutaFormulario(),array('id'=>$id));    
+            }else{
+                $request->getSession()
+                    ->getFlashBag()
+                    ->add('error', "No tiene tuición para un nuevo tramite");
+                    return $this->redirectToRoute('wf_tramite_index');    
+            }
+        }
         //dump($wfusuario);die;
         //Verificamos si tiene competencia para un nuevo tramite
-        if($wfusuario){
-            return $this->redirectToRoute($flujoproceso[0]->getRutaFormulario(),array('id'=>$id));
-        }else{
-            $request->getSession()
-                    ->getFlashBag()
-                    ->add('error', "No tiene tuición para un nuevo tramite RUE");
-                    return $this->redirectToRoute('wf_tramite_index');
-        }    
         
         /*switch ($id) {
             case 5: //RITT
