@@ -1,0 +1,418 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-table animated fadeIn"></i> Consultas - Maestros <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href={{ path('consultas_maestros_index') }}>Consultas</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><strong>Busqueda por: </strong></h3>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body" >
+                                 <div class="row" >
+                                      <div class="col-md-12 col-sm-12 col-xs-12">
+                                            <!-- Start color horizontal tabs -->
+                                            <div class="panel panel-tab panel-tab-double shadow">
+                                                <!-- Start tabs heading -->
+                                                <div class="panel-heading no-padding">
+                                                    <ul class="nav nav-tabs">
+                                                        <li class="nav-border nav-border-top-primary">
+                                                            <a href="#institucion" data-toggle="tab" class="text-center" aria-expanded="false">
+                                                                <i class="fa fa-bank" style="color: #2ba9e1"></i> Institución Educativa
+                                                            </a>
+                                                        </li>
+                                                        <li class="nav-border nav-border-top-success">
+                                                            <a href="#ci" data-toggle="tab" class="text-center" aria-expanded="false">
+                                                                <i class="fa fa-credit-card" style="color: green "></i> C.I.
+                                                            </a>
+                                                        </li>
+
+                                                        <li class="nav-border nav-border-top-warning">
+                                                            <a href="#datospersonales" data-toggle="tab" class="text-center" aria-expanded="false">
+                                                                <i class="fa fa-user" style="color: orange "></i> Datos Personales
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div><!-- /.panel-heading -->
+                                                <!--/ End tabs heading -->
+
+                                                <!-- Start tabs content -->
+                                                <div class="panel-body">
+                                                    <div class="tab-content">
+                                                        <div class="tab-pane fade active in" id="institucion">
+                                                           <div class="row">
+                                                               <div class="col-md-2">
+                                                                   <h4> <label for="instiEducativa">Código SIE</label></h4>
+                                                               </div>
+                                                               <div class="col-md-3">
+                                                                 <input id="sie" class="col-md-12" type="text" value="81410151"  placeholder="81410151" onkeypress='return validaNumericos(event)'>
+                                                               </div>
+                                                               <div class="col-md-2">
+                                                                   <h4><label for="gestion">Gestión </label></h4>
+                                                               </div>
+                                                               <div class="col-md-3">
+                                                                   <input id="gestion" class="col-md-12"  placeholder="2018" value="2018" type="text">
+                                                               </div>
+                                                           </div>
+                                                            <div class="row">
+                                                                <div class="row" align="right">
+                                                                    <button id="buscar_instedu" onclick="realizar_Busqueda()" type="submit" class="btn btn-theme fa fa-search  rounded"> Buscar</button>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="tab-pane fade" id="ci">
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <h4> <label for="c_i">Carnet de Identidad</label></h4>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <input id="ci_maestro" type="text">
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <h4><label for="gestion">Gestión </label></h4>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <input type="text" placeholder="2018">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="row" align="right">
+                                                                    <button id="buscar_ci" onclick="realizar_Busqueda_ci()" type="submit" class="btn btn-theme fa fa-search  rounded"> Buscar por CI</button>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="tab-pane fade" id="datospersonales"  onkeypress="return validar(event)">
+                                                            <div class="row">
+                                                                <div class="col-md-2">
+                                                                    <h4><label for="nombre">Nombres</label></h4>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <input id="nombre_maestro" type="text">
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <h4> <label for="paterno">Paterno</label></h4>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <input id="paterno_maestro" type="text">
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <h4><label for="materno">Materno </label></h4>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <input id="materno_maestro" type="text">
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="row" align="right">
+                                                                    <button id="buscar_ci" onclick="realizar_Busqueda_dp()" type="submit" class="btn btn-theme fa fa-search  rounded"> Buscar por CI</button>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div><!-- /.panel-body -->
+                                                <!--/ End tabs content -->
+                                            </div><!-- /.panel -->
+                                            <!--/ End color horizontal tabs -->
+                                        </div>
+                                  </div>
+                            </div><!-- /.panel-body -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+       <div class="row" id="resultado" hidden>
+
+        </div>
+       {# <form name="fm" method="POST" action="{{ path('consulta_Maestro_fichamaestro') }}">
+            <input type="hidden" name="ci">
+            <input type="hidden" name="gestion">
+        </form>#}
+    </div>
+
+{% endblock %}
+{% block javascripts%}
+    {{ parent() }}
+    <script>
+        $( document ).ready(function() {
+            cargatablas();
+        });
+        var cargatablas = function (identif){
+            // Setup - add a text input to each footer cell
+            $('#maestros_institucion tfoot th').each( function () {
+                var title = $(this).text();
+                if(title.trim() === "" || title === "Ver"){
+                    $(this).html('');
+                } else {
+                    $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+                }
+            } );
+
+            // DataTable
+            var table = $('#maestros_institucion').DataTable( {
+                    "order": [[ 0, "asc" ]],
+                    "columnDefs": [
+                        { "orderable": false, "targets": [0] }
+                    ],
+                }
+            );
+
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        };
+
+        function validaNumericos(event) {
+            if(event.charCode >= 48 && event.charCode <= 57){
+                return true;
+            }
+            return false;
+        }
+        function validar(e) {
+             tecla = (document.all) ? e.keyCode : e.which;
+              if (tecla==8) return true;
+             patron =/[A-Za-z\s]/;
+              te = String.fromCharCode(tecla);
+              return patron.test(te);
+        }
+        function realizar_Busqueda() {
+            var inst_edu = $('#sie').val();
+            var gestion = $('#gestion').val();
+            var ci = $('#ci_maestro').val();
+            var nombre = $('#nombre_maestro').val();
+            var paterno = $('#paterno_maestro').val();
+            var materno = $('#materno_maestro').val();
+           var imagen = '{{ asset("img/loading96.gif") }}';
+            /*if(inst_edu==''){
+                swal('Debe Ingresar un código SIE para la búsqueda');
+                return false;
+            }*/
+
+            //console.log(inst_edu,gestion);
+            $.ajax({
+                type: 'post',
+                data:({inst_edu: inst_edu,gestion:gestion,ci:ci,nombre:nombre,paterno:paterno,materno:materno,sw:0}),
+                url: "{{ path('consulta_Maestro_institucioneducativa') }}",
+
+                before: function (data) {
+                    swal({
+                        title: "Buscando...",
+                        text: "Espere un momento por favor",
+                        icon: imagen,
+                        buttons: false
+                    });
+                },
+                success: function (data) {
+                   $('#resultado').show();
+                   $('#resultado').empty();
+                   $('#resultado').append(data);
+
+                    /*var id_sie = data.data.maestros[0]['institucioneducativa_id'];
+                    $('#sie_').val(id_sie);
+                    $('#ie').val(data.infoInstitucion['institucioneducativa']);
+                    $('#director').val(data.infoDirector['nombre_director']);
+                    llenar(data.data.maestros );*/
+                },
+                complete: function () {
+
+                }
+            });
+
+
+        }
+
+        function realizar_Busqueda_ci() {
+            $('#resultado').hide();
+            var inst_edu = $('#sie').val();
+            var gestion = $('#gestion').val();
+            var ci = $('#ci_maestro').val();
+            var nombre = $('#nombre_maestro').val();
+            var paterno = $('#paterno_maestro').val();
+            var materno = $('#materno_maestro').val();
+            var imagen = '{{ asset("img/loading96.gif") }}';
+            /*if(inst_edu==''){
+                swal('Debe Ingresar un código SIE para la búsqueda');
+                return false;
+            }*/
+            $.ajax({
+                type: 'post',
+                data:({inst_edu: inst_edu,gestion:gestion,ci:ci,nombre:nombre,paterno:paterno,materno:materno,sw:0}),
+                url: "{{ path('consulta_Maestro_ci') }}",
+
+                before: function (data) {
+                    swal({
+                        title: "Buscando...",
+                        text: "Espere un momento por favor",
+                        icon: imagen,
+                        buttons: false
+                    });
+                },
+                success: function (data) {
+
+                    $('#resultado').show();
+                    $('#resultado').empty();
+                    $('#resultado').append(data);
+
+                    /*var id_sie = data.data.maestros[0]['institucioneducativa_id'];
+                    $('#sie_').val(id_sie);
+                    $('#ie').val(data.infoInstitucion['institucioneducativa']);
+                    $('#director').val(data.infoDirector['nombre_director']);
+                    llenar(data.data.maestros );*/
+                },
+                complete: function () {
+
+                }
+            });
+
+        }
+
+        function realizar_Busqueda_dp() {
+            $('#resultado').hide();
+            var inst_edu = $('#sie').val();
+            var gestion = $('#gestion').val();
+            var ci = $('#ci_maestro').val();
+            var nombre = $('#nombre_maestro').val();
+            var paterno = $('#paterno_maestro').val();
+            var materno = $('#materno_maestro').val();
+            var imagen = '{{ asset("img/loading96.gif") }}';
+            /*if(inst_edu==''){
+                swal('Debe Ingresar un código SIE para la búsqueda');
+                return false;
+            }*/
+            $.ajax({
+                type: 'post',
+                data:({inst_edu: inst_edu,gestion:gestion,ci:ci,nombre:nombre,paterno:paterno,materno:materno}),
+                url: "{{ path('consulta_Maestro_dp') }}",
+
+                before: function (data) {
+                    swal({
+                        title: "Buscando...",
+                        text: "Espere un momento por favor",
+                        icon: imagen,
+                        buttons: false
+                    });
+                },
+                success: function (data) {
+
+                    $('#resultado').show();
+                    $('#resultado').empty();
+                    $('#resultado').append(data);
+
+                    /*var id_sie = data.data.maestros[0]['institucioneducativa_id'];
+                    $('#sie_').val(id_sie);
+                    $('#ie').val(data.infoInstitucion['institucioneducativa']);
+                    $('#director').val(data.infoDirector['nombre_director']);
+                    llenar(data.data.maestros );*/
+                },
+                complete: function () {
+
+                }
+            });
+
+        }
+
+        function llenar(response)
+        {
+            var t = $('#maestros_institucion').DataTable({
+                "destroy": true,
+                "data": response,
+                "columns":[
+                    {"data":"nombre"},
+                    {"data":"nombre"},
+                    {"data":"paterno"},
+                    {"data":"materno"},
+                    {"data":"cargo"},
+                    {"data":"formacion"},
+                    {"data":"carnet"},
+                    {"data":"complemento"},
+                    {"data":"nombre"}
+
+                ],
+                "aoColumnDefs": [
+
+
+                    { "mRender": function (data, type, row) {
+
+                        return '<button type="button" class="btn btn-primary fa fa-eye rounded vermaestro"  data-id="'+row['carnet']+'" data-idg ="'+row['gestion_tipo_id']+'"  title="Detalles"></button>';
+                    },
+                        "aTargets": [8],
+                    },
+                ]
+            });
+            t.on( 'order.dt search.dt', function () {
+                t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                    cell.innerHTML = i+1;
+                } );
+            } ).draw();
+
+            $(document).on('click', '.vermaestro' , function () {
+                var ci_maestro = $(this).data('id');
+                var gestion_tipo_id = $(this).data('idg');
+               /* document.fm.ci = ci_maestro;
+                document.fm.gestion = gestion_tipo_id;
+                document.fm.submit();*/
+                $.ajax({
+                    type: 'post',
+                    data:({ci: ci_maestro,gestion:gestion_tipo_id,sw:1}),
+                    url: "{{ path('consulta_Maestro_institucioneducativa') }}",
+                    before: function (data) {
+                        swal({
+                            title: "Buscando...",
+                            text: "Espere un momento por favor",
+                            icon: imagen,
+                            buttons: false
+                        });
+                    },
+                    success: function (data) {
+                       /* console.log(data);
+
+                        location.href = "{{ path('consulta_Maestro_fichamaestro',{ 'data': "hfghf" }) }}";*/
+
+
+                    },
+                    complete: function () {
+
+                    }
+                });
+
+            });
+        }
+
+
+
+
+
+    </script>
+
+
+{% endblock %}

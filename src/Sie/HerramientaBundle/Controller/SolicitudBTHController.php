@@ -2,6 +2,7 @@
 
 namespace Sie\HerramientaBundle\Controller;
 
+use Sie\AppWebBundle\Entity\WfSolicitudTramite;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sie\AppWebBundle\Entity\EstudianteInscripcion;
@@ -18,7 +19,7 @@ use Sie\AppWebBundle\Entity\EstudianteNotaCualitativa;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\User;
 use Sie\ProcesosBundle\Controller\TramiteRueController;
-use Sie\ProcesosBundle\Controller\WfTramiteController;
+use Sie\AppWebBundle\Controller\WfTramiteController;
 use Sie\AppWebBundle\Entity\InstitucioneducativaEspecialidadTecnicoHumanistico;
 use Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnico;
 use Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnicoTipo;
@@ -355,12 +356,28 @@ class SolicitudBTHController extends Controller {
                 else{
                     $idTramite='';
                 }
-                $TramiteController = new TramiteRueController();
-                $TramiteController->setContainer($this->container);
+                //$TramiteController = new TramiteRueController();
+                $wfTramiteController = new WfTramiteController();
+               //$TramiteController->setContainer($this->container);
+                $wfTramiteController->setContainer($this->container);
                 $datos = ($request->get('ipt'));
-                $mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'',$id_tipoTramite,'',$idTramite,$datos,$id_distrito);
+               // $mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'',$id_tipoTramite,'',$idTramite,$datos,$id_distrito);
+                //               public function guardarTramiteNuevo($usuario,$rol,$flujotipo,      $tarea,$tabla,$id_tabla,     $observacion,$tipotramite,$varevaluacion,$idtramite,$datos,$lugarTipoLocalidad_id,$lugarTipoDistrito_id)
 
+                $mensaje = $wfTramiteController->guardarTramiteNuevo($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'',$id_tipoTramite,'',$idTramite,$datos,'',$id_distrito);
+                //dump($mensaje);die;
                 $res = 1;
+
+                /*
+                 * public function guardarTramiteNuevo($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,$varevaluacion,$idtramite,$datos,$lugarTipo_id)
+esta es para la primera tarea
+y esta para los demas
+public function guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos)
+y esta para cuando quieras hacer dos en uno
+primero se recibe luego se envia
+public function guardarTramiteRecibido($usuario,$tarea,$idtramite)}*/
+
+
 
             }
             else{
@@ -388,10 +405,13 @@ class SolicitudBTHController extends Controller {
                 else{
                     $idTramite='';
                 }
-                $TramiteController = new TramiteRueController();
-                $TramiteController->setContainer($this->container);
+                //$TramiteController = new TramiteRueController();
+                $wfTramiteController = new WfTramiteController();
+                //$TramiteController->setContainer($this->container);
+                $wfTramiteController->setContainer($this->container);
                 $datos = ($request->get('ipt'));
-                $mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'',$id_tipoTramite,'',$idTramite,$datos,$id_distrito);
+                $mensaje = $wfTramiteController->guardarTramiteNuevo($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'',$id_tipoTramite,'',$idTramite,$datos,$id_distrito);
+               // $mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'',$id_tipoTramite,'',$idTramite,$datos,$id_distrito);
                 $res = 1;
 
             }else{
@@ -654,8 +674,8 @@ class SolicitudBTHController extends Controller {
         return $this->render('SieHerramientaBundle:SolicitudBTH:inicioDistrital.html.twig',array('lista_tramites'=>$lista['tramites']));
     }
     public function  VerSolicitudBTHDisAction(Request $request){
-
-        $id_tramite = $request->get('lista_tramites_id');//ID de Tramite
+        //dump($request);die;
+        $id_tramite = $request->get('id');//ID de Tramite
 
        /*
         * Obtenemios la informacion de la UE
@@ -663,10 +683,14 @@ class SolicitudBTHController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT trm.institucioneducativa_id, trm.fecha_tramite,trm.gestion_id,wfsol.datos
-                                                FROM tramite trm INNER JOIN wf_solicitud_tramite wfsol ON trm.id=wfsol.tramite_id
-                                                WHERE wfsol.tramite_id=$id_tramite");
+                                                FROM tramite trm 
+                                                INNER JOIN tramite_detalle td  ON trm.id=td.tramite_id
+                                                INNER JOIN wf_solicitud_tramite wfsol ON td.id=wfsol.tramite_detalle_id
+                                                WHERE trm.id=$id_tramite
+                                                ORDER BY wfsol.id DESC limit 1 ");
         $query->execute();
         $infoUE = $query->fetch();
+       //dump($infoUE);die;
         $gestion    = $infoUE['gestion_id'];
         $institucion  = $infoUE['institucioneducativa_id'];
 
@@ -782,10 +806,17 @@ class SolicitudBTHController extends Controller {
 
         $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
             ->select('wf')
-            ->innerJoin('SieAppWebBundle:Tramite', 't', 'with', 't.id = wf.tramite')
+            ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wf.tramiteDetalle')
+            ->innerJoin('SieAppWebBundle:Tramite', 't', 'with', 't.id = td.tramite')
             ->where('t.id =' . $id_tramite)
+            ->orderBy('wf.id', 'desc')
+            ->setMaxResults('1')
             ->getQuery()
             ->getResult();
+
+
+
+        //$director = $query->getOneOrNullResult();
         $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
         //dump($datos);die;
         $informe= $datos[0]['informe'];
@@ -830,12 +861,15 @@ class SolicitudBTHController extends Controller {
           $id_rol= $this->session->get('roluser');
           $id_usuario= $this->session->get('userId');
           $institucionid    = $request->get('institucionid');
-          $id_distrito      = $request->get('id_distrito');
+          $id_distrito      = (int)$request->get('id_distrito');
           $evaluacion       = $request->get('evaluacion');
           $id_tramite       = $request->get('id_tramite');
         $query = $em->getConnection()->prepare("SELECT trm.institucioneducativa_id, trm.fecha_tramite,trm.gestion_id,wfsol.datos,trm.tramite_tipo
-                                                FROM tramite trm INNER JOIN wf_solicitud_tramite wfsol ON trm.id=wfsol.tramite_id
-                                                WHERE wfsol.tramite_id=$id_tramite");
+                                                FROM tramite trm 
+                                                INNER JOIN tramite_detalle td  ON trm.id=td.tramite_id
+                                                INNER JOIN wf_solicitud_tramite wfsol ON td.id=wfsol.tramite_detalle_id
+                                                WHERE trm.id=$id_tramite
+                                                ORDER BY wfsol.id DESC limit 1");
         $query->execute();
         $tipoTramite = $query->fetch();
          if ($tipoTramite['tramite_tipo']==45)
@@ -854,14 +888,23 @@ class SolicitudBTHController extends Controller {
 
           $tarea1            = 36;//elaborainfrorme y envia BTH
 
-          $TramiteController = new TramiteRueController();
-          $TramiteController->setContainer($this->container);
-          //$mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea,$tabla,$institucionid,'',$id_tipoTramite,$evaluacion,$id_tramite ,$datos,$id_distrito);
+//          $TramiteController = new TramiteRueController();
+  //        $TramiteController->setContainer($this->container);
+        $wfTramiteController = new WfTramiteController();
+        $wfTramiteController->setContainer($this->container);
+
+        //$mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea,$tabla,$institucionid,'',$id_tipoTramite,$evaluacion,$id_tramite ,$datos,$id_distrito);
 
           try{
-              $mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea,$tabla,$institucionid,$obs,$id_tipoTramite,$evaluacion,$id_tramite ,$datos,$id_distrito);
+              //    public function           guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos,$lugarTipoLocalidad_id,$lugarTipoDistrito_id)
+
+               $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$institucionid,$obs,$evaluacion,$id_tramite,$datos,'',$id_distrito);
+
+
               if ($evaluacion=='SI')
-              $mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea1,$tabla,$institucionid,'',$id_tipoTramite,'',$id_tramite ,$datos,$id_distrito);
+                  $mensaje = $wfTramiteController->guardarTramiteRecibido($id_usuario, $tarea1,$id_tramite);
+                  $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea1,$tabla,$institucionid,'','',$id_tramite,$datos,'',$id_distrito);
+              //$mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea1,$tabla,$institucionid,'',$id_tipoTramite,'',$id_tramite ,$datos,$id_distrito);
               $res = 1;
           }
           catch (Exception $exceptione){
@@ -1035,12 +1078,15 @@ class SolicitudBTHController extends Controller {
     }
     public function VerSolicitudBTHDepAction(Request $request){
         //dump($request);die;
-        $id_tramite = $request->get('lista_tramites_id');//ID de Tramite
+        $id_tramite = $request->get('id');//ID de Tramite
 
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT trm.institucioneducativa_id, trm.fecha_tramite,trm.gestion_id,wfsol.datos
-                                                FROM tramite trm INNER JOIN wf_solicitud_tramite wfsol ON trm.id=wfsol.tramite_id
-                                                WHERE wfsol.tramite_id=$id_tramite");
+                                                FROM tramite trm 
+                                                INNER JOIN tramite_detalle td  ON trm.id=td.tramite_id
+                                                INNER JOIN wf_solicitud_tramite wfsol ON td.id=wfsol.tramite_detalle_id
+                                                WHERE trm.id=$id_tramite
+                                                ORDER BY wfsol.id DESC limit 1");
         $query->execute();
         $infoUE = $query->fetch();
         $gestion    = $infoUE['gestion_id'];
@@ -1147,12 +1193,24 @@ class SolicitudBTHController extends Controller {
             ->getQuery();
 
         $director = $query->getOneOrNullResult();
+
         $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
+            ->select('wf')
+            ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wf.tramiteDetalle')
+            ->innerJoin('SieAppWebBundle:Tramite', 't', 'with', 't.id = td.tramite')
+            ->where('t.id =' . $id_tramite)
+            ->orderBy('wf.id', 'desc')
+            ->setMaxResults('1')
+            ->getQuery()
+            ->getResult();
+
+
+       /* $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
             ->select('wf')
             ->innerJoin('SieAppWebBundle:Tramite', 't', 'with', 't.id = wf.tramite')
             ->where('t.id =' . $id_tramite)
             ->getQuery()
-            ->getResult();
+            ->getResult();*/
         //dump($wfSolicitudTramite);die;
         $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
         $informe= $datos[0]['informe'];
@@ -1182,7 +1240,7 @@ class SolicitudBTHController extends Controller {
 
     }
     public function guardasolicitudDepartamentalAction(Request $request){
-
+        //dump($request);die;
         $documento = $request->files->get('docpdf');
         if(!empty($documento)){
             $destination_path = 'uploads/archivos/';
@@ -1199,8 +1257,11 @@ class SolicitudBTHController extends Controller {
         $evaluacion     = $request->get('evaluacion');
         $idtramite     = $request->get('id_tramite');
         $query = $em->getConnection()->prepare("SELECT trm.institucioneducativa_id, trm.fecha_tramite,trm.gestion_id,wfsol.datos,trm.tramite_tipo
-                                                FROM tramite trm INNER JOIN wf_solicitud_tramite wfsol ON trm.id=wfsol.tramite_id
-                                                WHERE wfsol.tramite_id=$idtramite");
+                                                FROM tramite trm 
+                                                INNER JOIN tramite_detalle td  ON trm.id=td.tramite_id
+                                                INNER JOIN wf_solicitud_tramite wfsol ON td.id=wfsol.tramite_detalle_id
+                                                WHERE trm.id=$idtramite
+                                                ORDER BY wfsol.id DESC limit 1");
         $query->execute();
         $infoUE = $query->fetch();
         if ($infoUE['tramite_tipo']==45)
@@ -1215,23 +1276,41 @@ class SolicitudBTHController extends Controller {
         $tarea1         = 38;//elaborainfrorme y envia BTH DEPARTAMENTO
         $tabla          = 'institucioneducativa';
 
-        $TramiteController = new TramiteRueController();
-        $TramiteController->setContainer($this->container);
+       /* $TramiteController = new TramiteRueController();
+        $TramiteController->setContainer($this->container);*/
+
+        $wfTramiteController = new WfTramiteController();
+        $wfTramiteController->setContainer($this->container);
 
         try{
-            $mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea,$tabla,$institucionid,$obs,$id_tipoTramite,$evaluacion,$idtramite ,$datos,$id_distrito);
+            $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$institucionid,$obs,$evaluacion,$idtramite,$datos,'',$id_distrito);
+            /*$mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea,$tabla,$institucionid,$obs,$id_tipoTramite,$evaluacion,$idtramite ,$datos,$id_distrito);*/
             if ($evaluacion=='SI')
             {
 
-                $mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea1,$tabla,$institucionid,'',$id_tipoTramite,'',$idtramite ,$datos,$id_distrito);
+                $mensaje = $wfTramiteController->guardarTramiteRecibido($id_usuario, $tarea1,$idtramite);
+                $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea1,$tabla,$institucionid,'','',$idtramite,$datos,'',$id_distrito);
+
+                //$mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea1,$tabla,$institucionid,'',$id_tipoTramite,'',$idtramite ,$datos,$id_distrito);
 
                /*Recuperamos los datos del tramite*/
-                $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
+                /*$wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
                     ->select('wf')
                     ->innerJoin('SieAppWebBundle:Tramite', 't', 'with', 't.id = wf.tramite')
                     ->where('t.id =' . $idtramite)
                     ->getQuery()
+                    ->getResult();*/
+                $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
+                    ->select('wf')
+                    ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wf.tramiteDetalle')
+                    ->innerJoin('SieAppWebBundle:Tramite', 't', 'with', 't.id = td.tramite')
+                    ->where('t.id =' . $idtramite)
+                    ->orderBy('wf.id', 'desc')
+                    ->setMaxResults('1')
+                    ->getQuery()
                     ->getResult();
+
+
                 $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
 
                 /*Recuperamos datos de la UE*/

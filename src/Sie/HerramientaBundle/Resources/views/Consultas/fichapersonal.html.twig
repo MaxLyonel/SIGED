@@ -1,0 +1,196 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-user animated fadeIn"></i> Información de  Maestro <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href={{ path('consultas_maestros_index') }}>Consultas</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <div class="body-content animated fadeIn">
+
+
+        <div class="panel panel-tab panel-tab-double panel-tab-vertical row no-margin mb-15 rounded shadow">
+            <!-- Start tabs heading -->
+            <div class="panel-heading no-padding col-lg-3 col-md-3 col-sm-3">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <div  class="col-md-13" >
+                            <a href="component-tabsaccordion.html#tab3-1" data-toggle="tab" aria-expanded="true">
+                                <div class="panel-body">
+                                    <ul class="inner-all list-unstyled">
+                                        <li class="text-center">
+                                            <img class="logo" src="{{asset('webherramienta/img/avatar/100/15.png')}}" alt="brand logo"/>
+                                        </li>
+                                        <li class="text-center">
+                                            <h4 class="text-capitalize">{{ maestro.nombre }}</h4>
+                                            <h5>{{ maestro.carnet }} - {{ maestro.complemento }}</h5>
+                                        </li>
+                                    </ul><!-- /.list-unstyled -->
+                                </div><!-- /.panel-body -->
+                            </a>
+                        </div>
+                    </li>
+                    <li class="">
+                        <a href="component-tabsaccordion.html#tab3-2" data-toggle="tab" aria-expanded="false">
+                            <i class="fa fa-file-text" style="color: #2ba9e1" ></i>
+                            <div>
+
+                                <span>Datos Referenciales</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="component-tabsaccordion.html#tab3-3" data-toggle="tab" aria-expanded="false">
+                            <i class="fa fa-building" style="color: #ff6d00"></i>
+                            <div>
+                                <span>Datos Academicos</span>
+                            </div>
+                        </a>
+                    </li>
+
+                </ul>
+            </div><!-- /.panel-heading -->
+            <!--/ End tabs heading -->
+
+            <!-- Start tabs content -->
+            <div class="panel-body col-lg-9 col-md-9 col-sm-9">
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="tab3-1">
+                        <div class="content"></div>
+                        <h4>Información Personal del maestro(a)</h4>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-4"><strong>Nombres</strong>  </div>
+                            <div class="col-md-4"><strong>Paterno</strong></div>
+                            <div class="col-md-4"><strong>Materno</strong></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">{{ maestro.nombre }} </div>
+                            <div class="col-md-4">{{ maestro.paterno }}</div>
+                            <div class="col-md-4">{{ maestro.materno }}</div>
+                        </div>
+                        <br>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-4"><strong>Fecha de Nacimiento</strong></div>
+                            <div class="col-md-4"><strong>RDA</strong></div>
+                            <div class="col-md-4"><strong>Género</strong></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">{{ maestro.fecha_nacimiento }} </div>
+                            <div class="col-md-4">{{ maestro.rda }} </div>
+                            <div class="col-md-4">{% if (maestro.genero_tipo_id == 1 )  %} Másculino {% elseif (maestro.genero_tipo_id == 2) %} Femenino {% else %} S/D {% endif %}</div>
+
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab3-2">
+                        <h4>Información Referencial</h4>
+                        <div class="row">
+                            <div class="col-md-12"><strong>Dirección</strong></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">{{ maestro.direccion }} </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-6"><strong>Celular</strong></div>
+                            <div class="col-md-6"><strong>Correo </strong></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">{{ maestro.celular }}</div>
+                            <div class="col-md-6">{{ maestro.correo }}</div>
+                        </div>
+                        <div class="row">
+
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab3-3">
+                        <h4>Información Académica</h4>
+
+                        {% for id_institucioneducactivas in id_institucioneducactivas  %}
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h6 class="panel-title">SIE: {{ id_institucioneducactivas.institucioneducativa_id }}</h6>
+                                    </div><!-- /.pull-left -->
+                                    <div class="pull-right">
+                                       {# <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>#}
+                                        <button onclick="buscarmaterias({{ id_institucioneducactivas.institucioneducativa_id }})">Detalles</button>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="panel-body">
+                                    <div id="infomaterias_{{ id_institucioneducactivas.institucioneducativa_id }}">
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        function buscarmaterias(institucioneducativa_id) {
+            //alert("fsdfs");
+            var institucioneducativa_id = institucioneducativa_id;
+            var ci={{ maestro.carnet }};
+            var complemento ='';
+
+            //var complemento = complemento ;
+            var gestion={{ gestion }};
+
+            $.ajax({
+                type: 'post',
+                data:({inst_edu: institucioneducativa_id,ci:ci,complemento:complemento,gestion:gestion}),
+                url: "{{ path('consulta_Maestro_materias') }}",
+
+                before: function (data) {
+                    swal({
+                        title: "Buscando...",
+                        text: "Espere un momento por favor",
+                        icon: imagen,
+                        buttons: false
+                    });
+                },
+                success: function (data) {
+
+
+                    $('#infomaterias_'+institucioneducativa_id).empty();
+                    $('#infomaterias_'+institucioneducativa_id).append(data);
+
+                    /*var id_sie = data.data.maestros[0]['institucioneducativa_id'];
+                    $('#sie_').val(id_sie);
+                    $('#ie').val(data.infoInstitucion['institucioneducativa']);
+                    $('#director').val(data.infoDirector['nombre_director']);
+                    llenar(data.data.maestros );*/
+                },
+                complete: function () {
+
+                }
+            });
+        }
+    </script>
+
+
+{% endblock %}
