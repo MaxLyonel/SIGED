@@ -46,13 +46,12 @@ class ConsultasController extends Controller {
 
     public function indexAction (Request $request) {
 
+
         return $this->render($this->session->get('pathSystem') . ':Consultas:index.html.twig');
 
     }
 
     public function buscarInstitucioneducativaAction(Request $request){
-       //dump($request);die;
-
 
         $Idinstitucion=$request->get('inst_edu');
         $institucionId = ($request->get('inst_edu')) ? $Idinstitucion :"";
@@ -62,7 +61,7 @@ class ConsultasController extends Controller {
         $materno = ($request->get('materno')) ? $request->get('materno') :"";
         $nombre = ($request->get('nombre')) ? $request->get('nombre') :   "";
         $data = $this->busquedas($institucionId,$ci,$gestion,$paterno,$materno,$nombre);
-
+        //dump($data);die;
         if($institucionId!=''){
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT ie.id, ie.institucioneducativa  from  institucioneducativa ie WHERE ie.id = $institucionId");
@@ -70,6 +69,68 @@ class ConsultasController extends Controller {
         $infoInstitucion= $query->fetch();
         } else {
            $infoInstitucion=array();
+        }
+       //infoDirector
+        $query = $em->getConnection()->prepare("SELECT    ps.nombre || ' ' || ps.paterno ||' '|| ps.materno As nombre_director,ct.cargo
+                                                FROM maestro_inscripcion mins 
+                                                INNER JOIN institucioneducativa_sucursal ies ON ies.id = mins.institucioneducativa_sucursal_id
+                                                INNER JOIN persona ps ON ps.id = mins.persona_id							 -- MAESTROINSCRIPCION-PERSONA
+                                                INNER JOIN cargo_tipo ct ON ct.id = mins.cargo_tipo_id				 -- MAESTROINSCRIPCION-CARGO
+                                                INNER JOIN formacion_tipo ft ON ft.id = mins.formacion_tipo_id -- MAESTROINSCRIPCION-FORMACION MAESTRO
+                                                WHERE mins.institucioneducativa_id =$institucionId--40730448--80730460  --81410151 -- id_centro			
+                                                AND mins.cargo_tipo_id in(SELECT ct.id from cargo_tipo ct  WHERE ct.rol_tipo_id in (2,9) AND ct.esdirector = TRUE)	
+                                                 AND mins.es_vigente_administrativo = TRUE 		
+                                                 AND mins.gestion_tipo_id = $gestion				
+                                                ORDER BY 1");
+        $query->execute();
+        $infoDirector= $query->fetch();
+
+
+        //para Busqueda por Ci
+
+        $query = $em->getConnection()->prepare("SELECT  mins.institucioneducativa_id,mins.gestion_tipo_id,ps.carnet,ps.complemento,ps.nombre,ps.paterno,ps.materno,
+                                                                ft.formacion,ps.genero_tipo_id,ps.rda,ps.fecha_nacimiento,ps.correo,ps.celular,ps.direccion,
+                                                                ct.cargo
+                                                FROM maestro_inscripcion mins 
+                                                        INNER JOIN formacion_tipo ft ON ft.id = mins.formacion_tipo_id -- MAESTROINSCRIPCION-FORMACION MAESTRO
+                                                        INNER JOIN persona ps ON ps.id = mins.persona_id							 -- MAESTROINSCRIPCION-PERSONA
+                                                        INNER JOIN cargo_tipo ct ON ct.id = mins.cargo_tipo_id				 -- MAESTROINSCRIPCION-CARGO
+                                                        WHERE 
+                                                                    mins.cargo_tipo_id in(SELECT ct.id from cargo_tipo ct  WHERE ct.rol_tipo_id=2)	
+                                                                    AND mins.gestion_tipo_id=$gestion
+                                                                    AND ps.carnet = '$ci'
+                                                ORDER BY 5 ");
+        $query->execute();
+        $infomaestro= $query->fetchAll();
+
+
+
+        return $this->render('SieHerramientaBundle:Consultas:infoUE.html.twig',array('data'=>$data['maestros'],
+            'infoInstitucion'=>$infoInstitucion,
+            'infoDirector'=>$infoDirector
+            //'data'=>$infomaestro
+            ));
+
+    }
+
+    public function buscarCiAction(Request $request){
+
+        $Idinstitucion=$request->get('inst_edu');
+        $institucionId = ($request->get('inst_edu')) ? $Idinstitucion :"";
+        $gestion = ($request->get('gestion')) ? $request->get('gestion') :"";
+        $ci =  ($request->get('ci')) ? $request->get('ci') :"";
+        $paterno = ($request->get('paterno')) ? $request->get('paterno') :"";
+        $materno = ($request->get('materno')) ? $request->get('materno') :"";
+        $nombre = ($request->get('nombre')) ? $request->get('nombre') :   "";
+        $data = $this->busquedas($institucionId,$ci,$gestion,$paterno,$materno,$nombre);
+        //dump($data);die;
+        if($institucionId!=''){
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->getConnection()->prepare("SELECT ie.id, ie.institucioneducativa  from  institucioneducativa ie WHERE ie.id = $institucionId");
+            $query->execute();
+            $infoInstitucion= $query->fetch();
+        } else {
+            $infoInstitucion=array();
         }
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT    ps.nombre || ' ' || ps.paterno ||' '|| ps.materno As nombre_director,	
@@ -84,16 +145,35 @@ class ConsultasController extends Controller {
                                                 ORDER BY 1 ");
         $query->execute();
         $infoDirector= $query->fetch();
+        //para Busqueda por Ci
 
-        return $this->render('SieHerramientaBundle:Consultas:infoUE.html.twig',array('data'=>$data['maestros'],
-            'infoInstitucion'=>$infoInstitucion,
-            'infoDirector'=>$infoDirector
-            ));
+        $query = $em->getConnection()->prepare("SELECT  mins.institucioneducativa_id,mins.gestion_tipo_id,ps.carnet,ps.complemento,ps.nombre,ps.paterno,ps.materno,
+                                                                ft.formacion,ps.genero_tipo_id,ps.rda,ps.fecha_nacimiento,ps.correo,ps.celular,ps.direccion,
+                                                                ct.cargo
+                                                FROM maestro_inscripcion mins 
+                                                        INNER JOIN formacion_tipo ft ON ft.id = mins.formacion_tipo_id -- MAESTROINSCRIPCION-FORMACION MAESTRO
+                                                        INNER JOIN persona ps ON ps.id = mins.persona_id							 -- MAESTROINSCRIPCION-PERSONA
+                                                        INNER JOIN cargo_tipo ct ON ct.id = mins.cargo_tipo_id				 -- MAESTROINSCRIPCION-CARGO
+                                                        WHERE 
+                                                                    mins.cargo_tipo_id in(SELECT ct.id from cargo_tipo ct  WHERE ct.rol_tipo_id=2)	
+                                                                    AND mins.gestion_tipo_id=$gestion
+                                                                    AND ps.carnet = '$ci'
+                                                ORDER BY 5 ");
+        $query->execute();
+        $infomaestro= $query->fetchAll();
+
+
+
+        return $this->render('SieHerramientaBundle:Consultas:infoMaestro.html.twig',array(
+            'data'=>$infomaestro
+        ));
 
     }
 
-    public function busquedas ($institucionId,$ci,$gestion,$paterno,$materno,$nombre){
 
+
+    public function busquedas ($institucionId,$ci,$gestion,$paterno,$materno,$nombre){
+        //dump($institucionId);die;
 
         if($institucionId!='')
         {
@@ -101,14 +181,17 @@ class ConsultasController extends Controller {
         $query = $em->getConnection()->prepare("SELECT  mins.institucioneducativa_id,mins.gestion_tipo_id,ps.carnet,ps.complemento,ps.nombre,ps.paterno,ps.materno,
                                                         ft.formacion,ps.genero_tipo_id,ps.rda,ps.fecha_nacimiento,ps.correo,ps.celular,ps.direccion,
                                                         ct.cargo
-                                                FROM maestro_inscripcion mins 
+                                                FROM maestro_inscripcion mins 		
+                                                INNER JOIN persona ps ON ps.id = mins.persona_id							 -- MAESTROINSCRIPCION-PERSONA		
+                                                INNER JOIN institucioneducativa_sucursal ies ON ies.id = mins.institucioneducativa_sucursal_id
+                                                INNER JOIN institucioneducativa ie ON ie.id = mins.institucioneducativa_id
                                                 INNER JOIN formacion_tipo ft ON ft.id = mins.formacion_tipo_id -- MAESTROINSCRIPCION-FORMACION MAESTRO
-                                                INNER JOIN persona ps ON ps.id = mins.persona_id							 -- MAESTROINSCRIPCION-PERSONA
                                                 INNER JOIN cargo_tipo ct ON ct.id = mins.cargo_tipo_id				 -- MAESTROINSCRIPCION-CARGO
-                                                WHERE mins.institucioneducativa_id = $institucionId --40730448--80730460  --81410151 -- id_centro			
-                                                            AND mins.cargo_tipo_id in(SELECT ct.id from cargo_tipo ct  WHERE ct.rol_tipo_id in (2,9))	
-                                                            AND mins.gestion_tipo_id=$gestion				
-                                        ORDER BY 5");
+                                                WHERE mins.institucioneducativa_id = $institucionId -- id_centro
+                                                            AND mins.cargo_tipo_id in(0,1)	
+                                                            AND mins.gestion_tipo_id=$gestion
+                                                            AND mins.es_vigente_administrativo = TRUE 
+                                                  ORDER BY 4,5,6");
         $query->execute();
         $maestros = $query->fetchAll();
         $data['maestros'] = $maestros;
@@ -145,6 +228,7 @@ class ConsultasController extends Controller {
     }
 
     public function fichapersonalAction(Request $request){
+        //dump($request);die;
 
         $Idinstitucion=$request->get('inst_edu');
         $gestion = ($request->get('gestion')) ? $request->get('gestion') :"";
@@ -176,8 +260,6 @@ class ConsultasController extends Controller {
         $idInstitucionEducativas= $query->fetchAll();
 
 
-
-
         return $this->render('SieHerramientaBundle:Consultas:fichapersonal.html.twig',array('id_institucioneducactivas'=>$idInstitucionEducativas
         ,'maestro'=>$infomaestro,'gestion'=>$gestion
        ));
@@ -188,15 +270,13 @@ class ConsultasController extends Controller {
         $complemento=$request->get('complemento');
         $gestion = $request->get('gestion');
         $inst_edu = $request->get('inst_edu');
-
-
          //infomaterias
           $em = $this->getDoctrine()->getManager();
          $query = $em->getConnection()->prepare("SELECT ps.id,ps.carnet,ps.complemento,ps.paterno,ps.materno,ps.nombre,ct.cargo,ps.genero_tipo_id,ps.rda,ps.fecha_nacimiento,ps.correo,ps.celular,ps.direccion,
                                                             ie.id as id_institucioneducativa,ie.institucioneducativa,mins.gestion_tipo_id,mins.periodo_tipo_id,
-                                                            ic.id as ic_id ,ieco.id as ieco_id, iecom.nota_tipo_id ,iecom.id as iecom_id, ic.grado_tipo_id,ic.paralelo_tipo_id,ic.nivel_tipo_id,(case  WHEN ic.turno_tipo_id = 1 THEN 'mañana' WHEN ic.turno_tipo_id = 2  THEN 'tarde'  WHEN ic.turno_tipo_id =3  THEN 'NOche'  else 'Otro' END) as turno,
+                                                            ic.id as ic_id ,ieco.id as ieco_id, iecom.nota_tipo_id ,iecom.id as iecom_id, ic.grado_tipo_id,ic.paralelo_tipo_id,ic.nivel_tipo_id,trt.turno,
                                                             ieco.asignatura_tipo_id,asg.asignatura,ie.institucioneducativa_tipo_id,iet.descripcion,ie.institucioneducativa_tipo_id,nt.nota_tipo
-                                                            ,pt.paralelo,gt.grado
+                                                            ,pt.paralelo,gt.grado,nvt.nivel,prt.periodo
                                                             --,piecc.cursocorto_tipo_id,pcct.cursocorto
                                                 FROM       institucioneducativa_curso ic
                                                 INNER JOIN institucioneducativa_curso_oferta ieco on ieco.insitucioneducativa_curso_id = ic.id --INSTITUCIONEDUCATIVACURSO-INSEDUCURSOOFERTA
@@ -211,6 +291,9 @@ class ConsultasController extends Controller {
                                                 INNER JOIN nota_tipo nt ON nt.id = iecom.nota_tipo_id  
                                                 INNER JOIN paralelo_tipo pt ON ic.paralelo_tipo_id = pt.id
                                                 INNER JOIN grado_tipo gt ON gt.id=ic.grado_tipo_id
+                                                INNER JOIN nivel_tipo nvt ON nvt.id = ic.nivel_tipo_id 
+                                                INNER JOIN periodo_tipo prt ON ic.periodo_tipo_id = prt.id 
+                                                INNER JOIN turno_tipo trt on trt.id = ic.turno_tipo_id
                                                 LEFT JOIN permanente_institucioneducativa_cursocorto piecc ON piecc.institucioneducativa_curso_id = ic.id
                                                 LEFT JOIN permanente_cursocorto_tipo pcct ON pcct.id = piecc.cursocorto_tipo_id
                                                 WHERE		ps.carnet = '$ci' AND mins.gestion_tipo_id =$gestion AND mins.es_vigente_administrativo =  TRUE and ic.institucioneducativa_id= $inst_edu --81410151 --80730660
@@ -222,5 +305,62 @@ class ConsultasController extends Controller {
 
         return $this->render('SieHerramientaBundle:Consultas:infoMaterias.html.twig',array('infomaterias'=>$infomaterias));
      }
+
+     function BuscardpAction(Request $request){
+         //ump($request);die;
+         $Idinstitucion=$request->get('inst_edu');
+         $institucionId = ($request->get('inst_edu')) ? $Idinstitucion :"";
+         $gestion = ($request->get('gestion')) ? $request->get('gestion') :"";
+         $ci =  ($request->get('ci')) ? $request->get('ci') :"";
+         $paterno = ($request->get('paterno')) ? $request->get('paterno') :"";
+         $materno = ($request->get('materno')) ? $request->get('materno') :"";
+         $nombre = ($request->get('nombre')) ? $request->get('nombre') :   "";
+         $data = $this->busquedas($institucionId,$ci,$gestion,$paterno,$materno,$nombre);
+         //dump($data);die;
+         if($institucionId!=''){
+             $em = $this->getDoctrine()->getManager();
+             $query = $em->getConnection()->prepare("SELECT ie.id, ie.institucioneducativa  from  institucioneducativa ie WHERE ie.id = $institucionId");
+             $query->execute();
+             $infoInstitucion= $query->fetch();
+         } else {
+             $infoInstitucion=array();
+         }
+         $em = $this->getDoctrine()->getManager();
+         $query = $em->getConnection()->prepare("SELECT    ps.nombre || ' ' || ps.paterno ||' '|| ps.materno As nombre_director,	
+                                                              ct.cargo
+                                                FROM maestro_inscripcion mins 
+                                                        INNER JOIN formacion_tipo ft ON ft.id = mins.formacion_tipo_id -- MAESTROINSCRIPCION-FORMACION MAESTRO
+                                                        INNER JOIN persona ps ON ps.id = mins.persona_id							 -- MAESTROINSCRIPCION-PERSONA
+                                                        INNER JOIN cargo_tipo ct ON ct.id = mins.cargo_tipo_id				 -- MAESTROINSCRIPCION-CARGO
+                                                        WHERE mins.institucioneducativa_id = $institucionId--40730448--80730460  --81410151 -- id_centro			
+                                                                    AND mins.cargo_tipo_id in(SELECT ct.id from cargo_tipo ct  WHERE ct.rol_tipo_id in (2,9) AND ct.esdirector = TRUE)	
+                                                                    AND mins.gestion_tipo_id=$gestion				
+                                                ORDER BY 1 ");
+         $query->execute();
+         $infoDirector= $query->fetch();
+         //para Busqueda por dp
+
+         $query = $em->getConnection()->prepare("SELECT  mins.institucioneducativa_id,mins.gestion_tipo_id,ps.carnet,ps.complemento,ps.nombre,ps.paterno,ps.materno,
+                                                                ft.formacion,ps.genero_tipo_id,ps.rda,ps.fecha_nacimiento,ps.correo,ps.celular,ps.direccion,
+                                                                ct.cargo
+                                                FROM maestro_inscripcion mins 
+                                                        INNER JOIN formacion_tipo ft ON ft.id = mins.formacion_tipo_id -- MAESTROINSCRIPCION-FORMACION MAESTRO
+                                                        INNER JOIN persona ps ON ps.id = mins.persona_id							 -- MAESTROINSCRIPCION-PERSONA
+                                                        INNER JOIN cargo_tipo ct ON ct.id = mins.cargo_tipo_id				 -- MAESTROINSCRIPCION-CARGO
+                                                        WHERE 
+                                                                    mins.cargo_tipo_id in(SELECT ct.id from cargo_tipo ct  WHERE ct.rol_tipo_id=2)	
+                                                                    --AND mins.gestion_tipo_id = 2018
+                                                                    AND ps.nombre LIKE '$nombre%' AND ps.paterno LIKE '$paterno%' AND ps.materno LIKE '$materno%'
+                                                ORDER BY 5 ");
+         $query->execute();
+         $infomaestro= $query->fetchAll();
+        // dump($infomaestro);die;
+
+         return $this->render('SieHerramientaBundle:Consultas:infoMaestro.html.twig',array(
+             'data'=>$infomaestro
+         ));
+
+     }
+
 
 }

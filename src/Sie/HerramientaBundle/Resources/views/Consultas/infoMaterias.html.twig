@@ -4,11 +4,11 @@
             <thead>
             <tr>
                 <th class="text-center border-right" style="min-width: 5px">No.</th>
-                <th>Curso</th>
-                <th>Tipo de Nota</th>
-                <th>Paralelo</th>
-                <th>Grado</th>
                 <th>Turno</th>
+                <th>Nivel</th>
+                <th>Grado</th>
+                <th>Paralelo</th>
+                <th>Periodo</th>
                 <th>Asignatura</th>
 
             </tr>
@@ -16,11 +16,11 @@
             <tfoot>
             <tr>
                 <th class="text-center border-right" style="min-width: 5px">No.</th>
-                <th>Curso</th>
-                <th>Tipo de Nota</th>
-                <th>Paralelo</th>
-                <th>Grado</th>
                 <th>Turno</th>
+                <th>Nivel</th>
+                <th>Grado</th>
+                <th>Paralelo</th>
+                <th>Periodo</th>
                 <th>Asignatura</th>
             </tr>
             </tfoot>
@@ -28,11 +28,11 @@
             {% for materias in infomaterias %}
                 <tr>
                     <td class="text-center" style="min-width: 5px">{{ loop.index }}</td>
-                    <td>{{ materias.ic_id }}</td>
-                    <td>{{ materias.nota_tipo }}</td>
-                    <td>{{ materias.paralelo }}</td>
-                    <td>{{ materias.grado }}</td>
                     <td>{{ materias.turno }}</td>
+                    <td>{{ materias.nivel }}</td>
+                    <td>{{ materias.grado }}</td>
+                    <td>{{ materias.paralelo }}</td>
+                    <td>{{ materias.periodo}}</td>
                     <td>{{ materias.asignatura }}</td>
 
 

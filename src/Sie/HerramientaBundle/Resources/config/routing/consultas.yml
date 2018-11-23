@@ -10,6 +10,14 @@ consulta_Maestro_fichamaestro:
 consulta_Maestro_materias:
     path:     /fichamaestro_materias
     defaults: { _controller: SieHerramientaBundle:Consultas:fichapersonal_materias }
+consulta_Maestro_ci:
+    path:     /fichamaestro_materias_ci
+    defaults: { _controller: SieHerramientaBundle:Consultas:buscarCi }
+
+consulta_Maestro_dp:
+    path:     /fichamaestro_materias_dp
+    defaults: { _controller: SieHerramientaBundle:Consultas:Buscardp }
+
 
 
 

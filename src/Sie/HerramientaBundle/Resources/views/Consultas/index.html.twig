@@ -70,6 +70,11 @@
                                                                    <input id="gestion" class="col-md-12"  placeholder="2018" value="2018" type="text">
                                                                </div>
                                                            </div>
+                                                            <div class="row">
+                                                                <div class="row" align="right">
+                                                                    <button id="buscar_instedu" onclick="realizar_Busqueda()" type="submit" class="btn btn-theme fa fa-search  rounded"> Buscar</button>
+                                                                </div>
+                                                            </div>
 
                                                         </div>
                                                         <div class="tab-pane fade" id="ci">
@@ -87,10 +92,21 @@
                                                                     <input type="text" placeholder="2018">
                                                                 </div>
                                                             </div>
+                                                            <div class="row">
+                                                                <div class="row" align="right">
+                                                                    <button id="buscar_ci" onclick="realizar_Busqueda_ci()" type="submit" class="btn btn-theme fa fa-search  rounded"> Buscar por CI</button>
+                                                                </div>
+                                                            </div>
 
                                                         </div>
                                                         <div class="tab-pane fade" id="datospersonales"  onkeypress="return validar(event)">
                                                             <div class="row">
+                                                                <div class="col-md-2">
+                                                                    <h4><label for="nombre">Nombres</label></h4>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <input id="nombre_maestro" type="text">
+                                                                </div>
                                                                 <div class="col-md-2">
                                                                     <h4> <label for="paterno">Paterno</label></h4>
                                                                 </div>
@@ -103,19 +119,17 @@
                                                                 <div class="col-md-2">
                                                                     <input id="materno_maestro" type="text">
                                                                 </div>
-                                                                <div class="col-md-2">
-                                                                    <h4><label for="nombre">Nombres</label></h4>
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <input id="nombre_maestro" type="text">
+
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="row" align="right">
+                                                                    <button id="buscar_ci" onclick="realizar_Busqueda_dp()" type="submit" class="btn btn-theme fa fa-search  rounded"> Buscar por CI</button>
                                                                 </div>
                                                             </div>
 
                                                         </div>
                                                     </div>
-                                                    <div class="row" align="right">
-                                                        <button id="buscar_instedu" onclick="realizar_Busqueda()" type="submit" class="btn btn-theme fa fa-search  rounded"> Buscar</button>
-                                                    </div>
+
                                                 </div><!-- /.panel-body -->
                                                 <!--/ End tabs content -->
                                             </div><!-- /.panel -->
@@ -204,6 +218,7 @@
                 return false;
             }*/
 
+            //console.log(inst_edu,gestion);
             $.ajax({
                 type: 'post',
                 data:({inst_edu: inst_edu,gestion:gestion,ci:ci,nombre:nombre,paterno:paterno,materno:materno,sw:0}),
@@ -218,7 +233,6 @@
                     });
                 },
                 success: function (data) {
-
                    $('#resultado').show();
                    $('#resultado').empty();
                    $('#resultado').append(data);
@@ -234,6 +248,96 @@
                 }
             });
 
+
+        }
+
+        function realizar_Busqueda_ci() {
+            $('#resultado').hide();
+            var inst_edu = $('#sie').val();
+            var gestion = $('#gestion').val();
+            var ci = $('#ci_maestro').val();
+            var nombre = $('#nombre_maestro').val();
+            var paterno = $('#paterno_maestro').val();
+            var materno = $('#materno_maestro').val();
+            var imagen = '{{ asset("img/loading96.gif") }}';
+            /*if(inst_edu==''){
+                swal('Debe Ingresar un código SIE para la búsqueda');
+                return false;
+            }*/
+            $.ajax({
+                type: 'post',
+                data:({inst_edu: inst_edu,gestion:gestion,ci:ci,nombre:nombre,paterno:paterno,materno:materno,sw:0}),
+                url: "{{ path('consulta_Maestro_ci') }}",
+
+                before: function (data) {
+                    swal({
+                        title: "Buscando...",
+                        text: "Espere un momento por favor",
+                        icon: imagen,
+                        buttons: false
+                    });
+                },
+                success: function (data) {
+
+                    $('#resultado').show();
+                    $('#resultado').empty();
+                    $('#resultado').append(data);
+
+                    /*var id_sie = data.data.maestros[0]['institucioneducativa_id'];
+                    $('#sie_').val(id_sie);
+                    $('#ie').val(data.infoInstitucion['institucioneducativa']);
+                    $('#director').val(data.infoDirector['nombre_director']);
+                    llenar(data.data.maestros );*/
+                },
+                complete: function () {
+
+                }
+            });
+
+        }
+
+        function realizar_Busqueda_dp() {
+            $('#resultado').hide();
+            var inst_edu = $('#sie').val();
+            var gestion = $('#gestion').val();
+            var ci = $('#ci_maestro').val();
+            var nombre = $('#nombre_maestro').val();
+            var paterno = $('#paterno_maestro').val();
+            var materno = $('#materno_maestro').val();
+            var imagen = '{{ asset("img/loading96.gif") }}';
+            /*if(inst_edu==''){
+                swal('Debe Ingresar un código SIE para la búsqueda');
+                return false;
+            }*/
+            $.ajax({
+                type: 'post',
+                data:({inst_edu: inst_edu,gestion:gestion,ci:ci,nombre:nombre,paterno:paterno,materno:materno}),
+                url: "{{ path('consulta_Maestro_dp') }}",
+
+                before: function (data) {
+                    swal({
+                        title: "Buscando...",
+                        text: "Espere un momento por favor",
+                        icon: imagen,
+                        buttons: false
+                    });
+                },
+                success: function (data) {
+
+                    $('#resultado').show();
+                    $('#resultado').empty();
+                    $('#resultado').append(data);
+
+                    /*var id_sie = data.data.maestros[0]['institucioneducativa_id'];
+                    $('#sie_').val(id_sie);
+                    $('#ie').val(data.infoInstitucion['institucioneducativa']);
+                    $('#director').val(data.infoDirector['nombre_director']);
+                    llenar(data.data.maestros );*/
+                },
+                complete: function () {
+
+                }
+            });
 
         }
 

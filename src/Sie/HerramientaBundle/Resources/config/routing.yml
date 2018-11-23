@@ -137,3 +137,7 @@ sie_herramienta_wf_tramite:
 sie_herramienta_tramite_rue:
     resource: "@SieHerramientaBundle/Resources/config/routing/tramiterue.yml"
     prefix:   /tramiterue
+
+sie_herramienta_consultas:
+    resource: "@SieHerramientaBundle/Resources/config/routing/consultas.yml"
+    prefix:   /sie/consultasmaestros
