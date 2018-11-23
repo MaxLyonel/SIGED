@@ -133,7 +133,7 @@ class InscriptionRezagoController extends Controller {
             //validate 2 times on rezago
             $conditionRezago = array('estudiante' => $student->getId(), 'estadomatriculaTipo' => '57');
             $objInscrWithRezago = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findBy($conditionRezago);
-            if (sizeof($objInscrWithRezago) >= 7) {
+            if (sizeof($objInscrWithRezago) >= 10) {
                 $message = 'Estudiante cuenta con ' . sizeof($objInscrWithRezago) . ' inscripciones... para esta gestión';
                 $this->addFlash('warningrezago', $message);
                 return $this->redirectToRoute('inscription_rezago_index');
