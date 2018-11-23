@@ -147,7 +147,7 @@ class WfTramiteController extends Controller
         
         $em = $this->getDoctrine()->getManager();
         
-        $query = $em->getConnection()->prepare("select distinct t.id,ft.flujo,ft.id as idflujo,case when te.id=3 then pt.proceso_tipo when te.id=15 and fp.es_evaluacion is false then ptsig.proceso_tipo when te.id=15 and fp.es_evaluacion is true then ptc.proceso_tipo  end as proceso_tipo,pt.proceso_tipo as tarea_actual,tt.tramite_tipo,te.tramite_estado,case when te.id = 3 then td.fecha_recepcion else td.fecha_envio end as fecha_estado,te.id as id_estado,td.obs,fp.plazo,case when te.id = 3 then td.fecha_recepcion + fp.plazo else null end as fecha_vencimiento,p.nombre
+        $query = $em->getConnection()->prepare("select distinct t.id,ft.flujo,ft.id as idflujo,case when te.id=3 then pt.proceso_tipo when te.id=15 or te.id=16  and fp.es_evaluacion is false then ptsig.proceso_tipo when te.id=15 or te.id=16 and fp.es_evaluacion is true then ptc.proceso_tipo  end as proceso_tipo,pt.proceso_tipo as tarea_actual,tt.tramite_tipo,te.tramite_estado,case when te.id = 3 then td.fecha_recepcion else td.fecha_envio end as fecha_estado,te.id as id_estado,td.obs,fp.plazo,case when te.id = 3 then td.fecha_recepcion + fp.plazo else null end as fecha_vencimiento,p.nombre
         from tramite t
         join tramite_detalle td on cast(t.tramite as int)=td.id
         join flujo_proceso fp on td.flujo_proceso_id=fp.id
@@ -164,9 +164,9 @@ class WfTramiteController extends Controller
         join usuario u on td.usuario_remitente_id=u.id
         join persona p on p.id=u.persona_id
         where ft.id>4 and t.fecha_fin is null and 
-        ((fpsig.rol_tipo_id=". $rol ." and te.id=15 and fp.es_evaluacion is false) or 
+        ((fpsig.rol_tipo_id=". $rol ." and (te.id=15 or te.id=16) and fp.es_evaluacion is false) or 
         (fp.rol_tipo_id=". $rol ." and te.id=3) or 
-        ((select rol_tipo_id from flujo_proceso where id= wftc.condicion_tarea_siguiente)=". $rol ." and te.id=15 and fp.es_evaluacion is true and td.valor_evaluacion=wftc.condicion) ) and td.usuario_destinatario_id=".$usuario." 
+        ((select rol_tipo_id from flujo_proceso where id= wftc.condicion_tarea_siguiente)=". $rol ." and (te.id=15 or te.id=16) and fp.es_evaluacion is true and td.valor_evaluacion=wftc.condicion) ) and td.usuario_destinatario_id=".$usuario." 
         order by ft.flujo,te.tramite_estado,fecha_estado,t.id,proceso_tipo,tt.tramite_tipo,id_estado,td.obs,p.nombre");
         $query->execute();
         $data['entities'] = $query->fetchAll();;
@@ -379,7 +379,7 @@ class WfTramiteController extends Controller
          */
         $tramite->setTramite($tramiteDetalle->getId());
         $em->flush();
-        $mensaje = 'El trámite se guardo correctamente';
+        $mensaje = 'El trámite Nro. '. $tramite->getId() .' se guardo correctamente';
         return $mensaje;
     }
 
@@ -416,7 +416,7 @@ class WfTramiteController extends Controller
         $em->flush();
         $tramite->setTramite($tramiteDetalle->getId());
         $em->flush();
-        $mensaje = 'El trámite se recibió correctamente';
+        $mensaje = 'El trámite Nro. '. $tramite->getId() .' se recibió correctamente';
         return $mensaje;
     }
     
@@ -433,7 +433,7 @@ class WfTramiteController extends Controller
         $em->getConnection()->prepare("select * from sp_reinicia_secuencia('tramite_detalle');")->execute();
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($tarea);
         $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($usuario);
-        $tramiteestado = $em->getRepository('SieAppWebBundle:TramiteEstado')->find(15);
+        //$tramiteestado = $em->getRepository('SieAppWebBundle:TramiteEstado')->find(15);
         $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
         $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
         /**
@@ -484,13 +484,6 @@ class WfTramiteController extends Controller
             $em->persist($wfSolicitudTramite);
             $em->flush();
         }
-
-         /**
-         * guarda tramite enviado
-         */
-        $tramiteDetalle->setObs($observacion);
-        $tramiteDetalle->setFechaEnvio(new \DateTime(date('Y-m-d')));
-        $tramiteDetalle->setTramiteEstado($tramiteestado);
         /**
          * asigana usuario destinatario
          */
@@ -516,6 +509,22 @@ class WfTramiteController extends Controller
             }
         }
         /**
+         * si el tramite es devuelto
+         */
+        if($tarea_sig_id > $flujoproceso->getId()){
+            $tramiteestado = $em->getRepository('SieAppWebBundle:TramiteEstado')->find(15); //enviado
+        }else{
+            $tramiteestado = $em->getRepository('SieAppWebBundle:TramiteEstado')->find(16); //devuelto
+        }
+
+         /**
+         * guarda tramite enviado/devuelto
+         */
+        $tramiteDetalle->setObs($observacion);
+        $tramiteDetalle->setFechaEnvio(new \DateTime(date('Y-m-d')));
+        $tramiteDetalle->setTramiteEstado($tramiteestado);
+      
+        /**
          * si es la ultima tarea del tramite se finaliza el tramite
          */
         if ($flujoproceso->getTareaSigId() == null)
@@ -523,7 +532,7 @@ class WfTramiteController extends Controller
             $tramite->setFechaFin(new \DateTime(date('Y-m-d')));
         }
         $em->flush();
-        $mensaje = 'El trámite se guardo correctamente';
+        $mensaje = 'El trámite Nro. '. $tramite->getId() .' se envió correctamente';
         return $mensaje;
     }
 
@@ -1285,7 +1294,7 @@ class WfTramiteController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $query = $em->getConnection()->prepare('select p.id, p.flujo,d.institucioneducativa, p.proceso_tipo, p.orden, p.es_evaluacion,p.variable_evaluacion,d.valor_evaluacion, p.plazo, p.tarea_ant_id, p.tarea_sig_id, p.rol_tipo_id,d.id as td_id,d.tramite_id, d.flujo_proceso_id,d.fecha_recepcion,d.fecha_envio,d.usuario_remitente,d.usuario_destinatario,d.obs,d.tramite_estado,d.fecha_envio-d.fecha_recepcion as duracion,case when p.plazo is not null then d.fecha_recepcion + p.plazo else null end as fecha_vencimiento
+        $query = $em->getConnection()->prepare('select p.id, p.flujo,d.institucioneducativa, p.proceso_tipo, p.orden, p.es_evaluacion,p.variable_evaluacion,d.valor_evaluacion, p.plazo, p.tarea_ant_id, p.tarea_sig_id, p.rol_tipo_id,d.id as td_id,d.tramite_id, d.flujo_proceso_id,d.fecha_recepcion,d.fecha_envio,d.usuario_remitente,d.usuario_destinatario,d.obs,d.tramite_estado,d.tramite_estado_id,d.fecha_envio-d.fecha_recepcion as duracion,case when p.plazo is not null then d.fecha_recepcion + p.plazo else null end as fecha_vencimiento
         from
         (SELECT 
           fp.id, f.flujo, p.proceso_tipo, fp.orden, fp.es_evaluacion,fp.variable_evaluacion,fp.plazo, fp.tarea_ant_id, fp.tarea_sig_id, fp.rol_tipo_id
@@ -1296,8 +1305,8 @@ class WfTramiteController extends Controller
            f.id='. $flujotipo .' order by fp.orden)p
         LEFT JOIN
         (SELECT 
-          t1.id,t1.tramite_id, t1.flujo_proceso_id,te.tramite_estado,t1.fecha_recepcion,t1.fecha_envio,pr.nombre as usuario_remitente,pd.nombre as usuario_destinatario,i.institucioneducativa,t1.valor_evaluacion,t1.obs
-	FROM 
+          t1.id,t1.tramite_id, t1.flujo_proceso_id,te.tramite_estado,te.id as tramite_estado_id,t1.fecha_recepcion,t1.fecha_envio,pr.nombre as usuario_remitente,pd.nombre as usuario_destinatario,i.institucioneducativa,t1.valor_evaluacion,t1.obs
+	    FROM 
           tramite_detalle t1 join tramite t on t1.tramite_id=t.id
           join tramite_estado te on t1.tramite_estado_id=te.id
           left join usuario ur on t1.usuario_remitente_id=ur.id
@@ -1306,11 +1315,11 @@ class WfTramiteController extends Controller
           left join persona pd on ud.persona_id=pd.id
           left join institucioneducativa i on t.institucioneducativa_id=i.id
         where t1.tramite_id='. $tramite .' order by t1.id)d
-        ON p.id=d.flujo_proceso_id order by d.id');
+        ON p.id=d.flujo_proceso_id order by d.id,p.id');
 
         $query->execute();
         $arrData = $query->fetchAll();
-        
+        //dump($arrData);die;
         return $arrData;
         
     }

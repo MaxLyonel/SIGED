@@ -93,7 +93,7 @@
                                             <td>{{ entity.tramite_tipo }}</td>
                                             <td>{{ entity.obs }}</td>
                                             <td>{{ entity.tarea_actual }}</td>
-                                            <td>{{ entity.tramite_estado }}</td>
+                                            <td><span class={% if entity.id_estado == 3 %}"label label-warning"{% elseif entity.id_estado == 16 %}"label label-danger" {% else %} "label label-success"{% endif %}>{{ entity.tramite_estado }}</span></td>
                                             <td>{{ entity.fecha_estado }}</td>
                                             <td>{{ entity.plazo }}</td>
                                             <td class="text-danger">{{ entity.fecha_vencimiento }}</td>
@@ -105,7 +105,7 @@
                                             </td>
                                             <td>{{ entity.proceso_tipo }}</td>
                                             <td>
-                                            {% if entity.id_estado == 15 %} {#si esta enviado #}
+                                            {% if entity.id_estado == 15 or entity.id_estado == 16 %} {#si esta enviado/devuelto #}
                                                 <a href="{{ path('wf_tramite_recibido_guardar', { 'id': entity.id }) }}" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="top" title="Recibir para:{{ entity.proceso_tipo }}">
                                                     <i class="glyphicon glyphicon-check"></i>
                                                 </a>
@@ -177,7 +177,7 @@
             //alert(id);
             formData = {id: id,flujo:flujo};
             $.ajax({
-                type: 'POST',
+                type: 'GET',
                 url: "{{path('wf_tramite_recibido_detalle')}}",
                 data: formData,
                 beforeSend: function () {
