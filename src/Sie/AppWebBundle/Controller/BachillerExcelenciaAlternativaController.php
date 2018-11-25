@@ -407,12 +407,12 @@ class BachillerExcelenciaAlternativaController extends Controller {
     public function indexRstAction() {
         $id_usuario = $this->session->get('userId');
 
-        if (!isset($id_usuario)) {
+        if (!isset($id_usuario)) {f
             return $this->redirect($this->generateUrl('login'));
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2018-11-25');
+        $fechaCorte = new \DateTime('2018-11-26');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -650,7 +650,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2018-11-25');
+        $fechaCorte = new \DateTime('2018-11-26');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -738,7 +738,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2018-11-25');
+        $fechaCorte = new \DateTime('2018-11-26');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
@@ -775,7 +775,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2018-11-25');
+        $fechaCorte = new \DateTime('2018-11-26');
 
         if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
