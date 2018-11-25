@@ -407,7 +407,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
     public function indexRstAction() {
         $id_usuario = $this->session->get('userId');
 
-        if (!isset($id_usuario)) {f
+        if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
 
