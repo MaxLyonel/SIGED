@@ -88,7 +88,7 @@ class InfoEstudianteNotasController extends Controller {
                 $plantilla = 'regular';
                 $vista = 0;
             }
-            $swspeciality    = false;
+            $swspeciality  = false;
             $objLevelModular    = false;
             foreach ($notas['cuantitativas'] as $key => $value) {
               if($value['idAsignatura']==1039){
@@ -100,6 +100,16 @@ class InfoEstudianteNotasController extends Controller {
               }
 
             }
+            
+
+            if($gestion >= 2018 and $operativo >= 4 and $grado == 6){
+                $validacionSexto = $this->get('funciones')->verificarGradoCerrado($sie, $gestion);
+                // dump($validacionSexto);die;
+                if($validacionSexto){
+                    $vista = 0;
+                }
+            }
+
 
             return $this->render('SieHerramientaBundle:InfoEstudianteNotas:bimestre.html.twig',array(
                 'notas'=>$notas,
