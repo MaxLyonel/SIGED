@@ -299,6 +299,17 @@
                                        {% endif %}
                                     {% endif %}
                                   {% endif %}<!-- here is the end to UE HUMANISTICA -->
+                                  
+                                  {# //////////// Imprimir cut ///////////// #}
+                                  {% if data.conespecialidad and data.imprimirCut and gestion >= 2018 and nivel == 13 and grado == 6 and operativo == 4 and data.estadomatriculaId in [4,5] %}
+                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Imprimir CUT">
+                                      <a class="btn btn-circle btn-success" href="#">
+                                        <i class="fa fa-file"></i>
+                                      </a>
+                                    </div>
+                                  {% endif %}
+                                  
+    
                                    </td>
                                   </td>
                                 </td>
