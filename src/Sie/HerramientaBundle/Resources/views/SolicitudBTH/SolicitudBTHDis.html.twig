@@ -401,6 +401,7 @@
                         //fd.append('docpdf', $('#adjdocumento')[0]);
                         var docpdf = document.getElementById('adjdocumento');
                         fd.append('docpdf', docpdf.files[0]);
+                        fd.append('sw',0);
                         $.ajax({
                             type: 'post',
                             url: "{{ path('solicitud_bth_enviosolicitud_Dep') }}",
