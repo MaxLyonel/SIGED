@@ -546,6 +546,7 @@ class WfTramiteController extends Controller
         $tramiteDetalle->setObs($observacion);
         $tramiteDetalle->setFechaEnvio(new \DateTime(date('Y-m-d')));
         $tramiteDetalle->setTramiteEstado($tramiteestado);
+        //dump($tramiteDetalle->getTramiteEstado());die;
         $em->flush();
         //dump($tramiteDetalle->getTramiteEstado());die;
       
@@ -558,6 +559,7 @@ class WfTramiteController extends Controller
             $em->flush();
         }
         $mensaje = 'El trámite Nro. '. $tramite->getId() .' se envió correctamente';
+        //dump($tramiteDetalle->getTramiteEstado());die;
         return $mensaje;
     }
 
@@ -709,7 +711,7 @@ class WfTramiteController extends Controller
             join flujo_tipo ft on t.flujo_tipo_id = ft.id
             join usuario u on td.usuario_remitente_id=u.id
             join persona p on p.id=u.persona_id
-            where ft.id>4 and fp.rol_tipo_id=". $rol ." and te.id=15 
+            where ft.id>4 and fp.rol_tipo_id=". $rol ." and (te.id=15 or te.id=16)
             and td.usuario_remitente_id=". $usuario ." order by ft.flujo,t.id,fecha_envio,fp.orden");
         $query->execute();
         $data['entities'] = $query->fetchAll();;
