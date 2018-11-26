@@ -3423,7 +3423,7 @@ class TramiteDetalleController extends Controller {
                     foreach ($tramites as $tramite) {
                         if ($serieCarton == 'A' or $serieCarton == 'A1' or $serieCarton == 'B' or $serieCarton == 'C' or $serieCarton == 'C1' or $serieCarton == 'D'){
                             $numCarton =$numCarton;
-                        } else {
+                        } else {    
                             $numCarton = str_pad($numCarton, 6, "0", STR_PAD_LEFT);
                         }
                         $tramiteId = (Int) base64_decode($tramite);
@@ -3886,8 +3886,11 @@ class TramiteDetalleController extends Controller {
             } else {
                 $msgContenido = "El primer número deber ser menor o igual al segundo npumero  ingresado (".$num1." - ".$num2.")";
             }
-            
 
+            if(($num2 - $num1) > 100){
+                $msgContenido = ($msgContenido=="") ? "El rango de números no debe excceder de 100 registros (".($num2 - $num1).")" : $msgContenido.", "."El rango de números no debe excceder de 100 registros (".$num2 - $num1.")";
+            }   
+            
             $documentoController = new documentoController();
             $documentoController->setContainer($this->container);
 
@@ -3926,7 +3929,28 @@ class TramiteDetalleController extends Controller {
                 $dep = $entidadDepartamento->getSigla();
                 $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->findOneBy(array('id' => $numeroSerie1));
                 $ges = $entityDocumentoSerie->getGestion()->getId();
+                $numSerieCarton = "";
+                $listaNumSerieCarton = "";
+                $num = $num1;
 
+                while ($num <= $num2) {
+                    if ($serie == 'A' or $serie == 'A1' or $serie == 'B' or $serie == 'C' or $serie == 'C1' or $serie == 'D'){
+                        $numCarton =$num;
+                    } else {    
+                        $numCarton = str_pad($num, 6, "0", STR_PAD_LEFT);
+                    }
+                    $numSerieCarton = $numCarton.$serie;
+                    $num = $num + 1;
+                    if ($listaNumSerieCarton == ""){
+                        $listaNumSerieCarton = $numSerieCarton;
+                    } else {
+                        $listaNumSerieCarton = $listaNumSerieCarton.",".$numSerieCarton;
+                    }
+                    
+                }
+
+                $sie = $listaNumSerieCarton;
+                
                 $arch = 'CARTON_'.$numeroSerie1.'_al_'.$numeroSerie2.'_'.date('YmdHis').'.pdf';
                 
                 $response = new Response();
