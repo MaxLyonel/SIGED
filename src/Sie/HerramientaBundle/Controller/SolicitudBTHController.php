@@ -25,6 +25,7 @@ use Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnico;
 use Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnicoTipo;
 use Sie\AppWebBundle\Entity\EspecialidadTecnicoHumanisticoTipo;
 use Sie\AppWebBundle\Entity\GestionTipo;
+use Sie\AppWebBundle\Entity\TramiteDetalle;
 
 
 
@@ -193,6 +194,22 @@ class SolicitudBTHController extends Controller {
     public function nuevasolicitudAction(Request $request){
         //dump($request);die;
         $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("select td.*
+        from tramite t
+        join tramite_detalle td on cast(t.tramite as int)=td.id where t.id=".$request->get('id'));
+        $query->execute();
+        $td = $query->fetchAll();
+        //dump($td);die;
+        if ($td[0]['tramite_detalle_id']){
+            $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find($td[0]['tramite_detalle_id']);
+        //dump($tramiteDetalle);die;
+            if($tramiteDetalle->getTramiteEstado()->getId()==16){
+                $iUE = $tramiteDetalle->getTramite()->getInstitucioneducativa()->getId();
+                //dump($iUE);die;
+                return $this->redirectToRoute('solicitud_bth_formulario',array('iUE'=>$iUE,'id_tramite'=>$request->get('id')));
+            }
+        }
+        
         $query = $em->getConnection()->prepare("SELECT tp.id,tp.tramite_tipo FROM tramite_tipo tp WHERE tp.obs='BTH' ");
         $query->execute();
         $tramite_tipo = $query->fetchAll();
@@ -889,6 +906,7 @@ class SolicitudBTHController extends Controller {
           //ELABORA INFORME
 
           $tarea1            = 36;//elaborainfrorme y envia BTH
+          //dump($tarea);die;
 
 //          $TramiteController = new TramiteRueController();
   //        $TramiteController->setContainer($this->container);
@@ -901,8 +919,6 @@ class SolicitudBTHController extends Controller {
               //    public function           guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos,$lugarTipoLocalidad_id,$lugarTipoDistrito_id)
 
                $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$institucionid,$obs,$evaluacion,$id_tramite,$datos,'',$id_distrito);
-
-
               if ($evaluacion=='SI')
                   $mensaje = $wfTramiteController->guardarTramiteRecibido($id_usuario, $tarea1,$id_tramite);
                   $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea1,$tabla,$institucionid,'','',$id_tramite,$datos,'',$id_distrito);

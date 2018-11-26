@@ -501,13 +501,17 @@ class WfTramiteController extends Controller
         /**
          * asigana usuario destinatario
          */
+        //dump($flujoproceso);die;
         if ($flujoproceso->getEsEvaluacion() == true) 
         {
             $tramiteDetalle->setValorEvaluacion($varevaluacion);
             $wfcondiciontarea = $em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findBy(array('flujoProceso'=>$flujoproceso->getId(),'condicion'=>$varevaluacion));
+            //dump($wfcondiciontarea);die;
             if ($wfcondiciontarea[0]->getCondicionTareaSiguiente() != null){
                 $tarea_sig_id = $wfcondiciontarea[0]->getCondicionTareaSiguiente();
+                //
                 $uDestinatario = $this->obtieneUsuarioDestinatario($tarea,$tarea_sig_id,$id_tabla,$tabla,$tramite);
+                //dump($uDestinatario);die;
                 $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
             }else{
                 /**
@@ -534,6 +538,7 @@ class WfTramiteController extends Controller
         }else{
             $tramiteestado = $em->getRepository('SieAppWebBundle:TramiteEstado')->find(15); //enviado
         }
+        //dump($tramiteestado);die;
 
          /**
          * guarda tramite enviado/devuelto
@@ -541,6 +546,8 @@ class WfTramiteController extends Controller
         $tramiteDetalle->setObs($observacion);
         $tramiteDetalle->setFechaEnvio(new \DateTime(date('Y-m-d')));
         $tramiteDetalle->setTramiteEstado($tramiteestado);
+        $em->flush();
+        //dump($tramiteDetalle->getTramiteEstado());die;
       
         /**
          * si es la ultima tarea del tramite se finaliza el tramite
@@ -548,8 +555,8 @@ class WfTramiteController extends Controller
         if ($flujoproceso->getTareaSigId() == null)
         {
             $tramite->setFechaFin(new \DateTime(date('Y-m-d')));
+            $em->flush();
         }
-        $em->flush();
         $mensaje = 'El trámite Nro. '. $tramite->getId() .' se envió correctamente';
         return $mensaje;
     }
@@ -563,7 +570,7 @@ class WfTramiteController extends Controller
         
         $flujoprocesoSiguiente = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($tarea_sig_id);
         $nivel = $flujoprocesoSiguiente->getRolTipo()->getLugarNivelTipo();
-        
+        //dump($nivel);die;
         switch ($tabla) {
             case 'institucioneducativa':
                 if ($tramite->getInstitucioneducativa()){
@@ -613,12 +620,14 @@ class WfTramiteController extends Controller
                         //$uDestinatario = $em->getRepository('SieAppWebBundle:UsuarioFlujoProceso')->findBy(array('flujoProceso'=>$flujoprocesoSiguiente->getId(),'lugarTipoId'=>$lugar_tipo_departamento));
                         break;
                     case 0://nivel nacional
+                        //dump($flujoprocesoSiguiente->getRolTipo()->getId());die;
                         if($flujoprocesoSiguiente->getRolTipo()->getId() == 9){  // si es director
                             $query = $em->getConnection()->prepare("select u.* from maestro_inscripcion m
                             join usuario u on m.persona_id=u.persona_id
                             where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=".(new \DateTime())->format('Y')." and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
                             $query->execute();
                             $uDestinatario = $query->fetchAll();
+                            //dump($uDestinatario);die;
                             $uid = $uDestinatario[0]['id'];
                             //$uDestinatario = $em->getRepository('SieAppWebBundle:UsuarioFlujoProceso')->findBy(array('flujoProceso'=>$flujoprocesoSiguiente->getId(),'lugarTipoId'=>1));
                         }elseif($flujoprocesoSiguiente->getRolTipo()->getId() == 8){ // si es tecnico nacional
@@ -645,6 +654,7 @@ class WfTramiteController extends Controller
         }
         
         $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($uid);
+        //dump($usuario);die;
         return $usuario;
     }
 
