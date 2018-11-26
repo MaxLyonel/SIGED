@@ -3796,6 +3796,163 @@ class TramiteDetalleController extends Controller {
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
+    // Controlador que busca una rango de series para imprimir el contenido del diploma humanistico (Regular o Alternativa) en la direccion departamental - legalizaciones
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function dipHumImpresionCartonLoteBuscaAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+        $route = $request->get('_route');
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $defaultTramiteController = new defaultTramiteController();
+        $defaultTramiteController->setContainer($this->container);
+
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        // $activeMenu = 'asds';
+		
+		if(empty($activeMenu)){
+			$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Módulo inhabilitado por el administrador, comuniquese con su Técnico SIE'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
+		} 
+
+        $documentoController = new documentoController();
+        $documentoController->setContainer($this->container);
+
+        $rolPermitido = array(8,16);
+        
+        return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:dipHumImpresionCartonLoteIndex.html.twig', array(
+            'formBusqueda' => $documentoController->creaFormBuscaInstitucionEducativaSerieLote('tramite_detalle_diploma_humanistico_impresion_carton_lote_pdf','','','','1')->createView(),
+            'titulo' => 'Impresión Cartón en Lote',
+            'subtitulo' => 'Diploma Humanísico',
+        ));
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que descarga Diplomas para imprimir en formato pdf segun el rango ingresado por la direccion departamental - legalizaciones
+    // PARAMETROS: numeroInicial, nummeroFinal, serie, tipoDocumentoId, gestion
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function dipHumImpresionCartonLotePdfAction(Request $request) {
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        $gestionActual = new \DateTime("Y");
+        $this->session->set('save', false);
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        try {
+            $form = $request->get('form');
+            //dump($form);die;
+            if ($form) {
+                $tipoImp = 3;
+                $num1 = $form['numeroInicial'];
+                $num2 = $form['numeroFinal'];
+                $serie = $form['serie'];
+                $sie = $num1.",".$num2;
+                $numeroSerie1 = $num1.$serie;
+                $numeroSerie2 = $num2.$serie;
+            } else {
+                $tipoImp = 0;
+                $sie = 0;
+                $num1 = 0;
+                $num2 = 0;
+                $serie = '';
+                $numeroSerie1 = $num1.$serie;
+                $numeroSerie2 = $num2.$serie;
+            }
+          
+            $ids = "";
+            $rolPermitido = 16;
+            $msgContenido = "";
+
+            if($num1 <= $num2){
+                $msgContenido = "";
+            } else {
+                $msgContenido = "El primer número deber ser menor o igual al segundo npumero  ingresado (".$num1." - ".$num2.")";
+            }
+            
+
+            $documentoController = new documentoController();
+            $documentoController->setContainer($this->container);
+
+            // VALIDACION DE LA ASIGNACION DE UN NUMERO DE SERIE A UN DOCUMENTO (NUMERO SERIE 1)
+            $valSerieAsigando = $documentoController->validaNumeroSerieAsignado($numeroSerie1);
+            if($valSerieAsigando == ""){
+                $msgContenido = ($msgContenido=="") ? "No existe el documento con número de serie ".$numeroSerie1 : $msgContenido.", "."No existe el documento con número de serie ".$numeroSerie1;
+            }
+
+            // VALIDACION DE LA ASIGNACION DE UN NUMERO DE SERIE A UN DOCUMENTO (NUMERO SERIE 2)
+            $valSerieAsigando = $documentoController->validaNumeroSerieAsignado($numeroSerie2);
+            if($valSerieAsigando == ""){
+                $msgContenido = ($msgContenido=="") ? "No existe el documento con número de serie ".$numeroSerie2 : $msgContenido.", "."No existe el documento con número de serie ".$numeroSerie2;
+            }
+
+            $departamentoCodigo = $documentoController->getCodigoLugarRol($id_usuario,$rolPermitido);
+
+            if ($departamentoCodigo == 0){
+                $msgContenido = ($msgContenido=="") ? "el usuario no cuenta con autorizacion para los documentos" : $msgContenido.", "."el usuario no cuenta con autorizacion para los el documentos ";
+            } else {
+                // VALIDACION DE TUICION DEL CARTON
+                $valSerieTuicion = $documentoController->validaNumeroSerieTuicion($numeroSerie1, $departamentoCodigo);
+                if($valSerieTuicion != ""){
+                    $msgContenido = ($msgContenido=="") ? $valSerieTuicion : $msgContenido.", ".$valSerieTuicion;
+                }
+                // VALIDACION DE TUICION DEL CARTON
+                $valSerieTuicion = $documentoController->validaNumeroSerieTuicion($numeroSerie2, $departamentoCodigo);
+                if($valSerieTuicion != ""){
+                    $msgContenido = ($msgContenido=="") ? $valSerieTuicion : $msgContenido.", ".$valSerieTuicion;
+                }
+            }
+
+            if ($msgContenido == ""){
+                $em = $this->getDoctrine()->getManager();
+                $entidadDepartamento = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneBy(array('id' => $departamentoCodigo));
+                $dep = $entidadDepartamento->getSigla();
+                $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->findOneBy(array('id' => $numeroSerie1));
+                $ges = $entityDocumentoSerie->getGestion()->getId();
+
+                $arch = 'CARTON_'.$numeroSerie1.'_al_'.$numeroSerie2.'_'.date('YmdHis').'.pdf';
+                
+                $response = new Response();
+                $response->headers->set('Content-type', 'application/pdf');
+                $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&'));
+                $response->setStatusCode(200);
+                $response->headers->set('Content-Transfer-Encoding', 'binary');
+                $response->headers->set('Pragma', 'no-cache');
+                $response->headers->set('Expires', '0');
+
+                //dump($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_'.$ges.'_'.strtolower($dep).'_v3.rptdesign&unidadeducativa='.$sie.'&gestion_id='.$ges.'&tipo='.$tipoImp.'&&__format=pdf&');die;
+                
+                return $response;
+            } else {
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msgContenido));
+                return $this->redirectToRoute('tramite_detalle_diploma_humanistico_impresion_carton_lote_busca', ['form' => $form], 307);
+            }            
+        } catch (\Doctrine\ORM\NoResultException $exc) {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al generar el listado, intente nuevamente'));
+            return $this->redirectToRoute('tramite_detalle_diploma_humanistico_impresion_carton_lote_busca', ['form' => $form], 307);
+        }
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
     // Controlador que busca una unidad educativa para enviar el trámite de diploma humanistico (Regular o Alternativa) en la direccion departamental
     // PARAMETROS: request
     // AUTOR: RCANAVIRI

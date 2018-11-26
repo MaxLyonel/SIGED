@@ -944,6 +944,37 @@ class DocumentoController extends Controller {
             ->getForm();
         return $form;
     }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que genera un formulario para la busqueda de documentos por numero de serie en lote
+    // PARAMETROS: institucionEducativaId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function creaFormBuscaInstitucionEducativaSerieLote($routing, $numero1, $numero2, $serie, $documentoTipoArrayId) {
+        $entityDocumentoSerie = $this->getSerieTipo($documentoTipoArrayId);
+
+        $serieEntity = array();
+        foreach ($entityDocumentoSerie as $key => $dato) {
+            $serieEntity[$dato['serie']] = $dato['serie'];
+        }
+
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl($routing))
+            ->add('numeroInicial', 'number', array('label' => 'Número Inicial', 'attr' => array('value' => $numero1, 'class' => 'form-control', 'pattern' => '[0-9]{1,6}', 'maxlength' => '6', 'autocomplete' => 'on', 'placeholder' => 'Número inicial')))
+            ->add('numeroFinal', 'number', array('label' => 'Número Final', 'attr' => array('value' => $numero2, 'class' => 'form-control', 'pattern' => '[0-9]{1,6}', 'maxlength' => '6', 'autocomplete' => 'on', 'placeholder' => 'Número final')))
+            ->add('serie',
+                      'choice',  
+                      array('label' => 'Serie',
+                            'choices' => $serieEntity,
+                            'data' => $serie,
+                            'attr' => array('class' => 'form-control'),
+                            )
+                )
+            ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary')))
+            ->getForm();
+        return $form;
+    }
   
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
