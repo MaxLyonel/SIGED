@@ -570,7 +570,7 @@
                             $.ajax({
                                 type: 'post',
                                 url: "{{ path('solicitud_bth_enviosolicitud') }}",
-                                data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},idsolicitud:idsolicitud},
+                                data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},idsolicitud:idsolicitud,sw:0},
                                 dataType : 'json',
                                 before: function () {
                                     swal({
@@ -635,7 +635,7 @@
                             $.ajax({
                                 type: 'post',
                                 url: "{{ path('solicitud_bth_enviosolicitud') }}",
-                                data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},idsolicitud:idsolicitud},
+                                data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},idsolicitud:idsolicitud,sw:0},
                                 dataType : 'json',
                                 before: function () {
                                     swal({

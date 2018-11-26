@@ -346,6 +346,7 @@ class SolicitudBTHController extends Controller {
 
         $id_Institucion = $request->get('institucionid');
         $gestion =  $request->getSession()->get('currentyear');
+        $sw = $request->get('sw');
        // dump($id_Institucion); dump($gestion);die;
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT ieht.id,ieht.gestion_tipo_id,ieht.gestion_tipo_id FROM institucioneducativa_humanistico_tecnico ieht  
@@ -367,22 +368,25 @@ class SolicitudBTHController extends Controller {
 
                 $id_tipoTramite = 45;//Registro Nuevo
                 $informacion    = json_decode($request->get('ipt',true)) ;
+                $idTramite='';
 
-                if ($request->get('id_tramite'))
-                {$idTramite=$request->get('id_tramite');}
-                else{
-                    $idTramite='';
-                }
-                //$TramiteController = new TramiteRueController();
                 $wfTramiteController = new WfTramiteController();
-               //$TramiteController->setContainer($this->container);
                 $wfTramiteController->setContainer($this->container);
                 $datos = ($request->get('ipt'));
-               // $mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'',$id_tipoTramite,'',$idTramite,$datos,$id_distrito);
-                //               public function guardarTramiteNuevo($usuario,$rol,$flujotipo,      $tarea,$tabla,$id_tabla,     $observacion,$tipotramite,$varevaluacion,$idtramite,$datos,$lugarTipoLocalidad_id,$lugarTipoDistrito_id)
 
-                $mensaje = $wfTramiteController->guardarTramiteNuevo($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'',$id_tipoTramite,'',$idTramite,$datos,'',$id_distrito);
-                //dump($mensaje);die;
+
+               if($sw == 0){
+                   $mensaje = $wfTramiteController->guardarTramiteNuevo($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'',$id_tipoTramite,'',$idTramite,$datos,'',$id_distrito);
+               }
+               else{
+
+                   $idTramite = $request->get('id_tramite');
+                   $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'','',$idTramite,$datos,'',$id_distrito);
+               }
+
+
+
+
                 $res = 1;
 
             }
@@ -406,18 +410,23 @@ class SolicitudBTHController extends Controller {
                 $id_tipoTramite = 46;//Ratificacion
                 $informacion    = json_decode($request->get('ipt',true)) ;
 
-                if ($request->get('id_tramite'))
-                {$idTramite=$request->get('id_tramite');}
-                else{
-                    $idTramite='';
-                }
-                //$TramiteController = new TramiteRueController();
+                $idTramite ='';
+
                 $wfTramiteController = new WfTramiteController();
-                //$TramiteController->setContainer($this->container);
                 $wfTramiteController->setContainer($this->container);
                 $datos = ($request->get('ipt'));
-                $mensaje = $wfTramiteController->guardarTramiteNuevo($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'',$id_tipoTramite,'',$idTramite,$datos,'',$id_distrito);
-               // $mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'',$id_tipoTramite,'',$idTramite,$datos,$id_distrito);
+
+
+
+                if($sw == 0){
+                    $mensaje = $wfTramiteController->guardarTramiteNuevo($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'',$id_tipoTramite,'',$idTramite,$datos,'',$id_distrito);
+                }
+                else{
+                    $idTramite = $request->get('id_tramite');
+                    $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'','',$idTramite,$datos,'',$id_distrito);
+                }
+
+
                 $res = 1;
 
             }else{
@@ -473,9 +482,19 @@ class SolicitudBTHController extends Controller {
          * */
 
         $em = $this->getDoctrine()->getManager();
+
+
+
         $query = $em->getConnection()->prepare("SELECT trm.institucioneducativa_id, trm.fecha_tramite,trm.gestion_id,wfsol.datos,trm.tramite_tipo
+                                                FROM tramite trm 
+                                                INNER JOIN tramite_detalle td  ON trm.id=td.tramite_id
+                                                INNER JOIN wf_solicitud_tramite wfsol ON td.id=wfsol.tramite_detalle_id
+                                                WHERE trm.id=$id_tramite
+                                                ORDER BY wfsol.id DESC limit 1 ");
+
+        /*$query = $em->getConnection()->prepare("SELECT trm.institucioneducativa_id, trm.fecha_tramite,trm.gestion_id,wfsol.datos,trm.tramite_tipo
                                                 FROM tramite trm INNER JOIN wf_solicitud_tramite wfsol ON trm.id=wfsol.tramite_id
-                                                WHERE wfsol.tramite_id=$id_tramite");
+                                                WHERE wfsol.tramite_id=$id_tramite");*/
         $query->execute();
         $infoUE = $query->fetch();
         $gestion    = $infoUE['gestion_id'];
