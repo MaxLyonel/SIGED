@@ -523,6 +523,7 @@
 
                     },
                     success: function (data) {
+
                         $(data).each(function(i, v){ // indice, valor
                             $('#lista_especialidades_ratificacion').append('<option value="' + v.id + '">' + v.especialidad + '</option>');
                         });

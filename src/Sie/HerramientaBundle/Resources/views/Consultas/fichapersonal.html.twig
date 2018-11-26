@@ -122,8 +122,9 @@
                                         <h6 class="panel-title">SIE: {{ id_institucioneducactivas.institucioneducativa_id }}</h6>
                                     </div><!-- /.pull-left -->
                                     <div class="pull-right">
-                                       {# <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>#}
-                                        <button onclick="buscarmaterias({{ id_institucioneducactivas.institucioneducativa_id }})">Detalles</button>
+                                       {#  <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>#}
+                                        {#<button class="btn btn-default btn-sm" onclick="buscarmaterias({{ id_institucioneducactivas.institucioneducativa_id }})" title="Detalle"><i class="fa fa-list-alt"></i></button>#}
+                                        <i class="fa fa-arrow-down fa-2x" style="cursor: pointer;" onclick="buscarmaterias({{ id_institucioneducactivas.institucioneducativa_id }})"></i>
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>
@@ -162,7 +163,7 @@
 
             $.ajax({
                 type: 'post',
-                data:({inst_edu: institucioneducativa_id,ci:ci,complemento:complemento,gestion:gestion}),
+                data:({inst_edu: institucioneducativa_id,ci:ci,complemento:complemento,gestion:gestion,institucioneducativa_id:institucioneducativa_id}),
                 url: "{{ path('consulta_Maestro_materias') }}",
 
                 before: function (data) {
@@ -174,11 +175,8 @@
                     });
                 },
                 success: function (data) {
-
-
                     $('#infomaterias_'+institucioneducativa_id).empty();
                     $('#infomaterias_'+institucioneducativa_id).append(data);
-
                     /*var id_sie = data.data.maestros[0]['institucioneducativa_id'];
                     $('#sie_').val(id_sie);
                     $('#ie').val(data.infoInstitucion['institucioneducativa']);

@@ -1,0 +1,144 @@
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="panel">
+        <div class="panel-body">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><strong>Resultado: </strong></h3>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body" >
+
+                    <div class="row" >
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <!-- Start color horizontal tabs -->
+                            <div class="panel panel-tab panel-tab-double shadow">
+                                <!-- Start tabs heading -->
+                                <div class="panel-heading no-padding">
+
+                                </div><!-- /.panel-heading -->
+                                <!--/ End tabs heading -->
+
+                                <!-- Start tabs content -->
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-striped table-default" >
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="text-center border-right" style="min-width: 5px">No.</th>
+                                                        <th>Gestion</th>
+                                                        <th>Subcentro</th>
+                                                        <th>Periodo</th>
+                                                        <th>Ver</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tfoot>
+                                                    <tr>
+                                                        <th class="text-center border-right" style="min-width: 5px">No.</th>
+                                                        <th>Gestion</th>
+                                                        <th>Subcentro</th>
+                                                        <th>Periodo</th>
+                                                        <th>Ver</th>
+                                                    </tr>
+                                                    </tfoot>
+                                                    <tbody id="contenido_institucion">
+                                                    {% for lista_ceas in data %}
+                                                        <tr>
+                                                            <td class="text-center" style="min-width: 5px">{{ loop.index }}</td>
+                                                            <td>{{ lista_ceas.gestion_tipo_id }}</td>
+                                                            <td>{{ lista_ceas.nombre_subcea }}</td>
+                                                            <td>{{ lista_ceas.periodo }}</td>
+                                                            <td>
+                                                                <a rol="button" onclick="getListaMaestros({{ lista_ceas.institucioneducativa_id }}, {{ lista_ceas.gestion_tipo_id }}, {{ lista_ceas.periodo_tipo_id }})" class="btn btn-warning btn-xs"   title="Ver Detalles"><i class="fa fa-eye"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="table-responsive">
+                                                <div id="lista_maestros_alter"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!-- /.panel-body -->
+                                <!--/ End tabs content -->
+                            </div><!-- /.panel -->
+                            <!--/ End color horizontal tabs -->
+                        </div>
+                    </div>
+                </div><!-- /.panel-body -->
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block javascripts%}
+
+    <script>
+        $( document ).ready(function() {
+            cargatablas();
+        });
+        var cargatablas = function (identif){
+            // Setup - add a text input to each footer cell
+            $('#maestros_institucion tfoot th').each( function () {
+                var title = $(this).text();
+                if(title.trim() === "" || title === "Ver"){
+                    $(this).html('');
+                } else {
+                    $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+                }
+            } );
+
+            // DataTable
+            var table = $('#maestros_institucion').DataTable( {
+                    "order": [[ 0, "asc" ]],
+                    "columnDefs": [
+                        { "orderable": false, "targets": [0] }
+                    ],
+                }
+            );
+
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                });
+            });
+        };
+
+        function getListaMaestros(institucioneducativa_id, gestion_tipo_id, periodo_tipo_id) {
+            $('#lista_maestros_alter').html('');
+            $.ajax({
+                type: 'post',
+                data: {'institucioneducativa_id':institucioneducativa_id, 'gestion_tipo_id':gestion_tipo_id, 'periodo_tipo_id':periodo_tipo_id},
+                url: "{{ path('consulta_Maestro_listaMaestrosAlter') }}",
+                before: function (data) {
+                    swal({
+                        title: "Buscando...",
+                        text: "Espere un momento por favor",
+                        icon: imagen,
+                        buttons: false
+                    });
+                },
+                success: function (data) {
+                    console.log(data);
+                    $('#lista_maestros_alter').html(data);
+                    /*location.href = "{ path('consulta_Maestro_fichamaestro',{ 'data': "hfghf" }) }}";*/
+                }
+            });
+        }
+
+    </script>
+
+{% endblock %}

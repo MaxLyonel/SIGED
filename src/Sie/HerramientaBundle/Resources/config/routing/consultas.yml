@@ -17,6 +17,9 @@ consulta_Maestro_ci:
 consulta_Maestro_dp:
     path:     /fichamaestro_materias_dp
     defaults: { _controller: SieHerramientaBundle:Consultas:Buscardp }
+consulta_Maestro_listaMaestrosAlter:
+    path:     /listaMaestrosAlter
+    defaults: { _controller: SieHerramientaBundle:Consultas:listaMaestrosAlter }
 
 
 

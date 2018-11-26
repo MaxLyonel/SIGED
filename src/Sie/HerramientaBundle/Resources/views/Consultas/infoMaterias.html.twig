@@ -1,6 +1,6 @@
 <div class="row">
     <div class="table-responsive col-md-12">
-        <table class="table table-bordered table-striped table-default" id="materias_institucion" >
+        <table class="table table-bordered table-striped table-default" id="materias_institucion_{{ institucioneducativa_id }}" >
             <thead>
             <tr>
                 <th class="text-center border-right" style="min-width: 5px">No.</th>
@@ -44,10 +44,12 @@
 {% block javascripts%}
 
     <script>
-
-        var cargatablas = function (identif){
+        $( document ).ready(function() {
+            cargatablas({{ institucioneducativa_id }});
+        });
+        function cargatablas(inst_id){
             // Setup - add a text input to each footer cell
-            $('#materias_institucion tfoot th').each( function () {
+            $('#materias_institucion_'+inst_id+' tfoot th').each( function () {
                 var title = $(this).text();
                 if(title.trim() === "" || title === "Ver"){
                     $(this).html('');
@@ -57,7 +59,7 @@
             } );
 
             // DataTable
-            var table = $('#materias_institucion').DataTable( {
+            var table = $('#materias_institucion_'+inst_id).DataTable( {
                     "order": [[ 0, "asc" ]],
                     "columnDefs": [
                         { "orderable": false, "targets": [0] }
@@ -78,9 +80,6 @@
                 } );
             } );
         };
-        $( document ).ready(function() {
-            cargatablas();
-        });
     </script>
 
 {% endblock %}

@@ -368,17 +368,6 @@ class SolicitudBTHController extends Controller {
                 //dump($mensaje);die;
                 $res = 1;
 
-                /*
-                 * public function guardarTramiteNuevo($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,$varevaluacion,$idtramite,$datos,$lugarTipo_id)
-esta es para la primera tarea
-y esta para los demas
-public function guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos)
-y esta para cuando quieras hacer dos en uno
-primero se recibe luego se envia
-public function guardarTramiteRecibido($usuario,$tarea,$idtramite)}*/
-
-
-
             }
             else{
                 $res = 2;//no puede como nuevo
@@ -410,7 +399,7 @@ public function guardarTramiteRecibido($usuario,$tarea,$idtramite)}*/
                 //$TramiteController->setContainer($this->container);
                 $wfTramiteController->setContainer($this->container);
                 $datos = ($request->get('ipt'));
-                $mensaje = $wfTramiteController->guardarTramiteNuevo($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'',$id_tipoTramite,'',$idTramite,$datos,$id_distrito);
+                $mensaje = $wfTramiteController->guardarTramiteNuevo($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'',$id_tipoTramite,'',$idTramite,$datos,'',$id_distrito);
                // $mensaje = $TramiteController->guardarTramiteDetalle($id_usuario,'',$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'',$id_tipoTramite,'',$idTramite,$datos,$id_distrito);
                 $res = 1;
 
@@ -579,12 +568,22 @@ public function guardarTramiteRecibido($usuario,$tarea,$idtramite)}*/
 
         $director = $query->getOneOrNullResult();
 
-        $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
+       /* $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
             ->select('wf')
             ->innerJoin('SieAppWebBundle:Tramite', 't', 'with', 't.id = wf.tramite')
             ->where('t.id =' . $id_tramite)
             ->getQuery()
+            ->getResult();*/
+        $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
+            ->select('wf')
+            ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wf.tramiteDetalle')
+            ->innerJoin('SieAppWebBundle:Tramite', 't', 'with', 't.id = td.tramite')
+            ->where('t.id =' . $id_tramite)
+            ->orderBy('wf.id', 'desc')
+            ->setMaxResults('1')
+            ->getQuery()
             ->getResult();
+
         //dump($wfSolicitudTramite);die;
         $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
         //dump($datos[2]['select_especialidad']);die;
@@ -647,6 +646,7 @@ public function guardarTramiteRecibido($usuario,$tarea,$idtramite)}*/
     public function ListaEspecialidadesAction(Request $request){
         $id_institucion = $request->get('institucionid');
         $gestion =  $request->getSession()->get('currentyear');
+
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT espt.id, espt.especialidad,ieth.gestion_tipo_id
                                                 FROM institucioneducativa_especialidad_tecnico_humanistico ieth
@@ -655,10 +655,12 @@ public function guardarTramiteRecibido($usuario,$tarea,$idtramite)}*/
                                                 ORDER BY 1");
         $query->execute();
         $lista_especialidad = $query->fetchAll();
+
         $lista_especialidadarray = array();
         for($i=0;$i<count($lista_especialidad);$i++){
             $lista_especialidadarray[]=array('id'=>$lista_especialidad[$i]['id'],'especialidad'=>$lista_especialidad[$i]['especialidad'] );
         }
+        //dump($lista_especialidadarray);die;
         return new JsonResponse($lista_especialidadarray);
     }
 //Distrital
