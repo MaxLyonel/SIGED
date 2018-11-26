@@ -102,9 +102,8 @@ class InfoEstudianteNotasController extends Controller {
             }
             
 
-            if($gestion >= 2018 and $operativo >= 4 and $grado == 6){
+            if($gestion >= 2018 and $operativo == 4 and $grado == 6){
                 $validacionSexto = $this->get('funciones')->verificarGradoCerrado($sie, $gestion);
-                // dump($validacionSexto);die;
                 if($validacionSexto){
                     $vista = 0;
                 }
