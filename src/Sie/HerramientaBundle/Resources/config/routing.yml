@@ -129,3 +129,7 @@ sie_herramienta_aca_multigrado:
 sie_herramienta_solicitud_bth:
     resource: "@SieHerramientaBundle/Resources/config/routing/solicitudBTH.yml"
     prefix:   /sie/solicitudbth
+
+sie_herramienta_regularizacion_cut:
+    resource: "@SieHerramientaBundle/Resources/config/routing/regularizationCUT.yml"
+    prefix:   /sie/regcut
