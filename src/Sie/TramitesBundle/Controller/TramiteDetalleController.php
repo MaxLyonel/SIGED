@@ -1632,7 +1632,7 @@ class TramiteDetalleController extends Controller {
                 $numeroCarton = $request->get('numeroSerie');
                 $serieCarton = $request->get('serie');
                 //$gestionCarton = $request->get('gestion');
-                $fechaCarton = new \DateTime($request->get('fecha'));
+                $fechaCarton = new \DateTime($request->get('fechaSerie'));
                 //$fechaCarton = $fechaActual;
 
                 $token = $request->get('_token');
