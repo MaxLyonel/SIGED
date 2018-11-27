@@ -1273,7 +1273,7 @@ class DocumentoController extends Controller {
                 $arrayFirma[base64_encode($registro['documento_firma_id'])] = $registro['nombre']." ".$registro['paterno']." ".$registro['materno'];
             }
         }
-        $arrayFirma['0'] = 'SIN FIRMA EN EL DOCUMENTO';
+        $arrayFirma[base64_encode('0')] = 'SIN FIRMA EN EL DOCUMENTO';
                 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
@@ -1372,7 +1372,7 @@ class DocumentoController extends Controller {
                 $sie = $form['sie'];  
                 $ges = $form['gestion']; 
                 $documentoFirmaId = base64_decode($form['firma']); 
-
+                
                 $tramiteController = new tramiteController();
                 $tramiteController->setContainer($this->container);
                 $rolPermitido = array(8,17);
@@ -1386,13 +1386,13 @@ class DocumentoController extends Controller {
 
                 // validar cantidad de firmas
                 $em = $this->getDoctrine()->getManager();
-
+                
                 $entityDocumentoInstitucionEducativa = $this->getDocumentoInstitucionEducativaGestion($sie, $ges, '1');
                 
                 $cantidadSolicitada = count($entityDocumentoInstitucionEducativa);
                 
                 $entityDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->findOneBy(array('id' => $documentoFirmaId));
-                //dump($cantidadSolicitada);die;
+                
                 if (count($entityDocumentoFirma)>0) {
                     $firmaPersonaId = $entityDocumentoFirma->getPersona()->getId();     
                     // $departamentoCodigo = $documentoController->getCodigoLugarRol($id_usuario,$rolPermitido);
@@ -1429,8 +1429,6 @@ class DocumentoController extends Controller {
                     // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No se encontro la firma ingresada, intente nuevamente'));
                     // return $this->redirectToRoute('tramite_detalle_diploma_humanistico_impresion_lista');
                 }
-
-
 
                 $arch = $sie.'_'.$ges.'_legalizacion'.date('YmdHis').'.pdf';
                 $response = new Response();
