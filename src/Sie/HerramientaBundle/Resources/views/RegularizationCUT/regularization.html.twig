@@ -7,7 +7,36 @@
                             </div>
                             <div class="panel-body no-padding">
 
-                                <form class="form-horizontal form-bordered" role="form">
+
+                                <table id="user" class="table table-bordered table-striped" style="clear: both">
+                                    <tbody>
+                                    <tr>
+                                        <td width="45%">NIVEL</td>
+                                        <td style="color: #1f326b;">{{dataregularization.nivel}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>GRADO</td>
+                                        <td style="color: #1f326b;">{{dataregularization.grado}} </td>
+                                    </tr>
+                                    <tr>
+                                        <td>PARALELO</td>
+                                        <td style="color: #1f326b;">{{dataregularization.paralelo}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>TURNO</td>
+                                        <td style="color: #1f326b;">{{dataregularization.turno}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>MATRICULA</td>
+                                        <td style="color: #1f326b;">{{dataregularization.estadoMatricula}}</td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+
+
+                                
+                                {{form_start(form, { 'attr':{'data-toggle':'validator','role':'form', 'class':'form-horizontal form-bordered', 'id':'regularizationFormId'} } )}}
                                     <div class="form-body">
                                        
                                         <div class="form-group">
@@ -39,7 +68,7 @@
                                             {{form_widget(form.register)}}
                                         </div>
                                     </div><!-- /.form-footer -->
-                                </form>
+                                {{form_end(form)}}
 
                             </div>
                         </div>

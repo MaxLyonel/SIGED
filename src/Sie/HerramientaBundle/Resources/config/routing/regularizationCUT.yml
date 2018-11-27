@@ -14,3 +14,13 @@ regularizacion_cut_regularization:
     defaults: { _controller: SieHerramientaBundle:RegularizationCUT:regularization }
     options:
          expose: true
+
+regularizacion_cut_registerNivelation:
+    path:     /sie/registerNivelation/
+    defaults: { _controller: SieHerramientaBundle:RegularizationCUT:registerNivelation }
+    options:
+         expose: true
+
+regularizacion_cut_listHistory:
+    path:     /listHistory/{codigoRude}
+    defaults: { _controller: SieHerramientaBundle:RegularizationCUT:listHistory}         

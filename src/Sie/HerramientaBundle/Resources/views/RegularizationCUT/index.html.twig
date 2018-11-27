@@ -112,10 +112,9 @@
               data: formData,
               url: "{{ path('regularizacion_cut_history') }}",
               beforeSend: function(){
-                $('historyId').empty();
-                $('historyId').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
-                $('regularizationId').empty();
-                $('regularizationId').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                $('#historyId').empty();
+                $('#historyId').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                $('#regularizationId').empty();
               },
               success: function(data){
                 $('#historyId').empty();
@@ -143,8 +142,8 @@
               data: {'estInsId': estInsId},
               url: "{{ path('regularizacion_cut_regularization') }}",
               beforeSend: function(){
-                $('regularizationId').empty();
-                $('regularizationId').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                $('#regularizationId').empty();
+                $('#regularizationId').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
               },
               success: function(data){
                 $('#regularizationId').empty();
@@ -161,6 +160,38 @@
 
 
             });
+        };
+
+
+        var registerNivelation = function(){
+
+        	   formData = $('#regularizationFormId').serialize();
+          
+            $.ajax({
+              type: 'post',
+              data: formData,
+              url: "{{ path('regularizacion_cut_registerNivelation') }}",
+              beforeSend: function(){
+                $('#historyId').empty();
+                $('#historyId').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                $('#regularizationId').empty();
+              },
+              success: function(data){
+                $('#historyId').empty();
+                $('#historyId').append(data);
+              },
+              statusCode: {
+                  500: function () {
+
+                  },
+                  404: function () {
+
+                  }
+              }
+
+
+            });
+            // $('#form_buscar').attr("disabled", true);
         };
 
 
