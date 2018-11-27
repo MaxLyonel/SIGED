@@ -43,7 +43,11 @@ class FlujoTipoController extends Controller
         }
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('SieAppWebBundle:FlujoTipo')->findBy(array(),array('id'=>'ASC'));
+        $entities = $em->getRepository('SieAppWebBundle:FlujoTipo')->createQueryBuilder('ft')
+                    ->select('ft')
+                    ->where('ft.id >4')
+                    ->getQuery()
+                    ->getResult();
 
         return $this->render('SieProcesosBundle:FlujoTipo:index.html.twig', array(
             'entities' => $entities,

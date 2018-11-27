@@ -33,18 +33,15 @@
                     </div><!-- /.panel-heading -->
                     <div class="panel-body">
 						{{ form_start(form) }}
-						    <div class="form-group">
+						    <div class="row form-group">
                                 <label class="col-sm-2">Nombre de rol:</label>
                                 <div class="col-sm-4">
                                     {{ form_widget(form.rol, {'attr':{'class':'form-control'} }) }}
                                 </div>
                             </div>
 						{{ form_end(form) }}
-                        <div class="clearfix"></div>
-                        <div class="form-group">
                             <div id="tablaprocesorol">
                             </div>
-                        </div>
                     </div><!-- /.panel-body -->
                 </div>
             </div>
@@ -64,6 +61,10 @@
                     type: 'GET',
                     url: "{{path('flujorol_listar_proceso_rol')}}",
                     data: formData,
+                    beforeSend: function () {
+                        $("#tablaprocesorol").empty();
+                        $("#tablaprocesorol").append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                    },
                     success: function (data) {
                         $('#tablaprocesorol').empty();
                         $('#tablaprocesorol').append(data);
