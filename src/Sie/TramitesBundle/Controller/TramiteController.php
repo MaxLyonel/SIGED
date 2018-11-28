@@ -1681,7 +1681,7 @@ class TramiteController extends Controller {
           inner join periodo_tipo as pet on pet.id = ies.periodo_tipo_id
           left join estudiante_asignatura as ea on ea.institucioneducativa_curso_oferta_id = ieco.id and ea.estudiante_inscripcion_id = ei.id
           left join estudiante_nota as en on en.estudiante_asignatura_id = ea.id
-          where  sfat.codigo in (15) and sat.codigo in (2,3) and sest.codigo in (2)
+          where  sfat.codigo in (15) and sat.codigo in (2,3) and sest.codigo in (2) and ea.estudianteasignatura_estado_id in (25,5)
           and ei.estadomatricula_tipo_id in (4,5,55) and en.nota_tipo_id::integer in (23,24,25,26)
           group by e.id, e.codigo_rude, e.paterno, e.materno, e.nombre, ei.estadomatricula_tipo_id, sest.id, sest.especialidad
           , sat.codigo, sat.acreditacion, ie.id, ie.institucioneducativa, tt.id, tt.turno, pt.paralelo, smt.id, smt.modulo
