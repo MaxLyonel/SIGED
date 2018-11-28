@@ -142,7 +142,7 @@ class UpdateEstudentController  extends Controller{
     
         $student = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['id']);
         if($answerSegip===true){
-            $student->setSegipId(20);       
+            $student->setSegipId(1);       
         }else{
             $student->setSegipId(0);       
         }
