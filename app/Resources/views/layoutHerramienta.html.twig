@@ -450,6 +450,18 @@
                           <!--li><a href="{{ path('herramienta_apderado_estudiante_index')}}">Apoderado - Estudiante</a></li-->
                       </ul>
                     </li>
+                     <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-diamond"></i></span>
+                                <span class="text">Consultas</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('consultas_maestros_index')}}">Consultas - Maestros</a></li>
+
+                            </ul>
+
+                     </li>
                     {% endif %}
                     {% if app.session.get('roluser')==10 %}
                         <li class="submenu">
@@ -500,18 +512,7 @@
                             </ul>
                         </li>#}
                     {% endif %}
-                    <li class="submenu">
-                        <a href="javascript:void(0);">
-                            <span class="icon"><i class="fa fa-diamond"></i></span>
-                            <span class="text">Consultas</span>
-                            <span class="arrow"></span>
-                        </a>
-                        <ul>
-                            <li><a href="{{ path('consultas_maestros_index')}}">Consultas - Maestros</a></li>
 
-                        </ul>
-
-                    </li>
 <!--
                     <li class="submenu">
                     <a href="javascript:void(0);">
