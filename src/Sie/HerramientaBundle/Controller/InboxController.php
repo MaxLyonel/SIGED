@@ -917,7 +917,7 @@ class InboxController extends Controller {
       if ($this->session->get('ue_modular')) {
         $inconsistencia = null;
       } else {
-        if($this->session->get('ie_id')=='80730460'){
+        if($this->session->get('ie_id')=='80730460' && $form['gestion']==2018){
           $query = $em->getConnection()->prepare('select * from sp_validacion_regular_insamericano_web(:gestion, :sie, :periodo)');
           $query->bindValue(':gestion', $form['gestion']);
           $query->bindValue(':sie', $form['sie']);
@@ -932,7 +932,6 @@ class InboxController extends Controller {
           $query->execute();
           $inconsistencia = $query->fetchAll();
         }
-
       }
 
       /***********************************\
