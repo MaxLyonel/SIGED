@@ -2750,6 +2750,67 @@ class TramiteController extends Controller {
         }
     }
 
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que registra la anulacion de un tramite
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function anulaGuardaAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        
+        $response = new JsonResponse();
+        
+        if ($request->isMethod('POST')) {
+            $tramiteId = base64_decode($request->get('val'));
+            $obs = $request->get('obs');
+            $formBusqueda = array('value'=>$tramiteId,'obs'=>$obs);
+            if ($tramiteId != "" and $obs != ""){
+                $em = $this->getDoctrine()->getManager();
+                $em->getConnection()->beginTransaction();
+                try {
+                    $entityTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $tramiteId));
+                    if(count($entityTramite)>0){
+                        $tramiteProcesoController = new tramiteProcesoController();
+                        $tramiteProcesoController->setContainer($this->container);
+                        $tramiteDetalleId =  $tramiteProcesoController->setProcesaTramiteAnula($tramiteId, $id_usuario, $obs, $em);
+                        $documentoController = new documentoController();
+                        $documentoController->setContainer($this->container);
+                        $entityDocumento = $documentoController->getDocumentoTramite($tramiteId,1);
+                        if (count($entityDocumento) > 0){
+                            $documentoId = $documentoController->setDocumentoEstado($entityDocumento->getId(),2);
+                        }                    
+                        $em->getConnection()->commit();
+                        return $response->setData(array('estado' => true, 'obs' => 'Trámite '.$tramiteId.' anulado de forma correcta'));
+                    } else {
+                        return $response->setData(array('estado' => false, 'obs' => 'Error al procesar la información, intente nuevamente'));
+                    }
+                } catch (\Doctrine\ORM\NoResultException $exc) {
+                    $em->getConnection()->rollback();
+                    return $response->setData(array('estado' => false, 'obs' => 'Error al procesar la información, intente nuevamente'));
+                }
+            } else {
+                return $response->setData(array('estado' => false, 'obs' => 'Error al procesar la información, intente nuevamente'));
+            }
+        } else {
+            return $response->setData(array('estado' => false, 'obs' => 'Error al enviar el formulario, intente nuevamente'));
+        }
+    }
+
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
     // Funcion que verifica la tuicion sobre una institucion educativa segun el usuario, rol y subsistema
