@@ -471,9 +471,9 @@
                             cache: false,
                             processData:false,
                             //dataType : 'json',
-                            before: function () {
+                            beforeSend: function () {
                                 swal({
-                                    title: "Enviando...",
+                                    title: "Finalizando Trámite...",
                                     text: "Espere un momento por favor",
                                     icon: imagen,
                                     buttons: false
@@ -482,7 +482,7 @@
                             success: function (data) {
 
                                 if (data==1){
-                                    swal("Su respuesta se ha enviado con éxito, con Nro. de Trámite: "+ {{ id_tramite }} );
+                                    swal("Su respuesta se ha enviado con éxito, con Nro. de Trámite: "+ {{ id_tramite }});
                                     location.href = "{{ path('wf_tramite_recibido') }}";
                                 }
                                 else{

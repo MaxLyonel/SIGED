@@ -119,11 +119,12 @@
 
         function getListaMaestros(institucioneducativa_id, gestion_tipo_id, periodo_tipo_id) {
             $('#lista_maestros_alter').html('');
+            var imagen = {{ asset("img/loading96.gif") }};
             $.ajax({
                 type: 'post',
                 data: {'institucioneducativa_id':institucioneducativa_id, 'gestion_tipo_id':gestion_tipo_id, 'periodo_tipo_id':periodo_tipo_id},
                 url: "{{ path('consulta_Maestro_listaMaestrosAlter') }}",
-                before: function (data) {
+                beforesend: function (data) {
                     swal({
                         title: "Buscando...",
                         text: "Espere un momento por favor",
@@ -135,6 +136,13 @@
                     console.log(data);
                     $('#lista_maestros_alter').html(data);
                     /*location.href = "{ path('consulta_Maestro_fichamaestro',{ 'data': "hfghf" }) }}";*/
+                },
+                complete: function () {
+                    swal.stopLoading();
+                    swal.close();
+                    $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+                        $(".alert").slideUp(1000);
+                    });
                 }
             });
         }

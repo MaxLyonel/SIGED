@@ -83,7 +83,7 @@
                                                         <td>{{ lista_maestros.carnet }}</td>
                                                         <td>{{ lista_maestros.complemento }}</td>
                                                         <td>
-                                                            <a href="{{ path('consulta_Maestro_fichamaestro',{'ci':lista_maestros.carnet,'gestion':lista_maestros.gestion_tipo_id,'complemento':lista_maestros.complemento}) }}" class="btn btn-warning btn-xs"   title="Ver Detalles"><i class="fa fa-eye"></i></a>
+                                                            <a href="{{ path('consulta_Maestro_fichamaestro',{'ci':lista_maestros.carnet,'gestion':lista_maestros.gestion_tipo_id,'complemento':lista_maestros.complemento,'idinstitucion': idinstitucion }) }}" class="btn btn-warning btn-xs"   title="Ver Detalles"><i class="fa fa-eye"></i></a>
                                                         </td>
 
                                                     </tr>

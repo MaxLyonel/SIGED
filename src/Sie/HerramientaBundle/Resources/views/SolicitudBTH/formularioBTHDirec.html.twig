@@ -283,22 +283,28 @@
             </div>
 
         </div>
-
-
+        <ul id="select_esp" style="display: none">
+        {% for especialidadarray in especialidadinfo %}
+            <li>{{ especialidadarray }}</li>
+        {% endfor %}
+        </ul>
     </div>
 {% endblock %}
 {% block javascripts%}
     {{ parent() }}
     <script>
         $(document).ready(function(){
-            var informe = {{ informe }}
-            //recibir el array de especialidadifno
+            var informe = {{ informe }};
             if(informe==1){
                 document.getElementById("informe").checked = true;
             }
             $('#obs').hide();
+            var select_array = [];
+            $('#select_esp').find('li').each(function (index, item) {
+                select_array.push(item.innerHTML);
+            });
             setTimeout(function () {
-                $("#select_especialidade").val(['1','2','3','4']).trigger('chosen:updated');
+                $("#select_especialidade").val(select_array).trigger('chosen:updated');
             },1000);
         });
         function muestraobs(){
@@ -330,11 +336,10 @@
                                     ip.push({ informe : 1});
                                 else ip.push({ informe : 0 });
                                 ip.push({institucionid : institucionid});
-
-                                    if($('#select_especialidade').val())
-                                        ip.push({select_especialidad : $('#select_especialidade').val()});
-                                    else
-                                    {swal("Debe seleccionar al menos una especialidad."); return false;}
+                                if($('#select_especialidade').val())
+                                    ip.push({select_especialidad : $('#select_especialidade').val()});
+                                else
+                                {swal("Debe seleccionar al menos una especialidad."); return false;}
 
                                 var obstxt=$('#obstxt').val();
                                 var ipt=JSON.stringify(ip);
@@ -344,7 +349,7 @@
                                     url: "{{ path('solicitud_bth_enviosolicitud') }}",
                                     data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},idsolicitud:idsolicitud,sw:1 },
                                     dataType : 'json',
-                                    before: function () {
+                                    beforeSend: function () {
                                         swal({
                                             title: "Enviando...",
                                             text: "Espere un momento por favor",
@@ -435,10 +440,6 @@
                     break;
 
             }
-
-
-
-
         }
 
     </script>

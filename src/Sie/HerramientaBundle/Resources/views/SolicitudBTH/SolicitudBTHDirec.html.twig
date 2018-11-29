@@ -572,7 +572,7 @@
                                 url: "{{ path('solicitud_bth_enviosolicitud') }}",
                                 data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},idsolicitud:idsolicitud,sw:0},
                                 dataType : 'json',
-                                before: function () {
+                                beforeSend: function () {
                                     swal({
                                         title: "Enviando...",
                                         text: "Espere un momento por favor",
@@ -588,7 +588,8 @@
                                     else if(data==2 ){
                                         swal("Debe iniciar su trámite como 'Ratificacion'");
                                     }else {
-                                        swal('Su formulario no se envío correctamente');
+                                        swal('Su formulario no se envío correctamente debido a que su Unidad Educativa ya ' +
+                                            'inicio su trámite como NUEVO');
                                     }
                                 },
                                 complete: function () {
@@ -628,7 +629,6 @@
                             });
                             ip.push({"select_especialidad" : especialidades_id});
 
-
                             var ipt=JSON.stringify(ip);
                             var imagen = '{{ asset("img/loading96.gif") }}';
                             //alert(ipt);
@@ -663,21 +663,15 @@
                             });
                         }
                     });
-
                 break;
-
         }
 
 
     }
-
-
     $(document).ready(function(){
             $('#form_nuevo').hide();
             $('#form_regularizacion').hide();
             $('#form_especialidad').hide();
-
-
     });
 
 </script>
