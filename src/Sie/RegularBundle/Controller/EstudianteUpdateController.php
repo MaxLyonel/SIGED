@@ -839,7 +839,7 @@ class EstudianteUpdateController extends Controller {
         $entity->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['generoTipo']));
         $ci = ($form['extranjero']) ? mb_strtoupper($form['extranjero']) . '-' . $form['ci'] : $form['ci'];
         $entity->setCarnetIdentidad($ci);
-        $entity->setComplemento($form['complemento']);
+        $entity->setComplemento( mb_strtoupper($form['complemento'], 'utf-8'));
         $entity->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['generoTipo']));
         $entity->setOficialia($form['oficialia']);
         $entity->setLibro($form['libro']);
@@ -925,7 +925,7 @@ class EstudianteUpdateController extends Controller {
         $ci = ($form['extranjero']) ? mb_strtoupper($form['extranjero']) . '-' . $form['ci'] : $form['ci'];
         $entity->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['generoTipo']));
         $entity->setCarnetIdentidad($ci);
-        $entity->setComplemento($form['complemento']);
+        $entity->setComplemento( mb_strtoupper($form['complemento'], 'utf-8'));
         $entity->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['generoTipo']));
         $entity->setOficialia($form['oficialia']);
         $entity->setLibro($form['libro']);
@@ -1011,7 +1011,7 @@ class EstudianteUpdateController extends Controller {
         $ci = ($form['extranjero']) ? mb_strtoupper($form['extranjero']) . '-' . $form['ci'] : $form['ci'];
         $entity->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['generoTipo']));
         $entity->setCarnetIdentidad($ci);
-        $entity->setComplemento($form['complemento']);
+        $entity->setComplemento( mb_strtoupper($form['complemento'], 'utf-8'));
         $entity->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['generoTipo']));
         $entity->setOficialia($form['oficialia']);
         $entity->setLibro($form['libro']);
