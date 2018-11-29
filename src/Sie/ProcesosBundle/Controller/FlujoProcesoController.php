@@ -64,7 +64,8 @@ class FlujoProcesoController extends Controller
     {
         $form = $this->createFormBuilder()
             //->setAction($this->generateUrl('flujoproceso_guardar'))
-            ->add('proceso','entity',array('label'=>'Proceso','required'=>true,'class'=>'SieAppWebBundle:FlujoTipo','property'=>'flujo','empty_value' => 'Seleccionar proceso'))
+            ->add('proceso','entity',array('label'=>'Proceso','required'=>true,'class'=>'SieAppWebBundle:FlujoTipo','query_builder'=>function(EntityRepository $ft){
+                return $ft->createQueryBuilder('ft')->where('ft.id >4')->orderBy('ft.flujo','ASC');},'property'=>'flujo','empty_value' => 'Seleccionar proceso'))
             ->add('tarea','entity',array('label'=>'Tarea','required'=>true,'class'=>'SieAppWebBundle:ProcesoTipo','property'=>'proceso_tipo','empty_value' => 'Seleccionar tarea'))
             ->add('rol','entity',array('label'=>'Tipo de rol','required'=>true,'class'=>'SieAppWebBundle:RolTipo','property'=>'rol','empty_value' => 'Seleccionar rol'))
             ->add('observacion','text',array('label'=>'Observación', 'required'=>false))
