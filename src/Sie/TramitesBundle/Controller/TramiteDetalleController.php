@@ -1633,7 +1633,7 @@ class TramiteDetalleController extends Controller {
                 $serieCarton = $request->get('serie');
                 //$gestionCarton = $request->get('gestion');
                 $fechaCarton = new \DateTime($request->get('fechaSerie'));
-                //$fechaCarton = $fechaActual;
+            //$fechaCarton = $fechaActual;
 
                 $token = $request->get('_token');
                 if (!$this->isCsrfTokenValid('imprimir', $token)) {
@@ -4215,6 +4215,10 @@ class TramiteDetalleController extends Controller {
                     $entidadEstudianteInscripcion = $entidadTramite->getEstudianteInscripcion();
                     //$entidadEstudianteInscripcion = $em->getRepository('SieAppWebBundle:estudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
                     $msgContenido = "";
+                    
+                    $documentoController = new documentoController();
+                    $documentoController->setContainer($this->container);
+
                     if(count($entidadEstudianteInscripcion)>0){
                         $participante = trim($entidadEstudianteInscripcion->getEstudiante()->getPaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getMaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getNombre());
                         $participanteId =  $entidadEstudianteInscripcion->getEstudiante()->getId();
@@ -4223,8 +4227,6 @@ class TramiteDetalleController extends Controller {
 
                         $msg = array('0'=>true, '1'=>$participante);
 
-                        $documentoController = new documentoController();
-                        $documentoController->setContainer($this->container);
 
                         if ($flujoSeleccionado == 'Adelante'){
                             // VALIDACION DE SOLO UN DIPLOMA BACHILLER HUMANISTICO POR ESTUDIANTE (RUDE)
@@ -4246,8 +4248,14 @@ class TramiteDetalleController extends Controller {
                             $tramiteDetalleId = $this->setProcesaTramiteSiguiente($tramiteId, $id_usuario, $obs, $em);
                         }
 
+                        if ($flujoSeleccionado == 'Atras' or $flujoSeleccionado == 'Anular'){
+                            $entityDocumento = $documentoController->getDocumentoTramite($tramiteId,1);
+                            if (count($entityDocumento) > 0){
+                              $documentoId = $documentoController->setDocumentoEstado($entityDocumento->getId(),2);
+                            }
+                        }
+
                         if ($flujoSeleccionado == 'Atras'){
-                            $documentoId = $documentoController->setTramiteDocumentoEstado($tramiteId, 2);
                             $tramiteDetalleId = $this->setProcesaTramiteAnterior($tramiteId, $id_usuario, $obs, $em);
                         }
 

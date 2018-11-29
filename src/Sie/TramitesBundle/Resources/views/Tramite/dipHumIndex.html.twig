@@ -139,7 +139,7 @@
                     botonModalDevolver.disabled = true;
                 }
                 if(botonAnular){
-                    botonAnular.disabled = false;
+                    botonAnular.disabled = true;
                 }
             }
         }
@@ -365,6 +365,8 @@
             return true;
         }
 
+        
+
        $(window).load(function(){
             // ..
             document.getElementById("form_sie").focus();
@@ -419,6 +421,42 @@
                 $('#botonImprimir').show();
                 $('#botonModalDevolver').show();
             });
-        });
+
+            
+            $('#tablaParticipantes tbody').on("click", "button", function(){    
+                var data = table.row( $(this).parents('tr')).data();
+                var r = confirm("¿ Desea anular el trámite "+data[1]+" ?");
+                if (r == true) {              
+                    // var estado = table.row($(this).parent().parent().children('td.estado')).value;
+                    var estado = false;
+                    var boton = $(this);
+                    var row = table.row($(this).parents('tr'));
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ path('tramite_anula') }}",
+                        data: {'val': $(this).val(), 'obs': data[8]},
+                        beforeSend: function () {
+                            boton.hide();  
+                        },
+                        success: function (data) {
+                            if(data.estado){
+                                row.remove().draw(false);
+                            } else {
+                                boton.show();  
+                            }                       
+                        },
+                        error: function(xhr) {
+                            boton.show();  
+                        },
+                    })
+                    .fail(function( jqXHR, textStatus, errorThrown ) {
+                        boton.show();  
+                    });  
+                    return true; 
+                } else {
+                    return false; 
+                }
+            });             
+        });   
     </script>
-{%endblock%}
+{% endblock %}
