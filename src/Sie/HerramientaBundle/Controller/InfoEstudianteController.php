@@ -61,6 +61,7 @@ class InfoEstudianteController extends Controller {
         $objUeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getInfoUeducativaBySieGestion($form['sie'], $form['gestion']);
 
         $exist = true;
+        $tieneSextoSec = false;
         $aInfoUnidadEductiva = array();
         if ($objUeducativa) {
             foreach ($objUeducativa as $uEducativa) {
@@ -74,6 +75,10 @@ class InfoEstudianteController extends Controller {
 
                 //send the values to the next steps
                 $aInfoUnidadEductiva[$uEducativa['turno']][$uEducativa['nivel']][$uEducativa['grado']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
+
+                if($uEducativa['nivelId'] == 13 and $uEducativa['gradoId'] == 6){
+                    $tieneSextoSec = true;
+                }
             }
         } else {
             $message = 'No existe información de la Unidad Educativa para la gestión seleccionada ó Código SIE no existe ';
@@ -93,6 +98,20 @@ class InfoEstudianteController extends Controller {
         //$objInfoAutorizadaUe = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->getInfoAutorizadaUe($form['sie'], $form['gestion']);die('krlossdfdfdfs');
         $odataUedu = $objUeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['sie']);
 
+
+        // Verificamos si se cerro el sexto grado de acuerdo al operativo
+        $sie = $form['sie'];
+        $gestion = $form['gestion'];
+
+        $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
+        $mostrarSextoCerrado = false;
+        if($tieneSextoSec and $gestion >= 2018 and $operativo == 4){
+            $validacionSexto = $this->get('funciones')->verificarGradoCerrado($sie, $gestion);
+            if(!$validacionSexto){
+                $mostrarSextoCerrado = true;
+            }
+        }
+
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:index.html.twig', array(
                     'aInfoUnidadEductiva' => $aInfoUnidadEductiva,
                     'sie' => $form['sie'],
@@ -101,7 +120,8 @@ class InfoEstudianteController extends Controller {
                     //'form' => $this->removeForm()->createView(),
                     'exist' => $exist,
           //          'levelAutorizados' => $objInfoAutorizadaUe,
-                    'odataUedu' => $odataUedu
+                    'odataUedu' => $odataUedu,
+                    'mostrarSextoCerrado'=>$mostrarSextoCerrado
         ));
     }
 
@@ -710,12 +730,22 @@ class InfoEstudianteController extends Controller {
       '61710004',
       '60900064'
       );
+
+    $mostrarSextoCerrado = false;
+    if($gestion >= 2018 and $operativo == 4 and $nivel == 13 and $grado == 6){
+        $validacionSexto = $this->get('funciones')->verificarGradoCerrado($sie, $gestion);
+        if(!$validacionSexto){
+            $mostrarSextoCerrado = true;
+        }
+    }
+
   $this->session->set('removeInscriptionAllowed', false);
   if(in_array($this->session->get('ie_id'),$aRemovesUeAllowed))
     $this->session->set('removeInscriptionAllowed',true);
 
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:seeStudents.html.twig', array(
                     'objStudents' => $objStudents,
+                    'iecId'=>$iecId,
                     'sie' => $sie,
                     'turno' => $turno,
                     'nivel' => $nivel,
@@ -734,7 +764,8 @@ class InfoEstudianteController extends Controller {
                     'operativo'=>$operativo,
                     'UePlenasAddSpeciality' => $UePlenasAddSpeciality,
                     'imprimirLibreta'=>$imprimirLibreta,
-                    'estadosPermitidosImprimir'=>$estadosPermitidosImprimir
+                    'estadosPermitidosImprimir'=>$estadosPermitidosImprimir,
+                    'mostrarSextoCerrado'=>$mostrarSextoCerrado
         ));
     }
 
@@ -1297,6 +1328,25 @@ class InfoEstudianteController extends Controller {
       }
 
 
+    public function cerrarSextoGradoAction(Request $request){
+        $sie = $request->get('sie');
+        $gestion = $request->get('gestion');
+        $em = $this->getDoctrine()->getManager();
 
+        $registroConsolidacion = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+            'unidadEducativa'=>$sie,
+            'gestion'=>$gestion
+        ));
+
+        if($registroConsolidacion){
+            $registroConsolidacion->setCierreSextosec(true);
+            $em->flush();
+        }
+
+        // Llamar funcion para cerrar sexto grado
+            
+        return new Response('Curso cerrado con exito!!');
+
+    }
 
 }
