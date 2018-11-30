@@ -175,19 +175,19 @@ class InscriptionTalentoController extends Controller {
                 $this->addFlash('notitalento', $message);
                 return $this->redirectToRoute('inscription_talento_index');
             }
-            if ($studentInscription[0]['nivel'] == 12 && ($studentInscription[0]['grado']==1 || $studentInscription[0]['grado']==2)) {
-                $message = 'No se puede realizar la inscripción, Estudiante ' . $form['codigoRude'] . ' en nivel Primario con Grado '.$studentInscription[0]['grado'];
-                $this->addFlash('notitalento', $message);
-                return $this->redirectToRoute('inscription_talento_index');
-            }
+            // if ($studentInscription[0]['nivel'] == 12 && ($studentInscription[0]['grado']==1 || $studentInscription[0]['grado']==2)) {
+            //     $message = 'No se puede realizar la inscripción, Estudiante ' . $form['codigoRude'] . ' en nivel Primario con Grado '.$studentInscription[0]['grado'];
+            //     $this->addFlash('notitalento', $message);
+            //     return $this->redirectToRoute('inscription_talento_index');
+            // }
             //get the notas of student
             $boolStudentCalification = $this->getStudentNotasValidation($studentInscription, $student->getId());
             //check if the student has calification
-            if(!$boolStudentCalification){
-              $message = 'Estudiante con rude: ' . $form['codigoRude'] . ' cuenta con calificaciones, no es posible realizar la operación ';
-              $this->addFlash('notitalento', $message);
-              return $this->redirectToRoute('inscription_talento_index');
-            }
+            // if(!$boolStudentCalification){
+            //   $message = 'Estudiante con rude: ' . $form['codigoRude'] . ' cuenta con calificaciones, no es posible realizar la operación ';
+            //   $this->addFlash('notitalento', $message);
+            //   return $this->redirectToRoute('inscription_talento_index');
+            // }
 
 
             //verificamos si tiene inscripcion en la gestion actual

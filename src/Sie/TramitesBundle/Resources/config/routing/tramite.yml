@@ -100,3 +100,9 @@ tramite_reactiva_lista:
 tramite_reactiva_guarda:
     path:     /reactiva/guarda
     defaults: { _controller: SieTramitesBundle:Tramite:reactivaGuarda }
+
+tramite_anula:
+    path:     /anula
+    defaults: { _controller: SieTramitesBundle:Tramite:anulaGuarda }
+    options:
+         expose: true  

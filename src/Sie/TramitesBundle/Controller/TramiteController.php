@@ -1681,7 +1681,7 @@ class TramiteController extends Controller {
           inner join periodo_tipo as pet on pet.id = ies.periodo_tipo_id
           left join estudiante_asignatura as ea on ea.institucioneducativa_curso_oferta_id = ieco.id and ea.estudiante_inscripcion_id = ei.id
           left join estudiante_nota as en on en.estudiante_asignatura_id = ea.id
-          where  sfat.codigo in (15) and sat.codigo in (2,3) and sest.codigo in (2)
+          where  sfat.codigo in (15) and sat.codigo in (2,3) and sest.codigo in (2) and ea.estudianteasignatura_estado_id in (25,5)
           and ei.estadomatricula_tipo_id in (4,5,55) and en.nota_tipo_id::integer in (23,24,25,26)
           group by e.id, e.codigo_rude, e.paterno, e.materno, e.nombre, ei.estadomatricula_tipo_id, sest.id, sest.especialidad
           , sat.codigo, sat.acreditacion, ie.id, ie.institucioneducativa, tt.id, tt.turno, pt.paralelo, smt.id, smt.modulo
@@ -2747,6 +2747,67 @@ class TramiteController extends Controller {
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
             return $this->redirect($this->generateUrl('tramite_reactiva_busca'));
+        }
+    }
+
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que registra la anulacion de un tramite
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function anulaGuardaAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        
+        $response = new JsonResponse();
+        
+        if ($request->isMethod('POST')) {
+            $tramiteId = base64_decode($request->get('val'));
+            $obs = $request->get('obs');
+            $formBusqueda = array('value'=>$tramiteId,'obs'=>$obs);
+            if ($tramiteId != "" and $obs != ""){
+                $em = $this->getDoctrine()->getManager();
+                $em->getConnection()->beginTransaction();
+                try {
+                    $entityTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $tramiteId));
+                    if(count($entityTramite)>0){
+                        $tramiteProcesoController = new tramiteProcesoController();
+                        $tramiteProcesoController->setContainer($this->container);
+                        $tramiteDetalleId =  $tramiteProcesoController->setProcesaTramiteAnula($tramiteId, $id_usuario, $obs, $em);
+                        $documentoController = new documentoController();
+                        $documentoController->setContainer($this->container);
+                        $entityDocumento = $documentoController->getDocumentoTramite($tramiteId,1);
+                        if (count($entityDocumento) > 0){
+                            $documentoId = $documentoController->setDocumentoEstado($entityDocumento->getId(),2);
+                        }                    
+                        $em->getConnection()->commit();
+                        return $response->setData(array('estado' => true, 'obs' => 'Trámite '.$tramiteId.' anulado de forma correcta'));
+                    } else {
+                        return $response->setData(array('estado' => false, 'obs' => 'Error al procesar la información, intente nuevamente'));
+                    }
+                } catch (\Doctrine\ORM\NoResultException $exc) {
+                    $em->getConnection()->rollback();
+                    return $response->setData(array('estado' => false, 'obs' => 'Error al procesar la información, intente nuevamente'));
+                }
+            } else {
+                return $response->setData(array('estado' => false, 'obs' => 'Error al procesar la información, intente nuevamente'));
+            }
+        } else {
+            return $response->setData(array('estado' => false, 'obs' => 'Error al enviar el formulario, intente nuevamente'));
         }
     }
 

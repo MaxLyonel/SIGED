@@ -944,6 +944,37 @@ class DocumentoController extends Controller {
             ->getForm();
         return $form;
     }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que genera un formulario para la busqueda de documentos por numero de serie en lote
+    // PARAMETROS: institucionEducativaId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function creaFormBuscaInstitucionEducativaSerieLote($routing, $numero1, $numero2, $serie, $documentoTipoArrayId) {
+        $entityDocumentoSerie = $this->getSerieTipo($documentoTipoArrayId);
+
+        $serieEntity = array();
+        foreach ($entityDocumentoSerie as $key => $dato) {
+            $serieEntity[$dato['serie']] = $dato['serie'];
+        }
+
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl($routing))
+            ->add('numeroInicial', 'number', array('label' => 'Número Inicial', 'attr' => array('value' => $numero1, 'class' => 'form-control', 'pattern' => '[0-9]{1,6}', 'maxlength' => '6', 'autocomplete' => 'on', 'placeholder' => 'Número inicial')))
+            ->add('numeroFinal', 'number', array('label' => 'Número Final', 'attr' => array('value' => $numero2, 'class' => 'form-control', 'pattern' => '[0-9]{1,6}', 'maxlength' => '6', 'autocomplete' => 'on', 'placeholder' => 'Número final')))
+            ->add('serie',
+                      'choice',  
+                      array('label' => 'Serie',
+                            'choices' => $serieEntity,
+                            'data' => $serie,
+                            'attr' => array('class' => 'form-control'),
+                            )
+                )
+            ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary')))
+            ->getForm();
+        return $form;
+    }
   
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
@@ -1242,7 +1273,7 @@ class DocumentoController extends Controller {
                 $arrayFirma[base64_encode($registro['documento_firma_id'])] = $registro['nombre']." ".$registro['paterno']." ".$registro['materno'];
             }
         }
-        $arrayFirma['0'] = 'SIN FIRMA EN EL DOCUMENTO';
+        $arrayFirma[base64_encode('0')] = 'SIN FIRMA EN EL DOCUMENTO';
                 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
@@ -1341,7 +1372,7 @@ class DocumentoController extends Controller {
                 $sie = $form['sie'];  
                 $ges = $form['gestion']; 
                 $documentoFirmaId = base64_decode($form['firma']); 
-
+                
                 $tramiteController = new tramiteController();
                 $tramiteController->setContainer($this->container);
                 $rolPermitido = array(8,17);
@@ -1355,13 +1386,13 @@ class DocumentoController extends Controller {
 
                 // validar cantidad de firmas
                 $em = $this->getDoctrine()->getManager();
-
+                
                 $entityDocumentoInstitucionEducativa = $this->getDocumentoInstitucionEducativaGestion($sie, $ges, '1');
                 
                 $cantidadSolicitada = count($entityDocumentoInstitucionEducativa);
                 
                 $entityDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->findOneBy(array('id' => $documentoFirmaId));
-                //dump($cantidadSolicitada);die;
+                
                 if (count($entityDocumentoFirma)>0) {
                     $firmaPersonaId = $entityDocumentoFirma->getPersona()->getId();     
                     // $departamentoCodigo = $documentoController->getCodigoLugarRol($id_usuario,$rolPermitido);
@@ -1398,8 +1429,6 @@ class DocumentoController extends Controller {
                     // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No se encontro la firma ingresada, intente nuevamente'));
                     // return $this->redirectToRoute('tramite_detalle_diploma_humanistico_impresion_lista');
                 }
-
-
 
                 $arch = $sie.'_'.$ges.'_legalizacion'.date('YmdHis').'.pdf';
                 $response = new Response();
@@ -1802,7 +1831,7 @@ class DocumentoController extends Controller {
         // $salt = '123456'.'abc';   
 
         $rsa = new RSA;
-        $key = $rsa->createkey(2048); 
+        $key = $rsa->createkey(1024); 
         $keyPublica = $key['publickey'];   
         $keyPrivada = $key['privatekey'];   
 
