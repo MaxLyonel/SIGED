@@ -132,19 +132,19 @@ class NotasMaestroController extends Controller {
                         ->getQuery()
                         ->getResult();
 
-            $inscritos = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findBy(array('institucioneducativaCurso'=>$curso[0]['idCurso']));
-            foreach ($inscritos as $ins) {
-                $asignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneBy(array('estudianteInscripcion'=>$ins->getId(), 'institucioneducativaCursoOferta'=>$idCursoOferta));
-                if(!$asignatura){
-                    $newAsignatura = new EstudianteAsignatura();
-                    $newAsignatura->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($curso[0]['gestion']));
-                    $newAsignatura->setFechaRegistro(new \DateTime('now'));
-                    $newAsignatura->setEstudianteInscripcion($ins);
-                    $newAsignatura->setInstitucioneducativaCursoOferta($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($idCursoOferta));
-                    $em->persist($newAsignatura);
-                    $em->flush();
-                }
-            }
+            // $inscritos = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findBy(array('institucioneducativaCurso'=>$curso[0]['idCurso']));
+            // foreach ($inscritos as $ins) {
+            //     $asignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneBy(array('estudianteInscripcion'=>$ins->getId(), 'institucioneducativaCursoOferta'=>$idCursoOferta));
+            //     if(!$asignatura){
+            //         $newAsignatura = new EstudianteAsignatura();
+            //         $newAsignatura->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($curso[0]['gestion']));
+            //         $newAsignatura->setFechaRegistro(new \DateTime('now'));
+            //         $newAsignatura->setEstudianteInscripcion($ins);
+            //         $newAsignatura->setInstitucioneducativaCursoOferta($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($idCursoOferta));
+            //         $em->persist($newAsignatura);
+            //         $em->flush();
+            //     }
+            // }
 
             $estudiantes = $em->createQueryBuilder()
                               ->select('e.paterno, e.materno, e.nombre, ea.id as idEstudianteAsignatura, eae.id as idEstadoAsignatura, ei.id as idInscripcion')
