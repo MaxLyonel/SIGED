@@ -91,7 +91,7 @@
                     <input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
                     <p><b>Informe anual del proceso educativo</b></p>
                     <p class="text-justify">
-                        <textarea class="form-control jnumbersletters notaCualitativa" name="notaCualitativa[]" rows="5" cols="30" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" minlength="15">{{c.notaCualitativa}}</textarea>
+                        <textarea class="form-control jnumbersletters notaCualitativa" name="notaCualitativa[]" rows="5" cols="30" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" minlength="16">{{c.notaCualitativa}}</textarea>
                     </p>
                 {% else %}
                     <p><b>Informe anual del proceso educativo</b></p>
@@ -123,8 +123,8 @@
         var mensaje = "";
         
         $(".notaCualitativa").each(function (index) {
-            if($(this).val().length < 15){
-                mensaje = 'Las notas cualitativas deben tener al menos 15 dígitos';
+            if($(this).val().length < 16){
+                mensaje = 'Las notas cualitativas deben tener al menos 16 dígitos';
                 enviar = false;
             }
         });
