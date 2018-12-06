@@ -113,7 +113,7 @@
         {% for c in notas.cualitativas %}
             <tr><td style="padding:0px; margin:0px">
             {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
-                {% if (c.notaCualitativa == "") or (vista == 2) or (c.idNotaTipo == notas.operativo and notas.gestion == notas.gestionActual) %}
+                {% if (c.notaCualitativa == "") or (vista == 2) or (c.idNotaTipo == notas.operativo and notas.gestion == notas.gestionActual) or (notas.operativo == 4 and notas.nivel in [1,11,403]) %}
                     <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
                     <input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
                     <p><b>{{c.notaTipo}}</b></p>
