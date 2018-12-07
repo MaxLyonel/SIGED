@@ -4376,13 +4376,13 @@ class TramiteDetalleController extends Controller {
 
                     if ($verTuicionUnidadEducativa != ''){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
-                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_regular_entrega_busca'));
+                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_entrega_busca'));
                     }
 
                     $entitySubsistemaInstitucionEducativa = $tramiteController->getSubSistemaInstitucionEducativa($sie);
                     if($entitySubsistemaInstitucionEducativa['msg'] != ''){
                         $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => $entitySubsistemaInstitucionEducativa['msg']));
-                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_regular_entrega_busca'));
+                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_entrega_busca'));
                     }
 
                     $entityAutorizacionInstitucionEducativa = $tramiteController->getAutorizacionUnidadEducativa($sie);
@@ -4407,11 +4407,11 @@ class TramiteDetalleController extends Controller {
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
-                    return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_entrega_lista'));
+                    return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_entrega_busca'));
                 }
             }  else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_entrega_lista'));
+                return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_entrega_busca'));
             }
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
