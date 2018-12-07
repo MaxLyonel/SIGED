@@ -3865,8 +3865,13 @@ class TramiteDetalleController extends Controller {
                 $num2 = $form['numeroFinal'];
                 $serie = $form['serie'];
                 $sie = $num1.",".$num2;
-                $numeroSerie1 = $num1.$serie;
-                $numeroSerie2 = $num2.$serie;
+                if ($serie == 'A' or $serie == 'A1' or $serie == 'B' or $serie == 'C' or $serie == 'C1' or $serie == 'D'){
+                    $numeroSerie1 = $num1.$serie;
+                    $numeroSerie2 = $num2.$serie;
+                } else {    
+                    $numeroSerie1 = (str_pad($num1, 6, "0", STR_PAD_LEFT)).$serie;
+                    $numeroSerie2 = (str_pad($num2, 6, "0", STR_PAD_LEFT)).$serie;
+                }
             } else {
                 $tipoImp = 0;
                 $sie = 0;
