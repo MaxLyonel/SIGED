@@ -152,79 +152,10 @@ class PrincipalController extends Controller {
             return $this->redirectToRoute('sie_gis_homepage');
         }
 
-        $gestionactual = $this->sesion->get('currentyear');
-        $roluser = $this->sesion->get('roluser');
-        $roluserlugarid = $this->sesion->get('roluserlugarid');
-        $bundle = $this->sesion->get('pathSystem');
-
-        switch ($bundle) {
-            case 'SieRegularBundle':
-            case 'SieHerramientaBundle':
-                $instipoid = 1;
-                $mingestion = 2014;
-                $title = 'Reporte de consolidación de operativos por gestión y Unidad Educativa';
-                $label = 'Cantidad de Unidades Educativas que reportaron información';
-                $label_distrito = 'Cantidad de Unidades Educativas que reportaron información en el distrito';
-                break;
-
-            case 'SieEspecialBundle':
-                $instipoid = 4;
-                $mingestion = 2013;
-                $title = 'Reporte de cierre de operativos por gestión y Centro de Educación Especial';
-                $label = 'Cantidad de Centros que reportaron matrícula';
-                $label_distrito = 'Cantidad de Centros que reportaron matrícula en el distrito';
-                break;
-            
-            default:
-                $instipoid = 1;
-                $mingestion = 2014;
-                $title = 'Reporte de consolidación de operativos por gestión y Unidad Educativa';
-                $label = 'Cantidad de Unidades Educativas que reportaron información';
-                $label_distrito = 'Cantidad de Unidades Educativas que reportaron información en el distrito';
-                break;
-        }
-        
-        $consol = $this->get('sie_app_web.funciones')->reporteConsol($gestionactual, $roluser, $roluserlugarid, $instipoid);
-
-        switch ($roluser) {
-            case 8:
-                $ues = $this->get('sie_app_web.funciones')->estadisticaConsolNal($gestionactual, $instipoid);
-                break;
-
-            case 7:
-                $ues = $this->get('sie_app_web.funciones')->estadisticaConsolDptal($gestionactual, $roluserlugarid, $instipoid);
-                break;
-
-            case 10:
-                $ues = $this->get('sie_app_web.funciones')->estadisticaConsolDtal($gestionactual, $roluserlugarid, $instipoid);
-                break;
-
-            default:
-                $ues = null;
-                break;
-        }
-
-        $gestiones = $em->getRepository('SieAppWebBundle:GestionTipo')->findBy(array(), array('id' => 'DESC'));
-
-        $gestionesArray = array();
-        
-        foreach ($gestiones as $value) {
-            if ($value->getId() >= $mingestion) {
-                $gestionesArray[$value->getId()] = $value->getGestion();
-            }
-        }
-
         return $this->render($this->sesion->get('pathSystem') . ':Principal:index.html.twig', array(
           'userData' => $userData,
           'entities' => $entities,
           'faea' => $faea,
-          'consol' => $consol,
-          'ues' => $ues,
-          'gestiones' => $gestionesArray,
-          'gestionactual' => $gestionactual,
-          'title' => $title,
-          'label' => $label,
-          'label_distrito' => $label_distrito,
           'notification' => $not,
           'entitiestot' => $nacional,
           'entitiesdpto' => $departamental,

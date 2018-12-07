@@ -29,12 +29,16 @@
                   <i class="fa fa-download" ></i> Listado de Estudiantes del Curso 
                 </a>
           </div>
-          <div class="col-md-4">
+          {#
+          {% if operativo >= 5 %}
+            <div class="col-md-4">
 
-                <a class="btn btn-block btn-linkedin" href="{{path('donwload_boletinPromoPerUe', {'ue': sie, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'gestion': gestion, 'ciclo':ciclo, 'itemsUe':itemsUe } )}}">
-                  <i class="fa fa-download" ></i> Boletín Centralizador
-                </a>
-          </div>
+                  <a class="btn btn-block btn-linkedin" href="{{path('donwload_boletinPromoPerUe', {'ue': sie, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'gestion': gestion, 'ciclo':ciclo, 'itemsUe':itemsUe } )}}">
+                    <i class="fa fa-download" ></i> Boletín Centralizador
+                  </a>
+            </div>
+          {% endif %}
+          #}
           <div class="col-md-4">
             {# if gestion == 2017 %}
               <button type="button" class="btn btn-inverse btn-stroke" disabled="disabled">

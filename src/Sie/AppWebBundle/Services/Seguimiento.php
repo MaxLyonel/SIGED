@@ -211,6 +211,7 @@ class Seguimiento {
           INNER JOIN validacion_regla_tipo AS b ON b.validacion_regla_entidad_tipo_id = c.id
           INNER JOIN validacion_proceso AS a ON a.validacion_regla_tipo_id = b.id
           WHERE
+          b.es_activo is true AND
           a.es_activo ='f' AND
           a.llave = '".$data['codigoRude']."' AND
           a.gestion_tipo_id = ".$data['gestion']

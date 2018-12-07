@@ -5201,13 +5201,14 @@ ciclo_tipo_id, grado_tipo_id
         $params = array();
         $stmt->execute($params);
         $po = $stmt->fetchAll();
-        
+        $id_ico=0;
         foreach ($po as $p) {
             $id_ico = $p["id"];
         }
 
         $discapacidades= $this->getDoctrine()->getRepository('SieAppWebBundle:DiscapacidadTipo')->findAll();
         ///sacamos el modulo emergente
+
         $modulo_emergente=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneByInstitucioneducativaCursoOferta($id_ico);
 
         if(!$modulo_emergente){

@@ -288,7 +288,7 @@ class InscUeUnaccreditedController extends Controller {
                 $student->setMaterno(strtoupper($newStudent['materno']));
                 $student->setNombre(strtoupper($newStudent['nombre']));
                 $student->setCarnetIdentidad($newStudent['ci']);
-                $student->setComplemento($newStudent['complemento']);
+                $student->setComplemento( mb_strtoupper($newStudent['complemento'], 'utf-8'));
                 $student->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($newStudent['generoTipo']));
                 $student->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($newStudent['pais']));
                 $student->setFechaNacimiento(new \DateTime($newStudent['fnacimiento']));
