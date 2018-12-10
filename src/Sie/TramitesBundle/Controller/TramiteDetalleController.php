@@ -3401,17 +3401,22 @@ class TramiteDetalleController extends Controller {
                 $numCarton =$numeroCarton;
                 $serCarton = $serieCarton;
                 
-                $entidadDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->findOneBy(array('id' => $documentoFirmaId));
-                //dump($documentoFirmaId);die;
-                if (count($entidadDocumentoFirma)>0) {
-                    $firmaPersonaId = $entidadDocumentoFirma->getPersona()->getId();    
-                    // $departamentoCodigo = $documentoController->getCodigoLugarRol($id_usuario,$rolPermitido);
-                    $valFirmaDisponible =  $documentoController->verFirmaAutorizadoDisponible($firmaPersonaId,count($tramites),$documentoTipoId);
+                if($documentoFirmaId != 0 and $documentoFirmaId != ""){
+                    $entidadDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->findOneBy(array('id' => $documentoFirmaId));
+                    //dump($documentoFirmaId);die;
+                    if (count($entidadDocumentoFirma)>0) {
+                        $firmaPersonaId = $entidadDocumentoFirma->getPersona()->getId();    
+                        // $departamentoCodigo = $documentoController->getCodigoLugarRol($id_usuario,$rolPermitido);
+                        $valFirmaDisponible =  $documentoController->verFirmaAutorizadoDisponible($firmaPersonaId,count($tramites),$documentoTipoId);
 
+                    } else {
+                        $valFirmaDisponible = array(0 => false, 1 => 'Firma no habilitada, intente nuevamente');
+                        // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No se encontro la firma ingresada, intente nuevamente'));
+                        // return $this->redirectToRoute('tramite_detalle_diploma_humanistico_impresion_lista');
+                    }
                 } else {
-                    $valFirmaDisponible = array(0 => true, 1 => '');
-                    // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No se encontro la firma ingresada, intente nuevamente'));
-                    // return $this->redirectToRoute('tramite_detalle_diploma_humanistico_impresion_lista');
+                    $valFirmaDisponible = array(0 => true, 1 => 'Generar documento sin firma');
+                    $documentoFirmaId = 0;
                 }
                 
                 $tramiteController = new tramiteController();
