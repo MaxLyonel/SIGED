@@ -109,6 +109,14 @@ class PersonaController extends Controller
         $form->get('nombre')->setData($persona->getNombre());
         $form->get('complemento')->setData($persona->getComplemento());
 
+
+
+
+        
+
+
+
+
         $datetime = $persona->getFechaNacimiento();
         $year = $datetime->format('Y');
         $datetimeact = new \DateTime();
