@@ -133,6 +133,7 @@
                                 </div>
                             </div>
                         {% endfor %}
+                        <div id="tuicionalerta"></div>
                     </div>
                 </div>
             </div>
@@ -167,14 +168,25 @@
                     });
                 },
                 success: function (data) {
-                    $('#infomaterias_'+institucioneducativa_id).empty();
-                    $('#infomaterias_'+institucioneducativa_id).append(data);
+                    if (data==1){
+                        var alerta = '<div class="alert alert-danger alert-dismissible" role="alert">\n' +
+                            '  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                            '  <strong>Alerta!</strong> Usted no tiene tuicion para la Unidad Educativa selecciona.\n' +
+                            '</div>';
+                        //$('#resultado').append(alerta);
+                        $('#tuicionalerta').empty();
+                        $('#tuicionalerta').append(alerta);
+                    }else{
+                        $('#infomaterias_'+institucioneducativa_id).empty();
+                        $('#infomaterias_'+institucioneducativa_id).append(data);
+                    }
+
                 },
                 complete: function () {
                     swal.stopLoading();
                     swal.close();
                     $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
-                        $(".alert").slideUp(1000);
+                        $(".alert").slideUp(1500);
                     });
                 }
             });

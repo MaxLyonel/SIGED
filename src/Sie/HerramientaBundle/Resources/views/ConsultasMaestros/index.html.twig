@@ -32,7 +32,7 @@ input[type=text], select {
     </div>
 
     <div class="header-content">
-        <h2><i class="fa fa-table animated fadeIn"></i> Consultas - Maestros <span></span></h2>
+        <h2><i class="fa fa-table animated fadeIn"></i> Consultas de Maestros <span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -53,7 +53,7 @@ input[type=text], select {
                     <div class="panel-body">
                         <div class="panel panel-primary">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><strong>Busqueda por: </strong></h3>
+                                <h3 class="panel-title"><strong>Búsqueda por: </strong></h3>
                             </div><!-- /.panel-heading -->
                             <div class="panel-body" >
                                  <div class="row" >
@@ -68,13 +68,13 @@ input[type=text], select {
                                                                 <i class="fa fa-bank" style="color: #2ba9e1"></i> Institución Educativa
                                                             </a>
                                                         </li>
-                                                        <li class="nav-border nav-border-top-success">
+                                                        <li class="nav-border nav-border-top-success" id="tab_ci">
                                                             <a href="#ci" data-toggle="tab" class="text-center" aria-expanded="false">
                                                                 <i class="fa fa-credit-card" style="color: green "></i> C.I.
                                                             </a>
                                                         </li>
 
-                                                        <li class="nav-border nav-border-top-warning">
+                                                        <li class="nav-border nav-border-top-warning" id="tab_dp">
                                                             <a href="#datospersonales" data-toggle="tab" class="text-center" aria-expanded="false">
                                                                 <i class="fa fa-user" style="color: orange "></i> Datos Personales
                                                             </a>
@@ -195,6 +195,13 @@ input[type=text], select {
     {{ parent() }}
     <script>
         $( document ).ready(function() {
+            var sw = {{ sw }};
+            if(sw==1)
+            {
+               $('#tab_ci').hide();
+               $('#tab_dp').hide();
+            }
+
             cargatablas();
         });
         var cargatablas = function (identif){
@@ -245,6 +252,7 @@ input[type=text], select {
               return patron.test(te);
         }
 
+
         $('#sie').keypress(function(e) {
             if(e.which == 13) {
                 realizar_Busqueda();
@@ -254,7 +262,7 @@ input[type=text], select {
         function realizar_Busqueda() {
             var inst_edu = $('#sie').val();
             var gestion = $('#gestion').val();
-           var imagen = '{{ asset("img/loading96.gif") }}';
+            var imagen = '{{asset("img/loading96.gif") }}';
 
             if(inst_edu !=''  ){
                 $.ajax({
@@ -268,25 +276,35 @@ input[type=text], select {
                             icon: imagen,
                             buttons: false
                         });
+
                     },
                     success: function (data) {
                         $('#resultado').show();
                         $('#resultado').empty();
-                        if (data!=1) {
-                           $('#resultado').append(data);
-                        } else {
+                        if(data==1){
                             var alerta = '<div class="alert alert-danger alert-dismissible" role="alert">\n' +
                                 '  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
                                 '  <strong>Alerta!</strong> Unidad Educativa no econtrada.\n' +
                                 '</div>';
                             $('#resultado').append(alerta);
                         }
+                        else if(data==2){
+                            var alerta = '<div class="alert alert-danger alert-dismissible" role="alert">\n' +
+                                '  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                                '  <strong>Alerta!</strong> No tiene tuición sobre la unidad educativa .\n' +
+                                '</div>';
+                            $('#resultado').append(alerta);
+                        }
+                        else{
+                            $('#resultado').append(data);
+                        }
+
                     },
                     complete: function () {
                         swal.stopLoading();
                         swal.close();
                         $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
-                            $(".alert").slideUp(2000);
+                            $(".alert").slideUp(3000);
                         });
                     }
                 });
@@ -304,6 +322,7 @@ input[type=text], select {
 
 
         function realizar_Busqueda_ci() {
+
             $('#resultado').hide();
             var inst_edu = $('#sie').val();
             var gestion = $('#select_gestion').val();
@@ -323,9 +342,18 @@ input[type=text], select {
                         });
                     },
                     success: function (data) {
-                        $('#resultado').show();
-                        $('#resultado').empty();
-                        $('#resultado').append(data);
+                       // if(data !=1){
+                            $('#resultado').show();
+                            $('#resultado').empty();
+                            $('#resultado').append(data);
+                       /* }else{
+                            var alerta = '<div class="alert alert-danger alert-dismissible" role="alert">\n' +
+                                '  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                                '  <strong>Alerta!</strong> No tiene tuición sobre la unidad educativa .\n' +
+                                '</div>';
+                            $('#resultado').append(alerta);
+                        }*/
+
                     },
                     complete: function () {
                         swal.stopLoading();
@@ -381,9 +409,17 @@ input[type=text], select {
                         });
                     },
                     success: function (data) {
-                        $('#resultado').show();
-                        $('#resultado').empty();
-                        $('#resultado').append(data);
+                        if(data !=1){
+                            $('#resultado').show();
+                            $('#resultado').empty();
+                            $('#resultado').append(data);
+                        }else{
+                            var alerta = '<div class="alert alert-danger alert-dismissible" role="alert">\n' +
+                                '  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                                '  <strong>Alerta!</strong> No tiene tuición sobre la unidad educativa .\n' +
+                                '</div>';
+                            $('#resultado').append(alerta);
+                        }
                     },
                     complete: function () {
                         swal.stopLoading();
