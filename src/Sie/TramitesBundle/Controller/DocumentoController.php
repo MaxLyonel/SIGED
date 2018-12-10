@@ -1188,16 +1188,22 @@ class DocumentoController extends Controller {
                     } else {
                         $em->getConnection()->beginTransaction();
                         try {
-                            $entidadDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->findOneBy(array('id' => $documentoFirmaId));
-                            //dump($documentoFirmaId);die;
-                            if (count($entidadDocumentoFirma)>0) {
-                                $firmaPersonaId = $entidadDocumentoFirma->getPersona()->getId();    
-                                // $departamentoCodigo = $documentoController->getCodigoLugarRol($id_usuario,$rolPermitido);
-                                $valFirmaDisponible =  $this->verFirmaAutorizadoDisponible($firmaPersonaId,1,2);
+                            if($documentoFirmaId != 0 and $documentoFirmaId != ""){
+                                $entidadDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->findOneBy(array('id' => $documentoFirmaId));
+                                //dump($documentoFirmaId);die;
+                                if (count($entidadDocumentoFirma)>0) {
+                                    $firmaPersonaId = $entidadDocumentoFirma->getPersona()->getId();    
+                                    // $departamentoCodigo = $documentoController->getCodigoLugarRol($id_usuario,$rolPermitido);
+                                    $valFirmaDisponible =  $this->verFirmaAutorizadoDisponible($firmaPersonaId,1,2);
+                                } else {
+                                    $documentoFirmaId = 0;
+                                    throw new exception('Dificultades al realizar el registro, intente nuevamente');
+                                    // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No se encontro la firma ingresada, intente nuevamente'));
+                                    // return $this->redirectToRoute('tramite_detalle_diploma_humanistico_impresion_lista');
+                                }
                             } else {
-                                $valFirmaDisponible = array(0 => false, 1 => 'No existe firmas disponibles');
-                                // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No se encontro la firma ingresada, intente nuevamente'));
-                                // return $this->redirectToRoute('tramite_detalle_diploma_humanistico_impresion_lista');
+                                $valFirmaDisponible = array(0 => true, 1 => 'Generar documento sin firma');
+                                $documentoFirmaId = 0;
                             }
                             if ($valFirmaDisponible[0]){
                                 $idDocumento = $this->setDocumento($entity[0]["tramite_id"], $usuarioId, 2, $entity[0]["serie"], "", $fechaActual, $documentoFirmaId);
