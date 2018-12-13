@@ -785,12 +785,17 @@ class WfTramiteController extends Controller
         $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
         $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find($id_td);
         //dump($tramiteDetalle);die;
-        $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($tramiteDetalle->getFlujoProceso()->getId());
+        //$flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($tramiteDetalle->getFlujoProceso()->getId());
+        $query = $em->getConnection()->prepare('select * from flujo_proceso where id=' . $tramiteDetalle->getFlujoProceso()->getId());
+        $query->execute();
+        $flujoproceso = $query->fetchAll();
+        
         //dump($flujoproceso);die;
         //Verificamos si tiene competencia para un nuevo tramite
-        if($flujoproceso->getRutaReporte()){
+        //if($flujoproceso[0]->getRutaReporte()){
+        if($flujoproceso[0]['ruta_reporte']){
             //return $this->redirectToRoute('tramite_rue_informe_distrito_nuevo', array('id' => $tramite->getId()));
-            return $this->redirectToRoute($flujoproceso->getRutaReporte(),array('id' => $idtramite,'id_td'=>$id_td));
+            return $this->redirectToRoute($flujoproceso[0]['ruta_reporte'],array('id' => $idtramite,'id_td'=>$id_td));
         }else{
             $request->getSession()
                     ->getFlashBag()
