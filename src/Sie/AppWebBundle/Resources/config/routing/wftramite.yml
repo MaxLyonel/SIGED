@@ -38,6 +38,10 @@ wf_tramite_concluidos:
     path:     /concluidos
     defaults: { _controller: SieAppWebBundle:WfTramite:concluidos }
 
+wf_tramite_reporte_formulario:
+    path:     /{idtramite}/{id_td}/reporteformulario
+    defaults: { _controller: "SieAppWebBundle:WfTramite:reporteFormulario" }
+
 wf_tramite_seguimiento:
     path:     /seguimiento
     defaults: { _controller: SieAppWebBundle:WfTramite:seguimientoTramite }

@@ -2,9 +2,22 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Detalle Trámite: {{ idtramite }}</h4>
+            <div class="modal-title">
+                <div class="row">
+                    <div class="col-md-3"><h4>Trámite:</h4></div>
+                    <div class="col-md-8"><h4>{{ idtramite }}</h4></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"><h4>Fecha de finalización:</h4></div>
+                    <div class="col-md-8"><h4>{% if fecha_fin != null %}{{ fecha_fin }}{% else %} <span class="label label-warning">PENDIENTE</span> {% endif %}</h4></div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
         </div><!-- /.panel-heading -->
         <div class="modal-body">
+            <div class="row">
+                
+            </div>
             <table class="table table-bordered table-primary">
                 <thead>
                     <tr>
@@ -23,6 +36,7 @@
                 </thead>
                 <tbody>
                     {% for d in detalle %}
+                        
                         <tr>
                             <td>{{ loop.index }}</td>
                             <td>{{ d.proceso_tipo }}</td>
@@ -32,6 +46,7 @@
                             <td>{{ d.duracion }}</td>
                             <td>{{ d.plazo }}</td>
                             {% if d.tramite_estado %}
+                                {% set fecha_fin = d.fecha_fin %}
                                 {% if d.tarea_sig_id == null %}
                                     <td ><span class="label label-success">TRAMITE CONCLUIDO</span></td>
                                 {% else %}
@@ -47,7 +62,7 @@
                                     <td>{{d.obs}}</td>
                                 {% endif %}
                             {% else %}
-                                <td> <span class="label label-warning">PENDIENTE</span></td>
+                                <td> {% if fecha_fin == null %}<span class="label label-warning">PENDIENTE</span>{% endif %}</td>
                                 <td></td>
                             {% endif %}
                             <td>{{d.usuario_remitente}}</td>

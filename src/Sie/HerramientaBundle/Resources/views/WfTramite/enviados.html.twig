@@ -64,6 +64,7 @@
                                             <th>Fecha de envío</th>
                                             <th>Fecha Vencimiento</th>
                                             <th>Usuario Remitente</th>
+                                            <th>Imprimir comprobante</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -79,6 +80,7 @@
                                             <th>Fecha de envío</th>
                                             <th>Fecha Vencimiento</th>
                                             <th>Usuario Remitente</th>
+                                            <th>Imprimir comprobante</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
@@ -95,6 +97,13 @@
                                             <td>{{ entity.fecha_envio }}</td>
                                             <td class="text-danger">{{ entity.fecha_vencimiento }}</td>
                                             <td>{{ entity.nombre }}</td>
+                                            <td>
+                                                {% if entity.ruta_reporte %} {#si tiene reporte #}
+                                                    <a href="{{ path('wf_tramite_reporte_formulario', { 'idtramite': entity.id,'id_td': entity.id_td }) }}" class="btn btn-danger btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="imprimir">
+                                                        <i class="glyphicon glyphicon-print"></i>
+                                                    </a>
+                                                {% endif %}
+                                            </td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>
@@ -122,7 +131,7 @@
             // Setup - add a text input to each footer cell
             $('#recepDep tfoot th').each( function () {
                 var title = $(this).text();
-                if(title.trim() === "" || title === "Acciones"){
+                if(title.trim() === "" || title === "Imprimir comprobante"){
                     $(this).html('');
                 } else {
                     $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
