@@ -679,19 +679,30 @@ class FlujoProcesoController extends Controller
                 ->add('error', $mensaje);    
         }else{
                 //dump($tramites);die;
+                $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->findBy(array('flujoProceso'=>$id));
+                if($tramiteDetalle){
+                    $mensaje = 'No se puede eliminar la tarea, pues tiene tramites asignados';
+                    $request->getSession()
+                        ->getFlashBag()
+                        ->add('error', $mensaje);    
+                }else{
+
+                    $query = $em->getConnection()->prepare("delete from wf_tarea_compuerta where flujo_proceso_id in (select id from flujo_proceso where flujo_tipo_id=". $entity->getFlujoTipo()->getId() . " and orden>=". $entity->getOrden() .")");
+                    $query->execute();
+                    $query = $em->getConnection()->prepare("delete from wf_pasos_flujo_proceso where flujo_proceso_id in (select id from flujo_proceso where flujo_tipo_id=". $entity->getFlujoTipo()->getId() . " and orden>=". $entity->getOrden() .")");
+                    $query->execute();
+                    $query = $em->getConnection()->prepare("delete from wf_usuario_flujo_proceso where flujo_proceso_id in (select id from flujo_proceso where flujo_tipo_id=". $entity->getFlujoTipo()->getId() . " and orden>=". $entity->getOrden() .")");
+                    $query->execute();
+                    $query = $em->getConnection()->prepare("delete from flujo_proceso where flujo_tipo_id=". $entity->getFlujoTipo()->getId() . " and orden>=". $entity->getOrden());
+                    $query->execute();
+                    /*$em->remove($entity);
+                    $em->flush();*/
+                    $mensaje = 'Las tareas se elimaron con éxito';
+                    $request->getSession()
+                        ->getFlashBag()
+                        ->add('exito', $mensaje);
+                }
                 
-                $query = $em->getConnection()->prepare("delete from wf_tarea_compuerta where flujo_proceso_id in (select id from flujo_proceso where flujo_tipo_id=". $entity->getFlujoTipo()->getId() . " and orden>=". $entity->getOrden() .")");
-                $query->execute();
-                $query = $em->getConnection()->prepare("delete from wf_pasos_flujo_proceso where flujo_proceso_id in (select id from flujo_proceso where flujo_tipo_id=". $entity->getFlujoTipo()->getId() . " and orden>=". $entity->getOrden() .")");
-                $query->execute();
-                $query = $em->getConnection()->prepare("delete from flujo_proceso where flujo_tipo_id=". $entity->getFlujoTipo()->getId() . " and orden>=". $entity->getOrden());
-                $query->execute();
-                /*$em->remove($entity);
-                $em->flush();*/
-                $mensaje = 'Las tareas se elimaron con éxito';
-                $request->getSession()
-                    ->getFlashBag()
-                    ->add('exito', $mensaje);
             }
         //return $this->redirect($this->generateUrl('flujotipo'));
         $data = $this->listarT($id_flujotipo);
@@ -900,6 +911,7 @@ class FlujoProcesoController extends Controller
                 $entity->setWfAsignacionTareaTipo($wfasignaciontareatipo);
                 if($form['evaluacion_edit'] == 1){
                     $entity->setVariableEvaluacion($form['varevaluacion_edit']);
+                    $entity->setTareaSigId($form['id']);
                 }else{
                     $entity->setVariableEvaluacion("");
                     $query = $em->getConnection()->prepare("delete from wf_tarea_compuerta where flujo_proceso_id=" . $entity->getId());

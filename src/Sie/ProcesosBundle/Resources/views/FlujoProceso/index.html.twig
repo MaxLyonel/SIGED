@@ -710,7 +710,7 @@
             if(confirm('¿Se eliminaran todas las tareas siguientes a esta. Está suguro de eliminar ?')){
                 formData = {id: id};
                 $.ajax({
-                    type: 'POST',
+                    type: 'GET',
                     url: "{{path('flujoproceso_tarea_delete')}}",
                     data: formData,
                     beforeSend: function () {
