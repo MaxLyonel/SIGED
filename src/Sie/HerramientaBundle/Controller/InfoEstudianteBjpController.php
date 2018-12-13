@@ -20,7 +20,7 @@ use Sie\AppWebBundle\Entity\BonojuancitoInstitucioneducativaCursoValidacion;
 use Sie\AppWebBundle\Entity\BonojuancitoEstudianteValidacion;
 
 /**
- * EstudianteInscripcion controller.
+ * InfoEstudianteBjp controller.
  *
  */
 class InfoEstudianteBjpController extends Controller {
@@ -42,30 +42,34 @@ class InfoEstudianteBjpController extends Controller {
      *
      */
     public function indexAction(Request $request) {
-
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
         $username = $this->session->get('userName');
-
-        //return $this->redirect($this->generateUrl('principal_web'));
 
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
 
+        $pagoTipo = 0; //En tiempo
+        if($request->getMethod()=='POST'){
+            $pagoTipo = 1; //Rezagados
+        }
+
         $em = $this->getDoctrine()->getManager();
 
-        $bjp = $em->getRepository('SieAppWebBundle:BonojuancitoInstitucioneducativaValidacion')->findBy(array(
-            'institucioneducativaId' => $this->session->get('ie_id'),
-            'gestionTipoId' => $this->session->get('currentyear') - 1,
-            'esactivo' => 't'
-        ));
-
-        if($bjp) {
-            return $this->redirect($this->generateUrl('sie_app_web_close_modules_bjp', array(
-                'sie' => $this->session->get('ie_id'),
-                'gestion' => $this->session->get('currentyear') - 1,
-            )));
+        if ($pagoTipo == 0) {
+            $bjp = $em->getRepository('SieAppWebBundle:BonojuancitoInstitucioneducativaValidacion')->findBy(array(
+                'institucioneducativaId' => $this->session->get('ie_id'),
+                'gestionTipoId' => $this->session->get('currentyear'),
+                'esactivo' => 't'
+            ));
+    
+            if($bjp) {
+                return $this->redirect($this->generateUrl('sie_app_web_close_modules_bjp', array(
+                    'sie' => $this->session->get('ie_id'),
+                    'gestion' => $this->session->get('currentyear'),
+                )));
+            }
         }
 
         $arrSieInfo = array('id'=>$this->session->get('ie_id'), 'datainfo'=>$this->session->get('ie_nombre'));
@@ -79,19 +83,9 @@ class InfoEstudianteBjpController extends Controller {
         $query->bindValue(':rolId', $this->session->get('roluser'));
         $query->execute();
         $aTuicion = $query->fetchAll();
-        //dump($aTuicion);die;
         $institucion = $arrSieInfo['id'];
-        $gestion = $this->session->get('currentyear') - 1;
+        $gestion = $this->session->get('currentyear');
 
-        /*if ($aTuicion[0]['get_ue_tuicion']) {
-            $institucion = $arrSieInfo['id'];
-            $gestion = 2016;
-        } else {
-            $this->get('session')->getFlashBag()->add('noTuicion', 'No tiene tuición sobre la Institución Educativa');
-        return $this->redirect($this->generateUrl('herramienta_info_estudiante_bjp_index'));
-        }*/
-
-        //find the levels from UE
         $repository = $em->getRepository('SieAppWebBundle:BonojuancitoInstitucioneducativaCursoValidacion');
 
         $query = $repository->createQueryBuilder('biv')
@@ -99,7 +93,7 @@ class InfoEstudianteBjpController extends Controller {
             ->where('biv.institucioneducativaId = :sie')
             ->andwhere('biv.gestionTipo = :gestion')
             ->setParameter('sie', $institucion)
-            ->setParameter('gestion', $this->session->get('currentyear') - 1)
+            ->setParameter('gestion', $this->session->get('currentyear'))
             ->addOrderBy('biv.turnoTipoId, biv.nivelTipoId, biv.gradoTipoId, biv.paralelo')
             ->getQuery();
 
@@ -113,7 +107,7 @@ class InfoEstudianteBjpController extends Controller {
                 $sinfoUeducativa = serialize(array(
                     'ueducativaInfo' => array('nivel' => $uEducativa->getNivel(), 'grado' => $uEducativa->getGrado(), 'paralelo' => $uEducativa->getParalelo(), 'turno' => $uEducativa->getTurno()),
                     'ueducativaInfoId' => array('paraleloId' => $uEducativa->getParalelo(), 'turnoId' => $uEducativa->getTurnoTipoId(), 'nivelId' => $uEducativa->getNivelTipoId(), 'gradoId' => $uEducativa->getGradoTipoId()),
-                    'requestUser' => array('sie' => $institucion, 'gestion' => $gestion)
+                    'requestUser' => array('sie' => $institucion, 'gestion' => $gestion, 'pagoTipo' => $pagoTipo)
                 ));
                 //send the values to the next steps
                 $aInfoUnidadEductiva[$uEducativa->getTurno()][$uEducativa->getNivel()][$uEducativa->getGrado()][$uEducativa->getParalelo()] = array('infoUe' => $sinfoUeducativa);
@@ -128,12 +122,13 @@ class InfoEstudianteBjpController extends Controller {
         $odataUedu = $objUeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($institucion);
 
         return $this->render($this->session->get('pathSystem') . ':InfoEstudianteBjp:index.html.twig', array(
-                    'aInfoUnidadEductiva' => $aInfoUnidadEductiva,
-                    'sie' => $institucion,
-                    'gestion' => $gestion,
-                    'objUe' => $objUe,
-                    'exist' => $exist,
-                    'odataUedu' => $odataUedu
+            'aInfoUnidadEductiva' => $aInfoUnidadEductiva,
+            'sie' => $institucion,
+            'gestion' => $gestion,
+            'objUe' => $objUe,
+            'exist' => $exist,
+            'odataUedu' => $odataUedu,
+            'pagoTipo' => $pagoTipo
         ));
     }
 
@@ -563,6 +558,7 @@ class InfoEstudianteBjpController extends Controller {
         $paralelo = $aInfoUeducativa['ueducativaInfoId']['paraleloId'];
         $gradoname = $aInfoUeducativa['ueducativaInfo']['grado'];
         $paraleloname = $aInfoUeducativa['ueducativaInfo']['paralelo'];
+        $pagoTipo = $aInfoUeducativa['requestUser']['pagoTipo'];
 
         //get db connexion
         $em = $this->getDoctrine()->getManager();
@@ -594,7 +590,7 @@ class InfoEstudianteBjpController extends Controller {
                 $nivelArray = array(16,$nivel);
             }
 
-            //find the levels from UE
+            //niveles de la UE
             $repository = $em->getRepository('SieAppWebBundle:BonojuancitoEstudianteValidacion');
 
             $query = $repository->createQueryBuilder('bev')
@@ -626,20 +622,21 @@ class InfoEstudianteBjpController extends Controller {
         $itemsUe = $aInfoUeducativa['ueducativaInfo']['nivel'].",".$aInfoUeducativa['ueducativaInfo']['grado'].",".$aInfoUeducativa['ueducativaInfo']['paralelo'];
 
         return $this->render($this->session->get('pathSystem') . ':InfoEstudianteBjp:seeStudents.html.twig', array(
-                    'objStudents' => $objStudents,
-                    'sie' => $sie,
-                    'turno' => $turno,
-                    'nivel' => $nivel,
-                    'grado' => $grado,
-                    'paralelo' => $paralelo,
-                    'gestion' => $gestion,
-                    'aData' => $aData,
-                    'gradoname' => $gradoname,
-                    'paraleloname' => $paraleloname,
-                    'form' => $this->createFormStudentInscription($infoUe)->createView(),
-                    'infoUe' => $infoUe,
-                    'exist' => $exist,
-                    'itemsUe'=>$itemsUe,
+            'objStudents' => $objStudents,
+            'sie' => $sie,
+            'pagoTipo' => $pagoTipo,
+            'turno' => $turno,
+            'nivel' => $nivel,
+            'grado' => $grado,
+            'paralelo' => $paralelo,
+            'gestion' => $gestion,
+            'aData' => $aData,
+            'gradoname' => $gradoname,
+            'paraleloname' => $paraleloname,
+            'form' => $this->createFormStudentInscription($infoUe)->createView(),
+            'infoUe' => $infoUe,
+            'exist' => $exist,
+            'itemsUe'=>$itemsUe,
         ));
     }
 
@@ -761,12 +758,14 @@ class InfoEstudianteBjpController extends Controller {
         $nivelTipoId = $verificarPago['nivel'];
         $gradoTipoId = $verificarPago['grado'];
         $paralelo = $verificarPago['paralelo'];
-        $gestion = $this->session->get('currentyear') - 1;
+        $pagoTipo = $verificarPago['pagoTipo'];
+        $gestion = $this->session->get('currentyear');
 
-        $estudiantesBjp = $em->getRepository('SieAppWebBundle:BonojuancitoEstudianteValidacion')->findBy(array('institucioneducativaId' => $sie, 'turnoTipoId'=> $turnoTipoId, 'nivelTipoId' => $nivelTipoId, 'gradoTipoId' => $gradoTipoId, 'paralelo' => $paralelo, 'gestionTipoId' => $gestion));
+        $estudiantesBjp = $em->getRepository('SieAppWebBundle:BonojuancitoEstudianteValidacion')->findBy(array('institucioneducativaId' => $sie, 'turnoTipoId'=> $turnoTipoId, 'nivelTipoId' => $nivelTipoId, 'gradoTipoId' => $gradoTipoId, 'paralelo' => $paralelo, 'gestionTipoId' => $gestion, 'pagoTipoId' => $pagoTipo, 'esPagado' => 'f'));
 
         foreach($estudiantesBjp as $item) {
             $item->setEsPagado('f');
+            $item->setPagoTipoId($pagoTipo);
             $em->persist($item);
             $em->flush();
         }
@@ -775,9 +774,10 @@ class InfoEstudianteBjpController extends Controller {
         if($verificarPago){
             foreach($verificarPago as $key=>$value) {
                 $contador++;
-                if($contador > 5){
+                if($contador > 6){
                     $estudianteBjp = $em->getRepository('SieAppWebBundle:BonojuancitoEstudianteValidacion')->findOneById($key);
                     $estudianteBjp->setEsPagado('t');
+                    $estudianteBjp->setPagoTipoId($pagoTipo);
                     $estudianteBjp->setFechaRegistro(new \DateTime('now'));
                     $em->persist($estudianteBjp);
                     $em->flush();
@@ -809,7 +809,7 @@ class InfoEstudianteBjpController extends Controller {
             ->add('nombre', 'text', array('label' => 'Nombre(s)', 'required' => true, 'attr' => array('class' => 'form-control', 'placeholder' => 'Nombre(s)', 'maxlength' => 50, 'pattern' => '[A-Z\Ññ ]{1,50}')))
             ->add('fechaNac', 'date', array('label' => 'Fecha de Nacimiento', 'required' => true, 'format' => 'dd-MM-yyyy', 'years' => range(date('Y') - 50, date('Y')), 'data' => new \DateTime('now'), 'attr' => array('class' => 'form-control')))
             ->add('genero', 'entity', array('label' => 'Género', 'required' => false, 'class' => 'SieAppWebBundle:GeneroTipo', 'property' => 'genero', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
-            ->add('guardar', 'submit', array('label' => 'Registrar Estudiante', 'attr' => array('class' => 'btn btn-default')))
+            ->add('guardar', 'submit', array('label' => 'Registrar Estudiante', 'attr' => array('class' => 'btn btn-success')))
             ->getForm();
     }
 
@@ -830,7 +830,7 @@ class InfoEstudianteBjpController extends Controller {
         $arrSieInfo = array('id'=>$this->session->get('ie_id'), 'datainfo'=>$this->session->get('ie_nombre'));
 
         $institucion = $arrSieInfo['id'];
-        $gestion = $this->session->get('currentyear') - 1;
+        $gestion = $this->session->get('currentyear');
 
         $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($institucion);
         $odataUedu = $objUeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($institucion);
@@ -839,11 +839,13 @@ class InfoEstudianteBjpController extends Controller {
                     'form' => $this->formNuevoEstudiante()->createView(),
                     'odataUedu' => $odataUedu,
                     'sie' => $institucion,
-                    'gestion' => $gestion
+                    'gestion' => $gestion,
+                    'pagoTipo' => $form['pagoTipo']
         ));
     }
 
     public function verificaPagoNuevoGuardarAction(Request $request) {
+        
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
         $username = $this->session->get('userName');
@@ -856,68 +858,297 @@ class InfoEstudianteBjpController extends Controller {
 
         $form = $request->get('form');
 
-        $bjpnew = new BonojuancitoEstudianteValidacion();
+        $estudianteValidacion = $em->getRepository('SieAppWebBundle:BonojuancitoEstudianteValidacion')->findBy(array(
+            'codigoRude' => $form['rude'],
+            'institucioneducativaId' => $form['sie'],
+            'gestionTipoId' => $this->session->get('currentyear')
+        ));
+        if ($estudianteValidacion) {
+            $message = 'La/El estudiante ya cuenta con registro para su validación o ya fue validado.';
+            $this->addFlash('msgError', $message);
+            return $this->redirect($this->generateUrl('herramienta_info_estudiante_bjp_index'));
+        } else {
+            $objTurno = $em->getRepository('SieAppWebBundle:TurnoTipo')->find($form['turno']);
+            $objNivel = $em->getRepository('SieAppWebBundle:NivelTipo')->find($form['nivel']);
+            $objGrado = $em->getRepository('SieAppWebBundle:GradoTipo')->find($form['grado']);
+            
+            switch($form['genero']){
+                case 1:
+                    $genero = 'Masculino';
+                    break;
+                case 2:
+                    $genero = 'Femenino';
+                    break;
+                default:
+                    $genero = 'Sin Dato';
+                    break;
+            }
+        
+            $bjpnew = new BonojuancitoEstudianteValidacion();
+            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('bonojuancito_estudiante_validacion');")->execute();
+            $bjpnew->setInstitucioneducativaId($form['sie']);
+            $bjpnew->setTurnoTipoId($form['turno']);
+            $bjpnew->setTurno($objTurno->getTurno());
+            $bjpnew->setNivelTipoId($form['nivel']);
+            $bjpnew->setNivel($objNivel->getNivel());
+            $bjpnew->setGradoTipoId($form['grado']);
+            $bjpnew->setGrado($objGrado->getGrado());
+            $bjpnew->setEstadomatricula('EFECTIVO');
+            $bjpnew->setParalelo($form['paralelo']);
+            $bjpnew->setCodigoRude(mb_strtoupper($form['rude'], 'UTF-8'));
+            $bjpnew->setCarnetIdentidad(mb_strtoupper($form['carnet'], 'UTF-8'));
+            $bjpnew->setPaterno(mb_strtoupper($form['paterno'], 'UTF-8'));
+            $bjpnew->setMaterno(mb_strtoupper($form['materno'], 'UTF-8'));
+            $bjpnew->setNombre(mb_strtoupper($form['nombre'], 'UTF-8'));
+            $bjpnew->setEsPagado('t');
+            $bjpnew->setEsNuevo('t');
+            $bjpnew->setPagoTipoId($form['pagoTipo']);
+            $bjpnew->setFechaNacimiento(new \DateTime($form['fechaNac']['year'].'-'.$form['fechaNac']['month'].'-'.$form['fechaNac']['day']));
+            $bjpnew->setGenero($genero);
+            $bjpnew->setFechaRegistro(new \DateTime('now'));
+            $bjpnew->setGestionTipoId($this->session->get('currentyear'));
 
-        $objTurno = $em->getRepository('SieAppWebBundle:TurnoTipo')->find($form['turno']);
-        $objNivel = $em->getRepository('SieAppWebBundle:NivelTipo')->find($form['nivel']);
-        $objGrado = $em->getRepository('SieAppWebBundle:GradoTipo')->find($form['grado']);
+            $em->persist($bjpnew);
+            $em->flush();
 
-        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('bonojuancito_estudiante_validacion');")->execute();
-        $bjpnew->setInstitucioneducativaId($form['sie']);
-        $bjpnew->setTurnoTipoId($form['turno']);
-        $bjpnew->setTurno($objTurno->getTurno());
-        $bjpnew->setNivelTipoId($form['nivel']);
-        $bjpnew->setNivel($objNivel->getNivel());
-        $bjpnew->setGradoTipoId($form['grado']);
-        $bjpnew->setGrado($objGrado->getGrado());
-        $bjpnew->setEstadomatricula('EFECTIVO');
-        $bjpnew->setParalelo($form['paralelo']);
-        $bjpnew->setCodigoRude(mb_strtoupper($form['rude'], 'UTF-8'));
-        $bjpnew->setCarnetIdentidad(mb_strtoupper($form['carnet'], 'UTF-8'));
-        $bjpnew->setPaterno(mb_strtoupper($form['paterno'], 'UTF-8'));
-        $bjpnew->setMaterno(mb_strtoupper($form['materno'], 'UTF-8'));
-        $bjpnew->setNombre(mb_strtoupper($form['nombre'], 'UTF-8'));
-        $bjpnew->setEsPagado('t');
-        $bjpnew->setEsNuevo('t');
-        $bjpnew->setFechaNacimiento(new \DateTime($form['fechaNac']['year'].'-'.$form['fechaNac']['month'].'-'.$form['fechaNac']['day']));
-        $bjpnew->setGenero($form['genero']);
-        $bjpnew->setGestionTipoId($this->session->get('currentyear') - 1);
+            $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['sie']);
 
-        $em->persist($bjpnew);
-        $em->flush();
+            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('bonojuancito_institucioneducativa_curso_validacion');")->execute();
+            $bjpieduca = new BonojuancitoInstitucioneducativaCursoValidacion();
+            $bjpieduca->setInstitucioneducativaId($form['sie']);
+            $bjpieduca->setTurnoTipoId($form['turno']);
+            $bjpieduca->setTurno($objTurno->getTurno());
+            $bjpieduca->setNivelTipoId($form['nivel']);
+            $bjpieduca->setNivel($objNivel->getNivel());
+            $bjpieduca->setGradoTipoId($form['grado']);
+            $bjpieduca->setGrado($objGrado->getGrado());
+            $bjpieduca->setParalelo($form['paralelo']);
+            $bjpieduca->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
 
-        $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['sie']);
+            $em->persist($bjpieduca);
+            $em->flush();
 
-        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('bonojuancito_institucioneducativa_curso_validacion');")->execute();
-        $bjpieduca = new BonojuancitoInstitucioneducativaCursoValidacion();
-        $bjpieduca->setInstitucioneducativaId($form['sie']);
-        $bjpieduca->setTurnoTipoId($form['turno']);
-        $bjpieduca->setTurno($objTurno->getTurno());
-        $bjpieduca->setNivelTipoId($form['nivel']);
-        $bjpieduca->setNivel($objNivel->getNivel());
-        $bjpieduca->setGradoTipoId($form['grado']);
-        $bjpieduca->setGrado($objGrado->getGrado());
-        $bjpieduca->setParalelo($form['paralelo']);
-        $bjpieduca->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear') - 1));
-
-        $em->persist($bjpieduca);
-        $em->flush();
-
-        $message = 'Se realizó el registro satisfactoriamente.';
-        $this->addFlash('msgOk', $message);
-        return $this->redirect($this->generateUrl('herramienta_info_estudiante_bjp_index'));
+            $message = 'Se realizó el registro satisfactoriamente.';
+            $this->addFlash('msgOk', $message);
+            return $this->redirect($this->generateUrl('herramienta_info_estudiante_bjp_index'));
+        }
     }
+
+    /* 
+    * Nuevo estudiante bjp por rude 
+    */
+    private function formbjpSearchRude() {
+        // $niveles = array('12' => 'Primaria Comunitaria Vocacional', '13' => 'Secundaria Comunitaria Productiva', '16' => 'Educación Especial', '401' => 'Independencia Personal', '402' => 'Independencia Social', '403' => 'Educación Inicial', '404' => 'Educación Primaria', '405' => 'Formación Técnica', '410' => 'Servicios', '411' => 'Programas', '999' => 'Ninguno');
+        // $grados = array('0' => 'Guarderia', '1' => 'Primero', '2' => 'Segundo', '3' => 'Tercero', '4' => 'Cuarto', '5' => 'Quinto', '6' => 'Sexto', '99' => 'Sin dato');
+        // $paralelos = array('A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F', 'G' => 'G', 'H' => 'H', 'I' => 'I', 'J' => 'J', 'K' => 'K', 'L' => 'L');
+
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('herramienta_info_estudiante_bjp_nuevo_rude_search'))
+            // ->add('turno', 'entity', array('label' => 'Turno', 'required' => true, 'class' => 'SieAppWebBundle:TurnoTipo', 'property' => 'turno', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+            // ->add('nivel', 'choice', array('label' => 'Nivel', 'choices' => $niveles, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+            // ->add('grado', 'choice', array('label' => 'Grado', 'choices' => $grados, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+            // ->add('paralelo', 'choice', array('label' => 'Paralelo', 'choices' => $paralelos, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+            ->add('rude', 'text', array('label' => 'Código Rude', 'required' => true, 'attr' => array('class' => 'form-control', 'placeholder' => 'Rude', 'maxlength' => 18, 'pattern' => '[A-Z0-9]{13,18}')))
+            // ->add('sie', 'text', array('label' => 'Código SIE', 'attr' => array('value' => $this->session->get('ie_id'), 'class' => 'form-control', 'placeholder' => 'Código SIE', 'maxlength' => 9, 'pattern' => '[0-9]{1,9}', 'readonly' => true)))
+            // ->add('carnet', 'text', array('label' => 'Carnet de Identidad', 'required' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Carnet de Identidad', 'maxlength' => 15, 'pattern' => '[A-Z0-9]{1,15}')))
+            // ->add('paterno', 'text', array('label' => 'Apellido Paterno', 'required' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Apellido Paterno', 'maxlength' => 50, 'pattern' => '[A-Z\Ññ ]{1,50}')))
+            // ->add('materno', 'text', array('label' => 'Apellido Materno', 'required' => false, 'attr' => array('class' => 'form-control', 'placeholder' => 'Apellido Materno', 'maxlength' => 50, 'pattern' => '[A-Z\Ññ ]{1,50}')))
+            // ->add('nombre', 'text', array('label' => 'Nombre(s)', 'required' => true, 'attr' => array('class' => 'form-control', 'placeholder' => 'Nombre(s)', 'maxlength' => 50, 'pattern' => '[A-Z\Ññ ]{1,50}')))
+            // ->add('fechaNac', 'date', array('label' => 'Fecha de Nacimiento', 'required' => true, 'format' => 'dd-MM-yyyy', 'years' => range(date('Y') - 50, date('Y')), 'data' => new \DateTime('now'), 'attr' => array('class' => 'form-control')))
+            // ->add('genero', 'entity', array('label' => 'Género', 'required' => false, 'class' => 'SieAppWebBundle:GeneroTipo', 'property' => 'genero', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+            ->add('guardar', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-success')))
+            ->getForm();
+    }
+
+
+    public function bjpNuevoRudeAction(Request $request) {
+        
+        $this->session = $request->getSession();
+        $id_usuario = $this->session->get('userId');
+        $username = $this->session->get('userName');
+
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $form = $request->get('verificarPagoNuevo');
+
+        $arrSieInfo = array('id'=>$this->session->get('ie_id'), 'datainfo'=>$this->session->get('ie_nombre'));
+
+        $institucion = $arrSieInfo['id'];
+        $gestion = $this->session->get('currentyear');
+
+        $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($institucion);
+        $odataUedu = $objUeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($institucion);
+
+        return $this->render($this->session->get('pathSystem') . ':InfoEstudianteBjp:nuevo_estudiante_rude_bjp.html.twig', array(
+                    'form' => $this->formbjpSearchRude()->createView(),
+                    'odataUedu' => $odataUedu,
+                    'sie' => $institucion,
+                    'gestion' => $gestion,
+                    'pagoTipo' => $form['pagoTipo']
+        ));
+    }
+
+    public function bjpNuevoRudeSearchAction(Request $request) {
+
+        $this->session = $request->getSession();
+        $id_usuario = $this->session->get('userId');
+        $username = $this->session->get('userName');
+
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $form = $request->get('form');
+        $em = $this->getDoctrine()->getManager();
+
+        $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array(
+            'codigoRude' => $form['rude']
+        ));
+
+        if ($estudiante) {
+            $repository = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
+
+            $query = $repository->createQueryBuilder('ei')
+                ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'e.id = ei.estudiante')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')
+                ->where('iec.institucioneducativa = :sie')
+                ->andWhere('iec.gestionTipo = :gestion')
+                ->andWhere('e.id = :estudiante')
+                ->setParameter('sie', $form['sie'])
+                ->setParameter('gestion', $form['gestion'])
+                ->setParameter('estudiante', $estudiante->getId())
+                ->getQuery();
+
+            $estudianteInscripcion = $query->getOneOrNullResult();
+
+            if ($estudianteInscripcion) {
+                $curso = $estudianteInscripcion->getInstitucioneducativaCurso();
+                dump($curso);die;
+            } else {
+                dump('NO PRESENTA INSCRIPCIÓN');die;//NO PRESENTA INSCRIPCIÓN
+            }
+        } else {
+            dump('RUDE NO ENCONTRADO');die;//RUDE NO ENCONTRADO
+        }
+        
+    }
+
+    public function bjpNuevoRudeGuardarAction(Request $request) {
+        
+        $this->session = $request->getSession();
+        $id_usuario = $this->session->get('userId');
+        $username = $this->session->get('userName');
+
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $form = $request->get('form');
+
+        $estudianteValidacion = $em->getRepository('SieAppWebBundle:BonojuancitoEstudianteValidacion')->findBy(array(
+            'codigoRude' => $form['rude'],
+            'institucioneducativaId' => $form['sie'],
+            'gestionTipoId' => $this->session->get('currentyear')
+        ));
+
+        if ($estudianteValidacion) {
+            $message = 'La/El estudiante ya cuenta con registro para su validación o ya fue validado.';
+            $this->addFlash('msgError', $message);
+            return $this->redirect($this->generateUrl('herramienta_info_estudiante_bjp_index'));
+        } else {
+            $objTurno = $em->getRepository('SieAppWebBundle:TurnoTipo')->find($form['turno']);
+            $objNivel = $em->getRepository('SieAppWebBundle:NivelTipo')->find($form['nivel']);
+            $objGrado = $em->getRepository('SieAppWebBundle:GradoTipo')->find($form['grado']);
+            
+            switch($form['genero']){
+                case 1:
+                    $genero = 'Masculino';
+                    break;
+                case 2:
+                    $genero = 'Femenino';
+                    break;
+                default:
+                    $genero = 'Sin Dato';
+                    break;
+            }
+        
+            $bjpnew = new BonojuancitoEstudianteValidacion();
+            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('bonojuancito_estudiante_validacion');")->execute();
+            $bjpnew->setInstitucioneducativaId($form['sie']);
+            $bjpnew->setTurnoTipoId($form['turno']);
+            $bjpnew->setTurno($objTurno->getTurno());
+            $bjpnew->setNivelTipoId($form['nivel']);
+            $bjpnew->setNivel($objNivel->getNivel());
+            $bjpnew->setGradoTipoId($form['grado']);
+            $bjpnew->setGrado($objGrado->getGrado());
+            $bjpnew->setEstadomatricula('EFECTIVO');
+            $bjpnew->setParalelo($form['paralelo']);
+            $bjpnew->setCodigoRude(mb_strtoupper($form['rude'], 'UTF-8'));
+            $bjpnew->setCarnetIdentidad(mb_strtoupper($form['carnet'], 'UTF-8'));
+            $bjpnew->setPaterno(mb_strtoupper($form['paterno'], 'UTF-8'));
+            $bjpnew->setMaterno(mb_strtoupper($form['materno'], 'UTF-8'));
+            $bjpnew->setNombre(mb_strtoupper($form['nombre'], 'UTF-8'));
+            $bjpnew->setEsPagado('t');
+            $bjpnew->setEsNuevo('t');
+            $bjpnew->setPagoTipoId($form['pagoTipo']);
+            $bjpnew->setFechaNacimiento(new \DateTime($form['fechaNac']['year'].'-'.$form['fechaNac']['month'].'-'.$form['fechaNac']['day']));
+            $bjpnew->setGenero($genero);
+            $bjpnew->setFechaRegistro(new \DateTime('now'));
+            $bjpnew->setGestionTipoId($this->session->get('currentyear'));
+
+            $em->persist($bjpnew);
+            $em->flush();
+
+            $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['sie']);
+
+            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('bonojuancito_institucioneducativa_curso_validacion');")->execute();
+            $bjpieduca = new BonojuancitoInstitucioneducativaCursoValidacion();
+            $bjpieduca->setInstitucioneducativaId($form['sie']);
+            $bjpieduca->setTurnoTipoId($form['turno']);
+            $bjpieduca->setTurno($objTurno->getTurno());
+            $bjpieduca->setNivelTipoId($form['nivel']);
+            $bjpieduca->setNivel($objNivel->getNivel());
+            $bjpieduca->setGradoTipoId($form['grado']);
+            $bjpieduca->setGrado($objGrado->getGrado());
+            $bjpieduca->setParalelo($form['paralelo']);
+            $bjpieduca->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
+
+            $em->persist($bjpieduca);
+            $em->flush();
+
+            $message = 'Se realizó el registro satisfactoriamente.';
+            $this->addFlash('msgOk', $message);
+            return $this->redirect($this->generateUrl('herramienta_info_estudiante_bjp_index'));
+        }
+    }
+
+    /* 
+    * reportes 
+    */
 
     public function repDdjjAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
 
-        $bjp = $em->getRepository('SieAppWebBundle:BonojuancitoInstitucioneducativaValidacion')->findOneBy(array(
-            'institucioneducativaId' => $this->session->get('ie_id'),
-            'gestionTipoId' => $this->session->get('currentyear') - 1,
-            'esactivo' => 'f'
-        ));
-         // $dateFinVal = $bjp->getFechaFinVal()->format('Y-m-d');
-
+        if($request->get('pagoTipo') == 0) {
+            $bjp = $em->getRepository('SieAppWebBundle:BonojuancitoInstitucioneducativaValidacion')->findOneBy(array(
+                'institucioneducativaId' => $this->session->get('ie_id'),
+                'gestionTipoId' => $this->session->get('currentyear'),
+                'esactivo' => 'f'
+            ));
+        } else {
+            $bjp = $em->getRepository('SieAppWebBundle:BonojuancitoInstitucioneducativaValidacion')->findOneBy(array(
+                'institucioneducativaId' => $this->session->get('ie_id'),
+                'gestionTipoId' => $this->session->get('currentyear'),
+                'esactivo' => 't'
+            ));
+        }
+        
         //check if the date is set the first time
         if($bjp->getObs()>0){
           $bjp->setFechaFinEdit(new \DateTime('now'));
@@ -945,7 +1176,7 @@ class InfoEstudianteBjpController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $arrSieInfo = array('id'=>$this->session->get('ie_id'), 'datainfo'=>$this->session->get('ie_nombre'));
-        $gestion = $this->session->get('currentyear') - 1;
+        $gestion = $this->session->get('currentyear');
         $arch = 'DECLARACION_JURADA_'.$arrSieInfo['id'].'_' . date('YmdHis') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
@@ -961,7 +1192,7 @@ class InfoEstudianteBjpController extends Controller {
     public function repBjpDptoAction(Request $request) {
         $form = $request->get('form');
 
-        $gestion = $this->session->get('currentyear') - 1;
+        $gestion = $this->session->get('currentyear');
         $arch = 'REPORTE_BJP_DPTO_'.$form['dpto'].'_' . date('YmdHis') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
