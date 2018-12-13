@@ -99,7 +99,7 @@
                                             <td>{{ entity.nombre }}</td>
                                             <td>
                                                 {% if entity.ruta_reporte %} {#si tiene reporte #}
-                                                    <a href="{{ path('wf_tramite_reporte_formulario', { 'idtramite': entity.id,'id_td': entity.id_td }) }}" class="btn btn-danger btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="imprimir">
+                                                    <a href="{{ path('wf_tramite_reporte_formulario', { 'idtramite': entity.id,'id_td': entity.id_td }) }}" class="btn btn-danger btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Imprimir">
                                                         <i class="glyphicon glyphicon-print"></i>
                                                     </a>
                                                 {% endif %}

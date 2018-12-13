@@ -723,7 +723,7 @@ class WfTramiteController extends Controller
             join usuario u on td.usuario_remitente_id=u.id
             join persona p on p.id=u.persona_id
             where ft.id>5 and fp.rol_tipo_id=". $rol ." and (te.id=15 or te.id=16)
-            and td.usuario_remitente_id=". $usuario ." order by ft.flujo,t.id,fecha_envio,fp.orden");
+            and td.usuario_remitente_id=". $usuario ." order by ft.flujo ASC,fecha_envio DESC");
         $query->execute();
         $data['entities'] = $query->fetchAll();;
         $data['titulo'] = "Listado de trámites enviados";
@@ -782,7 +782,7 @@ class WfTramiteController extends Controller
         
         $em = $this->getDoctrine()->getManager();
 
-        $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($id);
+        $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
         $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find($id_td);
         //dump($tramiteDetalle);die;
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($tramiteDetalle->getFlujoProceso()->getId());
