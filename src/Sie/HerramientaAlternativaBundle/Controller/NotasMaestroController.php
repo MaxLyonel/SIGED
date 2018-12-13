@@ -25,6 +25,24 @@ class NotasMaestroController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
+
+        // OBTENER LAS UES DONDE TRABAJA EL DOCENTE
+        $ues = $em->createQueryBuilder()
+                ->select('ie.id')
+                ->from('SieAppWebBundle:MaestroInscripcion','mi')
+                ->innerJoin('SieAppWebBundle:Institucioneducativa','ie','with','mi.institucioneducativa = ie.id')
+                ->where('mi.persona = :idPersona')
+                ->andWhere('mi.gestionTipo = :idGestion')
+                ->setParameter('idPersona',$this->session->get('personaId'))
+                ->setParameter('idGestion',$this->session->get('currentyear'))
+                ->getQuery()
+                ->getResult();
+
+        $codigosSie = [];
+        foreach ($ues as $ue) {
+            $codigosSie[] = $ue['id'];
+        }
+        // 
         //dump($this->session->get('ie_per_estado'));die;
 
         /*$sucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array(
@@ -76,13 +94,13 @@ class NotasMaestroController extends Controller {
                             ->where('p.id = :idPersona')
                             ->andWhere('gt.id = :idGestion')
                             ->andWhere('iest.tramiteEstado not in (:estados)')
-                            // ->andWhere('ies.id = :idSucursal')
+                            ->andWhere('ie.id in (:sies)')
                             ->orderBy('sat.id','ASC')
                             ->addOrderBy('sespt.id','ASC')
                             ->setParameter('idPersona',$this->session->get('personaId'))
                             ->setParameter('idGestion',$this->session->get('currentyear'))
                             ->setParameter('estados',array(8,14))
-                            //->setParameter('idInstitucion',$this->session->get('ie_id'))
+                            ->setParameter('sies', $codigosSie)
                             // ->setParameter('idSucursal',611764)
                             ->getQuery()
                             ->getResult();
