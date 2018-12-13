@@ -35,12 +35,12 @@
                     de selección de los estudiantes que recibieron el incentivo, presionar el botón "Enviar
                     Datos", para confirmar.</p>
 
-                    <p><strong>PASO 2</strong>.- Si tiene estudiantes que se incorporaron de forma manual en "la Planilla de Recepción"
+                    {#<p><strong>PASO 2</strong>.- Si tiene estudiantes que se incorporaron de forma manual en "la Planilla de Recepción"
                     puede ir a la opción "Nuevo Estudiante" (botón naranja) y llenar los datos que se solicita
-                    (Turno, Nivel, Grado, paralelo y los datos del estudiante).</p>
+                    (Turno, Nivel, Grado, paralelo y los datos del estudiante).</p>#}
 
-                    <p><strong>PASO 3</strong>.- Para finalizar el proceso debe imprimir el reporte con la opción "Generar Reporte de Información" (botón celeste). Para más información descargar el manual aqui
-                        <a href="{{ asset('uploads/procbjp.pdf') }}" target="_blank"><i class="fa fa-download fa-2x"></i></a>
+                    <p><strong>PASO 2</strong>.- Para finalizar el proceso debe imprimir el reporte con la opción "Generar Reporte de Información" (botón celeste). {#Para más información descargar el manual aqui
+                        <a href="{{ asset('uploads/procbjp.pdf') }}" target="_blank"><i class="fa fa-download fa-2x"></i></a>#}
                     </p>
                 </div>
             </div>
@@ -61,12 +61,12 @@
 
         <div class="row">
             <div class="col-md-4">
-                <form method="POST" action="{{path('herramienta_info_estudiante_bjp_verifica_pago_nuevo')}}" name="verificarPagoNuevo" id="verificarPagoNuevo" >
+                {#<form method="POST" action="{{path('herramienta_info_estudiante_bjp_verifica_pago_nuevo')}}" name="verificarPagoNuevo" id="verificarPagoNuevo" >
                       <input type="hidden" id="verificarPagoNuevo_sie" name="verificarPagoNuevo[sie]" value="{{sie}}">
                       <input type="hidden" id="verificarPagoNuevo_gestion" name="verificarPagoNuevo[gestion]" value="{{gestion}}">
                       <input type="hidden" id="verificarPagoNuevo_pagoTipo" name="verificarPagoNuevo[pagoTipo]" value="{{pagoTipo}}">
                       <input type="submit" class="btn btn-block btn-warning" value="Nuevo Estudiante">
-                </form>
+                </form>#}
                 <form method="POST" action="{{path('herramienta_info_estudiante_bjp_view_report')}}" name="viewReport" id="viewReport">
                       <input type="hidden" id="verificarPagoNuevo_sie" name="verificarPagoNuevo[sie]" value="{{sie}}">
                       <input type="hidden" id="verificarPagoNuevo_gestion" name="verificarPagoNuevo[gestion]" value="{{gestion}}">
