@@ -109,10 +109,32 @@ class PersonaController extends Controller
         $form->get('nombre')->setData($persona->getNombre());
         $form->get('complemento')->setData($persona->getComplemento());
 
-
-
-
+        $carnet = $persona->getCarnet();
+        $complemento = $persona->getComplemento();
+        $paterno = $persona->getPaterno();
+        $materno = $persona->getMaterno();
+        $nombre = $persona->getNombre();        
+        $fechaNac = $persona->getFechaNacimiento();
+        $fechaNacString = $fechaNac->format('d-m-Y');
+        $env = 'prod';
+        $sistema = 'alternativa';
         
+        //dump($carnet);dump($nombre);dump($paterno); die();|
+
+        //dump($fechaNacString); die();
+
+        if($carnet){
+            $arrParametros = array(      
+                'complemento'=>$complemento,
+                'primer_apellido'=>$paterno,
+                'segundo_apellido'=>$materno,
+                'nombre'=>$nombre,
+                'fecha_nacimiento'=>$fechaNacString); 
+            $resultadoa = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros, $env, $sistema); 
+            //$resultadoa = false;
+        }
+
+        dump($resultadoa);die;
 
 
 
