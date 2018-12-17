@@ -795,7 +795,7 @@ class WfTramiteController extends Controller
         //if($flujoproceso[0]->getRutaReporte()){
         if($flujoproceso[0]['ruta_reporte']){
             //return $this->redirectToRoute('tramite_rue_informe_distrito_nuevo', array('id' => $tramite->getId()));
-            return $this->redirectToRoute($flujoproceso[0]['ruta_reporte'],array('id' => $idtramite,'id_td'=>$id_td));
+            return $this->redirectToRoute($flujoproceso[0]['ruta_reporte'],array('idtramite' => $idtramite,'id_td'=>$id_td));
         }else{
             $request->getSession()
                     ->getFlashBag()
