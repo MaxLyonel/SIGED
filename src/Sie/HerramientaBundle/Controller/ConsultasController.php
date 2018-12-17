@@ -107,7 +107,7 @@ class ConsultasController extends Controller {
                                                 ORDER BY 1");
                 $query->execute();
                 $infoDirector= $query->fetch();
-               // dump($tipoInstitucion['institucioneducativa_tipo_id']);die;
+
                 /**
                  * evaluamos segun el tipo de institucion*/
 
