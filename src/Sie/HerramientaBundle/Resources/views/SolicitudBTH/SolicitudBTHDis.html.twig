@@ -10,25 +10,22 @@
                     <a href="#">Solicitud BTH</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
-
                 <li class="active">Index</li>
             </ol>
         </div><!-- /.breadcrumb-wrapper -->
     </div><!-- /.header-content -->
     <div class="body-content animated fadeIn">
-
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="panel">
                     <div class="panel-body">
-
-                        <div class="panel panel-success">
+                        <div class="panel panel-primary">
                             <div class="panel-heading">
                                 <h3 class="panel-title">Nro. trámite:  <strong>{{ id_tramite}}</strong>  - Formulario de Solicitud BTH </h3>
                             </div><!-- /.panel-heading -->
                             <div class="panel-body">
                                 <div class="row">
-                                    <div class="panel panel-success">
+                                    <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">1.- Personal Administrativo </h3>
                                         </div><!-- /.panel-heading -->
@@ -51,21 +48,19 @@
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <span>{{ director.paterno ~' '~ director.materno ~' '~ director.nombre }}</span>
-
                                                         </div>
                                                     </div>
                                                     <br>
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             {{ director.carnet }}
-
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div><!-- /.panel-body -->
                                     </div>
-                                    <div class="panel panel-success">
+                                    <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">2.- Información General</h3>
                                         </div><!-- /.panel-heading -->
@@ -86,7 +81,6 @@
                                                         </div>
                                                     </div>
                                                     <br>
-
                                                 </div>
                                                 <div class="col-md-9">
                                                     <div class="row">
@@ -101,14 +95,11 @@
                                                         </div>
                                                     </div>
                                                     <br>
-
                                                 </div>
                                             </div>
-
-
                                         </div><!-- /.panel-body -->
                                     </div>
-                                    <div class="panel panel-success">
+                                    <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">3.- Localización</h3>
                                         </div><!-- /.panel-heading -->
@@ -191,11 +182,9 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-
                                         </div><!-- /.panel-body -->
                                     </div>
-                                    <div class="panel panel-success">
+                                    <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">4.- Cumplimiento de Requisitos</h3>
                                         </div><!-- /.panel-heading -->
@@ -213,7 +202,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="panel panel-success">
+                                    <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">5.- Especialidad</h3>
                                         </div><!-- /.panel-heading -->
@@ -234,35 +223,15 @@
 
                                                 </div>
                                             </div>
-                                            {#<div class="row">
-                                                <div class="col-md-4">
-                                                    <strong>Seleccionar Curso al que se Aplica</strong>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <strong><span class="label label-warning">Nivel: Secundaria</span></strong>
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <select data-placeholder="Seleccionar Curso" class="chosen-select" multiple="" tabindex="-1" style="display: none;">
-                                                        #}{#{% if cursos %}
-                                                            {% for cursos in cursos %}#}{##}{#
-                                                                <option value="{{ cursos.grado_tipo_id }}">{{ cursos.grado }}</option>
-                                                            {% endfor %}
-                                                        {% else %}
-                                                            <option value="">U.E. sin cursos </option>
-                                                        {% endif %} #}{#
-                                                    </select>
-                                                </div>
-                                            </div>#}
 
                                         </div><!-- /.panel-body -->
                                     </div>
 
-                                    <div class="panel panel-success">
+                                    <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">6.- Evaluación</h3>
                                         </div><!-- /.panel-heading -->
                                         <div class="panel-body">
-
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <strong>¿Solicitud Procedente?</strong>
@@ -275,7 +244,6 @@
                                                         <input id="siprocede" type="radio" name="radiotype1" value="si" onclick="muestraobs()" checked >
                                                         <label for="siprocede"><strong>Si</strong></label>
                                                     </div>
-
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="rdio rdio-theme circle">
@@ -299,9 +267,6 @@
                                                     <div class="pull-right">
                                                         <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicituDistritaldbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
                                                     </div>
-                                                   {# <div class="pull-right">
-                                                        <button class="btn btn-sm btn-facebook"  title="dsd" onclick="verespecialidades()"><i class="fa fa-pencil"></i> Enviar ver</button>
-                                                    </div>#}
                                                 </div>
                                             </div>
                                         </div><!-- /.panel-body -->
@@ -333,16 +298,6 @@
                 $('#obs').show(2000);
             }
         }
-/*function verespecialidades() {
-    var especialidades_id = [];
-    $("#select_especialidad").find("option").each(function(index, opc){
-        //console.log(opc);
-        especialidades_id.push(opc.value);
-    });
-    console.log(especialidades_id);
-
-}*/
-
         function  enviarSolicituDistritaldbth() {
             swal({
                 title: "¿Está Segura/o de enviar la respuesta a la solicitud?",
@@ -365,7 +320,6 @@
                             especialidades_id.push(opc.value);
                         });
                         ip.push({"select_especialidad" : especialidades_id});
-                        //console.error(ip);
                         var obstxt=$('#obstxt').val();
                         if($('#siprocede').is(':checked')) {
                             var evaluacion  ="SI";
@@ -385,11 +339,7 @@
                         if($('#adjdocumento').val()=="")
                         {swal("Debe adjuntar su informe.");
                         return false;}
-
-
-
                         var ipt=JSON.stringify(ip);
-
                         var imagen = '{{ asset("img/loading96.gif") }}';
                         var fd = new FormData();
                         fd.append('ipt', ipt);
@@ -398,7 +348,6 @@
                         fd.append('institucionid', {{ institucion.id }});
                         fd.append('id_tramite', {{ id_tramite}});
                         fd.append('obstxt', obstxt);
-                        //fd.append('docpdf', $('#adjdocumento')[0]);
                         var docpdf = document.getElementById('adjdocumento');
                         fd.append('docpdf', docpdf.files[0]);
                         fd.append('sw',0);

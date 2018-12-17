@@ -26,6 +26,7 @@ use Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnicoTipo;
 use Sie\AppWebBundle\Entity\EspecialidadTecnicoHumanisticoTipo;
 use Sie\AppWebBundle\Entity\GestionTipo;
 use Sie\AppWebBundle\Entity\TramiteDetalle;
+use Sie\AppWebBundle\Entity\Tramite;
 
 
 
@@ -48,7 +49,6 @@ class SolicitudBTHController extends Controller {
 //Director
     public function indexAction (Request $request) {
 
-        //get the session's values
         $this->session  = $request->getSession();
         $id_usuario     = $this->session->get('userId');
         $id_rol     = $this->session->get('roluser');
@@ -70,9 +70,7 @@ class SolicitudBTHController extends Controller {
             ->setParameter('idInstitucion', $institucion)
             ->getQuery();
         $inss = $query->getResult();
-
         $gestion = $inss[0][1];
-        //dump($gestion);die;
         $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
         $query = $repository->createQueryBuilder('ie')
             ->select('ie, ies')
@@ -83,11 +81,8 @@ class SolicitudBTHController extends Controller {
             ->setParameter('idInstitucion', $institucion)
             ->setParameter('gestion', $inss)
             ->getQuery();
-
         $infoUe = $query->getResult();
-
         $repository = $em->getRepository('SieAppWebBundle:JurisdiccionGeografica');
-
         $query = $repository->createQueryBuilder('jg')
             ->select('lt4.codigo AS codigo_departamento,
                         lt4.lugar AS departamento,
@@ -217,7 +212,6 @@ class SolicitudBTHController extends Controller {
         $query = $repository->createQueryBuilder('ie')
             ->select('ie, ies')
             ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'ies', 'WITH', 'ies.institucioneducativa = ie.id')
-            //->innerJoin('SieAppWebBundle:DependenciaTipo', 'ft', 'WITH', 'mi.formacionTipo = ft.id')
             ->where('ie.id = :idInstitucion')
             ->andWhere('ies.gestionTipo in (:gestion)')
             ->setParameter('idInstitucion', $institucion)
@@ -247,7 +241,8 @@ class SolicitudBTHController extends Controller {
                         estt.estadoinstitucion,
                         inss.direccion,
                         jg.direccion,
-                        jg.zona')
+                        jg.zona,
+                        jg.lugarTipoIdDistrito')
             ->join('SieAppWebBundle:Institucioneducativa', 'inst', 'WITH', 'inst.leJuridicciongeografica = jg.id')
             ->leftJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'jg.lugarTipoLocalidad = lt.id')
             ->leftJoin('SieAppWebBundle:LugarTipo', 'lt1', 'WITH', 'lt.lugarTipo = lt1.id')
@@ -329,6 +324,7 @@ class SolicitudBTHController extends Controller {
 
     }
     public function guardasolicitudAction(Request $request){
+        //dump($request);die;
         $id_Institucion = $request->get('institucionid');
         $gestion =  $request->getSession()->get('currentyear');
         $sw = $request->get('sw');
@@ -417,9 +413,16 @@ class SolicitudBTHController extends Controller {
             return  new Response($res);
     }
     public function imprimirDirectorAction(Request $request){
-        $tramite_id = $request->get('tramite_id');
-        $idUE       = $request->get('idUE');
+        //dump($request);die;
+        $tramite_id = $request->get('id');
+        //$idUE       = $request->get('idUE');
         $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('SieAppWebBundle:Tramite')->find($tramite_id);
+
+        $idUE       = $repository->getInstitucioneducativa()->getId();
+
+
+       // $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find();
         $repository = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal');
         $query = $repository->createQueryBuilder('inss')
             ->select('max(inss.gestionTipo)')
@@ -438,6 +441,7 @@ class SolicitudBTHController extends Controller {
             ->getQuery()
             ->getResult();
         $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
+        //dump($idUE);dump($gestion);dump($tramite_id);die;
         $arch = 'FORMULARIO_'.$request->get('idUE').'_' . date('YmdHis') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
