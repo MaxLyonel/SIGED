@@ -281,7 +281,7 @@
                             <span class="selected"></span>
                         </a>
                     </li> -->
-                    {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 31 %}
+                    {#{% if app.session.get('roluser') == 8 or app.session.get('roluser') == 31 %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-globe"></i></span>
@@ -299,9 +299,9 @@
 
                             </ul>
                         </li>
-                    {% endif %}
+                    {% endif %}#}
 
-                    {#{{ render(controller('SieAppWebBundle:GestionMenu:generamenu',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  app.session.get('sistemaid') ,'userId':app.session.get('userId')  })) }}#}
+                    {{ render(controller('SieAppWebBundle:GestionMenu:generamenu',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  app.session.get('sistemaid') ,'userId':app.session.get('userId')  })) }}
 
 
 

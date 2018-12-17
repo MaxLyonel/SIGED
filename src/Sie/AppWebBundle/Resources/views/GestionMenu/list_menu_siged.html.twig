@@ -12,14 +12,14 @@
                      {% for menu_arbol3 in menu_arboles if (menu_arbol3.menu_nivel_tipo_id==3 and menu_arbol3.menu_tipo_id==menu_arbol12.id) %}
                          <li>
                              <a href="{{ path(menu_arbol3.ruta) }}">
-                                 <i class="{{ menu_arbol3.icono }}"></i> {{ menu_arbol3.detalle_menu }}
+                                 <i class="fa {{ menu_arbol3.icono }}"></i> {{ menu_arbol3.detalle_menu }}
                              </a>
                          </li>
                      {% endfor %}
                  {% else %}
                      <li>
                          <a href="{{ path(menu_arbol2.ruta) }}">
-                             <i class="{{ menu_arbol2.icono }}"></i> {{ menu_arbol2.detalle_menu }}
+                             <i class="fa {{ menu_arbol2.icono }}"></i> {{ menu_arbol2.detalle_menu }}
                          </a>
                      </li>
              {% endif %}

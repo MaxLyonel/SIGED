@@ -37,6 +37,7 @@ class GestionMenuController extends Controller {
     public function __construct() {
         //init the session values
         $this->session = new Session();
+        $this->session->set('sistemaid', 15);
     }
 
     /**
@@ -47,6 +48,7 @@ class GestionMenuController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
+        $this->session->set('sistemaid', 15);
         //Listado de menus principales - Nivel 1
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare('SELECT mt.id, mt.detalle_menu,mt.ruta,mt.icono, mt.menu_nivel_tipo_id  
@@ -1431,7 +1433,7 @@ ORDER BY 2,3,4");
 												INNER JOIN menu_tipo mt ON ms.menu_tipo_id= mt.id 
 												INNER JOIN permiso per 	ON per.menu_sistema_rol_id=msr.id
                                                 WHERE ms.sistema_tipo_id = $id_sistema
-                                                ORDER BY 2,3,4 ");
+                                                ORDER BY 2,3,4");
         $query->execute();
         $sistemamenupermiso = $query->fetchAll();
 
@@ -1534,6 +1536,7 @@ ORDER BY 2,3,4");
 
 
     public function generamenuAction($rol_tipo_id, $idsistema, $userId){
+        //dump($rol_tipo_id);dump($idsistema);dump($userId);die;
         $em = $this->getDoctrine()->getManager();
         /*
          * Adecuación a los Sistemas de Certificacion y diplomas*/
@@ -1619,17 +1622,17 @@ ORDER BY 2,3,4");
                 $sistemas = explode(",", $cadena);
                 //dump($sistemas);die;
 
-                $query = $em->getConnection()->prepare("SELECT TRIM(sistema_tipo.abreviatura) AS abreviatura from sistema_tipo WHERE sistema_tipo.\"id\"=$idsistema");
+                $query = $em->getConnection()->prepare("SELECT TRIM(sistema_tipo.abreviatura) AS abreviatura from sistema_tipo WHERE sistema_tipo.id=$idsistema");
                 $query->execute();
                 $abreviatura = $query->fetch();
-
+                //dump($abreviatura);die;
                 for ($i = 0; $i < count($sistemas); $i++) {
                     if($sistemas[$i] == $abreviatura['abreviatura'] OR  $sistemas[$i]=='*' OR $rol_tipo_id==8)
                     { $sw=1; break; }
                     else{$sw=0;
                     }
                 }
-
+                //dump($sw);die;
                 if($sw==1  )
                 {
                     /*
@@ -1639,6 +1642,7 @@ ORDER BY 2,3,4");
                             'SieAppWebBundle:GestionMenu:list_menu_siged.html.twig', array('menu_arboles' => $menu_arboles, 'rol_tipo_id' => $rol_tipo_id, 'sistema' => $idsistema)
                         );
                     }else{
+                       // dump($menu_arboles);die;
                         return $this->render(
                             'SieAppWebBundle:GestionMenu:list_menu.html.twig', array('menu_arboles' => $menu_arboles, 'rol_tipo_id' => $rol_tipo_id, 'sistema' => $idsistema)
                         );

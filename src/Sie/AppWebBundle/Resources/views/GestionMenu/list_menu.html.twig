@@ -1,7 +1,7 @@
 {% for menu_arbol in menu_arboles if menu_arbol.menu_nivel_tipo_id==1 %}
     <li class="submenu">
         <a href="#">
-            <span class="icon"><i class="{{ menu_arbol.icono }}"></i></span>
+            <span class="icon"><i class="fa {{ menu_arbol.icono }}"></i></span>
             <span class="text">{{ menu_arbol.detalle_menu }} </span>
             <span class="arrow"></span>
         </a>
