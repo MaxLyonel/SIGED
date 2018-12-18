@@ -106,42 +106,50 @@ class RegularizationCUTController extends Controller{
         if($objStudent){
             // check if the student is in 6to
             $dataStudentSixth = $this->get('funciones')->getInscriptionBthByRude($objStudent->getCodigoRude());
-            // check if the user has permissions
-            $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
-            $query->bindValue(':user_id', $this->session->get('userId'));
-            $query->bindValue(':sie', $dataStudentSixth[0]['sie']);
-            $query->bindValue(':rolId', $this->session->get('roluser'));
-            $query->execute();
-            $arrTuicion = $query->fetchAll();
-            // check if the user has permissions on the student
-            if ($arrTuicion[0]['get_ue_tuicion']) {
+            if($dataStudentSixth){
+                    // check if the user has permissions
+                    $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
+                    $query->bindValue(':user_id', $this->session->get('userId'));
+                    $query->bindValue(':sie', $dataStudentSixth[0]['sie']);
+                    $query->bindValue(':rolId', $this->session->get('roluser'));
+                    $query->execute();
+                    $arrTuicion = $query->fetchAll();
+                    // check if the user has permissions on the student
+                    if ($arrTuicion[0]['get_ue_tuicion']) {
 
-                   if(sizeof($dataStudentSixth)>0){
-                        // check if the student is not avalible to BTH
-                        $objInscriptionTecnicoHumanistico = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array(
-                          'estudianteInscripcion' => $dataStudentSixth[0]['estInsId']
-                      ));
-                        if($objInscriptionTecnicoHumanistico && $objInscriptionTecnicoHumanistico->getEsValido()==false){
-                            
-                        }else{
-                             $message = 'Estudiante habilitado para la descarga del CUT';
-                            $this->addFlash('warningReg', $message);
-                            $swError = false;
-                        }
+                           if(sizeof($dataStudentSixth)>0){
+                                // check if the student is not avalible to BTH
+                                $objInscriptionTecnicoHumanistico = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array(
+                                  'estudianteInscripcion' => $dataStudentSixth[0]['estInsId']
+                              ));
+                                if($objInscriptionTecnicoHumanistico && $objInscriptionTecnicoHumanistico->getEsValido()==false){
+                                    
+                                }else{
+                                     $message = 'Estudiante habilitado para la descarga del CUT';
+                                    $this->addFlash('warningReg', $message);
+                                    $swError = false;
+                                }
+
+                            }else{
+                                $message = 'El Estudiante no esta en el nivel requerido';
+                                $this->addFlash('warningReg', $message);
+                                $swError = false;
+
+                            }
 
                     }else{
-                        $message = 'El Estudiante no esta en el nivel requerido';
+                         $message = 'No tiene tuición para continuar con el ragistro';
                         $this->addFlash('warningReg', $message);
                         $swError = false;
 
                     }
 
             }else{
-                 $message = 'No tiene tuición para continuar con el ragistro';
+                $message = 'Estudiante no se encuentra en 6to de Seccundaria';
                 $this->addFlash('warningReg', $message);
                 $swError = false;
-
             }
+            
 
         }else{
             $message = 'No existe Estudiante';
