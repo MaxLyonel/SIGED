@@ -282,6 +282,13 @@ class RemoveInscriptionController extends Controller {
             }
             $em->flush();
 
+             //paso X borrando objHumanistico
+            $objHumanistico = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findBy(array('estudianteInscripcion' => $eiid ));
+            foreach ($objHumanistico as $element) {
+                $em->remove($element);
+            }
+            $em->flush();
+
             //step 6 copy data to control table and remove teh inscription
             $objStudentInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($eiid);
 

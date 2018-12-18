@@ -63,7 +63,7 @@
                                 <input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
                                 <input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
                                 {% if notas.nivel in [1,11,403] %}
-                                    <textarea class="notaCualitativa" name="nota[]" id="{{n.id}}" onkeypress="return validarNotaCualitativa(event,this.id,this.value)" pattern="[0-9A-Z]{1,200}" required autocomplete="off" style="text-transform: uppercase; width:170px" rows="6" minlength="16" maxlength="400">{{n.nota}}</textarea>
+                                    <textarea class="notaCualitativa jnumbersletters" name="nota[]" id="{{n.id}}" onkeypress="" pattern="[0-9A-Z]{1,200}" required autocomplete="off" style="text-transform: uppercase; width:170px" rows="6" minlength="16" maxlength="400">{{n.nota}}</textarea>
                                 {% else %}
                                     <input type="text" id="{{n.id}}" name="nota[]" value="{{n.nota}}" size="2" onkeypress="return validarNota(event,this.id,this.value)" onkeyup="promedio(this,'{{notas.idInscripcion}}_{{a.idAsignatura}}')" onblur="notaVacia(this,'{{notas.idInscripcion}}_{{a.idAsignatura}}')"  class="form-control input-sm nota {{notas.idInscripcion}}_{{a.idAsignatura}}" style="width:50px" maxlength="3" autocomplete="off">
                                 {% endif %}
@@ -74,7 +74,7 @@
                                 <input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
                                 <input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
                                 {% if notas.nivel in [1,11,403] %}
-                                    <textarea class="" name="nota[]" id="{{n.id}}" onkeyup="this.focus();" pattern="[0-9A-Z]{1,200}" required autocomplete="off" style="text-transform: uppercase; width:170px; background:#EFEFEF; border-color:#E2E2E2" rows="6" minlength="16" maxlength="400" readonly="readonly">{{n.nota}}</textarea>
+                                    <textarea class="jnumbersletters" name="nota[]" id="{{n.id}}" onkeyup="this.focus();" pattern="[0-9A-Z]{1,200}" required autocomplete="off" style="text-transform: uppercase; width:170px; background:#EFEFEF; border-color:#E2E2E2" rows="6" minlength="16" maxlength="400" readonly="readonly">{{n.nota}}</textarea>
                                 {% else %}
                                     <input type="text" id="{{n.id}}" name="nota[]" value="{{n.nota}}" size="2" onkeypress="return validarNota(event,this.id,this.value)" onkeyup="notaVacia(this.id,this.value)" class="form-control input-sm {% if n.idNotaTipo == 5 and notas.operativo >= 4 %} p{{notas.idInscripcion}}_{{a.idAsignatura}} {% else %} nota {{notas.idInscripcion}}_{{a.idAsignatura}} {% endif %}" style="width:50px" maxlength="3" autocomplete="off" readonly="readonly">
                                 {% endif %}
@@ -83,7 +83,7 @@
                     {% else %}
                         <td data-title="{{n.idNotaTipo}} Bimestre">
                         {% if notas.nivel in [1,11,403] %}
-                            <textarea id="{{n.id}}" class="" style="text-transform: uppercase; width:170px; background:#EFEFEF; border-color:#E2E2E2" rows="6" minlength="16" maxlength="400" disabled="disabled">{{n.nota}}</textarea>
+                            <textarea id="{{n.id}}" class="jnumbersletters" style="text-transform: uppercase; width:170px; background:#EFEFEF; border-color:#E2E2E2" rows="6" minlength="16" maxlength="400" disabled="disabled">{{n.nota}}</textarea>
                         {% else %}
                             <input id="{{n.id}}" type="text" size="2" class="form-control input-sm" style="width:50px" maxlength="3" autocomplete="off" disabled="disabled" value="{{n.nota}}">
                         {% endif %}
@@ -113,7 +113,7 @@
         {% for c in notas.cualitativas %}
             <tr><td style="padding:0px; margin:0px">
             {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
-                {% if (c.notaCualitativa == "") or (vista == 2) or (c.idNotaTipo == notas.operativo and notas.gestion == notas.gestionActual) %}
+                {% if (c.notaCualitativa == "") or (vista == 2) or (c.idNotaTipo == notas.operativo and notas.gestion == notas.gestionActual) or (notas.operativo == 4 and notas.nivel in [1,11,403]) %}
                     <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
                     <input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
                     <p><b>{{c.notaTipo}}</b></p>

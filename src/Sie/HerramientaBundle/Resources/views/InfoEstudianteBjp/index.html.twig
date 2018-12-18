@@ -1,8 +1,6 @@
 {% extends 'layoutHerramienta.html.twig' %}
 
 {% block contentoption %}
-
-
     <!-- Start page header -->
     <div class="header-content">
         <h2><i class="fa fa-table"></i> Recibidos <span>Solicitudes usuario</span></h2>
@@ -11,7 +9,7 @@
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
-                    <a href="dashboard.html">Recibidos</a>
+                    Recibidos
                     <i class="fa fa-angle-right"></i>
                 </li>
 
@@ -35,19 +33,15 @@
                     <p><strong>PASO 1</strong>.- En el "listado de estudiantes" debe "seleccionar" o "tickear" a los estudiantes que hayan
                     recibido el bono de acuerdo a la "Planilla de Recepción", una vez concluido el proceso
                     de selección de los estudiantes que recibieron el incentivo, presionar el botón "Enviar
-                    Datos", para confirmar.<p>
+                    Datos", para confirmar.</p>
 
-                    <p><strong>PASO 2</strong>.- Si tiene estudiantes que se incorporaron de forma manual en "la Planilla de Recepción"
+                    {#<p><strong>PASO 2</strong>.- Si tiene estudiantes que se incorporaron de forma manual en "la Planilla de Recepción"
                     puede ir a la opción "Nuevo Estudiante" (botón naranja) y llenar los datos que se solicita
-                    (Turno, Nivel, Grado, paralelo y los datos del estudiante).</p>
+                    (Turno, Nivel, Grado, paralelo y los datos del estudiante).</p>#}
 
-                    <p><strong>PASO 3</strong>.- Para finalizar el proceso debe imprimir el reporte con la opción "Generar Declaración Jurada" (botón celeste). Para más información descargar el manual aqui
-
-                      <!-- <a href="https://www.dropbox.com/s/1nzbk4gmxit8y56/CIRCULAR_BJP_VALIDACION_SIGED_ACADEMICO_ANEXO.pdf?dl=0" target="_blank">Aquí -->
-                        <a href="{{ asset('uploads/procbjp.pdf') }}" target="_blank"><i class="fa fa-download fa-2x"></i></a>
-                      </a></p>
-
-
+                    <p><strong>PASO 2</strong>.- Para finalizar el proceso debe imprimir el reporte con la opción "Generar Reporte de Información" (botón celeste). {#Para más información descargar el manual aqui
+                        <a href="{{ asset('uploads/procbjp.pdf') }}" target="_blank"><i class="fa fa-download fa-2x"></i></a>#}
+                    </p>
                 </div>
             </div>
         </div>
@@ -58,15 +52,22 @@
                 <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
             </div>
         {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('msgError') %}
+            <div class="alert alert-danger" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <i class="glyphicon glyphicon-warning"></i> {{ flashMessage }}
+            </div>
+        {% endfor %}
 
         <div class="row">
             <div class="col-md-4">
-                <form method="POST" action="{{path('herramienta_info_estudiante_bjp_verifica_pago_nuevo')}}" name="verificarPagoNuevo" id="verificarPagoNuevo" >
+                {#<form method="POST" action="{{path('herramienta_info_estudiante_bjp_nuevo_rude')}}" name="verificarPagoNuevo" id="verificarPagoNuevo" >
                       <input type="hidden" id="verificarPagoNuevo_sie" name="verificarPagoNuevo[sie]" value="{{sie}}">
                       <input type="hidden" id="verificarPagoNuevo_gestion" name="verificarPagoNuevo[gestion]" value="{{gestion}}">
+                      <input type="hidden" id="verificarPagoNuevo_pagoTipo" name="verificarPagoNuevo[pagoTipo]" value="{{pagoTipo}}">
                       <input type="submit" class="btn btn-block btn-warning" value="Nuevo Estudiante">
-                </form>
-                <form method="POST" action="{{path('herramienta_info_estudiante_bjp_view_report')}}" name="viewReport" id="viewReport" >
+                </form>#}
+                <form method="POST" action="{{path('herramienta_info_estudiante_bjp_view_report')}}" name="viewReport" id="viewReport">
                       <input type="hidden" id="verificarPagoNuevo_sie" name="verificarPagoNuevo[sie]" value="{{sie}}">
                       <input type="hidden" id="verificarPagoNuevo_gestion" name="verificarPagoNuevo[gestion]" value="{{gestion}}">
                       <input type="submit" class="btn btn-block btn-success" value="Ver Reporte de Información">
@@ -75,6 +76,7 @@
                 <form action="{{path('herramienta_info_estudiante_bjp_verifica_reporte')}}" method="post"  name="pepe" onsubmit="return doConfirmation()">
                     <input type="hidden" name="idInstitucion" value="{{odataUedu.id}}">
                     <input type="hidden" name="gestion" value="{{gestion}}">
+                    <input type="hidden" name="pagoTipo" value="{{pagoTipo}}">
                     <button type="submit" class="btn btn-block btn-primary" name="enviar"><i class="fa fa-save"></i> Generar Reporte de Información</button>
                 </form>
                 <small>
@@ -120,7 +122,7 @@
                 </small>
             </div>
 
-            <div class='col-md-8'>
+            <div class="col-md-8">
                 <div id="idstudents"></div>
             </div>
 
@@ -135,7 +137,7 @@
     </div><!-- /.modal -->
     <!--/ End body content -->
 {% endblock %}
-{% block javascripts%}
+{% block javascripts %}
     {{parent()}}
     <script>
 
@@ -362,7 +364,7 @@
         };
 
         var  doConfirmation = function() {
-          if(confirm('... esta seguro de realizar la descarga del Reporte?\nPresion en OK para continuar')){
+          if(confirm('¿Está segura/o de realizar la descarga del Reporte? No podrá realizar ningún cambio posteriormente.\nPresione OK para continuar...')){
               document.forms['pepe']['enviar'].disabled=true;
               return true;
           }else{
@@ -379,4 +381,4 @@
           }
 
 </script>
-{%endblock%}
+{% endblock %}

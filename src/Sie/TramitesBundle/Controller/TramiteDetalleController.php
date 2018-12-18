@@ -3401,17 +3401,22 @@ class TramiteDetalleController extends Controller {
                 $numCarton =$numeroCarton;
                 $serCarton = $serieCarton;
                 
-                $entidadDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->findOneBy(array('id' => $documentoFirmaId));
-                //dump($documentoFirmaId);die;
-                if (count($entidadDocumentoFirma)>0) {
-                    $firmaPersonaId = $entidadDocumentoFirma->getPersona()->getId();    
-                    // $departamentoCodigo = $documentoController->getCodigoLugarRol($id_usuario,$rolPermitido);
-                    $valFirmaDisponible =  $documentoController->verFirmaAutorizadoDisponible($firmaPersonaId,count($tramites),$documentoTipoId);
+                if($documentoFirmaId != 0 and $documentoFirmaId != ""){
+                    $entidadDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->findOneBy(array('id' => $documentoFirmaId));
+                    //dump($documentoFirmaId);die;
+                    if (count($entidadDocumentoFirma)>0) {
+                        $firmaPersonaId = $entidadDocumentoFirma->getPersona()->getId();    
+                        // $departamentoCodigo = $documentoController->getCodigoLugarRol($id_usuario,$rolPermitido);
+                        $valFirmaDisponible =  $documentoController->verFirmaAutorizadoDisponible($firmaPersonaId,count($tramites),$documentoTipoId);
 
+                    } else {
+                        $valFirmaDisponible = array(0 => false, 1 => 'Firma no habilitada, intente nuevamente');
+                        // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No se encontro la firma ingresada, intente nuevamente'));
+                        // return $this->redirectToRoute('tramite_detalle_diploma_humanistico_impresion_lista');
+                    }
                 } else {
-                    $valFirmaDisponible = array(0 => true, 1 => '');
-                    // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No se encontro la firma ingresada, intente nuevamente'));
-                    // return $this->redirectToRoute('tramite_detalle_diploma_humanistico_impresion_lista');
+                    $valFirmaDisponible = array(0 => true, 1 => 'Generar documento sin firma');
+                    $documentoFirmaId = 0;
                 }
                 
                 $tramiteController = new tramiteController();
@@ -3865,8 +3870,13 @@ class TramiteDetalleController extends Controller {
                 $num2 = $form['numeroFinal'];
                 $serie = $form['serie'];
                 $sie = $num1.",".$num2;
-                $numeroSerie1 = $num1.$serie;
-                $numeroSerie2 = $num2.$serie;
+                if ($serie == 'A' or $serie == 'A1' or $serie == 'B' or $serie == 'C' or $serie == 'C1' or $serie == 'D'){
+                    $numeroSerie1 = $num1.$serie;
+                    $numeroSerie2 = $num2.$serie;
+                } else {    
+                    $numeroSerie1 = (str_pad($num1, 6, "0", STR_PAD_LEFT)).$serie;
+                    $numeroSerie2 = (str_pad($num2, 6, "0", STR_PAD_LEFT)).$serie;
+                }
             } else {
                 $tipoImp = 0;
                 $sie = 0;
@@ -4319,8 +4329,7 @@ class TramiteDetalleController extends Controller {
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
-        // $rolPermitido = array(8,13);
-        $rolPermitido = array(9);
+        $rolPermitido = array(8,13);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -4372,13 +4381,13 @@ class TramiteDetalleController extends Controller {
 
                     if ($verTuicionUnidadEducativa != ''){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
-                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_regular_entrega_busca'));
+                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_entrega_busca'));
                     }
 
                     $entitySubsistemaInstitucionEducativa = $tramiteController->getSubSistemaInstitucionEducativa($sie);
                     if($entitySubsistemaInstitucionEducativa['msg'] != ''){
                         $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => $entitySubsistemaInstitucionEducativa['msg']));
-                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_regular_entrega_busca'));
+                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_entrega_busca'));
                     }
 
                     $entityAutorizacionInstitucionEducativa = $tramiteController->getAutorizacionUnidadEducativa($sie);
@@ -4403,11 +4412,11 @@ class TramiteDetalleController extends Controller {
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
-                    return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_entrega_lista'));
+                    return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_entrega_busca'));
                 }
             }  else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_entrega_lista'));
+                return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_entrega_busca'));
             }
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
