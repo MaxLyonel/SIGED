@@ -1010,6 +1010,8 @@ class InfoEstudianteBjpController extends Controller {
             'codigoRude' => $form['rude']
         ));
 
+        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['sie']);
+
         if ($estudiante) {
             $repository = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
 
@@ -1025,15 +1027,23 @@ class InfoEstudianteBjpController extends Controller {
                 ->getQuery();
 
             $estudianteInscripcion = $query->getOneOrNullResult();
-
+            
             if ($estudianteInscripcion) {
-                $curso = $estudianteInscripcion->getInstitucioneducativaCurso();
-                dump($curso);die;
+                return $this->render($this->session->get('pathSystem') . ':InfoEstudianteBjp:nuevo_estudiante_bjp.html.twig', array(
+                    'estudianteInscripcion' => $estudianteInscripcion,
+                    'pagoTipo' => $form['pagoTipo'],
+                    'gestion' => $form['gestion'],
+                    'institucioneducativa' => $institucioneducativa
+                ));
             } else {
-                dump('NO PRESENTA INSCRIPCIÓN');die;//NO PRESENTA INSCRIPCIÓN
+                $message = 'El estudiante no presenta inscripción en la gestión actual, verifique e intente nuevamente.';
+                $this->addFlash('msgError', $message);
+                return $this->redirect($this->generateUrl('herramienta_info_estudiante_bjp_index'));
             }
         } else {
-            dump('RUDE NO ENCONTRADO');die;//RUDE NO ENCONTRADO
+            $message = 'No se encontró el código RUDE buscado, verifique e intente nuevamente.';
+            $this->addFlash('msgError', $message);
+            return $this->redirect($this->generateUrl('herramienta_info_estudiante_bjp_index'));
         }
         
     }
@@ -1050,10 +1060,13 @@ class InfoEstudianteBjpController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $form = $request->get('form');
+        $form = $request->get('formNew');
+        $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($form['inscripcionId']);
+        $curso = $inscripcion->getInstitucioneducativaCurso();        
+        $estudiante = $inscripcion->getEstudiante();
 
         $estudianteValidacion = $em->getRepository('SieAppWebBundle:BonojuancitoEstudianteValidacion')->findBy(array(
-            'codigoRude' => $form['rude'],
+            'codigoRude' => $estudiante->getCodigoRude(),
             'institucioneducativaId' => $form['sie'],
             'gestionTipoId' => $this->session->get('currentyear')
         ));
@@ -1063,11 +1076,13 @@ class InfoEstudianteBjpController extends Controller {
             $this->addFlash('msgError', $message);
             return $this->redirect($this->generateUrl('herramienta_info_estudiante_bjp_index'));
         } else {
-            $objTurno = $em->getRepository('SieAppWebBundle:TurnoTipo')->find($form['turno']);
-            $objNivel = $em->getRepository('SieAppWebBundle:NivelTipo')->find($form['nivel']);
-            $objGrado = $em->getRepository('SieAppWebBundle:GradoTipo')->find($form['grado']);
             
-            switch($form['genero']){
+            $objTurno = $curso->getTurnoTipo();
+            $objNivel = $curso->getNivelTipo();
+            $objGrado = $curso->getGradoTipo();
+            $objParalelo = $curso->getParaleloTipo();
+            
+            switch($estudiante->getGeneroTipo()->getId()){
                 case 1:
                     $genero = 'Masculino';
                     break;
@@ -1082,42 +1097,44 @@ class InfoEstudianteBjpController extends Controller {
             $bjpnew = new BonojuancitoEstudianteValidacion();
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('bonojuancito_estudiante_validacion');")->execute();
             $bjpnew->setInstitucioneducativaId($form['sie']);
-            $bjpnew->setTurnoTipoId($form['turno']);
+            $bjpnew->setTurnoTipoId($objTurno->getId());
             $bjpnew->setTurno($objTurno->getTurno());
-            $bjpnew->setNivelTipoId($form['nivel']);
+            $bjpnew->setNivelTipoId($objNivel->getId());
             $bjpnew->setNivel($objNivel->getNivel());
-            $bjpnew->setGradoTipoId($form['grado']);
+            $bjpnew->setGradoTipoId($objGrado->getid());
             $bjpnew->setGrado($objGrado->getGrado());
-            $bjpnew->setEstadomatricula('EFECTIVO');
-            $bjpnew->setParalelo($form['paralelo']);
-            $bjpnew->setCodigoRude(mb_strtoupper($form['rude'], 'UTF-8'));
-            $bjpnew->setCarnetIdentidad(mb_strtoupper($form['carnet'], 'UTF-8'));
-            $bjpnew->setPaterno(mb_strtoupper($form['paterno'], 'UTF-8'));
-            $bjpnew->setMaterno(mb_strtoupper($form['materno'], 'UTF-8'));
-            $bjpnew->setNombre(mb_strtoupper($form['nombre'], 'UTF-8'));
+            $bjpnew->setParalelo($objParalelo->getParalelo());
+            $bjpnew->setEstadomatriculaTipoId($inscripcion->getEstadomatriculaTipo()->getId());
+            $bjpnew->setEstadomatricula($inscripcion->getEstadomatriculaTipo()->getEstadomatricula());
+            $bjpnew->setEstudianteInscripcionId($inscripcion->getId());
+            $bjpnew->setCodigoRude(mb_strtoupper($estudiante->getCodigoRude(), 'UTF-8'));
+            $bjpnew->setCarnetIdentidad(mb_strtoupper($estudiante->getCarnetIdentidad(), 'UTF-8'));
+            $bjpnew->setPaterno(mb_strtoupper($estudiante->getPaterno(), 'UTF-8'));
+            $bjpnew->setMaterno(mb_strtoupper($estudiante->getMaterno(), 'UTF-8'));
+            $bjpnew->setNombre(mb_strtoupper($estudiante->getNombre(), 'UTF-8'));
             $bjpnew->setEsPagado('t');
             $bjpnew->setEsNuevo('t');
             $bjpnew->setPagoTipoId($form['pagoTipo']);
-            $bjpnew->setFechaNacimiento(new \DateTime($form['fechaNac']['year'].'-'.$form['fechaNac']['month'].'-'.$form['fechaNac']['day']));
+            $bjpnew->setFechaNacimiento($estudiante->getFechaNacimiento());
             $bjpnew->setGenero($genero);
             $bjpnew->setFechaRegistro(new \DateTime('now'));
             $bjpnew->setGestionTipoId($this->session->get('currentyear'));
 
             $em->persist($bjpnew);
             $em->flush();
-
+            
             $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['sie']);
 
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('bonojuancito_institucioneducativa_curso_validacion');")->execute();
             $bjpieduca = new BonojuancitoInstitucioneducativaCursoValidacion();
             $bjpieduca->setInstitucioneducativaId($form['sie']);
-            $bjpieduca->setTurnoTipoId($form['turno']);
+            $bjpieduca->setTurnoTipoId($objTurno->getId());
             $bjpieduca->setTurno($objTurno->getTurno());
-            $bjpieduca->setNivelTipoId($form['nivel']);
+            $bjpieduca->setNivelTipoId($objNivel->getId());
             $bjpieduca->setNivel($objNivel->getNivel());
-            $bjpieduca->setGradoTipoId($form['grado']);
+            $bjpieduca->setGradoTipoId($objGrado->getid());
             $bjpieduca->setGrado($objGrado->getGrado());
-            $bjpieduca->setParalelo($form['paralelo']);
+            $bjpieduca->setParalelo($objParalelo->getParalelo());
             $bjpieduca->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
 
             $em->persist($bjpieduca);

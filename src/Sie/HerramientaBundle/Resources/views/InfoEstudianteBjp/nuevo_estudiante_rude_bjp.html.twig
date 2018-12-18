@@ -22,6 +22,19 @@
     <div class="body-content animated fadeIn">
         {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Validación Bono Juancito Pinto', 'gestion': gestion,'sie': odataUedu.id, 'ieducativa':odataUedu.institucioneducativa, 'opcion': 'Estudiantes para validar el pago del BJP'} %}
 
+        {% for flashMessage in app.session.flashbag.get('msgOkNew') %}
+            <div class="alert alert-success" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+            </div>
+        {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('msgErrorNew') %}
+            <div class="alert alert-danger" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <i class="glyphicon glyphicon-warning"></i> {{ flashMessage }}
+            </div>
+        {% endfor %}
+        
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <div class="panel panel-info">
