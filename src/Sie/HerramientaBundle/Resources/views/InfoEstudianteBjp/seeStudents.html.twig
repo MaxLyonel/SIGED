@@ -73,8 +73,12 @@
                                 <td align="">{{data.paterno}} {{data.materno}} {{data.nombre}}</td>
                                 <td align="">{{data.estadomatricula}}</td>
                                 <td align="center">
-                                    {% if pagoTipo == 1 and data.esPagado %}
-                                        <span class="label label-success">pagado</span>
+                                    {% if pagoTipo != data.pagoTipoId %}
+                                        {% if data.esPagado %}
+                                            <span class="label label-success">pagado</span>
+                                        {% else %}
+                                            <input type="checkbox" id="verificarPago_{{data.id}}" name="verificarPago[{{data.id}}]" {% if data.esPagado %}checked{% endif %}>
+                                        {% endif %}
                                     {% else %}
                                         <input type="checkbox" id="verificarPago_{{data.id}}" name="verificarPago[{{data.id}}]" {% if data.esPagado %}checked{% endif %}>
                                     {% endif %}

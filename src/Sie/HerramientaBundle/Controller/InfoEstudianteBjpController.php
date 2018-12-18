@@ -761,7 +761,7 @@ class InfoEstudianteBjpController extends Controller {
         $pagoTipo = $verificarPago['pagoTipo'];
         $gestion = $this->session->get('currentyear');
 
-        $estudiantesBjp = $em->getRepository('SieAppWebBundle:BonojuancitoEstudianteValidacion')->findBy(array('institucioneducativaId' => $sie, 'turnoTipoId'=> $turnoTipoId, 'nivelTipoId' => $nivelTipoId, 'gradoTipoId' => $gradoTipoId, 'paralelo' => $paralelo, 'gestionTipoId' => $gestion, 'pagoTipoId' => $pagoTipo, 'esPagado' => 'f'));
+        $estudiantesBjp = $em->getRepository('SieAppWebBundle:BonojuancitoEstudianteValidacion')->findBy(array('institucioneducativaId' => $sie, 'turnoTipoId'=> $turnoTipoId, 'nivelTipoId' => $nivelTipoId, 'gradoTipoId' => $gradoTipoId, 'paralelo' => $paralelo, 'gestionTipoId' => $gestion, 'pagoTipoId' => $pagoTipo, 'esPagado' => 't'));
 
         foreach($estudiantesBjp as $item) {
             $item->setEsPagado('f');
@@ -769,7 +769,7 @@ class InfoEstudianteBjpController extends Controller {
             $em->persist($item);
             $em->flush();
         }
-
+        
         $contador = 0;
         if($verificarPago){
             foreach($verificarPago as $key=>$value) {
@@ -863,6 +863,7 @@ class InfoEstudianteBjpController extends Controller {
             'institucioneducativaId' => $form['sie'],
             'gestionTipoId' => $this->session->get('currentyear')
         ));
+        
         if ($estudianteValidacion) {
             $message = 'La/El estudiante ya cuenta con registro para su validación o ya fue validado.';
             $this->addFlash('msgError', $message);
