@@ -504,8 +504,10 @@ class InboxController extends Controller {
                 ->leftJoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'mi.institucioneducativa = i.id')
                 ->where('mi.persona = :persona')
                 ->andwhere('mi.gestionTipo = :gestion')
+                ->andwhere('i.orgcurricularTipo = :curricularTipo')
                 ->setParameter('persona', $persona)
                 ->setParameter('gestion', $gestion)
+                ->setParameter('curricularTipo', 1)
                 ->setMaxResults(1)
                 ->getQuery();
         //print_r($query);die;
