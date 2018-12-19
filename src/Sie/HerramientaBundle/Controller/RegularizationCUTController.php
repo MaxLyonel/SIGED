@@ -215,8 +215,9 @@ class RegularizationCUTController extends Controller{
         $arrTypeNivelation = array('test1', 'test2');
         $form =  $this->createFormBuilder()
                 ->add('data', 'hidden', array('mapped' => false,'data' => json_encode($data) , 'attr' => array()))
-                ->add('typeNivelation', 'choice', array('label'=>'Tipo de Nivelación','choices'=>$arrTypeNivelation ,'attr'=>array('class'=>'form-control input-sm')))
+                // ->add('typeNivelation', 'choice', array('label'=>'Tipo de Nivelación','choices'=>$arrTypeNivelation ,'attr'=>array('class'=>'form-control input-sm')))
                 ->add('nota', 'text', array('label' => 'Nota', 'attr'=>array('class'=>'form-control input-sm')))
+                ->add('docRespaldo', 'text', array('label' => 'R.M.', 'attr'=>array('class'=>'form-control input-sm')))
                 ;
         if($data['nivelId']==13 && $data['gradoId']>4){
             //get all speciality 
