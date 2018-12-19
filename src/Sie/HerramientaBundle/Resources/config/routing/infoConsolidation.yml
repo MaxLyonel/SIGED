@@ -5,3 +5,7 @@ herramienta_infoconsolidation_index:
 herramienta_infoconsolidation_find:
     path:     /sie/find
     defaults: { _controller: SieHerramientaBundle:InfoConsolidation:find }
+
+herramienta_infoconsolidation_gestion_index:
+    path:     /consolgestion
+    defaults: { _controller: SieHerramientaBundle:InfoConsolidation:consolidacionGestion }
