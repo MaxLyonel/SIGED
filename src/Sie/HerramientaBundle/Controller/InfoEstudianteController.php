@@ -678,6 +678,10 @@ class InfoEstudianteController extends Controller {
                     }
                 }
             }
+        }else{
+            if($gestion > 2014 and $operativo >= 4){
+                $imprimirLibreta = true;
+            }
         }
 
       $aRemovesUeAllowed = array(
