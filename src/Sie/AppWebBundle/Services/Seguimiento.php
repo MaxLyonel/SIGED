@@ -181,7 +181,7 @@ class Seguimiento {
                                                       where c.codigo_rude = '".$rude."'
                                                       and a.esactivo is true
           ");
-        break;
+      break;
 
       default:
         return false;
@@ -571,6 +571,28 @@ public function getReportCalificationsByStudentInscription($studentInscription){
   return $objReportCalifications;
 
 }
+
+  public function getBachiller($id) {
+        
+        // $entity = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion');
+        $query = $this->em->createQueryBuilder('ei')
+                ->select('ei')
+                ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->where('ei.estudiante = :id')
+                ->andwhere('iec.nivelTipo in (:nivel)')
+                ->andwhere('iec.gradoTipo in (:grado)')
+                ->setParameter('id', $id)
+                ->setParameter('nivel', array('13', '3'))
+                ->setParameter('grado', array('6', '4'))
+                ->getQuery();
+
+        try {
+            return $query->getResult();
+        } catch (Exception $ex) {
+            return $ex;
+        }
+    }
 
 
 }
