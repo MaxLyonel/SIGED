@@ -31,3 +31,7 @@ herramienta_especial_registro_consol:
     defaults: { _controller: SieEspecialBundle:InfoCentro:registroConsol }
     options:
         expose: true
+
+herramienta_especial_infoconsolidation_gestion_index:
+    path:     /consolgestion
+    defaults: { _controller: SieEspecialBundle:InfoCentro:consolidacionGestion }
