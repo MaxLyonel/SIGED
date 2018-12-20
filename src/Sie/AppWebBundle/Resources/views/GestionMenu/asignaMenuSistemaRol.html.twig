@@ -361,38 +361,24 @@
 </script>
 
     <script type="text/javascript">
-
         $('.calendario').datepicker({
-
             format: 'dd-mm-yyyy',
-
             todayBtn: 'linked'
-
         });
-
-
-
-        // DateRangePicker
         $('#sandbox-container .input-daterange').datepicker({
             format: 'dd-mm-yyyy',
             todayBtn: 'linked'
         });
         $('#form_fechaInicio').on('change',function(){
-            if($("#form_fechaFin").val().length < 1){
-                $("#form_fechaFin").val($('#form_fechaInicio').val());
+            if($("#form_fechaFinal").val().length < 1){
+                $("#form_fechaFinal").val($('#form_fechaInicio').val());
             }
         });
-        $('#form_fechaFin').on('change',function(){
-            //if($("#form_fechaFin").val().length >= 1){
-            //   alert('adsjkfhkasd');
-            if($("#form_fechaFin").val() < $("#form_fechaInicio").val()){
-                $("#form_fechaInicio").val($('#form_fechaFin').val());
+        $('#form_fechaFinal').on('change',function(){
+            if($("#form_fechaFinal").val() < $("#form_fechaInicio").val()){
+                $("#form_fechaInicio").val($('#form_fechaFinal').val());
             }
-            //}
         });
-
-
-
     </script>
 
 
