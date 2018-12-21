@@ -1633,7 +1633,7 @@ class TramiteDetalleController extends Controller {
                 $serieCarton = $request->get('serie');
                 //$gestionCarton = $request->get('gestion');
                 $fechaCarton = new \DateTime($request->get('fechaSerie'));
-                //$fechaCarton = $fechaActual;
+            //$fechaCarton = $fechaActual;
 
                 $token = $request->get('_token');
                 if (!$this->isCsrfTokenValid('imprimir', $token)) {
@@ -2294,7 +2294,7 @@ class TramiteDetalleController extends Controller {
                 where trad.tramite_estado_id <> 4 and tram.flujo_tipo_id = 4 and tram.gestion_id = ".$gestionId."::double precision group by trad.tramite_id
                 ) and flujo_proceso_id in (select flujo_proceso_id_ant from flujo_proceso_detalle where id = 21 limit 1)
             ) as td on td.tramite_id = t.id
-            inner join documento as d on d.tramite_id = t.id and documento_tipo_id in (6,7,8) and d.documento_estado_id = 1
+            left join documento as d on d.tramite_id = t.id and documento_tipo_id in (6,7,8) and d.documento_estado_id = 1
             where ies.gestion_tipo_id = ".$gestionId."::double precision and siea.institucioneducativa_id = ".$institucionEducativaId." and sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and sfat.codigo in (18,19,20,21,22,23,24,25) and ei.estadomatricula_tipo_id in (4)
             order by sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, e.codigo_rude, ies.periodo_tipo_id desc
         ");
@@ -3401,17 +3401,22 @@ class TramiteDetalleController extends Controller {
                 $numCarton =$numeroCarton;
                 $serCarton = $serieCarton;
                 
-                $entidadDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->findOneBy(array('id' => $documentoFirmaId));
-                //dump($documentoFirmaId);die;
-                if (count($entidadDocumentoFirma)>0) {
-                    $firmaPersonaId = $entidadDocumentoFirma->getPersona()->getId();    
-                    // $departamentoCodigo = $documentoController->getCodigoLugarRol($id_usuario,$rolPermitido);
-                    $valFirmaDisponible =  $documentoController->verFirmaAutorizadoDisponible($firmaPersonaId,count($tramites),$documentoTipoId);
+                if($documentoFirmaId != 0 and $documentoFirmaId != ""){
+                    $entidadDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->findOneBy(array('id' => $documentoFirmaId));
+                    //dump($documentoFirmaId);die;
+                    if (count($entidadDocumentoFirma)>0) {
+                        $firmaPersonaId = $entidadDocumentoFirma->getPersona()->getId();    
+                        // $departamentoCodigo = $documentoController->getCodigoLugarRol($id_usuario,$rolPermitido);
+                        $valFirmaDisponible =  $documentoController->verFirmaAutorizadoDisponible($firmaPersonaId,count($tramites),$documentoTipoId);
 
+                    } else {
+                        $valFirmaDisponible = array(0 => false, 1 => 'Firma no habilitada, intente nuevamente');
+                        // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No se encontro la firma ingresada, intente nuevamente'));
+                        // return $this->redirectToRoute('tramite_detalle_diploma_humanistico_impresion_lista');
+                    }
                 } else {
-                    $valFirmaDisponible = array(0 => true, 1 => '');
-                    // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No se encontro la firma ingresada, intente nuevamente'));
-                    // return $this->redirectToRoute('tramite_detalle_diploma_humanistico_impresion_lista');
+                    $valFirmaDisponible = array(0 => true, 1 => 'Generar documento sin firma');
+                    $documentoFirmaId = 0;
                 }
                 
                 $tramiteController = new tramiteController();
@@ -3865,8 +3870,13 @@ class TramiteDetalleController extends Controller {
                 $num2 = $form['numeroFinal'];
                 $serie = $form['serie'];
                 $sie = $num1.",".$num2;
-                $numeroSerie1 = $num1.$serie;
-                $numeroSerie2 = $num2.$serie;
+                if ($serie == 'A' or $serie == 'A1' or $serie == 'B' or $serie == 'C' or $serie == 'C1' or $serie == 'D'){
+                    $numeroSerie1 = $num1.$serie;
+                    $numeroSerie2 = $num2.$serie;
+                } else {    
+                    $numeroSerie1 = (str_pad($num1, 6, "0", STR_PAD_LEFT)).$serie;
+                    $numeroSerie2 = (str_pad($num2, 6, "0", STR_PAD_LEFT)).$serie;
+                }
             } else {
                 $tipoImp = 0;
                 $sie = 0;
@@ -4215,6 +4225,10 @@ class TramiteDetalleController extends Controller {
                     $entidadEstudianteInscripcion = $entidadTramite->getEstudianteInscripcion();
                     //$entidadEstudianteInscripcion = $em->getRepository('SieAppWebBundle:estudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
                     $msgContenido = "";
+                    
+                    $documentoController = new documentoController();
+                    $documentoController->setContainer($this->container);
+
                     if(count($entidadEstudianteInscripcion)>0){
                         $participante = trim($entidadEstudianteInscripcion->getEstudiante()->getPaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getMaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getNombre());
                         $participanteId =  $entidadEstudianteInscripcion->getEstudiante()->getId();
@@ -4223,8 +4237,6 @@ class TramiteDetalleController extends Controller {
 
                         $msg = array('0'=>true, '1'=>$participante);
 
-                        $documentoController = new documentoController();
-                        $documentoController->setContainer($this->container);
 
                         if ($flujoSeleccionado == 'Adelante'){
                             // VALIDACION DE SOLO UN DIPLOMA BACHILLER HUMANISTICO POR ESTUDIANTE (RUDE)
@@ -4246,8 +4258,14 @@ class TramiteDetalleController extends Controller {
                             $tramiteDetalleId = $this->setProcesaTramiteSiguiente($tramiteId, $id_usuario, $obs, $em);
                         }
 
+                        if ($flujoSeleccionado == 'Atras' or $flujoSeleccionado == 'Anular'){
+                            $entityDocumento = $documentoController->getDocumentoTramite($tramiteId,1);
+                            if (count($entityDocumento) > 0){
+                              $documentoId = $documentoController->setDocumentoEstado($entityDocumento->getId(),2);
+                            }
+                        }
+
                         if ($flujoSeleccionado == 'Atras'){
-                            $documentoId = $documentoController->setTramiteDocumentoEstado($tramiteId, 2);
                             $tramiteDetalleId = $this->setProcesaTramiteAnterior($tramiteId, $id_usuario, $obs, $em);
                         }
 
@@ -4311,8 +4329,7 @@ class TramiteDetalleController extends Controller {
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
-        // $rolPermitido = array(8,13);
-        $rolPermitido = array(9);
+        $rolPermitido = array(8,13);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -4364,13 +4381,13 @@ class TramiteDetalleController extends Controller {
 
                     if ($verTuicionUnidadEducativa != ''){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
-                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_regular_entrega_busca'));
+                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_entrega_busca'));
                     }
 
                     $entitySubsistemaInstitucionEducativa = $tramiteController->getSubSistemaInstitucionEducativa($sie);
                     if($entitySubsistemaInstitucionEducativa['msg'] != ''){
                         $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => $entitySubsistemaInstitucionEducativa['msg']));
-                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_regular_entrega_busca'));
+                        return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_entrega_busca'));
                     }
 
                     $entityAutorizacionInstitucionEducativa = $tramiteController->getAutorizacionUnidadEducativa($sie);
@@ -4395,11 +4412,11 @@ class TramiteDetalleController extends Controller {
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
-                    return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_entrega_lista'));
+                    return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_entrega_busca'));
                 }
             }  else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_entrega_lista'));
+                return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_entrega_busca'));
             }
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));

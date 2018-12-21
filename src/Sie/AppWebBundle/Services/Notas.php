@@ -872,8 +872,7 @@ class Notas{
                     }
                 }
 
-
-                if((sizeof($asignaturas) > 0 && count($asignaturas) == count($arrayPromedios)) or ($gestion < $gestionActual && sizeof($asignaturas) > 0 ) or ($gestion >= 2018 && count($asignaturas) == (count($arrayPromedios) - 2)) ){
+                if((sizeof($asignaturas) > 0 && count($asignaturas) == count($arrayPromedios)) or ($gestion < $gestionActual && sizeof($asignaturas) > 0 ) or ($gestion >= 2018 && count($arrayPromedios) == (count($asignaturas) - 2)) ){
                     $estadoAnterior = $inscripcion->getEstadomatriculaTipo()->getId();
                     $nuevoEstado = 5; // Aprobado
                     if($tipo == 'Bimestre'){

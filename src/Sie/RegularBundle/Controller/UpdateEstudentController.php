@@ -184,7 +184,7 @@ class UpdateEstudentController  extends Controller{
                     $objStudent->setCarnetIdentidad($val);
                     break;
                   case 'Complemento':
-                    $objStudent->setComplemento($val);
+                    $objStudent->setComplemento(mb_strtoupper($val, 'utf-8'));
                     break;
 
                   default:

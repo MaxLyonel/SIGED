@@ -25,6 +25,24 @@ class NotasMaestroController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
+
+        // OBTENER LAS UES DONDE TRABAJA EL DOCENTE
+        $ues = $em->createQueryBuilder()
+                ->select('ie.id')
+                ->from('SieAppWebBundle:MaestroInscripcion','mi')
+                ->innerJoin('SieAppWebBundle:Institucioneducativa','ie','with','mi.institucioneducativa = ie.id')
+                ->where('mi.persona = :idPersona')
+                ->andWhere('mi.gestionTipo = :idGestion')
+                ->setParameter('idPersona',$this->session->get('personaId'))
+                ->setParameter('idGestion',$this->session->get('currentyear'))
+                ->getQuery()
+                ->getResult();
+
+        $codigosSie = [];
+        foreach ($ues as $ue) {
+            $codigosSie[] = $ue['id'];
+        }
+        // 
         //dump($this->session->get('ie_per_estado'));die;
 
         /*$sucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array(
@@ -76,13 +94,13 @@ class NotasMaestroController extends Controller {
                             ->where('p.id = :idPersona')
                             ->andWhere('gt.id = :idGestion')
                             ->andWhere('iest.tramiteEstado not in (:estados)')
-                            // ->andWhere('ies.id = :idSucursal')
+                            ->andWhere('ie.id in (:sies)')
                             ->orderBy('sat.id','ASC')
                             ->addOrderBy('sespt.id','ASC')
                             ->setParameter('idPersona',$this->session->get('personaId'))
                             ->setParameter('idGestion',$this->session->get('currentyear'))
                             ->setParameter('estados',array(8,14))
-                            //->setParameter('idInstitucion',$this->session->get('ie_id'))
+                            ->setParameter('sies', $codigosSie)
                             // ->setParameter('idSucursal',611764)
                             ->getQuery()
                             ->getResult();
@@ -132,19 +150,19 @@ class NotasMaestroController extends Controller {
                         ->getQuery()
                         ->getResult();
 
-            $inscritos = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findBy(array('institucioneducativaCurso'=>$curso[0]['idCurso']));
-            foreach ($inscritos as $ins) {
-                $asignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneBy(array('estudianteInscripcion'=>$ins->getId(), 'institucioneducativaCursoOferta'=>$idCursoOferta));
-                if(!$asignatura){
-                    $newAsignatura = new EstudianteAsignatura();
-                    $newAsignatura->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($curso[0]['gestion']));
-                    $newAsignatura->setFechaRegistro(new \DateTime('now'));
-                    $newAsignatura->setEstudianteInscripcion($ins);
-                    $newAsignatura->setInstitucioneducativaCursoOferta($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($idCursoOferta));
-                    $em->persist($newAsignatura);
-                    $em->flush();
-                }
-            }
+            // $inscritos = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findBy(array('institucioneducativaCurso'=>$curso[0]['idCurso']));
+            // foreach ($inscritos as $ins) {
+            //     $asignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneBy(array('estudianteInscripcion'=>$ins->getId(), 'institucioneducativaCursoOferta'=>$idCursoOferta));
+            //     if(!$asignatura){
+            //         $newAsignatura = new EstudianteAsignatura();
+            //         $newAsignatura->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($curso[0]['gestion']));
+            //         $newAsignatura->setFechaRegistro(new \DateTime('now'));
+            //         $newAsignatura->setEstudianteInscripcion($ins);
+            //         $newAsignatura->setInstitucioneducativaCursoOferta($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($idCursoOferta));
+            //         $em->persist($newAsignatura);
+            //         $em->flush();
+            //     }
+            // }
 
             $estudiantes = $em->createQueryBuilder()
                               ->select('e.paterno, e.materno, e.nombre, ea.id as idEstudianteAsignatura, eae.id as idEstadoAsignatura, ei.id as idInscripcion')

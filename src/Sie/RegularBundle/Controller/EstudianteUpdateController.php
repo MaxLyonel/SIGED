@@ -273,8 +273,8 @@ class EstudianteUpdateController extends Controller {
                     ->add('ci', 'hidden', array('label' => 'carnetIdentidad','required' => false, 'mapped' => false, 'data'=>$student->getCarnetIdentidad()))
                     ->add('complemento', 'hidden', array('label' => 'complemento','required' => false, 'mapped' => false))
                     ->add('id', 'hidden', array('label' => 'id','required' => false, 'data'=>$student->getId()))
-                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü- A-ZÑÜÖÄËÏ\'-]{2,30}')))
-                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü- A-ZÑÜÖÄËÏ\'-]{2,30}')))
+                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü- A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
+                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü- A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
                     ->add('nombre', 'text', array('label' => 'Nombre', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñ-\'-. A-ZÑ-\'-.]{2,40}')))
                     ->add('fechaNacimiento', 'text', array('data' => $student->getFechaNacimiento()->format('d-m-Y'), 'label' => 'Fecha Nacimiento', 'attr' => array('readonly' => 'readonly', 'class' => 'form-control')))
                     // ->add('save', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
@@ -300,8 +300,8 @@ class EstudianteUpdateController extends Controller {
                     // ->setAction($this->generateUrl('sie_estudiantes_updatestudentD', array('id' => $student->getId())))
                     ->add('id', 'hidden', array('label' => 'id','required' => false, 'data'=>$student->getId()))
                     ->add('codigoRude', 'hidden', array('label' => 'codigo rude'))
-                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄËÏ\'-]{2,30}')))
-                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄËÏ\'-]{2,30}')))
+                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
+                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
                     ->add('nombre', 'text', array('label' => 'Nombre', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñ-\'-. A-ZÑ-\'-.]{2,40}')))
                     ->add('fechaNacimiento', 'text', array('data' => $student->getFechaNacimiento()->format('d-m-Y'), 'label' => 'Fecha Nacimiento', 'attr' => array('class' => 'form-control')))
                     ->add('pais', 'entity', array('label' => 'Pais', 'attr' => array('class' => 'form-control'),
@@ -400,8 +400,8 @@ class EstudianteUpdateController extends Controller {
                     ->add('id', 'hidden', array('label' => 'id','required' => false, 'data'=>$student->getId()))
 
 
-                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü- A-ZÑÜÖÄËÏ\'-]{2,30}')))
-                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü- A-ZÑÜÖÄËÏ\'-]{2,30}')))
+                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü- A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
+                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü- A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
                     ->add('nombre', 'text', array('label' => 'Nombre', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñ-\'.- A-ZÑ-\'.-]{2,40}')))
                     ->add('fechaNacimiento', 'text', array('data' => $student->getFechaNacimiento()->format('d-m-Y'), 'label' => 'Fecha Nacimiento', 'attr' => array('class' => 'form-control')))
                     ->add('resolAprobatoria', 'textarea', array('required' => false, 'data' => $student->getResolucionaprovatoria(), 'mapped' => false, 'attr' => array('class' => 'form-control', 'rows' => '2', 'cols' => '3', 'maxlength' => '15')))
@@ -429,8 +429,8 @@ class EstudianteUpdateController extends Controller {
 
                     ->add('id', 'hidden', array('label' => 'id','required' => false, 'data'=>$student->getId()))
 
-                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄËÏ\'-]{2,30}')))
-                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄËÏ\'-]{2,30}')))
+                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
+                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄÃËÏ\'-]{2,30}')))
                     ->add('nombre', 'text', array('label' => 'Nombre', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñ-\'-. A-ZÑ-\'.-]{2,40}')))
                     ->add('fechaNacimiento', 'text', array('data' => $student->getFechaNacimiento()->format('d-m-Y'), 'label' => 'Fecha Nacimiento', 'attr' => array('class' => 'form-control')))
                     ->add('resolAprobatoria', 'textarea', array('required' => false, 'data' => $student->getResolucionaprovatoria(), 'mapped' => false, 'attr' => array('class' => 'form-control', 'rows' => '2', 'cols' => '3', 'maxlength' => '15')))
@@ -839,7 +839,7 @@ class EstudianteUpdateController extends Controller {
         $entity->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['generoTipo']));
         $ci = ($form['extranjero']) ? mb_strtoupper($form['extranjero']) . '-' . $form['ci'] : $form['ci'];
         $entity->setCarnetIdentidad($ci);
-        $entity->setComplemento($form['complemento']);
+        $entity->setComplemento( mb_strtoupper($form['complemento'], 'utf-8'));
         $entity->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['generoTipo']));
         $entity->setOficialia($form['oficialia']);
         $entity->setLibro($form['libro']);
@@ -925,7 +925,7 @@ class EstudianteUpdateController extends Controller {
         $ci = ($form['extranjero']) ? mb_strtoupper($form['extranjero']) . '-' . $form['ci'] : $form['ci'];
         $entity->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['generoTipo']));
         $entity->setCarnetIdentidad($ci);
-        $entity->setComplemento($form['complemento']);
+        $entity->setComplemento( mb_strtoupper($form['complemento'], 'utf-8'));
         $entity->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['generoTipo']));
         $entity->setOficialia($form['oficialia']);
         $entity->setLibro($form['libro']);
@@ -1011,7 +1011,7 @@ class EstudianteUpdateController extends Controller {
         $ci = ($form['extranjero']) ? mb_strtoupper($form['extranjero']) . '-' . $form['ci'] : $form['ci'];
         $entity->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['generoTipo']));
         $entity->setCarnetIdentidad($ci);
-        $entity->setComplemento($form['complemento']);
+        $entity->setComplemento( mb_strtoupper($form['complemento'], 'utf-8'));
         $entity->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['generoTipo']));
         $entity->setOficialia($form['oficialia']);
         $entity->setLibro($form['libro']);

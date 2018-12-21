@@ -370,13 +370,27 @@ class ChangeMatriculaController extends Controller {
         if($swChangeStatus){
           //find to update
           $currentInscrip = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($infoStudent['eInsId']);
+          $oldInscriptionStudent = clone $currentInscrip;
           $currentInscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($form['estadoMatricula']));
           $em->persist($currentInscrip);
           $em->flush();
           $message = 'Cambio de estado realizado';  
           $this->addFlash('goodinscription',$message);
+          // added set log info data
+          $this->get('funciones')->setLogTransaccion(
+                                $infoStudent['eInsId'],
+                                'estudiante_inscripcion',
+                                'U',
+                                '',
+                                $currentInscrip,
+                                $oldInscriptionStudent,
+                                'SIGED',
+                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+          );     
+
           // Try and commit the transaction
           $em->getConnection()->commit();
+
         }
 
     } catch (Exception $e) {

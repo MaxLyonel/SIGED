@@ -181,7 +181,7 @@ class Seguimiento {
                                                       where c.codigo_rude = '".$rude."'
                                                       and a.esactivo is true
           ");
-        break;
+      break;
 
       default:
         return false;
@@ -211,6 +211,7 @@ class Seguimiento {
           INNER JOIN validacion_regla_tipo AS b ON b.validacion_regla_entidad_tipo_id = c.id
           INNER JOIN validacion_proceso AS a ON a.validacion_regla_tipo_id = b.id
           WHERE
+          b.es_activo is true AND
           a.es_activo ='f' AND
           a.llave = '".$data['codigoRude']."' AND
           a.gestion_tipo_id = ".$data['gestion']
@@ -570,6 +571,28 @@ public function getReportCalificationsByStudentInscription($studentInscription){
   return $objReportCalifications;
 
 }
+
+  public function getBachiller($id) {
+        
+        // $entity = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion');
+        $query = $this->em->createQueryBuilder('ei')
+                ->select('ei')
+                ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->where('ei.estudiante = :id')
+                ->andwhere('iec.nivelTipo in (:nivel)')
+                ->andwhere('iec.gradoTipo in (:grado)')
+                ->setParameter('id', $id)
+                ->setParameter('nivel', array('13', '3'))
+                ->setParameter('grado', array('6', '4'))
+                ->getQuery();
+
+        try {
+            return $query->getResult();
+        } catch (Exception $ex) {
+            return $ex;
+        }
+    }
 
 
 }

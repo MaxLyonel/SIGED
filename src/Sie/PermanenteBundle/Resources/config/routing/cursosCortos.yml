@@ -25,7 +25,7 @@ herramienta_per_cursos_cortos_update:
     methods:  [POST, PUT]
 
 herramienta_per_cursos_cortos_delete:
-    path:   /delete/
+    path:   /deletecc/
     defaults: { _controller: SiePermanenteBundle:CursosCortos:deleteCursoCorto}
     options:
           expose: true

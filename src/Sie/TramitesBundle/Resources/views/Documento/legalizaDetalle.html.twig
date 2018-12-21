@@ -46,7 +46,20 @@
                         <form name="formLegalizacion" role="form" action="{{ path('tramite_documento_legalizacion_numero_serie_guarda') }}" method="POST">
                             <input type="hidden" name="codigo" value="{{listaDocumento.id|base64_encode}}"/>
                             <input type="hidden" name="_token" value="{{ csrf_token(listaDocumento.id) }}">
-                            <button type="submit" class="btn btn-primary col-md-12" data-original-title="Legalizar Documento" onclick="this.style.visibility='hidden';"><strong>Legalizar Documento</strong></button>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <select class="form-control" name="firma" id="firma" onchange="validarFormImpresion(this)">
+                                        <option value="">Seleccione la persona que firmara</option>
+                                        {% for firma in listaFirma %}
+                                            <option value="{{ firma.documento_firma_id|base64_encode }}">{{firma.nombre}} {{firma.paterno}} {{firma.materno}}</option>
+                                        {% endfor %}
+                                        <option value="{{ 0|base64_encode }}">SIN FIRMA EN EL DOCUMENTO</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <button type="submit" class="btn btn-primary col-md-12" data-original-title="Legalizar Documento" onclick="this.style.visibility='hidden';"><strong>Legalizar Documento</strong></button>
+                                </div>
+                            </div>
                         </form>
                     </div><!-- /.panel-body -->
                     <div class="panel-footer">

@@ -504,8 +504,10 @@ class InboxController extends Controller {
                 ->leftJoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'mi.institucioneducativa = i.id')
                 ->where('mi.persona = :persona')
                 ->andwhere('mi.gestionTipo = :gestion')
+                ->andwhere('i.orgcurricularTipo = :curricularTipo')
                 ->setParameter('persona', $persona)
                 ->setParameter('gestion', $gestion)
+                ->setParameter('curricularTipo', 1)
                 ->setMaxResults(1)
                 ->getQuery();
         //print_r($query);die;
@@ -597,7 +599,7 @@ class InboxController extends Controller {
           // $em->flush();
         }
 
-      $form['reglas'] = '1,2,3,8,10,12,13,16';
+      $form['reglas'] = '1,2,3,10,12,13,16,27';
       $form['gestion'] = $data['gestion'];
       $form['sie'] = $data['id'];
 
@@ -917,7 +919,7 @@ class InboxController extends Controller {
       if ($this->session->get('ue_modular')) {
         $inconsistencia = null;
       } else {
-        if($this->session->get('ie_id')=='80730460'){
+        if($this->session->get('ie_id')=='80730460' && $form['gestion']==2018){
           $query = $em->getConnection()->prepare('select * from sp_validacion_regular_insamericano_web(:gestion, :sie, :periodo)');
           $query->bindValue(':gestion', $form['gestion']);
           $query->bindValue(':sie', $form['sie']);
@@ -932,7 +934,6 @@ class InboxController extends Controller {
           $query->execute();
           $inconsistencia = $query->fetchAll();
         }
-
       }
 
       /***********************************\
