@@ -1070,7 +1070,7 @@ class InfoEstudianteBjpController extends Controller {
             'institucioneducativaId' => $form['sie'],
             'gestionTipoId' => $this->session->get('currentyear')
         ));
-
+        
         if ($estudianteValidacion) {
             $message = 'La/El estudiante ya cuenta con registro para su validación o ya fue validado.';
             $this->addFlash('msgError', $message);
@@ -1105,7 +1105,7 @@ class InfoEstudianteBjpController extends Controller {
             $bjpnew->setGrado($objGrado->getGrado());
             $bjpnew->setParalelo($objParalelo->getParalelo());
             $bjpnew->setEstadomatriculaTipoId($inscripcion->getEstadomatriculaTipo()->getId());
-            $bjpnew->setEstadomatricula($inscripcion->getEstadomatriculaTipo()->getEstadomatricula());
+            $bjpnew->setEstadomatricula('EFECTIVO');
             $bjpnew->setEstudianteInscripcionId($inscripcion->getId());
             $bjpnew->setCodigoRude(mb_strtoupper($estudiante->getCodigoRude(), 'UTF-8'));
             $bjpnew->setCarnetIdentidad(mb_strtoupper($estudiante->getCarnetIdentidad(), 'UTF-8'));
@@ -1119,7 +1119,7 @@ class InfoEstudianteBjpController extends Controller {
             $bjpnew->setGenero($genero);
             $bjpnew->setFechaRegistro(new \DateTime('now'));
             $bjpnew->setGestionTipoId($this->session->get('currentyear'));
-
+            
             $em->persist($bjpnew);
             $em->flush();
             
@@ -1136,7 +1136,7 @@ class InfoEstudianteBjpController extends Controller {
             $bjpieduca->setGrado($objGrado->getGrado());
             $bjpieduca->setParalelo($objParalelo->getParalelo());
             $bjpieduca->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
-
+            
             $em->persist($bjpieduca);
             $em->flush();
 
