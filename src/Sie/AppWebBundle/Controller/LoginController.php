@@ -39,7 +39,6 @@ class LoginController extends Controller {
         //****FIN DE SE OBTIENE EL ID DEL ROL DEL USUARIO 
         //******************
                
-
         //****************
         //****SE GENERAN LOS MENUS PARA EL SIGEN EN BASE AL ID DEL ROL DEL USUARIO
         $query = $em->getConnection()->prepare('SELECT get_objeto_menu (:rol_id::INT)');
