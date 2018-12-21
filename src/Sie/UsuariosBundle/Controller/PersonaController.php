@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 use Sie\AppWebBundle\Entity\Persona;
 use Sie\AppWebBundle\Entity\PersonaHistorico;
+use Sie\AppWebBundle\Entity\ValidacionProceso;
 use Sie\UsuariosBundle\Form\PersonaType;
 use Sie\UsuariosBundle\Form\PersonaSegipType;
 use Sie\UsuariosBundle\Form\PersonaApropiacionType;
@@ -107,9 +108,8 @@ class PersonaController extends Controller
         $fechaNac = $persona->getFechaNacimiento();
         $fechaNacString = $fechaNac->format('d-m-Y');
         $env = 'prod';
-        $sistema = 'alternativa';
-        
-        //dump($carnet);dump($nombre);dump($paterno); die();|
+        $sistema = 'alternativa';        
+        //dump($carnet);dump($nombre);dump($paterno); die();
 
         $segipId = $persona->getSegipId();
 
@@ -217,32 +217,57 @@ class PersonaController extends Controller
                 if ($segipId == true){
                     //****COMPRUEBA SI TIENE HISTORIAL */
                     //**** EN CASO DE CONTAR CON HISTORIAL CREA UNO NUEVO ANALIZAR UNIFICACION DE REGISTRO*/ 
+
+                    $obs = '';
                     $db = $em->getConnection();            
-                    $query = "  select a.id from
-                                maestro_inscripcion a
-                                inner join persona b on a.persona_id = b.id
-                                where b.carnet = ? and b.complemento = ?
-                                union
-                                select a.id from 
+                    $query = "  select a.id from 
                                 estudiante_apoderado a
                                 inner join persona b on a.persona_id = b.id
                                 where b.carnet = ? and b.complemento = ?                                
-                                union
-                                select a.id from 
-                                usuario a
-                                inner join persona b on a.persona_id = b.id
-                                where b.carnet = ? and b.complemento = ?
                                 limit 1";
                     $stmt = $db->prepare($query);
-                    $params = array($form['carnet'], mb_strtoupper($form['complemento'], "utf-8"), $form['carnet'], mb_strtoupper($form['complemento'], "utf-8"), $form['carnet'], mb_strtoupper($form['complemento'], "utf-8"));
+                    $params = array($form['carnet'], mb_strtoupper($form['complemento'], "utf-8"));
                     $stmt->execute($params);
                     $po = $stmt->fetchAll();                    
-                    //dump(count($po)); die;
+                    if (count($po) == 1){                    
+                        $obs = 'apoderado'; 
+                    }
+
+                    $query = "  select a.id from
+                                maestro_inscripcion a
+                                inner join persona b on a.persona_id = b.id
+                                where b.carnet = ? and b.complemento = ?                                
+                                limit 1";
+                    $stmt = $db->prepare($query);
+                    $params = array($form['carnet'], mb_strtoupper($form['complemento'], "utf-8"));
+                    $stmt->execute($params);
+                    $po = $stmt->fetchAll();                    
                     if (count($po) == 1){
+                        $obs = 'maestro';
+                    }
+
+                    if ($obs != ''){
                         //*** CAMBIO DE DATO DEL CARNET ANTERIOR*/
-                        $persona->setCarnet('9-'.$persona->setCarnet());
+                        $persona->setCarnet('9-'.$persona->getCarnet());
                         $em->persist($persona);
-                        $em->flush();                     
+                        $em->flush();
+                        
+                        //*** ENVIO DE REGISTRO A CALIDAD */                
+                        $validacionproceso = new ValidacionProceso(); 
+                        $validacionproceso->setFechaProceso(new \DateTime());
+                        $validacionproceso->setValidacionReglaTipo($em->getRepository('SieAppWebBundle:ValidacionReglaTipo')->findOneById(47));
+                        $validacionproceso->setLlave($persona->getCarnet());
+                        $validacionproceso->setGestiontipo($em->getRepository('SieAppWebBundle:ValidacionReglaTipo')->findOneById(2018));
+                        $validacionproceso->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->findOneById(3));
+                        $validacionproceso->setEsActivo('1');
+                        $validacionproceso->setObs('Docente');
+                        $validacionproceso->setInstitucionEducativaId('0');
+                        $validacionproceso->setLugarTipoIdDistrito('0');
+                        $validacionproceso->setSolucionTipoId('0');
+                        $validacionproceso->setOmitido('0');
+                        $em->persist($validacionproceso);
+                        $em->flush();
+
                         //***** NUEVO REGISTRO */
                         $newpersona = new Persona();            
                         $newpersona->setPaterno($paterno);
