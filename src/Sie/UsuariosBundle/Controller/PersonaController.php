@@ -182,15 +182,13 @@ class PersonaController extends Controller
         $response = new JsonResponse();
         try {
             //**** SOLO MODIFICA GENERO Y CORREO ELECTRONICO */
-            if ($persona->getSegipId() == 1){
-                if ($form['fechaEditOn'] == "true"){
-                    $fecha = str_pad($form['fechaNacimiento']['day'], 2, '0', STR_PAD_LEFT).'/'.str_pad($form['fechaNacimiento']['month'], 2, '0', STR_PAD_LEFT).'/'.$form['fechaNacimiento']['year'];
-                    $persona->setFechaNacimiento(\DateTime::createFromFormat('d/m/Y', $fecha));   
-                }                
+            if ($persona->getSegipId() == 1){                
                 $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['generoTipo']));                
                 $persona->setCorreo($form['correo']);                                              
                 $em->persist($persona);
                 $em->flush();
+                $em->getConnection()->commit();
+                return $response->setData(array('mensaje' => 'Proceso realizado exitosamente.'));
             } else {
                 $carnet = $form['carnet'];
                 $complemento = mb_strtoupper($form['complemento'], "utf-8");             
