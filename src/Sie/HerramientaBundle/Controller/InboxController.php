@@ -599,7 +599,7 @@ class InboxController extends Controller {
           // $em->flush();
         }
 
-      $form['reglas'] = '1,2,3,8,10,12,13,16';
+      $form['reglas'] = '1,2,3,10,12,13,16,27';
       $form['gestion'] = $data['gestion'];
       $form['sie'] = $data['id'];
 
