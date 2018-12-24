@@ -360,4 +360,32 @@ class FlujoProceso
     {
         return $this->rutaFormulario;
     }
+    /**
+     * @var string
+     */
+    private $rutaReporte;
+
+
+    /**
+     * Set rutaReporte
+     *
+     * @param string $rutaReporte
+     * @return FlujoProceso
+     */
+    public function setRutaReporte($rutaReporte)
+    {
+        $this->rutaReporte = $rutaReporte;
+    
+        return $this;
+    }
+
+    /**
+     * Get rutaReporte
+     *
+     * @return string 
+     */
+    public function getRutaReporte()
+    {
+        return $this->rutaReporte;
+    }
 }

@@ -71,6 +71,13 @@ Sie\AppWebBundle\Entity\FlujoProceso:
             fixed: false
             comment: ''
             column: ruta_formulario
+        rutaReporte:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: ruta_reporte
     manyToOne:
         flujoTipo:
             targetEntity: FlujoTipo
