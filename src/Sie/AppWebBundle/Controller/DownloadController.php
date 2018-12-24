@@ -583,7 +583,7 @@ class DownloadController extends Controller {
         }else{
             // Tecnica tecnologica
             if($this->session->get('ue_tecteg') == true){
-                if($gestion >= 2011 and $gestion <=2013 and $sie != '80730460'){
+                if($gestion >= 2009 and $gestion <= 2013){
                     $reporte = 'reg_est_CertificadoNotas_UnidadesEducativasTecnologicas2013_trimestral_v1_ivg.rptdesign';
                 }else{
                     $reporte = 'reg_est_CertificadoNotas_UnidadesEducativasTecnologicas2016_v1_ivg.rptdesign';
