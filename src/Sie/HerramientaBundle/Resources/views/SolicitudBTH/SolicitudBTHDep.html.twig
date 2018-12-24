@@ -10,25 +10,22 @@
                     <a href="#">Solicitud BTH</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
-
                 <li class="active">Index</li>
             </ol>
         </div><!-- /.breadcrumb-wrapper -->
     </div><!-- /.header-content -->
     <div class="body-content animated fadeIn">
-
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="panel">
                     <div class="panel-body">
-
-                        <div class="panel panel-success">
+                        <div class="panel panel-primary">
                             <div class="panel-heading">
                                 <h3 class="panel-title"> Nro. Trámite: <strong>{{ id_tramite}}</strong>  - Formulario de Solicitud BTH </h3>
                             </div><!-- /.panel-heading -->
                             <div class="panel-body">
                                 <div class="row">
-                                    <div class="panel panel-success">
+                                    <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">1.- Personal Administrativo </h3>
                                         </div><!-- /.panel-heading -->
@@ -51,21 +48,19 @@
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <span>{{ director.paterno ~' '~ director.materno ~' '~ director.nombre }}</span>
-
                                                         </div>
                                                     </div>
                                                     <br>
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             {{ director.carnet }}
-
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div><!-- /.panel-body -->
                                     </div>
-                                    <div class="panel panel-success">
+                                    <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">2.- Información General</h3>
                                         </div><!-- /.panel-heading -->
@@ -86,7 +81,6 @@
                                                         </div>
                                                     </div>
                                                     <br>
-
                                                 </div>
                                                 <div class="col-md-9">
                                                     <div class="row">
@@ -101,14 +95,11 @@
                                                         </div>
                                                     </div>
                                                     <br>
-
                                                 </div>
                                             </div>
-
-
                                         </div><!-- /.panel-body -->
                                     </div>
-                                    <div class="panel panel-success">
+                                    <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">3.- Localización</h3>
                                         </div><!-- /.panel-heading -->
@@ -191,11 +182,9 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-
                                         </div><!-- /.panel-body -->
                                     </div>
-                                    <div class="panel panel-success">
+                                    <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">4.- Cumplimiento de Requisitos</h3>
                                         </div><!-- /.panel-heading -->
@@ -213,14 +202,14 @@
                                             </div>
                                          </div><!-- /.panel-body -->
                                     </div>
-                                    <div class="panel panel-success">
+                                    <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">5.- Especialidad</h3>
                                         </div><!-- /.panel-heading -->
                                         <div class="panel-body">
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <strong>Seleccionar las especialidades</strong>
+                                                    <strong>Espeialidades Ratificadas</strong>
                                                 </div>
                                                 <div class="col-md-3">
                                                 </div>
@@ -232,30 +221,9 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            {#<div class="row">
-                                                <div class="col-md-4">
-                                                    <strong>Seleccionar Curso al que se Aplica</strong>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <strong><span class="label label-warning">Nivel: Secundaria</span></strong>
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <select data-placeholder="Seleccionar Curso" class="chosen-select" multiple="" tabindex="-1" style="display: none;">
-                                                        #}{#{% if cursos %}
-                                                            {% for cursos in cursos %}#}{##}{#
-                                                                <option value="{{ cursos.grado_tipo_id }}">{{ cursos.grado }}</option>
-                                                            {% endfor %}
-                                                        {% else %}
-                                                            <option value="">U.E. sin cursos </option>
-                                                        {% endif %} #}{#
-                                                    </select>
-                                                </div>
-                                            </div>#}
-
                                         </div><!-- /.panel-body -->
                                     </div>
-
-                                    <div class="panel panel-success">
+                                    <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">6.- Evaluación Distrital</h3>
                                         </div><!-- /.panel-heading -->
@@ -273,53 +241,23 @@
                                                         <label for="siprocede"><strong>Si</strong></label>
                                                     </div>
                                                 </div>
-                                                {#<div class="col-md-2">
-                                                    <div class="rdio rdio-theme circle">
-                                                        <input id="noprocede" type="radio" name="radiotype1" value="no" onclick="muestraobs()">
-                                                        <label for="noprocede"><strong>No</strong></label>
-                                                    </div>
-                                                </div>#}
-
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <strong>Documento adjunto</strong>
                                                 </div>
-
-
                                                 <a  class="btn btn-lilac btn-xs btn-stroke" href="{{asset('uploads/archivos/'~ documento )}}" target="_blank">
                                                     <i class="fa fa-file-pdf-o fa-2x" >  </i>   Informe Enviado por la Dirección Distrital
                                                 </a>
-
-
                                             </div>
-                                            <BR>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="pull-left">
-                                                       {#<button class="btn btn-sm btn-facebook"  title="Adjuntar Documento"><i class="glyphicon glyphicon-paperclip"></i>Adjuntar Documento</button>#}
-                                                       {# <input type="file" id="adjdocumento" title="Adjuntar Documento" >#}
-                                                    </div>
-                                                </div>
-                                                {#<div class="col-md-6">
-                                                    <div class="pull-right">
-                                                        <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicituDistritaldbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
-                                                    </div>
-                                                </div>#}
-
-                                            </div>
-
-
+                                            <br>
                                         </div><!-- /.panel-body -->
                                     </div>
-
-
-                                    <div class="panel panel-success">
+                                    <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">7.- Evaluación Departamental </h3>
                                         </div><!-- /.panel-heading -->
                                         <div class="panel-body">
-
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <strong>¿Autoriza Solicitud?</strong>
@@ -332,7 +270,6 @@
                                                         <input id="siprocededep" type="radio" name="radiotypedep" value="si"  onclick="muestraobs()" checked >
                                                         <label for="siprocededep"><strong>Si</strong></label>
                                                     </div>
-
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="rdio rdio-theme circle">
@@ -344,11 +281,10 @@
                                                     <textarea class="form-control" rows="5" id="obstxt"></textarea>
                                                 </div>
                                             </div>
-                                            <BR>
+                                            <br>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="pull-left">
-                                                        {#<button class="btn btn-sm btn-facebook"  title="Adjuntar Documento"><i class="glyphicon glyphicon-paperclip"></i>Adjuntar Documento</button>#}
                                                         <input type="file" id="adjdocumento" title="Adjuntar Documento" accept="application/pdf">
                                                     </div>
                                                 </div>
@@ -357,26 +293,16 @@
                                                         <button class="btn btn-sm btn-facebook" id="btn_accion" title="Finalizar Solicitud" onclick="enviarSolicituDepartamentaldbth()"><i class="fa fa-pencil"></i> Finalizar Solicitud</button>
                                                     </div>
                                                 </div>
-
-
                                             </div>
-
-
                                         </div><!-- /.panel-body -->
                                     </div>
-
                                 </div>
                             </div><!-- /.panel-body -->
                         </div>
-
                     </div>
                 </div>
-
             </div>
-
         </div>
-
-
     </div>
 {% endblock %}
 {% block javascripts%}
@@ -396,16 +322,12 @@
                 $('#obs').hide();
                 $('#btn_accion').text("Finalizar Solicitud");
                 $('#btn_accion').prop('title','Finalizar Solicitud');
-                //$('#btn_accion').prop('class','btn btn-sm btn-danger')
-
             }else {
                 $('#obs').show(2000);
                 $('#btn_accion').text("Enviar Solicitud");
                 $('#btn_accion').prop('title','Enviar Solicitud');
-                //$('#btn_accion').prop('class','btn btn-sm btn-facebook')
             }
         }
-        
         function  enviarSolicituDepartamentaldbth() {
             swal({
                 title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
@@ -440,12 +362,9 @@
                         }
                         if($('#siprocededep:checked').val())
                             var evaluacion  ="SI";
-
                         }
                         if($('#noprocededep:checked').val())
                             var evaluacion  = "NO";
-
-
 
                         if($('#adjdocumento').val()=="")
                         {swal("Debe adjuntar su informe.");
@@ -471,9 +390,9 @@
                             cache: false,
                             processData:false,
                             //dataType : 'json',
-                            before: function () {
+                            beforeSend: function () {
                                 swal({
-                                    title: "Enviando...",
+                                    title: "Finalizando Trámite...",
                                     text: "Espere un momento por favor",
                                     icon: imagen,
                                     buttons: false
@@ -482,8 +401,8 @@
                             success: function (data) {
 
                                 if (data==1){
-                                    swal("Su respuesta se ha enviado con éxito, con Nro. de Trámite: "+ {{ id_tramite }} );
-                                    location.href = "{{ path('solicitud_bth_departamental_index') }}";
+                                    swal("Su respuesta se ha enviado con éxito, con Nro. de Trámite: "+ {{ id_tramite }});
+                                    location.href = "{{ path('wf_tramite_recibido') }}";
                                 }
                                 else{
                                     swal("Su formulario no se envío correctamente");
@@ -498,7 +417,5 @@
                 });
 
         }
-
     </script>
-
 {% endblock %}

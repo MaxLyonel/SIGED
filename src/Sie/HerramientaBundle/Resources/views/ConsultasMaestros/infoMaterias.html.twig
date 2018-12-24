@@ -1,0 +1,85 @@
+<div class="row">
+    <div class="table-responsive col-md-12">
+        <table class="table table-bordered table-striped table-default" id="materias_institucion_{{ institucioneducativa_id }}" >
+            <thead>
+            <tr>
+                <th class="text-center border-right" style="min-width: 5px">No.</th>
+                <th>Turno</th>
+                <th>Nivel</th>
+                <th>Grado</th>
+                <th>Paralelo</th>
+                <th>Periodo</th>
+                <th>Asignatura</th>
+
+            </tr>
+            </thead>
+            <tfoot>
+            <tr>
+                <th class="text-center border-right" style="min-width: 5px">No.</th>
+                <th>Turno</th>
+                <th>Nivel</th>
+                <th>Grado</th>
+                <th>Paralelo</th>
+                <th>Periodo</th>
+                <th>Asignatura</th>
+            </tr>
+            </tfoot>
+            <tbody id = "contenido_institucion">
+            {% for materias in infomaterias %}
+                <tr>
+                    <td class="text-center" style="min-width: 5px">{{ loop.index }}</td>
+                    <td>{{ materias.turno }}</td>
+                    <td>{{ materias.nivel }}</td>
+                    <td>{{ materias.grado }}</td>
+                    <td>{{ materias.paralelo }}</td>
+                    <td>{{ materias.periodo}}</td>
+                    <td>{{ materias.asignatura }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% block javascripts%}
+
+    <script>
+        $( document ).ready(function() {
+            cargatablas({{ institucioneducativa_id }});
+        });
+        function cargatablas(inst_id){
+            // Setup - add a text input to each footer cell
+            $('#materias_institucion_'+inst_id+' tfoot th').each( function () {
+                var title = $(this).text();
+                if(title.trim() === "" || title === "Ver"){
+                    $(this).html('');
+                } else {
+                    $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+                }
+            } );
+
+            // DataTable
+            var table = $('#materias_institucion_'+inst_id).DataTable( {
+                    "order": [[ 0, "asc" ]],
+                    "columnDefs": [
+                        { "orderable": false, "targets": [0] }
+                    ],
+                }
+            );
+
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        };
+    </script>
+
+{% endblock %}

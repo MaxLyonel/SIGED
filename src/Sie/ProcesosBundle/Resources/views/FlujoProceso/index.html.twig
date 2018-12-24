@@ -46,7 +46,7 @@
                                         <ul class="nav nav-tabs">
                                             <li class="active">
                                                 <a href="#tab1-1" data-toggle="tab" id="t1" >
-                                                    <i class="fa fa-user"></i>
+                                                    <i class="glyphicon glyphicon-tasks"></i>
                                                     <div>
                                                         <span class="text-strong">Paso 1</span>
                                                         <span>Tareas</span>
@@ -55,7 +55,7 @@
                                             </li>
                                             <li>
                                                 <a href="#tab1-2" data-toggle="tab" onclick="cargar_tareas_proceso(2)" id="t2" >
-                                                    <i class="fa fa-file-text"></i>
+                                                    <i class="glyphicon glyphicon-list"></i>
                                                     <div  >
                                                         <span class="text-strong">Paso 2</span>
                                                         <span>Pasos tarea</span>
@@ -64,7 +64,7 @@
                                             </li>
                                             <li>
                                                 <a href="#tab1-3" data-toggle="tab" onclick="cargar_tareas_proceso(3)" id="t3">
-                                                    <i class="fa fa-credit-card"></i>
+                                                    <i class="glyphicon glyphicon-asterisk"></i>
                                                     <div>
                                                         <span class="text-strong">Paso 3</span>
                                                         <span>Condición tarea</span>
@@ -73,7 +73,7 @@
                                             </li>
                                             <li>
                                                 <a href="#tab1-4" data-toggle="tab" id="t4">
-                                                    <i class="fa fa-credit-card"></i>
+                                                    <i class="fa fa-check-circle"></i>
                                                     <div>
                                                         <span class="text-strong">Paso 4</span>
                                                         <span>Finalizar proceso</span>
@@ -101,78 +101,6 @@
                                             </div>
                                             <div id="tareas">
                                             </div>
-                                            {#<div id="formModal" class="modal fade"  role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.5);">#}
-                                            <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.5);">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                            <h4 class="modal-title">Tarea</h4>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="form-group">
-                                                                <label class="col-sm-6">Adicionar tarea</label>
-                                                                <div class="col-sm-4">
-                                                                    {{ form_widget(form.tarea, {'attr':{'class':'form-control','onclick':'cargar_tareas_proceso(0)'} }) }}
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label class="col-sm-6">Rol</label>
-                                                                <div class="col-sm-4">
-                                                                    {{ form_widget(form.rol, {'attr':{'class':'form-control'} }) }}
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label class="col-sm-6">Observación</label>
-                                                                <div class="col-sm-4">
-                                                                    {{ form_widget(form.observacion, {'attr':{'class':'form-control'} }) }}                                                       
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label class="col-sm-6">Tipo de asignación de tarea</label>
-                                                                <div class="col-sm-4">
-                                                                    {{ form_widget(form.asignacion, {'attr':{'class':'form-control'} }) }}
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label class="col-sm-6">Evaluación</label>
-                                                                <div class="col-md-4">
-                                                                    {{ form_widget(form.evaluacion, {'attr':{'class':'form-control'} }) }}
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label class="col-sm-6">Variable de valuación</label>
-                                                                <div class="col-sm-4">
-                                                                    {{ form_widget(form.varevaluacion, {'attr':{'class':'form-control'} }) }}
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label class="col-sm-6">Tarea anterior</label>
-                                                                <div class="col-sm-4">
-                                                                    {{ form_widget(form.tareaant, {'attr':{'class':'form-control'} }) }}
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label class="col-sm-6">Tarea siguiente</label>
-                                                                <div class="col-sm-4">
-                                                                    {{ form_widget(form.tareasig, {'attr':{'class':'form-control'} }) }}
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label class="col-sm-6">Plazo</label>
-                                                                <div class="col-md-1">
-                                                                    {{ form_widget(form.plazo, {'attr':{'class':'validar'} }) }}
-                                                                </div>
-                                                            </div>
-                                                            {{ form_end(form) }}  
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button id="adicionartarea" class="btn btn-primary" onclick="cargartarea()">Guardar</button>
-                                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
                                         <div class="tab-pane fade inner-all" id="tab1-2">
                                             <div class="form-group">
@@ -182,48 +110,6 @@
                                             </div>
                                              <div id="tablapasos">
                                             </div>
-                                            <div class="modal fade" id="formModal2" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.5);">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                            <h4 class="modal-title">Pasos de una tarea</h4>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            {{ form_start(form_pasos,{ 'attr': {'class': 'tab-content form-horizontal','id':'form_pasos'} } ) }}
-                                                            <div class="form-group">
-                                                                <label class="col-sm-2">Tarea</label>
-                                                                <div class="col-sm-4">
-                                                                    {{ form_widget(form_pasos.ptarea, {'attr':{'class':'form-control'} }) }}
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label class="col-sm-2">Nombre del paso</label>
-                                                                <div class="col-sm-4">
-                                                                    {{ form_widget(form_pasos.nombre, {'attr':{'class':'form-control'} }) }}
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label class="col-sm-2">Posición</label>
-                                                                <div class="col-md-1">
-                                                                    {{ form_widget(form_pasos.posicion, {'attr':{'class':'validar'} }) }}
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label class="col-sm-2">Tipo de paso</label>
-                                                                <div class="col-sm-4">
-                                                                    {{ form_widget(form_pasos.tipopaso, {'attr':{'class':'form-control'} }) }}
-                                                                </div>
-                                                            </div>
-                                                            {{ form_end(form_pasos) }}
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button id="adicionarpaso" class="btn btn-primary" onclick="cargarPasos()">Adicionar</button>
-                                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
                                         <div class="tab-pane fade inner-all" id="tab1-3">
                                                 <div class="form-group">
@@ -232,49 +118,6 @@
                                                     </button>
                                                 </div>
                                                 <div id="tablacondicion">
-                                                </div>
-                                                <div class="modal fade" id="formModal3" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.5);">
-                                                    <div class="modal-dialog" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                                    <h4 class="modal-title">Adicionar Pasos de una tarea</h4>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                {{ form_start(form_condicion,{ 'attr': {'class': 'tab-content form-horizontal','id':'form_condicion'} } ) }}
-                                                                    {#<input id="cont" name="cont" type="hidden" value="">#}
-                                                                <div class="form-group">
-                                                                    <label class="col-sm-2">Tarea</label>
-                                                                    <div class="col-sm-4">
-                                                                        {{ form_widget(form_condicion.ctarea, {'attr':{'class':'form-control'} }) }}
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label class="col-sm-2">Condición</label>
-                                                                    <div class="col-sm-4">
-                                                                        {{ form_widget(form_condicion.condiciones, {'attr':{'class':'form-control'} }) }}
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label class="col-sm-2">Tarea siguiente a la condición</label>
-                                                                    <div class="col-sm-4">
-                                                                        {{ form_widget(form_condicion.ctareasig, {'attr':{'class':'form-control'} }) }}
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label class="col-sm-2">Tipo condición</label>
-                                                                    <div class="col-sm-4">
-                                                                        {{ form_widget(form_condicion.tipocondicion, {'attr':{'class':'form-control'} }) }}
-                                                                    </div>
-                                                                </div>
-                                                                {{ form_end(form_condicion) }}  
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button id="adicionarcondicion" class="btn btn-primary" onclick="adicionarcondicion()">Adicionar</button>
-                                                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                         </div>
                                         <div class="tab-pane fade inner-all" id="tab1-4">
@@ -310,6 +153,172 @@
                             <!--/ End basic wizard horizontal-->
                     </div><!-- /.panel-body -->
                     
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="formModal">
+    {#<div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.5);">#}
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Adicionar tarea</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group col-md-12">
+                        <label class="col-sm-4">Tarea</label>
+                        <div class="col-sm-8">
+                            {{ form_widget(form.tarea, {'attr':{'class':'form-control','onclick':'cargar_tareas_proceso(0)'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-sm-4">Rol</label>
+                        <div class="col-sm-8">
+                            {{ form_widget(form.rol, {'attr':{'class':'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-sm-4">Observación</label>
+                        <div class="col-sm-8">
+                            {{ form_widget(form.observacion, {'attr':{'class':'form-control'} }) }}                                                       
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-sm-4">Tipo de asignación de tarea</label>
+                        <div class="col-sm-8">
+                            {{ form_widget(form.asignacion, {'attr':{'class':'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-sm-4">Evaluación</label>
+                        <div class="col-md-8">
+                            {{ form_widget(form.evaluacion, {'attr':{'class':'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-sm-4">Variable de valuación</label>
+                        <div class="col-sm-8">
+                            {{ form_widget(form.varevaluacion, {'attr':{'class':'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-sm-4">Tarea anterior</label>
+                        <div class="col-sm-8">
+                            {{ form_widget(form.tareaant, {'attr':{'class':'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-sm-4">Tarea siguiente</label>
+                        <div class="col-sm-8">
+                            {{ form_widget(form.tareasig, {'attr':{'class':'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-sm-4">Plazo</label>
+                        <div class="col-md-2">
+                            {{ form_widget(form.plazo, {'attr':{'class':'form-control validar'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-sm-4">Ruta de la tarea</label>
+                        <div class="col-md-8">
+                            {{ form_widget(form.ruta, {'attr':{'class':'form-control'} }) }}
+                        </div>
+                    </div>
+                    {{ form_end(form) }}  
+                </div>
+                <div class="modal-footer">
+                    <button id="adicionartarea" class="btn btn-primary" onclick="cargartarea()">Guardar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {#<div class="modal fade" id="formModal2" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.5);">#}
+    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="formModal2">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Pasos de una tarea</h4>
+                </div>
+                <div class="modal-body">
+                    {{ form_start(form_pasos,{ 'attr': {'class': 'tab-content form-horizontal','id':'form_pasos'} } ) }}
+                    <div class="form-group">
+                        <label class="col-sm-4">Tarea</label>
+                        <div class="col-sm-8">
+                            {{ form_widget(form_pasos.ptarea, {'attr':{'class':'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4">Nombre del paso</label>
+                        <div class="col-sm-8">
+                            {{ form_widget(form_pasos.nombre, {'attr':{'class':'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4">Posición</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form_pasos.posicion, {'attr':{'class':'form-control validar'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4">Tipo de paso</label>
+                        <div class="col-sm-8">
+                            {{ form_widget(form_pasos.tipopaso, {'attr':{'class':'form-control'} }) }}
+                        </div>
+                    </div>
+                    {{ form_end(form_pasos) }}
+                </div>
+                <div class="modal-footer">
+                    <button id="adicionarpaso" class="btn btn-primary" onclick="cargarPasos()">Adicionar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {#<div class="modal fade" id="formModal3" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.5);">#}
+    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="formModal3">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Condición de una tarea</h4>
+                </div>
+                <div class="modal-body">
+                    {{ form_start(form_condicion,{ 'attr': {'class': 'tab-content form-horizontal','id':'form_condicion'} } ) }}
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <label>Tarea</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form_widget(form_condicion.ctarea, {'attr':{'class':'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4">Condición</label>
+                        <div class="col-sm-8">
+                            {{ form_widget(form_condicion.condiciones, {'attr':{'class':'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4">Tarea siguiente a la condición</label>
+                        <div class="col-sm-8">
+                            {{ form_widget(form_condicion.ctareasig, {'attr':{'class':'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4">Tipo condición</label>
+                        <div class="col-sm-8">
+                            {{ form_widget(form_condicion.tipocondicion, {'attr':{'class':'form-control'} }) }}
+                        </div>
+                    </div>
+                    {{ form_end(form_condicion) }}  
+                </div>
+                <div class="modal-footer">
+                    <button id="adicionarcondicion" class="btn btn-primary" onclick="adicionarcondicion()">Adicionar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>
@@ -542,7 +551,7 @@
                         //$('#tareas').empty();
                     },
                     success: function (data) {
-                        $('#formModal').hide();
+                        $('#formModal').modal('hide');
                         //$('#formModal').modal('hide');
                         $('#tareas').empty();
                         $('#tareas').append(data);
@@ -583,7 +592,7 @@
                     $('#tablapasos').empty();
                 },
                 success: function (data) {
-                    $('#formModal2').hide();
+                    $('#formModal2').modal('hide');
                     //$('#formModal2').modal('hide');
                     $('#tablapasos').empty();
                     $('#tablapasos').append(data);
@@ -616,7 +625,7 @@
                     $('#tablacondicion').empty();
                 },
                 success: function (data) {
-                    $('#formModal3').hide();
+                    $('#formModal3').modal('hide');
                     $('#tablacondicion').empty();
                     $('#tablacondicion').append(data);
                 },
@@ -701,7 +710,7 @@
             if(confirm('¿Se eliminaran todas las tareas siguientes a esta. Está suguro de eliminar ?')){
                 formData = {id: id};
                 $.ajax({
-                    type: 'POST',
+                    type: 'GET',
                     url: "{{path('flujoproceso_tarea_delete')}}",
                     data: formData,
                     beforeSend: function () {
@@ -865,6 +874,26 @@
                 },
             });
         }
+
+        $('#form_rol').click(function(){
+            var formData = {rol: $('#form_rol').val()};
+            $.ajax({
+                type: 'GET',
+                url: "{{path('flujoproceso_buscar_usuarios')}}",
+                data: formData,
+                beforeSend: function () {
+                    $("#form_usuarios").empty();
+                    $("#form_usuarios").append('<option value="">Buscando...</option>');
+                },
+                success: function (data) {
+                    $("#form_usuarios").empty();
+                    $("#form_usuarios").append('<option value="">Seleccionar usuarios</option>');
+                    $.each(data.usuarios, function (i, value) {
+                        $("#form_usuarios").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                },
+            });
+        })
         
     </script>
 

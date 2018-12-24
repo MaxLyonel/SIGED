@@ -22,13 +22,13 @@
                 <div class="panel">
                     <div class="panel-body">
 
-                        <div class="panel panel-success">
+                        <div class="panel panel-primary">
                             <div class="panel-heading">
                                 <h3 class="panel-title">Nro. Trámite: <strong>{{ id_tramite}}</strong> Formulario de Solicitud BTH </h3>
                             </div><!-- /.panel-heading -->
                             <div class="panel-body">
                                 <div class="row">
-                                    <div class="panel panel-success">
+                                    <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">1.- Personal Administrativo </h3>
                                         </div><!-- /.panel-heading -->
@@ -65,7 +65,7 @@
                                             </div>
                                         </div><!-- /.panel-body -->
                                     </div>
-                                    <div class="panel panel-success">
+                                    <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">2.- Información General</h3>
                                         </div><!-- /.panel-heading -->
@@ -108,7 +108,7 @@
 
                                         </div><!-- /.panel-body -->
                                     </div>
-                                    <div class="panel panel-success">
+                                    <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">3.- Localización</h3>
                                         </div><!-- /.panel-heading -->
@@ -195,7 +195,7 @@
 
                                         </div><!-- /.panel-body -->
                                     </div>
-                                    <div class="panel panel-success">
+                                    <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">4.- Cumplimiento de Requisitos</h3>
                                         </div><!-- /.panel-heading -->
@@ -215,7 +215,7 @@
 
                                         </div><!-- /.panel-body -->
                                     </div>
-                                    <div class="panel panel-success">
+                                    <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">5.- Especialidad</h3>
                                         </div><!-- /.panel-heading -->
@@ -283,21 +283,28 @@
             </div>
 
         </div>
-
-
+        <ul id="select_esp" style="display: none">
+        {% for especialidadarray in especialidadinfo %}
+            <li>{{ especialidadarray }}</li>
+        {% endfor %}
+        </ul>
     </div>
 {% endblock %}
 {% block javascripts%}
     {{ parent() }}
     <script>
         $(document).ready(function(){
-            var informe = {{ informe }}
+            var informe = {{ informe }};
             if(informe==1){
                 document.getElementById("informe").checked = true;
             }
             $('#obs').hide();
+            var select_array = [];
+            $('#select_esp').find('li').each(function (index, item) {
+                select_array.push(item.innerHTML);
+            });
             setTimeout(function () {
-                $("#select_especialidade").val(['1','2','3','4']).trigger('chosen:updated');
+                $("#select_especialidade").val(select_array).trigger('chosen:updated');
             },1000);
         });
         function muestraobs(){
@@ -329,11 +336,10 @@
                                     ip.push({ informe : 1});
                                 else ip.push({ informe : 0 });
                                 ip.push({institucionid : institucionid});
-
-                                    if($('#select_especialidad').val())
-                                        ip.push({select_especialidad : $('#select_especialidad').val()});
-                                    else
-                                    {swal("Debe seleccionar al menos una especialidad."); return false;}
+                                if($('#select_especialidade').val())
+                                    ip.push({select_especialidad : $('#select_especialidade').val()});
+                                else
+                                {swal("Debe seleccionar al menos una especialidad."); return false;}
 
                                 var obstxt=$('#obstxt').val();
                                 var ipt=JSON.stringify(ip);
@@ -341,9 +347,9 @@
                                 $.ajax({
                                     type: 'post',
                                     url: "{{ path('solicitud_bth_enviosolicitud') }}",
-                                    data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},idsolicitud:idsolicitud },
+                                    data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},idsolicitud:idsolicitud,sw:1 },
                                     dataType : 'json',
-                                    before: function () {
+                                    beforeSend: function () {
                                         swal({
                                             title: "Enviando...",
                                             text: "Espere un momento por favor",
@@ -355,7 +361,7 @@
                                         console.log(data);
                                         if (data==1 ){
                                             swal("Su formulario se ha enviado con éxito, con Nro. Trámite: " + {{ id_tramite}} );
-                                            location.href = "{{ path('solicitud_bth_index') }}";
+                                            location.href = "{{ path('wf_tramite_index') }}";
                                         }
                                         else if(data==2 ){
                                             swal("Debe iniciar su trámite como 'Ratificacion'");
@@ -403,7 +409,7 @@
                                 $.ajax({
                                     type: 'post',
                                     url: "{{ path('solicitud_bth_enviosolicitud') }}",
-                                    data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}} },
+                                    data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},sw:1 },
                                     dataType : 'json',
                                     before: function () {
                                         swal({
@@ -416,7 +422,7 @@
                                     success: function (data) {
                                             if (data==1){
                                                 swal("Su formulario se ha enviado con éxito, con Nro. de Trámite:"+{{ id_tramite}} );
-                                                location.href = "{{ path('solicitud_bth_index') }}";
+                                                location.href = "{{ path('wf_tramite_index') }}";
                                             }
                                             else if(data==3 ){
                                                 swal("Debe iniciar su trámite como 'Registro Nuevo'");
@@ -434,10 +440,6 @@
                     break;
 
             }
-
-
-
-
         }
 
     </script>

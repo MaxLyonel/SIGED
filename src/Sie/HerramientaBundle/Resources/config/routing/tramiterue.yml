@@ -100,4 +100,8 @@ tramite_rue_le_buscar_distritos:
      path:    /distritos/{idDepartamento}/
      defaults: { _controller: "SieHerramientaBundle:TramiteRue:distritos" }
      options:
-         expose: true    
+         expose: true 
+
+tramite_rue_buscar_edificio:
+    path:     /buscaredificio
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:buscaredificio" }

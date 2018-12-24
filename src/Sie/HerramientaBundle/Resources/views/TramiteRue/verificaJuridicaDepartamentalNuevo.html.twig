@@ -1,8 +1,8 @@
-{% extends 'layoutProcesos.html.twig' %}
+{% extends 'layoutHerramienta.html.twig' %}
 {% block contentoption %}
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> TRAMITE RUE: <span>VERIFICACIÓN JURÍDICA DEPARTAMENTAL</span></h2>
+        <h2><i class="fa fa-list-alt"></i> TRAMITE RUE Nro. {{ idtramite }}: <span>VERIFICACIÓN ASUNTOS JURÍDICOS DEPARTAMENTAL</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -16,153 +16,264 @@
         </div><!-- /.breadcrumb-wrapper -->
     </div><!-- /.header-content -->
     <!--/ End page header -->
-    
     <div class="body-content animated fadeIn">
         <div class="row">
-            <div class="col-12">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        {% if app.session.flashBag.has('exito') %}
-                            <div class="alert alert-success">
-                                {% for msg in app.session.flashBag.get('exito') %}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    {{ msg }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                        {% if app.session.flashBag.has('error') %}
-                            <div class="alert alert-danger">
-                                {% for msg in app.session.flashBag.get('error') %}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    {{ msg }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}    
-                        <div class="pull-left">
-                            <h3 class="panel-title">VERIFICAR INFORME-Tramite:{{ idtramite }}</h3>
-                        </div>
-                        {#<div class="pull-left">
-                            <label>Código RUE:</label>
-                            <input type="text" value="" id="idrue">
-                            <a href="#" class="btn btn-primary" id="buscar_rue">
-                                <i class="fa fa-plus"></i> Buscar
-                            </a>
-                        </div>#}
-                        <div class="clearfix"></div>
-                    </div><!-- /.panel-heading -->
-                     {{ form_start(form) }}
+            <div class="col-md-12">
+                <div class="panel">
                     <div class="panel-body">
-                       
                         <div class="row">
-							<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
-								{{ form_label(form.idrue) }}
-								{{ form_widget(form.idrue, {'attr':{'class':'form-control'} }) }}
-							</div>
-                            <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
-								{{ form_label(form.institucioneducativa) }}
-								{{ form_widget(form.institucioneducativa, {'attr':{'class':'form-control'} }) }}
-							</div>
-                            <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
-								{{ form_label(form.tipotramite) }}
-								{{ form_widget(form.tipotramite, {'attr':{'class':'form-control'} }) }}
-							</div>
-                            <div class="row"></br></br>
-                            <div class="form-group col-md-12">
-								<div class="col-md-12"><h5 class="panel-title">OBSERVAR Y DEVOLVER</h5></div></br>
-                                {% for v1 in form.varevaluacion1 %}
-                                <div class="col-md-2">
-                                    {{ form_widget(v1) }}
-                                    {{ form_label(v1) }}
-                                </div>
-                                {% endfor %} 
-							</div>
-                            <div class="form-group col-md-12" id="obs" style="display:none">
-                                <div class="col-md-6">
-								    {{ form_label(form.observacion1) }}
-								    {{ form_widget(form.observacion1, {'attr':{'class':'form-control'} }) }}
-                                </div>
-							</div>
-                            </div>
-                            <div class="row" style="display:none" id="informe">
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-12"><h5 class="panel-title">INFORME PROCEDENTE</h5></div></br>
-                                    <div class="col-md-6">
-                                    {% for v2 in form.varevaluacion2 %}
-                                        <div class="form-group col-md-2">
-                                            {{ form_widget(v2) }}
-                                            {{ form_label(v2) }}
-                                        </div>
-                                    {% endfor %} 
+                            <div class="col-md-12">                    
+                                {% if app.session.flashBag.has('exito') %}
+                                    <div class="alert alert-success">
+                                        {% for msg in app.session.flashBag.get('exito') %}
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            {{ msg }}
+                                        {% endfor %}
                                     </div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-6">
-								        {{ form_label(form.informejuridica) }}
-								        {{ form_widget(form.informejuridica, {'attr':{'class':'form-control'} }) }}
-							        </div>
-                                    <div class="col-md-6">
-								        {{ form_label(form.fechainformejuridica) }}
-								        {{ form_widget(form.fechainformejuridica, {'attr':{'class':'form-control'} }) }}
-							        </div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                <div class="col-md-6">
-    								{{ form_label(form.observacion2) }}
-	    							{{ form_widget(form.observacion2, {'attr':{'class':'form-control'} }) }}
-		        				</div>
-                                </div>
-                                <div class="form-group col-md-12" id = "resol" style="display:none">
-                                    <div class="col-md-6">
-								        {{ form_label(form.resolucion) }}
-								        {{ form_widget(form.resolucion, {'attr':{'class':'form-control'} }) }}
-							        </div>
-                                    <div class="col-md-6">
-								        {{ form_label(form.fecharesolucion) }}
-								        {{ form_widget(form.fecharesolucion, {'attr':{'class':'form-control'} }) }}
-							        </div>
-                                </div>
+                                {% endif %}
+                                {% if app.session.flashBag.has('error') %}
+                                    <div class="alert alert-danger">
+                                        {% for msg in app.session.flashBag.get('error') %}
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            {{ msg }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <div class="pull-left">
+                                            <h3 class="panel-title">INFORME ASUNTOS JURÍDICOS</h3>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="panel-group">
+                                            <div class="panel">
+                                                <div class="panel-heading">
+                                                    <div class="pull-left">
+                                                        <a data-toggle="collapse" href="#collapse1"><h4 class="panel-title text-lilac"><i class="fa fa-eye"></i>Ver formularios anteriores</h4></a>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                                <div id="collapse1" class="panel-collapse collapse">
+                                                    <div class="panel-body">
+                                                        {% include 'SieHerramientaBundle:TramiteRue:historico.html.twig' with {'datos': datos} %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+			                        </div><!-- /.panel-body -->
+                                </div><!-- /.panel-primary -->
                             </div>
-                            <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								{{ form_label(form.guardar) }}
-                                {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary'} }) }}
-                                <a href="{{path('wf_tramite_recibido')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
-							</div>
-                        </div>    
-        			    
-			        </div><!-- /.panel-body -->
-                </div>
+                        </div>
+                         <div class="row">
+                            <div class="col-md-12">                    
+                               {{ form_start(form,{ 'attr': {'role': 'form','onsubmit':'return validacion()'}}) }}
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <div class="pull-left">
+                                            <h3 class="panel-title">VERIFICAR TRÁMITE</h3>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="form-group  col-md-12">
+                                                <div class="col-md-3"><strong>OBSERVAR Y DEVOLVER TRÁMITE:</strong></div>
+                                                <div class="col-md-9">
+                                                    {% for a in form.varevaluacion1 %}
+                                                        <div class="col-md-3 rdio rdio-primary circle">
+                                                            {{ form_widget(a) }}
+                                                            {{ form_label(a) }}
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12" id="obs" style="display:none">
+                                                <div class="col-md-3">
+		    			    			            {{ form_label(form.observacion1) }}
+                                                </div>
+                                                <div class="col-md-9">
+	        						    	        {{ form_widget(form.observacion1) }}
+                                                </div>
+    							            </div>
+                                        </div>
+    	    		                </div><!-- /.panel-body -->
+                                </div><!-- /.panel-primary -->
+                            </div>
+                        </div>
+                        <div class="row" style="display:none" id="informe">
+                            <div class="col-md-12">                    
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <div class="pull-left">
+                                            <h3 class="panel-title">DATOS DEL INFORME ASUNTOS JURÍDICOS</h3>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="form-group  col-md-12">
+                                                <div class="col-md-3"><strong>INFORME PROCEDENTE:</strong></div>
+                                                <div class="col-md-9">
+                                                    {% for b in form.varevaluacion2 %}
+                                                        <div class="col-md-3 rdio rdio-primary circle">
+                                                            {{ form_widget(b) }}
+                                                            {{ form_label(b) }}
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <div class="col-md-3">
+				        				            {{ form_label(form.informejuridica) }}
+                                                </div>   
+		        				        		<div class="col-md-9">
+                                                    {{ form_widget(form.informejuridica) }}
+						        	            </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <div class="col-md-3">
+				        				            {{ form_label(form.fechainformejuridica) }}
+                                                </div>
+                                                <div class="col-md-9">
+								                    {{ form_widget(form.fechainformejuridica) }}
+                                                </div>
+		        					        </div>
+                                            <div class="form-group col-md-12">
+                                                <div class="col-md-3">
+    							        	        {{ form_label(form.observacion2) }}
+                                                </div>
+                                                <div class="col-md-9">
+	            							        {{ form_widget(form.observacion2) }}
+                                                </div>
+        		                			</div>
+                                        </div>                                  
+                                    </div><!-- /.panel- body -->
+                                </div><!-- /.panel-primary -->
+                            </div>  
+                        </div>
+                        <div class="row" style="display:none" id="resol">
+                            <div class="col-md-12">                    
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <div class="pull-left">
+                                            <h3 class="panel-title">DATOS DE LA RESOLUCIÓN ADMINISTRATIVA</h3>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <div class="col-md-3">
+				        				            {{ form_label(form.resolucion) }}
+                                                </div>   
+		        				        		<div class="col-md-9">
+                                                    {{ form_widget(form.resolucion) }}
+						        	            </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <div class="col-md-3">
+				        				            {{ form_label(form.fecharesolucion) }}
+                                                </div>
+                                                <div class="col-md-9">
+								                    {{ form_widget(form.fecharesolucion) }}
+                                                </div>      
+        							        </div>
+                                        </div>                                  
+                                    </div><!-- /.panel- body -->
+                                </div><!-- /.panel-primary -->
+                            </div>
+                        </div>
+                    </div><!-- /.panel-body -->
+                    <div class="panel-footer">
+                        <div class="form-group col-md-12">
+                            {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary'} }) }}
+                            <a href="{{path('wf_tramite_recibido')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
+					    </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    {{ form_end(form) }}
+                </div><!-- /.panel -->
             </div>
         </div>
-{{ form_end(form) }}
     </div>
 {% endblock %}
  {% block javascripts %}
     {{ parent() }} 
     <script>
-        $('#form_varevaluacion1_1').click(function(){
-           //alert('entra');
-            if ($("#form_varevaluacion1_1").is(':checked')){
-                $('#informe').show();
-                $('#obs').hide();
-            }
-        });
+        //OBSERVAR
         $('#form_varevaluacion1_0').click(function(){
            //alert('entra');
             if ($("#form_varevaluacion1_0").is(':checked')){
                 $('#informe').hide();
+                $('#resol').hide();
                 $('#obs').show();
+                $('#form_observacion1').attr('required',true);
+                $("#form_varevaluacion2_0").attr('required',false);
+                $("#form_varevaluacion2_1").attr('required',false);
+                $("#form_informejuridica").attr('required',false);
+                $("#form_fechainformejuridica").attr('required',false);
+                
+                $('#form_observacion1').val('');
+                $('#form_observacion2').val('');
+                $("#form_varevaluacion2_0").attr('checked',false);
+                $("#form_varevaluacion2_1").attr('checked',false);
+                $("#form_informejuridica").val();
+                $("#form_fechainformejuridica").val();
+                $("#form_resolucion").val();
+                $("#form_fecharesolucion").val();
+              
             }
         });
+        
+        //INFORME
+        $('#form_varevaluacion1_1').click(function(){
+           //alert('entra');
+            if ($("#form_varevaluacion1_1").is(':checked')){
+                $('#informe').show();
+                $('#resol').hide();
+                $('#obs').hide();
+                $('#form_observacion1').attr('required',false);
+                $("#form_varevaluacion2_0").attr('required',true);
+                $("#form_varevaluacion2_1").attr('required',true);
+                $("#form_informejuridica").attr('required',true);
+                $("#form_fechainformejuridica").attr('required',true);
+
+                $('#form_observacion1').val('');
+                $('#form_observacion2').val('');
+                $("#form_varevaluacion2_0").attr('checked',false);
+                $("#form_varevaluacion2_1").attr('checked',false);
+                $("#form_informejuridica").val('');
+                $("#form_fechainformejuridica").val('');
+                $("#form_resolucion").val('');
+                $("#form_fecharesolucion").val('');
+            }
+        });
+        
+        //SI RESOLUCION
         $('#form_varevaluacion2_0').click(function(){
            //alert('entra');
             if ($("#form_varevaluacion2_0").is(':checked')){
                 $('#resol').show();
+                $("#form_resolucion").attr('required',true);
+                $("#form_fecharesolucion").attr('required',true);
+
+                $("#form_resolucion").val('');
+                $("#form_fecharesolucion").val('');
             }
         });
+
+        //NO RESOLUCION
         $('#form_varevaluacion2_1').click(function(){
            //alert('entra');
             if ($("#form_varevaluacion2_1").is(':checked')){
                 $('#resol').hide();
+                $("#form_resolucion").attr('required',false);
+                $("#form_fecharesolucion").attr('required',false);
+
+                $("#form_resolucion").val('');
+                $("#form_fecharesolucion").val('');
             }
         });
         

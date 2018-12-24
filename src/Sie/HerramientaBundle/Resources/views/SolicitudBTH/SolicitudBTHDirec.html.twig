@@ -16,13 +16,11 @@
         </div><!-- /.breadcrumb-wrapper -->
     </div><!-- /.header-content -->
     <div class="body-content animated fadeIn">
-
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="panel">
                     <div class="panel-body">
-
-                        <div class="panel panel-success">
+                        <div class="panel panel-primary">
                             <div class="panel-heading">
                                 <h3 class="panel-title">Formularios de Solicitudes</h3>
                             </div><!-- /.panel-heading -->
@@ -35,33 +33,28 @@
                                     </div>
                                     {{form_end(form)}}
                                 </div>
-
                             </div><!-- /.panel-body -->
                         </div>
-
                     </div>
                 </div>
-
             </div>
-
         </div>
     <div class="row" >
-        <div class="panel panel-success">
+        <div class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title" id="titulo">Formularios</h3>
+                <h3 class="panel-title" id="titulo">Formularios </h3>
             </div><!-- /.panel-heading -->
             <div class="panel-body">
                 <div class="row" id="form_nuevo" >
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="panel">
                             <div class="panel-body">
-                                <div class="panel panel-success">
+                                <div class="panel panel-primary">
                                     <div class="panel-heading">
                                         <h3 class="panel-title">1.- Información General</h3>
                                     </div><!-- /.panel-heading -->
                                     <div class="panel-body">
                                         <div class="row">
-
                                             {% set iedu = ieducativa[0] %}
                                             {% set iedusu = ieducativa[1] %}
                                             <div class="col-md-3">
@@ -77,11 +70,6 @@
                                                     </div>
                                                 </div>
                                                 <br>
-                                                {#<div class="row">
-                                                    <div class="col-md-12">
-                                                        <strong>Sub Sistema</strong>
-                                                    </div>
-                                                </div>#}
                                             </div>
                                             <div class="col-md-9">
                                                 <div class="row">
@@ -98,7 +86,6 @@
                                                 <br>
                                                 <div class="row">
                                                     <div class="col-md-12">
-
                                                     </div>
                                                 </div>
                                             </div>
@@ -107,7 +94,7 @@
 
                                     </div><!-- /.panel-body -->
                                 </div>
-                                <div class="panel panel-success">
+                                <div class="panel panel-primary">
                                     <div class="panel-heading">
                                         <h3 class="panel-title">2.- Localización</h3>
                                     </div><!-- /.panel-heading -->
@@ -190,16 +177,13 @@
                                                 </div>
                                             </div>
                                         </div>
-
-
                                     </div><!-- /.panel-body -->
                                 </div>
-                                <div class="panel panel-success">
+                                <div class="panel panel-primary">
                                     <div class="panel-heading">
                                         <h3 class="panel-title">3.- Cumplimiento de Requisitos</h3>
                                     </div><!-- /.panel-heading -->
                                     <div class="panel-body">
-
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <strong>2.1 Informe</strong>
@@ -211,21 +195,18 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div><!-- /.panel-body -->
                                 </div>
-                                <div class="panel panel-success">
+                                <div class="panel panel-primary">
                                     <div class="panel-heading">
                                         <h3 class="panel-title">4.- Especialidad</h3>
                                     </div><!-- /.panel-heading -->
                                     <div class="panel-body">
-
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <strong>Seleccionar las especialidades</strong>
                                             </div>
                                             <div class="col-md-3">
-
                                             </div>
                                             <div class="col-md-5">
                                                 <select data-placeholder="Seleccionar especialidad"  id="select_especialidad" name="select_especialidad[]"  class="chosen-select" multiple="" tabindex="-1" style="display: none;">
@@ -240,18 +221,8 @@
                                                 <strong>Nivel al que se Aplica</strong>
                                             </div>
                                             <div class="col-md-3">
-
                                             </div>
                                             <div class="col-md-5">
-                                                {#<select data-placeholder="Seleccionar Curso" class="chosen-select" multiple="" tabindex="-1" style="display: none;">
-                                                    {% if cursos %}
-                                                    {% for cursos in cursos %}
-                                                        <option value="{{ cursos.grado_tipo_id }}">{{ cursos.grado }}</option>
-                                                    {% endfor %}
-                                                    {% else %}
-                                                        <option value="">U.E. sin cursos </option>
-                                                    {% endif %}
-                                                </select>#}
                                                 <strong><span class="label label-primary">Nivel: Secundaria</span></strong>
                                             </div>
                                         </div>
@@ -261,23 +232,18 @@
                                                     <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicitudbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
                                                 </div>
                                             </div>
-
                                         </div>
-
-
                                     </div><!-- /.panel-body -->
                                 </div>
                             </div>
                         </div>
-
                     </div>
-
                 </div>
                 <div class="row" id="form_regularizacion" >
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="panel">
                             <div class="panel-body">
-                                <div class="panel panel-success">
+                                <div class="panel panel-primary">
                                     <div class="panel-heading">
                                         <h3 class="panel-title">1.- Información General</h3>
                                     </div><!-- /.panel-heading -->
@@ -297,8 +263,6 @@
                                                         <strong>Unidad Educativa</strong>
                                                     </div>
                                                 </div>
-
-
                                             </div>
                                             <div class="col-md-9">
                                                 <div class="row">
@@ -315,16 +279,13 @@
                                                 <br>
                                                 <div class="row">
                                                     <div class="col-md-12">
-
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
-
                                     </div><!-- /.panel-body -->
                                 </div>
-                                <div class="panel panel-success">
+                                <div class="panel panel-primary">
                                     <div class="panel-heading">
                                         <h3 class="panel-title">2.- Localización</h3>
                                     </div><!-- /.panel-heading -->
@@ -409,7 +370,7 @@
                                         </div>
                                     </div><!-- /.panel-body -->
                                 </div>
-                                <div class="panel panel-success">
+                                <div class="panel panel-primary">
                                     <div class="panel-heading">
                                         <h3 class="panel-title">3.- Cumplimiento de Requisitos</h3>
                                     </div><!-- /.panel-heading -->
@@ -417,7 +378,7 @@
 
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <strong>2.4 Informe</strong>
+                                                <strong> Informe</strong>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="ckbox ckbox-theme">
@@ -429,7 +390,7 @@
 
                                     </div><!-- /.panel-body -->
                                 </div>
-                                <div class="panel panel-success">
+                                <div class="panel panel-primary">
                                     <div class="panel-heading">
                                         <h3 class="panel-title">4.- Especialidad</h3>
                                     </div><!-- /.panel-heading -->
@@ -453,16 +414,17 @@
                                             <div class="col-md-3">
                                                 <strong><span class="label label-primary">Nivel: Secundaria</span> <span >Grado: {{ grado }}</span> </strong>
                                             </div>
-
                                         </div>
-
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="pull-right">
-                                                    <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicitudbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
+                                                    <button id="btnenviar" class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicitudbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
                                                 </div>
                                             </div>
                                         </div>
+                                        {#<div class="row">
+                                            <a href="{{ path('solicitud_bth_imprimeDirector',{'idUE':institucion.id,'tramite_id':listatareas.id}) }}" class="btn btn-danger btn-xs"   title="Imprimir Formulario"><i class="glyphicon glyphicon-print"></i></a>
+                                        </div>#}
                                     </div><!-- /.panel-body -->
                                 </div>
                             </div>
@@ -473,14 +435,31 @@
         </div>
     </div>
 
+        <div class="modal fade" id="recargar" tabindex="-1" role="dialog" style=" border-radius: 80px;" >
+            <div class="modal-dialog " role="document">
+                <div class="modal-content">
+                    {#<div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                    </div>#}
+                    <div class="modal-body">
+                        <h2 align="center">¡Su formulario fue enviado con éxito!.</h2>
 
+                        <div class="alert alert-danger">
+                            <strong>Nota.- !</strong> Descargue su comporbante en "Trámites Enviados".
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-facebook" onclick="recargar()">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 {% block javascripts%}
 {{ parent() }}
 <script>
-
-
     var campos_max  = 10;   //max de 10 campos
     var x = 0;
     $('#nueva_especialidad').click (function(e) {
@@ -500,7 +479,6 @@
         $(this).parent('div').remove();
         x--;
     });
-
     function cargarFormularioSolicitud() {
         var idsolicitud=$('#form_solicitud').val();
         switch (true){
@@ -520,7 +498,6 @@
                     url: "{{ path('solicitud_bth_lista_especialidades') }}",
                     data:{institucionid:{{ institucion.id }}},
                     before: function () {
-
                     },
                     success: function (data) {
                         $(data).each(function(i, v){ // indice, valor
@@ -529,18 +506,20 @@
                     }
                 });
                 break;
-
         }
 
     }
     function enviarSolicitudbth() {
-
+        /*
+        * Funcion que envia la solicitud BTH capturando los valor introduciodos
+        * en el formulario.*/
         var idsolicitud=$('#form_solicitud').val();
         switch (true){
             case (idsolicitud == 45): //Registro Nuevo
                 swal({
                     title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
-                    text:  "La información llenada será enviada a la Dirección Distrital.",
+                    text:  "La información llenada será enviada a la Dirección Distrital." +
+                    "Puede Descargar su formulario como comprobante en Trámites Enviados",
                     icon:  "warning",
                     buttons: true,
                     dangerMode: true,
@@ -549,7 +528,6 @@
                     .then(function(willDelete)  {
                         if (willDelete) {
                             var institucionid={{ institucion.id }}
-
                             var ip = [];
                             if($('#informe:checked').val())
                                 ip.push({ informe : 1});
@@ -562,16 +540,15 @@
                                 ip.push({select_especialidad : $('#select_especialidad').val()});
                             else
                             {swal("Debe seleccionar al menos una especialidad."); return false;}
-
                             var ipt=JSON.stringify(ip);
                             var imagen = '{{ asset("img/loading96.gif") }}';
-                            //alert(ipt);
+
                             $.ajax({
                                 type: 'post',
                                 url: "{{ path('solicitud_bth_enviosolicitud') }}",
-                                data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},idsolicitud:idsolicitud},
+                                data:{ipt: ipt,id_distrito: {{ ubicacion['lugarTipoIdDistrito'] }},institucionid:{{ institucion.id }},idsolicitud:idsolicitud,sw:0},
                                 dataType : 'json',
-                                before: function () {
+                                beforeSend: function () {
                                     swal({
                                         title: "Enviando...",
                                         text: "Espere un momento por favor",
@@ -580,14 +557,24 @@
                                     });
                                 },
                                 success: function (data) {
+
                                     if (data==1 ){
-                                        swal("Su formulario se ha enviado con éxito Nro Tramite:");
-                                        location.href = "{{ path('solicitud_bth_index') }}";
+                                        swal.stopLoading();
+                                        swal.close();
+                                        $(".modal-backdrop ").css("display", "none");
+                                        $('#recargar').modal('show');
+                                        $(".modal-backdrop ").css("display", "none");
+                                        /*swal("¡Registro actualizado!",  "success").then( function (okay) {
+                                            if(okay){
+                                                location.reload();
+                                            }
+                                        });*/
                                     }
                                     else if(data==2 ){
                                         swal("Debe iniciar su trámite como 'Ratificacion'");
                                     }else {
-                                        swal('Su formulario no se envío correctamente');
+                                        swal('Su formulario no se envío correctamente debido a que su Unidad Educativa ya ' +
+                                            'inicio su trámite como "REGISTRO NUEVO"');
                                     }
                                 },
                                 complete: function () {
@@ -602,7 +589,8 @@
 
                 swal({
                     title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
-                    text:  "La información llenada será enviada a la Dirección Distrital.",
+                    text:  "La información llenada será enviada a la Dirección Distrital." +
+                    "Puede Descargar su formulario como comprobante en Trámites Enviados",
                     icon:  "warning",
                     buttons: true,
                     dangerMode: true,
@@ -618,25 +606,21 @@
                             { swal("Debe seleccionar la casilla de informe."); return false;
                                 ip.push({ informe : 0 })
                             };
-
                             ip.push({institucionid : institucionid});
-
                             var especialidades_id = [];
                             $("#lista_especialidades_ratificacion").find("option").each(function(index, opc){
                                 especialidades_id.push(opc.value);
                             });
                             ip.push({"select_especialidad" : especialidades_id});
 
-
                             var ipt=JSON.stringify(ip);
                             var imagen = '{{ asset("img/loading96.gif") }}';
-                            //alert(ipt);
                             $.ajax({
                                 type: 'post',
                                 url: "{{ path('solicitud_bth_enviosolicitud') }}",
-                                data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},idsolicitud:idsolicitud},
+                                data:{ipt: ipt,id_distrito: {{ ubicacion['lugarTipoIdDistrito'] }},institucionid:{{ institucion.id }},idsolicitud:idsolicitud,sw:0},
                                 dataType : 'json',
-                                before: function () {
+                                beforeSend: function () {
                                     swal({
                                         title: "Enviando...",
                                         text: "Espere un momento por favor",
@@ -646,8 +630,12 @@
                                 },
                                 success: function (data) {
                                     if (data==1){
-                                        swal("Su formulario se ha enviado con éxito Muchas gracias");
-                                        location.href = "{{ path('solicitud_bth_index') }}";
+                                        swal.stopLoading();
+                                        swal.close();
+                                        $(".modal-backdrop ").css("display", "none");
+                                        $('#recargar').modal('show');
+                                        $(".modal-backdrop ").css("display", "none");
+
                                     }
                                     else if(data==3 ){
                                         swal("Debe iniciar su trámite como 'Registro Nuevo'");
@@ -662,21 +650,17 @@
                             });
                         }
                     });
-
                 break;
-
         }
-
-
     }
-
-
+    function recargar() {
+        $('#recargar').modal('hide');
+        location.href = "{{ path('wf_tramite_index') }}";
+    }
     $(document).ready(function(){
             $('#form_nuevo').hide();
             $('#form_regularizacion').hide();
             $('#form_especialidad').hide();
-
-
     });
 
 </script>
