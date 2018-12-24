@@ -246,14 +246,14 @@ class WfTramiteController extends Controller
         //dump($tramiteDetalle);die;
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($tramiteDetalle->getFlujoProceso()->getId());
         //dump($flujoproceso);die;
-        //Verificamos si tiene competencia para un nuevo tramite
+        //Verificamos si tiene competencia
         if($rol == $flujoproceso->getRolTipo()->getId()){
             //return $this->redirectToRoute('tramite_rue_informe_distrito_nuevo', array('id' => $tramite->getId()));
             return $this->redirectToRoute($flujoproceso->getRutaFormulario(),array('id' => $tramite->getId()));
         }else{
             $request->getSession()
                     ->getFlashBag()
-                    ->add('error', "No tiene tuición para un nuevo tramite RUE");
+                    ->add('error', "No tiene tuición para este tramite RUE");
                     return $this->redirectToRoute('wf_tramite_recibido');
         }  
 
@@ -616,7 +616,6 @@ class WfTramiteController extends Controller
                         }else{
                             $uid = $uDestinatario[0]['usuario_id'];
                         }
-                        //$uDestinatario = $em->getRepository('SieAppWebBundle:UsuarioFlujoProceso')->findBy(array('flujoProceso'=>$flujoprocesoSiguiente->getId(),'lugarTipoId'=>$lugar_tipo_distrito));
                         break;
                     case 6:   // Departamento
                     case 8:
@@ -630,7 +629,6 @@ class WfTramiteController extends Controller
                         }else{
                             $uid = $uDestinatario[0]['usuario_id'];
                         }
-                        //$uDestinatario = $em->getRepository('SieAppWebBundle:UsuarioFlujoProceso')->findBy(array('flujoProceso'=>$flujoprocesoSiguiente->getId(),'lugarTipoId'=>$lugar_tipo_departamento));
                         break;
                     case 0://nivel nacional
                         //dump($flujoprocesoSiguiente->getRolTipo()->getId());die;
@@ -642,7 +640,6 @@ class WfTramiteController extends Controller
                             $uDestinatario = $query->fetchAll();
                             //dump($uDestinatario);die;
                             $uid = $uDestinatario[0]['id'];
-                            //$uDestinatario = $em->getRepository('SieAppWebBundle:UsuarioFlujoProceso')->findBy(array('flujoProceso'=>$flujoprocesoSiguiente->getId(),'lugarTipoId'=>1));
                         }elseif($flujoprocesoSiguiente->getRolTipo()->getId() == 8){ // si es tecnico nacional
                             $query = $em->getConnection()->prepare("select * from wf_usuario_flujo_proceso ufp where ufp.esactivo is true and ufp.flujo_proceso_id=". $flujoprocesoSiguiente->getId()." and lugar_tipo_id=1");
                             $query->execute();
@@ -653,7 +650,6 @@ class WfTramiteController extends Controller
                             }else{
                                 $uid = $uDestinatario[0]['usuario_id'];
                             }
-                            //$uDestinatario = $em->getRepository('SieAppWebBundle:UsuarioFlujoProceso')->findBy(array('flujoProceso'=>$flujoprocesoSiguiente->getId(),'lugarTipoId'=>1));
                         }
                         break;
                 }
@@ -712,9 +708,19 @@ class WfTramiteController extends Controller
         
         $em = $this->getDoctrine()->getManager();
         
-        $query = $em->getConnection()->prepare("select t.id,td.id as id_td,fp.ruta_reporte,ft.flujo,tt.tramite_tipo,pt.proceso_tipo,te.tramite_estado,td.fecha_envio,td.fecha_recepcion,td.obs,fp.plazo,case when fp.plazo is not null then td.fecha_recepcion + fp.plazo else null end as fecha_vencimiento,p.nombre
+        $query = $em->getConnection()->prepare("select t.id,td.id as id_td,case when (ie.id is not null and ft.id=6) then 'Institucion Educativa: '||ie.institucioneducativa when (ie.id is null and ft.id=6) then wft.datos::json->>'institucioneducativa' when ei.id is not null then 'Estudiante: '||e.nombre||' '||e.paterno||' '||e.materno when mi.id is not null then 'Maestro: '||pm.nombre||' '||pm.paterno||' '||pm.materno when ai.id is not null then 'Apoderado: '||pa.nombre||' '||pa.paterno||' '||pa.materno end as nombre_tabla,fp.ruta_reporte,ft.flujo,tt.tramite_tipo,pt.proceso_tipo,te.tramite_estado,td.fecha_envio,td.fecha_recepcion,td.obs,fp.plazo,case when fp.plazo is not null then td.fecha_recepcion + fp.plazo else null end as fecha_vencimiento,p.nombre
             from tramite t
             join tramite_detalle td on t.id =td.tramite_id
+            left join institucioneducativa ie on t.institucioneducativa_id=ie.id
+            left join wf_solicitud_tramite wft on td.id=wft.tramite_detalle_id
+            left tramite_detalle td1 on td1.id =wft.trammite_detalle_id
+            left flujo_proceso fp1 on td1.flujo_proceso_id =fp1.id
+            left join estudiante_inscripcion ei on t.estudiante_inscripcion_id=ei.id
+            left join estudiante e on ei.estudiante_id=e.id
+            left join maestro_inscripcion mi on t.maestro_inscripcion_id=mi.id
+            left join persona pm on mi.persona_id=pm.id
+            left join apoderado_inscripcion ai on t.apoderado_inscripcion_id=ai.id
+            left join persona pa on ai.persona_id=pa.id
             join flujo_proceso fp on td.flujo_proceso_id=fp.id
             join proceso_tipo pt on fp.proceso_id=pt.id
             join tramite_tipo tt on t.tramite_tipo=tt.id
@@ -722,7 +728,7 @@ class WfTramiteController extends Controller
             join flujo_tipo ft on t.flujo_tipo_id = ft.id
             join usuario u on td.usuario_remitente_id=u.id
             join persona p on p.id=u.persona_id
-            where ft.id>5 and fp.rol_tipo_id=". $rol ." and (te.id=15 or te.id=16)
+            where ft.id>5 and fp.rol_tipo_id=". $rol ." and (te.id=15 or te.id=16) and wft.es_valido is true and fp1.orden=1
             and td.usuario_remitente_id=". $usuario ." order by ft.flujo ASC,fecha_envio DESC");
         $query->execute();
         $data['entities'] = $query->fetchAll();;
