@@ -148,38 +148,77 @@
                                     </form>
                                 </div>
                             {% endfor #}
+                            
+                            {# VERIFICAMOS SI EL ESTADO DE MATRICULA ES DIFERENTE DE INSCRIPCION POSTBACHILLERATO #}
+                            {% if notas.estadoMatricula != 29 %}
+                                
+                                {% if notas.cantidadFaltantes > 0 %}
+                                    <div style="background:#FFFFFF; text-align:center; font-size:1.2em; color:#F2591C; padding:20px">
+                                        <i class="fa fa-meh-o" style="font-size:1.6em"></i><br>
+                                         Para finalizar la operación correctamente debe registrar las calificaciones del estudiante.
+                                    </div>
 
+                                    <form action="{{path('regularizarNotas_update')}}" method="post" onsubmit="return validarRegistro();">
+                                        <input type="hidden" name="tipoUE" value="{{tipoUE.id}}">
+                                        <div id="no-more-tables">
+                                            {% include 'SieAppWebBundle:Services/Notas:'~ plantilla ~'.html.twig' with {'notas':notas,'vista':vista } %}
+                                        </div>
+                                        <hr>
+                                        <div style="text-align: center">
+                                            <button class="btn btn-primary">Registrar Calificaciones</button>
+                                        </div>
+                                    </form>
+                                {% else %}
+                                    <div style="background:#FFFFFF; text-align:center; font-size:1.2em; color:#37CC32; padding:20px">
+                                        <i class="fa fa-smile-o" style="font-size:1.6em"></i><br>
+                                        Operación finalizada correctamente. <br>
+                                        <form action="{{path('history_new_inscription_index')}}" method="post" style="display:inline-block">
+                                            <input type="hidden" name="form[codigoRudeHistory]" value="{{estudiante.codigoRude}}">
+                                            <button type="submit" class="btn-link" style="font-weight:bold"><i class="fa fa-hand-o-right"></i> Ir al Historial de Inscripciones</button>
+                                        </form>
+                                    </div>
+                                    <br>
+                                    <div id="no-more-tables">
+                                        {% include 'SieAppWebBundle:Services/Notas:'~ plantilla ~'.html.twig' with {'notas':notas,'vista':0 } %}
+                                    </div>
+                                {% endif %}
 
-                            {% if notas.cantidadFaltantes > 0 %}
-                                <div style="background:#FFFFFF; text-align:center; font-size:1.2em; color:#F2591C; padding:20px">
-                                    <i class="fa fa-meh-o" style="font-size:1.6em"></i><br>
-                                     Para finalizar la operación correctamente debe registrar las calificaciones del estudiante.
-                                </div>
-
-                                <form action="{{path('regularizarNotas_update')}}" method="post" onsubmit="return validarRegistro();">
-                                    <input type="hidden" name="tipoUE" value="{{tipoUE.id}}">
+                            {% else %}
+                                {# SI ES POSTBACHILLERATO #}
+                                {% if notas.cantidadFaltantes > 0 %}
+                                    <div style="background:#FFFFFF; text-align:center; font-size:1.2em; color:#F2591C; padding:20px">
+                                        <i class="fa fa-meh-o" style="font-size:1.6em"></i><br>
+                                         Para finalizar la operación correctamente debe registrar las calificaciones del estudiante.
+                                    </div>
+                                    
+                                    <form action="{{path('regularizarNotasPostbachillerato_update')}}" method="post" onsubmit="return validarRegistro();">
+                                        <input type="hidden" name="tipoUE" value="{{tipoUE.id}}">
+                                        <div id="no-more-tables">
+                                            {% include 'SieAppWebBundle:Services/Notas:'~ plantilla ~'.html.twig' with {'notas':notas,'vista':vista } %}
+                                        </div>
+                                        <hr>
+                                        <div style="text-align: center">
+                                            <button class="btn btn-primary">Registrar Calificaciones</button>
+                                        </div>
+                                    </form>
+                                {% else %}
+                                    <div style="background:#FFFFFF; text-align:center; font-size:1.2em; color:#37CC32; padding:20px">
+                                        <i class="fa fa-smile-o" style="font-size:1.6em"></i><br>
+                                        Operación finalizada correctamente. <br>
+                                        <form action="{{path('history_new_inscription_index')}}" method="post" style="display:inline-block">
+                                            <input type="hidden" name="form[codigoRudeHistory]" value="{{estudiante.codigoRude}}">
+                                            <button type="submit" class="btn-link" style="font-weight:bold"><i class="fa fa-hand-o-right"></i> Ir al Historial de Inscripciones</button>
+                                        </form>
+                                    </div>
                                     <div id="no-more-tables">
                                         {% include 'SieAppWebBundle:Services/Notas:'~ plantilla ~'.html.twig' with {'notas':notas,'vista':vista } %}
                                     </div>
-                                    <hr>
-                                    <div style="text-align: center">
-                                        <button class="btn btn-primary">Registrar Calificaciones</button>
-                                    </div>
-                                </form>
-                            {% else %}
-                                <div style="background:#FFFFFF; text-align:center; font-size:1.2em; color:#37CC32; padding:20px">
-                                    <i class="fa fa-smile-o" style="font-size:1.6em"></i><br>
-                                    Operación finalizada correctamente. <br>
-                                    <form action="{{path('history_new_inscription_index')}}" method="post" style="display:inline-block">
-                                        <input type="hidden" name="form[codigoRudeHistory]" value="{{estudiante.codigoRude}}">
-                                        <button type="submit" class="btn-link" style="font-weight:bold"><i class="fa fa-hand-o-right"></i> Ir al Historial de Inscripciones</button>
-                                    </form>
-                                </div>
-                                <br>
-                                <div id="no-more-tables">
-                                    {% include 'SieAppWebBundle:Services/Notas:'~ plantilla ~'.html.twig' with {'notas':notas,'vista':0 } %}
-                                </div>
+
+                                {% endif %}
+                                
                             {% endif %}
+                            
+
                         </div>
                     </div>
                 </div>

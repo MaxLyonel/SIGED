@@ -1,94 +1,103 @@
 {% extends 'layoutHerramienta.html.twig' %}
 
 {% block contentoption %}
-
-
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-table"></i> Recibidos <span>Solicitudes usuario</span></h2>
+        <h2><i class="fa fa-table"></i> Validación BJP <span>Nuevo estudiante</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aqui:</span>
             <ol class="breadcrumb">
-                <li>
-                    <i class="fa fa-home"></i>
-                    <a href="dashboard.html">Recibidos</a>
-                    <i class="fa fa-angle-right"></i>
-                </li>
-
-                <li class="active">Index</li>
+                <li class="active">Nuevo</li>
             </ol>
         </div><!-- /.breadcrumb-wrapper -->
     </div><!-- /.header-content -->
     <!--/ End page header -->
 
     <div class="body-content animated fadeIn">
-        {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Validación Bono Juancito Pinto', 'gestion': gestion,'sie': odataUedu.id, 'ieducativa':odataUedu.institucioneducativa, 'opcion': 'Estudiantes para validar el pago del BJP'} %}
+        {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Validación Bono Juancito Pinto', 'gestion': gestion,'sie': institucioneducativa.id, 'ieducativa':institucioneducativa.institucioneducativa, 'opcion': 'Nuevo estudiante BJP'} %}
 
         <div class="row">
-            <div class="col-md-6 col-md-offset-3">
+            <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <div class="panel-title">
-                            <h4>DATOS DEL NUEVO ESTUDIANTE</h4>
+                            <h4>REGISTRO NUEVO ESTUDIANTE BJP</h4>
                         </div>
                         <div class="clearfix"></div>
                     </div>
                     <div class="panel-body">
-                    {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form",'class':'form', 'name':'formNuevoEstudiante', 'id':'formNuevoEstudiante'} } )}}
-                    <div class="form-body">
-                        <div class="form-group">
-                            <label class="control-label">{{ form_label(form.sie) }}</label>
-                            {{ form_widget(form.sie) }}
-                        </div><!-- /.form-group -->
-                        <div class="form-group">
-                            <label class="control-label">{{ form_label(form.turno) }}</label>
-                            {{ form_widget(form.turno) }}
-                        </div><!-- /.form-group -->
-                        <div class="form-group">
-                            <label class="control-label">{{ form_label(form.nivel) }}</label>
-                            {{ form_widget(form.nivel) }}
-                        </div><!-- /.form-group -->
-                        <div class="form-group">
-                            <label class="control-label">{{ form_label(form.grado) }}</label>
-                            {{ form_widget(form.grado) }}
-                        </div><!-- /.form-group -->
-                        <div class="form-group">
-                            <label class="control-label">{{ form_label(form.paralelo) }}</label>
-                            {{ form_widget(form.paralelo) }}
-                        </div><!-- /.form-group -->
-                        <div class="form-group">
-                            <label class="control-label">{{ form_label(form.rude) }}</label>
-                            {{ form_widget(form.rude) }}
-                        </div><!-- /.form-group -->
-                        <div class="form-group">
-                            <label class="control-label">{{ form_label(form.carnet) }}</label>
-                            {{ form_widget(form.carnet) }}
-                        </div><!-- /.form-group -->
-                        <div class="form-group">
-                            <label class="control-label">{{ form_label(form.paterno) }}</label>
-                            {{ form_widget(form.paterno) }}
-                        </div><!-- /.form-group -->
-                        <div class="form-group">
-                            <label class="control-label">{{ form_label(form.materno) }}</label>
-                            {{ form_widget(form.materno) }}
-                        </div><!-- /.form-group -->
-                        <div class="form-group">
-                            <label class="control-label">{{ form_label(form.nombre) }}</label>
-                            {{ form_widget(form.nombre) }}
-                        </div><!-- /.form-group -->
-                        <div class="form-group">
-                            <label class="control-label">{{ form_label(form.fechaNac) }}</label>
-                            {{ form_widget(form.fechaNac) }}
-                        </div><!-- /.form-group -->
-                        <div class="form-group">
-                            <label class="control-label">{{ form_label(form.genero) }}</label>
-                            {{ form_widget(form.genero) }}
-                        </div><!-- /.form-group -->
-                        <div class="form-group">
-                            {{ form_widget(form.guardar) }}
+                        <div class="row">
+                            <div class="col-md-6 well">
+                                <h4>DATOS DEL ESTUDIANTE</h4>
+                                <table class="table">
+                                    <tr>
+                                        <th>Código RUDE:</th>
+                                        <td>{{estudianteInscripcion.estudiante.codigoRude}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Carnet de Identidad:</th>
+                                        <td>{{estudianteInscripcion.estudiante.carnetIdentidad}} {{estudianteInscripcion.estudiante.complemento}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Apellido Paterno:</th>
+                                        <td>{{estudianteInscripcion.estudiante.paterno}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Apellido Materno:</th>
+                                        <td>{{estudianteInscripcion.estudiante.materno}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Nombre(s):</th>
+                                        <td>{{estudianteInscripcion.estudiante.nombre}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Fecha de Nacimiento:</th>
+                                        <td>{{estudianteInscripcion.estudiante.fechaNacimiento|date('d-m-Y')}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6 well">  
+                                <h4>DATOS DE INSCRIPCIÓN</h4>
+                                <table class="table">
+                                    <tr>
+                                        <th>Código SIE:</th>
+                                        <td>{{estudianteInscripcion.institucioneducativaCurso.institucioneducativa.id}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Unidad Educativa:</th>
+                                        <td>{{estudianteInscripcion.institucioneducativaCurso.institucioneducativa.institucioneducativa}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Turno:</th>
+                                        <td>{{estudianteInscripcion.institucioneducativaCurso.turnoTipo.turno}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Nivel:</th>
+                                        <td>{{estudianteInscripcion.institucioneducativaCurso.nivelTipo.nivel}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Grado:</th>
+                                        <td>{{estudianteInscripcion.institucioneducativaCurso.gradoTipo.grado}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Paralelo:</th>
+                                        <td>{{estudianteInscripcion.institucioneducativaCurso.paraleloTipo.paralelo}}</td>
+                                    </tr>
+                                </table> 
+                            </div>
                         </div>
-                    </div>
-                    {{form_end(form)}}
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <form method="post" name="formNew" id="formNew" action="{{path('herramienta_info_estudiante_bjp_nuevo_rude_save')}}">
+                                    <input type="hidden" name="formNew[pagoTipo]" id="formNew_pagoTipo" value="{{pagoTipo}}">
+                                    <input type="hidden" name="formNew[inscripcionId]" id="formNew_inscripcionId" value="{{estudianteInscripcion.id}}">
+                                    <input type="hidden" name="formNew[sie]" id="formNew_sie" value="{{institucioneducativa.id}}">
+                                    <div class="form-group">
+                                        <input type="submit" class="btn btn-md btn-success" name="formNew[guardar]" id="formNew_guardar" value="Guardar">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
@@ -96,9 +105,5 @@
         </div>
     </div>
     <!-- Start body content -->
-    <!--/ End body content -->
-    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
-
-    </div><!-- /.modal -->
     <!--/ End body content -->
 {% endblock %}

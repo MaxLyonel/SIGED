@@ -2,24 +2,31 @@ Sie\AppWebBundle\Entity\Documento:
     type: entity
     table: documento
     indexes:
-        IDX_B6B12EC77C9FBE9A:
-            columns:
-                - documento_tipo_id
-        IDX_B6B12EC78D486744:
-            columns:
-                - documento_serie_id
-        IDX_B6B12EC75B6F055C:
+        documento_idx_documento_estado_id:
             columns:
                 - documento_estado_id
-        IDX_B6B12EC7820C2849:
+        documento_idx_documento_tipo_id:
+            columns:
+                - documento_tipo_id
+        documento_idx2:
             columns:
                 - tramite_id
+        documento_idx_documento_serie_id:
+            columns:
+                - documento_serie_id
+        IDX_B6B12EC7DB38439E:
+            columns:
+                - usuario_id
+        IDX_B6B12EC745103E8:
+            columns:
+                - documento_firma_id
     id:
         id:
-            type: smallint
+            type: integer
             nullable: false
             unsigned: false
             comment: ''
+            default: documento_id_seq
             id: true
             generator:
                 strategy: SEQUENCE
@@ -36,12 +43,6 @@ Sie\AppWebBundle\Entity\Documento:
             length: null
             fixed: false
             comment: ''
-        usuarioId:
-            type: smallint
-            nullable: false
-            unsigned: false
-            comment: ''
-            column: usuario_id
         fechaRegistro:
             type: date
             nullable: false
@@ -53,14 +54,41 @@ Sie\AppWebBundle\Entity\Documento:
             nullable: true
             comment: ''
             column: fecha_impresion
+        tokenPrivado:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: token_privado
+        tokenPublico:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: token_publico
+        url:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        tokenImpreso:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: token_impreso
     manyToOne:
-        documentoTipo:
-            targetEntity: DocumentoTipo
+        documentoEstado:
+            targetEntity: DocumentoEstado
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                documento_tipo_id:
+                documento_estado_id:
                     referencedColumnName: id
             orphanRemoval: false
         documentoSerie:
@@ -72,13 +100,13 @@ Sie\AppWebBundle\Entity\Documento:
                 documento_serie_id:
                     referencedColumnName: id
             orphanRemoval: false
-        documentoEstado:
-            targetEntity: DocumentoEstado
+        documentoTipo:
+            targetEntity: DocumentoTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                documento_estado_id:
+                documento_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         tramite:
@@ -88,6 +116,24 @@ Sie\AppWebBundle\Entity\Documento:
             inversedBy: null
             joinColumns:
                 tramite_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        documentoFirma:
+            targetEntity: DocumentoFirma
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                documento_firma_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

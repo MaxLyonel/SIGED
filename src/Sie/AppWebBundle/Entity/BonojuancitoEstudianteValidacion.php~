@@ -154,6 +154,11 @@ class BonojuancitoEstudianteValidacion
      */
     private $fechaRegistro;
 
+    /**
+     * @var integer
+     */
+    private $gestionTipoId;
+
 
     /**
      * Get id
@@ -807,5 +812,28 @@ class BonojuancitoEstudianteValidacion
     public function getFechaRegistro()
     {
         return $this->fechaRegistro;
+    }
+
+    /**
+     * Set gestionTipoId
+     *
+     * @param integer $gestionTipoId
+     * @return BonojuancitoEstudianteValidacion
+     */
+    public function setGestionTipoId($gestionTipoId)
+    {
+        $this->gestionTipoId = $gestionTipoId;
+    
+        return $this;
+    }
+
+    /**
+     * Get gestionTipoId
+     *
+     * @return integer 
+     */
+    public function getGestionTipoId()
+    {
+        return $this->gestionTipoId;
     }
 }

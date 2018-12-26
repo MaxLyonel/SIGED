@@ -13,3 +13,9 @@ segip_verify:
     defaults: { _controller: "SieAppWebBundle:Segip:verify" }
     options:
         expose: true
+
+segip_search_lote:
+    path:     /searchLote
+    defaults: { _controller: "SieAppWebBundle:Segip:searchLote" }
+    options:
+        expose: true

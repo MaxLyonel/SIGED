@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
- * SocioeconomicoRegular controller.
+ * EstudianteInformacion controller.
  *
  */
 class EstudianteInformacionController extends Controller {
@@ -48,7 +48,7 @@ class EstudianteInformacionController extends Controller {
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('estudianteinformacion_result'))
                 ->add('codigoRude', 'text', array('mapped' => false, 'label' => 'RUDE', 'required' => true, 'invalid_message' => 'Campo Obligatorio', 'attr' => array('class' => 'form-control', 'pattern' => '[0-9a-zA-Z\sñÑ]{14,18}', 'maxlength' => '18', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
-                ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestión', 'choices' => array('2017' => '2017', '2016' => '2016', '2015' => '2015', '2014' => '2014', '2013' => '2013'), 'attr' => array('class' => 'form-control')))
+                ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestión', 'choices' => array('2018' => '2018', '2017' => '2017', '2016' => '2016', '2015' => '2015', '2014' => '2014', '2013' => '2013'), 'attr' => array('class' => 'form-control')))
                 ->add('buscar', 'submit', array('label' => 'Buscar estudiante'))
                 ->getForm();
         return $form;
@@ -123,31 +123,17 @@ class EstudianteInformacionController extends Controller {
             
             //Verifica si el estudiante cuenta con inscripción en la UE y n la gestión ingresada en el formulario de búsqueda
             if ($inscription) {
-
-                //Si cuenta con datos socioeconómicos en la gestión se actualiza la información de los datos socioeconómicos
                 $idEstudiante = $student->getId();
-                //$apoderados = $em->getRepository('SieAppWebBundle:Apoderado')->findBy(array('personaEstudiante' => $idEstudiante, 'gestion' => $gestion));
-
-//                $repository = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion');
-//
-//                $query = $repository->createQueryBuilder('apo')
-//                        ->where('apo.estudianteInscripcion = :idInscripcion')
-//                        ->setParameter('idInscripcion', $inscription['insId'])
-//                        ->getQuery();
-//
-//                $apoderados = $query->getResult();
 
                 $repository = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion');
 
                 $query = $repository->createQueryBuilder('ai')
                         ->select('p.id perId, ai.id aiId, aid.id aidId, p.carnet, p.paterno, p.materno, p.nombre, at.apoderado apoTipo, aid.empleo')
-                        //->select('ai, p, aid, at')
                         ->innerJoin('SieAppWebBundle:Persona', 'p', 'WITH', 'ai.persona = p.id')
                         ->leftJoin('SieAppWebBundle:ApoderadoInscripcionDatos', 'aid', 'WITH', 'aid.apoderadoInscripcion = ai.id')
                         ->innerJoin('SieAppWebBundle:ApoderadoTipo', 'at', 'WITH', 'ai.apoderadoTipo = at.id')
                         ->where('ai.estudianteInscripcion = :inscripcion')
                         ->setParameter('inscripcion', $inscription['insId'])
-                        //->distinct()
                         ->getQuery();
 
                 $apoderados = $query->getResult();

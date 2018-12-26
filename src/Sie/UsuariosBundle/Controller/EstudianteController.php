@@ -154,7 +154,7 @@ class EstudianteController extends Controller
                 //dump($codigorude[0]["get_estudiante_nuevo_rude"]);die;
                 $estudiante->setCodigoRude($codigoRude);
                 $estudiante->setCarnetIdentidad($form['InputCi']);
-                $estudiante->setComplemento($form['InputComplemento']);
+                $estudiante->setComplemento(mb_strtoupper($form['InputComplemento'], 'utf-8'));
                 $estudiante->setPaterno($form['Paterno']);
                 $estudiante->setMaterno($form['Materno']);
                 $estudiante->setNombre($form['Nombre']);                        
@@ -172,7 +172,7 @@ class EstudianteController extends Controller
                     $estudiante->setLocalidadNac('');
                 }
                 //$estudiante->setComplemento('');
-                $estudiante->setSegipId('11');
+                $estudiante->setSegipId('0');
                 $em->persist($estudiante);
                 $em->flush();
 

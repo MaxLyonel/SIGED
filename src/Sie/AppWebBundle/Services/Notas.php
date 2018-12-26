@@ -531,6 +531,105 @@ class Notas{
 
 	}
 
+    public function postBachillerato($idInscripcion){
+
+        $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+
+        $nivel = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+        $grado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+        $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+        $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+
+        $asignaturas = $this->em->createQueryBuilder()
+                                ->select('at.id, at.area, asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
+                                ->from('SieAppWebBundle:EstudianteAsignatura','ea')
+                                ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
+                                ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
+                                ->innerJoin('SieAppWebBundle:AsignaturaTipo','asit','WITH','ieco.asignaturaTipo = asit.id')
+                                ->innerJoin('SieAppWebBundle:AreaTipo','at','WITH','asit.areaTipo = at.id')
+                                ->groupBy('at.id, at.area, asit.id, asit.asignatura, ea.id')
+                                ->orderBy('at.id','ASC')
+                                ->addOrderBy('asit.id','ASC')
+                                ->where('ei.id = :idInscripcion')
+                                ->setParameter('idInscripcion',$idInscripcion)
+                                ->getQuery()
+                                ->getResult();
+
+        $notasArray = array();
+
+        $cont = 0;
+        $cantidadFaltantes = 0;
+        foreach ($asignaturas as $a) {
+            // Concatenamos la especialidad si se tiene registrado
+            $nombreAsignatura = $a['asignatura'];
+            if($a['asignaturaId'] == 1039){
+                $especialidad = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array('estudianteInscripcion'=>$idInscripcion));
+                if($especialidad){
+                    $nombreAsignatura = $a['asignatura'].' '.$especialidad->getEspecialidadTecnicoHumanisticoTipo()->getEspecialidad();
+                }
+            }
+
+            
+            $notasArray[$cont] = array('idAsignatura'=>$a['asignaturaId'],'asignatura'=>$a['asignatura']);
+            
+            $asignaturasNotas = $this->em->createQueryBuilder()
+                                ->select('en.id as idNota, nt.id as idNotaTipo, nt.notaTipo, ea.id as idEstudianteAsignatura, en.notaCuantitativa, en.notaCualitativa, at.id')
+                                ->from('SieAppWebBundle:EstudianteNota','en')
+                                ->innerJoin('SieAppWebBundle:EstudianteAsignatura','ea','WITH','en.estudianteAsignatura = ea.id')
+                                ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
+                                ->innerJoin('SieAppWebBundle:AsignaturaTipo','at','WITH','ieco.asignaturaTipo = at.id')
+                                ->innerJoin('SieAppWebBundle:NotaTipo','nt','with','en.notaTipo = nt.id')
+                                ->orderBy('nt.id','ASC')
+                                ->where('ea.id = :estAsigId')
+                                ->andWhere('nt.id = 5')
+                                ->setParameter('estAsigId',$a['estAsigId'])
+                                ->getQuery()
+                                ->getResult();
+
+            $existe = 'no';
+            foreach ($asignaturasNotas as $an) {
+                
+                $valorNota = $an['notaCuantitativa'];
+                if($valorNota == 0){
+                    $cantidadFaltantes++;
+                }
+                
+                    $notasArray[$cont]['notas'][] =   array(
+                                            'id'=>$cont."-5",
+                                            'idEstudianteNota'=>$an['idNota'],
+                                            'nota'=>$valorNota,
+                                            'idNotaTipo'=>$an['idNotaTipo'],
+                                            'idEstudianteAsignatura'=>$an['idEstudianteAsignatura']
+                                        );
+                    $existe = 'si';
+                    break;
+
+            }
+            if($existe == 'no'){
+                $cantidadFaltantes++;
+                
+                $valorNota = '';
+                
+                $notasArray[$cont]['notas'][] =   array(
+                                            'id'=>$cont."-5",
+                                            'idEstudianteNota'=>'nuevo',
+                                            'nota'=>$valorNota,
+                                            'idNotaTipo'=>5,
+                                            'idEstudianteAsignatura'=>$a['estAsigId']
+                                        );
+            }
+
+            $cont++;
+        }
+
+        return array(
+            'idInscripcion'=>$idInscripcion,
+            'cuantitativas'=>$notasArray,
+            'cantidadFaltantes'=>$cantidadFaltantes,
+            'estadoMatricula'=>29 // ESTADO DE MATRICULA INSCRIPCION ES DIFERENTE AL ESTADO MATRICULA
+        );
+    }
+
     public function literal($num){
         switch ($num) {
             case '1': $lit = 'Primer'; break;
@@ -872,8 +971,7 @@ class Notas{
                     }
                 }
 
-
-                if((sizeof($asignaturas) > 0 && count($asignaturas) == count($arrayPromedios)) or ($gestion < $gestionActual && sizeof($asignaturas) > 0 ) or ($gestion >= 2018 && count($asignaturas) == (count($arrayPromedios) - 2)) ){
+                if((sizeof($asignaturas) > 0 && count($asignaturas) == count($arrayPromedios)) or ($gestion < $gestionActual && sizeof($asignaturas) > 0 ) or ($gestion >= 2018 && count($arrayPromedios) == (count($asignaturas) - 2)) ){
                     $estadoAnterior = $inscripcion->getEstadomatriculaTipo()->getId();
                     $nuevoEstado = 5; // Aprobado
                     if($tipo == 'Bimestre'){

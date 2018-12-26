@@ -509,6 +509,17 @@
                                 <li><a href="{{path('sie_alt_reportes_search')}}">Reportes Educación Alternativa </a></li>
                             </ul>
                         </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-home"></i></span>
+                                <span class="text">Bachiller de Excelencia</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('bach_exc_alt_rst')}}">Restablecer registros</a></li>
+                                <li><a href="{{ path('bach_exc_alt_rep_dis')}}">Generar Reporte</a></li>
+                            </ul>
+                        </li>
                     {% endif %}
 
 
@@ -555,16 +566,17 @@
                                 <li><a href="{{path('sie_alt_reportes_search')}}">Reportes Educación Alternativa </a></li>
                             </ul>
                         </li>
-                        {#<li class="submenu">
+                        <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
                                 <span class="text">Bachiller de Excelencia</span>
                                 <span class="arrow"></span>
                             </a>
                             <ul>
-                                <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>
+                                <li><a href="{{ path('bach_exc_alt_rst')}}">Restablecer registros</a></li>
+                                <li><a href="{{ path('bach_exc_alt_rep_dis')}}">Generar Reporte</a></li>
                             </ul>
-                        </li>#}
+                        </li>
                     {% endif %}
                     {% if app.session.get('roluser') == 10 %} {#DISTRITAL#}
                         <li class="submenu">
@@ -606,7 +618,7 @@
                                 <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
                             </ul>
                         </li>
-                        {#<li class="submenu">
+                        <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
                                 <span class="text">Bachiller de Excelencia</span>
@@ -619,7 +631,19 @@
                                 <li><a href="{{ path('bach_exc_alt_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>
 
                             </ul>
-                        </li>#}
+                        </li>
+                    {% endif %}
+                    {% if app.session.get('roluser') == 2 %}{#MAESTRO#}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-users"></i></span>
+                                <span class="text">Gestión</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{path('herramienta_alter_notas_maestro_index')}}">Registro de Notas </a></li>
+                            </ul>
+                        </li>
                     {% endif %}
                 </ul><!-- /.sidebar-menu -->
                 <!--/ End left navigation - menu -->

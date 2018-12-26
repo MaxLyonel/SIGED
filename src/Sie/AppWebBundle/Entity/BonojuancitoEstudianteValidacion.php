@@ -154,6 +154,11 @@ class BonojuancitoEstudianteValidacion
      */
     private $fechaRegistro;
 
+    /**
+     * @var integer
+     */
+    private $gestionTipoId;
+
 
     /**
      * Get id
@@ -808,11 +813,6 @@ class BonojuancitoEstudianteValidacion
     {
         return $this->fechaRegistro;
     }
-    /**
-     * @var integer
-     */
-    private $gestionTipoId;
-
 
     /**
      * Set gestionTipoId
@@ -835,5 +835,61 @@ class BonojuancitoEstudianteValidacion
     public function getGestionTipoId()
     {
         return $this->gestionTipoId;
+    }
+    /**
+     * @var integer
+     */
+    private $pagoTipoId;
+
+    /**
+     * @var integer
+     */
+    private $estudianteInscripcionId;
+
+
+    /**
+     * Set pagoTipoId
+     *
+     * @param integer $pagoTipoId
+     * @return BonojuancitoEstudianteValidacion
+     */
+    public function setPagoTipoId($pagoTipoId)
+    {
+        $this->pagoTipoId = $pagoTipoId;
+    
+        return $this;
+    }
+
+    /**
+     * Get pagoTipoId
+     *
+     * @return integer 
+     */
+    public function getPagoTipoId()
+    {
+        return $this->pagoTipoId;
+    }
+
+    /**
+     * Set estudianteInscripcionId
+     *
+     * @param integer $estudianteInscripcionId
+     * @return BonojuancitoEstudianteValidacion
+     */
+    public function setEstudianteInscripcionId($estudianteInscripcionId)
+    {
+        $this->estudianteInscripcionId = $estudianteInscripcionId;
+    
+        return $this;
+    }
+
+    /**
+     * Get estudianteInscripcionId
+     *
+     * @return integer 
+     */
+    public function getEstudianteInscripcionId()
+    {
+        return $this->estudianteInscripcionId;
     }
 }

@@ -1,0 +1,147 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption %}
+    <style type="text/css">
+        .jupper{
+            text-transform: uppercase;
+        }
+    </style>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Validación promedio Física - Química ({{gestion}})
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="#">Validación de promedios</a></li>
+    
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            {% if listado is not empty %}
+                <div class="portlet portlet-blue">
+                    <div class="portlet-heading">
+                        <div class="pull-left">
+                            <h4 class="portlet-title">Inconsistencias respecto a {{ regla.descripcion }}</h4>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            <div class="alert alert-info"> <strong>Nota:</strong> Nótese que el <strong>promedio calculado = (nota física + nota química) / 2</strong>, tomando en cuenta que resultados con decimales mayores o iguales a 0.5 se redondea al entero superior, los resultados con decimales menores a 0.5 sólo se mantiene el número entero. Al aceptar el promedio calculado autoriza la modificación de las notas para la libreta electrónica.</div>
+                            <div id="no-more-tables" class="table-responsive">
+                                <form action="{{path('promedio_calidad_save_list')}}" method="post">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>No.</th>
+                                                <th>Turno</th>
+                                                <th>Curso</th>
+                                                <th>Codigo Rude</th>
+                                                <th>Estudiante</th>
+                                                <th>Bimestre</th>
+                                                <th>Nota Química</th>
+                                                <th>Nota Física</th>
+                                                <th>Promedio calculado</th>
+                                                <th>¿Esta de acuerdo con el promedio calculado?</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for lista in listado %}
+                                                <tr>
+                                                    <td>{{ loop.index }}</td>
+                                                    <td>{{ lista.turno }}</td>
+                                                    <td class="">{{ lista.nivel }} - {{ lista.grado }} - {{lista.paralelo}}</td>
+                                                    <td >{{lista.rude}}</td>
+                                                    <td>{{lista.estudiante}}</td>
+                                                    <td>{{ lista.notaTipo.notaTipo }}</td>
+                                                    {% for nota in lista.notas %}
+                                                        {% if nota.codigo != 1051 %}
+                                                            <td>{{nota.notaCuantitativa}}</td>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    <td class="text-blue">{{lista.promedio}}</td>
+                                                    <td>
+                                                        <input type="hidden" name="idValidacion[]" value="{{lista.idValidacion}}">
+                                                        <input type="hidden" name="idNota[]" value="{{lista.idNota}}">
+                                                        <input type="hidden" name="promedio[]" value="{{lista.promedio}}">
+                                                        
+                                                        {# <div class="col-lg-5 col-md-12 col-sm-12"> #}
+                                                            <label><input type="radio" name="acuerdo[{{lista.idValidacion}}]" value="1" required> &nbsp;Si</label>
+                                                        {# </div> #}
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                                        {# <div class="col-lg-5 col-md-12 col-sm-12"> #}
+                                                            <label><input type="radio" name="acuerdo[{{lista.idValidacion}}]" value="0" required> &nbsp;No </label>
+                                                        {# </div> #}
+                                                        
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    
+                                    <button type="submit" class="btn btn-default">Guardar y validar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div><!-- /.panel-body -->
+                </div>
+                <div class="modal modal-flex fade" id="myModalInconsistencias" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+                    <div class="modal-dialog higherWider">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title" id="flexModalLabel">Inconsistencias</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div id="idInconsistencias"></div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-warning">
+                    <i class="fa fa-warning"></i> No presenta inconsistencias respecto a {{ regla.descripcion }}.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+{{parent()}}
+<script>
+    var omitirSolucionHistorico = function(vp_id, llave, gestion, nivel, grado){
+        if (confirm('Está a punto de omitir el proceso de validación del registro observado, por tanto, confirmará que la información actual es la correcta. ¿Desea continuar?')) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('ccalidad_omitir_historico', {'vp_id': vp_id, 'llave': llave, 'gestion': gestion, 'nivel': nivel, 'grado': grado}),
+                beforeSend: function () {
+                    $("#idCuerpo").empty();
+                    $("#idCuerpo").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#idCuerpo").empty();
+                    $("#idCuerpo").html(data);
+                },
+                statusCode: {
+                    500: function () {
+    
+                    },
+                    404: function () {
+    
+                    }
+                }
+            });
+        }
+    }
+</script>
+{% endblock %}

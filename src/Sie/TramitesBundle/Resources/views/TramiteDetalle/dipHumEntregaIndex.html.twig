@@ -12,7 +12,7 @@
                     <div class="panel">
                         <div class="panel-heading">
                             <div class="pull-left">
-                                <h4 class="panel-title">C.E.A.: {{infoAutorizacionUnidadEducativa.institucioneducativa}}</h4>
+                                <h4 class="panel-title">{{infoAutorizacionUnidadEducativa.institucioneducativa}}</h4>
                             </div>
                             <div class="pull-right">
                                 <button class="btn btn-danger" id="botonModalDevolver" name="botonModalDevolver" data-action="search" data-toggle="tooltip" data-placement="top" data-title="Devolver" data-original-title="" title="Devolver" disabled="true" >Devolver</button>
@@ -102,20 +102,20 @@
                                             <td>
                                                 {% if participante.gestion_tipo_id == "now"|date("Y") %}
                                                   {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
-                                                    <span class="label label-danger rounded">{{ participante.estadomatricula }}</span>
+                                                    {{ participante.estadomatricula }}
                                                   {% else %}
                                                     {{ participante.estadomatricula }}
                                                   {% endif %}
                                                 {% else %}
                                                   {% if participante.nivel_tipo_id == 13 %}
                                                     {% if participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
-                                                      <span class="label label-danger rounded">{{ participante.estadomatricula }}</span>
+                                                        {{ participante.estadomatricula }}
                                                     {% else %}
                                                       {{ participante.estadomatricula }}
                                                     {% endif %}
                                                   {% else %}
                                                     {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
-                                                      <span class="label label-danger rounded">{{ participante.estadomatricula }}</span>
+                                                        {{ participante.estadomatricula }}
                                                     {% else %}
                                                       {{ participante.estadomatricula }}
                                                     {% endif %}
@@ -167,6 +167,8 @@
                                                         <input name="participantes[]" id="{{ ("participantes"~loop.index)|base64_encode }}" value="{{ participante.tramite_id|base64_encode }}"  type="checkbox" onchange="validarMarcar(this);">
                                                         <label for="{{ ("participantes"~loop.index)|base64_encode }}"></label>
                                                     </div>
+                                                {% else %}
+                                                    <button type="button" value="{{ participante.tramite_id|base64_encode }}" class="btn btn-danger btn-stroke btn-xs">Anular</buttom>
                                                 {% endif %}
                                             </td>
                                         </tr>

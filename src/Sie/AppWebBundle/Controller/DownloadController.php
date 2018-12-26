@@ -546,7 +546,9 @@ class DownloadController extends Controller {
 
         if($this->session->get('ue_tecteg') == false){
             $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
-            $operativo = $operativo - 1;
+            if( !in_array($this->session->get('roluser'), array(7,8,10)) ){
+                $operativo = $operativo - 1;
+            }
             if($gestion == $this->session->get('currentyear') and $operativo >= 1 and $operativo <= 3){
                 switch ($nivel) {
                     case 11: $reporte = 'reg_est_LibretaEscolar_inicial_b'.$operativo.'_v1_rcm.rptdesign'; break;
@@ -581,7 +583,7 @@ class DownloadController extends Controller {
         }else{
             // Tecnica tecnologica
             if($this->session->get('ue_tecteg') == true){
-                if($gestion >= 2011 and $gestion <=2013 and $sie != '80730460'){
+                if($gestion >= 2009 and $gestion <= 2013){
                     $reporte = 'reg_est_CertificadoNotas_UnidadesEducativasTecnologicas2013_trimestral_v1_ivg.rptdesign';
                 }else{
                     $reporte = 'reg_est_CertificadoNotas_UnidadesEducativasTecnologicas2016_v1_ivg.rptdesign';

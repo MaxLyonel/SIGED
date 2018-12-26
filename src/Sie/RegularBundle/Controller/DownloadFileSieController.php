@@ -137,7 +137,7 @@ class DownloadFileSieController extends Controller {
           $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
           if($form['bimestre']>=1 && $form['gestion'] == $this->session->get('currentyear')){
           //the rule to donwload file with validations
-          $form['reglas'] = '1,2,3,10,12,13,16';
+          $form['reglas'] = '1,2,3,10,12,13,16,27';
 
           //first validations calidad
           /***********************************\
@@ -782,7 +782,7 @@ class DownloadFileSieController extends Controller {
 
         //get path of the file
         $dir = $this->get('kernel')->getRootDir() . '/../web/uploads/instaladores/';
-        $file = 'instalador_SIGED_SIE_v126.exe';
+        $file = 'instalador_SIGED_SIE_v128.exe';
 
         //create response to donwload the file
         $response = new Response();
@@ -797,6 +797,33 @@ class DownloadFileSieController extends Controller {
         $response->setContent(readfile($dir . $file));
         return $response;
     }
+
+     /**
+   * to download the sie install
+   * by krlos pacha pckrlos.a.gmail.dot.com
+   * @param type
+   * @return void
+   */
+    public function updatedownloadAction(Request $request) {
+
+        //get path of the file
+        $dir = $this->get('kernel')->getRootDir() . '/../web/uploads/instaladores/';
+        $file = 'actualizador_SIGED_v126_a_v128.exe';
+
+        //create response to donwload the file
+        $response = new Response();
+        //then send the headers to foce download the zip file
+        $response->headers->set('Content-Type', 'application/exe');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $file));
+        $response->setContent(file_get_contents($dir) . $file);
+        $response->headers->set('Pragma', "no-cache");
+        $response->headers->set('Expires', "0");
+        $response->headers->set('Content-Transfer-Encoding', "binary");
+        $response->sendHeaders();
+        $response->setContent(readfile($dir . $file));
+        return $response;
+    }
+
 
     public function getgestionAction($sie) {
         $em = $this->getDoctrine()->getManager();

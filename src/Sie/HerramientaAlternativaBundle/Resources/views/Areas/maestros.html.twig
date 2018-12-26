@@ -1,5 +1,4 @@
-<form action="" id="formMaestros" onsubmit="asignarMaestro();
-        return false">
+<form action="" id="formMaestros">
     <table class="table table-lilac table-striped">
         <thead>
             <tr>
@@ -34,7 +33,7 @@
     <div style="background:#EEEEEE; text-align:right; padding:5px;">
         <button type="button" class="btn btn-default" onclick="cerrarMaestros({{ieco}})">Cerrar</button>
         {% if app.session.get('ie_per_estado') != '0' %}
-        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+        <button type="button" class="btn btn-success" onclick="asignarMaestro();">Guardar Cambios</button>
     {% endif %}
     </div>
 </form>

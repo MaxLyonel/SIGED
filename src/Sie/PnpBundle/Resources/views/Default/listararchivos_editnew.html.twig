@@ -196,6 +196,38 @@
         </div>
     </div>
     {% else %}
+        {% if ('8' == app.session.get('roluser')) %}
+             <div class="row">
+            <div class="col-lg-12">
+                <div class="portlet portlet-blue">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4>Reporte de cursos</h4>
+                        </div>
+                        <div class="portlet-widgets">
+                            <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation"><i class="fa fa-chevron-down"></i></a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div id="pinformation" class="panel-collapse collapse in">
+                        <div class="portlet-body" align="center">
+                            <div class="row">
+                                <a href="{{ path('sie_pnp_listar_dep', {'val':80730794 }) }}" > La Paz</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="{{ path('sie_pnp_listar_dep', {'val':81230297 }) }}" > Oruro</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="{{ path('sie_pnp_listar_dep', {'val':81480201 }) }}" > Potosí</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="{{ path('sie_pnp_listar_dep', {'val':80980569 }) }}" > Cochabamba</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="{{ path('sie_pnp_listar_dep', {'val':80480300 }) }}" > Chuquisaca</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="{{ path('sie_pnp_listar_dep', {'val':81730264 }) }}" > Tarija</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="{{ path('sie_pnp_listar_dep', {'val':81981501 }) }}" > Santa Cruz</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="{{ path('sie_pnp_listar_dep', {'val':82230130 }) }}" > Beni</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="{{ path('sie_pnp_listar_dep', {'val':82480050 }) }}" > Pando</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        {% endif %}
         <div class="row">
             <div class="col-lg-12">
                 <div class="portlet portlet-blue">

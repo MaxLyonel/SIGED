@@ -2,7 +2,11 @@
 
 {% block contentoption %}
 
-
+    <style type="text/css">
+        .jupper{
+            text-transform: uppercase;
+        }
+    </style>
     <!-- Start page header -->
     <div class="header-content">
         <h2><i class="fa fa-table"></i> Registro de Calificaciones <span>Notas Cuantitativas</span></h2>
@@ -82,7 +86,13 @@
     									<th>Materno</th>
     									<th>Nombre(s)</th>
     									<th>Nota</th>
-    									<th style="width:250px">Estado</th>
+    									<th style="width:250px">
+                                            {% if primariaNuevo %}
+                                                Valoracion cualitativa
+                                            {% else %}
+                                                Estado
+                                            {% endif %}                                            
+                                        </th>
     	                        	</tr>
     							</thead>
     							<tbody>
@@ -103,17 +113,28 @@
                                                 {% endif %}
                                             </td>
     										<td>
-                                                <select id="{{e.idEstudianteAsignatura}}" class="form-control input-sm estados" name="idEstados[]" disabled required="true" onclick="this.blur()">
-                                                  <option value="">Estado...</option>
-                                                  {% for ea in estadosAsignatura %}
-                                                    {% if e.idEstadoAsignatura == ea.id %}
-                                                        {% set selected = 'selected' %}
+                                                {% if primariaNuevo %}
+                                                    {% if app.session.get('ie_per_estado') == 2 or app.session.get('ie_per_estado') == 3 %}
+                                                        <input type="hidden" name="idInscripcion[]" value="{{e.idInscripcion}}">
+                                                        <input type="hidden" name="idNotaCualitativa[]" value="{{e.idNotaCualitativa}}">
+                                                        <textarea name="notaCualitativa[]" rows="3" cols="40" class="form-control jupper" style="resize:vertical; min-height:25px; max-height:100px;" required>{{e.notaCualitativa}}</textarea>
                                                     {% else %}
-                                                        {% set selected = '' %}
+                                                        <textarea name="notaCualitativa[]" disabled rows="3" cols="40" class="form-control jupper" style="rezice:vertical; min-height:25px; max-height:100px;">{{e.notaCualitativa}}</textarea>
                                                     {% endif %}
-                                                    <option value="{{ea.id}}" {{selected}}>{{ea.estado}}</option>
-                                                  {% endfor %}
-                                                </select>
+                                                {% else %}     
+                                                
+                                                    <select id="{{e.idEstudianteAsignatura}}" class="form-control input-sm estados" name="idEstados[]" disabled required="true" onclick="this.blur()">
+                                                      <option value="">Estado...</option>
+                                                      {% for ea in estadosAsignatura %}
+                                                        {% if e.idEstadoAsignatura == ea.id %}
+                                                            {% set selected = 'selected' %}
+                                                        {% else %}
+                                                            {% set selected = '' %}
+                                                        {% endif %}
+                                                        <option value="{{ea.id}}" {{selected}}>{{ea.estado}}</option>
+                                                      {% endfor %}
+                                                    </select>
+                                                {% endif %}
     										</td>
     									</tr>
     								{% endfor %}

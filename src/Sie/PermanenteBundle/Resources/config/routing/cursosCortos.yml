@@ -25,7 +25,7 @@ herramienta_per_cursos_cortos_update:
     methods:  [POST, PUT]
 
 herramienta_per_cursos_cortos_delete:
-    path:   /delete/
+    path:   /deletecc/
     defaults: { _controller: SiePermanenteBundle:CursosCortos:deleteCursoCorto}
     options:
           expose: true
@@ -45,6 +45,12 @@ sie_per_clistarmunicipios:
 sie_per_mostrarpob:
     path:     /mostrarpob/{pob}
     defaults: { _controller: "SiePermanenteBundle:CursosCortos:mostrarPobDetalle" }
+    options:
+         expose: true
+
+sie_per_mostrarpob_cortos:
+    path:     /mostrarpobcor/{pob}
+    defaults: { _controller: "SiePermanenteBundle:CursosCortos:mostrarPobDetalleCC" }
     options:
          expose: true
 
@@ -160,6 +166,36 @@ herramienta_per_delete_areatem_nuevo:
 herramienta_per_show_areatem_nuevo:
     path:     /showareatemnuevo/
     defaults: { _controller: "SiePermanenteBundle:CursoPermanente:showAreaTemNuevo"}
+    options:
+         expose: true
+
+herramienta_per_show_especialidad_nuevo:
+    path:     /showespnuevo/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:showEspecialidadNuevo"}
+    options:
+         expose: true
+
+herramienta_per_create_especialidad_nuevo:
+    path:     /createespecnuevo/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:createEspecialidadNuevo"}
+    options:
+         expose: true
+
+herramienta_per_show_especialidad_edit:
+    path:     /showespedit/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:showEspecialidadEdit"}
+    options:
+         expose: true
+
+herramienta_per_especialidad_delete:
+    path:     /deleteesp/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:deleteEsp"}
+    options:
+         expose: true
+
+herramienta_per_update_especialidad_edit:
+    path:     /updateespecedit/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:updateEspecialidadEdit"}
     options:
          expose: true
 

@@ -104,6 +104,61 @@
 
         </div>
     </div>
+
+    <div class="row">
+
+        <!-- <div class="col-md-12"> -->
+
+           
+            
+{#             
+              {% for typeVal,validations in arrValidation %}
+
+                  {% if  typeVal == 'observaciones_calidad' %}
+                      <div class="col-md-12 col-sm-12">
+                            <div class="panel panel-danger">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">{{typeVal | upper}}</h3>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    {% for validation in validations %}
+                                        <li>
+                                         {{validation.obs}}
+                                        </li>
+                                    {% endfor %}
+                                </div><!-- /.panel-body -->
+                            </div><!-- /.panel -->
+                          
+                        </div>                  
+                  {% endif %}
+
+                  {% if  typeVal == 'observaciones_incosistencia' %}
+                        <div class="col-md-12 col-sm-12">
+                            <div class="panel panel-danger">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">{{typeVal | upper}}</h3>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    {% for validation in validations %}
+                                        <li>
+                                         {{validation.observacion}}
+                                        </li>
+                                    {% endfor %}
+                                </div><!-- /.panel-body -->
+                            </div><!-- /.panel -->
+                          
+                        </div>
+                    
+                  {% endif %}
+              {% endfor %}
+
+#}
+                <!-- handle array -->
+            
+            
+        <!-- </div>         -->
+    </div>
+
 {%endif%}
 
 

@@ -319,7 +319,7 @@ class ConsolidationSieController extends Controller {
                 $aDataExtractFileUE = explode('|', $fileInfoContent[3]);
                 $aFileInfoSie = explode('|', $fileInfoContent[1]);
 
-                $objAllowUEQa = $this->get('seguimiento')->getAllObservationQA(array('sie'=>$aFileInfoSie[2], 'gestion'=>$aFileInfoSie[1],'reglas'=>'1,2,3,10,12,13,16'));
+                $objAllowUEQa = $this->get('seguimiento')->getAllObservationQA(array('sie'=>$aFileInfoSie[2], 'gestion'=>$aFileInfoSie[1],'reglas'=>'1,2,3,10,12,13,16,27'));
                 if($objAllowUEQa){
                   $session->getFlashBag()->add('warningcons', 'El archivo con código Sie ' . $aDataExtractFileUE[1] . ' tiene observaciones de control de calidad, favor solucionar para poder descargar el archivo ');
                   system('rm -fr ' . $dirtmp);
@@ -353,7 +353,7 @@ class ConsolidationSieController extends Controller {
                 //validate the correct sie send with the correct version in current year
                 if ((strcmp(preg_replace('/\s+/', '', $aFileInfoSie[1]), preg_replace('/\s+/', '', $this->session->get('currentyear')))) == 0) {
                     if (
-                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.6'))) === 0
+                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.8'))) === 0
                             and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED5'))) === 0    
                     ){
 
