@@ -184,6 +184,12 @@
                                       {% else %}
                                         {% set styleButton = 'info' %}
                                       {% endif %}
+
+                                    {% if imprimirLibreta == true and data.estadomatriculaId in estadosPermitidosImprimir %}
+                                            <a class="btn btn-circle btn-lilac" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
+                                              <i class="fa fa-archive" style="color:#FFFFFF"></i>
+                                            </a>
+                                    {% endif %}
                                       
                                     {# if  app.session.get('ue_humanistica') #}
                                     {% if
@@ -237,11 +243,7 @@
 
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" data-placement="top" title data-original-title="Imprimir Libreta">
 
-                                      {% if imprimirLibreta == true and data.estadomatriculaId in estadosPermitidosImprimir %}
-                                              <a class="btn btn-circle btn-lilac" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
-                                                <i class="fa fa-archive"></i>
-                                              </a>
-                                      {% endif %}
+                                      
 
                                     </div>
                                     {% if false %}
