@@ -358,12 +358,13 @@ class TramiteTecnicoController extends Controller {
                 $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->findOneBy(array('id' => $numeroSerie.$tipoSerie));
             }
             $entityDocumentoEstado = $em->getRepository('SieAppWebBundle:DocumentoEstado')->findOneBy(array('id' => 1));
+            $entityUsuario = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('id' => $usuarioId));
             $entityDocumento = new Documento();
             $entityDocumento->setDocumento('');
             $entityDocumento->setDocumentoTipo($entityDocumentoTipo);
             $entityDocumento->setObs($entityDocumentoTipo->getDocumentoTipo() . ' generado');
             $entityDocumento->setDocumentoSerie($entityDocumentoSerie);
-            $entityDocumento->setUsuarioId($usuarioId);
+            $entityDocumento->setUsuario($entityUsuario);
             $entityDocumento->setFechaImpresion($fecha);
             $entityDocumento->setFechaRegistro($fechaActual);
             $entityDocumento->setTramite($entityTramite[0]);

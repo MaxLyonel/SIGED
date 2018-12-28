@@ -1,0 +1,92 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+
+{% block contentoption %}
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Centros Educativos <span>Disponibles</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="glyphicon glyphicon-leaf"></i>
+                        <a href="{{path('principal_web')}}">Bienvenida</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-table"></i>
+                        Lista de materias
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <div class="body-content animated fadeIn">
+        <div class="col-md-12">
+            <!-- Start repeater -->
+            <div class="panel rounded shadow no-overflow">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Lista de materias y/o modulos impartidos</h3>
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn btn-sm" data-action="refresh" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Refresh" data-original-title="" title=""><i class="fa fa-refresh"></i></button>
+                        <button class="btn btn-sm" data-action="collapse" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                        <button class="btn btn-sm" data-action="remove" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Remove" data-original-title="" title=""><i class="fa fa-times"></i></button>
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+                    {% if asignaturas|length > 0 %}
+                        <div class="table-responsive">
+                        <table class="table table-striped dataTable">
+                            <tr>
+                                <th>Nro</th>
+                                <th>Gestión</th>
+                                <th>Sie</th>
+                                <th>Centro</th>
+                                <th>Sucursal</th>
+                                <th>Periodo</th>
+                                <th>Nivel / Especialidad</th>
+                                <th>Etapa / Acreditación</th>
+                                <th>Asignatura / Módulo</th>
+                                <th>Turno</th>
+                                <th>Paralelo</th>
+                                <th>Acción</th>
+                            </tr>
+                            {% for a in asignaturas %}
+                                <tr>
+                                    <td>{{loop.index}}</td>
+                                    <td>{{a.gestion}}</td>
+                                    <td>{{a.sie}}</td>
+                                    <td>{{a.institucioneducativa}}</td>
+                                    <td>{{a.sucursal}}</td>
+                                    <td>{{a.periodoSuperior}}</td>
+                                    <td>{{a.especialidad}}</td>
+                                    <td>{{a.acreditacion}}</td>
+                                    <td>{{a.modulo}}</td>
+                                    <td>{{a.turno}}</td>
+                                    <td>{{a.paralelo}}</td>
+                                    <td>
+                                        <form action="{{path('herramienta_alter_notas_maestro_new')}}" method="post">
+                                            <input type="hidden" name="idCursoOferta" value="{{a.idCursoOferta}}">
+                                            <button type="submit" class="btn btn-lilac btn-stroke btn-sm">Reg.Notas</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            El maestro no tiene asignaturas y/o módulos asignados!!!
+                        </div>
+                    {% endif %}
+                </div><!-- /.panel-body -->
+            </div><!-- /.panel -->
+            <!--/ End repeater -->
+        </div>
+    </div>
+{% endblock %}

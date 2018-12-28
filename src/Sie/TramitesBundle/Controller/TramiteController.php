@@ -15,6 +15,8 @@ use Sie\TramitesBundle\Controller\DefaultController as defaultTramiteController;
 use Sie\TramitesBundle\Controller\TramiteDetalleController as tramiteProcesoController;
 use Sie\TramitesBundle\Controller\DocumentoController as documentoController;
 
+use phpseclib\Crypt\RSA;
+
 class TramiteController extends Controller {
 
     /**
@@ -34,7 +36,7 @@ class TramiteController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SieAppWebBundle:Tramite');
         $query = $entity->createQueryBuilder('t')
-                ->select("t.id as id, t.id as tramite, ds.id as serie, d.fechaImpresion as fechaemision, dept.departamento as departamentoemision, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documentoTipo as documentoTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad, tt.tramiteTipo as tramiteTipo")
+                ->select("t.id as id, t.id as tramite, ei.id as estudianteInscripcionId, ds.id as serie, d.fechaImpresion as fechaemision, dept.departamento as departamentoemision, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documentoTipo as documentoTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad, tt.tramiteTipo as tramiteTipo")
                 ->innerJoin('SieAppWebBundle:TramiteTipo', 'tt', 'WITH', 'tt.id = t.tramiteTipo')
                 ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'ei.id = t.estudianteInscripcion')
                 ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'e.id = ei.estudiante')
@@ -47,7 +49,7 @@ class TramiteController extends Controller {
                 ->leftJoin('SieAppWebBundle:DocumentoEstado', 'de', 'WITH', 'de.id = d.documentoEstado AND de.id = 1')
                 ->leftJoin('SieAppWebBundle:DocumentoTipo', 'dt', 'WITH', 'dt.id = d.documentoTipo')
                 ->leftJoin('SieAppWebBundle:DocumentoSerie', 'ds', 'WITH', 'ds.id = d.documentoSerie')
-                ->leftJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = ds.gestion')
+                ->leftJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = iec.gestionTipo')
                 ->leftJoin('SieAppWebBundle:DepartamentoTipo', 'dept', 'WITH', 'dept.id = ds.departamentoTipo')
                 ->where('t.id = :codTramite')
                 ->setParameter('codTramite', $tramite);
@@ -1078,11 +1080,11 @@ class TramiteController extends Controller {
     
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
-    // Funcion que despliega el ultimo periodo de un CEA en la getion actual
+    // Funcion que despliega el ultimo periodo de un CEA en la getion actualcreateQueryBuilder
     // PARAMETROS: institucionEducativaId, gestionId
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    private function getInstitucionEducativaPeriodoGestionActual($institucionEducativaId, $gestionId) {
+    public function getInstitucionEducativaPeriodoGestionActual($institucionEducativaId, $gestionId) {
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
                 select * from institucioneducativa_sucursal where institucioneducativa_id = ".$institucionEducativaId." and gestion_tipo_id = ".$gestionId." order by gestion_tipo_id desc, periodo_tipo_id desc limit 1
@@ -1679,7 +1681,7 @@ class TramiteController extends Controller {
           inner join periodo_tipo as pet on pet.id = ies.periodo_tipo_id
           left join estudiante_asignatura as ea on ea.institucioneducativa_curso_oferta_id = ieco.id and ea.estudiante_inscripcion_id = ei.id
           left join estudiante_nota as en on en.estudiante_asignatura_id = ea.id
-          where  sfat.codigo in (15) and sat.codigo in (2,3) and sest.codigo in (2)
+          where  sfat.codigo in (15) and sat.codigo in (2,3) and sest.codigo in (2) and ea.estudianteasignatura_estado_id in (25,5)
           and ei.estadomatricula_tipo_id in (4,5,55) and en.nota_tipo_id::integer in (23,24,25,26)
           group by e.id, e.codigo_rude, e.paterno, e.materno, e.nombre, ei.estadomatricula_tipo_id, sest.id, sest.especialidad
           , sat.codigo, sat.acreditacion, ie.id, ie.institucioneducativa, tt.id, tt.turno, pt.paralelo, smt.id, smt.modulo
@@ -1695,7 +1697,7 @@ class TramiteController extends Controller {
             else (n1 is null or n1 = 0 or n2 is null or n2 = 0 or n3 is null or n3 = 0 or n4 is null or n4 = 0)
             end
           else
-            true
+            false
           end
           group by v.codigo_rude, v.paterno, v.materno, v.nombre
         ");
@@ -2748,6 +2750,67 @@ class TramiteController extends Controller {
         }
     }
 
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que registra la anulacion de un tramite
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function anulaGuardaAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        
+        $response = new JsonResponse();
+        
+        if ($request->isMethod('POST')) {
+            $tramiteId = base64_decode($request->get('val'));
+            $obs = $request->get('obs');
+            $formBusqueda = array('value'=>$tramiteId,'obs'=>$obs);
+            if ($tramiteId != "" and $obs != ""){
+                $em = $this->getDoctrine()->getManager();
+                $em->getConnection()->beginTransaction();
+                try {
+                    $entityTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $tramiteId));
+                    if(count($entityTramite)>0){
+                        $tramiteProcesoController = new tramiteProcesoController();
+                        $tramiteProcesoController->setContainer($this->container);
+                        $tramiteDetalleId =  $tramiteProcesoController->setProcesaTramiteAnula($tramiteId, $id_usuario, $obs, $em);
+                        $documentoController = new documentoController();
+                        $documentoController->setContainer($this->container);
+                        $entityDocumento = $documentoController->getDocumentoTramite($tramiteId,1);
+                        if (count($entityDocumento) > 0){
+                            $documentoId = $documentoController->setDocumentoEstado($entityDocumento->getId(),2);
+                        }                    
+                        $em->getConnection()->commit();
+                        return $response->setData(array('estado' => true, 'obs' => 'Trámite '.$tramiteId.' anulado de forma correcta'));
+                    } else {
+                        return $response->setData(array('estado' => false, 'obs' => 'Error al procesar la información, intente nuevamente'));
+                    }
+                } catch (\Doctrine\ORM\NoResultException $exc) {
+                    $em->getConnection()->rollback();
+                    return $response->setData(array('estado' => false, 'obs' => 'Error al procesar la información, intente nuevamente'));
+                }
+            } else {
+                return $response->setData(array('estado' => false, 'obs' => 'Error al procesar la información, intente nuevamente'));
+            }
+        } else {
+            return $response->setData(array('estado' => false, 'obs' => 'Error al enviar el formulario, intente nuevamente'));
+        }
+    }
+
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
     // Funcion que verifica la tuicion sobre una institucion educativa segun el usuario, rol y subsistema
@@ -3268,7 +3331,8 @@ class TramiteController extends Controller {
                         // $error = $this->procesaTramite($tramiteId, $id_usuario, 'Adelante','');
                         $tramiteDetalleId = $tramiteProcesoController->setProcesaTramiteInicio($tramiteId, $id_usuario, 'REGISTRO DEL TRÁMITE', $em);
 
-                        $idDocumento = $documentoController->setDocumento($tramiteId, $id_usuario, $tipoDiploma, $serie, '', $fechaActual); 
+                        $documentoFirmaId = 0;
+                        $idDocumento = $documentoController->setDocumento($tramiteId, $id_usuario, $tipoDiploma, $serie, '', $fechaActual, $documentoFirmaId); 
 
                         $em->getConnection()->commit();
                         $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'Diploma Técnico Registrado'));

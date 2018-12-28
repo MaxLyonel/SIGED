@@ -27,3 +27,27 @@ herramienta_alter_infoEstudianteAreas_maestros_asignar:
     defaults: { _controller: "SieHerramientaAlternativaBundle:Areas:maestrosAsignar"}
     options:
          expose: true         
+
+herramienta_alter_areas_emergente:
+    path:     /areaEmergente
+    defaults: { _controller: SieHerramientaAlternativaBundle:Areas:areaEmergente }
+    options:
+         expose: true         
+
+herramienta_alter_infoEstudianteAreas_emergente_asignar:
+    path:     /emergenteAsignar
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Areas:emergenteAsignar"}
+    options:
+         expose: true
+
+herramienta_alter_areas_registerNameModIntEmer:
+    path:     /registerNameModIntEmer
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Areas:registerNameModIntEmer"}
+    options:
+         expose: true         
+
+herramienta_alter_area_emergente_add:
+    path:     /areaemergenteadd
+    defaults: { _controller: SieHerramientaAlternativaBundle:Areas:areaemergenteadd }
+    options:
+         expose: true            

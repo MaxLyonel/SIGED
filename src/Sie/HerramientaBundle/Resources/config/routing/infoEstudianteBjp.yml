@@ -116,3 +116,15 @@ herramienta_info_estudiante_bjp_remove_students:
 herramienta_info_estudiante_bjp_view_report:
     path:     /sie/viewReport/
     defaults: { _controller: SieHerramientaBundle:InfoEstudianteBjp:viewReport }
+
+herramienta_info_estudiante_bjp_nuevo_rude:
+    path:     /sie/bjprudenew/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteBjp:bjpNuevoRude }
+
+herramienta_info_estudiante_bjp_nuevo_rude_search:
+    path:     /sie/bjprudesearch/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteBjp:bjpNuevoRudeSearch }
+
+herramienta_info_estudiante_bjp_nuevo_rude_save:
+    path:     /sie/bjprudenewsave/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteBjp:bjpNuevoRudeGuardar }

@@ -38,7 +38,7 @@ security:
         - { path: ^/desunification, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSN_ALT,ROLE_TECSN_ESP,ROLE_TECSN_PNP,ROLE_TECSDE_SIG,ROLE_TECSDE_ALT,ROLE_TECSDE_ESP,ROLE_TECSDI_SIG] }
         - { path: ^/modificaciondatos, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSN_ALT,ROLE_TECSN_ESP,ROLE_TECSDE_SIG,ROLE_TECSDE_ALT,ROLE_TECSDE_ESP,ROLE_TECSDI_SIG,ROLE_IMPD_DIP] }
         - { path: ^/datosapoderado, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSN_ALT,ROLE_TECSN_ESP,ROLE_TECSDE_SIG,ROLE_TECSDE_ALT,ROLE_TECSDE_ESP,ROLE_TECSDI_SIG,ROLE_IMPD_DIP,ROLE_IMPD_DIP] }
-        - { path: ^/estudianteinformacion, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_INT_SIG] }
+        - { path: ^/estudianteinformacion, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_INT_SIG,ROLE_FEL_SIG] }
         - { path: ^/homologaciones, roles: [ROLE_TECSS_*,ROLE_IMPD_DIP] }        
         - { path: ^/removeIns, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG] }
         - { path: ^/inscriptionExtranjeros, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG,ROLE_TECSDI_SIG] }
@@ -50,8 +50,10 @@ security:
         - { path: ^/moveinscription, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
         - { path: ^/removeInscriptionfree, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG,ROLE_TECSDI_SIG] }
         - { path: ^/consolidationsie, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
-        - { path: ^/sie, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSN_REG,ROLE_TECSDE_SIG,ROLE_TECSDI_SIG,ROLE_DIR_*,ROLE_CONN_SIG,ROLE_INT_SIG, ROLE_CONN_] }
+        - { path: ^/sie, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSN_REG,ROLE_TECSDE_SIG,ROLE_TECSDI_SIG,ROLE_DIR_*,ROLE_CONN_SIG,ROLE_INT_SIG,ROLE_FEL_SIG, ROLE_CONN_] }
         - { path: ^/ususie, roles: [ROLE_TECSS_*,ROLE_TECSN_USU,ROLE_TECSDE_USU,ROLE_TECSDI_USU,ROLE_DIR_*,ROLE_MAE_*,ROLE_PNPP_USU,ROLE_PNPC_USU] }
         - { path: ^/altsie, roles: [ROLE_TECSS_*,ROLE_TECSN_ALT,ROLE_TECSDE_ALT,ROLE_TECSDI_ALT,ROLE_DIR_*,ROLE_MAE_*,ROLE_CONN_ALT] }
+        - { path: ^/espsie, roles: [ROLE_TECSS_*,ROLE_TECSN_ESP,ROLE_TECSDE_ESP,ROLE_TECSDI_ESP,ROLE_DIR_*,ROLE_CONN_ESP] }
         - { path: ^/pnpsie, roles: [ROLE_TECSS_*,ROLE_TECSN_PNP,ROLE_TECSDE_PNP,ROLE_TECSDI_PNP] }
         - { path: ^/diplomas, roles: [ROLE_RECUE_DIP,ROLE_RECD_DIP,ROLE_VENRD_DIP,ROLE_AUTT_DIP,ROLE_IMPD_DIP,ROLE_LEGD_DIP,ROLE_TECSN_SIG,ROLE_TECSDE_SIG,ROLE_TECSDI_SIG] }
+        - { path: ^/rittsie, roles: [ROLE_TECSN_RIE,ROLE_TECSDE_RIE] }

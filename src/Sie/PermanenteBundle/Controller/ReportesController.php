@@ -100,6 +100,58 @@ class ReportesController extends Controller {
 
     }
 
+    public function reportParticipantesCLAction(Request $request){
+
+        $infoUe = $request->get('infoUe');
+        $aInfoUeducativa = unserialize($infoUe);
+        $idcurso=$aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
+   //     dump($idcurso);die;
+        $sie = $this->session->get('ie_id');
+        $gestion = $this->session->get('ie_gestion');
+        $periodo = $this->session->get('ie_per_cod');
+        $suc=$this->session->get('ie_subcea');
+        $argum= 'REPORTE PARTICIPANTES CURSOS LARGOS';
+        $response = new Response();
+
+        $response->headers->set('Content-type', 'application/pdf');
+
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'_'. $periodo . '_' . $gestion . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'per_lst_participantes_curso_largo_v1_ma.rptdesign&Sie=' . $sie . '&Gestion=' .$gestion .  '&Periodo=' . $periodo. '&Subcea=' . $suc. '&Idcurso=' . $idcurso. '&&__format=pdf&'));
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+
+    }
+
+    public function reportCentralizadorCLAction(Request $request){
+
+        $infoUe = $request->get('infoUe');
+        $aInfoUeducativa = unserialize($infoUe);
+        $idcurso=$aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
+        //     dump($idcurso);die;
+        $sie = $this->session->get('ie_id');
+        $gestion = $this->session->get('ie_gestion');
+        $periodo = $this->session->get('ie_per_cod');
+        $suc=$this->session->get('ie_subcea');
+        $argum= 'REPORTE CENTRALIZADOR CURSOS LARGOS';
+        $response = new Response();
+
+        $response->headers->set('Content-type', 'application/pdf');
+
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'_'. $periodo . '_' . $gestion . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'per_lst_centralizador_curso_largo_v1_ma.rptdesign&Sie=' . $sie . '&Gestion=' .$gestion .  '&Periodo=' . $periodo. '&Subcea=' . $suc. '&Idcurso=' . $idcurso. '&&__format=pdf&'));
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+
+    }
+
     public function reportCertParticipantesAction(Request $request){
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);

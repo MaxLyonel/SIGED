@@ -297,7 +297,7 @@
                         {% endif %}
                     {% endfor %}
 
-                    {% if rol20 == false and rol8 == false and app.session.get('userId') != 92506172 and app.session.get('userId') != 13794031 and app.session.get('userId') != 92506479 and app.session.get('userId') != 13794032  and app.session.get('userId') != 13793984 and app.session.get('userId') != 92506171 %}
+                    {% if app.session.get('sysname') == "TRAMITES" %}
 
                         {% if (rol8 or rol16 or rol13) %}
                             <li class="submenu">
@@ -394,9 +394,7 @@
                                 </ul>
                             </li>
                         {% endif %}
-                    {% endif %}
-
-                    {% if rol20 == true or rol8 == true or app.session.get('userId') == 92506172 or app.session.get('userId') == 13794031  or app.session.get('userId') == 92506479  or app.session.get('userId') == 13794032 or app.session.get('userId') == 13793984  or app.session.get('userId') == 92506171 %}
+                    {% else %}
                         <!-- Start development - sub menu -->
                         {% for key,menu in app.session.get('aMenu') %}
                             <li class="submenu {% if app.session.get('pMenuId') == menu[0]['menuId'] %} active {% endif %}">
@@ -417,8 +415,19 @@
                                 <!-- /.nav-second-level -->
                             </li>
                         {% endfor %}
-                    {% endif %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-search"></i></span>
+                                <span class="text">Firma Electrónica</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul class="collapse nav" id="menu10000">
+                                <li><a href="{{ path('tramite_documento_firma_diploma_humanistico_autorizacion_lista') }}">Autorización</a></li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>   
                     <!--/ End development - sub menu -->
+                    {% endif %}
                 </ul><!-- /.sidebar-menu -->
 
 

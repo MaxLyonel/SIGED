@@ -251,7 +251,7 @@
                             <input type="hidden" id="rcurso_id" name="rcurso_id" required="required" {% if plan == 2%}value="{{id_archivo}}" {% endif %}/>
                             <input style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" id="mmodulo_emergente" maxlength="70" size="70" name="mmodulo_emergente" placeholder="Digite Nombre del Módulo Emergente" required="required"  {% if plan == 2%}value="{{modulo_emergente.moduloEmergente}}" {% endif %}/>
                             <h4>Horas Académicas:</h4>
-                            <input type="number" min="0" step="5"  max="99" maxlength="2" id="modulo_emergente_horas" name="modulo_emergente_horas" required="required" {% if plan == 2%}value="{{duracionhoras}}" {% endif %}/>
+                            <input type="number" min="0" step="5"  max="999" maxlength="3" id="modulo_emergente_horas" name="modulo_emergente_horas" required="required" {% if plan == 2%}value="{{duracionhoras}}" {% endif %}/>
                             </div>
                             <hr>
                             <div align="center"><button type="submit" class="btn btn-success btn-large glyphicon glyphicon-pencil"> Guardar Cambios</button></div>

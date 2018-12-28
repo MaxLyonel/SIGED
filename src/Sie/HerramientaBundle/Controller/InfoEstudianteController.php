@@ -676,7 +676,14 @@ class InfoEstudianteController extends Controller {
                     if($gestion == 2015 and $nivel == 13 and $grado >= 5 and $paralelo >= 6){
                         $imprimirLibreta = true;
                     }
+                    if($gestion >= 2009 and $gestion <= 2013){
+                        $imprimirLibreta = true;
+                    }
                 }
+            }
+        }else{
+            if($gestion > 2014 and $operativo >= 4){
+                $imprimirLibreta = true;
             }
         }
 

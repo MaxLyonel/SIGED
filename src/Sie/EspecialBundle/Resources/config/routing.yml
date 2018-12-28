@@ -1,62 +1,62 @@
 sie_especial_main:
     resource: "@SieEspecialBundle/Resources/config/routing/estudianteInscripcionEspecial.yml"
-    prefix:   /especial/especial
+    prefix:   /espsie/especial
 
 sie_especial_creacion_cursos:
     resource: "@SieEspecialBundle/Resources/config/routing/creacionCursosEspecial.yml"
-    prefix:   /especial/creacionCursosEspecial
+    prefix:   /espsie/creacionCursosEspecial
 
 sie_especial_info_maestro:
     resource: "@SieEspecialBundle/Resources/config/routing/infoMaestro.yml"
-    prefix:   /especial/infoMaestroEsp
+    prefix:   /espsie/infoMaestroEsp
 
 sie_especial_info_personal_adm:
     resource: "@SieEspecialBundle/Resources/config/routing/infoPersonalAdm.yml"
-    prefix:   /especial/infoPersonalAdmEsp
+    prefix:   /espsie/infoPersonalAdmEsp
 
 sie_especial_homepage:
-    path:     /especial/hello/{name}
+    path:     /espsie/hello/{name}
     defaults: { _controller: "SieEspecialBundle:Default:index" }
 
 sie_especial_area:
     resource: "@SieEspecialBundle/Resources/config/routing/areaEspecial.yml"
-    prefix:   /especial/areaEspecial
+    prefix:   /espsie/areaEspecial
 
 sie_especial_reportes:
     resource: "@SieEspecialBundle/Resources/config/routing/reporteEspecial.yml"
-    prefix:   /especial/reporteEspecial
+    prefix:   /espsie/reporteEspecial
 
 sie_especial_notas:
     resource: "@SieEspecialBundle/Resources/config/routing/estudianteNotas.yml"
-    prefix:   /especial/estudianteNotas
+    prefix:   /espsie/estudianteNotas
 
 sie_especial_info_notas:
     resource: "@SieEspecialBundle/Resources/config/routing/infoNotas.yml"
-    prefix:   /especial/infoNotas
+    prefix:   /espsie/infoNotas
 
 sie_especial_estadistica:
     resource: "@SieEspecialBundle/Resources/config/routing/estadisticaEspecial.yml"
-    prefix:   /especial/especial/estadistica
+    prefix:   /espsie/especial/estadistica
 
 sie_especial_info_especial:
     resource: "@SieEspecialBundle/Resources/config/routing/infoEspecial.yml"
-    prefix:   /especial/infoEspecial
+    prefix:   /espsie/infoEspecial
 
 sie_especial_info_centro:
     resource: "@SieEspecialBundle/Resources/config/routing/infoCentro.yml"
-    prefix:   /especial/centroEspecial
+    prefix:   /espsie/centroEspecial
 
 sie_especial_info_personal:
     resource: "@SieEspecialBundle/Resources/config/routing/infoPersonal.yml"
-    prefix:   /especial/infoEspecial
+    prefix:   /espsie/infoEspecial
 
 sie_especial_info_maestros:
     resource: "@SieEspecialBundle/Resources/config/routing/infoMaestros.yml"
-    prefix:   /especial/infoEspecial
+    prefix:   /espsie/infoEspecial
 
 sie_especial_info_students:
     resource: "@SieEspecialBundle/Resources/config/routing/infoStudents.yml"
-    prefix:   /especial/infoStudents
+    prefix:   /espsie/infoStudents
 
 index:
     path:     /index

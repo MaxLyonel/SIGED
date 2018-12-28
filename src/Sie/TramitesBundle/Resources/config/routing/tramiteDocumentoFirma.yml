@@ -1,0 +1,18 @@
+tramite_documento_firma_diploma_humanistico_autorizacion_busca:
+    path:     /autorizacion/busca
+    defaults: { _controller: SieTramitesBundle:DocumentoFirma:dipHumAutorizaFirmaBusca }
+    
+tramite_documento_firma_diploma_humanistico_autorizacion_lista:
+    path:     /autorizacion/lista
+    defaults: { _controller: SieTramitesBundle:DocumentoFirma:dipHumAutorizaFirmaLista }
+    
+tramite_documento_firma_diploma_humanistico_autorizacion_guarda:
+    path:     /autorizacion/guarda
+    defaults: { _controller: SieTramitesBundle:DocumentoFirma:dipHumAutorizaFirmaGuarda }
+
+
+tramite_documento_firma_diploma_humanistico_autorizacion_cambia_estado:
+    path:     /autorizacion/cambia/estado/{registro}
+    defaults: { _controller: SieTramitesBundle:DocumentoFirma:dipHumAutorizaFirmaCambiaEstado }
+    options:
+         expose: true 

@@ -8,9 +8,12 @@
                                                 {% endif %}
                                                 <li><a class="glyphicon glyphicon-eye-open" href="#" onclick="usuarioFormShow('{{persona.usuarioid}}')"> Ver</a></li> 
                                                 <li><a class="glyphicon glyphicon-flash" href="#" onclick="usuarioFormReset('{{persona.usuarioid}}')"> Resetear Contraseña</a></li> 
-                                                <li><a class="glyphicon glyphicon-edit" href="#" onclick="usuarioFormRolEdit('{{persona.usuarioid}}')"> Editar Roles</a></li>                                            
-                                                <li><a class="glyphicon glyphicon-pencil" href="#" onclick="personaFormEdit('{{persona.personaid}}')"> Editar datos personales</a></li>                                                                                        
+                                                <li><a class="glyphicon glyphicon-edit" href="#" onclick="usuarioFormRolEdit('{{persona.usuarioid}}')"> Editar Roles</a></li>
                                                 
+                                                {% if is_granted('ROLE_TECSN_SIG') or is_granted('ROLE_TECSD_SIG')  %}
+                                                    <li><a class="glyphicon glyphicon-pencil" href="#" onclick="personaFormEdit('{{persona.personaid}}')"> Editar datos personales</a></li>                                                                                        
+                                                {% endif %}
+
                                                 {% if is_granted('ROLE_TECSS_*')  %}
                                                     <li><a class="glyphicon glyphicon-ban-circle" href="#" onclick="usuarioDesactivar({{persona.usuarioid}})"> Activar/Desactivar Usuario </a></li>
                                                 {% elseif (persona.usuarioesactivo == true) and (is_granted('ROLE_TECSN_USU'))  %}

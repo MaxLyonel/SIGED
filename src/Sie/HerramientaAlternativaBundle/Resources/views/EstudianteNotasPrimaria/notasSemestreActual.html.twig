@@ -62,12 +62,12 @@
                     <table class="table table-bordered">
                        <thead>
                           <tr>
-                             <th rowspan="2" style="vertical-align: middle">Módulo</th>
-                             <th colspan="1" style="text-align:center">Valoración Cuantitativa</th>
-                             <th rowspan="2">Valoración Cualitativa</th>
+                             <th rowspan="2" style="vertical-align: middle">Área de Saberes y Conocimientos</th>
+                             <th colspan="1" style="text-align:center">VALORACIÓN</th>
+                             <th rowspan="2">VALORACIÓN INTEGRAL:</th>
                          </tr>
                          <tr>
-                            <th style="text-align:center">Promedio Semestral</th>
+                            <th style="text-align:center">NUMERAL</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -75,7 +75,12 @@
                         {% for asig in areas %}
                             {% if (app.session.get('roluser') != 2) %}
                                 <tr>
-                                    <td>{{asig.asignatura}}<br><small style="color:#000000; opacity:0.3; font-size:9px">{{asig.area}}</small></td>
+                                    <td>
+                                        {% if asig.codigo == 415 %}
+                                            <small style="color:#78747D; display:block; margin-bottom:12px;">FORMACIÓN PARA LA VIDA</small>
+                                        {% endif %}
+                                        {{asig.asignatura}}
+                                    </td>
                                     {% for n in asig.notas %}
                                         <td align="center">
                                             {% if app.session.get('ie_per_estado') == 2 or app.session.get('ie_per_estado') == 3 %}
@@ -105,7 +110,7 @@
                                                 <td rowspan="5">
                                                     <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{nc.idEstudianteNotaCualitativa}}">
                                                     <input type="hidden" name="idNotaTipoCualitativa[]" value="{{nc.idNotaTipo}}">
-                                                    <textarea name="notaCualitativa[]" cols="40" rows="7" class="form-control jupper">{{ nc.notaCualitativa }}</textarea>
+                                                    <textarea name="notaCualitativa[]" cols="27" rows="7" class="form-control jupper" style="resize:vertical">{{ nc.notaCualitativa }}</textarea>
                                                 </td>
                                             {% endfor %}
                                         {% endif %}

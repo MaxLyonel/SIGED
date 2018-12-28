@@ -35,9 +35,10 @@
                       <input type="hidden" id="verificarPago_nivel" name="verificarPago[nivel]" value="{{nivel}}">
                       <input type="hidden" id="verificarPago_grado" name="verificarPago[grado]" value="{{grado}}">
                       <input type="hidden" id="verificarPago_paralelo" name="verificarPago[paralelo]" value="{{paralelo}}">
+                      <input type="hidden" id="verificarPago_pagoTipo" name="verificarPago[pagoTipo]" value="{{pagoTipo}}">
                     <table class="table table-bordered table-hover cf">
                         <tr>
-                          <td align="center" class="info" colspan="5">Estudiantes para validar el pago del BJP</br>
+                          <td align="center" class="info" colspan="5">Listado de Estudiantes para validar el pago del BJP</br>
                               {{gradoname}} - {{paraleloname}}
                           </td>
                         </tr>
@@ -68,20 +69,34 @@
                             {% set jsnInfoStudent = items|json_encode() %}
                             <tr >
                                 <td>{{loop.index}}</td>
-                                <td  align="">{{data.codigoRude}}</td>
-                                <td  align="">{{data.paterno}} {{data.materno}} {{data.nombre}}</td>
-                                <td  align="">{{data.estadomatricula}}</td>
-                                <td  align="center">
-                                  <input type="checkbox" id="verificarPago_{{data.id}}" name="verificarPago[{{data.id}}]" {% if data.esPagado %}checked{% endif %}>
+                                <td align="">{{data.codigoRude}}</td>
+                                <td align="">{{data.paterno}} {{data.materno}} {{data.nombre}}</td>
+                                <td align="">{{data.estadomatricula}}</td>
+                                <td align="center">
+                                    {% if pagoTipo != data.pagoTipoId %}
+                                        {% if data.esPagado %}
+                                            <span class="label label-success">pagado</span>
+                                        {% else %}
+                                            <input type="checkbox" id="verificarPago_{{data.id}}" name="verificarPago[{{data.id}}]" {% if data.esPagado %}checked{% endif %}>
+                                        {% endif %}
+                                    {% else %}
+                                        <input type="checkbox" id="verificarPago_{{data.id}}" name="verificarPago[{{data.id}}]" {% if data.esPagado %}checked{% endif %}>
+                                    {% endif %}
                                 </td>
-                                <td  align="">
-                                    {% if data.esNuevo %}
-                                      <a onclick="eliminarRegistroBjp('{{infoUe}}','{{data.id}}');">Eliminar</a>
+                                <td align="center">
+                                    {% if data.esNuevo and data.esPagado == false %}
+                                        <a onclick="eliminarRegistroBjp('{{infoUe}}','{{data.id}}');">Eliminar</a>
+                                    {% elseif data.esNuevo and data.esPagado %}
+                                        <span class="label label-success">pagado</span>
                                     {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}
-                        <tr><td colspan="5"><div class="span4 pull-right"><input type="submit" class="btn btn-md btn-success" value="Enviar Datos"></div></td></tr>
+                        <tr>
+                            <td colspan="6" align="center">
+                                <input type="submit" class="btn btn-md btn-success" value="Enviar Datos">
+                            </td>
+                        </tr>
                     </table>
                     </form>
                 </div>
@@ -95,7 +110,7 @@
             {% for flashMessage in app.session.flashbag.get('warninsueall') %}
                 <div class="alert alert-warning alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                    <strong><i class="fa fa-linux"></i></strong> {{ flashMessage }}
                 </div>
             {% endfor %}
 

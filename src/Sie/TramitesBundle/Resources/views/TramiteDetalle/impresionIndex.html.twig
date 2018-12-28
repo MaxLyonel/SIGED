@@ -38,16 +38,21 @@
                             </div>
                             <div class="clearfix">
                                 <div class="row">
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                        Nro. Serie Inicial: <input type="number" name="numeroSerie" id="numeroSerie" min="1" max="999999" class="form-control" onKeyDown="validarFormImpresion(this)" onKeyUp="validarFormImpresion(this) onchange="validarFormImpresion(this)"/>
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                        Nro. Serie Inicial: 
+                                        <input type="number" name="numeroSerie" id="numeroSerie" min="1" max="999999" class="form-control" onKeyDown="validarFormImpresion(this)" onKeyUp="validarFormImpresion(this)" onchange="validarFormImpresion(this)"/>
                                     </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                         Serie:
                                         <select class="form-control" name="serie" id="serie">
                                             {% for serie in series %}
                                                 <option value="{{serie.serie}}">{{serie.serie}}</option>
                                             {% endfor %}
                                         </select>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                        Fecha de emisión
+                                        <input name="fechaSerie" id="fechaSerie" class="form-control date-range-picker-single" value="{{ "now"|date("d/m/Y", "America/La_Paz") }}" type="text">
                                     </div>
                                 </div>
 
@@ -184,4 +189,13 @@
             </form>
         </div>
     </div><!-- /.row -->
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{asset('juegos/assets/global/plugins/bower_components/bootstrap-datepicker-vitalets/js/bootstrap-datepicker.js')}}"></script>
+    <script src="{{asset('juegos/assets/global/plugins/bower_components/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js')}}"></script>
+    <script src="{{asset('juegos/assets/global/plugins/bower_components/moment/min/moment.min.js')}}"></script>
+    <script src="{{asset('juegos/assets/global/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
+
+    <script src="{{asset('juegos/assets/admin/js/pages/blankon.form.picker.js')}}"></script>
 {% endblock %}
