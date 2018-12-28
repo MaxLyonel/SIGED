@@ -273,6 +273,12 @@ class PromedioCalidadController extends Controller {
                 $nota->setNotaCuantitativa($promedio[$i]);
                 $em->flush();
 
+                // CALCULAMOS EL PROMEDIO
+                $this->get('notas')->calcularPromedioBimestral($nota->getEstudianteAsignatura()->getId());
+
+                // ACTUALIZAMOS EL ESTADO DE MATRICULA SI CORRESPONDE
+                $this->get('notas')->actualizarEstadoMatricula($nota->getEstudianteAsignatura()->getEstudianteInscripcion()->getId());
+
                 $validacion->setEsActivo(true);
                 $em->flush();
 
