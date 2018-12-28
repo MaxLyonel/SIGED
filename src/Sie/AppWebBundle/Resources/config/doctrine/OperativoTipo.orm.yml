@@ -1,0 +1,66 @@
+Sie\AppWebBundle\Entity\OperativoTipo:
+    type: entity
+    table: operativo_tipo
+    indexes:
+        IDX_66474A6E4080FEFA:
+            columns:
+                - institucioneducativa_tipo_id
+        IDX_66474A6E96157FA0:
+            columns:
+                - periodo_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        operarivo:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+        esvigente:
+            type: boolean
+            nullable: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        gestionTipoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+    manyToOne:
+        institucioneducativaTipo:
+            targetEntity: InstitucioneducativaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        periodoTipo:
+            targetEntity: PeriodoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                periodo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
