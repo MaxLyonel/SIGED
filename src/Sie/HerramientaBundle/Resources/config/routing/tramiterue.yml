@@ -105,3 +105,11 @@ tramite_rue_le_buscar_distritos:
 tramite_rue_buscar_edificio:
     path:     /buscaredificio
     defaults: { _controller: "SieHerramientaBundle:TramiteRue:buscaredificio" }
+
+tramite_rue_reporte_recepcion_distrito:
+    path:     /{idtramite}/{id_td}/ruereporterecepciondistrito
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:rueReporteRecepcionDistrito" }
+
+tramite_rue_reporte_informe_distrito:
+    path:     /{idtramite}/{id_td}/ruereporteinformedistrito
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:rueReporteInformeDistrito" }

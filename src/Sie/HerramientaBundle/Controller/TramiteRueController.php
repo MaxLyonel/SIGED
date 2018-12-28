@@ -218,6 +218,27 @@ class TramiteRueController extends Controller
         return $this->redirectToRoute('wf_tramite_index');
     
     }
+
+    public function rueReporteRecepcionDistritoAction(Request $request,$idtramite,$id_td)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
+        if($tramite->getInstitucioneducativa()){
+            $file = 'rue_recepciondistrito_v1_pv.rptdesign';    
+        }else{
+            $file = 'rue_recepciondistritonuevo_v1_pv.rptdesign'; 
+        }
+        $arch = 'FORMULARIO_'.$idtramite.'_' . date('YmdHis') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $file . '&idtramite='.$idtramite.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;   
+    }
     
     public function informeDistritoNuevoAction(Request $request)
     {
@@ -352,6 +373,23 @@ class TramiteRueController extends Controller
         //return $response->setData(array('mensaje' => $mensaje));   
         return $this->redirectToRoute('wf_tramite_recibido');
         //return $this->redirect($this->generateUrl('tramite_rue_informe_distrito'));
+    }
+
+    public function rueReporteInformeDistritoAction(Request $request,$idtramite,$id_td)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
+            $file = 'rue_informedistrito_v1_pv.rptdesign';    
+        $arch = 'FORMULARIO_'.$idtramite.'_' . date('YmdHis') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $file . '&idtramite='.$idtramite.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;   
     }
 
     public function createRecepcionDepartamentalNuevoForm($flujotipo,$tarea,$idtramite,$datos)
