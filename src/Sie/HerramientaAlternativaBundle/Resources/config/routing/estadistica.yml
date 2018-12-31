@@ -18,6 +18,22 @@ estadistica_esp_alternativa_informacion_general_print_xls:
     path:     /informacion/general/alternativaesp/print/xls
     defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:informacionGeneralAlternativaEspPrintXls }
 
+estadistica_alternativa_informacion_completa_print_pdf:
+    path:     /informacion/completo/alternativa/print/pdf
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:informacionCompletaAlternativaPrintPdf }
+
+estadistica_alternativa_informacion_completa_print_xls:
+    path:     /informacion/completo/alternativa/print/xls
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:informacionCompletaAlternativaPrintXls }
+
+estadistica_esp_alternativa_informacion_completa_print_pdf:
+    path:     /informacion/completo/alternativaesp/print/pdf
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:informacionCompletaAlternativaEspPrintPdf }
+
+estadistica_esp_alternativa_informacion_completa_print_xls:
+    path:     /informacion/completo/alternativaesp/print/xls
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:informacionCompletaAlternativaEspPrintXls }
+
 estadistica_esp_alternativa_informacion_centro_print_pdf:
     path:     /informacion/centro/alternativaesp/print/pdf
     defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:informacionCentroAlternativaEspPrintPdf }
