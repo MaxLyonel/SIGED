@@ -19,6 +19,8 @@
                 .bs-example{
                     margin: 20px;
                 }
+
+
             </style>
         </head>
 
@@ -33,6 +35,7 @@
                 </li>
             </ol>
         </div><!-- /.breadcrumb-wrapper -->
+
     </div>
 
     <div class="body-content animated fadeIn">
@@ -90,219 +93,216 @@
             </div>
         </div>
 
+        <div>
 
+            <h3>{{ dataReport.rol }} - {{ dataReport.gestion }} - {{ dataReport.semestre }}
+                <a href="{{path('sie_alt_submenu_diversa')}}" class="btn btn-primary btn-sm btn-stroke" title="Cambiar"> <i class="fa fa-undo" aria-hidden="true"></i></a>
+            </h3>
 
-
-        <div class="bs-example">
-            <ul class="nav nav-tabs" id="myTab">
-                <li><a data-toggle="tab" href="#sectionA">Soldados o Marineros</a></li>
-                <li><a data-toggle="tab" href="#sectionB">Personas en Contexto de Encierro</a></li>
-                <li><a data-toggle="tab" href="#sectionC">Trabajadores(as) del Hogar</a></li>
-            </ul>
-            <div class="tab-content">
-                <div id="sectionA" class="tab-pane fade in active">
-                    <h3>Educación Diversa - Soldados o Marineros </h3>
-
-
-                    <div class="col-md-12">
-
-                        <!-- Start list bank table -->
-                        <div class="panel">
-                            <div class="panel-heading">
-                                <h3 class="panel-title text-center"> Reportes - <b>Soldados o Marineros</b></h3>
-                            </div><!-- /.panel-heading -->
-                            <div class="panel-body no-padding">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <tbody>
-                                        <tr>
-                                            <td>
-                                                <span class="pull-left text-capitalize">Reportes por Especialidades</span>
-
-                                            </td>
-
-                                            <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_som_esp', { dataInfo: dataInfo })}}" class="btn btn-primary btn-sm btn-stroke">PDF</a></td>
-                                            <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_som_espex', { dataInfo: dataInfo })}}" class="btn btn-primary btn-sm btn-stroke">EXCEL</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <span class="pull-left text-capitalize">Reporte Estadisticas</span>
-                                            </td>
-
-                                            <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_som_est', { dataInfo: dataInfo })}}" class="btn btn-primary btn-sm btn-stroke">PDF</a></td>
-                                            <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_som_estex', { dataInfo: dataInfo })}}" class="btn btn-primary btn-sm btn-stroke">EXCEL</a></td>
-
-                                        </tr>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div><!-- /.panel-body -->
-                        </div>
-                        <!--/ End list bank table -->
-
-                    </div>
-
-                    <div class="col-md-12">
-
-                        <!-- Start list bank table -->
-                        <div class="panel">
-                            <div class="panel-heading">
-                                <h3 class="panel-title text-center"> Reportes - <b>Maestros / Instructores Militares</b></h3>
-                            </div><!-- /.panel-heading -->
-                            <div class="panel-body no-padding">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <tbody>
-                                        <tr>
-                                            <td>
-                                                <span class="pull-left text-capitalize">Reporte Listado de Maestros</span>
-
-                                            </td>
-
-                                            <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_maestros_instructores_list', { dataInfo: dataInfo })}}" class="btn btn-primary btn-sm btn-stroke">PDF</a></td>
-                                            <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_maestros_instructores_listex', { dataInfo: dataInfo })}}" class="btn btn-primary btn-sm btn-stroke">EXCEL</a></td>
-                                        </tr>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div><!-- /.panel-body -->
-                        </div>
-                        <!--/ End list bank table -->
-
-                    </div>
-                    <p>. </p>
-                </div>
-                <div id="sectionB" class="tab-pane fade">
-                    <h3>Educación Diversa - Personas en Contexto de Encierro</h3>
-
-
-                    <div class="col-md-12">
-
-                        <!-- Start list bank table -->
-                        <div class="panel">
-                            <div class="panel-heading">
-                                <h3 class="panel-title text-center"> Reportes - <b>Personas en Contexto de Encierro</b></h3>
-                            </div><!-- /.panel-heading -->
-                            <div class="panel-body no-padding">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <tbody>
-                                        <tr>
-                                            <td>
-                                                <span class="pull-left text-capitalize">Reportes por Especialidades</span>
-
-                                            </td>
-
-                                            <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_pece_esp', { dataInfo: dataInfo })}}" class="btn btn-primary btn-sm btn-stroke">PDF</a></td>
-                                            <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_pece_espex', { dataInfo: dataInfo })}}" class="btn btn-primary btn-sm btn-stroke">EXCEL</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <span class="pull-left text-capitalize">Reporte Estadisticas</span>
-                                            </td>
-
-                                            <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_pece_est', { dataInfo: dataInfo })}}" class="btn btn-primary btn-sm btn-stroke">PDF</a></td>
-                                            <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_pece_estex', { dataInfo: dataInfo })}}" class="btn btn-primary btn-sm btn-stroke">EXCEL</a></td>
-
-                                        </tr>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div><!-- /.panel-body -->
-                        </div>
-                        <!--/ End list bank table -->
-
-                    </div>
-
-                    <div class="col-md-12">
-
-                        <!-- Start list bank table -->
-                        <div class="panel">
-                            <div class="panel-heading">
-                                <h3 class="panel-title text-center"> Reportes - <b>Maestros en Recintos Penitenciarios</b></h3>
-                            </div><!-- /.panel-heading -->
-                            <div class="panel-body no-padding">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <tbody>
-                                        <tr>
-                                            <td>
-                                                <span class="pull-left text-capitalize">Reporte Listado de Maestros</span>
-
-                                            </td>
-
-                                            <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_maestros_penitenciario_list', { dataInfo: dataInfo })}}" class="btn btn-primary btn-sm btn-stroke">PDF</a></td>
-                                            <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_maestros_penitenciario_listex', { dataInfo: dataInfo })}}" class="btn btn-primary btn-sm btn-stroke">EXCEL</a></td>
-                                        </tr>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div><!-- /.panel-body -->
-                        </div>
-                        <!--/ End list bank table -->
-
-                    </div>
-                    <p>. </p>
-                </div>
-                <div id="sectionC" class="tab-pane fade">
-                    <h3>Educación Diversa - Trabajadores(as) del Hogar</h3>
-
-
-                    <div class="col-md-12">
-
-                        <!-- Start list bank table -->
-                        <div class="panel">
-                            <div class="panel-heading">
-                                <h3 class="panel-title text-center"> Reportes - <b>Trabajadores(as) del Hogar</b></h3>
-                            </div><!-- /.panel-heading -->
-                            <div class="panel-body no-padding">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <tbody>
-                                        <tr>
-                                            <td>
-                                                <span class="pull-left text-capitalize">Reportes por Especialidades</span>
-
-                                            </td>
-
-                                                <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_th_esp', { dataInfo: dataInfo })}}" class="btn btn-primary btn-sm btn-stroke">PDF</a></td>
-                                            <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_th_espex', { dataInfo: dataInfo })}}" class="btn btn-primary btn-sm btn-stroke">EXCEL</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <span class="pull-left text-capitalize">Reporte Estadisticas</span>
-                                            </td>
-
-                                            <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_th_est', { dataInfo: dataInfo })}}" class="btn btn-primary btn-sm btn-stroke">PDF</a></td>
-                                            <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_th_estex', { dataInfo: dataInfo })}}" class="btn btn-primary btn-sm btn-stroke">EXCEL</a></td>
-
-                                        </tr>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div><!-- /.panel-body -->
-                        </div>
-                        <!--/ End list bank table -->
-
-                    </div>
-
-                    <p>. </p>
-                </div>
-
-            </div>
         </div>
+        <div class="bs-example">
+                    <ul class="nav nav-tabs" id="myTab">
+                        <li><a data-toggle="tab" href="#sectionA">Soldados o Marineros</a></li>
+                        <li><a data-toggle="tab" href="#sectionB">Personas en Contexto de Encierro</a></li>
+                        <li><a data-toggle="tab" href="#sectionC">Trabajadores(as) del Hogar</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="sectionA" class="tab-pane fade in active">
+                            <h3>Educación Diversa - Soldados o Marineros </h3>
 
 
+                            <div class="col-md-12">
+
+                                <!-- Start list bank table -->
+                                <div class="panel">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title text-center"> Reportes - <b>Soldados o Marineros</b></h3>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body no-padding">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <span class="pull-left text-capitalize">Reportes por Especialidades</span>
+
+                                                    </td>
+
+                                                    <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_som_esp', { dataInfo: dataInfo })}}" class="btn btn-googleplus">PDF <i class="fa fa-file-pdf-o"  style="color: white;"></i></a></td>
+                                                    <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_som_espex', { dataInfo: dataInfo })}}" class="btn btn-success">EXCEL <i class="fa fa-file-excel-o"></i></a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <span class="pull-left text-capitalize">Reporte Estadisticas</span>
+                                                    </td>
+
+                                                    <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_som_est', { dataInfo: dataInfo })}}" class="btn btn-googleplus">PDF <i class="fa fa-file-pdf-o"  style="color: white;"></i></a></td>
+                                                    <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_som_estex', { dataInfo: dataInfo })}}" class="btn btn-success">EXCEL <i class="fa fa-file-excel-o"></i></a></td>
+
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div><!-- /.panel-body -->
+                                </div>
+                                <!--/ End list bank table -->
+
+                            </div>
+
+                            <div class="col-md-12">
+
+                                <!-- Start list bank table -->
+                                <div class="panel">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title text-center"> Reportes - <b>Maestros / Instructores Militares</b></h3>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body no-padding">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <span class="pull-left text-capitalize">Reporte Listado de Maestros</span>
+
+                                                    </td>
+
+                                                    <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_maestros_instructores_list', { dataInfo: dataInfo })}}" class="btn btn-googleplus">PDF <i class="fa fa-file-pdf-o"  style="color: white;"></i></a></td>
+                                                    <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_maestros_instructores_listex', { dataInfo: dataInfo })}}" class="btn btn-success">EXCEL <i class="fa fa-file-excel-o"></i></a></td>
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div><!-- /.panel-body -->
+                                </div>
+                                <!--/ End list bank table -->
+
+                            </div>
+                            <p>. </p>
+                        </div>
+                        <div id="sectionB" class="tab-pane fade">
+                            <h3>Educación Diversa - Personas en Contexto de Encierro</h3>
 
 
+                            <div class="col-md-12">
+
+                                <!-- Start list bank table -->
+                                <div class="panel">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title text-center"> Reportes - <b>Personas en Contexto de Encierro</b></h3>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body no-padding">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <span class="pull-left text-capitalize">Reportes por Especialidades</span>
+
+                                                    </td>
+
+                                                    <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_pece_esp', { dataInfo: dataInfo })}}" class="btn btn-googleplus">PDF <i class="fa fa-file-pdf-o"  style="color: white;"></i></a></td>
+                                                    <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_pece_espex', { dataInfo: dataInfo })}}" class="btn btn-success">EXCEL <i class="fa fa-file-excel-o"></i></a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <span class="pull-left text-capitalize">Reporte Estadisticas</span>
+                                                    </td>
+
+                                                    <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_pece_est', { dataInfo: dataInfo })}}" class="btn btn-googleplus">PDF <i class="fa fa-file-pdf-o"  style="color: white;"></i></a></td>
+                                                    <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_pece_estex', { dataInfo: dataInfo })}}" class="btn btn-success">EXCEL <i class="fa fa-file-excel-o"></i></a></td>
+
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div><!-- /.panel-body -->
+                                </div>
+                                <!--/ End list bank table -->
+
+                            </div>
+
+                            <div class="col-md-12">
+
+                                <!-- Start list bank table -->
+                                <div class="panel">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title text-center"> Reportes - <b>Maestros en Recintos Penitenciarios</b></h3>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body no-padding">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <span class="pull-left text-capitalize">Reporte Listado de Maestros</span>
+
+                                                    </td>
+
+                                                    <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_maestros_penitenciario_list', { dataInfo: dataInfo })}}" class="btn btn-googleplus">PDF <i class="fa fa-file-pdf-o"  style="color: white;"></i></a></td>
+                                                    <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_maestros_penitenciario_listex', { dataInfo: dataInfo })}}" class="btn btn-success">EXCEL <i class="fa fa-file-excel-o"></i></a></td>
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div><!-- /.panel-body -->
+                                </div>
+                                <!--/ End list bank table -->
+
+                            </div>
+                            <p>. </p>
+                        </div>
+                        <div id="sectionC" class="tab-pane fade">
+                            <h3>Educación Diversa - Trabajadores(as) del Hogar</h3>
 
 
+                            <div class="col-md-12">
 
+                                <!-- Start list bank table -->
+                                <div class="panel">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title text-center"> Reportes - <b>Trabajadores(as) del Hogar</b></h3>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body no-padding">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <span class="pull-left text-capitalize">Reportes por Especialidades</span>
+
+                                                    </td>
+
+                                                    <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_th_esp', { dataInfo: dataInfo })}}" class="btn btn-googleplus">PDF <i class="fa fa-file-pdf-o"  style="color: white;"></i></a></td>
+                                                    <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_th_espex', { dataInfo: dataInfo })}}" class="btn btn-success">EXCEL <i class="fa fa-file-excel-o"></i></a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <span class="pull-left text-capitalize">Reporte Estadisticas</span>
+                                                    </td>
+
+                                                    <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_th_est', { dataInfo: dataInfo })}}" class="btn btn-googleplus">PDF <i class="fa fa-file-pdf-o"  style="color: white;"></i></a></td>
+                                                    <td class="text-center" style="width: 1%"><a href="{{path('herramienta_alter_reporte_edudiv_th_estex', { dataInfo: dataInfo })}}" class="btn btn-success">EXCEL <i class="fa fa-file-excel-o"></i></a></td>
+
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div><!-- /.panel-body -->
+                                </div>
+                                <!--/ End list bank table -->
+
+                            </div>
+
+                            <p>. </p>
+                        </div>
+
+                    </div>
+                </div>
 
 
     </div>
