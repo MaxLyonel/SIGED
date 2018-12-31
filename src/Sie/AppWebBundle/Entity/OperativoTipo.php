@@ -220,4 +220,32 @@ class OperativoTipo
     {
         return $this->periodoTipo;
     }
+    /**
+     * @var string
+     */
+    private $operativo;
+
+
+    /**
+     * Set operativo
+     *
+     * @param string $operativo
+     * @return OperativoTipo
+     */
+    public function setOperativo($operativo)
+    {
+        $this->operativo = $operativo;
+    
+        return $this;
+    }
+
+    /**
+     * Get operativo
+     *
+     * @return string 
+     */
+    public function getOperativo()
+    {
+        return $this->operativo;
+    }
 }

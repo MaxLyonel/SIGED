@@ -18,7 +18,7 @@ Sie\AppWebBundle\Entity\OperativoTipo:
             generator:
                 strategy: SEQUENCE
     fields:
-        operarivo:
+        operativo:
             type: string
             nullable: false
             length: 100
