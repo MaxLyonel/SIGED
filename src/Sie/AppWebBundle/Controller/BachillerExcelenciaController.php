@@ -41,9 +41,9 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2018-12-11');
+        $fechaCorte = new \DateTime('2019-01-04');
 
-        if($this->session->get('userId') != 13856176) {
+        if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -84,9 +84,9 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2018-12-11');
+        $fechaCorte = new \DateTime('2019-01-04');
 
-        if($this->session->get('userId') != 13856176) {
+        if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -122,9 +122,9 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2018-12-11');
+        $fechaCorte = new \DateTime('2019-01-04');
 
-        if($this->session->get('userId') != 13856176) {
+        if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -297,9 +297,9 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2018-12-11');
+        $fechaCorte = new \DateTime('2019-01-04');
 
-        if($this->session->get('userId') != 13856176) {
+        if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -410,9 +410,9 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2018-12-11');
+        $fechaCorte = new \DateTime('2018-12-10');
 
-        if($this->session->get('userId') != 13856176) {
+        if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -449,9 +449,9 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2018-12-11');
+        $fechaCorte = new \DateTime('2019-01-04');
 
-        if($this->session->get('userId') != 13856176) {
+        if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -634,9 +634,9 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2018-12-11');
+        $fechaCorte = new \DateTime('2018-12-10');
 
-        if($this->session->get('userId') != 13856176) {
+        if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -714,9 +714,9 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2018-12-11');
+        $fechaCorte = new \DateTime('2018-12-10');
 
-        if($this->session->get('userId') != 13856176) {
+        if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -753,9 +753,9 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2018-12-11');
+        $fechaCorte = new \DateTime('2018-12-10');
 
-        if($this->session->get('userId') != 13856176) {
+        if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -826,9 +826,9 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2018-12-11');
+        $fechaCorte = new \DateTime('2019-01-04');
 
-        if($this->session->get('userId') != 13856176) {
+        if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -871,9 +871,9 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2018-12-11');
+        $fechaCorte = new \DateTime('2019-01-04');
 
-        if($this->session->get('userId') != 13856176) {
+        if($fechaActual > $fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
