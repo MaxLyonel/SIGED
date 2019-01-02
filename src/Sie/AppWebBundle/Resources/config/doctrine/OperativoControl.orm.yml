@@ -1,0 +1,102 @@
+Sie\AppWebBundle\Entity\OperativoControl:
+    type: entity
+    table: operativo_control
+    indexes:
+        IDX_82DA12E7C62650C0:
+            columns:
+                - operativo_tipo_id
+        IDX_82DA12E7FE19D46C:
+            columns:
+                - distrito_tipo_id
+        IDX_82DA12E77A322B24:
+            columns:
+                - institucioneducativa_sucursal_id
+        IDX_82DA12E71EEFD20:
+            columns:
+                - usuario_registro_id
+        IDX_82DA12E7DADD026:
+            columns:
+                - usuario_modificacion_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaInicio:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_inicio
+        fechaFin:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_fin
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        operativoTipo:
+            targetEntity: OperativoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                operativo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        distritoTipo:
+            targetEntity: DistritoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                distrito_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaSucursal:
+            targetEntity: InstitucioneducativaSucursal
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_sucursal_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuarioRegistro:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_registro_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuarioModificacion:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_modificacion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
