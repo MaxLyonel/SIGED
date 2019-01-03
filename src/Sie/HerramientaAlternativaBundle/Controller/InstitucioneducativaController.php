@@ -1600,30 +1600,29 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             //->setAction($this->generateUrl('herramientalt_ceducativa_estadistiscas_cierre'))
             if ($tipo =='operativo')
                 $form=$form
-                ->add('gestion','entity',array('label'=>'Seleccione Gestión','required'=>false,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
-                    return $g->createQueryBuilder('g')->orderBy('g.id','DESC');},'property'=>'gestion','empty_value' => 'Todas'));
+                ->add('gestion','entity',array('label'=>'Seleccione Gestión:','required'=>false,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
+                    return $g->createQueryBuilder('g')->orderBy('g.id','DESC');},'property'=>'gestion','empty_value' => 'Todas','attr'=>array('class'=>'form-control')));
             else{//ceas pendientes
                 $form=$form
                 ->add('gestion','entity',array('label'=>'Seleccione Gestión','required'=>false,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
-                    return $g->createQueryBuilder('g')->where('g.id >= 2017')->orderBy('g.id','DESC');},'property'=>'gestion','empty_value' => 'Todas'));
+                    return $g->createQueryBuilder('g')->where('g.id >= 2017')->orderBy('g.id','DESC');},'property'=>'gestion','empty_value' => 'Todas','attr'=>array('class'=>'form-control')));
             }
             if($rol==8)
             {
                 $form = $form
                 ->add('departamento','entity',array('label'=>'Departamento','required'=>false,'class'=>'SieAppWebBundle:DepartamentoTipo','query_builder'=>function(EntityRepository $dp){
-                    return $dp->createQueryBuilder('dp')->where('dp.id >= 1')->orderBy('dp.departamento','ASC');},'property'=>'departamento','empty_value' => 'Todos'));
+                    return $dp->createQueryBuilder('dp')->where('dp.id >= 1')->orderBy('dp.departamento','ASC');},'property'=>'departamento','empty_value' => 'Todos','attr'=>array('class'=>'form-control')));
             }
             $form =$form    
             /*->add('distrito','entity',array('label'=>'Distrito','required'=>true,'class'=>'SieAppWebBundle:DistritoTipo','query_builder'=>function(EntityRepository $ds){
                 return $ds->createQueryBuilder('ds')->orderBy('ds.distrito','ASC');},'property'=>'distrito','empty_value' => 'Todos'))*/
-            ->add('buscar', 'button', array('label'=> 'Buscar', 'attr'=>array('class'=>'btn btn-success', 'onclick'=>'buscarceaspendientes()')))
+            ->add('buscar', 'button', array('label'=> 'Buscar', 'attr'=>array('class'=>'btn btn-success form-control', 'onclick'=>'buscarceaspendientes()')))
             ->getForm();
 
         return $form;
     }
 
     public function historialceasForm($rol,$ie_id)
-
     {   
         $form = $this->createFormBuilder();
         if($rol==9 or $rol==10){
@@ -1642,20 +1641,20 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                 $subceasArray[$sc['sucursal']] = $sc['sucursal'];
             }
             $form=$form
-                ->add('codsie','text',array('label'=>'Cod. SIE','data'=>$ie_id,'read_only'=>true))
-                ->add('gestion','choice',array('label'=>'Gestión','required'=>true,'data'=>(new \DateTime())->format('Y'),'choices'=>$gestionesArray,'empty_value' => 'Todas'))
-                ->add('subcea','choice',array('label'=>'Sucursal','required'=>true,'choices'=>$subceasArray,'empty_value' => 'Todas'));
+                ->add('codsie','text',array('label'=>'Cod. SIE:','data'=>$ie_id,'read_only'=>true,'attr'=>array('class'=>'form-control validar')))
+                ->add('gestion','choice',array('label'=>'Gestión:','required'=>true,'data'=>(new \DateTime())->format('Y'),'choices'=>$gestionesArray,'empty_value' => 'Todas','attr'=>array('class'=>'form-control')))
+                ->add('subcea','choice',array('label'=>'Sucursal:','required'=>true,'choices'=>$subceasArray,'empty_value' => 'Todas','attr'=>array('class'=>'form-control')));
         }else{
             $form=$form
-                ->add('codsie','text',array('label'=>'Cod. SIE', 'attr'=>array('maxlength' => '8')))
-                ->add('gestion','choice',array('label'=>'Gestión','required'=>true,'empty_value' => 'Todas'))
-                ->add('subcea','choice',array('label'=>'Sucursal','required'=>true,'empty_value' => 'Todas'));
+                ->add('codsie','text',array('label'=>'Cod. SIE:', 'attr'=>array('maxlength' => '8','class'=>'form-control validar')))
+                ->add('gestion','choice',array('label'=>'Gestión:','required'=>true,'empty_value' => 'Todas','attr'=>array('class'=>'form-control')))
+                ->add('subcea','choice',array('label'=>'Sucursal:','required'=>true,'empty_value' => 'Todas','attr'=>array('class'=>'form-control')));
         }
         //->setAction($this->generateUrl('herramientalt_ceducativa_estadistiscas_cierre'))
         $form=$form
-            ->add('semestre','entity',array('label'=>'Semestre','required'=>false,'class'=>'SieAppWebBundle:PeriodoTipo','query_builder'=>function(EntityRepository $p){
-                return $p->createQueryBuilder('p')->where('p.id=2 or p.id=3');},'property'=>'periodo','empty_value' => 'Todas'))
-            ->add('buscar', 'button', array('label'=> 'Buscar', 'attr'=>array('class'=>'btn btn-success', 'onclick'=>'buscarhistorial()')))
+            ->add('semestre','entity',array('label'=>'Semestre:','required'=>false,'class'=>'SieAppWebBundle:PeriodoTipo','query_builder'=>function(EntityRepository $p){
+                return $p->createQueryBuilder('p')->where('p.id=2 or p.id=3');},'property'=>'periodo','empty_value' => 'Todas','attr'=>array('class'=>'form-control')))
+            ->add('buscar', 'button', array('label'=> 'Buscar', 'attr'=>array('class'=>'form-control btn btn-success', 'onclick'=>'buscarhistorial()')))
             ->getForm();
         return $form;
     }
