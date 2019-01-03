@@ -1,0 +1,72 @@
+Sie\AppWebBundle\Entity\RudeApoderadoInscripcion:
+    type: entity
+    table: rude_apoderado_inscripcion
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        apoderadoTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: apoderado_tipo_id
+        personaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: persona_id
+        estudianteInscripcionId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: estudiante_inscripcion_id
+        idiomaMaternoTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: idioma_materno_tipo_id
+        instruccionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: instruccion_tipo_id
+        empleo:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        telefono:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        tieneocupacion:
+            type: boolean
+            nullable: true
+            comment: ''
+        ocupacionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: ocupacion_tipo_id
+    lifecycleCallbacks: {  }

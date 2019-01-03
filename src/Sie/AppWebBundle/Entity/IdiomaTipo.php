@@ -56,4 +56,32 @@ class IdiomaTipo
     public function __toString() {
         return $this->idioma;
     }
+    /**
+     * @var integer
+     */
+    private $obs;
+
+
+    /**
+     * Set obs
+     *
+     * @param integer $obs
+     * @return IdiomaTipo
+     */
+    public function setObs($obs)
+    {
+        $this->obs = $obs;
+    
+        return $this;
+    }
+
+    /**
+     * Get obs
+     *
+     * @return integer 
+     */
+    public function getObs()
+    {
+        return $this->obs;
+    }
 }

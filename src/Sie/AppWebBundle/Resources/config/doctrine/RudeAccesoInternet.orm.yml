@@ -1,0 +1,50 @@
+Sie\AppWebBundle\Entity\RudeAccesoInternet:
+    type: entity
+    table: rude_acceso_internet
+    indexes:
+        IDX_9AA172DE443E4890:
+            columns:
+                - rude_id
+        IDX_9AA172DE8C22AD53:
+            columns:
+                - acceso_internet_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        rude:
+            targetEntity: Rude
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rude_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        accesoInternetTipo:
+            targetEntity: AccesoInternetTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                acceso_internet_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

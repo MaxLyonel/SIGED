@@ -1,0 +1,50 @@
+Sie\AppWebBundle\Entity\RudeTurnoTrabajo:
+    type: entity
+    table: rude_turno_trabajo
+    indexes:
+        IDX_1649A016443E4890:
+            columns:
+                - rude_id
+        IDX_1649A0169B276788:
+            columns:
+                - turno_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        rude:
+            targetEntity: Rude
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rude_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        turnoTipo:
+            targetEntity: TurnoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                turno_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
