@@ -1,0 +1,68 @@
+{% extends 'layoutEspecialSie.html.twig' %}
+
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Validación BJP <span>Nuevo estudiante</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li class="active">Nuevo</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+        {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Validación Bono Juancito Pinto', 'gestion': gestion,'sie': odataUedu.id, 'ieducativa':odataUedu.institucioneducativa, 'opcion': 'Estudiantes para validar el pago del BJP'} %}
+
+        {% for flashMessage in app.session.flashbag.get('msgOkNew') %}
+            <div class="alert alert-success" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+            </div>
+        {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('msgErrorNew') %}
+            <div class="alert alert-danger" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <i class="glyphicon glyphicon-warning"></i> {{ flashMessage }}
+            </div>
+        {% endfor %}
+        
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <h4>BUSCAR ESTUDIANTE POR RUDE</h4>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+                    {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form",'class':'form', 'name':'formNuevoEstudiante', 'id':'formNuevoEstudiante'} } )}}
+                    <input type="hidden" id="form_pagoTipo" name="form[pagoTipo]" value="{{pagoTipo}}">
+                    <input type="hidden" id="form_gestion" name="form[gestion]" value="{{gestion}}">
+                    <input type="hidden" id="form_sie" name="form[sie]" value="{{odataUedu.id}}">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="control-label">{{ form_label(form.rude) }}</label>
+                            {{ form_widget(form.rude) }}
+                        </div><!-- /.form-group -->
+                        <div class="form-group">
+                            {{ form_widget(form.guardar) }}
+                        </div>
+                    </div>
+                    {{form_end(form)}}
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <!-- Start body content -->
+    <!--/ End body content -->
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+
+    </div><!-- /.modal -->
+    <!--/ End body content -->
+{% endblock %}

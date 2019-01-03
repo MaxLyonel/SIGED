@@ -108,7 +108,8 @@ class NoteConsultationUesController extends Controller {
           }
 
         $arrValidation = array();
-        if($exist){
+        
+        if($exist && $gestion == $this->session->get('currentyear')){
 
 
             // added new validation to download the reports files

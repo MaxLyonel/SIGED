@@ -41,7 +41,6 @@
                             <tr>
                                 <th>No.</th>
                                 <th>Gestión</th>
-                                <th>Llave</th>
                                 <th>Observación</th>
                                 <th>Unidad Educativa</th>
                                 <th>Acciones</th>
@@ -52,7 +51,6 @@
                                 <tr>
                                     <td data-title="No.">{{ loop.index }}</td>
                                     <td data-title="Gestion">{{detalle.gestionTipo}}</td>
-                                    <td data-title="Llave">{{detalle.llave}}</td>
                                     <td data-title="Observacion">{{detalle.obs}}</td>
                                     <td data-title="Unidad Educativa">{{detalle.institucionEducativaId}}</td>
                                     <td data-title="Solucion">
@@ -179,6 +177,13 @@
                                         {% endif %}
                                     {% elseif app.session.get('roluser') == 9 %}
                                         {% if regla.id == 27 %}
+                                            <form action="{{path('ccalidad_verificar')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_institucionEducativa" name="form[institucionEducativa]" value="{{detalle.institucionEducativaId}}">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Se realizará la verificación del promedio actual de la/el estudiante observada/o. ¿Desea continuar?');"><i class="fa fa-check"></i> Verificar</button>
+                                            </form>
                                             <form action="{{path('promedio_calidad')}}" method="post"  target="_blank">
                                                 <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
                                                 <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">

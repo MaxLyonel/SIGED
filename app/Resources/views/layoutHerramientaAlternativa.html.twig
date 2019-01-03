@@ -500,14 +500,27 @@
                                 <li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
                                 <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>
                                 <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
-                                <li><a href="{{path('herramientalt_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>                                                                
+                                <li><a href="{{path('herramientalt_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>
+
                                 {% if (app.session.get('ie_id') != -1) %}
-                                    <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
+
                                     <li><a href="{{path('sie_alt_lista_estudiantes_excel')}}">Exportar listas a Excel </a></li>
                                 {% endif %}
                                 <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
                                 <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
+                                <li><a href="{{path('sie_alt_submenu_diversa')}}">Reportes Educación Diversa </a></li>
                                 <li><a href="{{path('sie_alt_reportes_search')}}">Reportes Educación Alternativa </a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-home"></i></span>
+                                <span class="text">Bachiller de Excelencia</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('bach_exc_alt_rst')}}">Restablecer registros</a></li>
+                                <li><a href="{{ path('bach_exc_alt_rep_dis')}}">Generar Reporte</a></li>
                             </ul>
                         </li>
                     {% endif %}
@@ -520,13 +533,15 @@
                             </a>
                             <ul>
                                 <!--li><a href="{{path('history_new_inscription_index')}}">Historial Estudiante/Participante </a></li-->
-                                <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>                                
+                                <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
+
                                 {% if (app.session.get('ie_id') != -1) %}
-                                    <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
+
                                     <li><a href="{{path('sie_alt_lista_estudiantes_excel')}}">Exportar listas a Excel </a></li>
                                 {% endif %}
                                 <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
                                 <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
+                                <li><a href="{{path('sie_alt_submenu_diversa')}}">Reportes Educación Diversa </a></li>
                             </ul>
                         </li>
                     {% endif %}
@@ -556,13 +571,15 @@
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
                                 <li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
                                 <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>
-                                <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>                                
+                                <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
+
                                 {% if (app.session.get('ie_id') != -1) %}
-                                    <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
+
                                     <li><a href="{{path('sie_alt_lista_estudiantes_excel')}}">Exportar listas a Excel </a></li>
                                 {% endif %}
                                 <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
                                 <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
+                                <li><a href="{{path('sie_alt_submenu_diversa')}}">Reportes Educación Diversa </a></li>
                                 <li><a href="{{path('sie_alt_reportes_search')}}">Reportes Educación Alternativa </a></li>
                             </ul>
                         </li>
@@ -573,7 +590,8 @@
                                 <span class="arrow"></span>
                             </a>
                             <ul>
-                                <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>
+                                <li><a href="{{ path('bach_exc_alt_rst')}}">Restablecer registros</a></li>
+                                <li><a href="{{ path('bach_exc_alt_rep_dis')}}">Generar Reporte</a></li>
                             </ul>
                         </li>
                     {% endif %}
@@ -603,12 +621,14 @@
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
                                 <li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
                                 <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>
+
                                 {% if (app.session.get('ie_id') != -1) %}
-                                    <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
+
                                     <li><a href="{{path('sie_alt_lista_estudiantes_excel')}}">Exportar listas a Excel </a></li>
                                 {% endif %}
                                 <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
                                 <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
+                                <li><a href="{{path('sie_alt_submenu_diversa')}}">Reportes Educación Diversa </a></li>
                                 <li><a href="{{path('sie_alt_reportes_search')}}">Reportes Educación Alternativa </a></li>
                             </ul>
                         </li>
@@ -623,9 +643,10 @@
                             <ul>
                                 <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Gestionar C.E.A.</a></li>
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
-                                <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
+
                                 <li><a href="{{path('sie_alt_lista_estudiantes_excel')}}">Exportar listas a Excel </a></li>
                                 <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
+                                <li><a href="{{path('sie_alt_submenu_diversa')}}">Reportes Educación Diversa </a></li>
                             </ul>
                         </li>
                         <li class="submenu">

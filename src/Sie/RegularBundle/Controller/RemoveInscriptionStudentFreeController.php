@@ -186,9 +186,9 @@ class RemoveInscriptionStudentFreeController extends Controller {
       // $arrEstados = array('4'=>'Efectivo', '10'=>'Abandono');
       $rolesAllowed = array(7,8,10);
       if(in_array($rolUser,$rolesAllowed)){
-        $arrEstados = array('4'=>'EFECTIVO','6'=>'NO INCORPORADO',/*'9'=>'RETIRADO TRASLADO'*/);
+        $arrEstados = array('4'=>'EFECTIVO', '10'=>'RETIRO ABANDONO',/*'6'=>'NO INCORPORADO','9'=>'RETIRADO TRASLADO'*/);
       }else{
-        $arrEstados = array('6'=>'NO INCORPORADO',/*'9'=>'RETIRADO TRASLADO'*/);
+        $arrEstados = array( '10'=>'RETIRO ABANDONO',/*'6'=>'NO INCORPORADO','9'=>'RETIRADO TRASLADO'*/);
       }
 
       return $this->createFormBuilder()
@@ -556,7 +556,7 @@ class RemoveInscriptionStudentFreeController extends Controller {
           
           $em->getConnection()->commit();
           // added set log info data
-          /*$this->get('funciones')->setLogTransaccion(
+          $this->get('funciones')->setLogTransaccion(
                                $inscriptionStudent->getId(),
                                 'estudiante_inscripcion',
                                 'U',
@@ -565,8 +565,8 @@ class RemoveInscriptionStudentFreeController extends Controller {
                                 $oldInscriptionStudent,
                                 'SIGED',
                                 json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-          );     */
-
+          );     
+         
           $message = "Proceso realizado exitosamente.";
           $this->addFlash('okchange', $message);
           $response = new JsonResponse();

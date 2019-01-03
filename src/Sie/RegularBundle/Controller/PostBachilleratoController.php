@@ -56,12 +56,19 @@ class PostBachilleratoController extends Controller {
      * @return \Symfony\Component\Form\Form The form
      */
     private function createSearchForm() {
+          //set new gestion to the select year
+        $aGestion = array();
+        $currentYear = date('Y')-1;
+        for ($i = 1; $i <= 6; $i++) {
+            $aGestion[$currentYear] = $currentYear;
+            $currentYear--;
+        }
         $estudiante = new Estudiante();
 
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('post_bachillerato_result'))
                 ->add('codigoRude', 'text', array('mapped' => false, 'label' => 'Rude', 'required' => true, 'invalid_message' => 'campo obligatorio', 'attr' => array('class' => 'form-control')))
-                ->add('gestion', 'choice', array('label' => 'Gestión', 'choices' => array('2017' => '2017','2016' => '2016', '2015' => '2015', '2014' => '2014', '2013' => '2013'), 'attr' => array('class' => 'form-control', 'autocomplete' => 'off')))
+                ->add('gestion', 'choice', array('label' => 'Gestión', 'choices' => $aGestion, 'attr' => array('class' => 'form-control', 'autocomplete' => 'off')))
                 ->add('buscar', 'submit', array('label' => 'Buscar'))
                 ->getForm();
         return $form;

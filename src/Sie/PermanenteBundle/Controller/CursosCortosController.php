@@ -159,7 +159,7 @@ class CursosCortosController extends Controller {
             $programa = $em->getRepository('SieAppWebBundle:PermanenteProgramaTipo')->findAll();
             $cursosCortos = $em->getRepository('SieAppWebBundle:PermanenteCursocortoTipo')->findAll();
             $turno = $em->getRepository('SieAppWebBundle:TurnoTipo')->findAll();
-
+            $organizacion = $em->getRepository('SieAppWebBundle:PermanenteOrganizacionTipo')->findAll();
             $subareaArray = array();
 
             foreach ($subarea as $value) {
@@ -186,6 +186,11 @@ class CursosCortosController extends Controller {
             $poblacionArray = array();
             foreach ($poblacion as $value) {
                 $poblacionArray[$value->getId()] = $value->getPoblacion();
+            }
+
+            $organizacionArray = array();
+            foreach ($organizacion as $value) {
+                $organizacionArray[$value->getId()] = $value->getOrganizacion();
             }
             $cursosCortosArray = array();
             foreach ($cursosCortos as $value) {
@@ -224,6 +229,7 @@ class CursosCortosController extends Controller {
             }
             $prov = array();
             $muni = array();
+            $pob = array();
             // Dibuja la Vista para la cracion de un nuevo curso
             $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('herramienta_per_cursos_cortos_create'))
@@ -231,17 +237,18 @@ class CursosCortosController extends Controller {
                 ->add('areatematica', 'choice', array('required' => true, 'choices' => $areatematicaArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
                 ->add('programa', 'choice', array('required' => true, 'choices' => $programaArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
                 ->add('cursosCortos', 'choice', array( 'required' => true, 'choices' => $cursosCortosArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'chosen-select col-lg-10')))
-                ->add('poblacion', 'choice', array( 'required' => true, 'choices' => $poblacionArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control','onchange' => 'mostrarPobDetalle(this.value)')))
+                ->add('poblacion', 'choice', array( 'required' => true, 'choices' => $pob, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
                 ->add('departamento', 'choice', array('label' => 'Departamento', 'required' => true, 'choices' => $dptoNacArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarProvincias(this.value)')))
                 ->add('provincia', 'choice', array('label' => 'Provincia', 'required' => true, 'choices' => $prov, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarMunicipios(this.value)')))
                 ->add('municipio', 'choice', array('label' => 'Municipio', 'required' => true, 'choices' => $muni, 'empty_value' => 'Seleccionar...','attr' => array('class' => 'form-control')))
                 ->add('fechaInicio', 'datetime', array('widget' => 'single_text','date_format' => 'dd-MM-yyyy','attr' => array('class' => 'form-control calendario')))
                 ->add('fechaFin', 'datetime', array('widget' => 'single_text','date_format' => 'dd-MM-yyyy','attr' => array('class' => 'form-control calendario')))
                 ->add('turno', 'choice', array( 'required' => true, 'choices' => $turnoArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
-                ->add('horas', 'text', array( 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true, 'pattern' => '[0-9]{1,2}', 'maxlength' => '2')))
+                ->add('horas', 'text', array( 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true, 'onblur'=>'rangosHorasCC(this)')))
                 ->add('lugar', 'text', array( 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
-                ->add('pobdetalle', 'text', array( 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
-                ->add('pobobs', 'textarea', array( 'required' => false, 'attr' => array('class' => 'form-control','readonly' => true)))
+               // ->add('pobdetalle', 'text', array( 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
+                ->add('organizacion', 'choice', array( 'required' => true, 'choices' => $organizacionArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control','onchange' => 'mostrarPobDetalleCC(this.value)')))
+              //  ->add('pobobs', 'textarea', array( 'required' => false, 'attr' => array('class' => 'form-control','readonly' => true)))
                 ->add('guardar', 'submit', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary', 'disbled' => true)))
                 ->getForm();
             return $this->render('SiePermanenteBundle:CursosCortos:new.html.twig', array(
@@ -300,7 +307,7 @@ class CursosCortosController extends Controller {
             $institucioncursocorto  ->setLugarTipoProvincia($em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $form['provincia'])));
             $institucioncursocorto  ->setLugarTipoMunicipio($em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $form['municipio'])));
             $institucioncursocorto  ->setLugarDetalle($form['lugar']);
-            $institucioncursocorto  ->setPoblacionDetalle($form['pobdetalle']);
+           // $institucioncursocorto  ->setPoblacionDetalle($form['pobdetalle']);
             $em->persist($institucioncursocorto);
             $em->flush();
 
@@ -338,6 +345,7 @@ class CursosCortosController extends Controller {
             $subarea = $em->getRepository('SieAppWebBundle:PermanenteSubAreaTipo')->findAll();
             $areatematica = $em->getRepository('SieAppWebBundle:PermanenteAreaTematicaTipo')->findAll();
             $poblacion = $em->getRepository('SieAppWebBundle:PermanentePoblacionTipo')->findAll();
+            $organizacion = $em->getRepository('SieAppWebBundle:PermanenteOrganizacionTipo')->findAll();
             $programa = $em->getRepository('SieAppWebBundle:PermanenteProgramaTipo')->findAll();
             $cursosCortos = $em->getRepository('SieAppWebBundle:PermanenteCursocortoTipo')->findAll();
             $turno = $em->getRepository('SieAppWebBundle:TurnoTipo')->findAll();
@@ -348,9 +356,42 @@ class CursosCortosController extends Controller {
             $munid=$institucioncursocorto->getLugarTipoMunicipio()->getId();
             $lugar=$institucioncursocorto->getLugarDetalle();
             $pobdetalle=$institucioncursocorto->getPoblacionDetalle();
-
+            $idpob=$institucioncursocorto->getPoblacionTipo()->getId();
             $arraypob= array();
             $pobobservacion=$em->getRepository('SieAppWebBundle:PermanentePoblacionTipo')->find($institucioncursocorto->getPoblacionTipo()->getId());
+//dump($idpob);die;
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->getConnection()->prepare('select organizacion_tipo_id from permanente_poblacion_tipo
+                              where id=:pobla                  
+        ');
+            $query->bindValue(':pobla', $idpob);
+            $query->execute();
+            $idorg= $query->fetch();
+         //   dump($idorg);die;
+            $query = $em->getConnection()->prepare('select * from permanente_poblacion_tipo
+                              where organizacion_tipo_id=:pobla                  
+        ');
+            $query->bindValue(':pobla', $idorg['organizacion_tipo_id']);
+            $query->execute();
+            $poblaciones= $query->fetchAll();
+
+
+            //   dump($idorg['organizacion_tipo_id']);die;
+
+            $poblacionesArray = array();
+            foreach ($poblaciones as $value) {
+                $poblacionesArray[$value['id']] =$value['poblacion'];
+                //$poblacionesArray[$c->getId()] = $c->get();
+            }
+            $poblacionArray = array();
+            foreach ($poblacion as $value) {
+                $poblacionArray[$value->getId()] = $value->getPoblacion();
+            }
+           // dump($poblacionesArray); dump($poblacionArray);die;
+            $organizacionArray = array();
+            foreach ($organizacion as $value) {
+                $organizacionArray[$value->getId()] = $value->getOrganizacion();
+            }
 
             $subareaArray= array();
             foreach ($subarea as $value) {
@@ -371,10 +412,8 @@ class CursosCortosController extends Controller {
                     $programaArray[$value->getId()] = $value->getPrograma();
                 }
             }
-            $poblacionArray = array();
-            foreach ($poblacion as $value) {
-                $poblacionArray[$value->getId()] = $value->getPoblacion();
-            }
+
+
             $cursosCortosArray = array();
             foreach ($cursosCortos as $value) {
                 $cursosCortosArray[$value->getId()] = $value->getCursocorto();
@@ -445,6 +484,7 @@ class CursosCortosController extends Controller {
             $prov = array();
             $muni = array();
 
+          //  dump($institucioncursocorto->getPoblacionTipo()->getId());die;
             // Dibuja el formulario con los datos Seleccionados Anteriormente
             $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('herramienta_per_cursos_cortos_update'))
@@ -458,17 +498,21 @@ class CursosCortosController extends Controller {
                 ->add('sucursal', 'hidden', array('data' => $sucursal))
                 ->add('institucion', 'hidden', array('data' => $institucion))
                 ->add('periodo', 'hidden', array('data' => $periodo))
-                ->add('turno', 'choice', array( 'required' => true, 'choices' => $turnoArray, 'data' => $institucioncurso->getTurnoTipo()->getId() , 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
-                ->add('horas', 'text', array( 'required' => true, 'data' => $institucioncurso->getDuracionhoras(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control','pattern' => '[0-9]{1,2}', 'maxlength' => '2')))
+                ->add('turno', 'choice', array( 'required' => true, 'choices' => $turnoArray, 'data' => $institucioncurso->getTurnoTipo()->getId() , 'attr' => array('class' => 'form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
+                ->add('horas', 'text', array( 'required' => true, 'data' => $institucioncurso->getDuracionhoras(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'onblur'=>'rangosHorasCC(this)')))
                 ->add('fechaInicio', 'date', array('widget' => 'single_text','format' => 'dd-MM-yyyy','data' => new \DateTime($institucioncurso->getFechaInicio()->format('d-m-Y')), 'required' => false, 'attr' => array('class' => 'form-control calendario')))
                 ->add('fechaFin', 'date', array('widget' => 'single_text','format' => 'dd-MM-yyyy','data' => new \DateTime($institucioncurso->getFechaFin()->format('d-m-Y')), 'required' => false, 'attr' => array('class' => 'form-control calendario')))
-                ->add('subarea', 'choice', array('required' => true, 'choices' => $subareaArray, 'data' => $institucioncursocorto->getSubareaTipo()->getId() , 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
-                ->add('programa', 'choice', array('required' => true, 'choices' => $programaArray, 'data' => $institucioncursocorto->getProgramaTipo()->getId() , 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
-                ->add('areatematica', 'choice', array('required' => true, 'choices' => $areatematicaArray, 'data' => $institucioncursocorto->getAreatematicaTipo()->getId() , 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
-                ->add('poblacion', 'choice', array( 'required' => true, 'choices' => $poblacionArray, 'data' => $institucioncursocorto->getPoblacionTipo()->getId() , 'attr' => array('class' => 'chosen-select form-control','onchange' => 'mostrarPobDetalle(this.value)', 'data-placeholder' => 'Seleccionar...')))
+                ->add('subarea', 'choice', array('required' => true, 'choices' => $subareaArray, 'data' => $institucioncursocorto->getSubareaTipo()->getId() , 'attr' => array('class' => 'form-control', 'data-placeholder' => 'Seleccionar...')))
+                ->add('programa', 'choice', array('required' => true, 'choices' => $programaArray, 'data' => $institucioncursocorto->getProgramaTipo()->getId() , 'attr' => array('class' => 'form-control', 'data-placeholder' => 'Seleccionar...')))
+                ->add('areatematica', 'choice', array('required' => true, 'choices' => $areatematicaArray, 'data' => $institucioncursocorto->getAreatematicaTipo()->getId() , 'attr' => array('class' => 'form-control', 'data-placeholder' => 'Seleccionar...')))
+                ->add('poblacion', 'choice', array( 'required' => true, 'choices' => $poblacionesArray, 'data' => $institucioncursocorto->getPoblacionTipo()->getId() , 'attr' => array('class' => 'form-control', 'data-placeholder' => 'Seleccionar...')))
+            //    ->add('poblacion', 'choice', array( 'required' => true, 'choices' => $poblacionesArray, 'data' => $idpob , 'attr' => array('class' => 'form-control', 'data-placeholder' => 'Seleccionar...')))
+                //      ->add('cursosCortos', 'choice', array( 'required' => true, 'choices' => $cursosCortosArray, 'data' => $institucioncursocorto->getCursocortoTipo()->getId() , 'attr' => array('class' => 'chosen-select col-lg-10')))
+                //->add('pobdetalle', 'text', array( 'required' => true, 'data' => $pobdetalle,'attr' => array('class' => 'form-control','enabled' => true)))
+                ->add('organizacion', 'choice', array( 'required' => true, 'choices' => $organizacionArray,'data' =>  $idorg['organizacion_tipo_id'],'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control','onchange' => 'mostrarPobDetalleCC(this.value)')))
                 ->add('cursosCortos', 'choice', array( 'required' => true, 'choices' => $cursosCortosArray, 'data' => $institucioncursocorto->getCursocortoTipo()->getId() , 'attr' => array('class' => 'chosen-select col-lg-10')))
-                ->add('pobdetalle', 'text', array( 'required' => true, 'data' => $pobdetalle,'attr' => array('class' => 'form-control','enabled' => true)))
-                ->add('pobobs', 'textarea', array( 'required' => false, 'data'=> $pobobservacion->getObs(),'attr' => array('class' => 'form-control','readonly' => true)))
+               // ->add('pobdetalle', 'text', array( 'required' => true, 'data' => $pobdetalle,'attr' => array('class' => 'form-control','enabled' => true)))
+             //   ->add('pobobs', 'textarea', array( 'required' => false, 'data'=> $pobobservacion->getObs(),'attr' => array('class' => 'form-control','readonly' => true)))
                 ->add('departamento', 'choice', array('label' => 'departamento', 'required' => true, 'choices' => $dptoNacArray,'data' => $institucioncursocorto->getLugarTipoDepartamento()->getId(),  'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarProvincias(this.value)')))
                 ->add('provincia', 'choice', array('label' => 'Provincia', 'required' => true, 'choices' => $provinciasArray,'data' => $institucioncursocorto->getLugarTipoProvincia()->getId(),  'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarMunicipios(this.value)')))
                 ->add('municipio', 'choice', array('label' => 'Municipio', 'required' => true, 'choices' => $municipiosArray, 'data' => $institucioncursocorto->getLugarTipoMunicipio()->getId(),'empty_value' => 'Seleccionar...','attr' => array('class' => 'form-control')))
@@ -548,6 +592,7 @@ class CursosCortosController extends Controller {
 
     public function deleteCursoCortoAction(Request $request){
         //create the DB conexion
+      //  dump($request);die;
         $em= $this->getDoctrine()->getManager();
         $db = $em->getConnection();
 
@@ -1472,9 +1517,10 @@ class CursosCortosController extends Controller {
         try
         {
 
-           $fechaini = $form['fechaInicio'] ;
-            $fechafin = $form['fechaFin'] ;
-
+           $fechaini = new \DateTime($form['fechaInicio']) ;
+            $fechafin =new \DateTime ($form['fechaFin']) ;
+            $fechaini=$fechaini->format('Y-m-d');
+            $fechafin=$fechafin->format('Y-m-d');
          //   dump($fechaini);die;
                //new \DateTime($->format('d-m-Y'));
 
@@ -1550,5 +1596,33 @@ class CursosCortosController extends Controller {
            return $ex;
        }
     }
+
+    public function mostrarPobDetalleCCAction($pob) {
+        try {
+
+            $em = $this->getDoctrine()->getManager();
+
+            $query = $em->getConnection()->prepare('select * from permanente_poblacion_tipo
+                              where organizacion_tipo_id=:pobla                  
+        ');
+            $query->bindValue(':pobla', $pob);
+            $query->execute();
+            $poblaciones= $query->fetchAll();
+
+            //dump($poblaciones);die;
+            $poblacionesArray = array();
+            foreach ($poblaciones as $value) {
+                $poblacionesArray[$value['id']] =$value['poblacion'];
+                //$poblacionesArray[$c->getId()] = $c->get();
+            }
+
+
+            $response = new JsonResponse();
+            return $response->setData(array('poblaciones' => $poblacionesArray));
+        } catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+        }
+    }
+
 
 }

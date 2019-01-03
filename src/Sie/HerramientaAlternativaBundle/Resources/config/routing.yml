@@ -86,7 +86,7 @@ sie_herramienta_alternativa_curso:
 
 sie_herramienta_alternativa_estadistica:
     resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/estadistica.yml"
-    prefix:   /altsie/estadistica
+    prefix:   /alt/estadistica
 
 sie_herramienta_alternativa_imagenes:
     resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/imagenes.yml"

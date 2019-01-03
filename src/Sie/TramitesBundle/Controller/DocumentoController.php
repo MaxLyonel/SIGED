@@ -73,7 +73,7 @@ class DocumentoController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $entityDocumento = $em->getRepository('SieAppWebBundle:Documento');
         $query = $entityDocumento->createQueryBuilder('d')
-                ->select("d.id as id, t.id as tramite, ds.id as serie, d.fechaImpresion as fechaemision, dept.departamento as departamentoemision, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documentoTipo as documentoTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad, tt.tramiteTipo as tramiteTipo")
+                ->select("d.id as id, t.id as tramite, ei.id as estudianteInscripcionId, ds.id as serie, d.fechaImpresion as fechaemision, dept.id as departamentoemisionid, dept.departamento as departamentoemision, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documentoTipo as documentoTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad, tt.tramiteTipo as tramiteTipo")
                 ->leftJoin('SieAppWebBundle:DocumentoEstado', 'de', 'WITH', 'de.id = d.documentoEstado')
                 ->innerJoin('SieAppWebBundle:DocumentoTipo', 'dt', 'WITH', 'dt.id = d.documentoTipo')
                 ->innerJoin('SieAppWebBundle:DocumentoSerie', 'ds', 'WITH', 'ds.id = d.documentoSerie')
@@ -110,7 +110,7 @@ class DocumentoController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $entityDocumento = $em->getRepository('SieAppWebBundle:Documento');
         $query = $entityDocumento->createQueryBuilder('d')
-                ->select("d.id as id, t.id as tramite, ds.id as serie, d.fechaImpresion as fechaemision, dept.departamento as departamentoemision, dept.id as departamentoemision_codigo, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, gt1.id as gestionMatricula, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documentoTipo as documentoTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad, tt.tramiteTipo as tramiteTipo")
+                ->select("d.id as id, t.id as tramite, ds.id as serie, d.fechaImpresion as fechaemision, dept.departamento as departamentoemision, dept.id as departamentoemision_codigo, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, gt1.id as gestionMatricula, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.id as documentoTipoId, dt.documentoTipo as documentoTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad, tt.tramiteTipo as tramiteTipo")
                 ->leftJoin('SieAppWebBundle:DocumentoEstado', 'de', 'WITH', 'de.id = d.documentoEstado')
                 ->innerJoin('SieAppWebBundle:DocumentoTipo', 'dt', 'WITH', 'dt.id = d.documentoTipo')
                 ->innerJoin('SieAppWebBundle:DocumentoSerie', 'ds', 'WITH', 'ds.id = d.documentoSerie')
@@ -439,7 +439,7 @@ class DocumentoController extends Controller {
 
         $entityDocumento = $em->getRepository('SieAppWebBundle:Documento');
         $query = $entityDocumento->createQueryBuilder('d')
-                ->select("d.id as id, t.id as tramite, ds.id as serie, d.fechaImpresion as fechaemision, dept.departamento as departamentoemision, dept.id as departamentoemision_codigo, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, gt1.id as gestionMatricula, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documentoTipo as documentoTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad, tt.tramiteTipo as tramiteTipo")
+                ->select("d.id as id, t.id as tramite, ds.id as serie, d.fechaImpresion as fechaemision, dept.departamento as departamentoemision, dept.id as departamentoemision_codigo, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, gt1.id as gestionMatricula, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.id as documentoTipoId, dt.documentoTipo as documentoTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad, tt.tramiteTipo as tramiteTipo")
                 ->leftJoin('SieAppWebBundle:DocumentoEstado', 'de', 'WITH', 'de.id = d.documentoEstado')
                 ->innerJoin('SieAppWebBundle:DocumentoTipo', 'dt', 'WITH', 'dt.id = d.documentoTipo')
                 ->innerJoin('SieAppWebBundle:DocumentoSerie', 'ds', 'WITH', 'ds.id = d.documentoSerie')
@@ -454,7 +454,7 @@ class DocumentoController extends Controller {
                 ->innerJoin('SieAppWebBundle:PaisTipo', 'pt', 'WITH', 'pt.id = e.paisTipo')
                 ->innerJoin('SieAppWebBundle:DepartamentoTipo', 'dept', 'WITH', 'dept.id = ds.departamentoTipo')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
-                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp    .lugarTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp.lugarTipo')
                 ->where('ds.id = :serie')
                 ->andWhere('dt.id in (1,3,4,5,6,7,8,9)')
                 ->andWhere('de.id in (1)')
@@ -464,7 +464,7 @@ class DocumentoController extends Controller {
         if(count($entityDocumento)>0){
             return "";
         } else {
-            return "El documento con número de serie ".$serie." no es válido para generar el documento legalizado.";
+            return "El documento con número de serie ".$serie." no puede legalizarse.";
         }
     }
 
@@ -595,7 +595,11 @@ class DocumentoController extends Controller {
         $documentoId = $entityDocumento->getId();
         if($documentoTipo == 1 or $documentoTipo == 2){
             if ($documentoFirmaId != 0 and $documentoFirmaId != ""){
-                $entityDocumentoGenerado = $this->getDocumento($documentoId);
+                if($documentoTipo == 2){
+                    $entityDocumentoGenerado = $this->getDocumentoLegalizado($documentoId);
+                } else {
+                    $entityDocumentoGenerado = $this->getDocumento($documentoId);
+                }
 
                 $entityDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->findOneBy(array('id' => $documentoFirmaId));
 
@@ -623,7 +627,7 @@ class DocumentoController extends Controller {
                 
                 $dateNacimiento = date_create($entityDocumentoGenerado['fechanacimiento']);
                 $dateEmision = date_create($entityDocumentoGenerado['fechaemision']);
-            
+                            
                 $datos = array(
                     'inscripcion'=>$entityDocumentoGenerado['estudianteInscripcionId'],
                     'tramite'=>$entityDocumentoGenerado['tramite'],
@@ -639,7 +643,7 @@ class DocumentoController extends Controller {
                     'cedulaidentidad'=>$entityDocumentoGenerado['carnetIdentidad'],
                     'emisiondepartamento'=>$entityDocumentoGenerado['departamentoemision'],
                     'emisionfecha'=>date_format($dateEmision, 'd/m/Y'),
-                    'tokenfirma'=>base64_encode($getDocumentoFirma['tokenfirma'])
+                    'tokenfirma'=>base64_encode($getDocumentoFirma['id'])
                 );
                 $keys = $this->getEncodeRSA($datos);
 
@@ -944,6 +948,37 @@ class DocumentoController extends Controller {
             ->getForm();
         return $form;
     }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que genera un formulario para la busqueda de documentos por numero de serie en lote
+    // PARAMETROS: institucionEducativaId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function creaFormBuscaInstitucionEducativaSerieLote($routing, $numero1, $numero2, $serie, $documentoTipoArrayId) {
+        $entityDocumentoSerie = $this->getSerieTipo($documentoTipoArrayId);
+
+        $serieEntity = array();
+        foreach ($entityDocumentoSerie as $key => $dato) {
+            $serieEntity[$dato['serie']] = $dato['serie'];
+        }
+
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl($routing))
+            ->add('numeroInicial', 'number', array('label' => 'Número Inicial', 'attr' => array('value' => $numero1, 'class' => 'form-control', 'pattern' => '[0-9]{1,6}', 'maxlength' => '6', 'autocomplete' => 'on', 'placeholder' => 'Número inicial')))
+            ->add('numeroFinal', 'number', array('label' => 'Número Final', 'attr' => array('value' => $numero2, 'class' => 'form-control', 'pattern' => '[0-9]{1,6}', 'maxlength' => '6', 'autocomplete' => 'on', 'placeholder' => 'Número final')))
+            ->add('serie',
+                      'choice',  
+                      array('label' => 'Serie',
+                            'choices' => $serieEntity,
+                            'data' => $serie,
+                            'attr' => array('class' => 'form-control'),
+                            )
+                )
+            ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary')))
+            ->getForm();
+        return $form;
+    }
   
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
@@ -1051,18 +1086,27 @@ class DocumentoController extends Controller {
 
             $entityDocumento = $this->getDocumentoSerieActivo($serie);
 
+            if (count($entityDocumento) <= 0){
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No existe el número de serie '.$serie));
+                return $this->redirectToRoute('tramite_documento_legalizacion_numero_serie');
+            }  
+
             $msgvalidaNumeroSerieTipoDocumento = $this->validaNumeroSerieParaLegalizar($serie);
 
             if ($msgvalidaNumeroSerieTipoDocumento != ""){
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msgvalidaNumeroSerieTipoDocumento));
-                return $this->redirectToRoute('tramite_documento_supletorio');
+                return $this->redirectToRoute('tramite_documento_legalizacion_numero_serie');
             }  
 
             $entityDocumentoDetalle = $this->getDocumentoDetalle($entityDocumento['tramite']);
+
+            $documentoTipoId = 2;
+            $entityFirma = $this->getPersonaFirmaAutorizada($departamentoCodigo,$documentoTipoId);
             
             return $this->render($this->session->get('pathSystem') . ':Documento:legalizaDetalle.html.twig', array(
                 'listaDocumento' => $entityDocumento,
                 'listaDocumentoDetalle' => $entityDocumentoDetalle,
+                'listaFirma' => $entityFirma,
                 'titulo' => 'Legalización',
                 'subtitulo' => 'Documentos'
             ));
@@ -1094,9 +1138,11 @@ class DocumentoController extends Controller {
         }
 
         $rolPermitido = 17;
+        $documentoFirmaId = 0;
 
         if ($request->getMethod() == 'POST') {
-            $documentoId = base64_decode($request->get('codigo'));     
+            $documentoId = base64_decode($request->get('codigo'));    
+            $documentoFirmaId = base64_decode($request->get('firma')); 
             $em = $this->getDoctrine()->getManager();       
             $query = $em->getConnection()->prepare("
                 select d.tramite_id as tramite_id, d.documento_serie_id as serie
@@ -1118,6 +1164,11 @@ class DocumentoController extends Controller {
             ");
             $query->execute();
             $entity = $query->fetchAll();
+
+            if (!is_numeric($documentoFirmaId)){
+                $documentoFirmaId = 0;
+            }
+            
             if (count($entity) > 0){
                 if (count($entity) < 2){
                     /*
@@ -1137,10 +1188,30 @@ class DocumentoController extends Controller {
                     } else {
                         $em->getConnection()->beginTransaction();
                         try {
-                            $documentoFirmaId = 0;
-                            $idDocumento = $this->setDocumento($entity[0]["tramite_id"], $usuarioId, 2, $entity[0]["serie"], "", $fechaActual, $documentoFirmaId);
-                            $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'El documento con numero de serie "'.$entity[0]["serie"].'" fue legalizado'));
-                            $em->getConnection()->commit();        
+                            if($documentoFirmaId != 0 and $documentoFirmaId != ""){
+                                $entidadDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->findOneBy(array('id' => $documentoFirmaId));
+                                //dump($documentoFirmaId);die;
+                                if (count($entidadDocumentoFirma)>0) {
+                                    $firmaPersonaId = $entidadDocumentoFirma->getPersona()->getId();    
+                                    // $departamentoCodigo = $documentoController->getCodigoLugarRol($id_usuario,$rolPermitido);
+                                    $valFirmaDisponible =  $this->verFirmaAutorizadoDisponible($firmaPersonaId,1,2);
+                                } else {
+                                    $documentoFirmaId = 0;
+                                    throw new exception('Dificultades al realizar el registro, intente nuevamente');
+                                    // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No se encontro la firma ingresada, intente nuevamente'));
+                                    // return $this->redirectToRoute('tramite_detalle_diploma_humanistico_impresion_lista');
+                                }
+                            } else {
+                                $valFirmaDisponible = array(0 => true, 1 => 'Generar documento sin firma');
+                                $documentoFirmaId = 0;
+                            }
+                            if ($valFirmaDisponible[0]){
+                                $idDocumento = $this->setDocumento($entity[0]["tramite_id"], $usuarioId, 2, $entity[0]["serie"], "", $fechaActual, $documentoFirmaId);
+                                $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'El documento con numero de serie "'.$entity[0]["serie"].'" fue legalizado'));
+                                $em->getConnection()->commit();        
+                            } else {
+                                throw new exception('Dificultades al realizar el registro, intente nuevamente');
+                            }
                             $formBusqueda = array('serie'=>$entity[0]["serie"]);      
                             return $this->redirectToRoute('tramite_documento_legalizacion_numero_serie_detalle', ['form' => $formBusqueda], 307);  
                         } catch (Exception $ex) {
@@ -1242,7 +1313,7 @@ class DocumentoController extends Controller {
                 $arrayFirma[base64_encode($registro['documento_firma_id'])] = $registro['nombre']." ".$registro['paterno']." ".$registro['materno'];
             }
         }
-        $arrayFirma['0'] = 'SIN FIRMA EN EL DOCUMENTO';
+        $arrayFirma[base64_encode('0')] = 'SIN FIRMA EN EL DOCUMENTO';
                 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
@@ -1341,7 +1412,7 @@ class DocumentoController extends Controller {
                 $sie = $form['sie'];  
                 $ges = $form['gestion']; 
                 $documentoFirmaId = base64_decode($form['firma']); 
-
+                
                 $tramiteController = new tramiteController();
                 $tramiteController->setContainer($this->container);
                 $rolPermitido = array(8,17);
@@ -1355,13 +1426,13 @@ class DocumentoController extends Controller {
 
                 // validar cantidad de firmas
                 $em = $this->getDoctrine()->getManager();
-
+                
                 $entityDocumentoInstitucionEducativa = $this->getDocumentoInstitucionEducativaGestion($sie, $ges, '1');
                 
                 $cantidadSolicitada = count($entityDocumentoInstitucionEducativa);
                 
                 $entityDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->findOneBy(array('id' => $documentoFirmaId));
-                //dump($cantidadSolicitada);die;
+                
                 if (count($entityDocumentoFirma)>0) {
                     $firmaPersonaId = $entityDocumentoFirma->getPersona()->getId();     
                     // $departamentoCodigo = $documentoController->getCodigoLugarRol($id_usuario,$rolPermitido);
@@ -1398,8 +1469,6 @@ class DocumentoController extends Controller {
                     // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No se encontro la firma ingresada, intente nuevamente'));
                     // return $this->redirectToRoute('tramite_detalle_diploma_humanistico_impresion_lista');
                 }
-
-
 
                 $arch = $sie.'_'.$ges.'_legalizacion'.date('YmdHis').'.pdf';
                 $response = new Response();
@@ -1802,7 +1871,7 @@ class DocumentoController extends Controller {
         // $salt = '123456'.'abc';   
 
         $rsa = new RSA;
-        $key = $rsa->createkey(2048); 
+        $key = $rsa->createkey(1024); 
         $keyPublica = $key['publickey'];   
         $keyPrivada = $key['privatekey'];   
 

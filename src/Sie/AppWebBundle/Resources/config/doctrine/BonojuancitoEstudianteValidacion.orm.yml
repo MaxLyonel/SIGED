@@ -126,17 +126,18 @@ Sie\AppWebBundle\Entity\BonojuancitoEstudianteValidacion:
             length: 45
             fixed: false
             comment: ''
-        estadomatriculaInicioTipoId:
+        pagoTipoId:
             type: smallint
             nullable: true
             unsigned: false
             comment: ''
-            column: estadomatricula_inicio_tipo_id
-        id2:
+            column: pago_tipo_id
+        estudianteInscripcionId:
             type: integer
             nullable: true
             unsigned: false
             comment: ''
+            column: estudiante_inscripcion_id
         nota1:
             type: bigint
             nullable: true

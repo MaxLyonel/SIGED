@@ -37,3 +37,7 @@ download_file_sie_buildAgain:
 download_file_install_download:
     path:     /installDownload
     defaults: { _controller: SieRegularBundle:DownloadFileSie:installDownload }
+
+download_file_install_updatedownload:
+    path:     /updatedownload
+    defaults: { _controller: SieRegularBundle:DownloadFileSie:updatedownload }

@@ -40,6 +40,13 @@ class BachillerExcelenciaAlternativaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
+        $fechaActual = new \DateTime('now');
+        $fechaCorte = new \DateTime('2019-01-04');
+
+        if($fechaActual > $fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
+        }
+
         $form = $this->createSearchIeForm();
 
         return $this->render('SieAppWebBundle:BachillerExcelenciaAlternativa:index.html.twig', array(
@@ -76,6 +83,13 @@ class BachillerExcelenciaAlternativaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
+        $fechaActual = new \DateTime('now');
+        $fechaCorte = new \DateTime('2019-01-04');
+
+        if($fechaActual > $fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
+        }
+
         $form = $this->createSearchIeDirForm();
 
         return $this->render('SieAppWebBundle:BachillerExcelenciaAlternativa:index_dir.html.twig', array(
@@ -110,6 +124,20 @@ class BachillerExcelenciaAlternativaController extends Controller {
 
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
+        }
+
+        $fechaActual = new \DateTime('now');
+        $fechaCorte = new \DateTime('2019-01-04');
+
+        if($fechaActual > $fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
+        }
+
+        $fechaActual = new \DateTime('now');
+        $fechaCorte = new \DateTime('2019-01-04');
+
+        if($fechaActual > $fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
         }
 
         $form = $this->createSearchIeDirForm();
@@ -270,6 +298,13 @@ class BachillerExcelenciaAlternativaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
+        $fechaActual = new \DateTime('now');
+        $fechaCorte = new \DateTime('2019-01-04');
+
+        if($fechaActual > $fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
+        }
+
         $response = new JsonResponse();
         try {
             $form_aux = $request->get('sie_appwebbundle_maestrocuentabancaria');
@@ -376,6 +411,13 @@ class BachillerExcelenciaAlternativaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
+        $fechaActual = new \DateTime('now');
+        $fechaCorte = new \DateTime('2018-12-10');
+
+        if($fechaActual > $fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
+        }
+
         $form = $this->createSearchIeRstForm();
 
         return $this->render('SieAppWebBundle:BachillerExcelenciaAlternativa:index_rst.html.twig', array(
@@ -406,6 +448,13 @@ class BachillerExcelenciaAlternativaController extends Controller {
 
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
+        }
+
+        $fechaActual = new \DateTime('now');
+        $fechaCorte = new \DateTime('2019-01-04');
+
+        if($fechaActual > $fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
         }
 
         $form = $this->createSearchIeForm();
@@ -600,6 +649,13 @@ class BachillerExcelenciaAlternativaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
+        $fechaActual = new \DateTime('now');
+        $fechaCorte = new \DateTime('2018-12-10');
+
+        if($fechaActual > $fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
+        }
+
         $form = $this->createSearchIeRstForm();
         $form->handleRequest($request);
 
@@ -632,7 +688,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
 
             if ($quinto[0][1] == 0) {
                 $this->get('session')->getFlashBag()->add('searchIe', 'La Institución Educativa ' . $formulario['institucioneducativa'] . ' no cuenta con aprendizajes especializados.');
-                return $this->redirect($this->generateUrl('bach_exc_alt'));
+                return $this->redirect($this->generateUrl('bach_exc_alt_rst'));
             }
 
             $repository = $em->getRepository('SieAppWebBundle:MaestroCuentabancaria');
@@ -649,23 +705,23 @@ class BachillerExcelenciaAlternativaController extends Controller {
                     ->getQuery();
 
             $director = $query->getOneOrNullResult();
-
+            
             $repository = $em->getRepository('SieAppWebBundle:EstudianteDestacado');
 
             $query = $repository->createQueryBuilder('ed')
-                    ->select('e.codigoRude, e.carnetIdentidad, e.paterno, e.materno, e.nombre, g.genero, ed.promedioFinal, ed.id edId, g.id gen')
-                    ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'ed.estudiante = e.id')
+                    ->select('ed.codigoRude, ed.carnetIdentidad, ed.paterno, ed.materno, ed.nombre, g.genero, ed.promedioFinal, ed.id edId, g.id gen')
+                    ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'ed.estudianteId = e.id')
                     ->innerJoin('SieAppWebBundle:GeneroTipo', 'g', 'WITH', 'e.generoTipo = g.id')
                     ->where('ed.institucioneducativa = :institucion')
                     ->andWhere('ed.gestionTipo = :gestion')
                     ->andWhere('ed.esoficial = :esoficial')
                     ->setParameter('institucion', $formulario['institucioneducativa'])
-                    ->setParameter('gestion', 2018)
+                    ->setParameter('gestion', $formulario['gestion'])
                     ->setParameter('esoficial', 't')
                     ->getQuery();
 
             $bachilleres = $query->getResult();
-
+            
             return $this->render('SieAppWebBundle:BachillerExcelenciaAlternativa:resultRst.html.twig', array(
                         'datadirector' => $director,
                         'ieducativa' => $formulario['institucioneducativa'],
@@ -679,6 +735,13 @@ class BachillerExcelenciaAlternativaController extends Controller {
 
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
+        }
+
+        $fechaActual = new \DateTime('now');
+        $fechaCorte = new \DateTime('2018-12-10');
+
+        if($fechaActual > $fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -709,6 +772,13 @@ class BachillerExcelenciaAlternativaController extends Controller {
 
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
+        }
+
+        $fechaActual = new \DateTime('now');
+        $fechaCorte = new \DateTime('2018-12-10');
+
+        if($fechaActual > $fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -809,6 +879,13 @@ class BachillerExcelenciaAlternativaController extends Controller {
 
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
+        }
+
+        $fechaActual = new \DateTime('now');
+        $fechaCorte = new \DateTime('2019-01-04');
+
+        if($fechaActual > $fechaCorte) {
+            return $this->redirect($this->generateUrl('principal_web'));
         }
 
         $response = new JsonResponse();
@@ -1107,6 +1184,59 @@ class BachillerExcelenciaAlternativaController extends Controller {
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');
         return $response;
+    }
+
+    public function indexReporteDistritoAction() {
+        $id_usuario = $this->session->get('userId');
+
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $form = $this->createSearchDistritoForm();
+
+        return $this->render('SieAppWebBundle:BachillerExcelenciaAlternativa:index_reporte_dist.html.twig', array(
+                    'form' => $form->createView(),
+        ));
+    }
+
+    private function createSearchDistritoForm() {
+        $form = $this->createForm(new SelectIeType(), null, array(
+            'action' => $this->generateUrl('bach_exc_alt_rep_dist_search'),
+            'method' => 'POST',
+        ));
+
+        $form->add('submit', 'submit', array('label' => 'Reporte por distrito'));
+
+        return $form;
+    }
+
+    public function resultSearchDistRepAction(Request $request) {
+        $id_usuario = $this->session->get('userId');
+        $username = $this->session->get('userName');
+
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $form = $this->createSearchDistritoForm();
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+
+            $formulario = $form->getData();
+
+            $arch = 'DECLARACION_JURADA_DISTRITO_' . $formulario['institucioneducativa'] . '_' . date('YmdHis') . '.pdf';
+            $response = new Response();
+            $response->headers->set('Content-type', 'application/pdf');
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_EstudianteExcelencia_DIstritoRegular_v2_afv_hcq.rptdesign&distrito=' . $formulario['institucioneducativa'] . '&&__format=pdf&'));
+            $response->setStatusCode(200);
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->headers->set('Pragma', 'no-cache');
+            $response->headers->set('Expires', '0');
+            return $response;
+        }
     }
 
 }
