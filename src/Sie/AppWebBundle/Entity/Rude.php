@@ -948,4 +948,32 @@ class Rude
     {
         return $this->viveHabitualmenteTipo;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstudianteInscripcion
+     */
+    private $estudianteInscripcion;
+
+
+    /**
+     * Set estudianteInscripcion
+     *
+     * @param \Sie\AppWebBundle\Entity\EstudianteInscripcion $estudianteInscripcion
+     * @return Rude
+     */
+    public function setEstudianteInscripcion(\Sie\AppWebBundle\Entity\EstudianteInscripcion $estudianteInscripcion = null)
+    {
+        $this->estudianteInscripcion = $estudianteInscripcion;
+    
+        return $this;
+    }
+
+    /**
+     * Get estudianteInscripcion
+     *
+     * @return \Sie\AppWebBundle\Entity\EstudianteInscripcion 
+     */
+    public function getEstudianteInscripcion()
+    {
+        return $this->estudianteInscripcion;
+    }
 }
