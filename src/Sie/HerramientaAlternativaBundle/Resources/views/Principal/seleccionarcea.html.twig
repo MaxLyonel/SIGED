@@ -44,31 +44,51 @@
                     <div class="clearfix"></div>
                 </div><!-- /.panel-heading -->
                 <div class="panel-body">
-                    {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form', 'id': 'form_cea'} } )}}
-                    <div class="row">
-                        <div class="form-group col-lg-3 col-md-3" {% if app.session.get('roluser') == 9 or app.session.get('roluser') == 10 %} style="display:none"{% else %}style="display:block"{% endif %}>
-                            {{ form_label(form.codsie)}}
-                            {{form_widget(form.codsie,{'attr':{'onchange':'gestion(this.value)','class':'validar'}}) }}
+                    <div class="panel">
+                    <div class="panel-body">
+                        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form', 'id': 'form_cea'} } )}}
+                        <div class="row">
+                            <div class="form-group col-md-3" {% if app.session.get('roluser') == 9 or app.session.get('roluser') == 10 %} style="display:none"{% else %}style="display:block"{% endif %}>
+                                <div class="col-md-4">
+                                    {{ form_label(form.codsie)}}
+                                </div>
+                                <div class="col-md-7">
+                                    {{form_widget(form.codsie,{'attr':{'onblur':'gestion(this.value)'}}) }}
+                                </div>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <div class="col-md-5">
+                                    {{ form_label(form.gestion)}}
+                                </div>
+                                <div class="col-md-7">
+                                    {{form_widget(form.gestion,{'attr':{'onchange':'subcea(this.value)'}}) }}
+                                </div>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <div class="col-md-5">
+                                    {{ form_label(form.subcea)}}
+                                </div>
+                                <div class="col-md-7">
+                                    {{form_widget(form.subcea,{'attr':{'onchange':'semestre(this.value)'}}) }}
+                                </div>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <div class="col-md-3">
+                                    {{ form_label(form.semestre)}}
+                                </div>
+                                <div class="col-md-8">
+                                    {{form_widget(form.semestre) }}
+                                </div>
+                            </div>
+                            <div class="form-group col-md-2"> 
+                                <div class="col-md-12">
+                                    {{ form_widget(form.buscar ) }}
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group col-lg-3 col-md-3">
-                            {{ form_label(form.gestion)}}
-                            {{form_widget(form.gestion,{'attr':{'onchange':'subcea(this.value)'}}) }}
-                        </div>
-                        <div class="form-group col-lg-3 col-md-3">
-                            {{ form_label(form.subcea)}}
-                            {{form_widget(form.subcea,{'attr':{'onchange':'semestre(this.value)'}}) }}
-                        </div>
-                        <div class="form-group col-lg-3 col-md-3">
-                            {{ form_label(form.semestre)}}
-                            {{form_widget(form.semestre) }}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-lg-3 col-md-3">                                        
-                            {{ form_widget(form.buscar ) }}
-                        </div>
-                    </div>
-                    {{form_end(form)}}
+                        {{form_end(form)}}
+                    </div><!-- /.panel-body -->
+                </div><!-- /.panel -->
                     {#<form action="{{path('herramienta_ceducativa_buscar_cea')}}" method="post" style="display:inline-block">
                         <div class="form-body">
                             <div class="form-group">
@@ -78,8 +98,8 @@
                             <button type="submit" class="btn btn-success">Buscar</button>
                         </div><!-- /.form-body -->
                     </form>#}
-                    <div id="lista">
-                    </div>    
+                <div id="lista">
+                </div>    
                 </div><!-- /.panel-body -->
             </div><!-- /.panel -->
             <!--/ End inline form -->
@@ -176,7 +196,7 @@
                     $("#form_gestion").empty();
                     $("#form_gestion").append('<option value="">Buscando...</option>');
                     $("#form_subcea").empty();
-                    $("#form_subces").append('<option value="">Buscando...</option>');
+                    $("#form_subcea").append('<option value="">Buscando...</option>');
                 },
                 success: function (data) {
                     $("#form_gestion").empty();
