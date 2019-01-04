@@ -144,7 +144,7 @@ class PromedioCalidadController extends Controller {
     public function listAction(Request $request) {
 
         $id_usuario = $this->session->get('userId');
-        $gestion = $this->session->get('currentyear');
+        $gestion = 2018;//$this->session->get('currentyear');
         $id = 27;
 
         if (!isset($id_usuario)) {
