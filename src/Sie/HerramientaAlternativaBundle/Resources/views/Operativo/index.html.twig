@@ -141,5 +141,19 @@
                 $("input:checkbox").prop('checked', $(this).prop("checked"));
             });
         }
+
+        function validar(){
+            alert('entra');
+            var cont = 0;
+            $('.checkbox:checked').each(function() {
+                cont = cont + 1;
+            });
+            if(cont>0){
+                return true;
+            }else{
+                alert('Debe seleccionar al menos un CEA de la lista');
+                return false;
+            }
+        }
     </script>
 {% endblock %} 
