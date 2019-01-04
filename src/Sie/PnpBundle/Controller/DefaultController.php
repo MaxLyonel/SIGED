@@ -5364,7 +5364,7 @@ ciclo_tipo_id, grado_tipo_id
             elseif($curso_rs==6){$bloque_rs_toca=3;$parte_rs_toca=1;}
             $rs_existe=1;
         }
-       
+            $institucioneducativa_curso_id_e=0;       
             $query = "SELECT
                       estudiante.id as estudiante_id,
                       estudiante.codigo_rude,
@@ -5444,6 +5444,7 @@ ciclo_tipo_id, grado_tipo_id
                 $em = $this->getDoctrine()->getManager();
                 $db = $em->getConnection();
                 //LISTA DE NOTAS
+                $matricula_estado_id_now=61;
                 $query = "SELECT ei.estadomatricula_tipo_id from
                             institucioneducativa_curso ic
                           join  estudiante_inscripcion ei on ei.institucioneducativa_curso_id=ic.id
