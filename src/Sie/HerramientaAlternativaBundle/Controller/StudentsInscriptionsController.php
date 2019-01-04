@@ -123,8 +123,9 @@ class StudentsInscriptionsController extends Controller {
       $em->getConnection()->beginTransaction();
       //get the send values
       $form= $request->get('form');
-      $aInfoUeducativa = unserialize($form['data']);
 
+      $aInfoUeducativa = unserialize($form['data']);
+      
     //set the validate year
     $validateYear = false;
     //if not checked, so validate the studens olds year
@@ -134,44 +135,55 @@ class StudentsInscriptionsController extends Controller {
 
       //get the students year old
 
-      $yearStudent = (date('Y') - date('Y',strtotime($form['dateStudent'])));
-
+      // $yearStudent = (date('Y') - date('Y',strtotime($form['dateStudent'])));
+      $arrYearStudent =$this->get('funciones')->tiempo_transcurrido($form['dateStudent'], '30-6-'.date('Y'));
+      $yearStudent = $arrYearStudent[0];
+      // dump($objInstitucioneducativaCursoStudent);
+      // dump($yearStudent);
+      // die;
       //validate the humanisticos
       if($objInstitucioneducativaCursoStudent->getNivelTipo()->getId()==15){
         //validate to nivel=15 - ciclo=1 - grado=1
-        if($objInstitucioneducativaCursoStudent->getCicloTipo()->getId()==1 and $objInstitucioneducativaCursoStudent->getGradoTipo()->getId()==1){
+        // if($objInstitucioneducativaCursoStudent->getCicloTipo()->getId()==1 and $objInstitucioneducativaCursoStudent->getGradoTipo()->getId()==1){
+        //   if(!($yearStudent>=15)){
+        //     $validateYear=true;
+        //   }
+        // }
+
+        if($aInfoUeducativa['ueducativaInfoId']['cicloId']==1 and $aInfoUeducativa['ueducativaInfoId']['gradoId']==1){
           if(!($yearStudent>=15)){
             $validateYear=true;
           }
         }
 
         //validate to nivel=15 - ciclo=1 - grado=2
-        if($objInstitucioneducativaCursoStudent->getCicloTipo()->getId()==1 and $objInstitucioneducativaCursoStudent->getGradoTipo()->getId()==2){
+        if($aInfoUeducativa['ueducativaInfoId']['cicloId']==1 and $aInfoUeducativa['ueducativaInfoId']['gradoId']==2){
           if(!($yearStudent>=16)){
             $validateYear=true;
           }
         }
 
         //validate to nivel=15 - ciclo=2 - grado=1
-        if($objInstitucioneducativaCursoStudent->getCicloTipo()->getId()==2 and $objInstitucioneducativaCursoStudent->getGradoTipo()->getId()==1){
+        if($aInfoUeducativa['ueducativaInfoId']['cicloId']==2 and $aInfoUeducativa['ueducativaInfoId']['gradoId']==1){
           if(!($yearStudent>=17)){
             $validateYear=true;
           }
         }
 
         //validate to nivel=15 - ciclo=2 - grado=2
-        if($objInstitucioneducativaCursoStudent->getCicloTipo()->getId()==2 and $objInstitucioneducativaCursoStudent->getGradoTipo()->getId()==2){
+        if($aInfoUeducativa['ueducativaInfoId']['cicloId']==2 and $aInfoUeducativa['ueducativaInfoId']['gradoId']==2){
           if(!($yearStudent>=18)){
             $validateYear=true;
           }
         }
 
         //validate to nivel=15 - ciclo=2 - grado=3
-        if($objInstitucioneducativaCursoStudent->getCicloTipo()->getId()==2 and $objInstitucioneducativaCursoStudent->getGradoTipo()->getId()==3){
+        if($aInfoUeducativa['ueducativaInfoId']['cicloId']==2 and $aInfoUeducativa['ueducativaInfoId']['gradoId']==3){
           if(!($yearStudent>=18)){
             $validateYear=true;
           }
         }
+
       }//end first if - validate the humanisticos
 
     }
@@ -189,8 +201,13 @@ class StudentsInscriptionsController extends Controller {
                   'form' => $this->createFormStudentInscription($form['data'])->createView(),
                   'exist' => $exist,
                   'infoUe' => $form['data'],
-                  'dataUe'=> $dataUe['ueducativaInfo']
+                  'etapaespecialidad' => '',
+                  'dataUe'=> $dataUe['ueducativaInfo'],
+                  'totalInscritos'=>count($objStudents),
+                   'swSetNameModIntEmer' => 'false',
+                  'primariaNuevo' => $this->get('funciones')->validatePrimariaCourse($dataUe['ueducativaInfoId']['iecId'])
       ));
+
     }
 
       try {
@@ -223,19 +240,22 @@ class StudentsInscriptionsController extends Controller {
           $em->flush();
         }
         // check if the course is PRIMARIA
-          if( $aInfoUeducativa['ueducativaInfoId']['sfatCodigo'] == 15 &&
-            $aInfoUeducativa['ueducativaInfoId']['setId'] == 13 &&
-            $aInfoUeducativa['ueducativaInfoId']['periodoId'] == 3
-          ){
-            //set the new curricula to the student
-             $data = array('iecId'=>$aInfoUeducativa['ueducativaInfoId']['iecId'], 'eInsId'=>$studentInscription->getId());
-            $objNewCurricula = $this->get('funciones')->setCurriculaStudent($data);
-         }
+         //  if( $aInfoUeducativa['ueducativaInfoId']['sfatCodigo'] == 15 &&
+         //    $aInfoUeducativa['ueducativaInfoId']['setId'] == 13 &&
+         //    $aInfoUeducativa['ueducativaInfoId']['periodoId'] == 3
+         //  ){
+         //    //set the new curricula to the student
+         //     $data = array('iecId'=>$aInfoUeducativa['ueducativaInfoId']['iecId'], 'eInsId'=>$studentInscription->getId());
+         //    $objNewCurricula = $this->get('funciones')->setCurriculaStudent($data);
+         // }
+          $data = array('iecId'=>$aInfoUeducativa['ueducativaInfoId']['iecId'], 'eInsId'=>$studentInscription->getId(), 'gestion' => $this->session->get('ie_gestion'));
+
+          $objNewCurricula = $this->get('funciones')->setCurriculaStudent($data);
+
         //to do the submit data into DB
         //do the commit in DB
         $em->getConnection()->commit();
         $this->session->getFlashBag()->add('goodinscription', 'Estudiante inscrito correctamente.');
-
         //reload the students list
         $exist = true;
         $objStudents = array();
