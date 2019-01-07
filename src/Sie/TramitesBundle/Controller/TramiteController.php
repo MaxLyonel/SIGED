@@ -520,13 +520,16 @@ class TramiteController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        $rolPermitido = '8,13';
 
-        $rolPermitido = array(8,10,13);
+        $servicioFunciones = $this->get('sie_app_web.funciones');
+        $validacionMenu = $servicioFunciones->controlaccesomenus(5, $rolPermitido, $id_usuario, $route);
 
-        $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
+        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
-        if (!$esValidoUsuarioRol){
+        // $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
+
+        if (!$validacionMenu){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
             return $this->redirect($this->generateUrl('tramite_homepage'));
         }

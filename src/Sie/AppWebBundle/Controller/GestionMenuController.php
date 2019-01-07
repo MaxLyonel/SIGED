@@ -1538,6 +1538,18 @@ ORDER BY 2,3,4");
     public function generamenuAction($rol_tipo_id, $idsistema, $userId){
         //dump($rol_tipo_id);dump($idsistema);dump($userId);die;
         $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("select * from get_objeto_menu_usuario($userId::INT,'$idsistema'::VARCHAR,$rol_tipo_id::INT) as v");
+        $query->execute();
+        $menu_arboles = $query->fetchAll();
+        return $this->render(
+            'SieAppWebBundle:GestionMenu:list_menu.html.twig', array('menu_arboles' => $menu_arboles, 'rol_tipo_id' => $rol_tipo_id, 'sistema' => $idsistema)
+        );
+    }
+
+
+    public function generamenuGuadalupeAction($rol_tipo_id, $idsistema, $userId){
+        //dump($rol_tipo_id);dump($idsistema);dump($userId);die;
+        $em = $this->getDoctrine()->getManager();
         /*
          * Adecuación a los Sistemas de Certificacion y diplomas*/
         switch ($idsistema) {
@@ -1647,7 +1659,6 @@ ORDER BY 2,3,4");
                             'SieAppWebBundle:GestionMenu:list_menu.html.twig', array('menu_arboles' => $menu_arboles, 'rol_tipo_id' => $rol_tipo_id, 'sistema' => $idsistema)
                         );
                     }
-
                 }
                 else{
                     return new Response('');

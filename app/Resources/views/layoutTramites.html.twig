@@ -398,7 +398,7 @@
 
                     {% if rol20 == true or rol8 == true or app.session.get('userId') == 92506172 or app.session.get('userId') == 13794031  or app.session.get('userId') == 92506479  or app.session.get('userId') == 13794032 or app.session.get('userId') == 13793984  or app.session.get('userId') == 92506171 %}
                         <!-- Start development - sub menu -->
-                        {% for key,menu in app.session.get('aMenu') %}
+                        {% for key,menu in app.session.get('aMenu0') %}
                             <li class="submenu {% if app.session.get('pMenuId') == menu[0]['menuId'] %} active {% endif %}">
                                 <a href="javascript:void(0);">
                                     <span class="icon"><i class="fa fa-search"></i></span>
@@ -417,6 +417,8 @@
                                 <!-- /.nav-second-level -->
                             </li>
                         {% endfor %}
+
+                        {{ render(controller('SieAppWebBundle:GestionMenu:generamenu',{ 'rol_tipo_id': 0 ,'idsistema': '3,5,6' , 'userId' : app.session.get('userId')  })) }}
                     {% endif %}
                     <!--/ End development - sub menu -->
                 </ul><!-- /.sidebar-menu -->

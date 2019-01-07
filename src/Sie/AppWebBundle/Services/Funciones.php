@@ -438,7 +438,20 @@ class Funciones {
         return $objStatistics;
 
     }
+
     public function controlaccesomenus($sistemaid, $rolid, $usuarioid, $rutamenu){
+        $query = $this->em->getConnection()->prepare("select * from get_objeto_menu_usuario_path($usuarioid::INT,'$sistemaid'::VARCHAR,'$rolid'::varchar, '$rutamenu'::VARCHAR) as v");
+        $query->execute();
+        $menu = $query->fetchAll();
+
+        if (count($menu)>0){
+            return $menu[0]['esactivo'];
+        } else {
+            return false;
+        }
+    }
+
+    public function controlaccesomenusGuadalupe($sistemaid, $rolid, $usuarioid, $rutamenu){
 
         switch ($sistemaid) {
             case 3:
@@ -472,8 +485,6 @@ class Funciones {
                 $respuesta = $query->fetchAll();
                 return $respuesta[0]['esactivo'];
         }
-
-
     }
 
 }
