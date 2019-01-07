@@ -1138,9 +1138,50 @@ class SolicitudModificacionCalificacionesController extends Controller {
 
             $idInscripcion = $solicitud->getEstudianteInscripcionId();
 
+            $sie = $solicitud->getInstitucioneducativaId();
             $gestion = $solicitud->getGestionTipoId();
             $nivel = $inscripcion[0]['nivel'];
             $grado = $inscripcion[0]['grado'];
+
+            $gestionActual = $this->session->get('currentyear');
+
+            if($gestion == $gestionActual){
+                // VERIFICAMOS SI LA UNIDAD EDUCATIVA BAJO SU ARCHIVO
+                $operativoLog = $em->createQueryBuilder()
+                                    ->select('ieol')
+                                    ->from('SieAppWebBundle:InstitucioneducativaOperativoLog','ieol')
+                                    ->innerJoin('SieAppWebBundle:InstitucioneducativaOperativoLogTipo','ieolt','with','ieol.institucioneducativaOperativoLogTipo = ieolt.id')
+                                    ->innerJoin('SieAppWebBundle:Institucioneducativa','ie','with','ieol.institucioneducativa = ie.id')
+                                    ->innerJoin('SieAppWebBundle:GestionTipo','gt','with','ieol.gestionTipoId = gt.id')
+                                    ->where('ie.id = :sie')
+                                    ->andWhere('gt.id = :gestion')
+                                    ->andWhere('ieolt.id in (1,2)')
+                                    ->setParameter('sie', $sie)
+                                    ->setParameter('gestion', $gestion)
+                                    ->orderBy('ieol.id','desc')
+                                    ->setMaxResults(1)
+                                    ->getQuery()
+                                    ->getResult()[0];
+                if($operativoLog){
+                    $accion = $operativoLog->getInstitucioneducativaOperativoLogTipo()->getId();
+                    if($accion == 1){
+                        $this->get('session')->getFlashBag()->add('error', 'La unidad educativa actualmente esta trabajando con la herramienta de escritorio, podra aprobar o rechazar la solicitud una vez que la unidad educativa haya consolidado su información');
+                        return $this->redirectToRoute('solicitudModificacionCalificaciones');
+                    }
+                    // VERIFICAMOS SI SE SUBIO EL ARCHIVO id = 2
+                    if($accion == 2){
+                        $operativo = $operativoLog->getPeriodoTipo()->getId();
+                        $operativoActual = $this->get('funciones')->obtenerOperativo($sie, $gestion);
+                        if( in_array($this->session->get('roluser'), array(7,8,10))) {
+                            $operativoActual = $operativoActual + 1;
+                        }
+                        if($operativoActual < $operativo){
+                            $this->get('session')->getFlashBag()->add('error', 'La unidad educativa actualmente esta trabajando con la herramienta de escritorio, podra aprobar o rechazar la solicitud una vez que la unidad educativa haya consolidado su información');
+                            return $this->redirectToRoute('solicitudModificacionCalificaciones');
+                        }
+                    }
+                }
+            }
 
             $idSolicitud = $request->get('idSolicitud');
             // Verificamos si la solicitud sigue en estado 1, para aprobralo 2 o rechazarlo 3

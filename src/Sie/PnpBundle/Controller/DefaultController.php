@@ -5222,7 +5222,7 @@ ciclo_tipo_id, grado_tipo_id
     }
     
 
-    public function buscarestudianteAction($ci,$curso_id,$complemento,$rude)
+    public function buscarestudianteAction($ci,$curso_id,$complemento,$rude)//ctv
     {
         $opcion = substr($ci, -2);    // devuelve "ef" //
         $ci = substr($ci, 0, -2);
@@ -5364,7 +5364,7 @@ ciclo_tipo_id, grado_tipo_id
             elseif($curso_rs==6){$bloque_rs_toca=3;$parte_rs_toca=1;}
             $rs_existe=1;
         }
-       
+            $institucioneducativa_curso_id_e=0;       
             $query = "SELECT
                       estudiante.id as estudiante_id,
                       estudiante.codigo_rude,
@@ -5444,79 +5444,12 @@ ciclo_tipo_id, grado_tipo_id
                 $em = $this->getDoctrine()->getManager();
                 $db = $em->getConnection();
                 //LISTA DE NOTAS
-                $query = "SELECT carnet_estudiante, ciclo_tipo_id as bloque, grado_tipo_id as parte, avg(nota_cuantitativa) as nota  
-                FROM
-                (select persona.carnet, persona.nombre as nombre_facilitador, persona.paterno as paterno_facilitador, persona.materno as materno_facilitador,
-                institucioneducativa_curso.fecha_inicio, institucioneducativa_curso.fecha_fin,
-                institucioneducativa_curso.ciclo_tipo_id, institucioneducativa_curso.grado_tipo_id,
-                institucioneducativa_curso.id,
-
-                CASE
-                            WHEN institucioneducativa_curso.institucioneducativa_id = 80480300 THEN
-                                'CHUQUISACA'
-                            WHEN institucioneducativa_curso.institucioneducativa_id = 80730794 THEN
-                                'LA PAZ'
-                            WHEN institucioneducativa_curso.institucioneducativa_id = 80980569 THEN
-                                'COCHABAMBA'
-                            WHEN institucioneducativa_curso.institucioneducativa_id = 81230297 THEN
-                                'ORURO'
-                            WHEN institucioneducativa_curso.institucioneducativa_id = 81480201 THEN
-                                'POTOSI'
-                            WHEN institucioneducativa_curso.institucioneducativa_id = 81730264 THEN
-                                'TARIJA'
-                            WHEN institucioneducativa_curso.institucioneducativa_id = 81981501 THEN
-                                'SANTA CRUZ'
-                            WHEN institucioneducativa_curso.institucioneducativa_id = 82230130 THEN
-                                'BENI'
-                            WHEN institucioneducativa_curso.institucioneducativa_id = 82480050 THEN
-                                'PANDO'                         
-                          END AS depto,
-                     institucioneducativa_curso.lugar,
-                estudiante_inscripcion.lugar as municipio,  
-                estudiante_inscripcion.lugarcurso as localidad,
-                estudiante_inscripcion.id as inscripcion_id,
-                estudiante_inscripcion.estadomatricula_tipo_id as matricula_estado_id,estadomatricula_tipo.estadomatricula,estudiante.id as estudiante_id,
-                  estudiante.codigo_rude, 
-                  estudiante.carnet_identidad as carnet_estudiante, 
-                  estudiante.paterno as paterno_estudiante, 
-                  estudiante.materno as materno_estudiante, 
-                  estudiante.nombre as nombre_estudiante, 
-                  estudiante.fecha_nacimiento, 
-                  estudiante.genero_tipo_id,
-                  genero_tipo.genero,
-                  estudiante.observacionadicional,
-                  estudiante_inscripcion.estadomatricula_tipo_id as matricula_estado_id,
-                  estadomatricula_tipo.estadomatricula,
-                  estudiante_inscripcion.id as inscripcion_id,
-                                        asignatura_tipo.asignatura,
-                  nota_tipo.nota_tipo, 
-                  estudiante_nota.nota_cuantitativa
-                        
-            from institucioneducativa_curso 
-            inner join maestro_inscripcion 
-            on institucioneducativa_curso.maestro_inscripcion_id_asesor = maestro_inscripcion .id
-            inner join persona 
-            on maestro_inscripcion .persona_id = persona.id
-                            INNER JOIN estudiante_inscripcion 
-                            ON estudiante_inscripcion.institucioneducativa_curso_id = institucioneducativa_curso.id
-            INNER JOIN estadomatricula_tipo 
-                            ON estadomatricula_tipo.ID = estudiante_inscripcion.estadomatricula_tipo_id
-                            inner join estudiante 
-                            on estudiante.id = estudiante_inscripcion.estudiante_id
-                            inner join genero_tipo 
-                            ON genero_tipo.id = estudiante.genero_tipo_id                    
-                            inner join public.estudiante_asignatura
-                            on estudiante_asignatura.estudiante_inscripcion_id=estudiante_inscripcion.id
-                            inner join public.estudiante_nota
-                            on estudiante_nota.estudiante_asignatura_id = estudiante_asignatura.id
-                            inner join public.institucioneducativa_curso_oferta
-                            on institucioneducativa_curso_oferta.id=estudiante_asignatura.institucioneducativa_curso_oferta_id
-            inner join public.asignatura_tipo
-                            on institucioneducativa_curso_oferta.asignatura_tipo_id = asignatura_tipo.id
-                            inner join public.nota_tipo
-                            on estudiante_nota.nota_tipo_id = nota_tipo.id                    
-               where  ($where) and nota_tipo='Nota Final' and ciclo_tipo_id=$bloque_e and grado_tipo_id=$parte_e $consulta1) as t1
-                GROUP BY carnet_estudiante, ciclo_tipo_id, grado_tipo_id  
+                $matricula_estado_id_now=61;
+                $query = "SELECT ei.estadomatricula_tipo_id from
+                            institucioneducativa_curso ic
+                          join  estudiante_inscripcion ei on ei.institucioneducativa_curso_id=ic.id
+                          join estudiante e on e.id=ei.estudiante_id
+                          where ic.id=$institucioneducativa_curso_id_e and e.codigo_rude='$rude'
                   ";
                 $stmt = $db->prepare($query);
                 $params = array();
@@ -5524,12 +5457,11 @@ ciclo_tipo_id, grado_tipo_id
                 $po = $stmt->fetchAll();
                 $filas = array();
                 $datos_filas = array();
-                $nota=0;
                 foreach ($po as $p) {
-                    $nota = (int)$p["nota"];
+                    $matricula_estado_id_now = $p["estadomatricula_tipo_id"];
                 }   
                 $paso=0;
-                if($nota>35) $paso=1;
+                if($matricula_estado_id_now==62) $paso=1;
 
              
              $cursos = array(
@@ -7087,7 +7019,7 @@ public function crear_curso_automaticoAction(Request $request){
                 $id_estudiante=$estudiante_inscripcion->getEstudiante()->getId();
                 $id_estudiante_inscripcion=$estudiante_inscripcion->getId();
                 $matricula_estado_id=$estudiante_inscripcion->getEstadomatriculaTipo()->getId();
-                if($matricula_estado_id==61)$aprobo=0;//ctv
+                if($matricula_estado_id==61)$aprobo=0;//
                 // id de la tabla estudiante_asignatura
                 
                 if($aprobo==1){//Aprobo por esa razon se lo registra al estudiante en estudiantes inscripcion
