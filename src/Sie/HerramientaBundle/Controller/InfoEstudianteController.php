@@ -678,7 +678,7 @@ class InfoEstudianteController extends Controller {
              */
             if($gestion < $this->session->get('currentyear')){
                 // Para unidades educativas en gestiones pasadas
-                if(in_array($tipoUE['id'], array(1,2,3,5)) and $gestion >= 2014 and $gestion < $this->session->get('currentyear') and $operativo >= 4){
+                if(in_array($tipoUE['id'], array(1,2,3,5)) and $gestion > 2014 and $gestion < $this->session->get('currentyear') and $operativo >= 4){
                     $imprimirLibreta = true;
                 }
 
@@ -696,7 +696,14 @@ class InfoEstudianteController extends Controller {
                     if($gestion == 2015 and $nivel == 13 and $grado >= 5 and $paralelo >= 6){
                         $imprimirLibreta = true;
                     }
+                    if($gestion >= 2009 and $gestion <= 2013){
+                        $imprimirLibreta = true;
+                    }
                 }
+            }
+        }else{
+            if($gestion > 2014 and $operativo >= 4){
+                $imprimirLibreta = true;
             }
         }
 

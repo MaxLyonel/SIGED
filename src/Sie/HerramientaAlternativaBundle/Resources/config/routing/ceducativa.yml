@@ -109,6 +109,12 @@ herramientalt_ceducativa_estadistiscas_departamento:
     options:
          expose: true
 
+sie_alt_submenu_diversa:
+    path:     /sie/submenuDiversa
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:submenuDiversa}
+    options:
+         expose: true
+
 sie_alt_reportes_diversa:
     path:     /sie/reportesDiversa
     defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:reporteDiversa}

@@ -27,13 +27,27 @@ class InscriptionExtranjerosController extends Controller {
     public $aCursos;
     public $arrYears;
     public $labelOption;
+    public $arrOptionInscription;
     /**
      * the class constructor
      */
     public function __construct() {
         $this->session = new Session();
         $this->aCursos = $this->fillCursos();
-      $this->arrYears = array($this->session->get('currentyear') => $this->session->get('currentyear')/*,'2015' => '2015', '2014' => '2014'*/);
+        $this->arrYears = array($this->session->get('currentyear') => $this->session->get('currentyear')/*,'2015' => '2015', '2014' => '2014'*/);
+        $this->fillOptionsInscriptions();
+    }
+
+    /**
+    function to load all inscription options
+    **/
+    public function fillOptionsInscriptions(){
+
+         $this->arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria','77'=> 'Post Bachillerato' );
+
+        if($this->session->get('roluser') == 7 || $this->session->get('roluser') == 8){
+            $this->arrOptionInscription[100] = 'Incial/Primaria R.M. No 2378/2017';
+        }
     }
 
     public function indexAction() {
@@ -55,16 +69,19 @@ class InscriptionExtranjerosController extends Controller {
 
     private function chooseIncriptionForm(){
 
-    if($this->session->get('roluser') == 7 || $this->session->get('roluser') == 8){
-        $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria', '100'=>'Incial/Primaria R.M. No 2378/2017' );
-    }else{
-        $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria' );
-    }
+    //     $this->arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria','77'=> 'Post Bachillerato' );
+
+    //     if($this->session->get('roluser') == 7 || $this->session->get('roluser') == 8){
+    //         $this->arrOptionInscription[100] = 'Incial/Primaria R.M. No 2378/2017';
+    //     }
+    //     // else{
+    // //     $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria' );
+    // // }
 
       
       $form = $this->createFormBuilder()
               ->setAction($this->generateUrl('inscription_extranjeros_main'))
-              ->add('optionInscription', 'choice', array('mapped' => false, 'label' => 'Inscripción', 'choices' => $arrOptionInscription, 'attr' => array('class' => 'form-control')))
+              ->add('optionInscription', 'choice', array('mapped' => false, 'label' => 'Inscripción', 'choices' => $this->arrOptionInscription, 'attr' => array('class' => 'form-control')))
               ->add('buscar', 'submit', array('label' => 'Continuar'))
               ->getForm();
       return $form;
@@ -78,10 +95,10 @@ class InscriptionExtranjerosController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         //define the options
-        $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria', '100'=>'Incial/Primaria R.M. No 2378/2017');
+        // $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria', '100'=>'Incial/Primaria R.M. No 2378/2017');
         //get the data send
         $formData = $request->get('form');//dump($formData);die;
-        $this->labelOption = array('label'=> $arrOptionInscription[$formData['optionInscription']], 'id'=>$formData['optionInscription']);
+        $this->labelOption = array('label'=> $this->arrOptionInscription[$formData['optionInscription']], 'id'=>$formData['optionInscription']);
         $form = json_encode($formData);
 
         $id_usuario = $this->session->get('userId');
@@ -456,6 +473,11 @@ class InscriptionExtranjerosController extends Controller {
         $sw = 0;
         $data = array();
         $form = $request->get('form');
+
+        $formData = json_decode($form['dataOption'],true);
+        $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude']));
+
+
         /**
          * add validation QA
          * @var [type]
@@ -485,17 +507,30 @@ class InscriptionExtranjerosController extends Controller {
             $gestion = $request->get('gestion');
         }
         //define the options
-        $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria','100'=>'Incial/Primaria RM No 2378/2017');
+        // $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria','100'=>'Incial/Primaria RM No 2378/2017');
 //dump($form);
-        $formData = json_decode($form['dataOption'],true);
+        
         //$labelInscription = $
         // dump($formData);die;
-        $this->labelOption = array('label'=> $arrOptionInscription[$formData['optionInscription']], 'id'=>$formData['optionInscription']);
+        $this->labelOption = array('label'=> $this->arrOptionInscription[$formData['optionInscription']], 'id'=>$formData['optionInscription']);
 //die;
-        $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude']));
-
         //check if the student exists
         if ($student) {
+
+            // check if the inscription is post Bachillerato
+            if($formData['optionInscription']==77){
+                // validate if the student is Bachiller
+                $studentbachiller = $this->get('seguimiento')->getBachiller($student->getId());
+                if(sizeof($studentbachiller)>0){
+                    // student is bachiller
+                }else{
+                    // student is not bachiller
+                    $observaionMessage = 'Estudiante no es bachiller';
+                    $this->addFlash('studentObservation', $observaionMessage);
+                    return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
+                }
+            }
+            // dump($formData);die;
             //check the tuicion
 //            $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :roluser::INT)');
 //            $query->bindValue(':user_id', $this->session->get('userId'));
@@ -827,11 +862,29 @@ class InscriptionExtranjerosController extends Controller {
             $studentInscription->setFechaInscripcion(new \DateTime('now'));
             $studentInscription->setFechaRegistro(new \DateTime('now'));
             $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($objCurso->getId()));
-            if($aDataOption['optionInscription']==19){
-                $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($aDataOption['optionInscription']));
-            }else{
-                $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(59));
+
+            switch ($aDataOption['optionInscription']) {
+                case 19:
+                    $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($aDataOption['optionInscription']));
+                    break;
+                case 59:
+                case 100:
+                    $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(59));
+                    break;
+                case 77:
+                    $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(29));
+                    break;
+                
+                default:
+                    # code...
+                    break;
             }
+
+            // if($aDataOption['optionInscription']==19){
+            //     $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($aDataOption['optionInscription']));
+            // }else{
+            //     $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(59));
+            // }
             $em->persist($studentInscription);
             $em->flush();
             //add the areas to the student
@@ -1074,11 +1127,27 @@ class InscriptionExtranjerosController extends Controller {
           $aTuicion = $query->fetchAll();
          */
         $aniveles = array();
-        if($optionInscription==19){
-            $arrCondition = array(1,2,3,11,12,13);
-        }else{
-            $arrCondition = array(1,2,11,12);
+        switch ($optionInscription) {
+            case 19:
+                $arrCondition = array(1,2,3,11,12,13);
+                break;
+            case 59:
+            case 100:
+                $arrCondition = array(1,2,3,11,12,13);
+                break;
+            case 77:
+                $arrCondition = array(3,13);
+                break;
+            
+            default:
+                # code...
+                break;
         }
+        // if($optionInscription==19){
+        //     $arrCondition = array(1,2,3,11,12,13);
+        // }else{
+        //     $arrCondition = array(1,2,11,12);
+        // }
         // if ($aTuicion[0]['get_ue_tuicion']) {
         //get the IE
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id);
@@ -1121,10 +1190,23 @@ class InscriptionExtranjerosController extends Controller {
     public function findgradoAction($idnivel, $sie, $gestion, $optionInscription) {
         $em = $this->getDoctrine()->getManager();
 
-        if($optionInscription==19){
-            $arrCondition = array(1,2,3,4,5,6);
-        }else{
-            $arrCondition = array(1,2);
+        //get level to the correction option
+        $aniveles = array();
+        switch ($optionInscription) {
+            case 19:
+                $arrCondition = array(1,2,3,4,5,6);
+                break;
+            case 59:
+            case 100:
+                $arrCondition = array(1,2);
+                break;
+            case 77:
+                $arrCondition = array(1,2,3,4,5,6);
+                break;
+            
+            default:
+                # code...
+                break;
         }
         //get grado
         $agrados = array();

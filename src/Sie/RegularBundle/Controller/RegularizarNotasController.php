@@ -136,7 +136,14 @@ class RegularizarNotasController extends Controller {
                 $operativo = $operativo - 1;
             }
 
-            $notas = $this->get('notas')->regular($idInscripcion,$operativo);
+            // VERIFICAMOS SI LAS NOTAS SON POSTBACHILLERATO
+            if($inscripcion->getEstadomatriculaInicioTipo()->getId() == 29){
+                $plantilla = 'postbachillerato';
+                $notas = $this->get('notas')->postbachillerato($idInscripcion);
+            }else{
+                $notas = $this->get('notas')->regular($idInscripcion,$operativo);
+            }
+
 
             $em->getConnection()->commit();
             return $this->render('SieRegularBundle:RegularizarNotas:show.html.twig', array(
@@ -192,5 +199,42 @@ class RegularizarNotasController extends Controller {
             return $this->redirect($this->generateUrl('regularizarNotas',array('op'=>'result')));
         }
         
+    }
+
+    public function postbachilleratoUpdateAction(Request $request){
+        try{
+            $em = $this->getDoctrine()->getManager();
+            $em->getConnection()->beginTransaction();
+
+            $idInscripcion = $request->get('idInscripcion');
+            $idEstudianteNota = $request->get('idEstudianteNota');
+            $idNotaTipo = $request->get('idNotaTipo');
+            $idEstudianteAsignatura = $request->get('idEstudianteAsignatura');
+            $nota = $request->get('nota');
+
+            for ($i=0; $i < count($idEstudianteNota); $i++) { 
+                if($idEstudianteNota[$i] == 'nuevo'){
+                    $this->get('notas')->registrarNota($idNotaTipo[$i], $idEstudianteAsignatura[$i],$nota[$i], '');
+                }
+            }
+            
+            $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
+            // Cerramos la conexion
+            $em->getConnection()->commit();
+            /*
+             * Creamos el mensaje del proceso y redireccionamos a la pagina principal de notas
+             */
+            $this->get('session')->getFlashBag()->add('updateOk', 'Las calificaciones se regularizarón correctamente.');
+            //return $this->redirect($this->generateUrl('regularizarNotas',array('op'=>'result')));
+            //return $this->redirect($this->generateUrl('regularizarNotas_show',array('idInscripcion'=>$request->get('idInscripcion'))));
+            $response = $this->forward('SieRegularBundle:RegularizarNotas:show',array(
+                'idInscripcion'=>$request->get('idInscripcion')
+            ));
+            return $response;
+        }catch(Exception $ex){
+            $em->getConnection()->rollback();
+            $this->get('session')->getFlashBag()->add('updateError', 'No se pudo realizar la modificacion de calificaciones.');
+            return $this->redirect($this->generateUrl('regularizarNotas',array('op'=>'result')));
+        }
     }
 }

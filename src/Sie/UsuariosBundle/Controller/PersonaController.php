@@ -8,7 +8,9 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 use Sie\AppWebBundle\Entity\Persona;
 use Sie\AppWebBundle\Entity\PersonaHistorico;
+use Sie\AppWebBundle\Entity\ValidacionProceso;
 use Sie\UsuariosBundle\Form\PersonaType;
+use Sie\UsuariosBundle\Form\PersonaSegipType;
 use Sie\UsuariosBundle\Form\PersonaApropiacionType;
 use Sie\UsuariosBundle\Form\UploadFotoPersonaType;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -49,8 +51,7 @@ class PersonaController extends Controller
         try {
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('persona');");
             $query->execute();
-            //dump($form );
-            //die;
+            //dump($form );die;
             $newpersona = new Persona();            
             $newpersona->setPaterno(mb_strtoupper($form['paterno'], "utf-8"));
             $newpersona->setMaterno(mb_strtoupper($form['materno'], "utf-8"));    
@@ -98,10 +99,49 @@ class PersonaController extends Controller
     }
     
     public function personaeditAction($personaid) {        
-        $persona = $this->getDoctrine()->getRepository('SieAppWebBundle:Persona')->find($personaid);
-        //dump($persona);die;
-        $form = $this->createForm(new PersonaType(), null, array(        
-        'method' => 'POST',));
+        $persona = $this->getDoctrine()->getRepository('SieAppWebBundle:Persona')->find($personaid);        
+        $carnet = $persona->getCarnet();
+        $complemento = $persona->getComplemento();
+        $paterno = $persona->getPaterno();
+        $materno = $persona->getMaterno();
+        $nombre = $persona->getNombre();        
+        $fechaNac = $persona->getFechaNacimiento();
+        $fechaNacString = $fechaNac->format('d-m-Y');
+        $env = 'prod';
+        $sistema = 'alternativa';        
+        //dump($carnet);dump($nombre);dump($paterno); die();
+
+        $segipId = $persona->getSegipId();
+
+        //dump($segipId); die();
+        if ($segipId == '0') {
+            if($carnet){
+                $arrParametros = array(      
+                    'complemento'=>$complemento,
+                    'primer_apellido'=>$paterno,
+                    'segundo_apellido'=>$materno,
+                    'nombre'=>$nombre,
+                    'fecha_nacimiento'=>$fechaNacString); 
+                //$segipId = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros, $env, $sistema); 
+                $segipId = false;
+                
+                if ($segipId == true) {
+                    $em = $this->getDoctrine()->getManager();
+                    $persona->setSegipId('1');                    
+                    $em->persist($persona);
+                    $em->flush();
+                }
+            }
+        } else {
+            $segipId = true;
+        }     
+        
+        if ($segipId == true){
+            $form = $this->createForm(new PersonaSegipType(), null, array('method' => 'POST',));
+        } else {
+            $form = $this->createForm(new PersonaType(), null, array('method' => 'POST',));
+        }
+        
         $form->get('idpersona')->setData($personaid);
         $form->get('carnet')->setData($persona->getCarnet());
         $form->get('paterno')->setData($persona->getPaterno());
@@ -109,21 +149,17 @@ class PersonaController extends Controller
         $form->get('nombre')->setData($persona->getNombre());
         $form->get('complemento')->setData($persona->getComplemento());
 
-        $datetime = $persona->getFechaNacimiento();
+        /*$datetime = $persona->getFechaNacimiento();
         $year = $datetime->format('Y');
         $datetimeact = new \DateTime();
         $yearact = $datetimeact->format('Y');
-
         $valfecha = intval($yearact) - intval($year);
-        //dump($valfecha); die;
-
         $fechaEditOn = '0';
         $form->get('fechaEditOn')->setData('0');
-
         if ($valfecha > 100){
             $fechaEditOn = 'true';
             $form->get('fechaEditOn')->setData('true');
-        }
+        }*/
                 
         $form->get('fechaNacimiento')->setData($persona->getFechaNacimiento());
         $form->get('generoTipo')->setData($persona->getGeneroTipo());
@@ -134,8 +170,7 @@ class PersonaController extends Controller
                     'ci' => $persona->getCarnet(),
                     'complemento' => $persona->getComplemento(),
                     'count_edit' => $persona->getCountEdit(),
-                    'segipId' => $persona->getSegipId(),
-                    'fechaEditOn' => $fechaEditOn,
+                    'segipId' => $segipId,
         ));        
     }
     
@@ -146,59 +181,149 @@ class PersonaController extends Controller
         $persona = $em->getRepository('SieAppWebBundle:Persona')->find($form['idpersona']);
         $response = new JsonResponse();
         try {
-            if (($persona->getSegipId() > 0) || ($persona->getCountEdit() > 2)){
-                if ($form['fechaEditOn'] == "true"){
-                    $fecha = str_pad($form['fechaNacimiento']['day'], 2, '0', STR_PAD_LEFT).'/'.str_pad($form['fechaNacimiento']['month'], 2, '0', STR_PAD_LEFT).'/'.$form['fechaNacimiento']['year'];
-                    $persona->setFechaNacimiento(\DateTime::createFromFormat('d/m/Y', $fecha));   
-                }    
-                //dump($persona); die; 4537043
+            //**** SOLO MODIFICA GENERO Y CORREO ELECTRONICO */
+            if ($persona->getSegipId() == 1){                
                 $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['generoTipo']));                
-                $persona->setCorreo($form['correo']);                
-                $persona->setEsVigente('1');
-                $persona->setEsVigenteApoderado('1');                
+                $persona->setCorreo($form['correo']);                                              
                 $em->persist($persona);
                 $em->flush();
+                $em->getConnection()->commit();
+                return $response->setData(array('mensaje' => 'Proceso realizado exitosamente.'));
             } else {
-                $persona->setPaterno(mb_strtoupper($form['paterno'], "utf-8"));
-                $persona->setMaterno(mb_strtoupper($form['materno'], "utf-8"));
-                $persona->setNombre(mb_strtoupper($form['nombre'], "utf-8"));
-                $persona->setCarnet($form['carnet'], "utf-8");
-                $persona->setComplemento(mb_strtoupper($form['complemento'], "utf-8"));            
-                $fecha = str_pad($form['fechaNacimiento']['day'], 2, '0', STR_PAD_LEFT).'/'.str_pad($form['fechaNacimiento']['month'], 2, '0', STR_PAD_LEFT).'/'.$form['fechaNacimiento']['year'];
-                $persona->setFechaNacimiento(\DateTime::createFromFormat('d/m/Y', $fecha));                
-                $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['generoTipo']));                
-                $persona->setCorreo($form['correo']);
-                //$persona->setActivo('0');
-                $persona->setEsVigente('1');
-                $persona->setEsVigenteApoderado('1');
-                if ( $persona->getCountEdit() == ''){
-                    $persona->setCountEdit(1);    
-                }else{
-                    $persona->setCountEdit($persona->getCountEdit() + 1);
-                }                
-                $em->persist($persona);
-                $em->flush();
-                
-                $newpersonahistorico = new PersonaHistorico();
-                $newpersonahistorico->setCarnet($form['carnet']); 
-                $newpersonahistorico->setComplemento(mb_strtoupper($form['complemento'], "utf-8"));
-                $newpersonahistorico->setNombre(mb_strtoupper($form['nombre'], "utf-8"));    
-                $newpersonahistorico->setPaterno(mb_strtoupper($form['paterno'], "utf-8"));
-                $newpersonahistorico->setMaterno(mb_strtoupper($form['materno'], "utf-8"));              
-                $newpersonahistorico->setFechaNacimiento(\DateTime::createFromFormat('d/m/Y', $fecha));
-                $newpersonahistorico->setGeneroTipoId($form['generoTipo']);
-                $newpersonahistorico->setCorreo(mb_strtolower($form['correo'], "utf-8"));
-                $newpersonahistorico->setUsuario($em->getRepository('SieAppWebBundle:usuario')->find($this->session->get('userId')));
-                $newpersonahistorico->setFechaActualizacion(new \DateTime());
-                $em->persist($newpersonahistorico);
-                $em->flush();
-            }
-            
-            $em->getConnection()->commit();
+                $carnet = $form['carnet'];
+                $complemento = mb_strtoupper($form['complemento'], "utf-8");             
+                $paterno = mb_strtoupper($form['paterno'], "utf-8");
+                $materno = mb_strtoupper($form['materno'], "utf-8");
+                $nombre = mb_strtoupper($form['nombre'], "utf-8");
+                $fechaNac = str_pad($form['fechaNacimiento']['day'], 2, '0', STR_PAD_LEFT).'/'.str_pad($form['fechaNacimiento']['month'], 2, '0', STR_PAD_LEFT).'/'.$form['fechaNacimiento']['year'];
+                $fechaNac = \DateTime::createFromFormat('d/m/Y', $fechaNac);
+                $generoTipo = $form['generoTipo'];
+                $correo = $form['correo'];
+                $segipId = false;
+                //COMPRUEBA DATOS DE FORMULARIO CON SEGIP
+                if($carnet){
+                    $arrParametros = array(      
+                        'complemento'=>$complemento,
+                        'primer_apellido'=>$paterno,
+                        'segundo_apellido'=>$materno,
+                        'nombre'=>$nombre,
+                        'fecha_nacimiento'=>$fechaNac); 
+                    //$segipId = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros, $env, $sistema); 
+                    $segipId = true;
+                }
+                //SI ES CORRECTO MODIFICA O CREA NUEVO
+                if ($segipId == true){
+                    //****COMPRUEBA SI TIENE HISTORIAL */
+                    //**** EN CASO DE CONTAR CON HISTORIAL CREA UNO NUEVO ANALIZAR UNIFICACION DE REGISTRO*/ 
 
-            //return $response->setData(array('mensaje' => 'El proceso de actualización de datos personales se encuentra temporalmente en mantenimiento.'));   
-            return $response->setData(array('mensaje' => 'Proceso realizado exitosamente.'));                
-            } 
+                    $obs = '';
+                    $db = $em->getConnection();            
+                    $query = "  select a.id from 
+                                estudiante_apoderado a
+                                inner join persona b on a.persona_id = b.id
+                                where b.carnet = ? and b.complemento = ?                                
+                                limit 1";
+                    $stmt = $db->prepare($query);
+                    $params = array($form['carnet'], mb_strtoupper($form['complemento'], "utf-8"));
+                    $stmt->execute($params);
+                    $po = $stmt->fetchAll();                    
+                    if (count($po) == 1){                    
+                        $obs = 'apoderado'; 
+                    }
+
+                    $query = "  select a.id from
+                                maestro_inscripcion a
+                                inner join persona b on a.persona_id = b.id
+                                where b.carnet = ? and b.complemento = ?                                
+                                limit 1";
+                    $stmt = $db->prepare($query);
+                    $params = array($form['carnet'], mb_strtoupper($form['complemento'], "utf-8"));
+                    $stmt->execute($params);
+                    $po = $stmt->fetchAll();                    
+                    if (count($po) == 1){
+                        $obs = 'maestro';
+                    }
+
+                    if ($obs != ''){
+                        //*** CAMBIO DE DATO DEL CARNET ANTERIOR*/
+                        $persona->setCarnet('9-'.$persona->getCarnet());
+                        $em->persist($persona);
+                        $em->flush();
+                        
+                        //*** ENVIO DE REGISTRO A CALIDAD */                
+                        $validacionproceso = new ValidacionProceso(); 
+                        $validacionproceso->setFechaProceso(new \DateTime());
+                        $validacionproceso->setValidacionReglaTipo($em->getRepository('SieAppWebBundle:ValidacionReglaTipo')->findOneById(47));
+                        $validacionproceso->setLlave($persona->getCarnet());
+                        $validacionproceso->setGestiontipo($em->getRepository('SieAppWebBundle:ValidacionReglaTipo')->findOneById(2018));
+                        $validacionproceso->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->findOneById(3));
+                        $validacionproceso->setEsActivo('1');
+                        $validacionproceso->setObs('Docente');
+                        $validacionproceso->setInstitucionEducativaId('0');
+                        $validacionproceso->setLugarTipoIdDistrito('0');
+                        $validacionproceso->setSolucionTipoId('0');
+                        $validacionproceso->setOmitido('0');
+                        $em->persist($validacionproceso);
+                        $em->flush();
+
+                        //***** NUEVO REGISTRO */
+                        $newpersona = new Persona();            
+                        $newpersona->setPaterno($paterno);
+                        $newpersona->setMaterno($materno);
+                        $newpersona->setNombre($nombre);
+                        $newpersona->setCarnet($carnet);  
+                        $newpersona->setComplemento($complemento);                        
+                        $newpersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->findOneById(0));
+                        $newpersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->findOneById(0));
+                        $newpersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->findOneById(0));
+                        $newpersona->setRda('0');
+                        $newpersona->setSegipId('1');            
+                        $newpersona->setFechaNacimiento($fechaNac);
+                        $newpersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($generoTipo));
+                        $newpersona->setCorreo($correo);                        
+                        $newpersona->setActivo('0');
+                        $newpersona->setEsVigente('0');
+                        $newpersona->setEsvigenteApoderado('0');
+                        $newpersona->setCountEdit('0');
+                        $em->persist($newpersona);
+                        $em->flush();
+                    } else {
+                        //***** ACTUALIZACION DE DATOS */
+                        $persona->setPaterno($paterno);
+                        $persona->setMaterno($materno);
+                        $persona->setNombre($nombre);
+                        //$persona->setCarnet($form['carnet'], "utf-8");
+                        //$persona->setComplemento(mb_strtoupper($form['complemento'], "utf-8"));                                
+                        $persona->setFechaNacimiento($fechaNac);
+                        $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($generoTipo));
+                        $persona->setCorreo($correo);
+                        $persona->setSegipId('1');                    
+                        $em->persist($persona);
+                        $em->flush();
+                    }
+
+                    $newpersonahistorico = new PersonaHistorico();
+                    $newpersonahistorico->setCarnet($form['carnet']); 
+                    $newpersonahistorico->setComplemento(mb_strtoupper($form['complemento'], "utf-8"));
+                    $newpersonahistorico->setNombre($nombre);    
+                    $newpersonahistorico->setPaterno($paterno);
+                    $newpersonahistorico->setMaterno($materno);              
+                    $newpersonahistorico->setFechaNacimiento($fechaNac);
+                    $newpersonahistorico->setGeneroTipoId($generoTipo);
+                    $newpersonahistorico->setCorreo($correo);
+                    $newpersonahistorico->setUsuario($em->getRepository('SieAppWebBundle:usuario')->find($this->session->get('userId')));
+                    $newpersonahistorico->setFechaActualizacion(new \DateTime());
+                    $em->persist($newpersonahistorico);
+                    $em->flush();
+
+                    $em->getConnection()->commit();
+                    return $response->setData(array('mensaje' => 'Proceso realizado exitosamente.'));                
+                } else {
+                    return $response->setData(array('mensaje' => 'Proceso detenido! se ha detectado inconsistencia de datos!'.$ex));                
+                    $em->getConnection()->rollback();
+                }                
+            }
+        } 
         catch (Exception $ex) {
             $em->getConnection()->rollback();
             return $response->setData(array('mensaje' => 'Proceso detenido! se ha detectado inconsistencia de datos!'.$ex));                
@@ -299,20 +424,6 @@ class PersonaController extends Controller
         try {
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('persona');");
             $query->execute();
-
-            /*$em = $this->getDoctrine()->getManager();
-            //$em = $this->getDoctrine()->getEntityManager();
-            $db = $em->getConnection();            
-            $query = "  select max(carnet)
-                        from persona 
-                        where char_length(carnet)>9 and substring(carnet,1,2)='90'";
-            $stmt = $db->prepare($query);
-            $params = array();
-            $stmt->execute($params);
-            $po = $stmt->fetchAll();
-            $newcarnet = (float)($po[0]['max']) + 1;
-            $newcarnetstr = strval ($newcarnet);*/
-
             $personaobs = $em->getRepository('SieAppWebBundle:Persona')->find($form['idpersona']);
             $personaobs->setCarnet('9-'.$form['carnet']);
             $em->persist($personaobs);
@@ -325,10 +436,7 @@ class PersonaController extends Controller
             $newpersona->setCarnet($form['carnet']);  
             $newpersona->setComplemento(mb_strtoupper($form['complemento'], "utf-8"));
             $newpersona->setCorreo(mb_strtolower($form['correo'], "utf-8"));
-            $fecha = str_pad($form['fechaNacimiento']['day'], 2, '0', STR_PAD_LEFT).'/'.str_pad($form['fechaNacimiento']['month'], 2, '0', STR_PAD_LEFT).'/'.$form['fechaNacimiento']['year'];
-            
-            //printf($fecha); die;
-
+            $fecha = str_pad($form['fechaNacimiento']['day'], 2, '0', STR_PAD_LEFT).'/'.str_pad($form['fechaNacimiento']['month'], 2, '0', STR_PAD_LEFT).'/'.$form['fechaNacimiento']['year'];         
             $newpersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->findOneById(0));
             $newpersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->findOneById(0));
             $newpersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->findOneById(0));
