@@ -17,6 +17,9 @@ Sie\AppWebBundle\Entity\OperativoControl:
         IDX_82DA12E73AB163FE:
             columns:
                 - institucioneducativa_id
+        IDX_82DA12E7179FF95:
+            columns:
+                - gestion_tipo_id
     id:
         id:
             type: integer
@@ -38,9 +41,9 @@ Sie\AppWebBundle\Entity\OperativoControl:
             comment: ''
             column: fecha_fin
         obs:
-            type: string
+            type: text
             nullable: true
-            length: 100
+            length: null
             fixed: false
             comment: ''
         fechaRegistro:
@@ -97,6 +100,15 @@ Sie\AppWebBundle\Entity\OperativoControl:
             inversedBy: null
             joinColumns:
                 institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

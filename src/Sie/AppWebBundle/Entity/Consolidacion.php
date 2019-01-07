@@ -388,4 +388,32 @@ class Consolidacion
     {
         return $this->sistemaTipo;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\GestionTipo
+     */
+    private $gestionTipo;
+
+
+    /**
+     * Set gestionTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\GestionTipo $gestionTipo
+     * @return Consolidacion
+     */
+    public function setGestionTipo(\Sie\AppWebBundle\Entity\GestionTipo $gestionTipo = null)
+    {
+        $this->gestionTipo = $gestionTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get gestionTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\GestionTipo 
+     */
+    public function getGestionTipo()
+    {
+        return $this->gestionTipo;
+    }
 }

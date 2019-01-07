@@ -23,6 +23,9 @@ Sie\AppWebBundle\Entity\Consolidacion:
         IDX_F22AF2BD34C419BF:
             columns:
                 - sistema_tipo_id
+        IDX_F22AF2BD179FF95:
+            columns:
+                - gestion_tipo_id
     id:
         id:
             type: integer
@@ -33,16 +36,6 @@ Sie\AppWebBundle\Entity\Consolidacion:
             generator:
                 strategy: SEQUENCE
     fields:
-        gestionTipoId:
-            type: integer
-            nullable: false
-            unsigned: false
-            comment: ''
-            column: gestion_tipo_id
-        esonline:
-            type: boolean
-            nullable: false
-            comment: ''
         obs:
             type: string
             nullable: true
@@ -64,6 +57,10 @@ Sie\AppWebBundle\Entity\Consolidacion:
             nullable: true
             length: 100
             fixed: false
+            comment: ''
+        esonline:
+            type: boolean
+            nullable: false
             comment: ''
     manyToOne:
         institucioneducativa:
@@ -127,6 +124,15 @@ Sie\AppWebBundle\Entity\Consolidacion:
             inversedBy: null
             joinColumns:
                 sistema_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
