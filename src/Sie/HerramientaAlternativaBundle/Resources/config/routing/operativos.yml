@@ -1,0 +1,39 @@
+alternativa_operativo_home:
+    path:     /operativohome
+    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:index}
+
+alternativa_operativo_distrito:
+    path:     /{tipo}/operativodistrito
+    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoDistrito}
+
+alternativa_operativo_cea:
+    path:     /operativocea
+    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoCea}
+
+alternativa_operativo_edit:
+    path:     /{id}/operativoedit
+    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoEdit}
+
+alternativa_operativo_update:
+    path:     /operativoupdate
+    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoUpdate}
+
+alternativa_operativo_delete:
+    path:     /{id}/operativodelete
+    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoDelete}
+
+alternativa_operativo_guardar:
+    path:     /operativoguardar
+    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoGuardar}
+
+alternativa_operativo_control:
+    path:     /controloperativo
+    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:controlOperativo}
+
+alternativa_operativo_buscar_cea:
+    path:     /operativobuscarcea
+    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoBucarCea}
+
+alternativa_operativo_buscar_oeprativos_ceas:
+    path:     /buscaroperativoceas
+    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:bucarOperativoCeas}
