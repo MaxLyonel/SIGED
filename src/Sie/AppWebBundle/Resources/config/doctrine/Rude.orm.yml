@@ -35,6 +35,9 @@ Sie\AppWebBundle\Entity\Rude:
         IDX_8E0126C4A1104027:
             columns:
                 - estudiante_inscripcion_id
+        IDX_8E0126C4102FF6F0:
+            columns:
+                - municipio_lugar_tipo_id
     id:
         id:
             type: integer
@@ -127,12 +130,6 @@ Sie\AppWebBundle\Entity\Rude:
             fixed: false
             comment: ''
             column: telefono_fijo
-        idLugar:
-            type: integer
-            nullable: true
-            unsigned: false
-            comment: ''
-            column: id_lugar
         cantHijos:
             type: integer
             nullable: true
@@ -171,6 +168,12 @@ Sie\AppWebBundle\Entity\Rude:
             nullable: true
             comment: ''
             column: fecha_registro_rude
+        localidad:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
     manyToOne:
         nacionOriginariaTipo:
             targetEntity: NacionOriginariaTipo
@@ -269,6 +272,15 @@ Sie\AppWebBundle\Entity\Rude:
             inversedBy: null
             joinColumns:
                 estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        municipioLugarTipo:
+            targetEntity: LugarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                municipio_lugar_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
