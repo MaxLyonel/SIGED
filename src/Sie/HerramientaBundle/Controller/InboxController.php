@@ -204,9 +204,15 @@ class InboxController extends Controller {
         //get the ue plena info
         //$objValidateUePlena=array();
         //if(!$arrSieInfo)
+
+        $operativoPerUe = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent(array('sie'=> $this->session->get('ie_id'), 'gestion'=>$this->session->get('currentyear')-1));
+        //get the current year
+        $gestionOpeUnidadEducativa = (($operativoPerUe == 0))?$this->session->get('currentyear'):($operativoPerUe-1 == 4)?$this->session->get('currentyear'):$this->session->get('currentyear')-1;
+
+
         $objValidateUePlena = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array(
           'institucioneducativaId' => $this->unidadEducativa,
-          'gestionTipoId' => $this->session->get('currentyear')
+          'gestionTipoId' => $gestionOpeUnidadEducativa
 
         ));
         //set the modular variable if exist
@@ -214,7 +220,7 @@ class InboxController extends Controller {
         // $this->session->set('ue_regularizar', (array_search("$this->unidadEducativa",$this->arrUeRegularizar,true)!=false)?true:false);
         // $this->session->set('ue_noturna', (array_search("$this->unidadEducativa",$this->arrUeNocturnas,true)!=false)?true:false);
         //get type of UE
-        $objTypeOfUE = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->getTypeOfUE(array('sie'=>$this->unidadEducativa,'gestion'=>$this->session->get('currentyear')));
+        $objTypeOfUE = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->getTypeOfUE(array('sie'=>$this->unidadEducativa,'gestion'=>$gestionOpeUnidadEducativa));
 
         if($objValidateUePlena){
           //switch to the kind of UE
