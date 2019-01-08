@@ -28,6 +28,13 @@ Sie\AppWebBundle\Entity\RudeActividad:
             nullable: true
             comment: ''
             column: fecha_modificacion
+        actividadOtro:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: actividad_otro
     manyToOne:
         rude:
             targetEntity: Rude

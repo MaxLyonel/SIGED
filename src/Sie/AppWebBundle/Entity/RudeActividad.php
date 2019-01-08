@@ -136,4 +136,32 @@ class RudeActividad
     {
         return $this->actividadTipo;
     }
+    /**
+     * @var string
+     */
+    private $actividadOtro;
+
+
+    /**
+     * Set actividadOtro
+     *
+     * @param string $actividadOtro
+     * @return RudeActividad
+     */
+    public function setActividadOtro($actividadOtro)
+    {
+        $this->actividadOtro = $actividadOtro;
+    
+        return $this;
+    }
+
+    /**
+     * Get actividadOtro
+     *
+     * @return string 
+     */
+    public function getActividadOtro()
+    {
+        return $this->actividadOtro;
+    }
 }
