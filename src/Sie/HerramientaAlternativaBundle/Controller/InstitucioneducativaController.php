@@ -1088,6 +1088,70 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                 $sesion->set('ie_per_estado', '3');
                 $sesion->set('ie_operativo', '¡En modo edición!');
                 //return $this->redirect($this->generateUrl('principal_web'));
+                /***
+                 * Cargar funcion para inicio de semestre
+                 */
+                $gestionActual = date('Y');
+                $mesActual = date('f');
+                if ($gestionActual >= 2019){
+                    $distrito_cod = $ie->getLeJuridicciongeografica()->getDistritoTipo()->getId();
+                    $operativoControl = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
+                            ->select('oc')
+                            ->where('oc.operativoTipo in(1,3)')
+                            ->andWhere("oc.distritoTipo = " .$distrito_cod)
+                            ->andWhere("oc.gestionTipo = " .$gestionActual)
+                            ->getQuery()
+                            ->getResult();
+                    //dump($oc);die;
+                    $em->getConnection()->beginTransaction();
+                    $db = $em->getConnection();
+                    try { 
+                        foreach($operativoControl as $o){
+                            if($o->getOperativoTipo()->getId()==1){
+                                $periodo = 2;
+                            }else{
+                                $periodo = 3;
+                            }
+                            $datos = json_decode($o->getObs(),true);
+                            foreach($datos as $d){
+                                $id_ie = json_decode($d,true)['ie'];
+                                $sucursal = json_decode($d,true)['suc'];
+                                if($ie->getId() == $id_ie){
+                                    $ies = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findBy(array('institucioneducativa'=>$ie->getId(),'sucursalTipo'=>$sucursal,'gestionTipo'=>$gestionActual,'periodoTipoId'=>$periodo));
+                                    if(!$ies){
+                                        $query = $em->getConnection()->prepare('SELECT sp_genera_inicio_sgte_gestion_alternativa(:sie, :gestion, :periodo, :subcea)');
+                                        $query->bindValue(':sie', $id_ie);
+                                        $query->bindValue(':gestion', $gestionActual);
+                                        $query->bindValue(':periodo', $periodo);
+                                        $query->bindValue(':subcea', $sucursal);
+                                        $query->execute();
+                                        $iesid = $query->fetchAll();            
+                                        if ($iesid[0]["sp_genera_inicio_sgte_gestion_alternativa"] != '0'){
+                                            $iesidnew = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneById($iesid[0]["sp_genera_inicio_sgte_gestion_alternativa"]);
+                                            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_sucursal_tramite');")->execute();  
+                                            $iest = new InstitucioneducativaSucursalTramite();
+                                            $iest->setInstitucioneducativaSucursal($iesidnew);            
+                                            $iest->setPeriodoEstado($em->getRepository('SieAppWebBundle:PeriodoEstadoTipo')->find('1'));
+                                            $iest->setTramiteEstado($em->getRepository('SieAppWebBundle:TramiteEstado')->find('11'));//Aceptación de apertura Inicio de Semestre
+                                            $iest->setTramiteTipo($em->getRepository('SieAppWebBundle:TramiteTipo')->find('5'));
+                                            $iest->setDistritoCod($distrito_cod);
+                                            $iest->setFechainicio(new \DateTime('now'));
+                                            $iest->setUsuarioIdInicio($this->session->get('userId'));
+                                            $em->persist($iest);
+                                            $em->flush();
+                                        }else{
+                                            $em->getConnection()->rollback();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        $em->getConnection()->commit(); 
+                    }catch (Exception $ex) {
+                        $em->getConnection()->rollback();
+                    }
+                }
+
                 /***adicionado***/
                 /**historial segun opciones de seleccion******/
                 $ie_id = $form['codsie'];

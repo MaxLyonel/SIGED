@@ -143,15 +143,18 @@
         }
 
         function validar(){
-            alert('entra');
             var cont = 0;
-            $('.checkbox:checked').each(function() {
-                cont = cont + 1;
-            });
-            if(cont>0){
-                return true;
+            if(confirm('¿Esta seguro de habilitar el operativo?')){
+                $('.checkbox:checked').each(function() {
+                   cont = cont + 1;
+                });
+                if(cont>0){
+                    return true;
+                }else{
+                    alert('Debe seleccionar al menos un CEA de la lista');
+                    return false;
+                }
             }else{
-                alert('Debe seleccionar al menos un CEA de la lista');
                 return false;
             }
         }
