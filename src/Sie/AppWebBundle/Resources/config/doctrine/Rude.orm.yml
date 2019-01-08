@@ -72,10 +72,8 @@ Sie\AppWebBundle\Entity\Rude:
             comment: ''
             column: centro_salud
         trabajoGestionPasada:
-            type: string
+            type: boolean
             nullable: true
-            length: 255
-            fixed: false
             comment: ''
             column: trabajo_gestion_pasada
         tieneOcupacionTrabajo:
@@ -174,6 +172,11 @@ Sie\AppWebBundle\Entity\Rude:
             length: 255
             fixed: false
             comment: ''
+        respuestaPago:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: respuesta_pago
     manyToOne:
         nacionOriginariaTipo:
             targetEntity: NacionOriginariaTipo

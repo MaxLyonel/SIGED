@@ -18,13 +18,6 @@ Sie\AppWebBundle\Entity\RudeRecibioPago:
             generator:
                 strategy: SEQUENCE
     fields:
-        respuestaPago:
-            type: string
-            nullable: true
-            length: 255
-            fixed: false
-            comment: ''
-            column: respuesta_pago
         fechaRegistro:
             type: date
             nullable: true

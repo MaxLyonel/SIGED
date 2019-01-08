@@ -976,4 +976,32 @@ class Rude
     {
         return $this->municipioLugarTipo;
     }
+    /**
+     * @var boolean
+     */
+    private $respuestaPago;
+
+
+    /**
+     * Set respuestaPago
+     *
+     * @param boolean $respuestaPago
+     * @return Rude
+     */
+    public function setRespuestaPago($respuestaPago)
+    {
+        $this->respuestaPago = $respuestaPago;
+    
+        return $this;
+    }
+
+    /**
+     * Get respuestaPago
+     *
+     * @return boolean 
+     */
+    public function getRespuestaPago()
+    {
+        return $this->respuestaPago;
+    }
 }
