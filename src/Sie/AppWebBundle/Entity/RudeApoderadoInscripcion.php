@@ -15,31 +15,6 @@ class RudeApoderadoInscripcion
     private $id;
 
     /**
-     * @var integer
-     */
-    private $apoderadoTipoId;
-
-    /**
-     * @var integer
-     */
-    private $personaId;
-
-    /**
-     * @var integer
-     */
-    private $estudianteInscripcionId;
-
-    /**
-     * @var integer
-     */
-    private $idiomaMaternoTipoId;
-
-    /**
-     * @var integer
-     */
-    private $instruccionTipoId;
-
-    /**
      * @var string
      */
     private $empleo;
@@ -60,9 +35,34 @@ class RudeApoderadoInscripcion
     private $tieneocupacion;
 
     /**
-     * @var integer
+     * @var \Sie\AppWebBundle\Entity\ApoderadoTipo
      */
-    private $ocupacionTipoId;
+    private $apoderadoTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\Persona
+     */
+    private $persona;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstudianteInscripcion
+     */
+    private $estudianteInscripcion;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\IdiomaTipo
+     */
+    private $idiomaMaternoTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\InstruccionTipo
+     */
+    private $instruccionTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\ApoderadoOcupacionTipo
+     */
+    private $ocupacionTipo;
 
 
     /**
@@ -73,121 +73,6 @@ class RudeApoderadoInscripcion
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set apoderadoTipoId
-     *
-     * @param integer $apoderadoTipoId
-     * @return RudeApoderadoInscripcion
-     */
-    public function setApoderadoTipoId($apoderadoTipoId)
-    {
-        $this->apoderadoTipoId = $apoderadoTipoId;
-    
-        return $this;
-    }
-
-    /**
-     * Get apoderadoTipoId
-     *
-     * @return integer 
-     */
-    public function getApoderadoTipoId()
-    {
-        return $this->apoderadoTipoId;
-    }
-
-    /**
-     * Set personaId
-     *
-     * @param integer $personaId
-     * @return RudeApoderadoInscripcion
-     */
-    public function setPersonaId($personaId)
-    {
-        $this->personaId = $personaId;
-    
-        return $this;
-    }
-
-    /**
-     * Get personaId
-     *
-     * @return integer 
-     */
-    public function getPersonaId()
-    {
-        return $this->personaId;
-    }
-
-    /**
-     * Set estudianteInscripcionId
-     *
-     * @param integer $estudianteInscripcionId
-     * @return RudeApoderadoInscripcion
-     */
-    public function setEstudianteInscripcionId($estudianteInscripcionId)
-    {
-        $this->estudianteInscripcionId = $estudianteInscripcionId;
-    
-        return $this;
-    }
-
-    /**
-     * Get estudianteInscripcionId
-     *
-     * @return integer 
-     */
-    public function getEstudianteInscripcionId()
-    {
-        return $this->estudianteInscripcionId;
-    }
-
-    /**
-     * Set idiomaMaternoTipoId
-     *
-     * @param integer $idiomaMaternoTipoId
-     * @return RudeApoderadoInscripcion
-     */
-    public function setIdiomaMaternoTipoId($idiomaMaternoTipoId)
-    {
-        $this->idiomaMaternoTipoId = $idiomaMaternoTipoId;
-    
-        return $this;
-    }
-
-    /**
-     * Get idiomaMaternoTipoId
-     *
-     * @return integer 
-     */
-    public function getIdiomaMaternoTipoId()
-    {
-        return $this->idiomaMaternoTipoId;
-    }
-
-    /**
-     * Set instruccionTipoId
-     *
-     * @param integer $instruccionTipoId
-     * @return RudeApoderadoInscripcion
-     */
-    public function setInstruccionTipoId($instruccionTipoId)
-    {
-        $this->instruccionTipoId = $instruccionTipoId;
-    
-        return $this;
-    }
-
-    /**
-     * Get instruccionTipoId
-     *
-     * @return integer 
-     */
-    public function getInstruccionTipoId()
-    {
-        return $this->instruccionTipoId;
     }
 
     /**
@@ -281,59 +166,6 @@ class RudeApoderadoInscripcion
     {
         return $this->tieneocupacion;
     }
-
-    /**
-     * Set ocupacionTipoId
-     *
-     * @param integer $ocupacionTipoId
-     * @return RudeApoderadoInscripcion
-     */
-    public function setOcupacionTipoId($ocupacionTipoId)
-    {
-        $this->ocupacionTipoId = $ocupacionTipoId;
-    
-        return $this;
-    }
-
-    /**
-     * Get ocupacionTipoId
-     *
-     * @return integer 
-     */
-    public function getOcupacionTipoId()
-    {
-        return $this->ocupacionTipoId;
-    }
-    /**
-     * @var \Sie\AppWebBundle\Entity\ApoderadoTipo
-     */
-    private $apoderadoTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\Persona
-     */
-    private $persona;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\EstudianteInscripcion
-     */
-    private $estudianteInscripcion;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\IdiomaTipo
-     */
-    private $idiomaMaternoTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\InstruccionTipo
-     */
-    private $instruccionTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\ApoderadoOcupacionTipo
-     */
-    private $ocupacionTipo;
-
 
     /**
      * Set apoderadoTipo
