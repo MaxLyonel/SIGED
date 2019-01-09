@@ -75,11 +75,18 @@ class StudentsInscriptionsController extends Controller {
           //check if the level and grado is correct to the student//the next step is do it
             $objStudentInscriptions = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->getInscriptionAlternativaStudent($objStudent->getId());
 
+            // added validation to show the inscription menor option
+            $showCaseSpecialOption = false;
+            if($dataUe['ueducativaInfoId']['nivelId'] ==15 && $dataUe['ueducativaInfoId']['cicloId']==2){
+              $showCaseSpecialOption = true;
+            }
+
             return $this->render($this->session->get('pathSystem').':StudentsInscriptions:inscriptions.html.twig', array(
               'objStudent'=>$objStudent,
               'objStudentInscriptions'=>$objStudentInscriptions,
               'form'=>$this->doInscriptionForm($form['data'], $objStudent->getId())->createView(),
-              'exist'=>true
+              'exist'=>true,
+              'showCaseSpecialOption'=>$showCaseSpecialOption,
 
             ));
 
@@ -149,34 +156,34 @@ class StudentsInscriptionsController extends Controller {
         //     $validateYear=true;
         //   }
         // }
-
+        // elementales
         if($aInfoUeducativa['ueducativaInfoId']['cicloId']==1 and $aInfoUeducativa['ueducativaInfoId']['gradoId']==1){
           if(!($yearStudent>=15)){
             $validateYear=true;
           }
         }
-
+        // avanzados
         //validate to nivel=15 - ciclo=1 - grado=2
         if($aInfoUeducativa['ueducativaInfoId']['cicloId']==1 and $aInfoUeducativa['ueducativaInfoId']['gradoId']==2){
           if(!($yearStudent>=16)){
             $validateYear=true;
           }
         }
-
+        // aplicados
         //validate to nivel=15 - ciclo=2 - grado=1
         if($aInfoUeducativa['ueducativaInfoId']['cicloId']==2 and $aInfoUeducativa['ueducativaInfoId']['gradoId']==1){
           if(!($yearStudent>=17)){
             $validateYear=true;
           }
         }
-
+        // complementarios
         //validate to nivel=15 - ciclo=2 - grado=2
         if($aInfoUeducativa['ueducativaInfoId']['cicloId']==2 and $aInfoUeducativa['ueducativaInfoId']['gradoId']==2){
           if(!($yearStudent>=18)){
             $validateYear=true;
           }
         }
-
+        // avanzados
         //validate to nivel=15 - ciclo=2 - grado=3
         if($aInfoUeducativa['ueducativaInfoId']['cicloId']==2 and $aInfoUeducativa['ueducativaInfoId']['gradoId']==3){
           if(!($yearStudent>=18)){
