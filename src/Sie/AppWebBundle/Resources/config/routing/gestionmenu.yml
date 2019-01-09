@@ -2,37 +2,7 @@ gestionmenu:
     path:     /
     defaults: { _controller: SieAppWebBundle:GestionMenu:index }
 
-gestionmenu_estado:
-    path:     /{id}/estado
-    defaults: { _controller: "SieAppWebBundle:GestionMenu:estado" }
 
-gestionmenu_list:
-    path:     /{id}/list
-    defaults: { _controller: "SieAppWebBundle:GestionMenu:list" }
-
-gestionmenu_consol:
-    path:     /consol
-    defaults: { _controller: "SieAppWebBundle:GestionMenu:consolidar" }
-
-gestionmenuprincipal_gestion_nuevo:
-    path:     /nuevo{idrol}{idsistema}
-    defaults: { _controller: SieAppWebBundle:GestionMenu:nuevo }
-
-gestionmenuprincipal_new:
-    path:     /new/
-    defaults: { _controller: SieAppWebBundle:GestionMenu:nuevo }
-
-
-
-
-gestionmenuprincipal_editar:
-    path:     /{id}/editar
-    defaults: { _controller: SieAppWebBundle:GestionMenu:editar }
-
-gestionmenuprincipal_create_sm:
-    path:     /createsm
-    defaults: { _controller: SieAppWebBundle:GestionMenu:createsm}
-    methods:  POST
 
 gestionmenusubmenu_nuevo:
     path:     /nuevosm
@@ -40,76 +10,6 @@ gestionmenusubmenu_nuevo:
     methods:  POST
     options:
       expose: true
-
-gestion_menu_sistemas_roles:
-    path:     /menuroles
-    defaults: { _controller: SieAppWebBundle:GestionMenu:menuroles}
-
-gestionmenuprincipal_genera_menu:
-    path:     /genera{id}{id_sis}
-    defaults: { _controller: SieAppWebBundle:GestionMenu:generamenus }
-
-
-
-
-
-
-gestion_listar_menus:
-    path:     /lista_menus/
-    defaults: { _controller: "SieAppWebBundle:GestionMenu:lista" }
-    options:
-         expose: true
-
-
-
-gestionmenuprincipal_createmenu:
-    path:     /nuevo{id_sis}{id}
-    defaults: { _controller: SieAppWebBundle:GestionMenu:createMenuPrueba}
-    methods:  POST
-
-gestionmenu_listaPrueba:
-    path:     /listaprueba
-    defaults: { _controller: SieAppWebBundle:GestionMenu:listaPrueba}
-    methods:  POST
-
-gestionmenuprincipal_muestramenus:
-    path:     /menu_submenus
-    defaults: { _controller: SieAppWebBundle:GestionMenu:listaMenusSubmenus}
-
-gestion_submenu_nuevo:
-    path:     /nuevosubmenu/
-    defaults: { _controller: SieAppWebBundle:GestionMenu:nuevosubmenu}
-
-
-gestionmenu_listSubMenu:
-    path:     /listMenu/{idmenu}/{idrol}/{idsistema}/
-    defaults: { _controller: "SieAppWebBundle:GestionMenu:listaSubMenu" }
-
-gestionmenu_editarsubmenu_:
-    path:     /geseditarsm/
-    defaults: { _controller: SieAppWebBundle:GestionMenu:editarsubmenu }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -318,6 +218,16 @@ gestionmenu_valida_roles_asignados:
 gestionmenu_valida_menus_asignados:
     path: /gmvalidamenusasignados/
     defaults: {_controller: SieAppWebBundle:GestionMenu:validamenusasigandos}
+
+gestionmenu_reportes_menus:
+    path: /gmreportesmenus/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:generareportemenu}
+
+gestionmenu_cargar_sistema_rol:
+    path: /gmsistemarol/
+    defaults: {_controller: SieAppWebBundle:GestionMenu:listarolsistema}
+
+
 
 
 

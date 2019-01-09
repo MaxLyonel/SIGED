@@ -1,5 +1,5 @@
 
-<div class="table-responsive col-md-12">
+<div class="table-responsive col-md-12" id="lista_asignados">
         <table class="table table-bordered table-striped table-default" id="listaCeas" >
             <thead>
             <tr >
@@ -37,7 +37,7 @@
                     {% else %}
                         <button  onclick="cambiaestadosistemamenurol({{ reg.id }}, {{ id_sistema }})"  class="btn btn-xs btn-danger">Inactivo</button>
                     {% endif %}
-                        {#<button class="btn btn-danger btn-xs" onclick="elimina_menu_sistema_rol({{reg.id }},{{id_sistema}})"  title="Eliminar"><i class="glyphicon glyphicon-trash"></i></button>#}
+                        <button class="btn btn-danger btn-xs" onclick="elimina_asignacion_menu_sistema_rol({{reg.id }},{{id_sistema}})"  title="Eliminar"><i class="glyphicon glyphicon-trash"></i></button>
                     </td>
 
 
@@ -68,6 +68,61 @@
             });
         }
     }
+
+
+    function elimina_asignacion_menu_sistema_rol (idmsr,id_sistema) {
+
+        swal({
+            title: "¿Está Segura/o de eliminar el Menú Asignado?",
+            //text: "El Sistema seleccionado será eliminado Permanentemente",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Continuar"],
+        })
+            .then(function(willDelete)  {
+                if (willDelete) {
+                    var imagen = '{{ asset("img/loading96.gif") }}';
+                    var formData = {idmsr:idmsr,id_sistema:id_sistema};
+                    $.ajax({
+                        type: 'post',
+                        url: "{{ path('gestionmenu_menu_sistema_rol_delete') }}",
+                        data:formData,
+                        beforeSend: function () {
+                            swal({
+                                title: "Eliminando...",
+                                text: "Espere un momento por favor",
+                                icon: imagen,
+                                buttons: false
+                            });
+                        },
+                        success: function (data) {
+                            //console.log(data);
+                            /*if (data==1){
+                                swal("Se eliminó correctamente la asignación");
+                                location.reload();
+                            }else {swal("No se elimino");}*/
+                            $("#lista_asignados").empty();
+                            $("#lista_asignados").append(data);
+                        },
+
+                        complete: function () {
+                            swal.stopLoading();
+                            swal.close();
+                            $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+                                $(".alert").slideUp(1000);
+                            });
+                        }
+                    });
+
+
+                }
+            });
+
+
+    }
+
+
     var cargatablas = function (identif){
         // Setup - add a text input to each footer cell
         $('#listaCeas tfoot th').each( function () {

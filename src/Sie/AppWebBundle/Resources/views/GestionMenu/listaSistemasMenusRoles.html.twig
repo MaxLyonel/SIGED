@@ -22,7 +22,7 @@
             <div class="container-fluid">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        <h5><strong>Asignar</strong></h5>
+                        <h5><strong>Listado General de Menús</strong></h5>
                     </div>
                     <div class="panel-body">
                         <div class="row">
@@ -77,7 +77,6 @@
                     $("#listam").empty();
                 },
                 success: function (data) {
-
                     $("#listam").empty();
                     /*$("#tablalista").append( {#{% include 'SieAppWebBundle:GestionMenu:generaListaSistemamenuRol.html.twig' with {'listaSistemamenurol': data} %}#});*/
                     $("#listam").append(data);
