@@ -187,7 +187,7 @@ class SolicitudBTHController extends Controller {
         $td = $query->fetchAll();
         if ($td[0]['tramite_detalle_id']){
             $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find($td[0]['tramite_detalle_id']);
-            if($tramiteDetalle->getTramiteEstado()->getId()==16){
+            if($tramiteDetalle->getTramiteEstado()->getId()== 16){
                 $iUE = $tramiteDetalle->getTramite()->getInstitucioneducativa()->getId();
                 return $this->redirectToRoute('solicitud_bth_formulario',array('iUE'=>$iUE,'id_tramite'=>$request->get('id')));
             }
@@ -414,7 +414,7 @@ class SolicitudBTHController extends Controller {
     }
     public function imprimirDirectorAction(Request $request){
         //dump($request);die;
-        $tramite_id = $request->get('id');
+        $tramite_id = $request->get('idtramite');
         //$idUE       = $request->get('idUE');
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('SieAppWebBundle:Tramite')->find($tramite_id);
@@ -777,8 +777,10 @@ class SolicitudBTHController extends Controller {
         /*
          * Listasmos los maestros inscritos en la unidad educativa
          */
-        $maestros = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion, 'cargoTipo' => 0));
-
+        //$maestros = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion, 'cargoTipo' => 0));
+        //dump ($maestros);die;
+           //no hay maestros inscritos para la gestion 2019
+        $gestion = 2018;
         $repository = $em->getRepository('SieAppWebBundle:MaestroInscripcion');
 
         $query = $repository->createQueryBuilder('mins')
@@ -824,7 +826,7 @@ class SolicitudBTHController extends Controller {
             'ubicacion' => $ubicacionUe,
             'director' => $director,
             'cursos'   => $cursos,
-            'maestros'=>$maestros,
+            //'maestros'=>$maestros,
             'especialidadarray'=>$especialidadarray,
             'informe'=>$informe,
             'id_tramite'=>$id_tramite
