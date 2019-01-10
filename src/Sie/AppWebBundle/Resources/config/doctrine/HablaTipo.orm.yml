@@ -1,0 +1,42 @@
+Sie\AppWebBundle\Entity\HablaTipo:
+    type: entity
+    table: habla_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        hablaTipo:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: habla_tipo
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        esVigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    lifecycleCallbacks: {  }

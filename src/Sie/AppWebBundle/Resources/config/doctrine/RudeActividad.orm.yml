@@ -1,0 +1,50 @@
+Sie\AppWebBundle\Entity\RudeActividad:
+    type: entity
+    table: rude_actividad
+    indexes:
+        IDX_5452D8D8443E4890:
+            columns:
+                - rude_id
+        IDX_5452D8D84B8E64C7:
+            columns:
+                - actividad_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        rude:
+            targetEntity: Rude
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rude_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        actividadTipo:
+            targetEntity: ActividadTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                actividad_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
