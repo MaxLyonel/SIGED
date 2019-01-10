@@ -138,8 +138,9 @@
                         $('#lista').empty();
                         $('#lista').append(data);
                         $( document ).ready(function() {
-                        cargatablas();
-                    });
+                            $(".tooltips").tooltip();
+                            cargatablas();
+                        });
                     }
                 },
                 statusCode: {

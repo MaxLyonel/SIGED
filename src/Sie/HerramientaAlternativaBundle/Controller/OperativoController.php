@@ -74,18 +74,11 @@ class OperativoController extends Controller {
         if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
         }
-
-        $form = $request->get('form');
-        $idlugarusuario = $this->session->get('roluserlugarid');
         $em = $this->getDoctrine()->getManager();
-        
+        $rol = $this->session->get('roluser');
+        $form = $request->get('form');
         switch($form['operativo']){
             case 1:
-                /*$query = $em->getConnection()->prepare("select * from operativo_control oc join operativo_tipo ot on ot.id=oc.operativo_tipo_id
-                        where operativo_tipo_id=1 and extract(year from fecha_inicio)=". $gestion ." and distrito_tipo_id=". $form['distrito']);
-                $query->execute();
-                $oc = $query->fetchAll();*/
-                //dump($oc);die;
                 $oc = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
                         ->select('oc')
                         ->where('oc.operativoTipo = 1')
@@ -120,7 +113,7 @@ class OperativoController extends Controller {
                 }
                 $entities =$entities 
                             ->andWhere('a.gestionTipo = '. ($gestion-1))
-                            ->andWhere('e.lugarTipoIdDistrito = '. $idlugarusuario)
+                            ->andWhere('e.distritoTipo = '. $form['distrito'])
                             ->andWhere('h.id in(8,14)')
                             ->orderBy('d.id, b.id, a.id')
                             ->getQuery()
@@ -139,7 +132,7 @@ class OperativoController extends Controller {
                             ->innerJoin('SieAppWebBundle:PeriodoTipo', 'i', 'WITH', 'i.id = a.periodoTipoId')
                             ->where('a.periodoTipoId = 2')
                             ->andWhere('a.gestionTipo = '. $gestion)
-                            ->andWhere('e.lugarTipoIdDistrito = '. $idlugarusuario)
+                            ->andWhere('e.distritoTipo = '. $form['distrito'])
                             ->andWhere('h.id in(9,12)')
                             ->orderBy('d.id, b.id, a.id')
                             ->getQuery()
@@ -180,7 +173,7 @@ class OperativoController extends Controller {
                 }
                 $entities =$entities 
                             ->andWhere('a.gestionTipo = '. $gestion)
-                            ->andWhere('e.lugarTipoIdDistrito = '. $idlugarusuario)
+                            ->andWhere('e.distritoTipo = '. $form['distrito'])
                             ->andWhere('h.id in(8,14)')
                             ->orderBy('d.id, b.id, a.id')
                             ->getQuery()
@@ -199,7 +192,7 @@ class OperativoController extends Controller {
                             ->innerJoin('SieAppWebBundle:PeriodoTipo', 'i', 'WITH', 'i.id = a.periodoTipoId')
                             ->where('a.periodoTipoId = 3')
                             ->andWhere('a.gestionTipo = '. $gestion)
-                            ->andWhere('e.lugarTipoIdDistrito = '. $idlugarusuario)
+                            ->andWhere('e.distritoTipo = '. $form['distrito'])
                             ->andWhere('h.id in(9,12)')
                             ->orderBy('d.id, b.id, a.id')
                             ->getQuery()
@@ -223,12 +216,12 @@ class OperativoController extends Controller {
         ));
     }
     
-    public function index1Action(Request $request) {
+    public function operativoAmpliarAction(Request $request) {
         //get the session's values
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
-        $gestion = date('Y');
-        //dump($gestion);die;
+        $rol = $this->session->get('roluser');
+        $gestionActual = date('Y');
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -238,41 +231,74 @@ class OperativoController extends Controller {
         if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
         }
-
         $em = $this->getDoctrine()->getManager();
+        if($rol == 7 or $rol == 10){
+            $idlugarusuario = $this->session->get('roluserlugarid');
+            $idLugarTipo = $em->getRepository('SieAppWebBundle:LugarTipo')->find($idlugarusuario)->getCodigo();
+        }else{
+            $idLugarTipo = "";
+        }
         
-        $entities = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
-                ->select('oc')
-                ->innerjoin('SieAppWebBundle:OperativoTipo', 'ot', 'WITH', 'oc.operativoTipo=ot.id' )
-                ->where('ot.institucioneducativaTipo=2')
-                ->andWhere("ot.esvigente='1'")
-                ->andWhere("ot.gestionTipoId=". $gestion)
-                ->orderBy('oc.gestionTipoId','DESC')
-                ->orderBy('oc.id','ASC')
-                ->getQuery()
-                ->getResult();
         //dump($entities);die;
-        return $this->render($this->session->get('pathSystem') . ':Operativo:index.html.twig', array(
-            'entities' => $entities,
+        return $this->render($this->session->get('pathSystem') . ':Operativo:ampliar.html.twig', array(
+            'entities' => $this->listaAmpliar($rol,$gestionActual,$idLugarTipo),
         ));
     }
 
     public function operativoForm()
     {   
         $idlugarusuario = $this->session->get('roluserlugarid');
+        $rolusuario = $this->session->get('roluser');
         $this->gestion = date('Y');
         $em = $this->getDoctrine()->getManager();
-        $distrito = $em->getRepository('SieAppWebBundle:LugarTipo')->find($idlugarusuario)->getCodigo();
-
         $form = $this->createFormBuilder()
         ->add('operativo','entity',array('label'=>'Operativo:','required'=>true,'class'=>'SieAppWebBundle:OperativoTipo','query_builder'=>function(EntityRepository $o){
-            return $o->createQueryBuilder('o')->where("o.institucioneducativaTipo=2 and o.esvigente='1' and o.gestionTipoId=". $this->gestion);},'property'=>'operaTivo','empty_value' => 'Seleccione operativo','attr'=>array('class'=>'form-control')))
-        ->add('distrito','hidden',array('data'=>$distrito))
-        ->add('fechainicio','text',array('label'=>'Fecha inicio:','required'=>true, 'attr'=>array('class'=>'form-control')))
-        ->add('fechafin','text',array('label'=>'Fecha fin:','required'=>true, 'attr'=>array('class'=>'form-control')))
+            return $o->createQueryBuilder('o')->where("o.institucioneducativaTipo=2 and o.esvigente=true and o.gestionTipoId=". $this->gestion);},'property'=>'operaTivo','empty_value' => 'Seleccione operativo','attr'=>array('class'=>'form-control')))
+        ->add('fechainicio','text',array('label'=>'Fecha inicio: (dia-mes-año)','required'=>true,'data'=>date('d-m-Y'), 'attr'=>array('class'=>'form-control datepicker','placeholder'=>'dd-mm-AAAA','maxlength'=>10,'minlength'=>10,'autocomplete'=>'off')))
+        ->add('fechafin','text',array('label'=>'Fecha fin: (dia-mes-año)','required'=>true,'data'=>date('d-m-Y'), 'attr'=>array('class'=>'form-control datepicker','placeholder'=>'dd-mm-AAAA','maxlength'=>10,'minlength'=>10,'autocomplete'=>'off')));
+        if($rolusuario == 8){
+            $form = $form
+            ->add('departamento','entity',array('label'=>'Departamento:','required'=>true,'class'=>'SieAppWebBundle:DepartamentoTipo','query_builder'=>function(EntityRepository $d){
+                return $d->createQueryBuilder('d')->where('d.id not in (0)')->orderBy('d.departamento');},'property'=>'departamento','empty_value' => false,'attr'=>array('class'=>'form-control','onchange'=>'distrito(this.value)')))
+            ->add('distrito','choice',array('label'=>'Distrito:','required'=>true,'empty_value' => false,'attr'=>array('class'=>'form-control')));
+            
+        }elseif($rolusuario == 7){
+            $this->departamento = $em->getRepository('SieAppWebBundle:LugarTipo')->find($idlugarusuario)->getCodigo();
+            $form =$form
+            ->add('distrito','entity',array('label'=>'Distrito:','required'=>true,'class'=>'SieAppWebBundle:DistritoTipo','query_builder'=>function(EntityRepository $dis){
+                return $dis->createQueryBuilder('dis')->where("dis.departamentoTipo=". $this->departamento);},'property'=>'distrito','empty_value' => false,'attr'=>array('class'=>'form-control')));
+        }elseif($rolusuario == 10){
+            $distrito = $em->getRepository('SieAppWebBundle:LugarTipo')->find($idlugarusuario)->getCodigo();
+            $form = $form
+            ->add('distrito','hidden',array('data'=>$distrito));
+        }
+        $form = $form
         ->add('buscar', 'button', array('label'=> 'Buscar Ceas', 'attr'=>array('class'=>'form-control btn btn-success','onclick'=>'buscarCeas()')))
         ->getForm();
         return $form;
+    }
+
+    public function bucarDistritoAction(Request $request)
+    {
+        $this->session = $request->getSession();
+        $id_usuario = $this->session->get('userId');
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        // Verificamos si no ha caducado la session
+        if (!$this->session->get('userId')) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        $id_departamento =$request->get('depto');
+        $em = $this->getDoctrine()->getManager();
+        $distrito = $em->getRepository('SieAppWebBundle:DistritoTipo')->findBy(array('departamentoTipo'=>$id_departamento));
+        $distritoArray = array();
+        foreach($distrito as $d){
+            $distritoArray[$d->getId()]=$d->getDistrito();
+        }
+        $response = new JsonResponse();
+        return $response->setData(array('distrito' => $distritoArray));
     }
 
     public function operativoDistritoAction(Request $request,$tipo) {
@@ -299,7 +325,7 @@ class OperativoController extends Controller {
         ));
     }
 
-    public function operativo1Form($rol,$tipo)
+    /*public function operativo1Form($rol,$tipo)
     {   
         $idlugarusuario = $this->session->get('roluserlugarid');
         $this->gestion = date('Y');
@@ -338,7 +364,7 @@ class OperativoController extends Controller {
         ->add('guardar', 'submit', array('label'=> 'Guardar', 'attr'=>array('class'=>'form-control btn btn-success')))
         ->getForm();
         return $form;
-    }
+    }*/
 
     public function operativoGuardarAction(Request $request)
     {
@@ -358,7 +384,7 @@ class OperativoController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         $gestion = (new \DateTime($request->get('fechainicio')))->format('Y');
-        //dump($request);die;
+        //dump($gestion);die;
         try {
             $oc = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
                     ->select('oc')
@@ -475,7 +501,7 @@ class OperativoController extends Controller {
         return $this->redirect($this->generateUrl('alternativa_operativo_home'));
     }*/
 
-    public function operativoEditAction(Request $request,$id) {
+    public function operativoEditAction(Request $request) {
         //get the session's values
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
@@ -487,49 +513,30 @@ class OperativoController extends Controller {
         if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
         }
+        //dump($request);die;
 
         $rol = $this->session->get('roluser');
         $em = $this->getDoctrine()->getManager();
         
-        $operativoEditForm = $this->operativoEditForm($rol,$id);
+        $operativoEditForm = $this->operativoEditForm($request->get('id'));
         return $this->render($this->session->get('pathSystem') . ':Operativo:editOperativo.html.twig', array(
             'form' => $operativoEditForm->createView(),
         ));
     }
 
-    public function operativoEditForm($rol,$id)
+    public function operativoEditForm($id)
     {   
-        
-        $idlugarusuario = $this->session->get('roluserlugarid');
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SieAppWebBundle:OperativoControl')->find($id);
-        $this->oc = $entity;
-        //dump($entity);die;
         $form = $this->createFormBuilder()
-        ->setAction($this->generateUrl('alternativa_operativo_update'));
-        if($rol == 7){
-            
-            $form=$form
-            ->add('distrito','entity',array('label'=>'Distrito:','required'=>true,'class'=>'SieAppWebBundle:DistritoTipo','query_builder'=>function(EntityRepository $d){
-                return $d->createQueryBuilder('d')->where('d.departamentoTipo=2');},'property'=>'distrito','empty_value' => 'Seleccione distrito','attr'=>array('class'=>'form-control')));
-        }elseif($rol == 8){
-            $form=$form
-            ->add('distrito','entity',array('label'=>'Distrito:','required'=>true,'class'=>'SieAppWebBundle:DistritoTipo','query_builder'=>function(EntityRepository $d){
-                return $d->createQueryBuilder('d')->where('d.departamentoTipo=2');},'property'=>'distrito','empty_value' => 'Seleccione distrito','attr'=>array('class'=>'form-control')));
-        }elseif($rol == 10){
-            $distrito = $em->getRepository('SieAppWebBundle:LugarTipo')->find($idlugarusuario)->getCodigo();
-            $form=$form
-            ->add('distrito','hidden',array('data'=>$entity->getdistritotipo()->getId()));
-        }
-        $form=$form
-        ->add('id','hidden',array('data'=>$id))
-        ->add('fechainicio','text',array('label'=>'Fecha inicio:','data'=>$entity->getfechaInicio()->format('Y-m-d'),'required'=>true, 'attr'=>array('class'=>'form-control')))
-        ->add('fechafin','text',array('label'=>'Fecha fin:','data'=>$entity->getfechaFin()->format('Y-m-d'),'required'=>true, 'attr'=>array('class'=>'form-control')))
-        ->add('obs','textarea',array('label'=>'Observación:','data'=>$entity->getObs(),'required'=>false, 'attr'=>array('class'=>'form-control','style' => 'text-transform:uppercase')))
-        ->add('operativo','entity',array('label'=>'Operativo:','data'=>$this->oc->getOperativoTipo()->getId(),'required'=>true,'class'=>'SieAppWebBundle:OperativoTipo','query_builder'=>function(EntityRepository $o){
-            return $o->createQueryBuilder('o')->where("o.institucioneducativaTipo=2 and o.esvigente='1' and o.gestionTipoId=".$this->oc->getOperativoTipo()->getGestionTipoId() ." and o.periodoTipo=". $this->oc->getOperativoTipo()->getPeriodoTipo()->getId());},'property'=>'operativo','empty_value' => false,'attr'=>array('class'=>'form-control')))
-        ->add('guardar', 'submit', array('label'=> 'Guardar', 'attr'=>array('class'=>'form-control btn btn-success')))
-        ->getForm();
+            //->setAction($this->generateUrl('alternativa_operativo_update'))
+            ->add('id','hidden',array('data'=>$id))
+            ->add('distrito','text',array('label'=>'Distrito:','data'=>$entity->getDistritoTipo()->getDistrito(),'disabled'=>true, 'attr'=>array('class'=>'form-control')))
+            ->add('operativo','text',array('label'=>'Operativo:','data'=>$entity->getOperativoTipo()->getOperativo(),'disabled'=>true, 'attr'=>array('class'=>'form-control')))
+            ->add('fechainicio','text',array('label'=>'Fecha inicio:','data'=>$entity->getfechaInicio()->format('d-m-Y'),'disabled'=>true, 'attr'=>array('class'=>'form-control')))
+            ->add('fechafin','text',array('label'=>'Fecha fin:','data'=>$entity->getfechaFin()->format('d-m-Y'),'required'=>true, 'attr'=>array('class'=>'form-control datepicker','maxlength'=>10,'minlength'=>10,'autocomplete'=>'off')))
+            ->add('guardar', 'button', array('label'=> 'Guardar Cambios', 'attr'=>array('class'=>'form-control btn btn-success','onclick'=>'guardarCambios()')))
+            ->getForm();
         return $form;
     }
 
@@ -537,37 +544,86 @@ class OperativoController extends Controller {
     {
         $em = $this->getDoctrine()->getManager();
         $id_usuario = $this->session->get('userId');
+        $rol = $this->session->get('roluser');
+        $gestionActual = date('Y');
+        if($rol == 7 or $rol == 10){
+            $idlugarusuario = $this->session->get('roluserlugarid');
+            $idLugarTipo = $em->getRepository('SieAppWebBundle:LugarTipo')->find($idlugarusuario)->getCodigo();
+        }else{
+            $idLugarTipo = "";
+        }
+        //dump($request);die;
         $form = $request->get('form');
         //dump($form);die;
-
         $entity = $em->getRepository('SieAppWebBundle:OperativoControl')->find($form['id']);
-
         if (!$entity) {
-            $this->get('session')->getFlashBag()->add('error', 'Operativo no encontrado.');
-        }
-        $em->getConnection()->beginTransaction();
-        try {
-            //modificamos el orperativo
-            $operativoTipo = $em->getRepository('SieAppWebBundle:OperativoTipo')->find($form['operativo']);
-            $distritoTipo = $em->getRepository('SieAppWebBundle:DistritoTipo')->find($form['distrito']);
-            $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($id_usuario);
-            $entity->setOperativoTipo($operativoTipo);
-            $entity->setDistritoTipo($distritoTipo);
-            $entity->setUsuarioModificacion($usuario);
-            $entity->setFechaInicio(new \DateTime($form['fechainicio']));
-            $entity->setFechaFin(new \DateTime($form['fechafin']));
-            $entity->setObs(strtoupper($form['obs']));
-            $entity->setFechaModificacion(new \DateTime('now'));
-            $em->flush();
-            $em->getConnection()->commit();
+            $mensaje['msg'] = 'Operativo no encontrado.';
+            $mensaje['tipo'] = 'error';
+        }else{
+            $em->getConnection()->beginTransaction();
+            try {
+                //modificamos el orperativo
+                $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($id_usuario);
+                $entity->setUsuarioModificacion($usuario);
+                $entity->setFechaFin(new \DateTime($form['fechafin']));
+                $entity->setFechaModificacion(new \DateTime('now'));
+                $em->flush();
+                $em->getConnection()->commit();
 
-            $this->get('session')->getFlashBag()->add('exito', 'Los datos fueron modificados correctamente.');
-        } catch (Exception $ex) {
-            $em->getConnection()->rollback();
-            $this->get('session')->getFlashBag()->add('error', 'Ocurrio un error al modificar el operativo.');
+                $mensaje['msg'] = 'Los datos fueron modificados correctamente.';
+                $mensaje['tipo'] = 'exito';
+            } catch (Exception $ex) {
+                $em->getConnection()->rollback();
+                $mensaje['msg'] = 'Ocurrio un error al modificar el operativo.';
+                $mensaje['tipo'] = 'error';
+            }
         }
-        
-        return $this->redirect($this->generateUrl('alternativa_operativo_home'));
+
+        return $this->render($this->session->get('pathSystem') . ':Operativo:tablaAmpliar.html.twig', array(
+            'entities' => $this->listaAmpliar($rol,$gestionActual,$idLugarTipo),
+            'mensaje'=> $mensaje,
+        ));
+    }
+
+    public function listaAmpliar($rol,$gestionActual,$idLugarTipo)
+    {
+        $em = $this->getDoctrine()->getManager();
+        if($rol == 8){
+            $entities = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
+                        ->select('oc')
+                        ->innerjoin('SieAppWebBundle:OperativoTipo', 'ot', 'WITH', 'oc.operativoTipo=ot.id' )
+                        ->where('ot.institucioneducativaTipo=2')
+                        ->andWhere('ot.esvigente=true')
+                        ->andWhere('oc.gestionTipo='. $gestionActual)
+                        ->orderBy('oc.distritoTipo,oc.id')
+                        ->getQuery()
+                        ->getResult();
+        }elseif($rol == 7){
+            $entities = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
+                        ->select('oc')
+                        ->innerjoin('SieAppWebBundle:OperativoTipo', 'ot', 'WITH', 'oc.operativoTipo=ot.id' )
+                        ->innerjoin('SieAppWebBundle:DistritoTipo', 'dt', 'WITH', 'oc.distritoTipo=dt.id' )
+                        ->where('ot.institucioneducativaTipo=2')
+                        ->andWhere('ot.esvigente=true')
+                        ->andWhere('oc.gestionTipo='. $gestionActual)
+                        ->andWhere('dt.departamentoTipo='. $idLugarTipo)
+                        ->orderBy('oc.distritoTipo,oc.id')
+                        ->getQuery()
+                        ->getResult();
+        }elseif($rol == 10){
+            $entities = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
+                        ->select('oc')
+                        ->innerjoin('SieAppWebBundle:OperativoTipo', 'ot', 'WITH', 'oc.operativoTipo=ot.id' )
+                        ->where('ot.institucioneducativaTipo=2')
+                        ->andWhere('ot.esvigente=true')
+                        ->andWhere('oc.gestionTipo='. $gestionActual)
+                        ->andWhere('oc.distritoTipo='. $idLugarTipo)
+                        ->orderBy('oc.distritoTipo,oc.id')
+                        ->getQuery()
+                        ->getResult();
+        }
+
+        return $entities;
     }
 
     public function operativoDeleteAction(Request $request, $id)
@@ -607,5 +663,27 @@ class OperativoController extends Controller {
         }
 
         return $this->redirect($this->generateUrl('alternativa_operativo_home'));
+    }
+    public function operativoVerCeasAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:OperativoControl')->find($request->get('id'));
+        //dump($entity);die;
+        if (!$entity) {
+            $this->get('session')->getFlashBag()->add('error', 'Operativo no encontrado.');
+            return $this->redirect($this->generateUrl('alternativa_operativo_ampliar'));
+        }else{
+            $datos = json_decode($entity->getObs(),true);
+            //dump($datos);die;
+            $ieSucursalArray = array(); 
+            foreach($datos as $d){
+                $ieSucursalArray[]=json_decode($d,true)['ies'];
+            }
+            $ies = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findBy(array('id'=>$ieSucursalArray));
+            
+            return $this->render($this->session->get('pathSystem') . ':Operativo:operativoVerCeas.html.twig', array(
+                'ies' => $ies,
+            ));
+        }
     }
 }

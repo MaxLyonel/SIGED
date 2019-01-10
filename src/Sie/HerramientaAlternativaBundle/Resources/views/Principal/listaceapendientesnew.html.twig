@@ -28,25 +28,33 @@
             {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form'} } )}}
             <div class="panel-body">
                 <div class="row">
-                    <div class="form-group col-lg-3 col-md-3">
-                        {{ form_label(form.gestion)}}
-                        {{form_widget(form.gestion) }}
+                    <div class="form-group col-md-4">
+                        <div class="col-md-5">
+                            {{ form_label(form.gestion)}}
+                        </div>
+                        <div class="col-md-3">
+                            {{form_widget(form.gestion) }}
+                        </div>
                     </div>
                     {% if rol == 8 %}
-                    <div class="form-group col-lg-3 col-md-3">
-                        {{ form_label(form.departamento)}}
-                        {{form_widget(form.departamento) }}
-                    </div>
+                        <div class="form-group col-md-3">
+                            <div class="col-md-5">
+                                {{ form_label(form.departamento)}}
+                            </div>
+                            <div class="col-md-5">
+                                {{form_widget(form.departamento) }}
+                            </div>
+                        </div>
                     {% endif %}
+                    <div class="form-group col-md-3">  
+                        <div class="col-md-6">                                      
+                            {{ form_widget(form.buscar ) }}
+                        </div>
+                    </div>
                     {#<div class="form-group col-lg-2 col-md-2">
                         {{ form_label(form.distrito)}}
                         {{form_widget(form.distrito) }}
                     </div>#}
-                </div>
-                <div class="row">
-                    <div class="form-group col-lg-3 col-md-3">                                        
-                        {{ form_widget(form.buscar ) }}
-                    </div>
                 </div>
                 {{form_end(form)}}
                 {{form_start(form_exp)}}

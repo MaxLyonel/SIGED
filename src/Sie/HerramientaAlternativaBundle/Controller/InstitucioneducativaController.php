@@ -423,7 +423,9 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                     a.iestid as iestid,
                     a.tramite_estado,
                     a.teid as teid,
-                    a.obs                             
+                    a.ttid as ttid,
+                    a.tramite_tipo,
+                    a.obs1                             
                     from
                     jurisdiccion_geografica jg 
                                     inner join (
@@ -443,10 +445,11 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             
             inner join 
             
-            (select  a.id as iestid, x.id as teid, a.*, b.*, x.*
+            (select  a.id as iestid, x.id as teid,x.obs as obs1, a.*, b.*, x.*,x1.*,x1.id as ttid
             from institucioneducativa_sucursal_tramite  a
             inner join institucioneducativa_sucursal b on a.institucioneducativa_sucursal_id = b.id
-            inner join tramite_estado x on a.tramite_estado_id = x.id 
+            inner join tramite_estado x on a.tramite_estado_id = x.id
+            inner join tramite_tipo x1 on a.tramite_tipo_id = x1.id
             --where b.institucioneducativa_id = '81230227'
             ) a on a.institucioneducativa_id = ie.id
             inner join (
@@ -494,7 +497,9 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                     a.iestid as iestid,
                     a.tramite_estado,
                     a.teid as teid,
-                    a.obs                             
+                    a.ttid as ttid,
+                    a.tramite_tipo,
+                    a.obs1                             
                     from
                     jurisdiccion_geografica jg 
                                     inner join (
@@ -514,10 +519,11 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             
             inner join 
             
-            (select  a.id as iestid, x.id as teid, a.*, b.*, x.*
+            (select  a.id as iestid, x.id as teid,x.obs as obs1, a.*, b.*, x.*,x1.*,x1.id as ttid
             from institucioneducativa_sucursal_tramite  a
             inner join institucioneducativa_sucursal b on a.institucioneducativa_sucursal_id = b.id
-            inner join tramite_estado x on a.tramite_estado_id = x.id 
+            inner join tramite_estado x on a.tramite_estado_id = x.id
+            inner join tramite_tipo x1 on a.tramite_tipo_id = x1.id
             --where b.institucioneducativa_id = '80480255'
             ) a on a.institucioneducativa_id = ie.id
             inner join (
@@ -571,7 +577,9 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                     a.iestid as iestid,
                     a.tramite_estado,
                     a.teid as teid,
-                    a.obs                             
+                    a.ttid as ttid,
+                    a.tramite_tipo,
+                    a.obs1
                     from
                     jurisdiccion_geografica jg 
                                     inner join (
@@ -591,10 +599,11 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             
             inner join 
             
-            (select  a.id as iestid, x.id as teid, a.*, b.*, x.*
+            (select  a.id as iestid, x.id as teid,x.obs as obs1, a.*, b.*, x.*,x1.*,x1.id as ttid
             from institucioneducativa_sucursal_tramite  a
             inner join institucioneducativa_sucursal b on a.institucioneducativa_sucursal_id = b.id
             inner join tramite_estado x on a.tramite_estado_id = x.id 
+            inner join tramite_tipo x1 on a.tramite_tipo_id = x1.id 
             --where b.institucioneducativa_id = '80480255'
             ) a on a.institucioneducativa_id = ie.id
             inner join (

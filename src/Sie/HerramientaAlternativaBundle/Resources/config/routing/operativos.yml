@@ -11,7 +11,7 @@ alternativa_operativo_cea:
     defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoCea}
 
 alternativa_operativo_edit:
-    path:     /{id}/operativoedit
+    path:     /operativoedit
     defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoEdit}
 
 alternativa_operativo_update:
@@ -37,3 +37,15 @@ alternativa_operativo_buscar_cea:
 alternativa_operativo_buscar_oeprativos_ceas:
     path:     /buscaroperativoceas
     defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:bucarOperativoCeas}
+
+alternativa_operativo_buscar_distrito:
+    path:     /buscardistrito
+    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:bucarDistrito}
+
+alternativa_operativo_ampliar:
+    path:     /operativoampliar
+    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoAmpliar}
+
+alternativa_operativo_ver_ceas:
+    path:     /operativoverceas
+    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoVerCeas}
