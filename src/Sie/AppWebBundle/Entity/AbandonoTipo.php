@@ -34,6 +34,10 @@ class AbandonoTipo
      */
     private $fechaModificacion;
 
+    public function __toString(){
+        return $this->descripcionAbandono;
+    }
+
 
     /**
      * Get id

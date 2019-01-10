@@ -34,7 +34,9 @@ class ViviendaOcupaTipo
      */
     private $fechaModificacion;
 
-
+    public function __toString(){
+        return $this->descripcionViviendaOcupa;
+    }
     /**
      * Get id
      *
