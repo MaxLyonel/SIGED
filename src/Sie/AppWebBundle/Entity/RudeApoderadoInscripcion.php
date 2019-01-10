@@ -15,31 +15,6 @@ class RudeApoderadoInscripcion
     private $id;
 
     /**
-     * @var integer
-     */
-    private $apoderadoTipoId;
-
-    /**
-     * @var integer
-     */
-    private $personaId;
-
-    /**
-     * @var integer
-     */
-    private $estudianteInscripcionId;
-
-    /**
-     * @var integer
-     */
-    private $idiomaMaternoTipoId;
-
-    /**
-     * @var integer
-     */
-    private $instruccionTipoId;
-
-    /**
      * @var string
      */
     private $empleo;
@@ -60,9 +35,34 @@ class RudeApoderadoInscripcion
     private $tieneocupacion;
 
     /**
-     * @var integer
+     * @var \Sie\AppWebBundle\Entity\ApoderadoTipo
      */
-    private $ocupacionTipoId;
+    private $apoderadoTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\Persona
+     */
+    private $persona;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstudianteInscripcion
+     */
+    private $estudianteInscripcion;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\IdiomaTipo
+     */
+    private $idiomaMaternoTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\InstruccionTipo
+     */
+    private $instruccionTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\ApoderadoOcupacionTipo
+     */
+    private $ocupacionTipo;
 
 
     /**
@@ -73,121 +73,6 @@ class RudeApoderadoInscripcion
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set apoderadoTipoId
-     *
-     * @param integer $apoderadoTipoId
-     * @return RudeApoderadoInscripcion
-     */
-    public function setApoderadoTipoId($apoderadoTipoId)
-    {
-        $this->apoderadoTipoId = $apoderadoTipoId;
-    
-        return $this;
-    }
-
-    /**
-     * Get apoderadoTipoId
-     *
-     * @return integer 
-     */
-    public function getApoderadoTipoId()
-    {
-        return $this->apoderadoTipoId;
-    }
-
-    /**
-     * Set personaId
-     *
-     * @param integer $personaId
-     * @return RudeApoderadoInscripcion
-     */
-    public function setPersonaId($personaId)
-    {
-        $this->personaId = $personaId;
-    
-        return $this;
-    }
-
-    /**
-     * Get personaId
-     *
-     * @return integer 
-     */
-    public function getPersonaId()
-    {
-        return $this->personaId;
-    }
-
-    /**
-     * Set estudianteInscripcionId
-     *
-     * @param integer $estudianteInscripcionId
-     * @return RudeApoderadoInscripcion
-     */
-    public function setEstudianteInscripcionId($estudianteInscripcionId)
-    {
-        $this->estudianteInscripcionId = $estudianteInscripcionId;
-    
-        return $this;
-    }
-
-    /**
-     * Get estudianteInscripcionId
-     *
-     * @return integer 
-     */
-    public function getEstudianteInscripcionId()
-    {
-        return $this->estudianteInscripcionId;
-    }
-
-    /**
-     * Set idiomaMaternoTipoId
-     *
-     * @param integer $idiomaMaternoTipoId
-     * @return RudeApoderadoInscripcion
-     */
-    public function setIdiomaMaternoTipoId($idiomaMaternoTipoId)
-    {
-        $this->idiomaMaternoTipoId = $idiomaMaternoTipoId;
-    
-        return $this;
-    }
-
-    /**
-     * Get idiomaMaternoTipoId
-     *
-     * @return integer 
-     */
-    public function getIdiomaMaternoTipoId()
-    {
-        return $this->idiomaMaternoTipoId;
-    }
-
-    /**
-     * Set instruccionTipoId
-     *
-     * @param integer $instruccionTipoId
-     * @return RudeApoderadoInscripcion
-     */
-    public function setInstruccionTipoId($instruccionTipoId)
-    {
-        $this->instruccionTipoId = $instruccionTipoId;
-    
-        return $this;
-    }
-
-    /**
-     * Get instruccionTipoId
-     *
-     * @return integer 
-     */
-    public function getInstruccionTipoId()
-    {
-        return $this->instruccionTipoId;
     }
 
     /**
@@ -283,25 +168,140 @@ class RudeApoderadoInscripcion
     }
 
     /**
-     * Set ocupacionTipoId
+     * Set apoderadoTipo
      *
-     * @param integer $ocupacionTipoId
+     * @param \Sie\AppWebBundle\Entity\ApoderadoTipo $apoderadoTipo
      * @return RudeApoderadoInscripcion
      */
-    public function setOcupacionTipoId($ocupacionTipoId)
+    public function setApoderadoTipo(\Sie\AppWebBundle\Entity\ApoderadoTipo $apoderadoTipo = null)
     {
-        $this->ocupacionTipoId = $ocupacionTipoId;
+        $this->apoderadoTipo = $apoderadoTipo;
     
         return $this;
     }
 
     /**
-     * Get ocupacionTipoId
+     * Get apoderadoTipo
      *
-     * @return integer 
+     * @return \Sie\AppWebBundle\Entity\ApoderadoTipo 
      */
-    public function getOcupacionTipoId()
+    public function getApoderadoTipo()
     {
-        return $this->ocupacionTipoId;
+        return $this->apoderadoTipo;
+    }
+
+    /**
+     * Set persona
+     *
+     * @param \Sie\AppWebBundle\Entity\Persona $persona
+     * @return RudeApoderadoInscripcion
+     */
+    public function setPersona(\Sie\AppWebBundle\Entity\Persona $persona = null)
+    {
+        $this->persona = $persona;
+    
+        return $this;
+    }
+
+    /**
+     * Get persona
+     *
+     * @return \Sie\AppWebBundle\Entity\Persona 
+     */
+    public function getPersona()
+    {
+        return $this->persona;
+    }
+
+    /**
+     * Set estudianteInscripcion
+     *
+     * @param \Sie\AppWebBundle\Entity\EstudianteInscripcion $estudianteInscripcion
+     * @return RudeApoderadoInscripcion
+     */
+    public function setEstudianteInscripcion(\Sie\AppWebBundle\Entity\EstudianteInscripcion $estudianteInscripcion = null)
+    {
+        $this->estudianteInscripcion = $estudianteInscripcion;
+    
+        return $this;
+    }
+
+    /**
+     * Get estudianteInscripcion
+     *
+     * @return \Sie\AppWebBundle\Entity\EstudianteInscripcion 
+     */
+    public function getEstudianteInscripcion()
+    {
+        return $this->estudianteInscripcion;
+    }
+
+    /**
+     * Set idiomaMaternoTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\IdiomaTipo $idiomaMaternoTipo
+     * @return RudeApoderadoInscripcion
+     */
+    public function setIdiomaMaternoTipo(\Sie\AppWebBundle\Entity\IdiomaTipo $idiomaMaternoTipo = null)
+    {
+        $this->idiomaMaternoTipo = $idiomaMaternoTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get idiomaMaternoTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\IdiomaTipo 
+     */
+    public function getIdiomaMaternoTipo()
+    {
+        return $this->idiomaMaternoTipo;
+    }
+
+    /**
+     * Set instruccionTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\InstruccionTipo $instruccionTipo
+     * @return RudeApoderadoInscripcion
+     */
+    public function setInstruccionTipo(\Sie\AppWebBundle\Entity\InstruccionTipo $instruccionTipo = null)
+    {
+        $this->instruccionTipo = $instruccionTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get instruccionTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\InstruccionTipo 
+     */
+    public function getInstruccionTipo()
+    {
+        return $this->instruccionTipo;
+    }
+
+    /**
+     * Set ocupacionTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\ApoderadoOcupacionTipo $ocupacionTipo
+     * @return RudeApoderadoInscripcion
+     */
+    public function setOcupacionTipo(\Sie\AppWebBundle\Entity\ApoderadoOcupacionTipo $ocupacionTipo = null)
+    {
+        $this->ocupacionTipo = $ocupacionTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get ocupacionTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\ApoderadoOcupacionTipo 
+     */
+    public function getOcupacionTipo()
+    {
+        return $this->ocupacionTipo;
     }
 }

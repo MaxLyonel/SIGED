@@ -32,6 +32,12 @@ Sie\AppWebBundle\Entity\Rude:
         IDX_8E0126C48E2273C1:
             columns:
                 - vive_habitualmente_tipo_id
+        IDX_8E0126C4A1104027:
+            columns:
+                - estudiante_inscripcion_id
+        IDX_8E0126C4102FF6F0:
+            columns:
+                - municipio_lugar_tipo_id
     id:
         id:
             type: integer
@@ -42,12 +48,6 @@ Sie\AppWebBundle\Entity\Rude:
             generator:
                 strategy: SEQUENCE
     fields:
-        estudianteInscripcionId:
-            type: integer
-            nullable: true
-            unsigned: false
-            comment: ''
-            column: estudiante_inscripcion_id
         discapacidadTipoId:
             type: integer
             nullable: true
@@ -72,10 +72,8 @@ Sie\AppWebBundle\Entity\Rude:
             comment: ''
             column: centro_salud
         trabajoGestionPasada:
-            type: string
+            type: boolean
             nullable: true
-            length: 255
-            fixed: false
             comment: ''
             column: trabajo_gestion_pasada
         tieneOcupacionTrabajo:
@@ -130,12 +128,6 @@ Sie\AppWebBundle\Entity\Rude:
             fixed: false
             comment: ''
             column: telefono_fijo
-        idLugar:
-            type: integer
-            nullable: true
-            unsigned: false
-            comment: ''
-            column: id_lugar
         cantHijos:
             type: integer
             nullable: true
@@ -174,6 +166,17 @@ Sie\AppWebBundle\Entity\Rude:
             nullable: true
             comment: ''
             column: fecha_registro_rude
+        localidad:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        respuestaPago:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: respuesta_pago
     manyToOne:
         nacionOriginariaTipo:
             targetEntity: NacionOriginariaTipo
@@ -263,6 +266,24 @@ Sie\AppWebBundle\Entity\Rude:
             inversedBy: null
             joinColumns:
                 vive_habitualmente_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        municipioLugarTipo:
+            targetEntity: LugarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                municipio_lugar_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

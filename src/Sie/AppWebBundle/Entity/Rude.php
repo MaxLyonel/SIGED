@@ -17,11 +17,6 @@ class Rude
     /**
      * @var integer
      */
-    private $estudianteInscripcionId;
-
-    /**
-     * @var integer
-     */
     private $discapacidadTipoId;
 
     /**
@@ -92,11 +87,6 @@ class Rude
     /**
      * @var integer
      */
-    private $idLugar;
-
-    /**
-     * @var integer
-     */
     private $cantHijos;
 
     /**
@@ -128,6 +118,11 @@ class Rude
      * @var \DateTime
      */
     private $fechaRegistroRude;
+
+    /**
+     * @var string
+     */
+    private $localidad;
 
     /**
      * @var \Sie\AppWebBundle\Entity\NacionOriginariaTipo
@@ -179,6 +174,16 @@ class Rude
      */
     private $viveHabitualmenteTipo;
 
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstudianteInscripcion
+     */
+    private $estudianteInscripcion;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\LugarTipo
+     */
+    private $municipioLugarTipo;
+
 
     /**
      * Get id
@@ -188,29 +193,6 @@ class Rude
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set estudianteInscripcionId
-     *
-     * @param integer $estudianteInscripcionId
-     * @return Rude
-     */
-    public function setEstudianteInscripcionId($estudianteInscripcionId)
-    {
-        $this->estudianteInscripcionId = $estudianteInscripcionId;
-    
-        return $this;
-    }
-
-    /**
-     * Get estudianteInscripcionId
-     *
-     * @return integer 
-     */
-    public function getEstudianteInscripcionId()
-    {
-        return $this->estudianteInscripcionId;
     }
 
     /**
@@ -536,29 +518,6 @@ class Rude
     }
 
     /**
-     * Set idLugar
-     *
-     * @param integer $idLugar
-     * @return Rude
-     */
-    public function setIdLugar($idLugar)
-    {
-        $this->idLugar = $idLugar;
-    
-        return $this;
-    }
-
-    /**
-     * Get idLugar
-     *
-     * @return integer 
-     */
-    public function getIdLugar()
-    {
-        return $this->idLugar;
-    }
-
-    /**
      * Set cantHijos
      *
      * @param integer $cantHijos
@@ -717,6 +676,29 @@ class Rude
     public function getFechaRegistroRude()
     {
         return $this->fechaRegistroRude;
+    }
+
+    /**
+     * Set localidad
+     *
+     * @param string $localidad
+     * @return Rude
+     */
+    public function setLocalidad($localidad)
+    {
+        $this->localidad = $localidad;
+    
+        return $this;
+    }
+
+    /**
+     * Get localidad
+     *
+     * @return string 
+     */
+    public function getLocalidad()
+    {
+        return $this->localidad;
     }
 
     /**
@@ -947,5 +929,79 @@ class Rude
     public function getViveHabitualmenteTipo()
     {
         return $this->viveHabitualmenteTipo;
+    }
+
+    /**
+     * Set estudianteInscripcion
+     *
+     * @param \Sie\AppWebBundle\Entity\EstudianteInscripcion $estudianteInscripcion
+     * @return Rude
+     */
+    public function setEstudianteInscripcion(\Sie\AppWebBundle\Entity\EstudianteInscripcion $estudianteInscripcion = null)
+    {
+        $this->estudianteInscripcion = $estudianteInscripcion;
+    
+        return $this;
+    }
+
+    /**
+     * Get estudianteInscripcion
+     *
+     * @return \Sie\AppWebBundle\Entity\EstudianteInscripcion 
+     */
+    public function getEstudianteInscripcion()
+    {
+        return $this->estudianteInscripcion;
+    }
+
+    /**
+     * Set municipioLugarTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\LugarTipo $municipioLugarTipo
+     * @return Rude
+     */
+    public function setMunicipioLugarTipo(\Sie\AppWebBundle\Entity\LugarTipo $municipioLugarTipo = null)
+    {
+        $this->municipioLugarTipo = $municipioLugarTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get municipioLugarTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\LugarTipo 
+     */
+    public function getMunicipioLugarTipo()
+    {
+        return $this->municipioLugarTipo;
+    }
+    /**
+     * @var boolean
+     */
+    private $respuestaPago;
+
+
+    /**
+     * Set respuestaPago
+     *
+     * @param boolean $respuestaPago
+     * @return Rude
+     */
+    public function setRespuestaPago($respuestaPago)
+    {
+        $this->respuestaPago = $respuestaPago;
+    
+        return $this;
+    }
+
+    /**
+     * Get respuestaPago
+     *
+     * @return boolean 
+     */
+    public function getRespuestaPago()
+    {
+        return $this->respuestaPago;
     }
 }
