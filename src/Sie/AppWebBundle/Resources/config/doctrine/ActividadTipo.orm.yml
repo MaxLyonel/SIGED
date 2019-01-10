@@ -1,0 +1,36 @@
+Sie\AppWebBundle\Entity\ActividadTipo:
+    type: entity
+    table: actividad_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        descripcionOcupacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: descripcion_ocupacion
+        esVigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    lifecycleCallbacks: {  }
