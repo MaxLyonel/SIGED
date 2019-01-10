@@ -6,9 +6,13 @@ alternativa_operativo_distrito:
     path:     /{tipo}/operativodistrito
     defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoDistrito}
 
-alternativa_operativo_cea:
-    path:     /operativocea
-    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoCea}
+alternativa_operativo_regularizar:
+    path:     /operativoregularizar
+    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoRegularizar}
+
+alternativa_operativo_regularizar_guardar:
+    path:     /{id}/operativoregularizarguardar
+    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoRegularizarGuardar}
 
 alternativa_operativo_edit:
     path:     /operativoedit

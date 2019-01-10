@@ -6,12 +6,17 @@
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
                <li>
-                    <i class="glyphicon glyphicon-leaf"></i>
-                    <a href="{{path('principal_web')}}">Bienvenida/o</a>
+                    <i class="fa fa-users"></i>
+                    Gestión
                     <i class="fa fa-angle-right"></i>
                 </li>
                 <li>
-                    <i class="fa fa-th-large"></i>
+                    <i class="glyphicon glyphicon-cog"></i>
+                    Operativos
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    Habilitar Operativo
                     <i class="fa fa-angle-right"></i>
                 </li>
             </ol>
@@ -209,7 +214,7 @@
 
         function validar(){
             var cont = 0;
-            if(confirm('¿Esta seguro de habilitar el operativo?')){
+            if(confirm('¡AVISO IMPORTANTE! !LEA CON ATENCIÓN!\nLa habilitación del siguiente operativo cerrara toda regularización para los CEAS seleccionados,\ny solo los tec SIE podran realizar ediciones futuras segun normativa vigente.\nSe le comunica que se registrara el usuario y fecha de esta autorización.\n¿Esta seguro de habilitar el siguiente operativo para este centro?\nSi no esta seguro de este mensaje presione CANCELAR.')){
                 $('.checkbox:checked').each(function() {
                    cont = cont + 1;
                 });

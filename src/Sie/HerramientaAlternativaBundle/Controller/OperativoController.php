@@ -198,12 +198,6 @@ class OperativoController extends Controller {
                             ->getQuery()
                             ->getResult();
                 break;
-            case 5:
-
-                break;
-            case 6:
-
-                break;
         }
 
         //dump($entities);die;
@@ -534,7 +528,7 @@ class OperativoController extends Controller {
             ->add('distrito','text',array('label'=>'Distrito:','data'=>$entity->getDistritoTipo()->getDistrito(),'disabled'=>true, 'attr'=>array('class'=>'form-control')))
             ->add('operativo','text',array('label'=>'Operativo:','data'=>$entity->getOperativoTipo()->getOperativo(),'disabled'=>true, 'attr'=>array('class'=>'form-control')))
             ->add('fechainicio','text',array('label'=>'Fecha inicio:','data'=>$entity->getfechaInicio()->format('d-m-Y'),'disabled'=>true, 'attr'=>array('class'=>'form-control')))
-            ->add('fechafin','text',array('label'=>'Fecha fin:','data'=>$entity->getfechaFin()->format('d-m-Y'),'required'=>true, 'attr'=>array('class'=>'form-control','maxlength'=>10,'minlength'=>10,'autocomplete'=>'off')))
+            ->add('fechafin','text',array('label'=>'Fecha fin (dia-mes-año):','data'=>$entity->getfechaFin()->format('d-m-Y'),'required'=>true, 'attr'=>array('class'=>'form-control','maxlength'=>10,'minlength'=>10,'autocomplete'=>'off')))
             ->add('guardar', 'button', array('label'=> 'Guardar Cambios', 'attr'=>array('class'=>'form-control btn btn-success','onclick'=>'guardarCambios()')))
             ->getForm();
         return $form;
@@ -644,26 +638,53 @@ class OperativoController extends Controller {
 
         return $this->redirect($this->generateUrl('alternativa_operativo_home'));
     }
-    
+
     public function operativoBucarCeaAction(Request $request)
     {
-        $idcea = $request->get('idcea');
+        $form = $request->get('form');
+        //dump($form);die;
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('SieAppWebBundle:Inst')->find($id);
-        if (!$entity) {
-            $this->get('session')->getFlashBag()->add('error', 'Operativo no encontrado.');
-        }else{
-            $em->remove($entity);
-            $em->flush();
-            $mensaje = 'El operativo fué eliminado correctamente.';
-            $request->getSession()
-                    ->getFlashBag()
-                    ->add('exito', $mensaje);           
+        switch($form['operativo']){
+            case 1: //INSCRIPCIONES PRIMER SEMESTRE
+                $periodo = 2;
+                $tramiteEstado = 12;
+                break;
+            case 2: //NOTAS PRIMER SEMESTRE
+                $periodo = 2;
+                $tramiteEstado = 14;
+                break;
+            case 3: //INSCRIPCIONES SEGUNDO SEMESTRE
+                $periodo = 3;
+                $tramiteEstado = 12;
+                break;
+            case 4: //NOTAS SEGUNDO SEMESTRE
+                $periodo = 3;
+                $tramiteEstado = 14;
+                break;
         }
-
-        return $this->redirect($this->generateUrl('alternativa_operativo_home'));
+        $entities = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->createQueryBuilder('a')
+                            ->select('d.id as gestionTipo, b.id as SucursalIE, a.id as IEsucursalId,c.id as id_ie,c.institucioneducativa,f.id as idDistrito,f.distrito, a.periodoTipoId,i.periodo, h.id as teid, h.tramiteEstado as te, h.obs as observacion')
+                            ->innerJoin('SieAppWebBundle:SucursalTipo', 'b', 'WITH', 'b.id = a.sucursalTipo')
+                            ->innerJoin('SieAppWebBundle:Institucioneducativa', 'c', 'WITH', 'c.id = a.institucioneducativa')
+                            ->innerJoin('SieAppWebBundle:GestionTipo', 'd', 'WITH', 'd.id = a.gestionTipo') 
+                            ->innerJoin('SieAppWebBundle:JurisdiccionGeografica', 'e', 'WITH', 'c.leJuridicciongeografica = e.id')
+                            ->innerJoin('SieAppWebBundle:DistritoTipo', 'f', 'WITH', 'e.distritoTipo = f.id')
+                            ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursalTramite', 'g', 'WITH', 'g.institucioneducativaSucursal = a.id')
+                            ->innerJoin('SieAppWebBundle:TramiteEstado', 'h', 'WITH', 'h.id = g.tramiteEstado')
+                            ->innerJoin('SieAppWebBundle:PeriodoTipo', 'i', 'WITH', 'i.id = a.periodoTipoId')
+                            ->where('a.periodoTipoId = '. $periodo)
+                            ->andWhere('a.institucioneducativa = '. $form['codsie'])
+                            ->andWhere('a.gestionTipo = '. $form['gestion'])
+                            ->andWhere('g.tramiteEstado = '. $tramiteEstado)
+                            ->getQuery()
+                            ->getResult();
+        //dump($entities);die;
+        return $this->render($this->session->get('pathSystem') . ':Operativo:tablaRegularizar.html.twig', array(
+            'entities' => $entities,
+        ));
     }
+
     public function operativoVerCeasAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
@@ -685,5 +706,106 @@ class OperativoController extends Controller {
                 'ies' => $ies,
             ));
         }
+    }
+
+    public function operativoRegularizarAction(Request $request) {
+        //get the session's values
+        $this->session = $request->getSession();
+        $id_usuario = $this->session->get('userId');
+        //dump($gestion);die;
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        // Verificamos si no ha caducado la session
+        if (!$this->session->get('userId')) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        
+        return $this->render($this->session->get('pathSystem') . ':Operativo:regularizar.html.twig', array(
+            'form' => $this->operativoRegularizarForm()->createView(),
+        ));
+    }
+
+    public function operativoRegularizarForm()
+    {   
+        $idlugarusuario = $this->session->get('roluserlugarid');
+        $rolusuario = $this->session->get('roluser');
+        $this->gestion = date('Y');
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createFormBuilder()
+        ->add('codsie','text',array('label'=>'Cod. SIE:', 'required'=>true, 'attr'=>array('maxlength' => '8','class'=>'form-control validar')))
+        ->add('operativo','entity',array('label'=>'Operativo:','required'=>true,'class'=>'SieAppWebBundle:OperativoTipo','query_builder'=>function(EntityRepository $o){
+            return $o->createQueryBuilder('o')->where("o.institucioneducativaTipo=2 and o.esvigente=true");},'property'=>'operaTivo','empty_value' => false,'attr'=>array('class'=>'form-control')))
+        ->add('gestion','entity',array('label'=>'Gestión:','required'=>true,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
+            return $g->createQueryBuilder('g')->where('g.id>=2018');},'property'=>'gestion','empty_value' => false,'attr'=>array('class'=>'form-control')))
+        //->add('fechainicio','text',array('label'=>'Fecha inicio: (dia-mes-año)','required'=>true,'data'=>date('d-m-Y'), 'attr'=>array('class'=>'form-control datepicker','placeholder'=>'dd-mm-AAAA','maxlength'=>10,'minlength'=>10,'autocomplete'=>'off')))
+        //->add('fechafin','text',array('label'=>'Fecha fin: (dia-mes-año)','required'=>true,'data'=>date('d-m-Y'), 'attr'=>array('class'=>'form-control datepicker','placeholder'=>'dd-mm-AAAA','maxlength'=>10,'minlength'=>10,'autocomplete'=>'off')));
+        ->add('buscar', 'button', array('label'=> 'Buscar', 'attr'=>array('class'=>'form-control btn btn-success','onclick'=>'buscarCea()')))
+        ->getForm();
+        return $form;
+    }
+
+    public function operativoRegularizarGuardarAction(Request $request)
+    {
+        //dump($request->get('id'));die;
+        //get the session's values
+        $this->session = $request->getSession();
+        $id_usuario = $this->session->get('userId');
+        $rol = $this->session->get('roluser');
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        // Verificamos si no ha caducado la session
+        if (!$this->session->get('userId')) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        $em = $this->getDoctrine()->getManager();
+        $codsie = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find($request->get('id'))->getInstitucioneducativa()->getId();
+        $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
+        $query->bindValue(':user_id', $id_usuario);
+        $query->bindValue(':sie', $codsie);
+        $query->bindValue(':rolId', $rol);
+        $query->execute();
+        $aTuicion = $query->fetchAll();        
+        //dump($aTuicion);die;
+        if ($aTuicion[0]['get_ue_tuicion']) {
+
+            $em->getConnection()->beginTransaction();
+            try {
+                $iest = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalTramite')->findBy(array('institucioneducativaSucursal'=>$request->get('id')));            
+                //dump($iest);die;
+                $estado = $iest[0]->getTramiteEstado()->getId();
+                //dump($estado);die;
+                if ($estado == '14'){                                                           
+                    $iest[0]->setTramiteEstado($em->getRepository('SieAppWebBundle:TramiteEstado')->find('6'));//EN REGULARIZACIÓN FIN DE SEMESTRE                
+                    $iest[0]->setTramiteTipo($em->getRepository('SieAppWebBundle:TramiteTipo')->find('24')); 
+                }    
+                if ($estado == '12'){
+                    $iest[0]->setTramiteEstado($em->getRepository('SieAppWebBundle:TramiteEstado')->find('7'));//EN REGULARIZACIÓN INICIO DE SEMESTRE
+                    $iest[0]->setTramiteTipo($em->getRepository('SieAppWebBundle:TramiteTipo')->find('23'));                                
+                }
+                $iest[0]->setFechaModificacion(new \DateTime('now'));
+                $iest[0]->setUsuarioIdModificacion($this->session->get('userId'));            
+                $em->persist($iest[0]);
+                $em->flush();
+            
+                $em->getConnection()->commit();
+            
+                $this->get('session')->getFlashBag()->add('exito', 'El CEA: '. $iest[0]->getInstitucioneducativaSucursal()->getInstitucioneducativa()->getInstitucioneducativa() . ' ,fué habilitado para regularizar el operativo.');
+            } catch (Exception $ex) {
+                $em->getConnection()->rollback();
+                $this->get('session')->getFlashBag()->add('error', 'Ocurrio un error, el CEA no fué habilitado para regularizar el operativo');
+            }
+        }else{
+            $this->get('session')->getFlashBag()->add('error', 'No tiene tuición sobre el Centro de Educación Alternativa.');    
+        }
+        
+        return $this->redirect($this->generateUrl('alternativa_operativo_regularizar'));
     }
 }
