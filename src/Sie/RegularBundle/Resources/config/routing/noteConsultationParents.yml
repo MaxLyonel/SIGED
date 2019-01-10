@@ -15,7 +15,7 @@ note_consultation_parents_sie_nota:
          expose: true
 
 note_consultation_parents_sie_nota_new:
-    path:     /seeNotaNew/{inscripcionid}/{idstudent}/{nivel}/{grado}/{paralelo}/{turno}/{gestion}/{sie}/{estadomatriculaTipo}
+    path:     /seeNotaNew/{inscripcionid}/{estudianteid}/{gestion}/{subsistema}
     defaults: { _controller: SieRegularBundle:NoteConsultationParents:notaNew }
     options:
          expose: true
