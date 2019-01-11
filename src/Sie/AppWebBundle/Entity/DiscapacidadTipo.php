@@ -24,7 +24,6 @@ class DiscapacidadTipo
      */
     private $esVigente;
 
-
     /**
      * Get id
      *

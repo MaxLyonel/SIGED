@@ -29,7 +29,9 @@ class GradoDiscapacidadTipo
      */
     private $gradoDiscapacidad;
 
-
+    public function __toString(){
+        return $this->gradoDiscapacidad;
+    }
 
     /**
      * Get id
