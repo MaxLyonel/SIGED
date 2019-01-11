@@ -17,7 +17,7 @@ class ViveHabitualmenteTipo
     /**
      * @var string
      */
-    private $descripcionViveHabitualmenet;
+    private $descripcionViveHabitualmente;
 
     /**
      * @var boolean
@@ -46,26 +46,26 @@ class ViveHabitualmenteTipo
     }
 
     /**
-     * Set descripcionViveHabitualmenet
+     * Set descripcionViveHabitualmente
      *
-     * @param string $descripcionViveHabitualmenet
+     * @param string $descripcionViveHabitualmente
      * @return ViveHabitualmenteTipo
      */
-    public function setDescripcionViveHabitualmenet($descripcionViveHabitualmenet)
+    public function setDescripcionViveHabitualmente($descripcionViveHabitualmente)
     {
-        $this->descripcionViveHabitualmenet = $descripcionViveHabitualmenet;
+        $this->descripcionViveHabitualmente = $descripcionViveHabitualmente;
     
         return $this;
     }
 
     /**
-     * Get descripcionViveHabitualmenet
+     * Get descripcionViveHabitualmente
      *
      * @return string 
      */
-    public function getDescripcionViveHabitualmenet()
+    public function getDescripcionViveHabitualmente()
     {
-        return $this->descripcionViveHabitualmenet;
+        return $this->descripcionViveHabitualmente;
     }
 
     /**

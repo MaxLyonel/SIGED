@@ -34,7 +34,9 @@ class CantidadCentroSaludTipo
      */
     private $fechaModificaion;
 
-
+    public function __toString(){
+        return $this->descripcionCantidad;
+    }
     /**
      * Get id
      *

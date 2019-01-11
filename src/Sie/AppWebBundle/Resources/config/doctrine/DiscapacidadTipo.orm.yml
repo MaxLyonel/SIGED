@@ -17,4 +17,9 @@ Sie\AppWebBundle\Entity\DiscapacidadTipo:
             length: 45
             fixed: false
             comment: ''
+        esVigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente
     lifecycleCallbacks: {  }
