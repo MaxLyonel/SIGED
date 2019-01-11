@@ -24,6 +24,9 @@ class DiscapacidadTipo
      */
     private $esVigente;
 
+    public function __toString(){
+        return $this->origendiscapacidad;
+    }
     /**
      * Get id
      *

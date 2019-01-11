@@ -126,7 +126,6 @@ class InfoEstudianteRudeNuevoController extends Controller {
         $tutor = $this->obtenerApoderado($idInscripcion,array(3,4,5,6,7,8,9,10,11,12,13));
         $formTutor = $this->createFormApoderado($rude, $idInscripcion, $tutor[0]);
 
-
         $ayudaComplemento = ["Complementito","Contenido del complemento, no se refiere al lugar de expedición del documento."];
 
         return $this->render('SieHerramientaBundle:InfoEstudianteRudeNuevo:index.html.twig', [
@@ -135,6 +134,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
             'formEstudiante'=>$this->createFormEstudiante($rude, $estudiante)->createView(),
             'formDireccion'=>$this->createFormDireccion($rude)->createView(),
             'formSocioeconomico'=>$this->createFormSocioeconomico($rude)->createView(),
+            'formConQuienVive'=>$this->createFormConQuienVive($rude)->createView(),
             'formPadre'=>$formPadre->createView(),
             'formMadre'=>$formMadre->createView(),
             'formTutor'=>$formTutor->createView(),
@@ -239,7 +239,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                             'class' => 'SieAppWebBundle:DiscapacidadTipo',
                             'query_builder' => function (EntityRepository $e) {
                                 return $e->createQueryBuilder('dt')
-                                        ->where('dt.id != 1');
+                                        ->where('dt.id not in (1,2)');
                             },
                             'empty_value' => 'Selecionar...',
                             'required' => true,
@@ -845,7 +845,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                             'property'=>'descripcionTiempoMaxTipo',
                             'required'=>true,
                             'mapped'=>false,
-                            'data'=>(count($medioTransporteEstudiante) > 0)?$medioTransporteEstudiante[0]->getTiempoMaximoTrayectoTipo()->getId():''
+                            'data'=>(count($medioTransporteEstudiante) > 0)?$em->getRepository('SieAppWebBundle:TiempoMaximoTrayectoTipo')->find($medioTransporteEstudiante[0]->getTiempoMaximoTrayectoTipo()->getId()):''
                         ))
                     ->add('tieneAbandono', 'choice', array(
                             'choices'=>array(true=>'Si', false=>'No'),
@@ -858,7 +858,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                             'class' => 'SieAppWebBundle:AbandonoTipo',
                             'multiple'=>true,
                             'property'=>'descripcionAbandono',
-                            'required'=>false,
+                            'required'=>true,
                             'data'=>$em->getRepository('SieAppWebBundle:AbandonoTipo')->findBy(array('id'=>$arrayAbandono)),
                             'mapped'=>false,
                             'expanded'=>false
@@ -1251,7 +1251,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         ->getResult();
         // SI TRABAJO LA GESTION PASADA Y RECIBIO PAGO
         // REGISTRAMOS LSO TIPOS DE PAGO 
-        if(isset($form['recibioTipoPago']) and $form['respuestaPago'] == true){
+        if(isset($form['recibioTipoPago']) and isset($form['respuestaPago']) and $form['respuestaPago'] == true){
             $recibioTipoPago = $form['recibioTipoPago'];
             for ($i=0; $i < count($recibioTipoPago); $i++) { 
                 $pagoEstudiante = new RudeRecibioPago();
@@ -1330,6 +1330,41 @@ class InfoEstudianteRudeNuevoController extends Controller {
 
         $response = new JsonResponse();
         return $response->setData(['msg'=>true]);
+    }
+
+    /**
+     * FORMULARIO CON QUIEN VIVE EL ESTUDAINTE
+     */
+    public function createFormConQuienVive($rude){
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createFormBuilder($rude)
+                ->add('id', 'hidden')
+                ->add('viveHabitualmenteTipo', 'entity', array(
+                        'class' => 'SieAppWebBundle:ViveHabitualmenteTipo',
+                        'query_builder' => function (EntityRepository $e) {
+                            return $e->createQueryBuilder('vat')
+                                    ->where('vat.esVigente = true')
+                                    ->orderBy('vat.id', 'ASC')
+                            ;
+                        },
+                        'empty_value' => 'Seleccionar...',
+                        'required'=>true,
+                        'data'=> ($rude->getViveHabitualmenteTipo())?$em->getReference('SieAppWebBundle:ViveHabitualmenteTipo', $rude->getViveHabitualmenteTipo()->getId()):'',
+                        'mapped'=>false
+                    ))
+                ->getForm();
+        return $form;
+    }
+
+    public function saveFormConQuienViveAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $form = $request->get('form');
+        $rude = $em->getRepository('SieAppWebBundle:Rude')->find($form['id']);
+        $rude->setViveHabitualmenteTipo($em->getRepository('SieAppWebBundle:ViveHabitualmenteTipo')->find($form['viveHabitualmenteTipo']));
+        $em->flush();
+
+        $response = new JsonResponse();
+        return $response->setData(['msg'=>'ok']);
     }
 
     /**
@@ -1626,7 +1661,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
             $tiene = $request->get('m_tieneMadre');
         }
         if($tipo == 'tutor'){
-            $parentesco = array(1,3,4,5,6,7,8,9,10,11,12,13,0);
+            $parentesco = array(3,4,5,6,7,8,9,10,11,12,13,0);
             $tiene = $request->get('t_tieneTutor');
         }
 

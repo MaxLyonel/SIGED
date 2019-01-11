@@ -34,7 +34,9 @@ class ViveHabitualmenteTipo
      */
     private $fechaModificacion;
 
-
+    public function __toString(){
+        return $this->descripcionViveHabitualmente;
+    }
     /**
      * Get id
      *
