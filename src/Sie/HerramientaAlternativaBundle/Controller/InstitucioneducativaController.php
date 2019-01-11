@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Sie\AppWebBundle\Entity\InstitucioneducativaSucursalTramite;
+use Sie\AppWebBundle\Entity\Consolidacion;
 use Doctrine\ORM\EntityRepository;
 
 
@@ -689,18 +690,19 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
     }
 
     public function cerraroperativoAction(Request $request) {
+        //dump($request);die;
         $sesion = $request->getSession();
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         $db = $em->getConnection();
-
+        $gestion = 2019;
+        //dump($sesion->get('ie_per_estado'));die;
         try {
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_sucursal_tramite');")->execute();
             $ies = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find($sesion->get('ie_suc_id'));            
             $iest = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalTramite')->findByInstitucioneducativaSucursal($ies);
-            if ($iest){           
+            if ($iest){
                 if ($sesion->get('ie_per_estado') == '1'){//INICIO INSCRIPCIONES
-                    
                     //MIGRANDO DATOS DE SOCIO ECONOMICOS DEL ANTERIOR PERIODO AL ACTUAL PERIODO
                     $gestant = $this->session->get('ie_gestion');
                     $perant = $this->session->get('ie_per_cod');
@@ -744,14 +746,25 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                     if ($observaciones){
                         return $this->redirect($this->generateUrl('herramienta_alter_reporte_observacionesoperativoinicio'));
                     }
-                    else{                      
+                    else{    
                         if ($iest[0]->getTramiteEstado()->getId() == '11'){//Aceptación de apertura Inicio de Semestre
                             $iestvar = $iest[0];
                             $iestvar->setTramiteEstado($em->getRepository('SieAppWebBundle:TramiteEstado')->find('12'));//¡Inicio de Semestre - Cerrado!                           
                             $iestvar->setFechaModificacion(new \DateTime('now'));
                             $iestvar->setUsuarioIdModificacion($this->session->get('userId'));
                             $em->persist($iestvar);
-                            $em->flush(); 
+                            $em->flush();
+                            /**
+                             * Registro de la consolidacion a partir de la gestion 2019
+                             */
+                            if($ies->getGestionTipo()->getId() >= $gestion){
+                                if($ies->getPeriodoTipoId()==2){
+                                    $operativo = 1;
+                                }else{
+                                    $operativo = 3;
+                                } 
+                                $reg = $this->registroConsolidacion($ies,$operativo,'registro');
+                            }
                         }
                         if ($iest[0]->getTramiteEstado()->getId() == '7'){//Autorizado para regularización(Inicio de Semestre)
                             $iestvar = $iest[0];
@@ -760,10 +773,16 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                             $iestvar->setUsuarioIdModificacion($this->session->get('userId'));
                             $em->persist($iestvar);
                             $em->flush(); 
+                            /**
+                             * Registro de la regularizacion en consolidacion a partir de la gestion 2019
+                             */
+                            if($ies->getGestionTipo()->getId() >= $gestion){
+                                $reg = $this->registroConsolidacion($ies,'','regularizar');
+                            }
                         }
                     }
                 }
-                if ($sesion->get('ie_per_estado') == '2'){//FIN NOTAS                    
+                if ($sesion->get('ie_per_estado') == '2'){//FIN NOTAS
                     $query = "select * from sp_validacion_alternativa_web('".$this->session->get('ie_gestion')."','".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."');";
                     $obs= $db->prepare($query);
                     $params = array();
@@ -778,7 +797,13 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                             $iestvar->setFechaModificacion(new \DateTime('now'));
                             $iestvar->setUsuarioIdModificacion($this->session->get('userId'));
                             $em->persist($iestvar);
-                            $em->flush(); 
+                            $em->flush();
+                            /**
+                             * Registro de la regularizacion en consolidacion a partir de la gestion 2019
+                             */
+                            if($ies->getGestionTipo()->getId() >= $gestion){
+                                $reg = $this->registroConsolidacion($ies,'','regularizar');
+                            }
                         }
                         if ($iest[0]->getTramiteEstado()->getId() == '13'){//¡En notas!
                             $iestvar = $iest[0];
@@ -786,7 +811,18 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                             $iestvar->setFechaModificacion(new \DateTime('now'));
                             $iestvar->setUsuarioIdModificacion($this->session->get('userId'));
                             $em->persist($iestvar);
-                            $em->flush(); 
+                            $em->flush();
+                            /**
+                             * Registro de la consolidacion a partir de la gestion 2019
+                             */
+                            if($ies->getGestionTipo()->getId() >= $gestion){
+                                if($ies->getPeriodoTipoId()==2){
+                                    $operativo = 2;
+                                }else{
+                                    $operativo = 4;
+                                } 
+                                $reg = $this->registroConsolidacion($ies,$operativo,'registro');
+                            }
                         } 
                     }
                 }
@@ -806,7 +842,11 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                             $iestvar->setFechaModificacion(new \DateTime('now'));
                             $iestvar->setUsuarioIdModificacion($this->session->get('userId'));
                             $em->persist($iestvar);
-                            $em->flush(); 
+                            $em->flush();
+                            //Registro de la regularizacion en consolidacion a partir de la gestion 2019
+                            if($ies->getGestionTipo()->getId() >= $gestion){
+                                $reg = $this->registroConsolidacion($ies,'','regularizar');
+                            }
                         }
                         if ($iest[0]->getTramiteEstado()->getId() == '5'){//Autorizado para regularización gestión pasada                          
                             $iestvar = $iest[0];
@@ -861,6 +901,45 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             $em->getConnection()->rollback();
         }
     }
+
+    /**
+     * Registro de la consolidacion/cierre del operativo
+     */
+    function registroConsolidacion($ies,$operativo,$tipo)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        $db = $em->getConnection();
+        try {              
+            if($tipo == 'registro'){
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('consolidacion');")->execute(); 
+                $consolidacion = new Consolidacion();
+                $consolidacion->setInstitucioneducativa($ies->getInstitucioneducativa());
+                $consolidacion->setInstitucioneducativaSucursal($ies);
+                $consolidacion->setInstitucioneducativaTipo($ies->getInstitucioneducativa()->getInstitucioneducativaTipo());
+                $consolidacion->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find(date('Y')));
+                $consolidacion->setOperativoTipo($em->getRepository('SieAppWebBundle:OperativoTipo')->find($operativo));
+                $consolidacion->setSistemaTipo($em->getRepository('SieAppWebBundle:SistemaTipo')->find(2));
+                $consolidacion->setFechaRegistro(new \DateTime('now'));
+                $consolidacion->setUsuarioCreacion($em->getRepository('SieAppWebBundle:Usuario')->find($this->session->get('userId')));
+                $consolidacion->setEsonline(true);
+                $em->persist($consolidacion);
+                $em->flush(); 
+            }else{
+                $consolidacion = $em->getRepository('SieAppWebBundle:Consolidacion')->findBy(array('institucioneducativaSucursal'=>$ies));
+                if($consolidacion){
+                    $consolidacion[0]->setFechaModificacion(new \DateTime('now'));
+                    $consolidacion[0]->setUsuarioModificacion($em->getRepository('SieAppWebBundle:Usuario')->find($this->session->get('userId')));
+                    $em->flush(); 
+                }
+            }
+            $em->getConnection()->commit();
+            return true;
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+            return false;
+        }
+    }   
     
     public function tramitecontinuaroperativoAction(Request $request, $iestid) {
         $sesion = $request->getSession();
