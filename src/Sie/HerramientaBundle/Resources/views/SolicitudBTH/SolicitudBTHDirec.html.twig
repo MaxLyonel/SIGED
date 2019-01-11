@@ -488,7 +488,7 @@
                 $('#form_especialidad').hide();
                 $('#form_nuevo').show(2000);
                 break;
-            case (idsolicitud == 46):
+            case (idsolicitud == 46)://ratificacion
                 document.getElementById("titulo").innerHTML= "Formulario de Ratificación";
                 $('#form_nuevo').hide();
                 $('#form_especialidad').hide();
@@ -511,7 +511,7 @@
     }
     function enviarSolicitudbth() {
         /*
-        * Funcion que envia la solicitud BTH capturando los valor introduciodos
+        * Funcion que envia la solicitud BTH capturando los valor introducidos
         * en el formulario.*/
         var idsolicitud=$('#form_solicitud').val();
         switch (true){
@@ -571,10 +571,11 @@
                                         });*/
                                     }
                                     else if(data==2 ){
-                                        swal("Debe iniciar su trámite como 'Ratificacion'");
+                                        swal(" Su Unidad Educativa ya se declaro como BTH - Debe iniciar su trámite como 'Ratificacion'");
                                     }else {
                                         swal('Su formulario no se envío correctamente debido a que su Unidad Educativa ya ' +
-                                            'inicio su trámite como "REGISTRO NUEVO"');
+                                            'inicio su trámite como "REGISTRO NUEVO" o ya se encuentra registrado como BTH' +
+                                            ' Si fuera así le corresponderia iniciar su trámite como Ratificacion');
                                     }
                                 },
                                 complete: function () {
@@ -637,10 +638,11 @@
                                         $(".modal-backdrop ").css("display", "none");
 
                                     }
-                                    else if(data==3 ){
+                                    else if(data==2 ){
                                         swal("Debe iniciar su trámite como 'Registro Nuevo'");
                                     }else {
-                                        swal('Su formulario no se envío correctamente');
+                                        swal('Su formulario no se envío correctamente debido a que su Unidad Educativa ya ' +
+                                            'inicio su trámite como "REGISTRO NUEVO o RATIFICACION o su UE ya se encuentra como BTH');
                                     }
                                 },
                                 complete: function () {

@@ -371,7 +371,7 @@
                         <li><a href="{{ path('herramienta_info_maestro_migrar_index')}}">Personal Docente</a></li>
                       </ul>
                     </li>
-                        <li class="submenu">
+                       {# <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
                                 <span class="text">Trámites - BTH</span>
@@ -385,7 +385,7 @@
                                 <li><a href="{{ path('solicitud_bth_seguimiento_tramite')}}">Trámites - Seguimiento BTH</a></li>
 
                             </ul>
-                        </li>
+                        </li>#}
                     {% endif %}
                     <li class="submenu">
                         <a href="javascript:void(0);">
@@ -464,25 +464,25 @@
 
                      </li>
                     {% endif %}
-                    {% if app.session.get('roluser')==10 %}
-                        <li class="submenu">
-                            <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-diamond"></i></span>
-                                <span class="text">Proceso BTH</span>
-                                <span class="arrow"></span>
-                            </a>
-                            <ul>
-                                <li><a href="{{ path('solicitud_bth_distrital_index')}}">Támites - Solicitud BTH</a></li>
-                            </ul>
-                            <ul>
-                                <li><a href="{{ path('solicitud_bth_seguimiento_tramite')}}">Trámites - Seguimiento BTH</a></li>
+                        {#{% if app.session.get('roluser')==10 %}
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="icon"><i class="fa fa-diamond"></i></span>
+                                    <span class="text">Proceso BTH</span>
+                                    <span class="arrow"></span>
+                                </a>
+                                <ul>
+                                    <li><a href="{{ path('solicitud_bth_distrital_index')}}">Támites - Solicitud BTH</a></li>
+                                </ul>
+                                <ul>
+                                    <li><a href="{{ path('solicitud_bth_seguimiento_tramite')}}">Trámites - Seguimiento BTH</a></li>
 
-                            </ul>
-                        </li>
-                    {% endif %}
+                                </ul>
+                            </li>
+                        {% endif %}#}
                     {% if app.session.get('roluser')==7 %}
 
-                        <li class="submenu">
+                       {# <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
                                 <span class="text">Proceso BTH</span>
@@ -501,7 +501,7 @@
 
                             </ul>
 
-                        </li>
+                        </li>#}
                         {#<li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
