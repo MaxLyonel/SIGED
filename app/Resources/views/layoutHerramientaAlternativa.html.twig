@@ -714,9 +714,9 @@
                 <div class="header-content" style="background-color: #6d7b61;">
                     <h2><i class="fa fa-university"></i> {{app.session.get('ie_nombre')}} 
                         <span> {{app.session.get('ie_id')}}  {{app.session.get('ie_gestion')}}  {{app.session.get('ie_per_nom')}}
-                            {% if (app.session.get('ie_per_estado') != '0') %}
+                            {#{% if (app.session.get('ie_per_estado') != '0') %}#}
                                 : <i class="fa fa-wrench"></i> {{app.session.get('ie_operativo')}}
-                            {% endif %}                            
+                            {#{% endif %}                            #}
                         </span>
                     </h2>
                     <div class="breadcrumb-wrapper hidden-xs">
