@@ -15,6 +15,26 @@ class Persona
     private $id;
 
     /**
+     * @var integer
+     */
+    private $idiomaMaternoId;
+
+    /**
+     * @var integer
+     */
+    private $generoTipoId;
+
+    /**
+     * @var integer
+     */
+    private $sangreTipoId;
+
+    /**
+     * @var integer
+     */
+    private $estadocivilTipoId;
+
+    /**
      * @var string
      */
     private $carnet;
@@ -81,7 +101,6 @@ class Persona
 
     /**
      * @var string
-
      */
     private $celular;
 
@@ -103,39 +122,124 @@ class Persona
     /**
      * @var integer
      */
-
     private $countEdit;
 
+    /**
+     * @var string
+     */
+    private $obsSegip;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\GeneroTipo
+     * @var boolean
      */
-    private $generoTipo;
+    private $esExtranjero;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\EstadoCivilTipo
+     * @var string
      */
-    private $estadocivilTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\IdiomaMaterno
-     */
-    private $idiomaMaterno;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\SangreTipo
-     */
-    private $sangreTipo;
+    private $expedido;
 
 
     /**
      * Get id
      *
-     * @return integer
+     * @return integer 
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set idiomaMaternoId
+     *
+     * @param integer $idiomaMaternoId
+     * @return Persona
+     */
+    public function setIdiomaMaternoId($idiomaMaternoId)
+    {
+        $this->idiomaMaternoId = $idiomaMaternoId;
+    
+        return $this;
+    }
+
+    /**
+     * Get idiomaMaternoId
+     *
+     * @return integer 
+     */
+    public function getIdiomaMaternoId()
+    {
+        return $this->idiomaMaternoId;
+    }
+
+    /**
+     * Set generoTipoId
+     *
+     * @param integer $generoTipoId
+     * @return Persona
+     */
+    public function setGeneroTipoId($generoTipoId)
+    {
+        $this->generoTipoId = $generoTipoId;
+    
+        return $this;
+    }
+
+    /**
+     * Get generoTipoId
+     *
+     * @return integer 
+     */
+    public function getGeneroTipoId()
+    {
+        return $this->generoTipoId;
+    }
+
+    /**
+     * Set sangreTipoId
+     *
+     * @param integer $sangreTipoId
+     * @return Persona
+     */
+    public function setSangreTipoId($sangreTipoId)
+    {
+        $this->sangreTipoId = $sangreTipoId;
+    
+        return $this;
+    }
+
+    /**
+     * Get sangreTipoId
+     *
+     * @return integer 
+     */
+    public function getSangreTipoId()
+    {
+        return $this->sangreTipoId;
+    }
+
+    /**
+     * Set estadocivilTipoId
+     *
+     * @param integer $estadocivilTipoId
+     * @return Persona
+     */
+    public function setEstadocivilTipoId($estadocivilTipoId)
+    {
+        $this->estadocivilTipoId = $estadocivilTipoId;
+    
+        return $this;
+    }
+
+    /**
+     * Get estadocivilTipoId
+     *
+     * @return integer 
+     */
+    public function getEstadocivilTipoId()
+    {
+        return $this->estadocivilTipoId;
     }
 
     /**
@@ -147,14 +251,14 @@ class Persona
     public function setCarnet($carnet)
     {
         $this->carnet = $carnet;
-
+    
         return $this;
     }
 
     /**
      * Get carnet
      *
-     * @return string
+     * @return string 
      */
     public function getCarnet()
     {
@@ -170,14 +274,14 @@ class Persona
     public function setRda($rda)
     {
         $this->rda = $rda;
-
+    
         return $this;
     }
 
     /**
      * Get rda
      *
-     * @return integer
+     * @return integer 
      */
     public function getRda()
     {
@@ -193,14 +297,14 @@ class Persona
     public function setLibretaMilitar($libretaMilitar)
     {
         $this->libretaMilitar = $libretaMilitar;
-
+    
         return $this;
     }
 
     /**
      * Get libretaMilitar
      *
-     * @return string
+     * @return string 
      */
     public function getLibretaMilitar()
     {
@@ -216,14 +320,14 @@ class Persona
     public function setPasaporte($pasaporte)
     {
         $this->pasaporte = $pasaporte;
-
+    
         return $this;
     }
 
     /**
      * Get pasaporte
      *
-     * @return string
+     * @return string 
      */
     public function getPasaporte()
     {
@@ -239,14 +343,14 @@ class Persona
     public function setPaterno($paterno)
     {
         $this->paterno = $paterno;
-
+    
         return $this;
     }
 
     /**
      * Get paterno
      *
-     * @return string
+     * @return string 
      */
     public function getPaterno()
     {
@@ -262,14 +366,14 @@ class Persona
     public function setMaterno($materno)
     {
         $this->materno = $materno;
-
+    
         return $this;
     }
 
     /**
      * Get materno
      *
-     * @return string
+     * @return string 
      */
     public function getMaterno()
     {
@@ -285,14 +389,14 @@ class Persona
     public function setNombre($nombre)
     {
         $this->nombre = $nombre;
-
+    
         return $this;
     }
 
     /**
      * Get nombre
      *
-     * @return string
+     * @return string 
      */
     public function getNombre()
     {
@@ -308,14 +412,14 @@ class Persona
     public function setFechaNacimiento($fechaNacimiento)
     {
         $this->fechaNacimiento = $fechaNacimiento;
-
+    
         return $this;
     }
 
     /**
      * Get fechaNacimiento
      *
-     * @return \DateTime
+     * @return \DateTime 
      */
     public function getFechaNacimiento()
     {
@@ -331,14 +435,14 @@ class Persona
     public function setSegipId($segipId)
     {
         $this->segipId = $segipId;
-
+    
         return $this;
     }
 
     /**
      * Get segipId
      *
-     * @return integer
+     * @return integer 
      */
     public function getSegipId()
     {
@@ -354,14 +458,14 @@ class Persona
     public function setComplemento($complemento)
     {
         $this->complemento = $complemento;
-
+    
         return $this;
     }
 
     /**
      * Get complemento
      *
-     * @return string
+     * @return string 
      */
     public function getComplemento()
     {
@@ -377,14 +481,14 @@ class Persona
     public function setActivo($activo)
     {
         $this->activo = $activo;
-
+    
         return $this;
     }
 
     /**
      * Get activo
      *
-     * @return boolean
+     * @return boolean 
      */
     public function getActivo()
     {
@@ -400,14 +504,14 @@ class Persona
     public function setCorreo($correo)
     {
         $this->correo = $correo;
-
+    
         return $this;
     }
 
     /**
      * Get correo
      *
-     * @return string
+     * @return string 
      */
     public function getCorreo()
     {
@@ -423,14 +527,14 @@ class Persona
     public function setFoto($foto)
     {
         $this->foto = $foto;
-
+    
         return $this;
     }
 
     /**
      * Get foto
      *
-     * @return string
+     * @return string 
      */
     public function getFoto()
     {
@@ -446,14 +550,14 @@ class Persona
     public function setCelular($celular)
     {
         $this->celular = $celular;
-
+    
         return $this;
     }
 
     /**
      * Get celular
      *
-     * @return string
+     * @return string 
      */
     public function getCelular()
     {
@@ -469,14 +573,14 @@ class Persona
     public function setDireccion($direccion)
     {
         $this->direccion = $direccion;
-
+    
         return $this;
     }
 
     /**
      * Get direccion
      *
-     * @return string
+     * @return string 
      */
     public function getDireccion()
     {
@@ -492,14 +596,14 @@ class Persona
     public function setEsvigente($esvigente)
     {
         $this->esvigente = $esvigente;
-
+    
         return $this;
     }
 
     /**
      * Get esvigente
      *
-     * @return boolean
+     * @return boolean 
      */
     public function getEsvigente()
     {
@@ -515,14 +619,14 @@ class Persona
     public function setEsvigenteApoderado($esvigenteApoderado)
     {
         $this->esvigenteApoderado = $esvigenteApoderado;
-
+    
         return $this;
     }
 
     /**
      * Get esvigenteApoderado
      *
-     * @return integer
+     * @return integer 
      */
     public function getEsvigenteApoderado()
     {
@@ -538,14 +642,14 @@ class Persona
     public function setCountEdit($countEdit)
     {
         $this->countEdit = $countEdit;
-
+    
         return $this;
     }
 
     /**
      * Get countEdit
      *
-     * @return integer
+     * @return integer 
      */
     public function getCountEdit()
     {
@@ -553,98 +657,71 @@ class Persona
     }
 
     /**
-     * Set generoTipo
+     * Set obsSegip
      *
-     * @param \Sie\AppWebBundle\Entity\GeneroTipo $generoTipo
+     * @param string $obsSegip
      * @return Persona
      */
-    public function setGeneroTipo(\Sie\AppWebBundle\Entity\GeneroTipo $generoTipo = null)
+    public function setObsSegip($obsSegip)
     {
-        $this->generoTipo = $generoTipo;
-
-        return $this;
-    }
-
-    /**
-     * Get generoTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\GeneroTipo
-     */
-    public function getGeneroTipo()
-    {
-        return $this->generoTipo;
-    }
-
-    /**
-     * Set estadocivilTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\EstadoCivilTipo $estadocivilTipo
-     * @return Persona
-     */
-    public function setEstadocivilTipo(\Sie\AppWebBundle\Entity\EstadoCivilTipo $estadocivilTipo = null)
-    {
-        $this->estadocivilTipo = $estadocivilTipo;
-
-        return $this;
-    }
-
-    /**
-     * Get estadocivilTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\EstadoCivilTipo
-     */
-    public function getEstadocivilTipo()
-    {
-        return $this->estadocivilTipo;
-    }
-
-    /**
-     * Set idiomaMaterno
-     *
-     * @param \Sie\AppWebBundle\Entity\IdiomaMaterno $idiomaMaterno
-     * @return Persona
-     */
-    public function setIdiomaMaterno(\Sie\AppWebBundle\Entity\IdiomaMaterno $idiomaMaterno = null)
-    {
-        $this->idiomaMaterno = $idiomaMaterno;
-
-        return $this;
-    }
-
-    /**
-     * Get idiomaMaterno
-     *
-     * @return \Sie\AppWebBundle\Entity\IdiomaMaterno
-     */
-    public function getIdiomaMaterno()
-    {
-        return $this->idiomaMaterno;
-    }
-
-    /**
-     * Set sangreTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\SangreTipo $sangreTipo
-     * @return Persona
-     */
-    public function setSangreTipo(\Sie\AppWebBundle\Entity\SangreTipo $sangreTipo = null)
-    {
-        $this->sangreTipo = $sangreTipo;
-
-        return $this;
-    }
-
-    /**
-     * Get sangreTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\SangreTipo
-     */
-    public function getSangreTipo()
-    {
-        return $this->sangreTipo;
-    }
+        $this->obsSegip = $obsSegip;
     
-   public function __toString() {
-       return $this->paterno.' '.$this->materno.' '.$this->nombre;
-   }
+        return $this;
+    }
+
+    /**
+     * Get obsSegip
+     *
+     * @return string 
+     */
+    public function getObsSegip()
+    {
+        return $this->obsSegip;
+    }
+
+    /**
+     * Set esExtranjero
+     *
+     * @param boolean $esExtranjero
+     * @return Persona
+     */
+    public function setEsExtranjero($esExtranjero)
+    {
+        $this->esExtranjero = $esExtranjero;
+    
+        return $this;
+    }
+
+    /**
+     * Get esExtranjero
+     *
+     * @return boolean 
+     */
+    public function getEsExtranjero()
+    {
+        return $this->esExtranjero;
+    }
+
+    /**
+     * Set expedido
+     *
+     * @param string $expedido
+     * @return Persona
+     */
+    public function setExpedido($expedido)
+    {
+        $this->expedido = $expedido;
+    
+        return $this;
+    }
+
+    /**
+     * Get expedido
+     *
+     * @return string 
+     */
+    public function getExpedido()
+    {
+        return $this->expedido;
+    }
 }

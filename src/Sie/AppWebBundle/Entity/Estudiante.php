@@ -145,6 +145,16 @@ class Estudiante
     private $esDobleNacionalidad;
 
     /**
+     * @var string
+     */
+    private $observacion;
+
+    /**
+     * @var string
+     */
+    private $expedido;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\GeneroTipo
      */
     private $generoTipo;
@@ -781,6 +791,52 @@ class Estudiante
     public function getEsDobleNacionalidad()
     {
         return $this->esDobleNacionalidad;
+    }
+
+    /**
+     * Set observacion
+     *
+     * @param string $observacion
+     * @return Estudiante
+     */
+    public function setObservacion($observacion)
+    {
+        $this->observacion = $observacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get observacion
+     *
+     * @return string 
+     */
+    public function getObservacion()
+    {
+        return $this->observacion;
+    }
+
+    /**
+     * Set expedido
+     *
+     * @param string $expedido
+     * @return Estudiante
+     */
+    public function setExpedido($expedido)
+    {
+        $this->expedido = $expedido;
+    
+        return $this;
+    }
+
+    /**
+     * Get expedido
+     *
+     * @return string 
+     */
+    public function getExpedido()
+    {
+        return $this->expedido;
     }
 
     /**
