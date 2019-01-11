@@ -11,13 +11,13 @@ Sie\AppWebBundle\Entity\ViveHabitualmenteTipo:
             generator:
                 strategy: SEQUENCE
     fields:
-        descripcionViveHabitualmenet:
+        descripcionViveHabitualmente:
             type: string
             nullable: true
             length: null
             fixed: false
             comment: ''
-            column: descripcion_vive_habitualmenet
+            column: descripcion_vive_habitualmente
         esVigente:
             type: boolean
             nullable: true
