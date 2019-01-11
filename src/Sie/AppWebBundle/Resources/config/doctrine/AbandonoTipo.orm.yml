@@ -12,9 +12,10 @@ Sie\AppWebBundle\Entity\AbandonoTipo:
                 strategy: SEQUENCE
     fields:
         descripcionAbandono:
-            type: integer
+            type: string
             nullable: true
-            unsigned: false
+            length: 255
+            fixed: false
             comment: ''
             column: descripcion_abandono
         esVigente:

@@ -15,7 +15,7 @@ class AbandonoTipo
     private $id;
 
     /**
-     * @var integer
+     * @var string
      */
     private $descripcionAbandono;
 
@@ -34,10 +34,6 @@ class AbandonoTipo
      */
     private $fechaModificacion;
 
-    public function __toString(){
-        return $this->descripcionAbandono;
-    }
-
 
     /**
      * Get id
@@ -52,7 +48,7 @@ class AbandonoTipo
     /**
      * Set descripcionAbandono
      *
-     * @param integer $descripcionAbandono
+     * @param string $descripcionAbandono
      * @return AbandonoTipo
      */
     public function setDescripcionAbandono($descripcionAbandono)
@@ -65,7 +61,7 @@ class AbandonoTipo
     /**
      * Get descripcionAbandono
      *
-     * @return integer 
+     * @return string 
      */
     public function getDescripcionAbandono()
     {

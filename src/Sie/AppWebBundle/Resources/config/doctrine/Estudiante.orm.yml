@@ -3,6 +3,12 @@ Sie\AppWebBundle\Entity\Estudiante:
     table: estudiante
     repositoryClass: Sie\AppWebBundle\Entity\EstudianteRepository
     indexes:
+        indx_ci:
+            columns:
+                - carnet_identidad
+        estudiante_idx_pais_tipo_id:
+            columns:
+                - pais_tipo_id
         indx_per_nomb:
             columns:
                 - paterno
@@ -20,9 +26,6 @@ Sie\AppWebBundle\Entity\Estudiante:
         IDX_3B3F3FAD86DC8ECF:
             columns:
                 - lugar_prov_nac_tipo_id
-        IDX_3B3F3FAD92548EB1:
-            columns:
-                - pais_tipo_id
         IDX_3B3F3FAD70591119:
             columns:
                 - sangre_tipo_id
@@ -42,7 +45,7 @@ Sie\AppWebBundle\Entity\Estudiante:
     fields:
         codigoRude:
             type: string
-            nullable: true
+            nullable: false
             length: 18
             fixed: false
             comment: ''
@@ -116,10 +119,11 @@ Sie\AppWebBundle\Entity\Estudiante:
             column: segip_id
         complemento:
             type: string
-            nullable: true
+            nullable: false
             length: 2
             fixed: false
             comment: ''
+            default: ''
         bolean:
             type: integer
             nullable: true
@@ -198,6 +202,18 @@ Sie\AppWebBundle\Entity\Estudiante:
             nullable: true
             comment: ''
             column: es_doble_nacionalidad
+        observacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        expedido:
+            type: string
+            nullable: true
+            length: 6
+            fixed: false
+            comment: ''
     manyToOne:
         generoTipo:
             targetEntity: GeneroTipo
