@@ -52,13 +52,7 @@
                                     {{form_widget(form.departamento) }}
                                 </div>
                             {% endif %}
-                            {% if app.session.get('roluser') in [7,8] %}
-                                <div class="form-group col-md-2">
-                                    {{ form_label(form.distrito)}}
-                                    {{form_widget(form.distrito) }}
-                                </div>  
-                            {% endif %}
-                            <div class="form-group col-md-2">
+                            <div class="form-group col-md-3">
                                 {{ form_label(form.operativo)}}
                                 {{form_widget(form.operativo) }}
                             </div>
@@ -89,10 +83,6 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script>
         $( document ).ready(function() {
-            var rol = '{{app.session.get('roluser')}}';
-            if(rol == 8){
-                distrito($('#form_departamento').val());
-            }
             $(function() {
                 $('.datepicker').datepicker({
                     dateFormat: 'dd-mm-yy',

@@ -77,15 +77,33 @@ class OperativoController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $rol = $this->session->get('roluser');
         $form = $request->get('form');
+        if($rol == 8 or $rol == 7){
+            $distrito = "";
+        }else{
+            $distrito = $form['distrito'];
+        }
+
         switch($form['operativo']){
             case 1:
-                $oc = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
+                if($rol == 8 or $rol == 7){
+                    $oc = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
+                        ->select('oc')
+                        ->innerJoin('SieAppWebBundle:DistritoTipo', 'd', 'WITH', 'd.id = oc.distritoTipo')
+                        ->where('oc.operativoTipo = 1')
+                        ->andWhere('d.departamentoTipo = ' .$form['departamento'])
+                        ->andWhere('oc.gestionTipo = ' . $gestion)
+                        ->getQuery()
+                        ->getResult();
+                
+                }else{
+                    $oc = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
                         ->select('oc')
                         ->where('oc.operativoTipo = 1')
                         ->andWhere('oc.distritoTipo = ' .$form['distrito'])
                         ->andWhere('oc.gestionTipo = ' . $gestion)
                         ->getQuery()
                         ->getResult();
+                }
                 $iesArray = array();
                 if($oc){
                     foreach($oc as $o){
@@ -97,12 +115,13 @@ class OperativoController extends Controller {
                     }
                 }
                 $entities = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->createQueryBuilder('a')
-                            ->select('d.id as gestionTipo, b.id as SucursalIE, a.id as IEsucursalId,c.id as id_ie,c.institucioneducativa,f.id as idDistrito,f.distrito, a.periodoTipoId,i.periodo, h.id as teid, h.tramiteEstado as te, h.obs as observacion')
+                            ->select('d.id as gestionTipo, b.id as SucursalIE, a.id as IEsucursalId,c.id as id_ie,c.institucioneducativa,f.id as idDistrito,f.distrito,j.departamento, a.periodoTipoId,i.periodo, h.id as teid, h.tramiteEstado as te, h.obs as observacion')
                             ->innerJoin('SieAppWebBundle:SucursalTipo', 'b', 'WITH', 'b.id = a.sucursalTipo')
                             ->innerJoin('SieAppWebBundle:Institucioneducativa', 'c', 'WITH', 'c.id = a.institucioneducativa')
                             ->innerJoin('SieAppWebBundle:GestionTipo', 'd', 'WITH', 'd.id = a.gestionTipo') 
                             ->innerJoin('SieAppWebBundle:JurisdiccionGeografica', 'e', 'WITH', 'c.leJuridicciongeografica = e.id')
                             ->innerJoin('SieAppWebBundle:DistritoTipo', 'f', 'WITH', 'e.distritoTipo = f.id')
+                            ->innerJoin('SieAppWebBundle:DepartamentoTipo', 'j', 'WITH', 'f.departamentoTipo = j.id')
                             ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursalTramite', 'g', 'WITH', 'g.institucioneducativaSucursal = a.id')
                             ->innerJoin('SieAppWebBundle:TramiteEstado', 'h', 'WITH', 'h.id = g.tramiteEstado')
                             ->innerJoin('SieAppWebBundle:PeriodoTipo', 'i', 'WITH', 'i.id = a.periodoTipoId')
@@ -112,40 +131,68 @@ class OperativoController extends Controller {
                                         ->setParameter('id_ies', $iesArray);
                 }
                 $entities =$entities 
-                            ->andWhere('a.gestionTipo = '. ($gestion-1))
-                            ->andWhere('e.distritoTipo = '. $form['distrito'])
+                            ->andWhere('a.gestionTipo = '. ($gestion-1));
+                if($rol == 8 or $rol == 7){
+                    $entities =$entities 
+                                ->andWhere('f.departamentoTipo = '. $form['departamento']);
+                }else{
+                    $entities =$entities 
+                                ->andWhere('e.distritoTipo = '. $form['distrito']);
+                }
+                $entities =$entities                             
                             ->andWhere('h.id in(8,14)')
                             ->orderBy('d.id, b.id, a.id')
                             ->getQuery()
                             ->getResult();
+                            
                 break;
             case 2:
                 $entities = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->createQueryBuilder('a')
-                            ->select('d.id as gestionTipo, b.id as SucursalIE, a.id as IEsucursalId,c.id as id_ie,c.institucioneducativa,f.id as idDistrito,f.distrito, a.periodoTipoId,i.periodo, h.id as teid, h.tramiteEstado as te, h.obs as observacion')
+                            ->select('d.id as gestionTipo, b.id as SucursalIE, a.id as IEsucursalId,c.id as id_ie,c.institucioneducativa,f.id as idDistrito,f.distrito,j.departamento, a.periodoTipoId,i.periodo, h.id as teid, h.tramiteEstado as te, h.obs as observacion')
                             ->innerJoin('SieAppWebBundle:SucursalTipo', 'b', 'WITH', 'b.id = a.sucursalTipo')
                             ->innerJoin('SieAppWebBundle:Institucioneducativa', 'c', 'WITH', 'c.id = a.institucioneducativa')
                             ->innerJoin('SieAppWebBundle:GestionTipo', 'd', 'WITH', 'd.id = a.gestionTipo') 
                             ->innerJoin('SieAppWebBundle:JurisdiccionGeografica', 'e', 'WITH', 'c.leJuridicciongeografica = e.id')
                             ->innerJoin('SieAppWebBundle:DistritoTipo', 'f', 'WITH', 'e.distritoTipo = f.id')
+                            ->innerJoin('SieAppWebBundle:DepartamentoTipo', 'j', 'WITH', 'f.departamentoTipo = j.id')
                             ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursalTramite', 'g', 'WITH', 'g.institucioneducativaSucursal = a.id')
                             ->innerJoin('SieAppWebBundle:TramiteEstado', 'h', 'WITH', 'h.id = g.tramiteEstado')
                             ->innerJoin('SieAppWebBundle:PeriodoTipo', 'i', 'WITH', 'i.id = a.periodoTipoId')
                             ->where('a.periodoTipoId = 2')
-                            ->andWhere('a.gestionTipo = '. $gestion)
-                            ->andWhere('e.distritoTipo = '. $form['distrito'])
+                            ->andWhere('a.gestionTipo = '. $gestion);
+                if($rol == 8 or $rol == 7){
+                    $entities =$entities 
+                                ->andWhere('f.departamentoTipo = '. $form['departamento']);
+                }else{
+                    $entities =$entities 
+                                ->andWhere('e.distritoTipo = '. $form['distrito']);
+                }
+                $entities =$entities                             
                             ->andWhere('h.id in(9,12)')
                             ->orderBy('d.id, b.id, a.id')
                             ->getQuery()
                             ->getResult();
                 break;
             case 3:
-                $oc = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
-                        ->select('oc')
-                        ->where('oc.operativoTipo = 3')
-                        ->andWhere("oc.distritoTipo = " .$form['distrito'])
-                        ->andWhere('oc.gestionTipo = ' . $gestion)
-                        ->getQuery()
-                        ->getResult();
+                if($rol == 8 or $rol == 7){
+                    $oc = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
+                            ->select('oc')
+                            ->innerJoin('SieAppWebBundle:DistritoTipo', 'd', 'WITH', 'd.id = oc.distritoTipo')
+                            ->where('oc.operativoTipo = 3')
+                            ->andWhere('d.departamentoTipo = ' .$form['departamento'])
+                            ->andWhere('oc.gestionTipo = ' . $gestion)
+                            ->getQuery()
+                            ->getResult();
+            
+                }else{
+                    $oc = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
+                            ->select('oc')
+                            ->where('oc.operativoTipo = 3')
+                            ->andWhere('oc.distritoTipo = ' .$form['distrito'])
+                            ->andWhere('oc.gestionTipo = ' . $gestion)
+                            ->getQuery()
+                            ->getResult();
+                }
                 $iesArray = array();
                 if($oc){
                     foreach($oc as $o){
@@ -157,12 +204,13 @@ class OperativoController extends Controller {
                         }
                 }
                 $entities = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->createQueryBuilder('a')
-                            ->select('d.id as gestionTipo, b.id as SucursalIE, a.id as IEsucursalId,c.id as id_ie,c.institucioneducativa,f.id as idDistrito,f.distrito, a.periodoTipoId,i.periodo, h.id as teid, h.tramiteEstado as te, h.obs as observacion')
+                            ->select('d.id as gestionTipo, b.id as SucursalIE, a.id as IEsucursalId,c.id as id_ie,c.institucioneducativa,f.id as idDistrito,f.distrito,j.departamento, a.periodoTipoId,i.periodo, h.id as teid, h.tramiteEstado as te, h.obs as observacion')
                             ->innerJoin('SieAppWebBundle:SucursalTipo', 'b', 'WITH', 'b.id = a.sucursalTipo')
                             ->innerJoin('SieAppWebBundle:Institucioneducativa', 'c', 'WITH', 'c.id = a.institucioneducativa')
                             ->innerJoin('SieAppWebBundle:GestionTipo', 'd', 'WITH', 'd.id = a.gestionTipo') 
                             ->innerJoin('SieAppWebBundle:JurisdiccionGeografica', 'e', 'WITH', 'c.leJuridicciongeografica = e.id')
                             ->innerJoin('SieAppWebBundle:DistritoTipo', 'f', 'WITH', 'e.distritoTipo = f.id')
+                            ->innerJoin('SieAppWebBundle:DepartamentoTipo', 'j', 'WITH', 'f.departamentoTipo = j.id')
                             ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursalTramite', 'g', 'WITH', 'g.institucioneducativaSucursal = a.id')
                             ->innerJoin('SieAppWebBundle:TramiteEstado', 'h', 'WITH', 'h.id = g.tramiteEstado')
                             ->innerJoin('SieAppWebBundle:PeriodoTipo', 'i', 'WITH', 'i.id = a.periodoTipoId')
@@ -172,8 +220,15 @@ class OperativoController extends Controller {
                                         ->setParameter('id_ies', $iesArray);
                 }
                 $entities =$entities 
-                            ->andWhere('a.gestionTipo = '. $gestion)
-                            ->andWhere('e.distritoTipo = '. $form['distrito'])
+                            ->andWhere('a.gestionTipo = '. $gestion);
+                if($rol == 8 or $rol == 7){
+                    $entities =$entities 
+                                ->andWhere('f.departamentoTipo = '. $form['departamento']);
+                }else{
+                    $entities =$entities 
+                                ->andWhere('e.distritoTipo = '. $form['distrito']);
+                }
+                $entities =$entities    
                             ->andWhere('h.id in(8,14)')
                             ->orderBy('d.id, b.id, a.id')
                             ->getQuery()
@@ -181,17 +236,26 @@ class OperativoController extends Controller {
                 break;
             case 4:
                 $entities = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->createQueryBuilder('a')
-                            ->select('d.id as gestionTipo, b.id as SucursalIE, a.id as IEsucursalId,c.id as id_ie,c.institucioneducativa,f.id as idDistrito,f.distrito, a.periodoTipoId,i.periodo, h.id as teid, h.tramiteEstado as te, h.obs as observacion')
+                            ->select('d.id as gestionTipo, b.id as SucursalIE, a.id as IEsucursalId,c.id as id_ie,c.institucioneducativa,f.id as idDistrito,f.distrito,j.departamento, a.periodoTipoId,i.periodo, h.id as teid, h.tramiteEstado as te, h.obs as observacion')
                             ->innerJoin('SieAppWebBundle:SucursalTipo', 'b', 'WITH', 'b.id = a.sucursalTipo')
                             ->innerJoin('SieAppWebBundle:Institucioneducativa', 'c', 'WITH', 'c.id = a.institucioneducativa')
                             ->innerJoin('SieAppWebBundle:GestionTipo', 'd', 'WITH', 'd.id = a.gestionTipo') 
                             ->innerJoin('SieAppWebBundle:JurisdiccionGeografica', 'e', 'WITH', 'c.leJuridicciongeografica = e.id')
                             ->innerJoin('SieAppWebBundle:DistritoTipo', 'f', 'WITH', 'e.distritoTipo = f.id')
+                            ->innerJoin('SieAppWebBundle:DepartamentoTipo', 'j', 'WITH', 'f.departamentoTipo = j.id')
                             ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursalTramite', 'g', 'WITH', 'g.institucioneducativaSucursal = a.id')
                             ->innerJoin('SieAppWebBundle:TramiteEstado', 'h', 'WITH', 'h.id = g.tramiteEstado')
                             ->innerJoin('SieAppWebBundle:PeriodoTipo', 'i', 'WITH', 'i.id = a.periodoTipoId')
                             ->where('a.periodoTipoId = 3')
-                            ->andWhere('a.gestionTipo = '. $gestion)
+                            ->andWhere('a.gestionTipo = '. $gestion);
+                if($rol == 8 or $rol == 7){
+                    $entities =$entities 
+                                ->andWhere('f.departamentoTipo = '. $form['departamento']);
+                }else{
+                    $entities =$entities 
+                                ->andWhere('e.distritoTipo = '. $form['distrito']);
+                }
+                $entities =$entities  
                             ->andWhere('e.distritoTipo = '. $form['distrito'])
                             ->andWhere('h.id in(9,12)')
                             ->orderBy('d.id, b.id, a.id')
@@ -206,11 +270,13 @@ class OperativoController extends Controller {
             'operativo'=>$form['operativo'],
             'fechainicio'=>$form['fechainicio'],
             'fechafin'=>$form['fechafin'],
-            'distrito'=>$form['distrito'],
+            'distrito'=>$distrito,
         ));
     }
     
     public function operativoAmpliarAction(Request $request) {
+        
+        //dump($request);die;
         //get the session's values
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
@@ -233,7 +299,7 @@ class OperativoController extends Controller {
             $idLugarTipo = "";
         }
         
-        //dump($entities);die;
+        //dump($this->listaAmpliar($rol,$gestionActual,$idLugarTipo));die;
         return $this->render($this->session->get('pathSystem') . ':Operativo:ampliar.html.twig', array(
             'entities' => $this->listaAmpliar($rol,$gestionActual,$idLugarTipo),
         ));
@@ -253,14 +319,11 @@ class OperativoController extends Controller {
         if($rolusuario == 8){
             $form = $form
             ->add('departamento','entity',array('label'=>'Departamento:','required'=>true,'class'=>'SieAppWebBundle:DepartamentoTipo','query_builder'=>function(EntityRepository $d){
-                return $d->createQueryBuilder('d')->where('d.id not in (0)')->orderBy('d.departamento');},'property'=>'departamento','empty_value' => false,'attr'=>array('class'=>'form-control','onchange'=>'distrito(this.value)')))
-            ->add('distrito','choice',array('label'=>'Distrito:','required'=>true,'empty_value' => false,'attr'=>array('class'=>'form-control')));
-            
+                return $d->createQueryBuilder('d')->where('d.id not in (0)')->orderBy('d.departamento');},'property'=>'departamento','empty_value' => false,'attr'=>array('class'=>'form-control','onchange'=>'distrito(this.value)')));
         }elseif($rolusuario == 7){
-            $this->departamento = $em->getRepository('SieAppWebBundle:LugarTipo')->find($idlugarusuario)->getCodigo();
+            $departamento = $em->getRepository('SieAppWebBundle:LugarTipo')->find($idlugarusuario)->getCodigo();
             $form =$form
-            ->add('distrito','entity',array('label'=>'Distrito:','required'=>true,'class'=>'SieAppWebBundle:DistritoTipo','query_builder'=>function(EntityRepository $dis){
-                return $dis->createQueryBuilder('dis')->where("dis.departamentoTipo=". $this->departamento);},'property'=>'distrito','empty_value' => false,'attr'=>array('class'=>'form-control')));
+            ->add('departamento','hidden',array('data'=>$departamento));
         }elseif($rolusuario == 10){
             $distrito = $em->getRepository('SieAppWebBundle:LugarTipo')->find($idlugarusuario)->getCodigo();
             $form = $form
@@ -366,6 +429,7 @@ class OperativoController extends Controller {
         //get the session's values
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
+        $rol = $this->session->get('roluser');
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -378,9 +442,52 @@ class OperativoController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         $gestion = (new \DateTime($request->get('fechainicio')))->format('Y');
-        //dump($gestion);die;
+        //dump($request->get('ies'));die;
+        $iesOperativo = $request->get('ies');
         try {
-            $oc = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
+            if($rol == 8 or $rol == 7){
+                foreach($iesOperativo as $op){
+                    $distrito=json_decode($op,true)['dis'];
+                    //dump($distrito);die;
+                    $oc = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
+                        ->select('oc')
+                        ->where('oc.operativoTipo = '.$request->get('operativo'))
+                        ->andWhere("oc.fechaInicio = '".$request->get('fechainicio')."'")
+                        ->andWhere("oc.fechaFin = '".$request->get('fechafin')."'")
+                        ->andWhere("oc.distritoTipo = " . $distrito) 
+                        ->getQuery()
+                        ->getResult();
+                    //dump($oc);die;
+                    if($oc){
+                        //dump($op);die;
+                        $datos=json_decode($oc[0]->getObs(),true);
+                        $obs = array_merge($datos,array($op));
+                        $obs = json_encode($obs);
+                        $oc[0]->setObs($obs);
+                        $em->flush();
+                    }else{
+                        $obs = json_encode(array($op));
+                        //registramos el orperativo
+                        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('operativo_control');")->execute();
+                        $operativoControl = New OperativoControl();
+                        $operativoTipo = $em->getRepository('SieAppWebBundle:OperativoTipo')->find($request->get('operativo'));
+                        $distritoTipo = $em->getRepository('SieAppWebBundle:DistritoTipo')->find($distrito);
+                        $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($id_usuario);
+                        $operativoControl->setOperativoTipo($operativoTipo);
+                        $operativoControl->setDistritoTipo($distritoTipo);
+                        $operativoControl->setUsuarioRegistro($usuario);
+                        $operativoControl->setFechaInicio(new \DateTime($request->get('fechainicio')));
+                        $operativoControl->setFechaFin(new \DateTime($request->get('fechafin')));
+                        $operativoControl->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
+                        $operativoControl->setObs($obs);
+                        $operativoControl->setFechaRegistro(new \DateTime('now'));
+                        $em->persist($operativoControl);
+                        $em->flush();
+                    }
+                    
+                }
+            }else{
+                $oc = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
                     ->select('oc')
                     ->where('oc.operativoTipo = '.$request->get('operativo'))
                     ->andWhere("oc.fechaInicio = '".$request->get('fechainicio')."'")
@@ -388,33 +495,35 @@ class OperativoController extends Controller {
                     ->andWhere("oc.distritoTipo = " .$request->get('distrito')) 
                     ->getQuery()
                     ->getResult();
-            //dump($oc);die;
-            if($oc){
-                $datos=json_decode($oc[0]->getObs(),true);
-                $obs = array_merge($datos,$request->get('ies'));
-                $obs = json_encode($obs);
-                //dump($obs);die;
-                $oc[0]->setObs($obs);
-                $em->flush();
-            }else{
-                $obs = json_encode($request->get('ies'));
-                //registramos el orperativo
-                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('operativo_control');")->execute();
-                $operativoControl = New OperativoControl();
-                $operativoTipo = $em->getRepository('SieAppWebBundle:OperativoTipo')->find($request->get('operativo'));
-                $distritoTipo = $em->getRepository('SieAppWebBundle:DistritoTipo')->find($request->get('distrito'));
-                $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($id_usuario);
-                $operativoControl->setOperativoTipo($operativoTipo);
-                $operativoControl->setDistritoTipo($distritoTipo);
-                $operativoControl->setUsuarioRegistro($usuario);
-                $operativoControl->setFechaInicio(new \DateTime($request->get('fechainicio')));
-                $operativoControl->setFechaFin(new \DateTime($request->get('fechafin')));
-                $operativoControl->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
-                $operativoControl->setObs($obs);
-                $operativoControl->setFechaRegistro(new \DateTime('now'));
-                $em->persist($operativoControl);
-                $em->flush();
+                //dump($oc);die;
+                if($oc){
+                    $datos=json_decode($oc[0]->getObs(),true);
+                    $obs = array_merge($datos,$request->get('ies'));
+                    $obs = json_encode($obs);
+                    //dump($obs);die;
+                    $oc[0]->setObs($obs);
+                    $em->flush();
+                }else{
+                    $obs = json_encode($request->get('ies'));
+                    //registramos el orperativo
+                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('operativo_control');")->execute();
+                    $operativoControl = New OperativoControl();
+                    $operativoTipo = $em->getRepository('SieAppWebBundle:OperativoTipo')->find($request->get('operativo'));
+                    $distritoTipo = $em->getRepository('SieAppWebBundle:DistritoTipo')->find($request->get('distrito'));
+                    $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($id_usuario);
+                    $operativoControl->setOperativoTipo($operativoTipo);
+                    $operativoControl->setDistritoTipo($distritoTipo);
+                    $operativoControl->setUsuarioRegistro($usuario);
+                    $operativoControl->setFechaInicio(new \DateTime($request->get('fechainicio')));
+                    $operativoControl->setFechaFin(new \DateTime($request->get('fechafin')));
+                    $operativoControl->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
+                    $operativoControl->setObs($obs);
+                    $operativoControl->setFechaRegistro(new \DateTime('now'));
+                    $em->persist($operativoControl);
+                    $em->flush();
+                }
             }
+            
             if($request->get('operativo') == 2 or $request->get('operativo') == 4){ //apertura notas primer y segundo semestre
                 //dump($request->get('ies'));die;
                 $iesucursal = $request->get('ies');
@@ -436,10 +545,10 @@ class OperativoController extends Controller {
             $em->getConnection()->commit();
             $this->get('session')->getFlashBag()->add('exito', 'Los datos fueron registrados correctamente.');
     
-            } catch (Exception $ex) {
-                $em->getConnection()->rollback();
-                $this->get('session')->getFlashBag()->add('error', 'Error al registrar los datos.');
-            }
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+            $this->get('session')->getFlashBag()->add('error', 'Error al registrar los datos.');
+        }
         
         return $this->redirect($this->generateUrl('alternativa_operativo_home'));
     }
@@ -495,7 +604,7 @@ class OperativoController extends Controller {
         return $this->redirect($this->generateUrl('alternativa_operativo_home'));
     }*/
 
-    public function operativoEditAction(Request $request) {
+    public function operativoEditAction(Request $request,$id) {
         //get the session's values
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
@@ -512,7 +621,8 @@ class OperativoController extends Controller {
         $rol = $this->session->get('roluser');
         $em = $this->getDoctrine()->getManager();
         
-        $operativoEditForm = $this->operativoEditForm($request->get('id'));
+        //$operativoEditForm = $this->operativoEditForm($request->get('id'));
+        $operativoEditForm = $this->operativoEditForm($id);
         return $this->render($this->session->get('pathSystem') . ':Operativo:editOperativo.html.twig', array(
             'form' => $operativoEditForm->createView(),
         ));
@@ -523,19 +633,21 @@ class OperativoController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SieAppWebBundle:OperativoControl')->find($id);
         $form = $this->createFormBuilder()
-            //->setAction($this->generateUrl('alternativa_operativo_update'))
+            ->setAction($this->generateUrl('alternativa_operativo_update'))
             ->add('id','hidden',array('data'=>$id))
             ->add('distrito','text',array('label'=>'Distrito:','data'=>$entity->getDistritoTipo()->getDistrito(),'disabled'=>true, 'attr'=>array('class'=>'form-control')))
             ->add('operativo','text',array('label'=>'Operativo:','data'=>$entity->getOperativoTipo()->getOperativo(),'disabled'=>true, 'attr'=>array('class'=>'form-control')))
             ->add('fechainicio','text',array('label'=>'Fecha inicio:','data'=>$entity->getfechaInicio()->format('d-m-Y'),'disabled'=>true, 'attr'=>array('class'=>'form-control')))
-            ->add('fechafin','text',array('label'=>'Fecha fin (dia-mes-año):','data'=>$entity->getfechaFin()->format('d-m-Y'),'required'=>true, 'attr'=>array('class'=>'form-control','maxlength'=>10,'minlength'=>10,'autocomplete'=>'off')))
-            ->add('guardar', 'button', array('label'=> 'Guardar Cambios', 'attr'=>array('class'=>'form-control btn btn-success','onclick'=>'guardarCambios()')))
+            ->add('fechafin','text',array('label'=>'Fecha fin (dia-mes-año):','data'=>$entity->getfechaFin()->format('d-m-Y'),'required'=>true, 'attr'=>array('class'=>'form-control datepicker','maxlength'=>10,'minlength'=>10,'autocomplete'=>'off')))
+            //->add('guardar', 'button', array('label'=> 'Guardar Cambios', 'attr'=>array('class'=>'form-control btn btn-success','onclick'=>'guardarCambios()')))
+            ->add('guardar', 'submit', array('label'=> 'Guardar Cambios', 'attr'=>array('class'=>'form-control btn btn-success')))
             ->getForm();
         return $form;
     }
 
     public function operativoUpdateAction(Request $request)
     {
+        //dump($request);die;
         $em = $this->getDoctrine()->getManager();
         $id_usuario = $this->session->get('userId');
         $rol = $this->session->get('roluser');
@@ -551,8 +663,10 @@ class OperativoController extends Controller {
         //dump($form);die;
         $entity = $em->getRepository('SieAppWebBundle:OperativoControl')->find($form['id']);
         if (!$entity) {
-            $mensaje['msg'] = 'Operativo no encontrado.';
-            $mensaje['tipo'] = 'error';
+            $mensaje = '¡Error, Operativo no encontrado.!';
+            $request->getSession()
+                    ->getFlashBag()
+                    ->add('error', $mensaje);   
         }else{
             $em->getConnection()->beginTransaction();
             try {
@@ -564,19 +678,24 @@ class OperativoController extends Controller {
                 $em->flush();
                 $em->getConnection()->commit();
 
-                $mensaje['msg'] = 'Los datos fueron modificados correctamente.';
-                $mensaje['tipo'] = 'exito';
+                $mensaje = 'Los datos fueron modificados correctamente.';
+                $request->getSession()
+                    ->getFlashBag()
+                    ->add('exito', $mensaje);   
             } catch (Exception $ex) {
                 $em->getConnection()->rollback();
-                $mensaje['msg'] = 'Ocurrio un error al modificar el operativo.';
-                $mensaje['tipo'] = 'error';
+                $mensaje = '¡Ocurrio un error al modificar el operativo.!';
+                $request->getSession()
+                    ->getFlashBag()
+                    ->add('error', $mensaje);   
             }
         }
 
-        return $this->render($this->session->get('pathSystem') . ':Operativo:tablaAmpliar.html.twig', array(
+        return $this->redirect($this->generateUrl('alternativa_operativo_ampliar'));
+        /*return $this->render($this->session->get('pathSystem') . ':Operativo:tablaAmpliar.html.twig', array(
             'entities' => $this->listaAmpliar($rol,$gestionActual,$idLugarTipo),
             'mensaje'=> $mensaje,
-        ));
+        ));*/
     }
 
     public function listaAmpliar($rol,$gestionActual,$idLugarTipo)

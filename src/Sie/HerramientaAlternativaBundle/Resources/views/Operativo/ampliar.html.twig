@@ -44,23 +44,6 @@
                     <div class="clearfix"></div>
                 </div><!-- /.panel-heading -->
                 <div class="panel-body">
-                    {#<div class="panel-body">
-                      <div class="panel-heading">
-                            <div class="pull-right">
-                                <div class="group-btn">
-                                    <button type="button" class="btn btn-success" tabindex="-1">Nuevo Operativo</button>
-                                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" tabindex="-1">
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu pull-right" role="menu">
-                                        <li><a href="{{ path('alternativa_operativo_distrito',{'tipo':'distrito'}) }}">Operativo por Distrito</a></li>
-                                        <li><a href="{{ path('alternativa_operativo_distrito',{'tipo':'cea'}) }}">Operativo por C.E.A.</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
-                    </div>#}
                     {% if entities is not empty %}
                         <div class="table-responsive col-md-12" id="id">
                             <table class="table table-bordered table-striped" id="datatable">
@@ -109,7 +92,8 @@
                                                 </a>
                                             </td>
                                             <td>
-                                                <a class="btn btn-primary btn-xs text-primary" data-toggle="modal" data-target="#modal" data-placement="top" title="Editar" onclick="ediataroperativo({{entity.id}})">
+                                                {#<a href="{{path('alternativa_operativo_edit',{ 'id': entity.id })}}" class="btn btn-primary btn-xs text-primary" data-toggle="modal" data-target="#modal" data-placement="top" title="Ampliar fecha del operativo" onclick="ediataroperativo({{entity.id}})">#}
+                                                <a href="{{path('alternativa_operativo_edit',{ 'id': entity.id })}}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Ampliar fecha del operativo">
                                                     <i class="glyphicon glyphicon-pencil"></i>
                                                 </a>
                                             </td>
@@ -164,23 +148,8 @@
                 } );
             } );
         };
-        function ediataroperativo(id){
-            formData = {id: id};
-            $.ajax({
-                type: 'get',
-                url: "{{path('alternativa_operativo_edit')}}",
-                data: formData,
-                beforeSend: function () {
-                    $('#modal').empty();
-                    $('#modal').append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
-                },
-                success: function (data) {
-                    $('#modal').empty();
-                    $('#modal').append(data);
-                },
-            });
-        }
-        function guardarCambios(){
+        
+        /*function guardarCambios(){
             if(confirm('¿Esta suguro de ampliar la fecha del operativo?')){
                 var dataform = $('#form_operativo_edit').serialize();
                 $.ajax({
@@ -201,7 +170,7 @@
             }else{
                 return false;
             }
-        }
+        }*/
 
         function verCeas(id){
             formData = {id: id};

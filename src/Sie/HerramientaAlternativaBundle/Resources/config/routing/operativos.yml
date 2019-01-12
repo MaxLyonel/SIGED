@@ -15,7 +15,7 @@ alternativa_operativo_regularizar_guardar:
     defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoRegularizarGuardar}
 
 alternativa_operativo_edit:
-    path:     /operativoedit
+    path:     /{id}/operativoedit
     defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoEdit}
 
 alternativa_operativo_update:
