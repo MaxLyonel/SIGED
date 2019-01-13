@@ -682,7 +682,7 @@ class SolicitudBTHController extends Controller {
          * Listasmos los maestros inscritos en la unidad educativa
          */
         $maestros = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion, 'cargoTipo' => 0));
-//no hay maestros inscritos para la gestion 2019
+        //no hay maestros inscritos para la gestion 2019
         $gestion = 2018;
         $repository = $em->getRepository('SieAppWebBundle:MaestroInscripcion');
 
@@ -1046,9 +1046,10 @@ class SolicitudBTHController extends Controller {
         //dump( $request);die;
         $id_tramite = $request->get('lista_tramites_id');//ID de Tramite
 
-        /*
-         * Obtenemios la informacion de la UE
-         * */
+        /**
+         * Obtenemos la informacion de la Unidad Educativa
+         */
+
 
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT trm.institucioneducativa_id, trm.fecha_tramite,trm.gestion_id,wfsol.datos
