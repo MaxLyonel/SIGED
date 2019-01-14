@@ -2,32 +2,26 @@ Sie\AppWebBundle\Entity\Persona:
     type: entity
     table: persona
     indexes:
-        fk__persona31:
+        fk_persona_estado_civil_tipo1_f:
             columns:
+                - estadocivil_tipo_id
+        carnet_index:
+            columns:
+                - carnet
+        fk_persona_idioma_materno1_fk:
+            columns:
+                - idioma_materno_id
+        fk_persona_grupo_sanguineo1_fk:
+            columns:
+                - sangre_tipo_id
+        idxapod2:
+            columns:
+                - carnet
                 - paterno
                 - materno
-                - nombre
-                - fecha_nacimiento
-                - carnet
-        fk__persona32:
+        fk_dat_rde_persona_cla_genero1_:
             columns:
-                - paterno
-                - materno
-                - nombre
-                - carnet
-        fk__persona30:
-            columns:
-                - paterno
-                - materno
-                - nombre
-    uniqueConstraints:
-        uniq_carnet_idx:
-            columns:
-                - carnet
-        uniq_carnet:
-            columns:
-                - carnet
-                - complemento
+                - genero_tipo_id
     id:
         id:
             type: integer
@@ -38,30 +32,6 @@ Sie\AppWebBundle\Entity\Persona:
             generator:
                 strategy: SEQUENCE
     fields:
-        idiomaMaternoId:
-            type: integer
-            nullable: false
-            unsigned: false
-            comment: ''
-            column: idioma_materno_id
-        generoTipoId:
-            type: integer
-            nullable: false
-            unsigned: false
-            comment: ''
-            column: genero_tipo_id
-        sangreTipoId:
-            type: smallint
-            nullable: false
-            unsigned: false
-            comment: ''
-            column: sangre_tipo_id
-        estadocivilTipoId:
-            type: smallint
-            nullable: false
-            unsigned: false
-            comment: ''
-            column: estadocivil_tipo_id
         carnet:
             type: string
             nullable: false
@@ -120,11 +90,10 @@ Sie\AppWebBundle\Entity\Persona:
             column: segip_id
         complemento:
             type: string
-            nullable: false
+            nullable: true
             length: 2
             fixed: false
             comment: ''
-            default: ''
         activo:
             type: boolean
             nullable: true
@@ -170,23 +139,41 @@ Sie\AppWebBundle\Entity\Persona:
             unsigned: false
             comment: ''
             column: count_edit
-        obsSegip:
-            type: string
-            nullable: true
-            length: 100
-            fixed: false
-            comment: ''
-            column: obs_segip
-        esExtranjero:
-            type: boolean
-            nullable: false
-            comment: ''
-            default: false
-            column: es_extranjero
-        expedido:
-            type: string
-            nullable: true
-            length: 4
-            fixed: false
-            comment: ''
+    manyToOne:
+        generoTipo:
+            targetEntity: GeneroTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                genero_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estadocivilTipo:
+            targetEntity: EstadoCivilTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estadocivil_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idiomaMaterno:
+            targetEntity: IdiomaMaterno
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma_materno_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        sangreTipo:
+            targetEntity: SangreTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                sangre_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
     lifecycleCallbacks: {  }

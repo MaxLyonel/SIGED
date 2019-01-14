@@ -140,7 +140,7 @@ var p_buscarPadre = function(){
             p_cargarDatos(data);
 
         }else{
-            $('#p_idPersona').val('nuevo');
+            // $('#p_idPersona').val('nuevo');
             $('#p_mensaje').empty();
             p_cambiarFondoMensaje(3);
             $('#p_mensaje').append('Complete los datos de nombre y fecha de nacimiento');
@@ -188,7 +188,7 @@ var p_buscarPadre = function(){
                     }
 
                     // Verificar el parentesco con el estudiante
-                    setTimeout("p_validarParentesco()",3000);
+                    // setTimeout("p_validarParentesco()",3000);
 
                 },
                 error: function(data){
@@ -277,11 +277,11 @@ function p_limpiarBuscador(){
     $('#pb_fechaNacimiento').val('');
 }
 
-function saveFormPadre(recargar = true){
+function saveFormPadre(){
     var data = $('#formPadre').serialize();
     // data['actualizar'] = recargar;
     $.ajax({
-        url: Routing.generate('info_estudiante_rude_nuevo_save_formApoderado', {'actualizar':recargar}),
+        url: Routing.generate('info_estudiante_rude_nuevo_save_formApoderado'),
         type: 'post',
         data: data,
         beforeSend: function(){

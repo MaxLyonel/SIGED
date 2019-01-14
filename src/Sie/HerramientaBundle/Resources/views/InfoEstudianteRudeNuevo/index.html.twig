@@ -539,38 +539,38 @@
                                         <div class="col-md-12 col-sm-12">4.3 ACCESO DE LA O EL ESTUDIANTE A SERVICIOS BASICOS</div>
                                     </div>
                                     <div class="row form-group">
-                                        <label class="col-md-8">4.3.1. ¿Tiene acceso a agua por cañeria de red?</label>
-                                        <div class="col-md-4 col-sm-4">
+                                        <label class="col-md-6">4.3.1. ¿Tiene acceso a agua por cañeria de red?</label>
+                                        <div class="col-md-6 col-sm-6">
                                             {{ form_widget(formSocioeconomico.agua, {'attr':{'class':'jupper'} }) }}
                                         </div>
                                     </div>
                                     <div class="row form-group">
-                                        <label class="col-md-8">4.3.2. ¿Tiene baño en su vivienda?</label>
-                                        <div class="col-md-4 col-sm-4">
+                                        <label class="col-md-6">4.3.2. ¿Tiene baño en su vivienda?</label>
+                                        <div class="col-md-6 col-sm-6">
                                             {{ form_widget(formSocioeconomico.banio, {'attr':{'class':'jupper'} }) }}
                                         </div>
                                     </div>
                                     <div class="row form-group">
-                                        <label class="col-md-8">4.3.3. ¿Tiene red de alcantarillado?</label>
-                                        <div class="col-md-4 col-sm-4">
+                                        <label class="col-md-6">4.3.3. ¿Tiene red de alcantarillado?</label>
+                                        <div class="col-md-6 col-sm-6">
                                             {{ form_widget(formSocioeconomico.alcantarillado, {'attr':{'class':'jupper'} }) }}
                                         </div>
                                     </div>
                                     <div class="row form-group">
-                                        <label class="col-md-8">4.3.4. ¿Tiene energia electrica para alumbrar su vivienda?</label>
-                                        <div class="col-md-4 col-sm-4">
+                                        <label class="col-md-6">4.3.4. ¿Tiene energia electrica para alumbrar su vivienda?</label>
+                                        <div class="col-md-6 col-sm-6">
                                             {{ form_widget(formSocioeconomico.energiaElectrica, {'attr':{'class':'jupper'} }) }}
                                         </div>
                                     </div>
                                     <div class="row form-group">
-                                        <label class="col-md-8">4.3.5. ¿Cuenta con servicio de recojo de basura?</label>
-                                        <div class="col-md-4 col-sm-4">
+                                        <label class="col-md-6">4.3.5. ¿Cuenta con servicio de recojo de basura?</label>
+                                        <div class="col-md-6 col-sm-6">
                                             {{ form_widget(formSocioeconomico.recojoBasura, {'attr':{'class':'jupper'} }) }}
                                         </div>
                                     </div>
                                     <div class="row form-group">
-                                        <label class="col-md-8">4.3.6. La vivienda que ocupa el hogar es:</label>
-                                        <div class="col-md-4 col-sm-4">
+                                        <label class="col-md-6">4.3.6. La vivienda que ocupa el hogar es:</label>
+                                        <div class="col-md-6 col-sm-6">
                                             {{ form_widget(formSocioeconomico.viviendaOcupaTipo, {'attr':{'class':'form-control jupper'} }) }}
                                         </div>
                                     </div>
@@ -579,15 +579,15 @@
                                         <div class="col-md-12 col-sm-12">4.4 ACCESO A INTERNET DE LA O EL ESTUDIANTE</div>
                                     </div>
                                     <div class="row form-group">
-                                        <label class="col-md-8">4.4.1. El estudiante accesde a internet en:</label>
-                                        <div class="col-md-4 col-sm-4">
+                                        <label class="col-md-6">4.4.1. El estudiante accesde a internet en:</label>
+                                        <div class="col-md-6 col-sm-6">
                                             {{ form_widget(formSocioeconomico.accesoInternet, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
                                         </div>
                                     </div>
                                     <fieldset id="fieldsetInternet">
                                         <div class="row form-group">
-                                            <label class="col-md-8">4.4.2. ¿Con que frecuencia usa internet?</label>
-                                            <div class="col-md-4 col-sm-4">
+                                            <label class="col-md-6">4.4.2. ¿Con que frecuencia usa internet?</label>
+                                            <div class="col-md-6 col-sm-6">
                                                 {{ form_widget(formSocioeconomico.frecuenciaUsoInternetTipo, {'attr':{'class':'form-control jupper'} }) }}
                                             </div>
                                         </div>
@@ -597,42 +597,44 @@
                                         <div class="col-md-12 col-sm-12">4.5 ACTIVIDAD LABORAL DE LA O EL ESTUDIANTE</div>
                                     </div>
                                     <div class="row form-group">
-                                        <label class="col-md-8">4.5.1. En la pasada gestión ¿El estudiante trabajo?</label>
-                                        <div class="col-md-4 col-sm-4">
+                                        <label class="col-md-6">4.5.1. En la pasada gestión ¿El estudiante trabajo?</label>
+                                        <div class="col-md-6 col-sm-6">
                                             {{ form_widget(formSocioeconomico.trabajoGestionPasada, {'attr':{'class':'jupper radioTrabajo'} }) }}
                                         </div>
                                     </div>
                                     <fieldset id="fieldsetTrabajo">
                                         <div class="row">
-                                            <div class="col-md-8"></div>
-                                            <div class="col-md-4">
-                                                {{ form_widget(formSocioeconomico.mesesTrabajados, {'attr':{'class':'form-control jupper'} }) }}
+                                            <div class="col-md-6"></div>
+                                            <div class="col-md-6">
+                                                {{ form_widget(formSocioeconomico.mesesTrabajados, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
                                             </div>
                                         </div>
                                         <div class="row form-group">
-                                            <label class="col-md-8">4.5.2. En la pasada gestión ¿El en que actividad trabajó el estudiante?</label>
-                                            <div class="col-md-4 col-sm-4">
-                                                {{ form_widget(formSocioeconomico.actividades, {'attr':{'class':'form-control jupper'} }) }}
-                                                {{ form_widget(formSocioeconomico.actividadOtro, {'attr':{'class':'form-control jupper'} }) }}
+                                            <label class="col-md-6">4.5.2. En la pasada gestión ¿El en que actividad trabajó el estudiante?</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                {{ form_widget(formSocioeconomico.actividades, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                                {{ form_widget(formSocioeconomico.actividadOtro, {'attr':{'class':'form-control jupper','placeholder':'Especificar otra actividad'} }) }}
                                             </div>
                                         </div>
                                         <div class="row form-group">
-                                            <label class="col-md-8">4.5.3. ¿En que turno trabajo el estudiante?</label>
-                                            <div class="col-md-4 col-sm-4">
-                                                {{ form_widget(formSocioeconomico.turnosTrabajo, {'attr':{'class':'form-control jupper'} }) }}
+                                            <label class="col-md-6">4.5.3. ¿En que turno trabajo el estudiante?</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                {{ form_widget(formSocioeconomico.turnosTrabajo, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
                                             </div>
                                         </div>
                                         <div class="row form-group">
-                                            <label class="col-md-8">4.5.4. ¿Con que frecuencia trabajó?</label>
-                                            <div class="col-md-4 col-sm-4">
+                                            <label class="col-md-6">4.5.4. ¿Con que frecuencia trabajó?</label>
+                                            <div class="col-md-6 col-sm-6">
                                                 {{ form_widget(formSocioeconomico.frecuenciaTrabajoTipo, {'attr':{'class':'form-control jupper'} }) }}
                                             </div>
                                         </div>
                                         <div class="row form-group">
-                                            <label class="col-md-8">4.5.5. ¿Recibió algun pago?</label>
-                                            <div class="col-md-4 col-sm-4">
-                                                {{ form_widget(formSocioeconomico.respuestaPago, {'attr':{'class':''} }) }}
-                                                {{ form_widget(formSocioeconomico.recibioTipoPago, {'attr':{'class':'form-control jupper'} }) }}
+                                            <label class="col-md-6">4.5.5. ¿Recibió algun pago?</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                {{ form_widget(formSocioeconomico.respuestaPago, {'attr':{'class':'radioTipoPago'} }) }}
+                                                <fieldset id="fieldsetTipoPago">
+                                                    {{ form_widget(formSocioeconomico.recibioTipoPago, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                                </fieldset>
                                             </div>
                                         </div>
                                     </fieldset>
@@ -640,15 +642,15 @@
                                         <div class="col-md-12 col-sm-12">4.6 MEDIO DE TRANSPORTE PARA LLEGAR A LA UNIDAD EDUCATIVA</div>
                                     </div>
                                     <div class="row form-group">
-                                        <label class="col-md-8">4.6.1 Generalemente ¿Como llega el estudiante a la unidad educativa?</label>
-                                        <div class="col-md-4 col-sm-4">
-                                            {{ form_widget(formSocioeconomico.medioTransporte, {'attr':{'class':'form-control jupper'} }) }}
-                                            {{ form_widget(formSocioeconomico.medioTransporteOtro, {'attr':{'class':'form-control jupper'} }) }}
+                                        <label class="col-md-6">4.6.1 Generalemente ¿Como llega el estudiante a la unidad educativa?</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.medioTransporte, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                            {{ form_widget(formSocioeconomico.medioTransporteOtro, {'attr':{'class':'form-control jupper','placeholder':'ESPECIFIQUE OTRO MEDIO DE TRANSPORTE'} }) }}
                                         </div>
                                     </div>
                                     <div class="row form-group">
-                                        <label class="col-md-8">4.6.2 Segun el medio de transporte señalado, ¿Cuál es el tiempo máximo que demora el estudiante desde su vivienda hasta la Unidad Educativa?</label>
-                                        <div class="col-md-4 col-sm-4">
+                                        <label class="col-md-6">4.6.2 Segun el medio de transporte señalado, ¿Cuál es el tiempo máximo que demora el estudiante desde su vivienda hasta la Unidad Educativa?</label>
+                                        <div class="col-md-6 col-sm-6">
                                             {{ form_widget(formSocioeconomico.tiempoTransporte, {'attr':{'class':'form-control jupper'} }) }}
                                         </div>
                                     </div>
@@ -656,15 +658,15 @@
                                         <div class="col-md-12 col-sm-12">4.7 ABANDONO ESCOLAR CORRESPONDIENTE A LA GESTION ANTERIOR</div>
                                     </div>
                                     <div class="row form-group">
-                                        <label class="col-md-8">4.7.1 ¿El estudiante abandonó la Unidad Educativa el año pasado?</label>
-                                        <div class="col-md-4 col-sm-4">
-                                            {{ form_widget(formSocioeconomico.tieneAbandono, {'attr':{'class':''} }) }}
+                                        <label class="col-md-6">4.7.1 ¿El estudiante abandonó la Unidad Educativa el año pasado?</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.tieneAbandono, {'attr':{'class':'radioAbandono'} }) }}
                                         </div>
                                     </div>
                                     <div class="row form-group">
-                                        <label class="col-md-8">4.7.2 ¿Cuál o cuáles fueron las razones de abandono escolar?</label>
-                                        <div class="col-md-4 col-sm-4">
-                                            {{ form_widget(formSocioeconomico.abandono, {'attr':{'class':'form-control jupper'} }) }}
+                                        <label class="col-md-6">4.7.2 ¿Cuál o cuáles fueron las razones de abandono escolar?</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.abandono, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
                                             {{ form_widget(formSocioeconomico.abandonoOtro, {'attr':{'class':'form-control jupper'} }) }}
                                         </div>
                                     </div>                                    
@@ -681,12 +683,16 @@
                             </div>
                             <div class="tab-pane fade inner-all" id="tab4">
                                 <h4 class="page-header">V. DATOS DEL PADRE, MADRE O TUTOR(A) DE LA O EL ESTUDIANTE</h4>
-                                <div class="row form-group">
-                                    <label class="col-md-6">5.1 LA O EL ESTUDIANTE VIVE HABITUALMENTE CON:</label>
-                                    <div class="col-md-6 col-sm-6">
-                                        {# {{ form_widget(formSocioeconomico.idiomaNines, {'attr':{'class':'form-control'} }) }} #}
+                                <form id="formConQuienVive">
+                                    <div class="row form-group">
+                                        <label class="col-md-6">5.1 LA O EL ESTUDIANTE VIVE HABITUALMENTE CON:</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formConQuienVive.viveHabitualmenteTipo, {'attr':{'class':'form-control jupper'} }) }}
+                                        </div>
                                     </div>
-                                </div>
+                                    {{ form_widget(formConQuienVive) }}
+                                </form>
+                                
                                 
                                 {# <div class="ml-10"> #}
                                     <div class="panel panel-tab rounded shadow">
@@ -1220,7 +1226,7 @@
                                                 <div class="form-group row">
                                                     <label class="col-md-6">Lugar de registro</label>
                                                     <div class="col-md-6 col-sm-6">
-                                                        {{ form_widget(formLugar.lugarRegistroRude, {'attr':{'class':'form-control jupper'} }) }}
+                                                        {{ form_widget(formLugar.lugarRegistroRude, {'attr':{'class':'form-control jupper','readonly':'readonly'} }) }}
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
@@ -1290,6 +1296,11 @@
         validarTieneDiscapacidad();
         validarAccesoInternet();
         validarSiTrabajo();
+        validarOtraActividad();
+        validarTipoPago();
+        validarOtroTransporte();
+        validarAbandono();
+        validarOtroAbandono();
         $("#form_fecha").inputmask({ "alias": "dd-mm-yyyy" });
     });
 
@@ -1311,7 +1322,14 @@
     $('#form_accesoInternet').chosen({width: "100%"});
     $('#form_frecuenciaUsoInternetTipo').chosen({width: "100%"});
 
-
+    $('#form_mesesTrabajados').chosen({width: "100%"});
+    $('#form_actividades').chosen({width: "100%"});
+    $('#form_turnosTrabajo').chosen({width: "100%"});
+    $('#form_frecuenciaTrabajoTipo').chosen({width: "100%"});
+    $('#form_recibioTipoPago').chosen({width: "100%"});
+    $('#form_medioTransporte').chosen({width: "100%"});
+    $('#form_tiempoTransporte').chosen({width: "100%"});
+    $('#form_abandono').chosen({width: "100%"});
 
     $(".readonly").keydown(function(e){
         e.preventDefault();
@@ -1356,8 +1374,10 @@
             $('#form_accesoInternet').val([5]);
             $('#fieldsetInternet').attr('disabled','disabled');
             $('#form_accesoInternet').trigger("chosen:updated");
+            $('#form_frecuenciaUsoInternetTipo').prop('disabled', true).trigger("chosen:updated");
         }else{
             $('#fieldsetInternet').removeAttr('disabled');
+            $('#form_frecuenciaUsoInternetTipo').prop('disabled', false).trigger("chosen:updated");
         }
     }
 
@@ -1378,13 +1398,105 @@
             $('#form_recibioTipoPago').val([]);
 
             $('#fieldsetTrabajo').attr('disabled','disabled');
+            $('#form_mesesTrabajados').prop('disabled', true).trigger("chosen:updated");
+            $('#form_actividades').prop('disabled', true).trigger("chosen:updated");
+            $('#form_turnosTrabajo').prop('disabled', true).trigger("chosen:updated");
+            $('#form_frecuenciaTrabajoTipo').prop('disabled', true).trigger("chosen:updated");
+            $('#form_recibioTipoPago').prop('disabled', true).trigger("chosen:updated");
         }else{
             $('#fieldsetTrabajo').removeAttr('disabled');
+            $('#form_mesesTrabajados').prop('disabled', false).trigger("chosen:updated");
+            $('#form_actividades').prop('disabled', false).trigger("chosen:updated");
+            $('#form_turnosTrabajo').prop('disabled', false).trigger("chosen:updated");
+            $('#form_frecuenciaTrabajoTipo').prop('disabled', false).trigger("chosen:updated");
+            $('#form_recibioTipoPago').prop('disabled', false).trigger("chosen:updated");
         }
+        validarTipoPago();
     }
 
     $('.radioTrabajo').on('change', function(){
         validarSiTrabajo();
+    })
+
+    // VALIDAR SI TIENE OTRA ACTIVIDAD
+    function validarOtraActividad(){
+        var accesos = $('#form_actividades').val();
+        if($.inArray('99', accesos) !== -1){
+            $('#form_actividadOtro').css('display','block');
+            $('#form_actividadOtro').attr('required','required');
+        }else{
+            $('#form_actividadOtro').val('');
+            $('#form_actividadOtro').css('display','none');
+            $('#form_actividadOtro').removeAttr('required');
+        }
+    }
+    $('#form_actividades').on('change', function(){
+        validarOtraActividad();
+    })
+
+    // VALIDAR SI RECIBIO ALGUN PAGO
+    function validarTipoPago(){
+        if(!$('#form_respuestaPago_0').is(':checked')){
+            $('#form_recibioTipoPago').val([]);
+            $('#fieldsetTipoPago').attr('disabled','disabled');
+            $('#form_recibioTipoPago').prop('disabled', true).trigger("chosen:updated");
+        }else{
+            $('#fieldsetTipoPago').removeAttr('disabled');
+            $('#form_recibioTipoPago').prop('disabled', false).trigger("chosen:updated");
+        }
+    }
+
+    $('.radioTipoPago').on('change', function(){
+        validarTipoPago();
+    })
+
+    // VALIDAR OTRO TIPO DE TRANSPORTE
+    function validarOtroTransporte(){
+        var accesos = $('#form_medioTransporte').val();
+        if($.inArray('99', accesos) !== -1){
+            $('#form_medioTransporteOtro').css('display','block');
+            $('#form_medioTransporteOtro').attr('required','required');
+        }else{
+            $('#form_medioTransporteOtro').val('');
+            $('#form_medioTransporteOtro').css('display','none');
+            $('#form_medioTransporteOtro').removeAttr('required');
+        }
+    }
+    $('#form_medioTransporte').on('change', function(){
+        validarOtroTransporte();
+    })
+
+    // VALIDAR ABANDONO
+    function validarAbandono(){
+        if(!$('#form_tieneAbandono_0').is(':checked')){
+            $('#form_abandono').val([]);
+            $('#form_abandonoOtro').val('');
+            $('#form_abandonoOtro').attr('disabled', 'disabled');
+            $('#form_abandono').prop('disabled', true).trigger("chosen:updated");
+        }else{
+            $('#form_abandonoOtro').removeAttr('disabled');
+            $('#form_abandono').prop('disabled', false).trigger("chosen:updated");
+        }
+    }
+
+    $('.radioAbandono').on('change', function(){
+        validarAbandono();
+    })
+
+    // VALIDAR OTRO TIPO DE ABANDONO
+    function validarOtroAbandono(){
+        var accesos = $('#form_abandono').val();
+        if($.inArray('99', accesos) !== -1){
+            $('#form_abandonoOtro').css('display','block');
+            $('#form_abandonoOtro').attr('required','required');
+        }else{
+            $('#form_abandonoOtro').val('');
+            $('#form_abandonoOtro').css('display','none');
+            $('#form_abandonoOtro').removeAttr('required');
+        }
+    }
+    $('#form_abandono').on('change', function(){
+        validarOtroAbandono();
     })
 
     /* Funciones para actualizar lugar de nacimiento */
@@ -1597,6 +1709,30 @@
         });
     }
 
+    // HABITUALMENTE CON QUIEN VIVE
+
+    function saveFormConQuienVive(){
+        var data = $('#formConQuienVive').serialize();
+        $.ajax({
+            url: Routing.generate('info_estudiante_rude_nuevo_save_formConQuienVive'),
+            type: 'post',
+            data: data,
+            beforeSend: function(){
+                console.log('enviando')
+            },
+            success: function(data){
+                // $('#paso3').attr('data-toggle','tab');
+                // $('#paso4').click();
+            },
+            error: function(){
+
+            }
+        });
+    }
+    $('#form_viveHabitualmenteTipo').on('change', function(){
+        saveFormConQuienVive();
+    });
+
     // DATOS SOCIOECONOMICOS
     $('#form_idioma1').on('change',function(){
         var idioma1 = $('#form_idioma1').val();
@@ -1762,23 +1898,5 @@
             }
         });
     }
-
-    // function saveFormApoderado(){
-    //     var data = $('#formTutor').serialize();
-    //     $.ajax({
-    //         url: Routing.generate('info_estudiante_rude_nuevo_save_formApoderado'),
-    //         type: 'post',
-    //         data: data,
-    //         beforeSend: function(){
-    //             console.log('enviando');
-    //         },
-    //         success: function(data){
-    //             console.log('registrado');
-    //         },
-    //         error: function(){
-
-    //         }
-    //     });
-    // }
 
 </script>

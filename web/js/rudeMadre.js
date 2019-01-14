@@ -139,7 +139,7 @@ var m_buscarMadre = function(){
             m_cargarDatos(data);
 
         }else{
-            $('#m_idPersona').val('nuevo');
+            // $('#m_idPersona').val('nuevo');
             $('#m_mensaje').empty();
             m_cambiarFondoMensaje(3);
             $('#m_mensaje').append('Complete los datos de nombre y fecha de nacimiento');
@@ -276,11 +276,11 @@ function m_limpiarBuscador(){
     $('#mb_fechaNacimiento').val('');
 }
 
-function saveFormMadre(recargar = false){
+function saveFormMadre(){
     var data = $('#formMadre').serialize();
     // data['actualizar'] = recargar;
     $.ajax({
-        url: Routing.generate('info_estudiante_rude_nuevo_save_formApoderado', {'actualizar':recargar}),
+        url: Routing.generate('info_estudiante_rude_nuevo_save_formApoderado'),
         type: 'post',
         data: data,
         beforeSend: function(){
