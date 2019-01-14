@@ -1,106 +1,93 @@
 <!-- Website Stats  Widget -->
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-xs-12 col-lg-12">
-            <div class="panel panel-icon panel-primary">
-                <div class="panel-heading">
-                    <div class="portlet-title">
-                        CURSOS PARA CERRAR E INFORMÁTICO/A
+ <div class="panel panel-icon panel-primary">
+    <div class="panel-heading">
+        Cursos para cerrar e informático/a
+    </div>
+    <div class="panel-body">
+        {% if curso_existe == 1 %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+                        <table id="tablaTotales" class="display" cellspacing="0" width="100%">    
+                            <thead>
+                                <tr>
+                                    <th>Id del Curso</th>
+                                    <th>Gestión</th>                               
+                                </tr>
+                            </thead>
+                            <tbody> 
+                                {% for curso in cursos %}
+                                <tr>
+                                    <td>{{curso.id_curso}}</td>
+                                    <td>{{curso.gestion}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody> 
+                        </table>
                     </div>
-                </div>
-                <div class="panel-body">                              
-                    <div class="row" align="center">
-                        <div class "col-md-12" align="center">
-                            <h2>Curso</h2>
-                        </div>
-                    </div>
-                    {#  mostrar si el curso existe #}
-                    {% if curso_existe == 1 %}
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
-                                    <table id="tablaTotales" class="display" cellspacing="0" width="100%">    
-                                        <thead>
-                                            <tr>
-                                                <th>Id del Curso</th>
-                                                <th>Gestión</th>                               
-                                            </tr>
-                                        </thead>
-                                        <tbody> 
-                                            {% for curso in cursos %}
-                                            <tr>
-                                                <td>{{curso.id_curso}}</td>
-                                                <td>{{curso.gestion}}</td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody> 
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    {% else %}
-                        <div class="alert alert-danger" align="center">CURSO NO ECNONTRADO!!!</div>
-                    {% endif %}
-                    <div class="row">
-                        <div class "col-md-12" align="center">
-                            <div> <h2 class="glyphicon glyphicon-arrow-down"></h2></div>            
-                        </div>
-                    </div>
-                     <div class="row" align="center">
-                        <div class "col-md-12" align="center">
-                            <h2>Nuevo Facilitador</h2>
-                        </div>
-                    </div>
-                    {# mostrar si el participante se encuentra #}
-                    {% if facilitador_existe == 1 %}
-                        <div class="row">
-                            <div class "col-md-11">
-                                <div class="contenedor-tabla" style="width: 100%;">
-                                    <table class="display" width="100%" border="0">
-                                        <tbody>
-                                            <tr align="center">
-                                                <td><strong>CI</strong></td>
-                                                <td><strong>Nombre</strong></td>
-                                                <td><strong>Paterno</strong></td>
-                                                <td><strong>Materno</strong></td>  
-                                                <td><strong>Fech de Nacimiento</strong></td>                                           
-                                            </tr>                                        
-                                            <tr align="center">
-                                                <td>{{ facilitador.ci }}{% if facilitador.complemento != '' %}-{{facilitador.complemento}}{% endif %}</td>
-                                                <td>{{facilitador.nombre}}</td>
-                                                <td>{{facilitador.paterno}}</td>
-                                                <td>{{facilitador.materno}}</td>
-                                                <td>{{facilitador.fecha_nac|date('d-m-Y')}}</td>
-                                            </tr>
-                                        </tbody> 
-                                    </table>
-                                </div>        
-                            </div>
-                        </div>
-                    {% else %}
-                        <div class="alert alert-danger" align="center">FACILITADOR NO ECNONTRADO!!!</div>
-                    {% endif %}
-                    {% if curso_existe == 1 and facilitador_existe == 1 %}
-                        <div class="row" align="center">
-                            <form action="{{ path('sie_pnp_cerrar_curso') }}" method="POST">
-                                <input type="hidden" value="{{ curso_id }}" id="curso_id" name="curso_id" required="required">
-                                <input type="hidden" value="{{ userId }}" id="userId" name="userId" required="required">
-                                <input type="hidden" value="{{ id_dep }}" id="id_dep" name="id_dep" required="required">
-                                 <input type ="submit" id="boton" value="Cerrar Cursos" class="btn btn-success btn-large " onclick="return confirm('¿Está seguro de cerrar los cursos?');" >
-                            </form>
-                        </div>
-                    {% else %}
-                        <div class="row" align="center">
-                            <input type="submit" disabled="disabled" id="boton" value="Cerrar Cursos" class="btn btn-success btn-large">
-                        </div>
-                    {% endif %}
                 </div>
             </div>
+        {% else %}
+            <div class="alert alert-danger" align="center">CURSO NO ECNONTRADO!!!</div>
+        {% endif %}
+        <div class="row">
+            <div class "col-md-12" align="center">
+                <div> <h4 class="glyphicon glyphicon-arrow-down"></h4></div>            
+            </div>
         </div>
+         <div class="row" align="center">
+            <div class "col-md-12" align="center">
+                <h4>Nuevo Facilitador</h4>
+            </div>
+        </div>
+        {# mostrar si el participante se encuentra #}
+        {% if facilitador_existe == 1 %}
+            <div class="row">
+                <div class "col-md-11">
+                    <div class="contenedor-tabla" style="width: 100%;">
+                        <table class="display" width="100%" border="0">
+                            <tbody>
+                                <tr align="center">
+                                    <td><strong>CI</strong></td>
+                                    <td><strong>Nombre</strong></td>
+                                    <td><strong>Paterno</strong></td>
+                                    <td><strong>Materno</strong></td>  
+                                    <td><strong>Fech de Nacimiento</strong></td>                                           
+                                </tr>                                        
+                                <tr align="center">
+                                    <td>{{ facilitador.ci }}{% if facilitador.complemento != '' %}-{{facilitador.complemento}}{% endif %}</td>
+                                    <td>{{facilitador.nombre}}</td>
+                                    <td>{{facilitador.paterno}}</td>
+                                    <td>{{facilitador.materno}}</td>
+                                    <td>{{facilitador.fecha_nac|date('d-m-Y')}}</td>
+                                </tr>
+                            </tbody> 
+                        </table>
+                    </div>        
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-danger" align="center">FACILITADOR NO ECNONTRADO!!!</div>
+        {% endif %}
+        {% if curso_existe == 1 and facilitador_existe == 1 %}
+            <div class="row" align="center">
+                <form action="{{ path('sie_pnp_cerrar_curso') }}" method="POST">
+                    <input type="hidden" value="{{ curso_id }}" id="curso_id" name="curso_id" required="required">
+                    <input type="hidden" value="{{ userId }}" id="userId" name="userId" required="required">
+                    <input type="hidden" value="{{ id_dep }}" id="id_dep" name="id_dep" required="required">
+                     <input type ="submit" id="boton" value="Cerrar Cursos" class="btn btn-success btn-large " onclick="return confirm('¿Está seguro de cerrar los cursos?');" >
+                </form>
+            </div>
+        {% else %}
+            <div class="row" align="center">
+                <br>
+                <input type="submit" disabled="disabled" id="boton" value="Cerrar Cursos" class="btn btn-success btn-large">
+            </div>
+        {% endif %}
     </div>
 </div>
-<!-- End of Website Stats Widget -->
-       
+
+
 
 
     <script type="text/javascript">

@@ -1,19 +1,23 @@
 {% extends 'layoutPnp.html.twig' %}
 
 {% block body -%}
-     <div class="row">
-        <div class="col-lg-12">
-            <div class="page-title">
-                <h1 class="glyphicon glyphicon-floppy-remove"> CURSOS VACIOS (ELIMINAR)</h1>
-                <ol class="breadcrumb">
-                    <li>
-                    </li>
-                </ol>
-            </div>
-        </div>
-        <!-- /.col-lg-12 -->
-    </div>
+    <div class="header-content">
+        <h2><i class="fa fa-home animated flip"></i>CURSOS VACIOS (ELIMINAR) <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">
+                    Curso
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
 
+                <li class="active">Cursos vacios (Eliminar)</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
     <div style="width: 100%;">
         <div class="row">
             <div class="col-xs-12">
@@ -29,76 +33,63 @@
                         <strong>Bien!</strong> {{ flashMessage }}
                     </div>
         {% endfor %}
-        <!-- /.row -->
+    
+<div class="body-content animated fadeIn">
     <div class="row">
-        <div class="col-lg-12">
-            <div class="portlet portlet-blue">
-                <div class="portlet-heading">
-                    <div class="portlet-title">
-                        <h4>Cursos Vacios</h4>
-                    </div>
-                    <div class="portlet-widgets">
-                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation"><i class="fa fa-chevron-down"></i></a>
-                    </div>
-                    <div class="clearfix"></div>
+        <div class="col-xs-12 col-lg-12">
+            <div class="panel panel-icon panel-primary">
+                <div class="panel-heading">
+                    Cursos Vacios
                 </div>
-                <div id="pinformation" class="panel-collapse collapse in">
-                    <div class="portlet-body" align="center">
-                        <div class="row">
-                <div class="col-lg-12">
-                </div>
+                <div class="panel-body">
                 {% if (totales) %}
-                <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
-                <table id="tablaTotales" class="display" cellspacing="0" width="100%">    
-                    <thead>
-                        <tr>
-                            <th>Id del Curso</th>
-                            <th>Lista Participantes</th>
-                            <th>Carnet</th>
-                            <th>Nombre</th>
-                            <th>Paterno</th>
-                            <th>Materno</th>                            
-                            <th>Fecha Inicio</th>                            
-                            <th>Fecha Fin</th>                            
-                            <th>Ciclo</th>                            
-                            <th>Grado</th>                            
-                            <th>Departamento</th>  
-                            <th>Lugar</th>
-                            <th>Eliminar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for fila in totales %}
-                        <tr>
-                            <td>{{ fila.id }}</td>
-                            <td><a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado_editnew', { 'id': fila.id }) }}" > Ver participantes</a></td>
-                            <td>{{ fila.carnet }}{% if fila.complemento != '' %}-{{fila.complemento}}{% endif %}</td>
-                            <td>{{ fila.nombre }}</td>                            
-                            <td>{{ fila.paterno }}</td>
-                            <td>{{ fila.materno }}</td> 
-                            <td>{{ fila.fecha_inicio }}</td>
-                            <td>{{ fila.fecha_fin }}</td>                            
-                            <td>{% if fila.plan == 1 %}BLOQUE {% endif %}{{ fila.nciclo }}</td>
-                            <td>{% if fila.plan == 1 %}PARTE {% endif %}{{ fila.ngrado }}</td>
-                            <td>{{ fila.dep }}</td>
-                            <td>{{ fila.lugar }}</td>
-                            {% if (fila.dep|upper == lugar_usuario|upper) or ('8' == app.session.get('roluser')) %}
-                                <td><a role="button" class="btn btn-danger orbtn-xs glyphicon glyphicon-floppy-remove" href="{{ path('sie_pnp_curso_vacionew',{'id_eliminar': fila.id }) }}" onclick="return eliminar()" > Eliminar</a></td>
-                            {% else %}
-                                <td align="center">- - -</td>
-                            {% endif %}                            
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-             {% endif %}
-            </div>
-                    </div>
-                </div> 
+                    <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+                        <table id="tablaTotales" class="display" cellspacing="0" width="100%">    
+                            <thead>
+                                <tr>
+                                    <th>Id Curso</th>
+                                    <th>Opciones</th>
+                                    <th>Carnet</th>
+                                    <th>Nombre</th>
+                                    <th>Paterno</th>
+                                    <th>Materno</th>                            
+                                    <th>Inicio</th>
+                                    <th>Fin</th>                            
+                                    <th>Ciclo</th>                            
+                                    <th>Grado</th>                            
+                                    <th>Departamento</th>  
+                                    <th>Lugar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for fila in totales %}
+                                <tr>
+                                    <td>{{ fila.id }}</td>
+                                    <td>
+                                        <a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado_editnew', { 'id': fila.id }) }}" title="Ver curso"></a>
+                                        {% if (fila.dep|upper == lugar_usuario|upper) or ('8' == app.session.get('roluser')) %}
+                                            <a role="button" class="btn btn-danger btn-xs glyphicon glyphicon-floppy-remove" href="{{ path('sie_pnp_curso_vacionew',{'id_eliminar': fila.id }) }}" onclick="return eliminar()" title="Eliminar Curso"> </a>
+                                        {% endif %}        
+                                    </td>
+                                    <td>{{ fila.carnet }}{% if fila.complemento != '' %}-{{fila.complemento}}{% endif %}</td>
+                                    <td>{{ fila.nombre }}</td>                            
+                                    <td>{{ fila.paterno }}</td>
+                                    <td>{{ fila.materno }}</td> 
+                                    <td>{{ fila.fecha_inicio }}</td>
+                                    <td>{{ fila.fecha_fin }}</td>                            
+                                    <td>{% if fila.plan == 1 %}BLOQUE {% endif %}{{ fila.nciclo }}</td>
+                                    <td>{% if fila.plan == 1 %}PARTE {% endif %}{{ fila.ngrado }}</td>
+                                    <td>{{ fila.dep }}</td>
+                                    <td>{{ fila.lugar }}</td>                            
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div> 
+                {% endif %}
             </div>
         </div>
-    </div>               
-</div>
+
 
 {% endblock %}
 
@@ -136,45 +127,7 @@
         
     $(document).ready(function() {
         
-        var dtable = $('#tablaTotales').dataTable( {"oLanguage": espanol,
-         'dom': 'lfrtip <"clear">',
-        'buttons': [
-             {   
-                extend: 'colvis',
-                text:'Visibilizar Columnas'
-            },
-            {
-                extend: 'print',
-                text: 'Imprimir',
-                autoPrint: true,
-                title: 'PNP - LISTA DE ARCHIVOS SUBIDOS RUP - 4',
-                header:true,
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            {
-                extend:'pdf',
-                title: 'PNP - LISTA DE ARCHIVOS SUBIDOS RUP - 4',
-                filename:'Lista de archivos subidos RUP-4',
-                orientation:'landscape',
-                exportOptions: {
-                modifier: {
-                    page: 'Lista de archivos subidos RUP-4'
-                    }
-                }
-            },
-            {
-            extend: 'excel',
-            text: 'Excel',
-            filename:'Lista de archivos subidos RUP-4',
-            exportOptions: {
-                modifier: {
-                    page: 'Lista de archivos subidos RUP-4'
-                    }
-                }
-            },
-        ]} );
+        var dtable = $('#tablaTotales').dataTable( {"oLanguage": espanol} );
         
         
 

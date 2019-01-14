@@ -50,11 +50,7 @@ sie_pnp_curso_id:
     
 sie_pnp_resultado_curso_listado_id:
     path:     /curso_listado_busqueda/
-    defaults: { _controller: SiePnpBundle:Default:cursolistarbusqueda }    
-    
-sie_pnp_estadisticas:
-    path:     /pnp/estadisticas/
-    defaults: { _controller: SiePnpBundle:Default:estadisticas }       
+    defaults: { _controller: SiePnpBundle:Default:cursolistarbusqueda }        
     
 sie_pnp_reportes:
     path:     /pnp/reportesfiltro/
@@ -287,6 +283,12 @@ sie_pnp_cambiar_facilitador_encontrado:
 sie_pnp_listar_dep:
     path:     /pnp/listar_dep/{val}
     defaults: { _controller: SiePnpBundle:Default:listar_dep }
+    options:
+         expose: true
+
+sie_pnp_rudeal:
+    path:     /pnp/rudeal/{id_inscripcion}
+    defaults: { _controller: SiePnpBundle:Default:rudeal , id_inscripcion:0 }
     options:
          expose: true
          
