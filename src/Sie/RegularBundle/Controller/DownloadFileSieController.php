@@ -840,7 +840,7 @@ class DownloadFileSieController extends Controller {
                 $aGestion[$gsie->getGestion()] = $gsie->getGestion();
             }
             //this is for current year
-            // $aGestion[$this->session->get('currentyear')] = $this->session->get('currentyear');
+            $aGestion[$this->session->get('currentyear')] = $this->session->get('currentyear');
         }else{
           switch ($objStatusUe->getEstadoInstitucionTipo()->getId()) {
             case 19:
