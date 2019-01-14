@@ -174,14 +174,8 @@ Sie\AppWebBundle\Entity\Persona:
             comment: ''
             default: false
             column: es_extranjero
-        expedido:
-            type: string
-            nullable: true
-            length: 4
-            fixed: false
-            comment: ''
     manyToOne:
-        expedido2:
+        expedido:
             targetEntity: DepartamentoTipo
             cascade: {  }
             mappedBy: null

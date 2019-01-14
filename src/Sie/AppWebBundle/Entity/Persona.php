@@ -115,14 +115,9 @@ class Persona
     private $esExtranjero;
 
     /**
-     * @var string
-     */
-    private $expedido;
-
-    /**
      * @var \Sie\AppWebBundle\Entity\DepartamentoTipo
      */
-    private $expedido2;
+    private $expedido;
 
     /**
      * @var \Sie\AppWebBundle\Entity\IdiomaMaterno
@@ -618,10 +613,10 @@ class Persona
     /**
      * Set expedido
      *
-     * @param string $expedido
+     * @param \Sie\AppWebBundle\Entity\DepartamentoTipo $expedido
      * @return Persona
      */
-    public function setExpedido($expedido)
+    public function setExpedido(\Sie\AppWebBundle\Entity\DepartamentoTipo $expedido = null)
     {
         $this->expedido = $expedido;
     
@@ -631,34 +626,11 @@ class Persona
     /**
      * Get expedido
      *
-     * @return string 
+     * @return \Sie\AppWebBundle\Entity\DepartamentoTipo 
      */
     public function getExpedido()
     {
         return $this->expedido;
-    }
-
-    /**
-     * Set expedido2
-     *
-     * @param \Sie\AppWebBundle\Entity\DepartamentoTipo $expedido2
-     * @return Persona
-     */
-    public function setExpedido2(\Sie\AppWebBundle\Entity\DepartamentoTipo $expedido2 = null)
-    {
-        $this->expedido2 = $expedido2;
-    
-        return $this;
-    }
-
-    /**
-     * Get expedido2
-     *
-     * @return \Sie\AppWebBundle\Entity\DepartamentoTipo 
-     */
-    public function getExpedido2()
-    {
-        return $this->expedido2;
     }
 
     /**
