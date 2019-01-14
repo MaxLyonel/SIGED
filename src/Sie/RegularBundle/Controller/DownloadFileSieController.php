@@ -782,7 +782,7 @@ class DownloadFileSieController extends Controller {
 
         //get path of the file
         $dir = $this->get('kernel')->getRootDir() . '/../web/uploads/instaladores/';
-        $file = 'instalador_SIGED_SIE_v128.exe';
+        $file = 'instalador_SIGED_SIE_v129.exe';
 
         //create response to donwload the file
         $response = new Response();
@@ -840,7 +840,7 @@ class DownloadFileSieController extends Controller {
                 $aGestion[$gsie->getGestion()] = $gsie->getGestion();
             }
             //this is for current year
-            // $aGestion[$this->session->get('currentyear')] = $this->session->get('currentyear');
+            $aGestion[$this->session->get('currentyear')] = $this->session->get('currentyear');
         }else{
           switch ($objStatusUe->getEstadoInstitucionTipo()->getId()) {
             case 19:
