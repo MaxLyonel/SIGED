@@ -193,7 +193,7 @@ class StudentsInscriptionsController extends Controller {
         }
 
       } else{
-          if(!($yearStudent>=18)){
+          if(!($yearStudent>=16)){
             $validateYear=true;
           }
       }//end first if - validate the humanisticos
