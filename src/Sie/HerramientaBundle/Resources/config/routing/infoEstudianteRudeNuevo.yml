@@ -63,6 +63,12 @@ info_estudiante_rude_nuevo_buscar_persona:
     options:
          expose: true
 
+info_estudiante_rude_nuevo_save_formConQuienVive:
+    path:     /saveFormConQuienVive
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRudeNuevo:saveFormConQuienVive" }
+    options:
+         expose: true
+
 info_estudiante_rude_nuevo_save_formApoderado:
     path:     /saveFormApoderado
     defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRudeNuevo:saveFormApoderado" }
