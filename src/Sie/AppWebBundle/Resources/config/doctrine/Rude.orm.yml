@@ -48,12 +48,6 @@ Sie\AppWebBundle\Entity\Rude:
             generator:
                 strategy: SEQUENCE
     fields:
-        discapacidadTipoId:
-            type: integer
-            nullable: true
-            unsigned: false
-            comment: ''
-            column: discapacidad_tipo_id
         esPertenceNacionOriginaria:
             type: string
             nullable: true
@@ -177,6 +171,35 @@ Sie\AppWebBundle\Entity\Rude:
             nullable: true
             comment: ''
             column: respuesta_pago
+        tieneCi:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: tiene_ci
+        tienePasaporte:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: tiene_pasaporte
+        tieneCarnetDiscapacidad:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: tiene_carnet_discapacidad
+        tiempoLlegadaHoras:
+            type: string
+            nullable: true
+            length: 2
+            fixed: false
+            comment: ''
+            column: tiempo_llegada_horas
+        tiempoLlegadaMinutos:
+            type: string
+            nullable: true
+            length: 2
+            fixed: false
+            comment: ''
+            column: tiempo_llegada_minutos
     manyToOne:
         nacionOriginariaTipo:
             targetEntity: NacionOriginariaTipo
