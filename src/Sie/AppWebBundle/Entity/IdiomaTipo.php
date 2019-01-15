@@ -84,4 +84,32 @@ class IdiomaTipo
     {
         return $this->obs;
     }
+    /**
+     * @var boolean
+     */
+    private $esVigente;
+
+
+    /**
+     * Set esVigente
+     *
+     * @param boolean $esVigente
+     * @return IdiomaTipo
+     */
+    public function setEsVigente($esVigente)
+    {
+        $this->esVigente = $esVigente;
+    
+        return $this;
+    }
+
+    /**
+     * Get esVigente
+     *
+     * @return boolean 
+     */
+    public function getEsVigente()
+    {
+        return $this->esVigente;
+    }
 }
