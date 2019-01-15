@@ -624,20 +624,17 @@ class DownloadController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $informacion = $em->createQueryBuilder()
-                    ->select('pt.id as periodo, st.id as sucursal')
-                    ->from('SieAppWebBundle:EstudianteInscripcion','ei')
-                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
-                    ->innerJoin('SieAppWebBundle:PeriodoTipo','pt','with','iec.periodoTipo = pt.id')
-                    ->innerJoin('SieAppWebBundle:SucursalTipo','st','with','iec.sucursalTipo = st.id')
-                    ->where('ei.id = :idInscripcion')
+                    ->select('IDENTITY(eiht.especialidadTecnicoHumanisticoTipo) as especialidad')
+                    ->from('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico','eiht')
+                    ->where('eiht.estudianteInscripcion = :idInscripcion')
                     ->setParameter('idInscripcion',$idInscripcion)
                     ->getQuery()
                     ->getResult();
-        $periodo = $informacion[0]['periodo'];
-        $sucursal = $informacion[0]['sucursal'];
+        $especialidad = $informacion[0]['especialidad'];
+        
 
         //$datos = "2869471|624600252014167A|62460025|2015|11|2|1|1|0";
-        $datos = $idInscripcion.'|'.$rude.'|'.$sie.'|'.$gestion.'|'.$nivel.'|'.$grado.'|'.$periodo.'|'.$turno.'|'.$sucursal;
+        $datos = $idInscripcion.'|'.$rude.'|'.$sie.'|'.$turno.'|'.$grado.'|'.$paralelo.'|'.$especialidad.'|'.$gestion;
 
         // Cadena de seguridad
         $codes = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/';
@@ -665,7 +662,7 @@ class DownloadController extends Controller {
         }
 
         // generanos el link, para codigo QR
-        $link = 'http://libreta.minedu.gob.bo/lib/'.$result;
+        $link = 'http://academico.sie.gob.bo/bth/'.$result;
 
         // Validamos que tipo de libreta se ha de imprimir
         // Modular y plena
