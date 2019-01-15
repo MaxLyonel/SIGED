@@ -17,6 +17,10 @@ $('#pb_complemento').on('keyup',function(){
     $(this).val($(this).val().toUpperCase());
 });
 
+$('#pb_fechaNacimiento').on('change', function(){
+
+});
+
 // $('#p_idioma').select2({width: "100%"});
 // $('#p_ocupacion').select2({width: "100%"});
 
@@ -124,12 +128,27 @@ var p_buscarPadre = function(){
     var p_nombre = $('#pb_nombre').val();
     var p_fechaNacimiento = $('#pb_fechaNacimiento').val();
 
+    // Validamos si la fecha de nacimiento es correcta
+    var p_df = p_fechaNacimiento.split('-');
+    var p_anio = p_df[2];
+
+    var p_fechaActual = new Date();
+    var p_anioActual = p_fechaActual.getFullYear();
+
+    if(p_anio < 1900 || (p_anioActual - p_anio) < 15 || (p_anioActual - p_anio) > 100){
+        alert('La fecha de nacimiento no es válida, verfique e intentelo nuevamente.');
+        return;
+    }
+    /////////
+
+
     if($('#pb_sinCarnet').is(':checked')){
 
         if(p_nombre != "" && p_fechaNacimiento != ""){
+            $('#pb_carnet').val('');
             var data = {
                 id: 'nuevo',
-                carnet: p_carnet,
+                carnet: '',
                 complemento: p_complemento,
                 paterno: p_paterno,
                 materno: p_materno,

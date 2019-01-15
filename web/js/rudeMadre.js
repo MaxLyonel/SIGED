@@ -123,12 +123,26 @@ var m_buscarMadre = function(){
     var m_nombre = $('#mb_nombre').val();
     var m_fechaNacimiento = $('#mb_fechaNacimiento').val();
 
+    // Validamos si la fecha de nacimiento es correcta
+    var m_df = m_fechaNacimiento.split('-');
+    var m_anio = m_df[2];
+
+    var m_fechaActual = new Date();
+    var m_anioActual = m_fechaActual.getFullYear();
+
+    if(m_anio < 1900 || (m_anioActual - m_anio) < 15 || (m_anioActual - m_anio) > 100){
+        alert('La fecha de nacimiento no es válida, verfique e intentelo nuevamente.');
+        return;
+    }
+    /////////
+
     if($('#mb_sinCarnet').is(':checked')){
 
         if(m_nombre != "" && m_fechaNacimiento != ""){
+            $('#mb_carnet').val('');
             var data = {
                 id: 'nuevo',
-                carnet: m_carnet,
+                carnet: '',
                 complemento: m_complemento,
                 paterno: m_paterno,
                 materno: m_materno,

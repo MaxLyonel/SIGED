@@ -758,6 +758,12 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row">
+                                                                    <label class="col-md-6">Expedido</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formPadre.expedido, {'id':'p_expedido','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
                                                                     <label class="col-md-6">Apellido paterno</label>
                                                                     <div class="col-md-6 col-sm-6">
                                                                         {{ form_widget(formPadre.paterno, {'id':'p_paterno','attr':{'class':'form-control readonly',} }) }}
@@ -849,28 +855,28 @@
                                                                         <div id="p_top2" style="padding:10px; border:1px solid #cccccc; display:none">
                                                                             <p>Para buscar datos del padre, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarlo.</p>
                                                                             <p class="sinCarnet">
-                                                                                <label><input type="checkbox" id="pb_sinCarnet"> El padre no cuenta con carnet</label>
+                                                                                <label><input type="checkbox" id="pb_sinCarnet" autocomplete="off"> El padre no cuenta con carnet</label>
                                                                             </p>
-                                                                            <input type="text" name="pb_carnet" id="pb_carnet" class="form-control" placeholder="Nro de Carnet" value="">
-                                                                            <input type="text" name="pb_complemento" id="pb_complemento" class="form-control" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
-                                                                            <input type="text" name="pb_paterno" id="pb_paterno" class="form-control" placeholder="Paterno" value="">
-                                                                            <input type="text" name="pb_materno" id="pb_materno" class="form-control" placeholder="Materno" value="">
-                                                                            <input type="text" name="pb_nombre" id="pb_nombre" class="form-control" placeholder="Nombre" value="">
-                                                                            <input type="text" name="pb_fechaNacimiento" id="pb_fechaNacimiento" class="form-control" placeholder="Fecha de nacimiento" value="">
+                                                                            <input type="text" name="pb_carnet" autocomplete="off" id="pb_carnet" autocomplete="off" class="form-control" placeholder="Nro de Carnet" value="">
+                                                                            <input type="text" name="pb_complemento" autocomplete="off" id="pb_complemento" autocomplete="off" class="form-control" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            <input type="text" name="pb_paterno" autocomplete="off" id="pb_paterno" autocomplete="off" class="form-control" placeholder="Paterno" value="">
+                                                                            <input type="text" name="pb_materno" autocomplete="off" id="pb_materno" autocomplete="off" class="form-control" placeholder="Materno" value="">
+                                                                            <input type="text" name="pb_nombre" autocomplete="off" id="pb_nombre" autocomplete="off" class="form-control" placeholder="Nombre" value="">
+                                                                            <input type="text" name="pb_fechaNacimiento" autocomplete="off" id="pb_fechaNacimiento" autocomplete="off" class="form-control" placeholder="Fecha de nacimiento" value="">
                                                                             <button type="button" class="btn btn-block btn-info" onclick="p_buscarPadre();"> <i class="fa fa-search"></i> Buscar</button>
                                                                         </div>
                                                                     {% else %}
                                                                         <div id="p_top2" style="padding:10px; border:1px solid #cccccc">
                                                                             <p>Para buscar datos del padre, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarlo.</p>
                                                                             <p class="sinCarnet">
-                                                                                <label><input type="checkbox" id="pb_sinCarnet"> El padre no cuenta con carnet</label>
+                                                                                <label><input type="checkbox" id="pb_sinCarnet" autocomplete="off"> El padre no cuenta con carnet</label>
                                                                             </p>
-                                                                            <input type="text" name="pb_carnet" id="pb_carnet" class="form-control" placeholder="Nro de Carnet" value="">
-                                                                            <input type="text" name="pb_complemento" id="pb_complemento" class="form-control" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
-                                                                            <input type="text" name="pb_paterno" id="pb_paterno" class="form-control" placeholder="Paterno" value="">
-                                                                            <input type="text" name="pb_materno" id="pb_materno" class="form-control" placeholder="Materno" value="">
-                                                                            <input type="text" name="pb_nombre" id="pb_nombre" class="form-control" placeholder="Nombre" value="">
-                                                                            <input type="text" name="pb_fechaNacimiento" id="pb_fechaNacimiento" class="form-control" placeholder="Fecha de nacimiento" value="">
+                                                                            <input type="text" name="pb_carnet" autocomplete="off" id="pb_carnet" autocomplete="off" class="form-control" placeholder="Nro de Carnet" value="">
+                                                                            <input type="text" name="pb_complemento" autocomplete="off" id="pb_complemento" autocomplete="off" class="form-control" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            <input type="text" name="pb_paterno" autocomplete="off" id="pb_paterno" autocomplete="off" class="form-control" placeholder="Paterno" value="">
+                                                                            <input type="text" name="pb_materno" autocomplete="off" id="pb_materno" autocomplete="off" class="form-control" placeholder="Materno" value="">
+                                                                            <input type="text" name="pb_nombre" autocomplete="off" id="pb_nombre" autocomplete="off" class="form-control" placeholder="Nombre" value="">
+                                                                            <input type="text" name="pb_fechaNacimiento" autocomplete="off" id="pb_fechaNacimiento" autocomplete="off" class="form-control" placeholder="Fecha de nacimiento" value="">
                                                                             <button type="button" class="btn btn-block btn-info" onclick="p_buscarPadre();"> <i class="fa fa-search"></i> Buscar</button>
                                                                         </div>
                                                                     {% endif %}
@@ -917,6 +923,12 @@
                                                                     <label class="col-md-6">Complemento</label>
                                                                     <div class="col-md-6 col-sm-6">
                                                                         {{ form_widget(formMadre.complemento, {'id':'m_complemento','attr':{'class':'form-control readonly'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Expedido</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formMadre.expedido, {'id':'m_expedido','attr':{'class':'form-control'} }) }}
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row">
@@ -1011,28 +1023,28 @@
                                                                         <div id="m_top2" style="padding:10px; border:1px solid #cccccc; display:none">
                                                                             <p>Para buscar datos de la madre, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarla.</p>
                                                                             <p class="sinCarnet">
-                                                                                <label><input type="checkbox" id="mb_sinCarnet"> La madre no cuenta con carnet</label>
+                                                                                <label><input type="checkbox" id="mb_sinCarnet" autocomplete="off"> La madre no cuenta con carnet</label>
                                                                             </p>
-                                                                            <input type="text" name="mb_carnet" id="mb_carnet" class="form-control" placeholder="Nro de Carnet" value="">
-                                                                            <input type="text" name="mb_complemento" id="mb_complemento" class="form-control" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
-                                                                            <input type="text" name="mb_paterno" id="mb_paterno" class="form-control" placeholder="Paterno" value="">
-                                                                            <input type="text" name="mb_materno" id="mb_materno" class="form-control" placeholder="Materno" value="">
-                                                                            <input type="text" name="mb_nombre" id="mb_nombre" class="form-control" placeholder="Nombre" value="">
-                                                                            <input type="text" name="mb_fechaNacimiento" id="mb_fechaNacimiento" class="form-control" placeholder="Fecha de nacimiento" value="">
+                                                                            <input type="text" name="mb_carnet" autocomplete="off" id="mb_carnet" autocomplete="off" class="form-control" placeholder="Nro de Carnet" value="">
+                                                                            <input type="text" name="mb_complemento" autocomplete="off" id="mb_complemento" autocomplete="off" class="form-control" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            <input type="text" name="mb_paterno" autocomplete="off" id="mb_paterno" autocomplete="off" class="form-control" placeholder="Paterno" value="">
+                                                                            <input type="text" name="mb_materno" autocomplete="off" id="mb_materno" autocomplete="off" class="form-control" placeholder="Materno" value="">
+                                                                            <input type="text" name="mb_nombre" autocomplete="off" id="mb_nombre" autocomplete="off" class="form-control" placeholder="Nombre" value="">
+                                                                            <input type="text" name="mb_fechaNacimiento" autocomplete="off" id="mb_fechaNacimiento" autocomplete="off" class="form-control" placeholder="Fecha de nacimiento" value="">
                                                                             <button type="button" class="btn btn-block btn-info" onclick="m_buscarMadre();"> <i class="fa fa-search"></i> Buscar</button>
                                                                         </div>
                                                                     {% else %}
                                                                         <div id="m_top2" style="padding:10px; border:1px solid #cccccc">
                                                                             <p>Para buscar datos de la madre, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarla.</p>
                                                                             <p class="sinCarnet">
-                                                                                <label><input type="checkbox" id="mb_sinCarnet"> La madre no cuenta con carnet</label>
+                                                                                <label><input type="checkbox" id="mb_sinCarnet" autocomplete="off"> La madre no cuenta con carnet</label>
                                                                             </p>
-                                                                            <input type="text" name="mb_carnet" id="mb_carnet" class="form-control" placeholder="Nro de Carnet" value="">
-                                                                            <input type="text" name="mb_complemento" id="mb_complemento" class="form-control" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
-                                                                            <input type="text" name="mb_paterno" id="mb_paterno" class="form-control" placeholder="Paterno" value="">
-                                                                            <input type="text" name="mb_materno" id="mb_materno" class="form-control" placeholder="Materno" value="">
-                                                                            <input type="text" name="mb_nombre" id="mb_nombre" class="form-control" placeholder="Nombre" value="">
-                                                                            <input type="text" name="mb_fechaNacimiento" id="mb_fechaNacimiento" class="form-control" placeholder="Fecha de nacimiento" value="">
+                                                                            <input type="text" name="mb_carnet" autocomplete="off" id="mb_carnet" autocomplete="off" class="form-control" placeholder="Nro de Carnet" value="">
+                                                                            <input type="text" name="mb_complemento" autocomplete="off" id="mb_complemento" autocomplete="off" class="form-control" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            <input type="text" name="mb_paterno" autocomplete="off" id="mb_paterno" autocomplete="off" class="form-control" placeholder="Paterno" value="">
+                                                                            <input type="text" name="mb_materno" autocomplete="off" id="mb_materno" autocomplete="off" class="form-control" placeholder="Materno" value="">
+                                                                            <input type="text" name="mb_nombre" autocomplete="off" id="mb_nombre" autocomplete="off" class="form-control" placeholder="Nombre" value="">
+                                                                            <input type="text" name="mb_fechaNacimiento" autocomplete="off" id="mb_fechaNacimiento" autocomplete="off" class="form-control" placeholder="Fecha de nacimiento" value="">
                                                                             <button type="button" class="btn btn-block btn-info" onclick="m_buscarMadre();"> <i class="fa fa-search"></i> Buscar</button>
                                                                         </div>
                                                                     {% endif %}
@@ -1079,6 +1091,12 @@
                                                                     <label class="col-md-6">Complemento</label>
                                                                     <div class="col-md-6 col-sm-6">
                                                                         {{ form_widget(formTutor.complemento, {'id':'t_complemento','attr':{'class':'form-control readonly'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Expedido</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formTutor.expedido, {'id':'t_expedido','attr':{'class':'form-control'} }) }}
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row">
@@ -1173,28 +1191,28 @@
                                                                         <div id="t_top2" style="padding:10px; border:1px solid #cccccc; display:none">
                                                                             <p>Para buscar datos del tutor, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarlo.</p>
                                                                             <p class="sinCarnet">
-                                                                                <label><input type="checkbox" id="tb_sinCarnet"> El tutor no cuenta con carnet</label>
+                                                                                <label><input type="checkbox" id="tb_sinCarnet" autocomplete="off"> El tutor no cuenta con carnet</label>
                                                                             </p>
-                                                                            <input type="text" name="tb_carnet" id="tb_carnet" class="form-control" placeholder="Nro de Carnet" value="">
-                                                                            <input type="text" name="tb_complemento" id="tb_complemento" class="form-control" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
-                                                                            <input type="text" name="tb_paterno" id="tb_paterno" class="form-control" placeholder="Paterno" value="">
-                                                                            <input type="text" name="tb_materno" id="tb_materno" class="form-control" placeholder="Materno" value="">
-                                                                            <input type="text" name="tb_nombre" id="tb_nombre" class="form-control" placeholder="Nombre" value="">
-                                                                            <input type="text" name="tb_fechaNacimiento" id="tb_fechaNacimiento" class="form-control" placeholder="Fecha de nacimiento" value="">
+                                                                            <input type="text" name="tb_carnet" autocomplete="off" id="tb_carnet" autocomplete="off" class="form-control" placeholder="Nro de Carnet" value="">
+                                                                            <input type="text" name="tb_complemento" autocomplete="off" id="tb_complemento" autocomplete="off" class="form-control" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            <input type="text" name="tb_paterno" autocomplete="off" id="tb_paterno" autocomplete="off" class="form-control" placeholder="Paterno" value="">
+                                                                            <input type="text" name="tb_materno" autocomplete="off" id="tb_materno" autocomplete="off" class="form-control" placeholder="Materno" value="">
+                                                                            <input type="text" name="tb_nombre" autocomplete="off" id="tb_nombre" autocomplete="off" class="form-control" placeholder="Nombre" value="">
+                                                                            <input type="text" name="tb_fechaNacimiento" autocomplete="off" id="tb_fechaNacimiento" autocomplete="off" class="form-control" placeholder="Fecha de nacimiento" value="">
                                                                             <button type="button" class="btn btn-block btn-info" onclick="t_buscarTutor();"> <i class="fa fa-search"></i> Buscar</button>
                                                                         </div>
                                                                     {% else %}
                                                                         <div id="t_top2" style="padding:10px; border:1px solid #cccccc">
                                                                             <p>Para buscar datos del tutor, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarlo.</p>
                                                                             <p class="sinCarnet">
-                                                                                <label><input type="checkbox" id="tb_sinCarnet"> El tutor no cuenta con carnet</label>
+                                                                                <label><input type="checkbox" id="tb_sinCarnet" autocomplete="off"> El tutor no cuenta con carnet</label>
                                                                             </p>
-                                                                            <input type="text" name="tb_carnet" id="tb_carnet" class="form-control" placeholder="Nro de Carnet" value="">
-                                                                            <input type="text" name="tb_complemento" id="tb_complemento" class="form-control" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
-                                                                            <input type="text" name="tb_paterno" id="tb_paterno" class="form-control" placeholder="Paterno" value="">
-                                                                            <input type="text" name="tb_materno" id="tb_materno" class="form-control" placeholder="Materno" value="">
-                                                                            <input type="text" name="tb_nombre" id="tb_nombre" class="form-control" placeholder="Nombre" value="">
-                                                                            <input type="text" name="tb_fechaNacimiento" id="tb_fechaNacimiento" class="form-control" placeholder="Fecha de nacimiento" value="">
+                                                                            <input type="text" name="tb_carnet" autocomplete="off" id="tb_carnet" autocomplete="off" class="form-control" placeholder="Nro de Carnet" value="">
+                                                                            <input type="text" name="tb_complemento" autocomplete="off" id="tb_complemento" autocomplete="off" class="form-control" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            <input type="text" name="tb_paterno" autocomplete="off" id="tb_paterno" autocomplete="off" class="form-control" placeholder="Paterno" value="">
+                                                                            <input type="text" name="tb_materno" autocomplete="off" id="tb_materno" autocomplete="off" class="form-control" placeholder="Materno" value="">
+                                                                            <input type="text" name="tb_nombre" autocomplete="off" id="tb_nombre" autocomplete="off" class="form-control" placeholder="Nombre" value="">
+                                                                            <input type="text" name="tb_fechaNacimiento" autocomplete="off" id="tb_fechaNacimiento" autocomplete="off" class="form-control" placeholder="Fecha de nacimiento" value="">
                                                                             <button type="button" class="btn btn-block btn-info" onclick="t_buscarTutor();"> <i class="fa fa-search"></i> Buscar</button>
                                                                         </div>
                                                                     {% endif %}
@@ -1293,6 +1311,7 @@
 
     $(function(){
         verificarPaisNacimiento();
+        // cargarGradoDiscapacidad();
         validarTieneDiscapacidad();
         validarAccesoInternet();
         validarSiTrabajo();
@@ -1309,6 +1328,37 @@
         placeholder: "Seleccione una opción",
         allowClear: true
     });
+
+    function cargarGradoDiscapacidad(){
+        var discapacidad = $('#form_discapacidad').val();
+        if(discapacidad != ""){
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('info_estudiante_rude_nuevo_cargar_grado_discapacidad', {'discapacidad': discapacidad}),
+                beforeSend: function () {
+                    $("#form_gradoDiscapacidad").empty();
+                    $("#form_gradoDiscapacidad").append('<option value="">Seleccionar...</option>');
+                },
+                success: function (data) {
+                    $("#form_gradoDiscapacidad").empty();
+                    $("#form_gradoDiscapacidad").append('<option value="">Seleccionar...</option>');
+
+                    $.each(data.gradosDiscapacidad, function (i, value) {
+                        $("#form_gradoDiscapacidad").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }else{
+            $("#form_gradoDiscapacidad").empty();
+            $("#form_gradoDiscapacidad").append('<option value="">Seleccionar...</option>');
+        }
+    }
+
+    $('#form_discapacidad').on('change', function(){
+        cargarGradoDiscapacidad();
+    });
+
+
 
     // APLICANDO BUSCADOR A LOS SELECTS
     $('#form_idiomaNines').chosen({width: "100%"});
@@ -1340,7 +1390,7 @@
 
     // VALIDACION DE DISCAPACIDAD
     function validarTieneDiscapacidad(){
-        if($('#form_tieneDiscapacidad_0').is(':checked')){
+        if($('#form_tieneDiscapacidad_1').is(':checked')){
             $('#form_carnetIbc').val('');
             $('#form_carnetIbc').removeAttr('required');
             $('#form_discapacidad').val('');
@@ -1348,16 +1398,13 @@
             $('#form_gradoDiscapacidad').val('');
             $('#form_gradoDiscapacidad').removeAttr('required');
 
-            $('#fieldsetDiscapacidad').removeAttr('disabled');            
+            $('#fieldsetDiscapacidad').attr('disabled','disabled');            
         }else{
-            $('#form_carnetIbc').val('');
             $('#form_carnetIbc').attr('required','required');
-            $('#form_discapacidad').val('');
             $('#form_discapacidad').attr('required','required');
-            $('#form_gradoDiscapacidad').val('');
             $('#form_gradoDiscapacidad').attr('required','required');
 
-            $('#fieldsetDiscapacidad').attr('disabled','disabled');
+            $('#fieldsetDiscapacidad').removeAttr('disabled');
         }
     }
 
@@ -1370,7 +1417,7 @@
     // ACCESO A INTERNET
     function validarAccesoInternet(){
         var accesos = $('#form_accesoInternet').val();
-        if($.inArray('5', accesos) !== -1){
+        if($.inArray('4', accesos) !== -1){
             $('#form_accesoInternet').val([5]);
             $('#fieldsetInternet').attr('disabled','disabled');
             $('#form_accesoInternet').trigger("chosen:updated");
@@ -1709,7 +1756,7 @@
         });
     }
 
-    // HABITUALMENTE CON QUIEN VIVE
+    // HABITUALMENTE CON QUIEN VIVEPersona.orm.yml
 
     function saveFormConQuienVive(){
         var data = $('#formConQuienVive').serialize();

@@ -123,12 +123,27 @@ var t_buscarTutor = function(){
     var t_nombre = $('#tb_nombre').val();
     var t_fechaNacimiento = $('#tb_fechaNacimiento').val();
 
+    // Validamos si la fecha de nacimiento es correcta
+    var t_df = t_fechaNacimiento.split('-');
+    var t_anio = t_df[2];
+
+    var t_fechaActual = new Date();
+    var t_anioActual = t_fechaActual.getFullYear();
+
+    if(t_anio < 1900 || (t_anioActual - t_anio) < 15 || (t_anioActual - t_anio) > 100){
+        alert('La fecha de nacimiento no es válida, verfique e intentelo nuevamente.');
+        return;
+    }
+    /////////
+    /////////
+
     if($('#tb_sinCarnet').is(':checked')){
 
         if(t_nombre != "" && t_fechaNacimiento != ""){
+            $('#tb_carnet').val('');
             var data = {
                 id: 'nuevo',
-                carnet: t_carnet,
+                carnet: '',
                 complemento: t_complemento,
                 paterno: t_paterno,
                 materno: t_materno,

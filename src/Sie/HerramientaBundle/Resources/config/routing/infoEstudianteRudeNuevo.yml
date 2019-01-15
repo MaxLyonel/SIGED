@@ -43,6 +43,13 @@ info_estudiante_rude_nuevo_listarmunicipios:
     options:
          expose: true
 
+#DISCAPACDIDAD
+info_estudiante_rude_nuevo_cargar_grado_discapacidad:
+    path:     /cargarGradoDiscapacidad
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRudeNuevo:cargarGradoDiscapacidad" }
+    options:
+         expose: true
+
 info_estudiante_rude_nuevo_save_formDireccion:
     path:     /saveFormDireccion
     defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRudeNuevo:saveFormDireccion" }

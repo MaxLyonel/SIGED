@@ -1021,9 +1021,11 @@ class InfoEstudianteBjpController extends Controller {
                 ->where('iec.institucioneducativa = :sie')
                 ->andWhere('iec.gestionTipo = :gestion')
                 ->andWhere('e.id = :estudiante')
+                ->andWhere('ei.estadomatriculaTipo in (:matricula)')
                 ->setParameter('sie', $form['sie'])
                 ->setParameter('gestion', $form['gestion'])
                 ->setParameter('estudiante', $estudiante->getId())
+                ->setParameter('matricula', array(0,4,5,11,55))
                 ->getQuery();
 
             $estudianteInscripcion = $query->getOneOrNullResult();
