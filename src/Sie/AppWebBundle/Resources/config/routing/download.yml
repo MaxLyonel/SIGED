@@ -78,6 +78,10 @@ download_libreta:
     path:    /downloadLibreta/{idInscripcion}/{rude}/{sie}/{gestion}/{nivel}/{grado}/{paralelo}/{turno}/{ciclo}
     defaults: { _controller: SieAppWebBundle:Download:downloadLibreta }
 
+download_cut:
+    path:    /downloadcut/{idInscripcion}/{rude}/{sie}/{gestion}/{nivel}/{grado}/{paralelo}/{turno}/{ciclo}
+    defaults: { _controller: SieAppWebBundle:Download:downloadCut }
+
 download_ddjj_speciality:
     path:    /ddjjSpecialityStudent/{idInscripcion}/{rude}/{sie}/{gestion}/{nivel}/{grado}/{paralelo}/{turno}/{ciclo}
     defaults: { _controller: SieAppWebBundle:Download:ddjjSpecialityStudent }

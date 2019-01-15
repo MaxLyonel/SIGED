@@ -765,7 +765,7 @@ class InfoEstudianteBjpController extends Controller {
 
         foreach($estudiantesBjp as $item) {
             $item->setEsPagado('f');
-            $item->setPagoTipoId($pagoTipo);
+            $item->setPagoTipoId(null);
             $em->persist($item);
             $em->flush();
         }
