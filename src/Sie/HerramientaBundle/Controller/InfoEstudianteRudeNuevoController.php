@@ -180,6 +180,19 @@ class InfoEstudianteRudeNuevoController extends Controller {
 
         // DISCAPACIDAD DEL ESTUDIANTE
         $discapacidadEstudiante = $em->getRepository('SieAppWebBundle:RudeDiscapacidadGrado')->findOneBy(array('rude'=>$rude->getId()));
+        $gradosArray = array();
+        if($discapacidadEstudiante){
+            // SI LA DISCAPACDIDAD ES VISUAL ENTONCES SOLO MOSTRAMOS CIEETOS GRADOS DE DISCAPACIDAD
+            if($discapacidadEstudiante->getDiscapacidadTipo()->getId() == 10){
+                $gradoDiscapacidad = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->findBy(array('id'=>array(6,5),'esVigente'=>true));
+            }else{
+                $gradoDiscapacidad = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->findBy(array('id'=>array(1,2,7,8),'esVigente'=>true));
+            }
+
+            foreach ($gradoDiscapacidad as $gd) {
+                $gradosArray[] = $gd->getId();
+            }
+        }
 
         // LUGAR DE NACIMIENTO
         $departamentoNacimiento = $em->getRepository('SieAppWebBundle:LugarTipo')->find($departamento);
@@ -197,7 +210,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                                         ->orderBy('p.pais', 'ASC')
                                 ;
                             },
-                            'empty_value' => 'Selecionar...',
+                            'empty_value' => 'Seleccionar...',
                             'required'=>true,
                             'property' => 'pais',
                             'data'=>$e->getPaisTipo()
@@ -216,7 +229,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                                 return $e->createQueryBuilder('gt')
                                         ->where('gt.id != 3');
                             },
-                            'empty_value' => 'Selecionar...',
+                            'empty_value' => 'Seleccionar...',
                             'required' => true,
                             'data'=>$e->getGeneroTipo()
                         ))
@@ -239,22 +252,23 @@ class InfoEstudianteRudeNuevoController extends Controller {
                             'class' => 'SieAppWebBundle:DiscapacidadTipo',
                             'query_builder' => function (EntityRepository $e) {
                                 return $e->createQueryBuilder('dt')
-                                        ->where('dt.id not in (1,2)');
+                                        ->where('dt.id not in (0,1)');
                             },
-                            'empty_value' => 'Selecionar...',
+                            'empty_value' => 'Seleccionar...',
                             'required' => true,
-                            'data'=>($discapacidadEstudiante)?$em->getReference('SieAppWebBundle:DiscapacidadTipo', $discapacidadEstudiante->getDiscapacidadTipo()->getId()):'',
+                            'data'=>($discapacidadEstudiante)?$discapacidadEstudiante->getDiscapacidadTipo():'',
                             'mapped'=>false
                         ))
                     ->add('gradoDiscapacidad', 'entity', array(
                             'class' => 'SieAppWebBundle:GradoDiscapacidadTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($gradosArray) {
                                 return $e->createQueryBuilder('gdt')
-                                        ->where('gdt.id != 1');
+                                        ->where('gdt.id in (:ids)')
+                                        ->setParameter('ids', $gradosArray);
                             },
-                            'empty_value' => 'Selecionar...',
+                            'empty_value' => 'Seleccionar...',
                             'required' => true,
-                            'data'=>($discapacidadEstudiante)?$em->getReference('SieAppWebBundle:GradoDiscapacidadTipo', $discapacidadEstudiante->getGradoDiscapacidadTipo()->getId()):''
+                            'data'=>($discapacidadEstudiante)?$discapacidadEstudiante->getGradoDiscapacidadTipo():''
                         ))
                     ->add('departamentoNacimiento', 'hidden', array('data'=>$departamentoNacimiento->getLugar()))
                     ->add('provinciaNacimiento', 'hidden', array('data'=>$provinciaNacimiento->getLugar()))
@@ -658,7 +672,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                                         ->orderBy('it.id', 'ASC')
                                 ;
                             },
-                            'empty_value' => 'Selecionar...',
+                            'empty_value' => 'Seleccionar...',
                             'required'=>false,
                             'data'=>$em->getReference('SieAppWebBundle:IdiomaTipo', $idioma3),
                             'mapped'=>false
@@ -928,6 +942,25 @@ class InfoEstudianteRudeNuevoController extends Controller {
         } catch (Exception $ex) {
             //$em->getConnection()->rollback();
         }
+    }
+
+    public function cargarGradoDiscapacidadAction(Request $request){
+        $idDiscapacidad = $request->get('discapacidad');
+        $em = $this->getDoctrine()->getManager();
+        // SI LA DISCAPACIDAD ES VISUAL = 10
+        if($idDiscapacidad == 10){
+            $gradoDiscapacidad = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->findBy(array('id'=>array(6,5),'esVigente'=>true));
+        }else{
+            $gradoDiscapacidad = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->findBy(array('id'=>array(1,2,7,8),'esVigente'=>true));
+        }
+
+        $gradosArray = array();
+        foreach ($gradoDiscapacidad as $gd) {
+            $gradosArray[$gd->getId()] = $gd->getGradoDiscapacidad();
+        }
+
+        $response = new JsonResponse();
+        return $response->setData(array('gradosDiscapacidad' => $gradosArray));
     }
 
     public function saveFormDireccionAction(Request $request){
@@ -1385,7 +1418,8 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         p.carnet,
                         p.complemento,
                         p.fechaNacimiento,
-                        p.segipId, 
+                        p.segipId,
+                        dt.id as expedido,
                         gt.id as genero, 
                         p.correo, 
                         p.celular, 
@@ -1399,6 +1433,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     ->leftJoin('SieAppWebBundle:IdiomaTipo','it','with','rai.idiomaMaternoTipo = it.id')
                     ->leftJoin('SieAppWebBundle:InstruccionTipo','inst','with','rai.instruccionTipo = inst.id')
                     ->leftJoin('SieAppWebBundle:ApoderadoOcupacionTipo','aot','with','rai.ocupacionTipo = aot.id')
+                    ->leftJoin('SieAppWebBundle:DepartamentoTipo','dt','with','p.expedido = dt.id')
                     ->where('rai.estudianteInscripcion = :idInscripcion')
                     ->andWhere('at.id in (:tipoApoderado)')
                     ->setParameter('idInscripcion',$idInscripcion)
@@ -1421,6 +1456,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                 'complemento'=>null,
                 'fechaNacimiento'=>null,
                 'segipId'=>null,
+                'expedido'=>null,
                 'genero'=>null,
                 'correo'=>null,
                 'celular'=>null,
@@ -1497,6 +1533,19 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     ->add('complemento', 'text', array('required' => false))
                     ->add('fechaNacimiento', 'text', array('required' => true))
                     ->add('segipId', 'hidden', array('required' => true))
+                    ->add('expedido', 'entity', array(
+                            'class' => 'SieAppWebBundle:DepartamentoTipo',
+                            'query_builder' => function (EntityRepository $e) {
+                                return $e->createQueryBuilder('dt')
+                                        ->where('dt.id not in (0)')
+                                        ->orderBy('dt.id', 'ASC')
+                                ;
+                            },
+                            'property'=>'sigla',
+                            'empty_value' => 'Seleccionar...',
+                            'required'=>true,
+                            'data'=>($datos['expedido'] != null)?$em->getReference('SieAppWebBundle:DepartamentoTipo', $datos['expedido']):''
+                        ))
                     ->add('genero', 'entity', array(
                             'class' => 'SieAppWebBundle:GeneroTipo',
                             'query_builder' => function (EntityRepository $e) {
@@ -1506,7 +1555,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                                         ->orderBy('gt.id', 'ASC')
                                 ;
                             },
-                            'empty_value' => 'Selecionar...',
+                            'empty_value' => 'Seleccionar...',
                             'required'=>true,
                             'data'=>($datos['genero'] != null)?$em->getReference('SieAppWebBundle:GeneroTipo', $datos['genero']):''
                         ))
@@ -1521,7 +1570,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                                         ->orderBy('it.id', 'ASC')
                                 ;
                             },
-                            'empty_value' => 'Selecionar...',
+                            'empty_value' => 'Seleccionar...',
                             'required'=>true,
                             'data'=>($datos['idiomaMaterno'] != null)?$em->getReference('SieAppWebBundle:IdiomaTipo', $datos['idiomaMaterno']):''
                         ))
@@ -1534,7 +1583,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                                         ->orderBy('ot.id', 'ASC')
                                 ;
                             },
-                            'empty_value' => 'Selecionar...',
+                            'empty_value' => 'Seleccionar...',
                             'required'=>true,
                             'property'=>'ocupacion',
                             'data'=>($datos['ocupacion'] != null)?$em->getReference('SieAppWebBundle:ApoderadoOcupacionTipo', ($datos['ocupacion'])?$datos['ocupacion']:10035):''
@@ -1549,7 +1598,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                                         ->orderBy('it.id', 'ASC')
                                 ;
                             },
-                            'empty_value' => 'Selecionar...',
+                            'empty_value' => 'Seleccionar...',
                             'required'=>true,
                             'data'=>($datos['instruccionTipo'] != null)?$em->getReference('SieAppWebBundle:InstruccionTipo', $datos['instruccionTipo']):''
                         ))
@@ -1608,6 +1657,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
 
             //     $data['status'] = 200;
             //     $data['persona'] = array(
+            //         'id'=>'segip',
             //         'carnet'=> $persona['NumeroDocumento'],
             //         'complemento'=> $persona['Complemento'],
             //         'paterno'=> $persona['PrimerApellido'],
@@ -1668,7 +1718,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
         if($tiene == 1){
 
             // Verificamos si la persona es nueva
-            if($form['idPersona'] == 'nuevo'){
+            if($form['idPersona'] == 'nuevo' or $form['idPersona'] == 'segip'){
                 // PREGUNTAMOS SI EL CARNET ESTA VACIO
                 if($form['carnet'] != ""){
                     $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
@@ -1687,6 +1737,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     // SI EXISTE LA PERSONA SOLO ACTUALIZAMOS SU FECHA DE NACIMIENTO
                     $persona->setFechaNacimiento(new \DateTime($form['fechaNacimiento']));
                     $persona->setCelular($form['celular']);
+                    $persona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($form['expedido']));
                     $em->flush();
 
                     $idPersona = $persona->getId();
@@ -1708,7 +1759,15 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         }
                     }else{
                         // generamos un carnet ficticio
-                        $form['carnet'] = '777777'. rand(1000, 2000);
+                        $personasSinCarnet = $em->createQueryBuilder()
+                                            ->select('p')
+                                            ->from('SieAppWebBundle:Persona','p')
+                                            ->where('p.carnet like :palabra')
+                                            ->setParameter('palabra','SC%')
+                                            ->getQuery()
+                                            ->getResult();
+
+                        $form['carnet'] = 'SC'. (count($personasSinCarnet) + 1);
                     }
                     
 
@@ -1726,7 +1785,12 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     $nuevaPersona->setMaterno(mb_strtoupper($form['materno'],'utf-8'));
                     $nuevaPersona->setNombre(mb_strtoupper($form['nombre'],'utf-8'));
                     $nuevaPersona->setFechaNacimiento(new \DateTime($form['fechaNacimiento']));
-                    $nuevaPersona->setSegipId(0);
+                    if($form['idPersona'] == 'segip'){
+                        $nuevaPersona->setSegipId(1);
+                    }else{
+                        $nuevaPersona->setSegipId(0);
+                    }
+                    $nuevaPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($form['expedido']));
 
                     $em->persist($nuevaPersona);
                     $em->flush();
@@ -1740,6 +1804,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                 $actualizarPersona = $em->getRepository('SieAppWebBundle:Persona')->find($form['idPersona']);
                 if($actualizarPersona){
                     // Actualizmos los datos de la persona
+                    $actualizarPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($form['expedido']));
                     $actualizarPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['genero']));
                     $actualizarPersona->setCorreo($form['correo']);
                     $actualizarPersona->setCelular($form['celular']);
