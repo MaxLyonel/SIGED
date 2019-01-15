@@ -1,74 +1,66 @@
-<form action="{{path('alternativa_operativo_guardar')}}" method="post" onsubmit="return validar()">
-<div class="panel">
-    <div class="panel-heading">
-        <div class="pull-right">
-            <input type='submit' class='btn btn-lilac' value="Habilitar Operativo">
-            <input type='hidden' name="operativo" value="{{operativo}}">
-            <input type='hidden' name="fechainicio" value="{{fechainicio}}">
-            <input type='hidden' name="fechafin" value="{{fechafin}}">
-            <input type='hidden' name="distrito" value="{{distrito}}">
+{% if entities %}
+    <form action="{{path('alternativa_operativo_guardar')}}" method="post" onsubmit="return validar()">
+        <div class="panel">
+            <div class="panel-heading">
+                <div class="pull-right">
+                    <input type='submit' class='btn btn-lilac' value="Habilitar Operativo">
+                    <input type='hidden' name="operativo" value="{{operativo}}">
+                    <input type='hidden' name="fechainicio" value="{{fechainicio}}">
+                    <input type='hidden' name="fechafin" value="{{fechafin}}">
+                    <input type='hidden' name="distrito" value="{{distrito}}">
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="table-responsive col-md-12">
+                    <table class="table table-bordered table-striped" id="datatable">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="min-width:5px">No.</th>
+                                <th>Gestión</th>
+                                <th>Departamento</th>
+                                <th>Distrito</th>
+                                <th>Código de distrito</th>
+                                <th>Cod. Cea</th>
+                                <th>CEA</th>
+                                <th class="text-center" style="min-width:5px">Sub Cea</th>
+                                <th>Periodo</th>
+                                <th>Estado</th>
+                                <th class="text-center">
+                                    <div class="ckbox ckbox-lilac">
+                                        <input id="ok" name="ok" type="checkbox" onclick="seleccionar()">
+                                        <label for="ok"></label>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entity in entities %}
+                                <tr>
+                                    <td class="text-center">{{ loop.index }}</td>
+                                    <td>{{ entity.gestionTipo }}</td>
+                                    <td>{{ entity.departamento }}</td>
+                                    <td>{{ entity.distrito }}</td>
+                                    <td>{{ entity.idDistrito }}</td>
+                                    <td>{{ entity.id_ie }}</td>
+                                    <td>{{ entity.institucioneducativa }}</td>
+                                    <td class="text-center">{{ entity.SucursalIE }}</td>
+                                    <td class="text-center">{{ entity.periodo }}</td>
+                                    <td>{{ entity.te }}</td>
+                                    <td class="text-center">
+                                        <div class="ckbox ckbox-lilac">
+                                            <input name="ies[]" id="{{ loop.index }}" class="checkbox" value='{"ies":"{{ entity.IEsucursalId }}","ie":"{{entity.id_ie}}","suc":"{{entity.SucursalIE}}","dis":"{{entity.idDistrito}}"}' type="checkbox">
+                                            <label for="{{ loop.index }}"></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </div><!-- /.panel-heading -->
-    <div class="panel-body">
-        <div class="table-responsive col-md-12">
-            <table class="table table-bordered table-striped" id="datatable">
-                <thead>
-                    <tr>
-                        <th class="text-center" style="min-width:5px">No.</th>
-                        <th>Gestión</th>
-                        <th>Código de distrito</th>
-                        <th>Distrito</th>
-                        <th>Cod. Cea</th>
-                        <th>CEA</th>
-                        <th class="text-center" style="min-width:5px">Sub Cea</th>
-                        <th>Periodo</th>
-                        <th>Estado</th>
-                        <th class="text-center">
-                            <div class="ckbox ckbox-lilac">
-                                <input id="ok" name="ok" type="checkbox" onclick="seleccionar()">
-                                <label for="ok"></label>
-                            </div>
-                        </th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-                        <th class="text-center" style="min-width:5px">No.</th>
-                        <th>Gestión</th>
-                        <th>Código de distrito</th>
-                        <th>Distrito</th>
-                        <th>Cod. Cea</th>
-                        <th>CEA</th>
-                        <th class="text-center" style="min-width:5px">Sub Cea</th>
-                        <th>Periodo</th>
-                        <th>Estado</th>
-                        <th class="text-center"></th>
-                    </tr>
-                </tfoot>
-                <tbody>
-                    {% for entity in entities %}
-                        <tr>
-                            <td class="text-center">{{ loop.index }}</td>
-                            <td>{{ entity.gestionTipo }}</td>
-                            <td>{{ entity.idDistrito }}</td>
-                            <td>{{ entity.distrito }}</td>
-                            <td>{{ entity.id_ie }}</td>
-                            <td>{{ entity.institucioneducativa }}</td>
-                            <td class="text-center">{{ entity.SucursalIE }}</td>
-                            <td class="text-center">{{ entity.periodo }}</td>
-                            <td>{{ entity.te }}</td>
-                            <td class="text-center">
-                                <div class="ckbox ckbox-lilac">
-                                <input name="ies[]" id="{{ loop.index }}" class="checkbox" value='{"ies":"{{ entity.IEsucursalId }}","ie":"{{entity.id_ie}}","suc":"{{entity.SucursalIE}}"}' type="checkbox">
-                                <label for="{{ loop.index }}"></label>
-                                </div>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-</form>
+    </form>
+{% else %}
+    No existen ceas habilitados para este operativo
+{% endif %}

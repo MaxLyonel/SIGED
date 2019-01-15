@@ -1,0 +1,69 @@
+Sie\AppWebBundle\Entity\RudeMedioTransporte:
+    type: entity
+    table: rude_medio_transporte
+    indexes:
+        IDX_58C04E4A443E4890:
+            columns:
+                - rude_id
+        IDX_58C04E4ACE756387:
+            columns:
+                - tiempo_maximo_trayecto_tipo_id
+        IDX_58C04E4A9F9F4989:
+            columns:
+                - medio_transporte_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        llegaOtro:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: llega_otro
+    manyToOne:
+        rude:
+            targetEntity: Rude
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rude_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        tiempoMaximoTrayectoTipo:
+            targetEntity: TiempoMaximoTrayectoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tiempo_maximo_trayecto_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        medioTransporteTipo:
+            targetEntity: MedioTransporteTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                medio_transporte_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

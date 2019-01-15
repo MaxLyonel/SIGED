@@ -6,9 +6,13 @@ alternativa_operativo_distrito:
     path:     /{tipo}/operativodistrito
     defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoDistrito}
 
-alternativa_operativo_cea:
-    path:     /operativocea
-    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoCea}
+alternativa_operativo_regularizar:
+    path:     /operativoregularizar
+    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoRegularizar}
+
+alternativa_operativo_regularizar_guardar:
+    path:     /{id}/operativoregularizarguardar
+    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoRegularizarGuardar}
 
 alternativa_operativo_edit:
     path:     /{id}/operativoedit
@@ -37,3 +41,15 @@ alternativa_operativo_buscar_cea:
 alternativa_operativo_buscar_oeprativos_ceas:
     path:     /buscaroperativoceas
     defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:bucarOperativoCeas}
+
+alternativa_operativo_buscar_distrito:
+    path:     /buscardistrito
+    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:bucarDistrito}
+
+alternativa_operativo_ampliar:
+    path:     /operativoampliar
+    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoAmpliar}
+
+alternativa_operativo_ver_ceas:
+    path:     /operativoverceas
+    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoVerCeas}

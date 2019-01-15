@@ -8,13 +8,17 @@
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
                 <li>
-                    <i class="glyphicon glyphicon-leaf"></i>
-                    <a href="{{path('principal_web')}}">Bienvenida/o</a>
+                    <i class="fa fa-users"></i>
+                    Gestión
                     <i class="fa fa-angle-right"></i>
                 </li>
                 <li>
-                    <i class="fa fa-th-large"></i>
-                    Panel operativos
+                    <i class="glyphicon glyphicon-cog"></i>
+                    Operativos
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    Panel de control de operativos
                     <i class="fa fa-angle-right"></i>
                 </li>
             </ol>
@@ -28,7 +32,7 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <p class="lead">Por esta interfaz los tecnicos <code>SIE</code> pueden dar continuidad al siguiente operativo o habilitar al centro una ultima edición de datos en modo regularización.</p>
+                        <p class="lead">Por esta interfaz los tecnicos <code>SIE</code> pueden verificar el estado del operativo de cada centro.</p>
                         {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form'} } )}}
                         <div class="panel-body">
                             <div class="row">

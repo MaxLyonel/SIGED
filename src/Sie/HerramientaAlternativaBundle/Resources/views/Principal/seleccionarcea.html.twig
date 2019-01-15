@@ -48,7 +48,7 @@
                     <div class="panel-body">
                         {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form', 'id': 'form_cea'} } )}}
                         <div class="row">
-                            <div class="form-group col-md-3" {% if app.session.get('roluser') == 9 or app.session.get('roluser') == 10 %} style="display:none"{% else %}style="display:block"{% endif %}>
+                            <div class="form-group col-md-3" {% if app.session.get('roluser') == 9 or app.session.get('roluser') == 2 or app.session.get('roluser') == 10 %} style="display:none"{% else %}style="display:block"{% endif %}>
                                 <div class="col-md-4">
                                     {{ form_label(form.codsie)}}
                                 </div>
@@ -111,7 +111,7 @@
     {{ parent() }}
     <script>
         $( document ).ready(function() {
-            if("{{app.session.get('roluser')}}" == 9 || "{{app.session.get('roluser')}}" == 10){
+            if("{{app.session.get('roluser')}}" == 9 || "{{app.session.get('roluser')}}" == 10 || "{{app.session.get('roluser')}}" == 2){
                 buscarhistorial();
             }
         });
@@ -138,8 +138,9 @@
                         $('#lista').empty();
                         $('#lista').append(data);
                         $( document ).ready(function() {
-                        cargatablas();
-                    });
+                            $(".tooltips").tooltip();
+                            cargatablas();
+                        });
                     }
                 },
                 statusCode: {

@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Sie\AppWebBundle\Entity\InstitucioneducativaSucursalTramite;
+use Sie\AppWebBundle\Entity\Consolidacion;
 use Doctrine\ORM\EntityRepository;
 
 
@@ -258,6 +259,7 @@ class InstitucioneducativaController extends Controller {
         $sesion->set('ie_subcea', $subcea);
         $sesion->set('ie_per_cod', $semestre);
         $sesion->set('ie_suc_id', $idiesuc);
+        $em = $this->getDoctrine()->getManager();
         
         switch ($semestre) {
             case 1:
@@ -270,7 +272,8 @@ class InstitucioneducativaController extends Controller {
                 $sesion->set('ie_per_nom', 'Segundo Semestre');
                 break;
         }
-        
+        //dump($idiesuc);die;
+        $ies = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find($idiesuc);
         switch ($teid) {
             case 0://MODO EDICION 
                 $sesion->set('ie_per_estado', '3');
@@ -281,12 +284,70 @@ class InstitucioneducativaController extends Controller {
                 $sesion->set('ie_operativo', '!En operativo de regularización!');
                 break;                       
             case 10: //INSCRIPCIONES - INICIO DE SEMESTRE
-                $sesion->set('ie_per_estado', '1');
-                $sesion->set('ie_operativo', '¡En operativo inscripciones!');
+                if($ies->getGestionTipo()->getId() >= 2019){
+                    if($ies->getPeriodoTipoId() == 2){
+                        $operativo = 1;
+                    }else{
+                        $operativo = 3;
+                    }
+                    $operativoControl = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
+                                        ->select('oc')
+                                        ->where('oc.operativoTipo =' . $operativo)
+                                        ->andWhere('oc.distritoTipo = ' . $ies->getInstitucioneducativa()->getLejuridicciongeografica()->getDistritoTipo())
+                                        ->andWhere('oc.gestionTipo = ' . $ies->getGestionTipo())
+                                        ->getQuery()
+                                        ->getResult();
+                    foreach($operativoControl as $o){
+                        $datos = json_decode($o->getObs(),true);
+                        foreach ($datos as $d){
+                            if($ies->getId() == json_decode($d,true)['ies']){
+                                if(date('d-m-Y') > $o->getFechaFin()->format('d-m-Y')){
+                                    $sesion->set('ie_per_estado', '0');
+                                    $sesion->set('ie_operativo', '!Operativo fuera de plazo. Vencio el '. $o->getFechaFin()->format('d-m-Y') . ', contactese con su tecnico SIE.!');
+                                }else{
+                                    $sesion->set('ie_per_estado', '1');
+                                    $sesion->set('ie_operativo', '¡En operativo inscripciones!');                
+                                }
+                            }
+                        }
+                    }
+                }else{
+                    $sesion->set('ie_per_estado', '1');
+                    $sesion->set('ie_operativo', '¡En operativo inscripciones!');
+                }
                 break;
             case 11: //NOTAS - FIN DE SEMESTRE
-                $sesion->set('ie_per_estado', '2');
-                $sesion->set('ie_operativo', '¡En operativo notas!');
+                if($ies->getGestionTipo()->getId() >= 2019){
+                    if($ies->getPeriodoTipoId() == 2){
+                        $operativo = 2;
+                    }else{
+                        $operativo = 4;
+                    }
+                    $operativoControl = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
+                                        ->select('oc')
+                                        ->where('oc.operativoTipo =' . $operativo)
+                                        ->andWhere('oc.distritoTipo = ' . $ies->getInstitucioneducativa()->getLejuridicciongeografica()->getDistritoTipo())
+                                        ->andWhere('oc.gestionTipo = ' . $ies->getGestionTipo())
+                                        ->getQuery()
+                                        ->getResult();
+                    foreach($operativoControl as $o){
+                        $datos = json_decode($o->getObs(),true);
+                        foreach ($datos as $d){
+                            if($ies->getId() == json_decode($d,true)['ies']){
+                                if(date('d-m-Y') > $o->getFechaFin()->format('d-m-Y')){
+                                    $sesion->set('ie_per_estado', '0');
+                                    $sesion->set('ie_operativo', '!Operativo fuera de plazo. Vencio el '. $o->getFechaFin()->format('d-m-Y') . ', contactese con su tecnico SIE.!');
+                                }else{
+                                    $sesion->set('ie_per_estado', '2');
+                                    $sesion->set('ie_operativo', '¡En operativo notas!');
+                                }
+                            }
+                        }
+                    }
+                }else{
+                    $sesion->set('ie_per_estado', '2');
+                    $sesion->set('ie_operativo', '¡En operativo notas!');
+                }
                 break;
             case 12: //INSCRIPCIONES Y NOTAS - INICIO DE SISTEMA UNA SOLA VEZ EN LA VIDA -MODO EDICION
                 $sesion->set('ie_per_estado', '3');
@@ -295,8 +356,6 @@ class InstitucioneducativaController extends Controller {
             case 13: //INSCRIPCIONES Y NOTAS - POR MIGRACION DE SISTEMA UNA SOLA VEZ EN LA VIDA -MODO EDICION
                 $sesion->set('ie_per_estado', '3');
                 $sesion->set('ie_operativo', '¡Operativo unico para regularización de información, gestiones pasadas!');
-                
-                $em = $this->getDoctrine()->getManager();
                 $em->getConnection()->beginTransaction();
                 $db = $em->getConnection();
                 try {
@@ -333,11 +392,42 @@ class InstitucioneducativaController extends Controller {
                 //return $this->redirectToRoute('principal_web');
                 break;
             case 99: //SOLO LECTURA
+                //dump(date('Y-m-d'));die;
                 $sesion->set('ie_per_estado', '0');
+                $sesion->set('ie_operativo', '!En modo vista!');
                 break;
             case 100: //MAESTRO DE UNIDAD EDUCATIVA ALTER
-                $sesion->set('ie_per_estado', '3');
-                $sesion->set('ie_operativo', '¡En operativo fin de semestre (notas)!');                
+                if($ies->getGestionTipo()->getId() >= 2019){
+                    if($ies->getPeriodoTipoId() == 2){
+                        $operativo = 2;
+                    }else{
+                        $operativo = 4;
+                    }
+                    $operativoControl = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
+                                        ->select('oc')
+                                        ->where('oc.operativoTipo =' . $operativo)
+                                        ->andWhere('oc.distritoTipo = ' . $ies->getInstitucioneducativa()->getLejuridicciongeografica()->getDistritoTipo())
+                                        ->andWhere('oc.gestionTipo = ' . $ies->getGestionTipo())
+                                        ->getQuery()
+                                        ->getResult();
+                    foreach($operativoControl as $o){
+                        $datos = json_decode($o->getObs(),true);
+                        foreach ($datos as $d){
+                            if($ies->getId() == json_decode($d,true)['ies']){
+                                if(date('d-m-Y') > $o->getFechaFin()->format('d-m-Y')){
+                                    $sesion->set('ie_per_estado', '0');
+                                    $sesion->set('ie_operativo', '!Operativo fuera de plazo. Vencio el '. $o->getFechaFin()->format('d-m-Y') . ', contactese con su tecnico SIE.!');
+                                }else{
+                                    $sesion->set('ie_per_estado', '3');
+                                    $sesion->set('ie_operativo', '¡En operativo fin de semestre (notas)!');                
+                                }
+                            }
+                        }
+                    }
+                }else{
+                    $sesion->set('ie_per_estado', '3');
+                    $sesion->set('ie_operativo', '¡En operativo fin de semestre (notas)!');                
+                }
                 return $this->redirectToRoute('herramienta_alter_notas_maestro_index');
                 break;
             default:
@@ -423,7 +513,9 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                     a.iestid as iestid,
                     a.tramite_estado,
                     a.teid as teid,
-                    a.obs                             
+                    a.ttid as ttid,
+                    a.tramite_tipo,
+                    a.obs1                             
                     from
                     jurisdiccion_geografica jg 
                                     inner join (
@@ -443,10 +535,11 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             
             inner join 
             
-            (select  a.id as iestid, x.id as teid, a.*, b.*, x.*
+            (select  a.id as iestid, x.id as teid,x.obs as obs1, a.*, b.*, x.*,x1.*,x1.id as ttid
             from institucioneducativa_sucursal_tramite  a
             inner join institucioneducativa_sucursal b on a.institucioneducativa_sucursal_id = b.id
-            inner join tramite_estado x on a.tramite_estado_id = x.id 
+            inner join tramite_estado x on a.tramite_estado_id = x.id
+            inner join tramite_tipo x1 on a.tramite_tipo_id = x1.id
             --where b.institucioneducativa_id = '81230227'
             ) a on a.institucioneducativa_id = ie.id
             inner join (
@@ -494,7 +587,9 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                     a.iestid as iestid,
                     a.tramite_estado,
                     a.teid as teid,
-                    a.obs                             
+                    a.ttid as ttid,
+                    a.tramite_tipo,
+                    a.obs1                             
                     from
                     jurisdiccion_geografica jg 
                                     inner join (
@@ -514,10 +609,11 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             
             inner join 
             
-            (select  a.id as iestid, x.id as teid, a.*, b.*, x.*
+            (select  a.id as iestid, x.id as teid,x.obs as obs1, a.*, b.*, x.*,x1.*,x1.id as ttid
             from institucioneducativa_sucursal_tramite  a
             inner join institucioneducativa_sucursal b on a.institucioneducativa_sucursal_id = b.id
-            inner join tramite_estado x on a.tramite_estado_id = x.id 
+            inner join tramite_estado x on a.tramite_estado_id = x.id
+            inner join tramite_tipo x1 on a.tramite_tipo_id = x1.id
             --where b.institucioneducativa_id = '80480255'
             ) a on a.institucioneducativa_id = ie.id
             inner join (
@@ -571,7 +667,9 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                     a.iestid as iestid,
                     a.tramite_estado,
                     a.teid as teid,
-                    a.obs                             
+                    a.ttid as ttid,
+                    a.tramite_tipo,
+                    a.obs1
                     from
                     jurisdiccion_geografica jg 
                                     inner join (
@@ -591,10 +689,11 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             
             inner join 
             
-            (select  a.id as iestid, x.id as teid, a.*, b.*, x.*
+            (select  a.id as iestid, x.id as teid,x.obs as obs1, a.*, b.*, x.*,x1.*,x1.id as ttid
             from institucioneducativa_sucursal_tramite  a
             inner join institucioneducativa_sucursal b on a.institucioneducativa_sucursal_id = b.id
             inner join tramite_estado x on a.tramite_estado_id = x.id 
+            inner join tramite_tipo x1 on a.tramite_tipo_id = x1.id 
             --where b.institucioneducativa_id = '80480255'
             ) a on a.institucioneducativa_id = ie.id
             inner join (
@@ -680,18 +779,19 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
     }
 
     public function cerraroperativoAction(Request $request) {
+        //dump($request);die;
         $sesion = $request->getSession();
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         $db = $em->getConnection();
-
+        $gestion = 2019;
+        //dump($sesion->get('ie_per_estado'));die;
         try {
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_sucursal_tramite');")->execute();
             $ies = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find($sesion->get('ie_suc_id'));            
             $iest = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalTramite')->findByInstitucioneducativaSucursal($ies);
-            if ($iest){           
+            if ($iest){
                 if ($sesion->get('ie_per_estado') == '1'){//INICIO INSCRIPCIONES
-                    
                     //MIGRANDO DATOS DE SOCIO ECONOMICOS DEL ANTERIOR PERIODO AL ACTUAL PERIODO
                     $gestant = $this->session->get('ie_gestion');
                     $perant = $this->session->get('ie_per_cod');
@@ -735,14 +835,25 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                     if ($observaciones){
                         return $this->redirect($this->generateUrl('herramienta_alter_reporte_observacionesoperativoinicio'));
                     }
-                    else{                      
+                    else{    
                         if ($iest[0]->getTramiteEstado()->getId() == '11'){//Aceptación de apertura Inicio de Semestre
                             $iestvar = $iest[0];
                             $iestvar->setTramiteEstado($em->getRepository('SieAppWebBundle:TramiteEstado')->find('12'));//¡Inicio de Semestre - Cerrado!                           
                             $iestvar->setFechaModificacion(new \DateTime('now'));
                             $iestvar->setUsuarioIdModificacion($this->session->get('userId'));
                             $em->persist($iestvar);
-                            $em->flush(); 
+                            $em->flush();
+                            /**
+                             * Registro de la consolidacion a partir de la gestion 2019
+                             */
+                            if($ies->getGestionTipo()->getId() >= $gestion){
+                                if($ies->getPeriodoTipoId()==2){
+                                    $operativo = 1;
+                                }else{
+                                    $operativo = 3;
+                                } 
+                                $reg = $this->registroConsolidacion($ies,$operativo,'registro');
+                            }
                         }
                         if ($iest[0]->getTramiteEstado()->getId() == '7'){//Autorizado para regularización(Inicio de Semestre)
                             $iestvar = $iest[0];
@@ -751,10 +862,16 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                             $iestvar->setUsuarioIdModificacion($this->session->get('userId'));
                             $em->persist($iestvar);
                             $em->flush(); 
+                            /**
+                             * Registro de la regularizacion en consolidacion a partir de la gestion 2019
+                             */
+                            if($ies->getGestionTipo()->getId() >= $gestion){
+                                $reg = $this->registroConsolidacion($ies,'','regularizar');
+                            }
                         }
                     }
                 }
-                if ($sesion->get('ie_per_estado') == '2'){//FIN NOTAS                    
+                if ($sesion->get('ie_per_estado') == '2'){//FIN NOTAS
                     $query = "select * from sp_validacion_alternativa_web('".$this->session->get('ie_gestion')."','".$this->session->get('ie_id')."','".$this->session->get('ie_subcea')."','".$this->session->get('ie_per_cod')."');";
                     $obs= $db->prepare($query);
                     $params = array();
@@ -769,7 +886,13 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                             $iestvar->setFechaModificacion(new \DateTime('now'));
                             $iestvar->setUsuarioIdModificacion($this->session->get('userId'));
                             $em->persist($iestvar);
-                            $em->flush(); 
+                            $em->flush();
+                            /**
+                             * Registro de la regularizacion en consolidacion a partir de la gestion 2019
+                             */
+                            if($ies->getGestionTipo()->getId() >= $gestion){
+                                $reg = $this->registroConsolidacion($ies,'','regularizar');
+                            }
                         }
                         if ($iest[0]->getTramiteEstado()->getId() == '13'){//¡En notas!
                             $iestvar = $iest[0];
@@ -777,7 +900,18 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                             $iestvar->setFechaModificacion(new \DateTime('now'));
                             $iestvar->setUsuarioIdModificacion($this->session->get('userId'));
                             $em->persist($iestvar);
-                            $em->flush(); 
+                            $em->flush();
+                            /**
+                             * Registro de la consolidacion a partir de la gestion 2019
+                             */
+                            if($ies->getGestionTipo()->getId() >= $gestion){
+                                if($ies->getPeriodoTipoId()==2){
+                                    $operativo = 2;
+                                }else{
+                                    $operativo = 4;
+                                } 
+                                $reg = $this->registroConsolidacion($ies,$operativo,'registro');
+                            }
                         } 
                     }
                 }
@@ -797,7 +931,11 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                             $iestvar->setFechaModificacion(new \DateTime('now'));
                             $iestvar->setUsuarioIdModificacion($this->session->get('userId'));
                             $em->persist($iestvar);
-                            $em->flush(); 
+                            $em->flush();
+                            //Registro de la regularizacion en consolidacion a partir de la gestion 2019
+                            if($ies->getGestionTipo()->getId() >= $gestion){
+                                $reg = $this->registroConsolidacion($ies,'','regularizar');
+                            }
                         }
                         if ($iest[0]->getTramiteEstado()->getId() == '5'){//Autorizado para regularización gestión pasada                          
                             $iestvar = $iest[0];
@@ -852,6 +990,45 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             $em->getConnection()->rollback();
         }
     }
+
+    /**
+     * Registro de la consolidacion/cierre del operativo
+     */
+    function registroConsolidacion($ies,$operativo,$tipo)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        $db = $em->getConnection();
+        try {              
+            if($tipo == 'registro'){
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('consolidacion');")->execute(); 
+                $consolidacion = new Consolidacion();
+                $consolidacion->setInstitucioneducativa($ies->getInstitucioneducativa());
+                $consolidacion->setInstitucioneducativaSucursal($ies);
+                $consolidacion->setInstitucioneducativaTipo($ies->getInstitucioneducativa()->getInstitucioneducativaTipo());
+                $consolidacion->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find(date('Y')));
+                $consolidacion->setOperativoTipo($em->getRepository('SieAppWebBundle:OperativoTipo')->find($operativo));
+                $consolidacion->setSistemaTipo($em->getRepository('SieAppWebBundle:SistemaTipo')->find(2));
+                $consolidacion->setFechaRegistro(new \DateTime('now'));
+                $consolidacion->setUsuarioCreacion($em->getRepository('SieAppWebBundle:Usuario')->find($this->session->get('userId')));
+                $consolidacion->setEsonline(true);
+                $em->persist($consolidacion);
+                $em->flush(); 
+            }else{
+                $consolidacion = $em->getRepository('SieAppWebBundle:Consolidacion')->findBy(array('institucioneducativaSucursal'=>$ies));
+                if($consolidacion){
+                    $consolidacion[0]->setFechaModificacion(new \DateTime('now'));
+                    $consolidacion[0]->setUsuarioModificacion($em->getRepository('SieAppWebBundle:Usuario')->find($this->session->get('userId')));
+                    $em->flush(); 
+                }
+            }
+            $em->getConnection()->commit();
+            return true;
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+            return false;
+        }
+    }   
     
     public function tramitecontinuaroperativoAction(Request $request, $iestid) {
         $sesion = $request->getSession();
@@ -1689,7 +1866,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
     public function historialceasForm($rol,$ie_id)
     {   
         $form = $this->createFormBuilder();
-        if($rol==9 or $rol==10){
+        if($rol==9 or $rol==10 or $rol==2){
             $gestion = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getGestionCea($ie_id);
             $subcea = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getSubceaGestion($ie_id,'');
             //dump($gestion);die;

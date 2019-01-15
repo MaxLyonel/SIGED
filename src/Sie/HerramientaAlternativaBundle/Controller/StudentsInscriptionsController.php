@@ -149,7 +149,8 @@ class StudentsInscriptionsController extends Controller {
       // dump($yearStudent);
       // die;
       //validate the humanisticos
-      if($objInstitucioneducativaCursoStudent->getNivelTipo()->getId()==15){
+      // if($objInstitucioneducativaCursoStudent->getNivelTipo()->getId()==15){
+      if($aInfoUeducativa['ueducativaInfoId']['nivelId']==15){
         //validate to nivel=15 - ciclo=1 - grado=1
         // if($objInstitucioneducativaCursoStudent->getCicloTipo()->getId()==1 and $objInstitucioneducativaCursoStudent->getGradoTipo()->getId()==1){
         //   if(!($yearStudent>=15)){
@@ -191,6 +192,10 @@ class StudentsInscriptionsController extends Controller {
           }
         }
 
+      } else{
+          if(!($yearStudent>=16)){
+            $validateYear=true;
+          }
       }//end first if - validate the humanisticos
 
     }
