@@ -223,11 +223,16 @@ class WfTramiteController extends Controller
         }else{
             $tarea = $tramiteDetalle->getFlujoProceso()->getTareaSigId();
         }
-
         $mensaje = $this->guardarTramiteRecibido($usuario,$tarea,$idtramite);
-        $request->getSession()
+        if($mensaje['dato'] == true){
+            $request->getSession()
                 ->getFlashBag()
-                ->add('recibido', $mensaje);
+                ->add('recibido', $mensaje['msg']);
+        }else{
+            $request->getSession()
+                ->getFlashBag()
+                ->add('error', $mensaje['msg']);
+        }
         return $this->redirectToRoute('wf_tramite_recibido');
 
         //return $this->render('SieHerramientaBundle:WfTramite:recibidos.html.twig');
@@ -356,11 +361,12 @@ class WfTramiteController extends Controller
                 $tarea_sig_id = $flujoproceso->getTareaSigId();
             }
             $uDestinatario = $this->obtieneUsuarioDestinatario($tarea,$tarea_sig_id,$id_tabla,$tabla,$tramite);
-            if($usuario == false){
+            
+            if($uDestinatario == false){
                 $em->getConnection()->rollback();
-                $this->get('session')->getFlashBag()->add('error', '¡Error, no existe usuario destinatario registrado.!');
-                return $this->redirectToRoute('wf_tramite_nuevo');
-
+                $mensaje['dato'] = false;
+                $mensaje['msg'] = '¡Error, no existe usuario destinatario registrado.!';
+                return $mensaje;
             }else{
                 $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
             }
@@ -371,12 +377,14 @@ class WfTramiteController extends Controller
             $tramite->setTramite($tramiteDetalle->getId());
             $em->flush();
             $em->getConnection()->commit();
-            $mensaje = 'El trámite Nro. '. $tramite->getId() .' se guardó correctamente';
+            $mensaje['dato'] = true;
+            $mensaje['msg'] = 'El trámite Nro. '. $tramite->getId() .' se guardó correctamente';
             return $mensaje;
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
-            $this->get('session')->getFlashBag()->add('error', 'Ocurrio un error al guardar el trámite.');
-            return $this->redirectToRoute('wf_tramite_nuevo');
+            $mensaje['dato'] = false;
+            $mensaje['msg'] = '¡Ocurrio un error al guardar el trámite.!';
+            return $mensaje;    
         }
     }
 
@@ -417,13 +425,14 @@ class WfTramiteController extends Controller
             $tramite->setTramite($tramiteDetalle->getId());
             $em->flush();
             $em->getConnection()->commit();
-
-            $mensaje = 'El trámite Nro. '. $tramite->getId() .' se recibió correctamente';
+            $mensaje['dato'] = true;
+            $mensaje['msg'] = 'El trámite Nro. '. $tramite->getId() .' se recibió correctamente';
             return $mensaje;
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
-            $this->get('session')->getFlashBag()->add('error', 'Ocurrio un error al guardar el trámite.');
-            return $this->redirectToRoute('wf_tramite_recibido');
+            $mensaje['dato'] = false;
+            $mensaje['msg'] = 'Ocurrio un error al guardar el trámite.';
+            return $mensaje;
         }
     }
     
@@ -455,8 +464,9 @@ class WfTramiteController extends Controller
                     $uDestinatario = $this->obtieneUsuarioDestinatario($tarea,$tarea_sig_id,$id_tabla,$tabla,$tramite);
                     if($uDestinatario == false){
                         $em->getConnection()->rollback();
-                        $this->get('session')->getFlashBag()->add('error', '¡Error, no existe usuario destinatario registrado.!');
-                        return $this->redirectToRoute('wf_tramite_recibido');
+                        $mensaje['dato'] = false;
+                        $mensaje['msg'] = '¡Error, no existe usuario destinatario registrado.!';
+                        return $mensaje;
                     }else{
                         $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
                     }
@@ -533,15 +543,17 @@ class WfTramiteController extends Controller
             {
                 $tramite->setFechaFin(new \DateTime(date('Y-m-d')));
                 $em->flush();
-                $mensaje = 'TOME NOTA, el trámite Nro. '. $tramite->getId() .' a finalizado.';
+                $mensaje['msg'] = 'TOME NOTA, el trámite Nro. '. $tramite->getId() .' a finalizado.';
             }else{
-               $mensaje = 'El trámite Nro. '. $tramite->getId() .' se envió correctamente.';
+               $mensaje['msg'] = 'El trámite Nro. '. $tramite->getId() .' se envió correctamente.';
             }
+            $mensaje['dato'] = true;
             return $mensaje;
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
-            $this->get('session')->getFlashBag()->add('error', 'Ocurrio un error al enviar el trámite.');
-            return $this->redirectToRoute('wf_tramite_recibido');
+            $mensaje['dato'] = false;
+            $mensaje['msg'] = '¡Ocurrio un error al enviar el trámite.!';
+            return $mensaje;
         }
     }
 
@@ -674,6 +686,47 @@ class WfTramiteController extends Controller
         $uid = $usuarios[0]['usuario_id'];
         //dump($uid);die;
         return $uid;
+    }
+
+    public function eliminarTramiteRecibido($idtramite)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
+        $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
+        $tramite->setTramite($tramiteDetalle->getTramiteDetalle()->getId());
+        $em->flush();
+        $em->remove($tramiteDetalle);
+        $em->flush();
+        return true;
+    }
+
+    public function eliminarTramteEnviado($idtramite,$idusuario)
+    {
+        $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
+        $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
+        $tramiteDetalle->setValorEvaluacion(null);
+        $tramiteDetalle->setUsuarioDestinatario($em->getRepository('SieAppWebBundle:Usuario')->find($idusuario));
+        $tramiteDetalle->setObs(null);
+        $tramiteDetalle->setFechaEnvio(null);
+        $tramiteDetalle->setTramiteEstado($em->getRepository('SieAppWebBundle:TramiteEstado')->find(3));
+        $em->flush();
+        $query = $em->getConnection()->prepare("delete from wf_solicitud_tramite where tramite_detalle_id =". $tramiteDetalle->getId());
+        $query->execute();
+        $wfDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
+                    ->select('wf')
+                    ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wf.tramiteDetalle')
+                    ->innerJoin('SieAppWebBundle:Tramite', 't', 'with', 't.id = td.tramite')
+                    ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'fp.id = td.flujoProceso')
+                    ->where('fp.id =' . $tramiteDetalle->getFlujoProceso()->getId())
+                    ->andwhere('t.id =' . $idtramite)
+                    ->andwhere('wf.esValido =false')
+                    ->getQuery()
+                    ->getResult();
+        if($wfDatos){
+            $wfDatos[0]->setEsValido(true);
+            $wfDatos[0]->setFechaModificacion(null);
+        }
+        return true;
     }
 
     /**

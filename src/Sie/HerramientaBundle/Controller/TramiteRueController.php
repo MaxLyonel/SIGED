@@ -207,9 +207,16 @@ class TramiteRueController extends Controller
             $WfTramiteController = new WfTramiteController();
             $WfTramiteController->setContainer($this->container);
             $mensaje = $WfTramiteController->guardarTramiteNuevo($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,'','',$datos,$ie_lugarlocalidad,$ie_lugardistrito);
-            $request->getSession()
+            if($mensaje['dato']==true){
+                $request->getSession()
                 ->getFlashBag()
-                ->add('exito', $mensaje);
+                ->add('exito', $mensaje['msg']);
+            }else{
+                $request->getSession()
+                ->getFlashBag()
+                ->add('error', $mensaje['msg']);
+            }
+            
         }else{
             $request->getSession()
                 ->getFlashBag()
@@ -366,13 +373,16 @@ class TramiteRueController extends Controller
         $WfTramiteController = new WfTramiteController();
         $WfTramiteController->setContainer($this->container);
         $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
-        $request->getSession()
+        if($mensaje['dato']== true){
+            $request->getSession()
                 ->getFlashBag()
-                ->add('exito', $mensaje);
-        //$response = new JsonResponse();
-        //return $response->setData(array('mensaje' => $mensaje));   
+                ->add('exito', $mensaje['msg']);
+        }else{
+            $request->getSession()
+                ->getFlashBag()
+                ->add('error', $mensaje['msg']);
+        }
         return $this->redirectToRoute('wf_tramite_recibido');
-        //return $this->redirect($this->generateUrl('tramite_rue_informe_distrito'));
     }
 
     public function rueReporteInformeDistritoAction(Request $request,$idtramite,$id_td)
@@ -753,9 +763,10 @@ class TramiteRueController extends Controller
             $wfdatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
                 ->select('wfd')
                 ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
+                ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'fp.id = td.flujoProceso')
                 ->where('td.tramite='.$tramite->getId())
                 ->andWhere("wfd.esValido=true")
-                ->andWhere("td.flujoProceso=39")
+                ->andWhere("fp.orden=1")
                 ->getQuery()
                 ->getResult();
             $d = json_decode($wfdatos[0]->getDatos(),true);
@@ -770,9 +781,15 @@ class TramiteRueController extends Controller
         $WfTramiteController = new WfTramiteController();
         $WfTramiteController->setContainer($this->container);
         $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
-        $request->getSession()
+        if($mensaje['dato'] == true){
+            $request->getSession()
                 ->getFlashBag()
-                ->add('exito', $mensaje);
+                ->add('exito', $mensaje['msg']);    
+        }else{
+            $request->getSession()
+                ->getFlashBag()
+                ->add('error', $mensaje['msg']);
+        }
         return $this->redirect($this->generateUrl('wf_tramite_recibido'));
     }
 
@@ -867,16 +884,45 @@ class TramiteRueController extends Controller
         $WfTramiteController = new WfTramiteController();
         $WfTramiteController->setContainer($this->container);
         $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion1,$varevaluacion1,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
-        if($varevaluacion1=="SI"){
-            $varevaluacion2 = $form['varevaluacion2'];
-            $observacion2 = $form['observacion2'];
-            $tarea = 43;
-            $mensaje = $WfTramiteController->guardarTramiteRecibido($usuario,$tarea,$idtramite);
-            $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion2,$varevaluacion2,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
-        }
-        $request->getSession()
+        if($mensaje['dato'] == true){
+            if($varevaluacion1=="SI"){
+                $wfTareaCompuerta = $em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findBy(array('flujoProceso'=>$tarea,'condicion'=>'SI'));
+                $varevaluacion2 = $form['varevaluacion2'];
+                $observacion2 = $form['observacion2'];
+                $tarea = $wfTareaCompuerta[0]->getCondicionTareaSiguiente();
+                $mensaje = $WfTramiteController->guardarTramiteRecibido($usuario,$tarea,$idtramite);
+                if($mensaje['dato'] == true){
+                    $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion2,$varevaluacion2,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
+                    if($mensaje['dato'] == true){
+                        $request->getSession()
+                                ->getFlashBag()
+                                ->add('exito', $mensaje['msg']);            
+                    }else{
+                        //eliminar tramite recibido
+                        $a = $WfTramiteController->eliminarTramiteRecibido($idtramite);
+                        //eliminar tramite enviado
+                        $b = $WfTramiteController->eliminarTramiteEnviado($idtramite,$usuario);
+                        $request->getSession()
+                                ->getFlashBag()
+                                ->add('error', $mensaje['msg']);
+                    }
+                }else{
+                    //eliminar tramite enviado
+                    $b = $WfTramiteController->eliminarTramiteEnviado($idtramite,$usuario);
+                    $request->getSession()
+                    ->getFlashBag()
+                    ->add('error', $mensaje['msg']);            
+                }
+            }else{
+                $request->getSession()
+                    ->getFlashBag()
+                    ->add('exito', $mensaje['msg']);        
+            }
+        }else{
+            $request->getSession()
                 ->getFlashBag()
-                ->add('exito', $mensaje);
+                ->add('error', $mensaje['msg']);
+        }
         return $this->redirect($this->generateUrl('wf_tramite_recibido'));
     }
 
@@ -972,23 +1018,84 @@ class TramiteRueController extends Controller
         $WfTramiteController = new WfTramiteController();
         $WfTramiteController->setContainer($this->container);
         $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion1,$varevaluacion1,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
-        if($varevaluacion1=="SI"){
-            $varevaluacion2 = $form['varevaluacion2'];
-            $observacion2 = $form['observacion2'];
-            $tarea = 45;
-            $mensaje = $WfTramiteController->guardarTramiteRecibido($usuario,$tarea,$idtramite);
-            $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion2,$varevaluacion2,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
-            if($varevaluacion2 == "SI"){
-                $tarea = 46;
-                $varevaluacion = "";
-                $observacion = $observacion2;
+        if($mensaje['dato'] == true){
+            if($varevaluacion1=="SI"){
+                $wfTareaCompuerta = $em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findBy(array('flujoProceso'=>$tarea,'condicion'=>'SI'));
+                $tarea = $wfTareaCompuerta[0]->getCondicionTareaSiguiente();
+                $varevaluacion2 = $form['varevaluacion2'];
+                $observacion2 = $form['observacion2'];
                 $mensaje = $WfTramiteController->guardarTramiteRecibido($usuario,$tarea,$idtramite);
-                $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
+                if($mensaje['dato'] == true){
+                    $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion2,$varevaluacion2,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
+                    if($mensaje['dato'] == true){
+                        if($varevaluacion2 == "SI"){
+                            $wfTareaCompuerta = $em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findBy(array('flujoProceso'=>$tarea,'condicion'=>'SI'));
+                            $tarea = $wfTareaCompuerta[0]->getCondicionTareaSiguiente();
+                            $varevaluacion = "";
+                            $observacion = $observacion2;
+                            $mensaje = $WfTramiteController->guardarTramiteRecibido($usuario,$tarea,$idtramite);
+                            if($mensaje['dato'] == true){
+                                $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
+                                if ($mensaje['dato'] == true) {
+                                    $request->getSession()
+                                            ->getFlashBag()
+                                            ->add('exito', $mensaje['msg']);
+                                }else{
+                                    //eliminar tramite recibido
+                                    $a = $WfTramiteController->eliminarTramiteRecibido($idtramite);
+                                    //eliminar tramite enviado
+                                    $b = $WfTramiteController->eliminarTramiteEnviado($idtramite,$usuario);
+                                    //eliminar tramite recibido
+                                    $a = $WfTramiteController->eliminarTramiteRecibido($idtramite);
+                                    //eliminar tramite enviado
+                                    $b = $WfTramiteController->eliminarTramiteEnviado($idtramite,$usuario);
+                                    $request->getSession()
+                                            ->getFlashBag()
+                                            ->add('error', $mensaje['msg']);    
+                                }                  
+                            }else{
+                                //eliminar tramite enviado
+                                $b = $WfTramiteController->eliminarTramiteEnviado($idtramite,$usuario);
+                                //eliminar tramite recibido
+                                $a = $WfTramiteController->eliminarTramiteRecibido($idtramite);
+                                //eliminar tramite enviado
+                                $b = $WfTramiteController->eliminarTramiteEnviado($idtramite,$usuario);
+                                $request->getSession()
+                                        ->getFlashBag()
+                                        ->add('error', $mensaje['msg']);
+                            }
+                            
+                        }else{
+                            $request->getSession()
+                                    ->getFlashBag()
+                                    ->add('exito', $mensaje['msg']);
+                        }
+                    }else{
+                        //eliminar tramite recibido
+                        $a = $WfTramiteController->eliminarTramiteRecibido($idtramite);
+                        //eliminar tramite enviado
+                        $b = $WfTramiteController->eliminarTramiteEnviado($idtramite,$usuario);
+                        $request->getSession()
+                                ->getFlashBag()
+                                ->add('error', $mensaje['msg']);
+                    }
+                }else{
+                    //eliminar tramite enviado
+                    $b = $WfTramiteController->eliminarTramiteEnviado($idtramite,$usuario);
+                    $request->getSession()
+                    ->getFlashBag()
+                    ->add('error', $mensaje['msg']);  
+                }
+            }else{
+                $request->getSession()
+                        ->getFlashBag()
+                        ->add('exito', $mensaje['msg']);
             }
+        }else{
+            $request->getSession()
+                    ->getFlashBag()
+                    ->add('error', $mensaje['msg']);
         }
-        $request->getSession()
-                ->getFlashBag()
-                ->add('exito', $mensaje);
         return $this->redirect($this->generateUrl('wf_tramite_recibido'));
     }
 
@@ -1327,16 +1434,45 @@ class TramiteRueController extends Controller
         $WfTramiteController = new WfTramiteController();
         $WfTramiteController->setContainer($this->container);
         $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
-        if($varevaluacion=="NO"){  //observar
-            $varevaluacion1 = $form['varevaluacion1'];
-            $observacion1 = $form['observacion1'];
-            $tarea = 48;
-            $mensaje = $WfTramiteController->guardarTramiteRecibido($usuario,$tarea,$idtramite);
-            $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion1,$varevaluacion1,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
+        if($mensaje['dato'] == true){
+            if($varevaluacion=="NO"){  //observar
+                $wfTareaCompuerta = $em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findBy(array('flujoProceso'=>$tarea,'condicion'=>'NO'));
+                $tarea = $wfTareaCompuerta[0]->getCondicionTareaSiguiente();
+                $varevaluacion1 = $form['varevaluacion1'];
+                $observacion1 = $form['observacion1'];
+                $mensaje = $WfTramiteController->guardarTramiteRecibido($usuario,$tarea,$idtramite);
+                if($mensaje['dato'] == true){
+                    $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion1,$varevaluacion1,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
+                    if($mensaje['dato'] == true){
+                        $request->getSession()
+                                ->getFlashBag()
+                                ->add('exito', $mensaje['msg']);
+                    }else{
+                        //eliminar tramite recibido
+                        $a = $WfTramiteController->eliminarTramiteRecibido($idtramite);
+                        //eliminar tramite enviado
+                        $b = $WfTramiteController->eliminarTramiteEnviado($idtramite,$usuario);
+                        $request->getSession()
+                                ->getFlashBag()
+                                ->add('error', $mensaje['msg']);
+                    }
+                }else{
+                    //eliminar tramite enviado
+                    $b = $WfTramiteController->eliminarTramiteEnviado($idtramite,$usuario);
+                    $request->getSession()
+                    ->getFlashBag()
+                    ->add('error', $mensaje['msg']); 
+                }
+            }else{
+                $request->getSession()
+                        ->getFlashBag()
+                        ->add('exito', $mensaje);
+            }
+        }else{
+            $request->getSession()
+                    ->getFlashBag()
+                    ->add('error', $mensaje['msg']);
         }
-        $request->getSession()
-                ->getFlashBag()
-                ->add('exito', $mensaje);
         return $this->redirect($this->generateUrl('wf_tramite_recibido'));
     }
 
@@ -1525,181 +1661,220 @@ class TramiteRueController extends Controller
         $WfTramiteController = new WfTramiteController();
         $WfTramiteController->setContainer($this->container);
         $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
-        if($varevaluacion=="SI"){
-            $tarea = 50; //tarea siguiente
-            $varevaluacion = "";
-            $observacion = $form['observacion1'];
-            $mensaje = $WfTramiteController->guardarTramiteRecibido($usuario,$tarea,$idtramite);
-            $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
-            if($form['lejurisdiccion']==""){
-                $codLe = $this->obtieneCodigoLe($form, $usuario);
-            }
-            /**
-             * Registrar en el RUE
-             */
-            if($id_tabla){
-                $em->getConnection()->beginTransaction();
-                try {
-                        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_nivel_autorizado');")->execute();
-                        $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($id_tabla);
-                        $entity->setInstitucioneducativa(mb_strtoupper($form['institucioneducativa'], 'utf-8'));
-                        $entity->setFechaResolucion(new \DateTime($form['fecharesolucion']));
-                        $entity->setNroResolucion(mb_strtoupper($form['resolucion'], 'utf-8'));
-                        $entity->setDependenciaTipo($em->getRepository('SieAppWebBundle:DependenciaTipo')->findOneById($form['dependencia']));
-                        $entity->setConvenioTipo(($form['convenioTipo'] != "") ? $em->getRepository('SieAppWebBundle:ConvenioTipo')->findOneById($form['convenioTipo']) : null);
-                        $entity->setEstadoinstitucionTipo($em->getRepository('SieAppWebBundle:EstadoinstitucionTipo')->findOneById($form['estadoTipo']));
-                        $entity->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->findOneById($form['tipoeducacion']));
-                        $entity->setObsRue(mb_strtoupper($form['observacion1'], 'utf-8'));
-                        $entity->setDesUeAntes(mb_strtoupper($form['desUeAntes'], 'utf-8'));
+        if($mensaje['dato'] == true){
+            if($varevaluacion=="SI"){
+                $wfTareaCompuerta = $em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findBy(array('flujoProceso'=>$tarea,'condicion'=>'SI'));
+                $tarea = $wfTareaCompuerta[0]->getCondicionTareaSiguiente();
+                $varevaluacion = "";
+                $observacion = $form['observacion1'];
+                $mensaje = $WfTramiteController->guardarTramiteRecibido($usuario,$tarea,$idtramite);
+                if($mensaje['dato'] == true){
+                    $mensaje = $WfTramiteController->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos,$lugar['idlugarlocalidad'],$lugar['idlugardistrito']);
+                    if($mensaje['dato'] == true){
                         if($form['lejurisdiccion']==""){
-                            $entity->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($codLe));    
+                            $codLe = $this->obtieneCodigoLe($form, $usuario);
+                        }
+                        /**
+                         * Registrar en el RUE
+                         */
+                        if($id_tabla){
+                            $em->getConnection()->beginTransaction();
+                            try {
+                                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_nivel_autorizado');")->execute();
+                                    $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($id_tabla);
+                                    $entity->setInstitucioneducativa(mb_strtoupper($form['institucioneducativa'], 'utf-8'));
+                                    $entity->setFechaResolucion(new \DateTime($form['fecharesolucion']));
+                                    $entity->setNroResolucion(mb_strtoupper($form['resolucion'], 'utf-8'));
+                                    $entity->setDependenciaTipo($em->getRepository('SieAppWebBundle:DependenciaTipo')->findOneById($form['dependencia']));
+                                    $entity->setConvenioTipo(($form['convenioTipo'] != "") ? $em->getRepository('SieAppWebBundle:ConvenioTipo')->findOneById($form['convenioTipo']) : null);
+                                    $entity->setEstadoinstitucionTipo($em->getRepository('SieAppWebBundle:EstadoinstitucionTipo')->findOneById($form['estadoTipo']));
+                                    $entity->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->findOneById($form['tipoeducacion']));
+                                    $entity->setObsRue(mb_strtoupper($form['observacion1'], 'utf-8'));
+                                    $entity->setDesUeAntes(mb_strtoupper($form['desUeAntes'], 'utf-8'));
+                                    if($form['lejurisdiccion']==""){
+                                        $entity->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($codLe));    
+                                    }else{
+                                        $entity->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($form['lejurisdiccion']));
+                                    }
+                                    $em->persist($entity);
+                                    $em->flush();
+                                    //elimina los niveles
+                                    $nivelesElim = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->findBy(array('institucioneducativa' => $entity->getId()));
+                                    if($nivelesElim){
+                                        foreach ($nivelesElim as $nivel) {
+                                            $em->remove($nivel);
+                                        }
+                                        $em->flush();
+                                    }
+                                    //adiciona niveles nuevos
+                                    if ($form['tipoeducacion'] == 1 or $form['tipoeducacion'] == 2 or $form['tipoeducacion'] == 4 or $form['tipoeducacion'] == 5 or $form['tipoeducacion'] == 6) {
+                                        $niveles = (isset($form['niveltipo']))?$form['niveltipo']:array();
+                                        for($i=0;$i<count($niveles);$i++){
+                                            $nivel = new InstitucioneducativaNivelAutorizado();
+                                            $nivel->setFechaRegistro(new \DateTime('now'));
+                                            $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($niveles[$i]));
+                                            $nivel->setInstitucioneducativa($entity);
+                                            $em->persist($nivel);
+                                        }
+                                        $em->flush();
+                                    }
+                                    if ($form['tipoeducacion'] == 4) {
+                                        //elimina las areas
+                                        $areasElim = $em->getRepository('SieAppWebBundle:InstitucioneducativaAreaEspecialAutorizado')->findBy(array('institucioneducativa' => $entity->getId()));
+                                        if($areasElim) {
+                                            foreach ($areasElim as $area) {
+                                                $em->remove($area);
+                                            }
+                                            $em->flush();
+                                        }
+                                        //adiciona areas nuevas
+                                        $areas = $form['areaEspecialTipo'];
+                                        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_area_especial_autorizado');")->execute();
+                                        for($i=0;$i<count($areas);$i++){
+                                            $area = new InstitucioneducativaAreaEspecialAutorizado();
+                                            $area->setFechaRegistro(new \DateTime('now'));
+                                            $area->setEspecialAreaTipo($em->getRepository('SieAppWebBundle:EspecialAreaTipo')->findOneById($areas[$i]));
+                                            $area->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($entity->getId()));
+                                            $em->persist($area);
+                                        }
+                                        $em->flush();
+                                    }
+                                    // Try and commit the transaction
+                                    $em->getConnection()->commit();
+                                    $mensaje = "El trámite Nro. ". $tramite->getId() ." de ". $tramite->getTramiteTipo()->getTramiteTipo() ." para la Institución Educativa ". $entity->getInstitucioneducativa() ." fue registrada correctamente con el código RUE: ".$entity->getId().", y el código de Local educativo: ".$entity->getLeJuridicciongeografica()->getId();
+                                    $request->getSession()
+                                        ->getFlashBag()
+                                        ->add('exito', $mensaje);
+                                } catch (Exception $e) {
+                                    //eliminar tramite recibido
+                                    $a = $WfTramiteController->eliminarTramiteRecibido($idtramite);
+                                    //eliminar tramite enviado
+                                    $b = $WfTramiteController->eliminarTramiteEnviado($idtramite,$usuario);
+                                    $em->getConnection()->rollback();
+                                    $mensaje = "Error al registrar la institución educativa. ";
+                                    $request->getSession()
+                                        ->getFlashBag()
+                                        ->add('error', $mensaje);
+                            }
                         }else{
-                            $entity->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($form['lejurisdiccion']));
-                        }
-                        $em->persist($entity);
-                        $em->flush();
-                        //elimina los niveles
-                        $nivelesElim = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->findBy(array('institucioneducativa' => $entity->getId()));
-                        if($nivelesElim){
-                            foreach ($nivelesElim as $nivel) {
-                                $em->remove($nivel);
-                            }
-                            $em->flush();
-                        }
-                        //adiciona niveles nuevos
-                        if ($form['tipoeducacion'] == 1 or $form['tipoeducacion'] == 2 or $form['tipoeducacion'] == 4 or $form['tipoeducacion'] == 5 or $form['tipoeducacion'] == 6) {
-                            $niveles = (isset($form['niveltipo']))?$form['niveltipo']:array();
-                            for($i=0;$i<count($niveles);$i++){
-                                $nivel = new InstitucioneducativaNivelAutorizado();
-                                $nivel->setFechaRegistro(new \DateTime('now'));
-                                $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($niveles[$i]));
-                                $nivel->setInstitucioneducativa($entity);
-                                $em->persist($nivel);
-                            }
-                            $em->flush();
-                        }
-                        if ($form['tipoeducacion'] == 4) {
-                            //elimina las areas
-                            $areasElim = $em->getRepository('SieAppWebBundle:InstitucioneducativaAreaEspecialAutorizado')->findBy(array('institucioneducativa' => $entity->getId()));
-                            if($areasElim) {
-                                foreach ($areasElim as $area) {
-                                    $em->remove($area);
+                            try {
+                                $em->getConnection()->beginTransaction();
+                                $form = $request->get('form');
+                                // Validar la ie no esta registrada
+                                $buscar_institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array(
+                                        'institucioneducativa' => $form['institucioneducativa'],
+                                        'fechaResolucion' => new \DateTime($form['fecharesolucion']),
+                                ));
+                                if ($buscar_institucion) {
+                                    $this->get('session')->getFlashBag()->add('registroInstitucionError', 'La institución educativa ya existe en el sistema');
+                                    return $this->redirect($this->generateUrl('rue'));
+                                }
+            
+                                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_nivel_autorizado');")->execute();
+                                $query = $em->getConnection()->prepare('SELECT get_genera_codigo_ue(:codle)');
+                                if($form['lejurisdiccion']==""){
+                                    $query->bindValue(':codle', $codLe);
+                                }else{
+                                    $query->bindValue(':codle', $form['lejurisdiccion']);
+                                }
+                                $query->execute();
+                                $codigoue = $query->fetchAll();
+                                //Registro de institucion educativa
+                                $entity = new Institucioneducativa();
+                                $entity->setId($codigoue[0]["get_genera_codigo_ue"]);
+                                $ieducativatipo = $em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->findOneById($form['tipoeducacion']);
+                                $entity->setInstitucioneducativa(mb_strtoupper($form['institucioneducativa'], 'utf-8'));
+                                $entity->setFechaResolucion(new \DateTime($form['fecharesolucion']));
+                                $entity->setFechaCreacion(new \DateTime('now'));
+                                $entity->setNroResolucion(mb_strtoupper($form['resolucion'], 'utf-8'));
+                                $entity->setDependenciaTipo($em->getRepository('SieAppWebBundle:DependenciaTipo')->findOneById($form['dependencia']));
+                                $entity->setConvenioTipo(($form['convenioTipo'] != "") ? $em->getRepository('SieAppWebBundle:ConvenioTipo')->findOneById($form['convenioTipo']) : null);
+                                $entity->setEstadoinstitucionTipo($em->getRepository('SieAppWebBundle:EstadoinstitucionTipo')->findOneById($form['estadoTipo']));
+                                $entity->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->findOneById($form['tipoeducacion']));
+                                $entity->setObsRue(mb_strtoupper($form['observacion1'], 'utf-8'));
+                                $entity->setDesUeAntes(mb_strtoupper($form['desUeAntes'], 'utf-8'));
+                                if($form['lejurisdiccion']==""){
+                                    $entity->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($codLe));    
+                                }else{
+                                    $entity->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($form['lejurisdiccion']));
+                                }
+                                $entity->setOrgcurricularTipo($ieducativatipo->getOrgcurricularTipo());
+                                $entity->setInstitucioneducativaAcreditacionTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaAcreditacionTipo')->find(1));
+                
+                                $em->persist($entity);
+                                $em->flush();
+                                //adiciona niveles nuevos
+                                //$niveles = $form['nivelTipo'];
+                                $niveles = (isset($form['niveltipo']))?$form['niveltipo']:array();
+                                for($i=0;$i<count($niveles);$i++){
+                                    $nivel = new InstitucioneducativaNivelAutorizado();
+                                    $nivel->setFechaRegistro(new \DateTime('now'));
+                                    $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($niveles[$i]));
+                                    $nivel->setInstitucioneducativa($entity);
+                                    $em->persist($nivel);
                                 }
                                 $em->flush();
+                                if ($form['tipoeducacion'] == 4) {
+                                    //adiciona areas nuevas
+                                    $areas = $form['areaEspecialTipo'];
+                                    for($i=0;$i<count($areas);$i++){
+                                        $area = new InstitucioneducativaAreaEspecialAutorizado();
+                                        $area->setFechaRegistro(new \DateTime('now'));
+                                        $area->setEspecialAreaTipo($em->getRepository('SieAppWebBundle:EspecialAreaTipo')->findOneById($areas[$i]));
+                                        $area->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($entity->getId()));
+                                        $em->persist($area);
+                                    }
+                                    $em->flush();
+                                }
+                                //actualizamos el tramite con la unidad educativa creada
+                                $tramite->setInstitucioneducativa($entity);
+                                $em->flush();
+                                // Try and commit the transaction
+                                $em->getConnection()->commit();
+                                $mensaje = "El trámite Nro. " . $tramite->getId() . " de CREACIÓN para la institución educativa ". $entity->getInstitucioneducativa() ." fue registrada correctamente con el código RUE: ".$entity->getId().", y el código de Local educativo: ".$entity->getLeJuridicciongeografica()->getId();
+                                $request->getSession()
+                                        ->getFlashBag()
+                                        ->add('exito', $mensaje);
+                            } catch (Exception $ex) {
+                                //eliminar tramite recibido
+                                $a = $WfTramiteController->eliminarTramiteRecibido($idtramite);
+                                //eliminar tramite enviado
+                                $b = $WfTramiteController->eliminarTramiteEnviado($idtramite,$usuario);
+                                $em->getConnection()->rollback();
+                                $mensaje = "Error al registrar la institución educativa ".$entity->getInstitucioneducativa();
+                                $request->getSession()
+                                        ->getFlashBag()
+                                        ->add('error', $mensaje);
                             }
-                            //adiciona areas nuevas
-                            $areas = $form['areaEspecialTipo'];
-                            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_area_especial_autorizado');")->execute();
-                            for($i=0;$i<count($areas);$i++){
-                                $area = new InstitucioneducativaAreaEspecialAutorizado();
-                                $area->setFechaRegistro(new \DateTime('now'));
-                                $area->setEspecialAreaTipo($em->getRepository('SieAppWebBundle:EspecialAreaTipo')->findOneById($areas[$i]));
-                                $area->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($entity->getId()));
-                                $em->persist($area);
-                            }
-                            $em->flush();
                         }
-                        // Try and commit the transaction
-                        $em->getConnection()->commit();
-                        $mensaje = "El trámite Nro. ". $tramite->getId() ." de ". $tramite->getTramiteTipo()->getTramiteTipo() ." para la Institución Educativa ". $entity->getInstitucioneducativa() ." fue registrada correctamente con el código RUE: ".$entity->getId().", y el código de Local educativo: ".$entity->getLeJuridicciongeografica()->getId();
+                    }else{
+                        //eliminar tramite recibido
+                        $a = $WfTramiteController->eliminarTramiteRecibido($idtramite);
+                        //eliminar tramite enviado
+                        $b = $WfTramiteController->eliminarTramiteEnviado($idtramite,$usuario);
                         $request->getSession()
+                                ->getFlashBag()
+                                ->add('error', $mensaje['msg']);
+                    }
+                }else{
+                    //eliminar tramite enviado
+                    $b = $WfTramiteController->eliminarTramiteEnviado($idtramite,$usuario);
+                    $request->getSession()
                             ->getFlashBag()
-                            ->add('exito', $mensaje);
-                    } catch (Exception $e) {
-                        $em->getConnection()->rollback();
-                        $mensaje = "Error al registrar la institución educativa. ";
-                        $request->getSession()
-                            ->getFlashBag()
-                            ->add('error', $mensaje);
+                            ->add('error', $mensaje['msg']);   
                 }
             }else{
-                try {
-                    $em->getConnection()->beginTransaction();
-                    $form = $request->get('form');
-                    // Validar la ie no esta registrada
-                    $buscar_institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array(
-                            'institucioneducativa' => $form['institucioneducativa'],
-                            'fechaResolucion' => new \DateTime($form['fecharesolucion']),
-                    ));
-                    if ($buscar_institucion) {
-                        $this->get('session')->getFlashBag()->add('registroInstitucionError', 'La institución educativa ya existe en el sistema');
-                        return $this->redirect($this->generateUrl('rue'));
-                    }
-
-                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_nivel_autorizado');")->execute();
-                    $query = $em->getConnection()->prepare('SELECT get_genera_codigo_ue(:codle)');
-                    if($form['lejurisdiccion']==""){
-                        $query->bindValue(':codle', $codLe);
-                    }else{
-                        $query->bindValue(':codle', $form['lejurisdiccion']);
-                    }
-                    $query->execute();
-                    $codigoue = $query->fetchAll();
-                    //Registro de institucion educativa
-                    $entity = new Institucioneducativa();
-                    $entity->setId($codigoue[0]["get_genera_codigo_ue"]);
-                    $ieducativatipo = $em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->findOneById($form['tipoeducacion']);
-                    $entity->setInstitucioneducativa(mb_strtoupper($form['institucioneducativa'], 'utf-8'));
-                    $entity->setFechaResolucion(new \DateTime($form['fecharesolucion']));
-                    $entity->setFechaCreacion(new \DateTime('now'));
-                    $entity->setNroResolucion(mb_strtoupper($form['resolucion'], 'utf-8'));
-                    $entity->setDependenciaTipo($em->getRepository('SieAppWebBundle:DependenciaTipo')->findOneById($form['dependencia']));
-                    $entity->setConvenioTipo(($form['convenioTipo'] != "") ? $em->getRepository('SieAppWebBundle:ConvenioTipo')->findOneById($form['convenioTipo']) : null);
-                    $entity->setEstadoinstitucionTipo($em->getRepository('SieAppWebBundle:EstadoinstitucionTipo')->findOneById($form['estadoTipo']));
-                    $entity->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->findOneById($form['tipoeducacion']));
-                    $entity->setObsRue(mb_strtoupper($form['observacion1'], 'utf-8'));
-                    $entity->setDesUeAntes(mb_strtoupper($form['desUeAntes'], 'utf-8'));
-                    if($form['lejurisdiccion']==""){
-                        $entity->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($codLe));    
-                    }else{
-                        $entity->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($form['lejurisdiccion']));
-                    }
-                    $entity->setOrgcurricularTipo($ieducativatipo->getOrgcurricularTipo());
-                    $entity->setInstitucioneducativaAcreditacionTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaAcreditacionTipo')->find(1));
-    
-                    $em->persist($entity);
-                    $em->flush();
-                    //adiciona niveles nuevos
-                    //$niveles = $form['nivelTipo'];
-                    $niveles = (isset($form['niveltipo']))?$form['niveltipo']:array();
-                    for($i=0;$i<count($niveles);$i++){
-                        $nivel = new InstitucioneducativaNivelAutorizado();
-                        $nivel->setFechaRegistro(new \DateTime('now'));
-                        $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($niveles[$i]));
-                        $nivel->setInstitucioneducativa($entity);
-                        $em->persist($nivel);
-                    }
-                    $em->flush();
-                    if ($form['tipoeducacion'] == 4) {
-                        //adiciona areas nuevas
-                        $areas = $form['areaEspecialTipo'];
-                        for($i=0;$i<count($areas);$i++){
-                            $area = new InstitucioneducativaAreaEspecialAutorizado();
-                            $area->setFechaRegistro(new \DateTime('now'));
-                            $area->setEspecialAreaTipo($em->getRepository('SieAppWebBundle:EspecialAreaTipo')->findOneById($areas[$i]));
-                            $area->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($entity->getId()));
-                            $em->persist($area);
-                        }
-                        $em->flush();
-                    }
-                    //actualizamos el tramite con la unidad educativa creada
-                    $tramite->setInstitucioneducativa($entity);
-                    $em->flush();
-                    // Try and commit the transaction
-                    $em->getConnection()->commit();
-                    $mensaje = "El trámite Nro. " . $tramite->getId() . " de CREACIÓN para la institución educativa ". $entity->getInstitucioneducativa() ." fue registrada correctamente con el código RUE: ".$entity->getId().", y el código de Local educativo: ".$entity->getLeJuridicciongeografica()->getId();
-                    $request->getSession()
-                            ->getFlashBag()
-                            ->add('exito', $mensaje);
-                } catch (Exception $ex) {
-                    $em->getConnection()->rollback();
-                    $mensaje = "Error al registrar la institución educativa ".$entity->getInstitucioneducativa();
-                    $request->getSession()
-                            ->getFlashBag()
-                            ->add('error', $mensaje);
-                }
+                $request->getSession()
+                        ->getFlashBag()
+                        ->add('exito', $mensaje['msg']);
             }
+        }else{
+            $request->getSession()
+                    ->getFlashBag()
+                    ->add('error', $mensaje['msg']);
         }
+
+        
         return $this->redirect($this->generateUrl('wf_tramite_recibido'));
     }
     
@@ -1903,481 +2078,6 @@ class TramiteRueController extends Controller
         //dump($tramites);die;
         $data['tramites'] = $tramites;
         return $data;
-    }
-
-    public function tramiteTareaRitt($tarea_ant,$tarea_actual,$flujotipo,$usuario,$rol)
-    {
-        $em = $this->getDoctrine()->getManager();
-        //dump($lugarTipo);die;
-        $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$usuario,'rolTipo'=>$rol));            
-        $idlugarusuario = $usuariorol[0]->getLugarTipo()->getCodigo();
-        //dump($usuariorol);die;
-        //dump((int)$idlugarusuario);die;
-         /**tareas devuelta por condicion**/
-        $wftareac = $em->getRepository('SieAppWebBundle:WfTareaCompuerta')->createQueryBuilder('wf')
-                ->select('fp.id,wf.condicion')
-                ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'fp.id = wf.flujoProceso')
-                ->where('wf.condicionTareaSiguiente =' . $tarea_actual)
-                ->getQuery()
-                ->getResult();
-        /**tarea devuelta**/
-        $fp = $em->getRepository('SieAppWebBundle:FlujoProceso')->createQueryBuilder('fp')
-                ->select('fp.id')
-                ->where('fp.tareaSigId =' . $tarea_actual)
-                ->getQuery()
-                ->getResult();
-        /**tarea anterior**/
-        $tarea = 'td.flujo_proceso_id='. $tarea_ant;
-        if($wftareac and $fp){
-            $tarea = "(" . $tarea . " or (td.flujo_proceso_id=". $wftareac[0]['id'] ." and td.valor_evaluacion='". $wftareac[0]['condicion'] ."') or td.flujo_proceso_id=". $fp[0]['id']. ")";
-        }elseif ($wftareac){
-            $tarea = "(" . $tarea . " or (td.flujo_proceso_id=". $wftareac[0]['id'] ." and td.valor_evaluacion='". $wftareac[0]['condicion'] ."'))";
-        }elseif ($fp){
-            $tarea = "(" . $tarea . " or td.flujo_proceso_id=". $fp[0]['id']. ")";
-        }
-        //dump($wftareac);die;
-        /**si la tarea anterior tiene evaluacion **/
-        $query1 = $em->getConnection()->prepare('select * from flujo_proceso where id=' . $tarea_ant . ' and es_evaluacion=true');
-        $query1->execute();
-        $evaluacion = $query1->fetchAll();
-        if($rol == 7){ // departamental
-            if ($evaluacion)
-            {
-                
-                $query = $em->getConnection()->prepare("select t.id,t.td_id,ie.institucioneducativa_id,ie.institucioneducativa,ie.sede,t.tramite_tipo,t.fecha_registro,t.obs,t.nombre,t.estado
-                from
-                (select se.institucioneducativa_id, se.sede,ie.institucioneducativa
-                from ttec_institucioneducativa_sede se
-                join institucioneducativa ie on se.institucioneducativa_id=ie.id
-                join jurisdiccion_geografica le on ie.le_juridicciongeografica_id=le.id
-                left join tramite t on ie.id=t.institucioneducativa_id
-                where t.fecha_fin is null and se.estado =true and ie.institucioneducativa_tipo_id in (7,8,9) and ie.estadoinstitucion_tipo_id=10 and le.lugar_tipo_id_localidad in (select id from lugar_tipo where lugar_tipo_id in (select id from lugar_tipo where lugar_tipo_id in (select id from lugar_tipo where lugar_tipo_id in(select id from lugar_tipo where lugar_tipo_id in (select id from lugar_tipo where codigo='". (int)$idlugarusuario ."' and lugar_nivel_id=1))))))ie
-                left join
-                (select t.id,td.id as td_id,t.institucioneducativa_id,tt.tramite_tipo,t.fecha_registro,td.obs,p.nombre,case when td.flujo_proceso_id = ". $tarea_ant ." then 'ENVIADO' else 'DEVUELTO' end as estado
-                from tramite t
-                join tramite_detalle td on cast(t.tramite as int)=td.id
-                join tramite_tipo tt on t.tramite_tipo=tt.id
-                join usuario u on td.usuario_remitente_id=u.id
-                join persona p on p.id=u.persona_id
-                where t.flujo_tipo_id=". $flujotipo ." and t.fecha_fin is null and ". $tarea ." and td.valor_evaluacion = (select condicion from wf_tarea_compuerta where flujo_proceso_id=". $tarea_ant ." and condicion_tarea_siguiente=". $tarea_actual . "))t on ie.institucioneducativa_id=t.institucioneducativa_id");
-            }else{
-                $query = $em->getConnection()->prepare("select t.id,t.td_id,ie.institucioneducativa_id,ie.institucioneducativa,ie.sede,t.tramite_tipo,t.fecha_registro,t.obs,t.nombre,t.estado
-                from
-                (select se.institucioneducativa_id, se.sede,ie.institucioneducativa
-                from ttec_institucioneducativa_sede se
-                join institucioneducativa ie on se.institucioneducativa_id=ie.id
-                join jurisdiccion_geografica le on ie.le_juridicciongeografica_id=le.id
-                left join tramite t on ie.id=t.institucioneducativa_id
-                where t.fecha_fin is null and se.estado =true and ie.institucioneducativa_tipo_id in (7,8,9) and ie.estadoinstitucion_tipo_id=10 and le.lugar_tipo_id_localidad in (select id from lugar_tipo where lugar_tipo_id in (select id from lugar_tipo where lugar_tipo_id in (select id from lugar_tipo where lugar_tipo_id in(select id from lugar_tipo where lugar_tipo_id in (select id from lugar_tipo where codigo='". (int)$idlugarusuario ."' and lugar_nivel_id=1))))))ie
-                left join
-                (select t.id,td.id as td_id,t.institucioneducativa_id,tt.tramite_tipo,t.fecha_registro,td.obs,p.nombre,case when td.flujo_proceso_id = ". $tarea_ant ." then 'ENVIADO' else 'DEVUELTO' end as estado
-                from tramite t
-                join tramite_detalle td on cast(t.tramite as int)=td.id
-                join tramite_tipo tt on t.tramite_tipo=tt.id
-                join usuario u on td.usuario_remitente_id=u.id
-                join persona p on p.id=u.persona_id
-                where t.flujo_tipo_id=". $flujotipo ." and t.fecha_fin is null and ". $tarea .")t on ie.institucioneducativa_id=t.institucioneducativa_id");
-            }
-        }elseif($rol == 8){ 
-            if ($evaluacion)
-            {
-                
-                $query = $em->getConnection()->prepare("select t.id,ie.id as codrie,ie.institucioneducativa,lt4.lugar,tt.tramite_tipo,t.fecha_registro,td.obs,p.nombre,case when td.flujo_proceso_id = ". $tarea_ant ." then 'ENVIADO' else 'DEVUELTO' end as estado
-                from tramite t join tramite_detalle td on cast(t.tramite as int)=td.id
-                join institucioneducativa ie on t.institucioneducativa_id=ie.id
-                join jurisdiccion_geografica le on ie.le_juridicciongeografica_id=le.id
-                left join lugar_tipo lt on lt.id = le.lugar_tipo_id_localidad
-                left join lugar_tipo lt1 on lt1.id = lt.lugar_tipo_id
-                left join lugar_tipo lt2 on lt2.id = lt1.lugar_tipo_id
-                left join lugar_tipo lt3 on lt3.id = lt2.lugar_tipo_id
-                left join lugar_tipo lt4 on lt4.id = lt3.lugar_tipo_id
-                join tramite_tipo tt on t.tramite_tipo=tt.id
-                join usuario u on td.usuario_remitente_id=u.id
-                join persona p on p.id=u.persona_id
-                where t.flujo_tipo_id=". $flujotipo ." and t.fecha_fin is null and ". $tarea ." and td.valor_evaluacion = (select condicion from wf_tarea_compuerta where flujo_proceso_id=". $tarea_ant ." and condicion_tarea_siguiente=". $tarea_actual . ")");
-            }else{
-                $query = $em->getConnection()->prepare("select t.id,ie.id as codrie,ie.institucioneducativa,lt4.lugar,tt.tramite_tipo,t.fecha_registro,td.obs,p.nombre,case when td.flujo_proceso_id = ". $tarea_ant ." then 'ENVIADO' else 'DEVUELTO' end as estado
-                from tramite t join tramite_detalle td on cast(t.tramite as int)=td.id
-                join institucioneducativa ie on t.institucioneducativa_id=ie.id
-                join jurisdiccion_geografica le on ie.le_juridicciongeografica_id=le.id
-                left join lugar_tipo lt on lt.id = le.lugar_tipo_id_localidad
-                left join lugar_tipo lt1 on lt1.id = lt.lugar_tipo_id
-                left join lugar_tipo lt2 on lt2.id = lt1.lugar_tipo_id
-                left join lugar_tipo lt3 on lt3.id = lt2.lugar_tipo_id
-                left join lugar_tipo lt4 on lt4.id = lt3.lugar_tipo_id
-                join tramite_tipo tt on t.tramite_tipo=tt.id
-                join usuario u on td.usuario_remitente_id=u.id
-                join persona p on p.id=u.persona_id
-                where t.flujo_tipo_id=". $flujotipo ." and t.fecha_fin is null and ". $tarea);
-            }
-        }
-        $query->execute();
-        $tramites = $query->fetchAll();
-        //dump($tramites);die;
-        $data['tramites'] = $tramites;
-        return $data;
-    }
-    
-    public function guardarTramiteDetalle($usuario,$uDestinatario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,$varevaluacion,$idtramite,$datos,$lugarTipo_id)
-    {
-
-        //dump($datos);die;
-        $tramiteDetalle = new TramiteDetalle();
-        $em = $this->getDoctrine()->getManager();
-        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('tramite_detalle');")->execute();
-        $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($tarea);
-        
-        $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($usuario);
-        $tramiteestado = $em->getRepository('SieAppWebBundle:TramiteEstado')->find(1);
-        
-        //insert tramite
-        if($flujoproceso->getOrden() == 1 and $idtramite == ""){
-            
-            $tramite = new Tramite();
-            $wfSolicitudTramite = new WfSolicitudTramite();
-            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('tramite');")->execute();
-            $flujotipo = $em->getRepository('SieAppWebBundle:FlujoTipo')->find($flujotipo);
-            $tramitetipo = $em->getRepository('SieAppWebBundle:TramiteTipo')->find($tipotramite);
-            //dump($tramitetipo);die;
-            $tramite->setFlujoTipo($flujotipo);
-            $tramite->setTramiteTipo($tramitetipo);
-            $tramite->setFechaTramite(new \DateTime(date('Y-m-d')));
-            $tramite->setFechaRegistro(new \DateTime(date('Y-m-d')));
-            $tramite->setEsactivo(true);
-            $tramite->setGestionId((new \DateTime())->format('Y'));
-            
-            switch ($tabla) {
-                case 'institucioneducativa':
-                    if ($id_tabla){
-                        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id_tabla);
-                        $tramite->setInstitucioneducativa($institucioneducativa);
-                    }
-                    break;
-                case 'estudiante_inscripcion':
-                    $estudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($id_tabla);
-                    $tramite->setestudianteInscripcion($estudiante);
-                    break;
-                case 'apoderado_inscripcion':
-                    $apoderado = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find($id_tabla);
-                    $tramite->setApoderadoInscripcion($apoderado);
-                    break;
-                case 'maestro_inscripcion':
-                    $maestro = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($id_tabla);
-                    $tramite->setMaestroInscripcion($maestro);
-                    break;
-            }
-            $em->persist($tramite);
-            $em->flush();
-            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('wf_solicitud_tramite');")->execute();
-            //dump($tramite);die;
-            if ($datos){
-                //datos propios de la solicitud
-                $wfSolicitudTramite->setTramite($tramite);
-                $wfSolicitudTramite->setDatos($datos);
-                $wfSolicitudTramite->setEsValido(true);
-                $wfSolicitudTramite->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));
-                $wfSolicitudTramite->setLugarTipoId($lugarTipo_id);
-                $em->persist($wfSolicitudTramite);
-                $em->flush();
-            }
-        }else{
-            /*$query = $em->getConnection()->prepare('select * from tramite_detalle where flujo_proceso_id='. $flujoproceso->getTareaAntId());
-            $query->execute();
-            $tramiteD = $query->fetchAll();*/
-            //dump($idtramite);die;
-            //Modificacion de datos propios de la solicitud
-            $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
-            $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
-                ->select('wf')
-                ->innerJoin('SieAppWebBundle:Tramite', 't', 'with', 't.id = wf.tramite')
-                ->where('t.id =' . $tramite->getId())
-                ->getQuery()
-                ->getResult();
-            //dump($wfSolicitudTramite);die;
-            if($wfSolicitudTramite){
-                //datos de la solicitud
-                $wfSolicitudTramite[0]->setDatos($datos);
-                $wfSolicitudTramite[0]->setEsValido(true);
-                $wfSolicitudTramite[0]->setFechaModificacion(new \DateTime(date('Y-m-d H:i:s')));
-                $em->flush();
-            }
-            //dump($tramite);die;
-            //$tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($tramiteD[0]->getTramite()->getId());
-        }
-        //insert tramite_detalle
-        //dump($tramiteD);die;
-        $tramiteDetalle->setObs($observacion);
-        $tramiteDetalle->setTramite($tramite);
-        $tramiteDetalle->setTramiteEstado($tramiteestado);
-        $tramiteDetalle->setFlujoProceso($flujoproceso);
-        $tramiteDetalle->setFechaRegistro(new \DateTime(date('Y-m-d')));
-        $tramiteDetalle->setFechaEnvio(new \DateTime(date('Y-m-d')));
-        $tramiteDetalle->setFechaRecepcion(new \DateTime(date('Y-m-d')));
-        $tramiteDetalle->setUsuarioRemitente($usuario);
-        /** */
-        if ($idtramite!="")
-        {
-            $td_anterior = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
-            $tramiteDetalle->setTramiteDetalle($td_anterior);
-        }
-        //dump($flujoproceso);die;
-        if ($flujoproceso->getEsEvaluacion() == true) 
-        {
-            $tramiteDetalle->setValorEvaluacion($varevaluacion);
-        }
-        if($flujoproceso->getWfAsignacionTareaTipo()->getId() == 3) //asignacion por seleccion
-        {
-               if($idtramite != "")
-               {
-                    $query = $em->getConnection()->prepare('select * from tramite_detalle where id='. (int)$tramite->getTramite().' and tramite_id='.$idtramite);
-                    $query->execute();
-                    $td = $query->fetchAll();
-                    $tramiteD = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find($td[0]['id']);
-                    $tramiteD->setUsuarioDestinatario($usuario);
-                    //$em->persist($tramiteD);
-                    $em->flush();
-               }
-        }else{ //si es directa o randomica
-            //dump($uDestinatario);die;
-            $uDestinatario = $em->getRepository('SieAppWebBundle:Usuario')->find($uDestinatario);
-            //dump($uDestinatario);die;
-            $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
-        }
-        $em->persist($tramiteDetalle);
-        $em->flush();
-        if ($flujoproceso->getTareaSigId() == null)
-        {
-            $tramite->setFechaFin(new \DateTime(date('Y-m-d')));
-        }
-        $tramite->setTramite($tramiteDetalle->getId());
-        //$em->persist($tramite);
-        $em->flush();
-        //dump((new \DateTime())->format('Y'));die;
-        //guardar datos del propios del tramite
-        $mensaje = 'El trámite se guardo correctamente';
-        return $mensaje;
-    }
-    
-    public function guardarTramiteNuevo($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,$varevaluacion,$idtramite,$datos,$lugarTipo_id,$idtramiteestado)
-    {
-
-        $em = $this->getDoctrine()->getManager();
-        
-        $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($tarea);
-        $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($usuario);
-        $tramiteestado = $em->getRepository('SieAppWebBundle:TramiteEstado')->find(15);
-        $flujotipo = $em->getRepository('SieAppWebBundle:FlujoTipo')->find($flujotipo);
-        $tramitetipo = $em->getRepository('SieAppWebBundle:TramiteTipo')->find($tipotramite);
-        /**
-         * insert tramite
-         */
-        $tramite = new Tramite();
-        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('tramite');")->execute();
-        $tramite->setFlujoTipo($flujotipo);
-        $tramite->setTramiteTipo($tramitetipo);
-        $tramite->setFechaTramite(new \DateTime(date('Y-m-d')));
-        $tramite->setFechaRegistro(new \DateTime(date('Y-m-d')));
-        $tramite->setEsactivo(true);
-        $tramite->setGestionId((new \DateTime())->format('Y'));
-        switch ($tabla) {
-            case 'institucioneducativa':
-                if ($id_tabla){
-                    $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id_tabla);
-                    $tramite->setInstitucioneducativa($institucioneducativa);
-                }
-                break;
-            case 'estudiante_inscripcion':
-                $estudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($id_tabla);
-                $tramite->setestudianteInscripcion($estudiante);
-                break;
-            case 'apoderado_inscripcion':
-                $apoderado = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find($id_tabla);
-                $tramite->setApoderadoInscripcion($apoderado);
-                break;
-            case 'maestro_inscripcion':
-                $maestro = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($id_tabla);
-                $tramite->setMaestroInscripcion($maestro);
-                break;
-        }
-        $em->persist($tramite);
-        $em->flush();
-        /**
-         * insert datos propios de la solicitud
-         */
-        if ($datos){
-            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('wf_solicitud_tramite');")->execute();   
-            $wfSolicitudTramite = new WfSolicitudTramite();
-            $wfSolicitudTramite->setTramite($tramite);
-            $wfSolicitudTramite->setDatos($datos);
-            $wfSolicitudTramite->setEsValido(true);
-            $wfSolicitudTramite->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));
-            $wfSolicitudTramite->setLugarTipoId($lugarTipo_id);
-            $em->persist($wfSolicitudTramite);
-            $em->flush();
-        }
-        /**
-         * insert tramite_detalle 
-         */
-        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('tramite_detalle');")->execute();
-        $tramiteDetalle = new TramiteDetalle();    
-        $tramiteDetalle->setTramite($tramite);
-        $tramiteDetalle->setFechaRegistro(new \DateTime(date('Y-m-d')));
-        $tramiteDetalle->setFechaRecepcion(new \DateTime(date('Y-m-d')));
-        $tramiteDetalle->setFechaEnvio(new \DateTime(date('Y-m-d')));
-        $tramiteDetalle->setFlujoProceso($flujoproceso);
-        $tramiteDetalle->setUsuarioRemitente($usuario);
-        $tramiteDetalle->setObs($observacion);
-        $tramiteDetalle->setTramiteEstado($tramiteestado);
-        if ($flujoproceso->getEsEvaluacion() == true) 
-        {
-            $tramiteDetalle->setValorEvaluacion($varevaluacion);
-            $wfcondiciontarea = $em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findBy(array('flujoProceso'=>$flujoproceso->getId(),'condicion'=>$varevaluacion));
-            $tarea_sig_id = $wfcondiciontarea[0]->condicionTareaSiguiente();
-            $uDestinatario = $this->obtieneUsuarioDestinatario($tarea_sig_id,$id_tabla,$tabla);
-        }else{
-            $tarea_sig_id = $flujoproceso->getTareaSigId();
-            $uDestinatario = $this->obtieneUsuarioDestinatario($tarea_sig_id.$id_tabla.$tabla);
-        }
-        $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
-        $em->persist($tramiteDetalle);
-        $em->flush();
-        $tramite->setTramite($tramiteDetalle->getId());
-        $em->flush();
-        $mensaje = 'El trámite se guardo correctamente';
-        return $mensaje;
-    }
-
-    public function guardarTramiteRecibido($usuario,$tarea,$tabla,$id_tabla,$idtramite,$idtramiteestado)
-    {
-
-        $em = $this->getDoctrine()->getManager();
-
-        $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($tarea);
-        $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($usuario);
-        $tramiteestado = $em->getRepository('SieAppWebBundle:TramiteEstado')->find($tramiteestado);
-        $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
-        /**
-         * guarda tramite recibido
-         */
-        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('tramite_detalle');")->execute();
-        $tramiteDetalle = new TramiteDetalle();    
-        $tramiteDetalle->setTramite($tramite);
-        $tramiteDetalle->setFechaRegistro(new \DateTime(date('Y-m-d')));
-        $tramiteDetalle->setFechaRecepcion(new \DateTime(date('Y-m-d')));
-        $tramiteDetalle->setTramiteEstado($tramiteestado);
-        $tramiteDetalle->setFlujoProceso($flujoproceso);
-        $tramiteDetalle->setUsuarioRemitente($usuario);
-        /**
-         * Guardamos tarea anterior en tramite detalle  
-         */
-        $td_anterior = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
-        $tramiteDetalle->setTramiteDetalle($td_anterior);
-        $em->persist($tramiteDetalle);
-        $em->flush();
-        $tramite->setTramite($tramiteDetalle->getId());
-        $em->flush();
-        $mensaje = 'El trámite se guardo correctamente';
-        return $mensaje;
-    }
-    
-    public function guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,$varevaluacion,$idtramite,$datos,$lugarTipo_id,$idtramiteestado)
-    {
-
-        $em = $this->getDoctrine()->getManager();
-
-        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('tramite_detalle');")->execute();
-        $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($tarea);
-        $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($usuario);
-        $tramiteestado = $em->getRepository('SieAppWebBundle:TramiteEstado')->find($tramiteestado);
-        $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
-        /**
-         * Modificacion de datos propios de la solicitud
-         */
-        if ($datos){
-            $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
-                ->select('wf')
-                ->innerJoin('SieAppWebBundle:Tramite', 't', 'with', 't.id = wf.tramite')
-                ->where('t.id =' . $tramite->getId())
-                ->getQuery()
-                ->getResult();
-            if($wfSolicitudTramite){
-                //datos de la solicitud
-                $wfSolicitudTramite[0]->setDatos($datos);
-                $wfSolicitudTramite[0]->setEsValido(true);
-                $wfSolicitudTramite[0]->setFechaModificacion(new \DateTime(date('Y-m-d H:i:s')));
-                $em->flush();
-            }
-        }
-        /**
-         * guarda tramite enviado
-         */
-        $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
-        $tramiteDetalle->setObs($observacion);
-        $tramiteDetalle->setFechaEnvio(new \DateTime(date('Y-m-d')));
-        $tramiteDetalle->setTramiteEstado($tramiteestado);
-
-        if ($flujoproceso->getEsEvaluacion() == true) 
-        {
-            $tramiteDetalle->setValorEvaluacion($varevaluacion);
-            $wfcondiciontarea = $em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findBy(array('flujoProceso'=>$flujoproceso->getId(),'condicion'=>$varevaluacion));
-            if ($wfcondiciontarea[0]->condicionTareaSiguiente() != null){
-                $tarea_sig_id = $wfcondiciontarea[0]->condicionTareaSiguiente();
-                $uDestinatario = $this->obtieneUsuarioDestinatario($tarea_sig_id,$id_tabla,$tabla);
-                $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
-            }else{
-                $tramite->setFechaFin(new \DateTime(date('Y-m-d')));    
-            }
-        }else{
-            if ($flujoproceso->getTareaSigId() != null){
-                $tarea_sig_id = $flujoproceso->getTareaSigId();
-                $uDestinatario = $this->obtieneUsuarioDestinatario($tarea_sig_id.$id_tabla.$tabla);
-                $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
-            }
-        }
-        if ($flujoproceso->getTareaSigId() == null)
-        {
-            $tramite->setFechaFin(new \DateTime(date('Y-m-d')));
-        }
-        $em->flush();
-        $mensaje = 'El trámite se guardo correctamente';
-        return $mensaje;
-    }
-
-    public function obtieneUsuarioDestinatario($tarea_sig_id,$id_tabla,$tabla)
-    {
-        $flujoprocesoSiguiente = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($tarea_sig_id);
-        $nivel = $flujoprocesoSiguiente->getRolTipo()->getLugarNivelTipo();
-        switch ($tabla) {
-            case 'institucioneducativa':
-                if ($id_tabla){
-                    $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id_tabla);
-                    switch ($nivel->getId()) {
-                        case 7:   // Distrito
-                            $lugar_tipo_distrito = $institucioneducativa->getLeJuridicciongeografica()->getLugarTipoDistritoId();
-                            $uDestinatario = $em->getRepository('SieAppWebBundle:UsuarioFlujoProceso')->findBy(array('flujoProceso'=>$flujoprocesoSiguiente->getId(),'lugarTipoId'=>$lugar_tipo_distrito));
-                            break;
-                        case 6:   // Departamento
-                            $lugar_tipo_departamento = $institucioneducativa->getLeJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getLugraTipo()->getId();
-                            $uDestinatario = $em->getRepository('SieAppWebBundle:UsuarioFlujoProceso')->findBy(array('flujoProceso'=>$flujoprocesoSiguiente->getId(),'lugarTipoId'=>$lugar_tipo_departamento));
-                            break;
-                        case 0:
-                            if($flujoprocesoSiguiente->getRolTipo()->getId() == 9){
-                                //$uDestinatario = $em->getRepository('SieAppWebBundle:UsuarioFlujoProceso')->findBy(array('flujoProceso'=>$flujoprocesoSiguiente->getId(),'lugarTipoId'=>1));
-                            }elseif($flujoprocesoSiguiente->getRolTipo->getId() == 8){
-                                $uDestinatario = $em->getRepository('SieAppWebBundle:UsuarioFlujoProceso')->findBy(array('flujoProceso'=>$flujoprocesoSiguiente->getId(),'lugarTipoId'=>1));
-                            }
-                            break;
-                    }
-                }
-                break;
-            case 'estudiante_inscripcion':
-                break;
-            case 'apoderado_inscripcion':
-                break;
-            case 'maestro_inscripcion':
-                break;
-        }
-        return $uDestinatario[0]->getUsuario();
     }
 
     public function verFlujoRueAction(Request $request)
