@@ -22,4 +22,9 @@ Sie\AppWebBundle\Entity\IdiomaTipo:
             nullable: true
             unsigned: false
             comment: ''
+        esVigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente
     lifecycleCallbacks: {  }
