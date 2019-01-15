@@ -1,19 +1,24 @@
 {% extends 'layoutPnp.html.twig' %}
 
 {% block body -%}
-  <div class="row">
-        <div class="col-lg-12">
-            <div class="page-title">
-                <h1 class=" glyphicon glyphicon-check"> VALIDAR RECONOCIMIENTO DE SABERES</h1>
-                <ol class="breadcrumb">
-                    <li>
-                    </li>
-                </ol>
-            </div>
-        </div>
-        <!-- /.col-lg-12 -->
-    </div>
+    <div class="header-content">
+        <h2><i class="fa fa-shield animated flip"></i>VALIDAR RECONOCIMIENTO DE SABERES <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-shield"></i>
+                    <a href="#">
+                    Reconoc. de Saberes
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
 
+                <li class="active">Validar Reconocimiento</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+  
     <div style="width: 100%;">
         <div class="row">
             <div class="col-xs-12">
@@ -35,75 +40,62 @@
                     </div>
                 {% endfor %}
          <!-- /.row -->
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="portlet portlet-blue">
-                    <div class="portlet-heading">
-                        <div class="portlet-title">
-                            <h4>Reconocimiento de Saberes - Validar</h4>
-                        </div>
-                        <div class="portlet-widgets">
-                            <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation"><i class="fa fa-chevron-down"></i></a>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div id="pinformation" class="panel-collapse collapse in">
-                        <div class="portlet-body" align="center">
+        <div class="body-content animated fadeIn">
             <div class="row">
-                <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
-                <table id="tablaTotales" class="display" cellspacing="0" width="100%">    
-                    <thead>
-                        <tr>
-                            <th>C&oacute;digo UE</th>
-                            <th>Lugar</th>
-                            <th>Carnet</th>
-                            <th>Rude</th>
-                            <th>Nombre</th>
-                            <th>Paterno</th>
-                            <th>Materno</th>                            
-                            <th>Fecha Nac.</th>                            
-                            <th>Homologado a</th>                            
-                            <th>Fecha</th>                            
-                            <th>Usuario</th>                            
-                            <th>Validar/Eliminar</th>  
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for fila in filas %}
-                        <tr>
-                            <td>{{ fila.institucioneducativa_id }}</td>
-                            <td>{{ fila.depto }}</td>
-                            <td>{{ fila.carnet_identidad }}{% if fila.complemento != '' %}-{{fila.complemento}}{% endif %}</td>
-                            <td>{{ fila.codigo_rude }}</td>
-                            <td>{{ fila.nombre }}</td>                            
-                            <td>{{ fila.paterno }}</td>
-                            <td>{{ fila.materno }}</td> 
-                            <td>{{ fila.fecha_nacimiento|date('d-m-Y') }}</td>
-                            <td>{{ fila.curso_nombre }}</td>
-                            <td>{{ fila.fecha_creacion|date('d-m-Y') }}</td>
-                            <td>{{ fila.usuario_id }}</td>
-                            {% if fila.homologado == true %}    
-                                <td>
-                                    <a role="button" class="btn btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_reconocimiento_saberes_imprimir', { 'id': fila.reconocimiento_saberes_id}) }}" > Certificaci&oacute;n</a>
-                                </td>
-                            {% else %}
-                                <td>
-                                    <a role="button" class="btn btn-success btn-ls glyphicon glyphicon-ok" href="{{ path('sie_pnp_reconocimiento_saberes_validar',{'opcion' : 1,'reconocimiento_saberes_id':fila.reconocimiento_saberes_id}) }}"  title="Validar Reconocimiento de Saber" onclick="return confirm('¿Est\u00E1 seguro de validar este Reconocimiento de Saber?')"> <strong>V</strong></a>
-                                    <a role="button" class="btn btn-danger btn-ls glyphicon glyphicon glyphicon-remove" href="{{ path('sie_pnp_reconocimiento_saberes_validar',{'opcion' : 2,'reconocimiento_saberes_id':fila.reconocimiento_saberes_id}) }}" title="Eliminar Reconocimiento de Saber" onclick="return confirm('¿Est\u00E1 seguro de Eliminar este Reconocimiento de Saber?, si acepta no podr\u00E1 recuperar')" > <strong>E</strong></a>
-                                </td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                <div class="col-xs-12 col-lg-12">
+                    <div class="panel panel-icon panel-primary">
+                        <div class="panel-heading">
+                            Reconocimiento de Saberes - Validar
+                        </div>
+                        <div class="panel-body">
+                            <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+                                <table id="tablaTotales" class="display" cellspacing="0" width="100%">    
+                                    <thead>
+                                        <tr>
+                                            <th>Rude</th>
+                                            <th>Lugar</th>
+                                            <th>Nombre</th>
+                                            <th>Paterno</th>
+                                            <th>Materno</th>                            
+                                            <th>Carnet</th>
+                                            <th>Fecha Nac.</th>                            
+                                            <th>Homologado a</th>                            
+                                            <th>Fecha</th>                            
+                                            <th>Usuario</th>                            
+                                            <th>Opciones</th>  
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for fila in filas %}
+                                        <tr>
+                                            <td>{{ fila.codigo_rude }}</td>
+                                            <td>{{ fila.depto }}</td>
+                                            <td>{{ fila.nombre }}</td>                            
+                                            <td>{{ fila.paterno }}</td>
+                                            <td>{{ fila.materno }}</td> 
+                                            <td>{{ fila.carnet_identidad }}{% if fila.complemento != '' %}-{{fila.complemento}}{% endif %}</td>
+                                            <td>{{ fila.fecha_nacimiento|date('d-m-Y') }}</td>
+                                            <td>{{ fila.curso_nombre }}</td>
+                                            <td>{{ fila.fecha_creacion|date('d-m-Y') }}</td>
+                                            <td>{{ fila.usuario_id }}</td>
+                                            {% if fila.homologado == true %}    
+                                                <td>
+                                                    <a role="button" class="btn btn-xs btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_reconocimiento_saberes_imprimir', { 'id': fila.reconocimiento_saberes_id}) }}" title="Certificación"></a>
+                                                </td>
+                                            {% else %}
+                                                <td>
+                                                    <a role="button" class="btn btn-success btn-xs glyphicon glyphicon-ok" href="{{ path('sie_pnp_reconocimiento_saberes_validar',{'opcion' : 1,'reconocimiento_saberes_id':fila.reconocimiento_saberes_id}) }}"  title="Validar Reconocimiento de Saber" onclick="return confirm('¿Est\u00E1 seguro de validar este Reconocimiento de Saber?')"></a>
+                                                    <a role="button" class="btn btn-danger btn-xs glyphicon glyphicon glyphicon-remove" href="{{ path('sie_pnp_reconocimiento_saberes_validar',{'opcion' : 2,'reconocimiento_saberes_id':fila.reconocimiento_saberes_id}) }}" title="Eliminar Reconocimiento de Saber" onclick="return confirm('¿Est\u00E1 seguro de Eliminar este Reconocimiento de Saber?, si acepta no podr\u00E1 recuperar')" ></a>
+                                                </td>
+                                            {% endif %}
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
 {% endblock %}
 
 {% block javascripts %}
@@ -134,45 +126,7 @@
         
     $(document).ready(function() {
         
-        var dtable = $('#tablaTotales').dataTable( {"oLanguage": espanol,
-         'dom': 'lBfrtip <"clear">',
-        'buttons': [
-             {   
-                extend: 'colvis',
-                text:'Visibilizar Columnas'
-            },
-            {
-                extend: 'print',
-                text: 'Imprimir',
-                autoPrint: true,
-                title: 'PNP - LISTA DE ARCHIVOS SUBIDOS RUP - 4',
-                header:true,
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            {
-                extend:'pdf',
-                title: 'PNP - LISTA DE ARCHIVOS SUBIDOS RUP - 4',
-                filename:'Lista de archivos subidos RUP-4',
-                orientation:'landscape',
-                exportOptions: {
-                modifier: {
-                    page: 'Lista de archivos subidos RUP-4'
-                    }
-                }
-            },
-            {
-            extend: 'excel',
-            text: 'Excel',
-            filename:'Lista de archivos subidos RUP-4',
-            exportOptions: {
-                modifier: {
-                    page: 'Lista de archivos subidos RUP-4'
-                    }
-                }
-            },
-        ]} );
+        var dtable = $('#tablaTotales').dataTable( {"oLanguage": espanol} );
         
         $('#tablaTotales tbody').on( 'click', 'tr', function () {
             if ( $(this).hasClass('selected') ) {

@@ -30,7 +30,14 @@ use Sie\AppWebBundle\Entity\DiscapacidadTipo;
 use Sie\AppWebBundle\Entity\EstudianteNotaCualitativa;
 use Sie\AppWebBundle\Entity\AltModuloemergente;
 use Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAlternativa;
-
+use Sie\AppWebBundle\Entity\Rude;
+use Sie\AppWebBundle\Entity\GradoDiscapacidadTipo;
+use Sie\AppWebBundle\Entity\NacionOriginariaTipo;
+use Sie\AppWebBundle\Entity\IdiomaTipo;
+use Sie\AppWebBundle\Entity\CentroSaludTipo;
+use Sie\AppWebBundle\Entity\ViviendaOcupaTipo;
+use Sie\AppWebBundle\Entity\AccesoInternetTipo;
+use Sie\AppWebBundle\Entity\FrecuenciaUsoInternetTipo;
 //use Sie\AppWebBundle\Entity\PnpSerialRude;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -241,816 +248,6 @@ class DefaultController extends Controller
         
         //print_r($filas[3] );
         //die;
-    }
-    
-    public function reportesfiltroejecutarAction(Request $request)    {                
-        
-        $em = $this->getDoctrine()->getManager();        
-        //$em = $this->getDoctrine()->getManager();
-        $db = $em->getConnection();
-
-        $form = $request->get('sie_pnp_municipio_filtro');
-//        print_r($form['depto']);
-//        die;
-        //TOTAL CONSOLIDACION
-        $query = "
-                    select 
-
-                            case b.institucioneducativa_id when '80480300' then 'Chuquisaca' when '80730794' then 'La Paz' when '80980569' then 'Cochabamba' when '81230297' then 'Oruro' when '81480201' then 'Potosi'
-                                    when '81730264' then 'Tarija' when '81981501' then 'Santa Cruz' when '82230130' then 'Beni' when '82480050' then 'Pando' end as depto,
-
-                     b.lugar as provincia, a.lugar as municipio, b.id as cursoid,
-                     'Primaria comunitaria vocacional' as nivel, b.ciclo_tipo_id as parte, b.grado_tipo_id as bloque,
-                     b.fecha_inicio, b.fecha_fin, a.id as inscripcionid, b.facilitador as facilitadorci, a.facilitadorcurso as facilitador,
-                     c.codigo_rude, c.carnet_identidad, c.nombre, c.paterno, c.materno, d.genero, c.fecha_nacimiento,
-                     date_part('year',age( c.fecha_nacimiento )) as edadactual
-
-                    from estudiante_inscripcion a 
-                            inner join institucioneducativa_curso b on a.institucioneducativa_curso_id = b.id 
-                            inner join estudiante c on a.estudiante_id = c.id
-                            inner join genero_tipo d on c.genero_tipo_id = d.id 
-
-                    where b.institucioneducativa_id = '".$form['depto']."'
-                    and b.lugar = '".$form['provincia']."' and a.lugar = '".$form['municipio']."'
-
-                    order by depto, provincia, municipio, ciclo_tipo_id, grado_tipo_id, nombre, paterno, materno, genero, edadactual
-
-                ";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
-        $filas = array();
-        $datos_filas = array();
-        foreach ($po as $p) {
-            $datos_filas["depto"] = $p["depto"];
-            $datos_filas["provincia"] = $p["provincia"];
-            $datos_filas["municipio"] = $p["municipio"];
-            $datos_filas["cursoid"] = $p["cursoid"];
-            $datos_filas["nivel"] = $p["nivel"];
-            $datos_filas["parte"] = $p["parte"];
-            $datos_filas["bloque"] = $p["bloque"];
-            $datos_filas["fecha_inicio"] = $p["fecha_inicio"];
-            $datos_filas["fecha_fin"] = $p["fecha_fin"];
-            $datos_filas["inscripcionid"] = $p["inscripcionid"];
-            $datos_filas["facilitadorci"] = $p["facilitadorci"];
-            $datos_filas["facilitador"] = $p["facilitador"];
-            $datos_filas["codigo_rude"] = $p["codigo_rude"];
-            $datos_filas["carnet_identidad"] = $p["carnet_identidad"];
-            $datos_filas["nombre"] = $p["nombre"];
-            $datos_filas["paterno"] = $p["paterno"];
-            $datos_filas["materno"] = $p["materno"];
-            $datos_filas["genero"] = $p["genero"];            
-            $datos_filas["fecha_nacimiento"] = $p["fecha_nacimiento"];
-            $datos_filas["edadactual"] = $p["edadactual"];
-            $filas[] = $datos_filas;
-        } 
-        
-        return $this->render('SiePnpBundle:Estadisticas:reporte.html.twig', array('filas' => $filas));
-    }
-    
-    
-    public function estadisticasAction()    {        
-        $em = $this->getDoctrine()->getManager();
-        //$em = $this->getDoctrine()->getManager();
-        $db = $em->getConnection();
-        //LISTA DE NOTAS
-//        $query = "select 
-//                       case institucioneducativa_id when '80480300' then '1:Chuquisaca' when '80730794' then '2:La Paz' when '80980569' then '3:Cochabamba' when '81230297' then '4:Oruro' when '81480201' then '5:Potosi'
-//                when '81730264' then '6:Tarija' when '81981501' then '7:Santa Cruz' when '82230130' then '8:Beni' when '82480050' then '9:Pando' end as depto, b.gestion_tipo_id,
-//                        SUM(CASE WHEN b.nivel_tipo_id is not null and e.genero_tipo_id = 1
-//                                THEN 1
-//                                ELSE 0 
-//                             END       )
-//                        AS Masculino,
-//                        SUM(CASE WHEN b.nivel_tipo_id is not null and e.genero_tipo_id = 2
-//                                THEN 1
-//                                ELSE 0 
-//                             END       )
-//                        AS Femenino,
-//                        SUM(CASE WHEN b.nivel_tipo_id is not null
-//                                THEN 1
-//                                ELSE 0 
-//                             END       )
-//                        AS Total
-//
-//                from 
-//
-//                institucioneducativa_curso b inner join estudiante_inscripcion c on b.id=c.institucioneducativa_curso_id 
-//                inner join estudiante e on c.estudiante_id = e.id
-//                inner join estadomatricula_tipo d on c.estadomatricula_tipo_id=d.id
-//                inner join estadomatricula_tipo f on c.estadomatricula_inicio_tipo_id=f.id
-//                where institucioneducativa_id IN ('82230130')
-//                and b.nivel_tipo_id = '12'
-//                group by depto, b.gestion_tipo_id
-//                order by b.gestion_tipo_id
-//                ";
-//        $stmt = $db->prepare($query);
-//        $params = array();
-//        $stmt->execute($params);
-//        $po = $stmt->fetchAll();
-//        $filas = array();
-//        $datos_filas = array();
-////        print_r(count($po));
-////        die;
-//        foreach ($po as $p) {
-//            $datos_filas["depto"] = $p["depto"];
-//            $datos_filas["gestion_tipo_id"] = $p["gestion_tipo_id"];
-//            $datos_filas["masculino"] = $p["masculino"];            
-//            $datos_filas["femenino"] = $p["femenino"];
-//            $datos_filas["total"] = $p["total"];
-//            $filas[] = $datos_filas;
-//        }  
-        //print_r($filas[2]);
-        //die; 
-        
-        
-        
-        //TOTAL CONSOLIDACION
-        $query = "
-                    select
-                        case institucioneducativa_id when '80480300' then 'BO-H' when '80730794' then 'BO-L' when '80980569' then 'BO-C' when '81230297' then 'BO-O' when '81480201' then 'BO-P'
-                        when '81730264' then 'BO-T' when '81981501' then 'BO-S' when '82230130' then 'BO-B' when '82480050' then 'BO-N' end as v,
-
-                        case institucioneducativa_id when '80480300' then 'Chuquisaca' when '80730794' then 'La Paz' when '80980569' then 'Cochabamba' when '81230297' then 'Oruro' when '81480201' then 'Potosí'
-                        when '81730264' then 'Tarija' when '81981501' then 'Santa Cruz' when '82230130' then 'Beni' when '82480050' then 'Pando' end as f,
-
-                        SUM(CASE WHEN b.nivel_tipo_id is not null
-                                THEN 1
-                                ELSE 0 
-                        END)
-                        AS t,
-
-
-                        to_char(SUM(CASE WHEN b.nivel_tipo_id is not null
-                                THEN 1
-                                ELSE 0 
-                        END       )
-                        ,'FM999,FM999')   AS d
-
-                from 
-
-                institucioneducativa_curso b inner join estudiante_inscripcion c on b.id=c.institucioneducativa_curso_id 
-                inner join estudiante e on c.estudiante_id = e.id
-                inner join estadomatricula_tipo d on c.estadomatricula_tipo_id=d.id
-                inner join estadomatricula_tipo f on c.estadomatricula_inicio_tipo_id=f.id
-
-                where institucioneducativa_id IN ('80480300','80730794','80980569','81230297','81480201','81730264','81981501','82230130','82480050')
-                and b.nivel_tipo_id = '312'
-                group by institucioneducativa_id, f
-
-                ";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
-        $filas = array();
-        $datos_filas = array();
-        foreach ($po as $p) {
-            $datos_filas["v"] = $p["v"];
-            $datos_filas["f"] = $p["f"];
-            $datos_filas["t"] = $p["t"];
-            $datos_filas["d"] = $p["d"];
-            $filas[] = $datos_filas;
-        } 
-
-        //DEPARTAMENTO GESTION
-        $query = "
-                select
-                        case institucioneducativa_id when '80480300' then 'Chuquisaca' when '80730794' then 'La Paz' when '80980569' then 'Cochabamba' when '81230297' then 'Oruro' when '81480201' then 'Potosí'
-                        when '81730264' then 'Tarija' when '81981501' then 'Santa Cruz' when '82230130' then 'Beni' when '82480050' then 'Pando' end as depto,
-
-                        SUM(CASE WHEN b.nivel_tipo_id is not null and e.genero_tipo_id = 2
-                                THEN 1
-                                ELSE 0 
-                        END) AS femenino,
-
-                        SUM(CASE WHEN b.nivel_tipo_id is not null and e.genero_tipo_id = 1
-                                THEN 1
-                                ELSE 0 
-                        END)AS masculino,
-
-                        SUM(CASE WHEN b.nivel_tipo_id is not null
-                                THEN 1
-                                ELSE 0 
-                        END)  AS total
-
-                from 
-
-                institucioneducativa_curso b inner join estudiante_inscripcion c on b.id=c.institucioneducativa_curso_id 
-                inner join estudiante e on c.estudiante_id = e.id
-                inner join estadomatricula_tipo d on c.estadomatricula_tipo_id=d.id
-                inner join estadomatricula_tipo f on c.estadomatricula_inicio_tipo_id=f.id
-
-                where institucioneducativa_id IN ('80480300','80730794','80980569','81230297','81480201','81730264','81981501','82230130','82480050')
-                and b.nivel_tipo_id = '312'
-                group by institucioneducativa_id, depto
-                ";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
-        $filasgestion = array();
-        $datos_filas = array();
-        foreach ($po as $p) {
-            $datos_filas["depto"] = $p["depto"];
-            $datos_filas["femenino"] = $p["femenino"];
-            $datos_filas["masculino"] = $p["masculino"];
-            $datos_filas["total"] = $p["total"];
-            $filasgestion[] = $datos_filas;
-        }
-        
-        
-        
-        //DEPARTAMENTO GESTION
-        //chuquisaca
-        $query = "
-                select 
-                       case institucioneducativa_id when '80480300' then '1:Chuquisaca' when '80730794' then '2:La Paz' when '80980569' then '3:Cochabamba' when '81230297' then '4:Oruro' when '81480201' then '5:Potosi'
-                when '81730264' then '6:Tarija' when '81981501' then '7:Santa Cruz' when '82230130' then '8:Beni' when '82480050' then '9:Pando' end as depto, b.gestion_tipo_id,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null and e.genero_tipo_id = 1
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS masculino,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null and e.genero_tipo_id = 2
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS femenino,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS total
-
-                from 
-
-                institucioneducativa_curso b inner join estudiante_inscripcion c on b.id=c.institucioneducativa_curso_id 
-                inner join estudiante e on c.estudiante_id = e.id
-                inner join estadomatricula_tipo d on c.estadomatricula_tipo_id=d.id
-                inner join estadomatricula_tipo f on c.estadomatricula_inicio_tipo_id=f.id
-                where institucioneducativa_id IN ('80480300')
-                and b.nivel_tipo_id = '312'
-                group by depto, b.gestion_tipo_id
-                order by b.gestion_tipo_id
-                ";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
-        $filaschu = array();
-        $datos_filas = array();
-        foreach ($po as $p) {
-            $datos_filas["depto"] = $p["depto"];
-            $datos_filas["gestion_tipo_id"] = $p["gestion_tipo_id"];
-            $datos_filas["femenino"] = $p["femenino"];
-            $datos_filas["masculino"] = $p["masculino"];
-            $datos_filas["total"] = $p["total"];
-            $filaschu[] = $datos_filas;
-        }
-        
-        //lp
-        $query = "
-                select 
-                       case institucioneducativa_id when '80480300' then '1:Chuquisaca' when '80730794' then '2:La Paz' when '80980569' then '3:Cochabamba' when '81230297' then '4:Oruro' when '81480201' then '5:Potosi'
-                when '81730264' then '6:Tarija' when '81981501' then '7:Santa Cruz' when '82230130' then '8:Beni' when '82480050' then '9:Pando' end as depto, b.gestion_tipo_id,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null and e.genero_tipo_id = 1
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS masculino,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null and e.genero_tipo_id = 2
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS femenino,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS total
-
-                from 
-
-                institucioneducativa_curso b inner join estudiante_inscripcion c on b.id=c.institucioneducativa_curso_id 
-                inner join estudiante e on c.estudiante_id = e.id
-                inner join estadomatricula_tipo d on c.estadomatricula_tipo_id=d.id
-                inner join estadomatricula_tipo f on c.estadomatricula_inicio_tipo_id=f.id
-                where institucioneducativa_id IN ('80730794')
-                and b.nivel_tipo_id = '312'
-                group by depto, b.gestion_tipo_id
-                order by b.gestion_tipo_id
-                ";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
-        $filaslp = array();
-        $datos_filas = array();
-        foreach ($po as $p) {
-            $datos_filas["depto"] = $p["depto"];
-            $datos_filas["gestion_tipo_id"] = $p["gestion_tipo_id"];
-            $datos_filas["femenino"] = $p["femenino"];
-            $datos_filas["masculino"] = $p["masculino"];
-            $datos_filas["total"] = $p["total"];
-            $filaslp[] = $datos_filas;
-        }
-        
-        //cocha
-        $query = "
-                select 
-                       case institucioneducativa_id when '80480300' then '1:Chuquisaca' when '80730794' then '2:La Paz' when '80980569' then '3:Cochabamba' when '81230297' then '4:Oruro' when '81480201' then '5:Potosi'
-                when '81730264' then '6:Tarija' when '81981501' then '7:Santa Cruz' when '82230130' then '8:Beni' when '82480050' then '9:Pando' end as depto, b.gestion_tipo_id,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null and e.genero_tipo_id = 1
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS masculino,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null and e.genero_tipo_id = 2
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS femenino,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS total
-
-                from 
-
-                institucioneducativa_curso b inner join estudiante_inscripcion c on b.id=c.institucioneducativa_curso_id 
-                inner join estudiante e on c.estudiante_id = e.id
-                inner join estadomatricula_tipo d on c.estadomatricula_tipo_id=d.id
-                inner join estadomatricula_tipo f on c.estadomatricula_inicio_tipo_id=f.id
-                where institucioneducativa_id IN ('80980569')
-                and b.nivel_tipo_id = '312'
-                group by depto, b.gestion_tipo_id
-                order by b.gestion_tipo_id
-                ";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
-        $filasco = array();
-        $datos_filas = array();
-        foreach ($po as $p) {
-            $datos_filas["depto"] = $p["depto"];
-            $datos_filas["gestion_tipo_id"] = $p["gestion_tipo_id"];
-            $datos_filas["femenino"] = $p["femenino"];
-            $datos_filas["masculino"] = $p["masculino"];
-            $datos_filas["total"] = $p["total"];
-            $filasco[] = $datos_filas;
-        }
-        
-        //oruro
-        $query = "
-                select 
-                       case institucioneducativa_id when '80480300' then '1:Chuquisaca' when '80730794' then '2:La Paz' when '80980569' then '3:Cochabamba' when '81230297' then '4:Oruro' when '81480201' then '5:Potosi'
-                when '81730264' then '6:Tarija' when '81981501' then '7:Santa Cruz' when '82230130' then '8:Beni' when '82480050' then '9:Pando' end as depto, b.gestion_tipo_id,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null and e.genero_tipo_id = 1
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS masculino,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null and e.genero_tipo_id = 2
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS femenino,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS total
-
-                from 
-
-                institucioneducativa_curso b inner join estudiante_inscripcion c on b.id=c.institucioneducativa_curso_id 
-                inner join estudiante e on c.estudiante_id = e.id
-                inner join estadomatricula_tipo d on c.estadomatricula_tipo_id=d.id
-                inner join estadomatricula_tipo f on c.estadomatricula_inicio_tipo_id=f.id
-                where institucioneducativa_id IN ('81230297')
-                and b.nivel_tipo_id = '312'
-                group by depto, b.gestion_tipo_id
-                order by b.gestion_tipo_id
-                ";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
-        $filasor = array();
-        $datos_filas = array();
-        foreach ($po as $p) {
-            $datos_filas["depto"] = $p["depto"];
-            $datos_filas["gestion_tipo_id"] = $p["gestion_tipo_id"];
-            $datos_filas["femenino"] = $p["femenino"];
-            $datos_filas["masculino"] = $p["masculino"];
-            $datos_filas["total"] = $p["total"];
-            $filasor[] = $datos_filas;
-        }
-        
-        //potosi
-        $query = "
-                select 
-                       case institucioneducativa_id when '80480300' then '1:Chuquisaca' when '80730794' then '2:La Paz' when '80980569' then '3:Cochabamba' when '81230297' then '4:Oruro' when '81480201' then '5:Potosi'
-                        when '81730264' then '6:Tarija' when '81981501' then '7:Santa Cruz' when '82230130' then '8:Beni' when '82480050' then '9:Pando' end as depto, b.gestion_tipo_id,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null and e.genero_tipo_id = 1
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS masculino,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null and e.genero_tipo_id = 2
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS femenino,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS total
-
-                from 
-
-                institucioneducativa_curso b inner join estudiante_inscripcion c on b.id=c.institucioneducativa_curso_id 
-                inner join estudiante e on c.estudiante_id = e.id
-                inner join estadomatricula_tipo d on c.estadomatricula_tipo_id=d.id
-                inner join estadomatricula_tipo f on c.estadomatricula_inicio_tipo_id=f.id
-                where institucioneducativa_id IN ('81480201')
-                and b.nivel_tipo_id = '312'
-                group by depto, b.gestion_tipo_id
-                order by b.gestion_tipo_id
-                ";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
-        $filaspt = array();
-        $datos_filas = array();
-        foreach ($po as $p) {
-            $datos_filas["depto"] = $p["depto"];
-            $datos_filas["gestion_tipo_id"] = $p["gestion_tipo_id"];
-            $datos_filas["femenino"] = $p["femenino"];
-            $datos_filas["masculino"] = $p["masculino"];
-            $datos_filas["total"] = $p["total"];
-            $filaspt[] = $datos_filas;
-        }
-        
-        //tarija
-        $query = "
-                select 
-                       case institucioneducativa_id when '80480300' then '1:Chuquisaca' when '80730794' then '2:La Paz' when '80980569' then '3:Cochabamba' when '81230297' then '4:Oruro' when '81480201' then '5:Potosi'
-                        when '81730264' then '6:Tarija' when '81981501' then '7:Santa Cruz' when '82230130' then '8:Beni' when '82480050' then '9:Pando' end as depto, b.gestion_tipo_id,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null and e.genero_tipo_id = 1
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS masculino,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null and e.genero_tipo_id = 2
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS femenino,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS total
-
-                from 
-
-                institucioneducativa_curso b inner join estudiante_inscripcion c on b.id=c.institucioneducativa_curso_id 
-                inner join estudiante e on c.estudiante_id = e.id
-                inner join estadomatricula_tipo d on c.estadomatricula_tipo_id=d.id
-                inner join estadomatricula_tipo f on c.estadomatricula_inicio_tipo_id=f.id
-                where institucioneducativa_id IN ('81730264')
-                and b.nivel_tipo_id = '312'
-                group by depto, b.gestion_tipo_id
-                order by b.gestion_tipo_id
-                ";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
-        $filastj = array();
-        $datos_filas = array();
-        foreach ($po as $p) {
-            $datos_filas["depto"] = $p["depto"];
-            $datos_filas["gestion_tipo_id"] = $p["gestion_tipo_id"];
-            $datos_filas["femenino"] = $p["femenino"];
-            $datos_filas["masculino"] = $p["masculino"];
-            $datos_filas["total"] = $p["total"];
-            $filastj[] = $datos_filas;
-        }
-        
-        //santa cruz
-        $query = "
-                select 
-                       case institucioneducativa_id when '80480300' then '1:Chuquisaca' when '80730794' then '2:La Paz' when '80980569' then '3:Cochabamba' when '81230297' then '4:Oruro' when '81480201' then '5:Potosi'
-                        when '81730264' then '6:Tarija' when '81981501' then '7:Santa Cruz' when '82230130' then '8:Beni' when '82480050' then '9:Pando' end as depto, b.gestion_tipo_id,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null and e.genero_tipo_id = 1
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS masculino,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null and e.genero_tipo_id = 2
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS femenino,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS total
-
-                from 
-
-                institucioneducativa_curso b inner join estudiante_inscripcion c on b.id=c.institucioneducativa_curso_id 
-                inner join estudiante e on c.estudiante_id = e.id
-                inner join estadomatricula_tipo d on c.estadomatricula_tipo_id=d.id
-                inner join estadomatricula_tipo f on c.estadomatricula_inicio_tipo_id=f.id
-                where institucioneducativa_id IN ('81981501')
-                and b.nivel_tipo_id = '312'
-                group by depto, b.gestion_tipo_id
-                order by b.gestion_tipo_id
-                ";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
-        $filassc = array();
-        $datos_filas = array();
-        foreach ($po as $p) {
-            $datos_filas["depto"] = $p["depto"];
-            $datos_filas["gestion_tipo_id"] = $p["gestion_tipo_id"];
-            $datos_filas["femenino"] = $p["femenino"];
-            $datos_filas["masculino"] = $p["masculino"];
-            $datos_filas["total"] = $p["total"];
-            $filassc[] = $datos_filas;
-        }
-        
-        //beni
-        $query = "
-                select 
-                       case institucioneducativa_id when '80480300' then '1:Chuquisaca' when '80730794' then '2:La Paz' when '80980569' then '3:Cochabamba' when '81230297' then '4:Oruro' when '81480201' then '5:Potosi'
-                        when '81730264' then '6:Tarija' when '81981501' then '7:Santa Cruz' when '82230130' then '8:Beni' when '82480050' then '9:Pando' end as depto, b.gestion_tipo_id,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null and e.genero_tipo_id = 1
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS masculino,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null and e.genero_tipo_id = 2
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS femenino,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS total
-
-                from 
-
-                institucioneducativa_curso b inner join estudiante_inscripcion c on b.id=c.institucioneducativa_curso_id 
-                inner join estudiante e on c.estudiante_id = e.id
-                inner join estadomatricula_tipo d on c.estadomatricula_tipo_id=d.id
-                inner join estadomatricula_tipo f on c.estadomatricula_inicio_tipo_id=f.id
-                where institucioneducativa_id IN ('82230130')
-                and b.nivel_tipo_id = '312'
-                group by depto, b.gestion_tipo_id
-                order by b.gestion_tipo_id
-                ";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
-        $filasbn = array();
-        $datos_filas = array();
-        foreach ($po as $p) {
-            $datos_filas["depto"] = $p["depto"];
-            $datos_filas["gestion_tipo_id"] = $p["gestion_tipo_id"];
-            $datos_filas["femenino"] = $p["femenino"];
-            $datos_filas["masculino"] = $p["masculino"];
-            $datos_filas["total"] = $p["total"];
-            $filasbn[] = $datos_filas;
-        }
-        
-        //pando
-        $query = "
-                select 
-                       case institucioneducativa_id when '80480300' then '1:Chuquisaca' when '80730794' then '2:La Paz' when '80980569' then '3:Cochabamba' when '81230297' then '4:Oruro' when '81480201' then '5:Potosi'
-                        when '81730264' then '6:Tarija' when '81981501' then '7:Santa Cruz' when '82230130' then '8:Beni' when '82480050' then '9:Pando' end as depto, b.gestion_tipo_id,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null and e.genero_tipo_id = 1
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS masculino,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null and e.genero_tipo_id = 2
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS femenino,
-                        SUM(CASE WHEN b.nivel_tipo_id is not null
-                                THEN 1
-                                ELSE 0 
-                             END       )
-                        AS total
-
-                from 
-
-                institucioneducativa_curso b inner join estudiante_inscripcion c on b.id=c.institucioneducativa_curso_id 
-                inner join estudiante e on c.estudiante_id = e.id
-                inner join estadomatricula_tipo d on c.estadomatricula_tipo_id=d.id
-                inner join estadomatricula_tipo f on c.estadomatricula_inicio_tipo_id=f.id
-                where institucioneducativa_id IN ('82480050')
-                and b.nivel_tipo_id = '312'
-                group by depto, b.gestion_tipo_id
-                order by b.gestion_tipo_id
-                ";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
-        $filaspn = array();
-        $datos_filas = array();
-        foreach ($po as $p) {
-            $datos_filas["depto"] = $p["depto"];
-            $datos_filas["gestion_tipo_id"] = $p["gestion_tipo_id"];
-            $datos_filas["femenino"] = $p["femenino"];
-            $datos_filas["masculino"] = $p["masculino"];
-            $datos_filas["total"] = $p["total"];
-            $filaspn[] = $datos_filas;
-        }
-        
-//// Conocer cuanto falta
-       // Cantidades totales
-        $lp_ct=9470; // La Paz
-        $co_ct=5598; // Cochabamba
-        $ch_ct=6166; // Chuquisaca
-        $sc_ct=7380; // Santa Cruz
-        $or_ct=3445; // Oruro
-        $pt_ct=4565; // Potosi 6121
-        $be_ct=4268; //Beni
-        $pa_ct=540;  // Pando
-        $ta_ct=1950; //Tarija
-        $to_ct=$lp_ct + $co_ct + $ch_ct + $sc_ct + $or_ct + $pt_ct + $be_ct + $pa_ct + $ta_ct;
-       // Archivos Subidos
-        $query = "
-                select depto,count(depto) as cantidad from ( 
-select persona.carnet, persona.nombre, persona.paterno, persona.materno,
-                    institucioneducativa_curso.fecha_inicio, institucioneducativa_curso.fecha_fin,
-                    institucioneducativa_curso.ciclo_tipo_id, institucioneducativa_curso.grado_tipo_id,
-            
-
-                    CASE
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 80480300 THEN
-                                    'CHUQUISACA'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 80730794 THEN
-                                    'LA PAZ'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 80980569 THEN
-                                    'COCHABAMBA'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 81230297 THEN
-                                    'ORURO'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 81480201 THEN
-                                    'POTOSI'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 81730264 THEN
-                                    'TARIJA'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 81981501 THEN
-                                    'SANTA CRUZ'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 82230130 THEN
-                                    'BENI'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 82480050 THEN
-                                    'PANDO'                         
-                              END AS depto,
-                         institucioneducativa_curso.lugar
-
-                from institucioneducativa_curso 
-                inner join maestro_inscripcion 
-                on institucioneducativa_curso.maestro_inscripcion_id_asesor = maestro_inscripcion .id
-                inner join persona 
-                on maestro_inscripcion .persona_id = persona.id
-
-            
-
-                order by                 
-                institucioneducativa_curso.fecha_inicio,
-                institucioneducativa_curso.ciclo_tipo_id, institucioneducativa_curso.grado_tipo_id) as t1
-GROUP BY depto
-                ";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
-        $filaspn = array();
-        $datos_filas = array();
-        $to=0;
-        foreach ($po as $p) {
-            if($p["depto"]=='LA PAZ') {$lp_cs=$p["cantidad"]; $to=$to+$p["cantidad"];}
-            if($p["depto"]=='SANTA CRUZ') {$sc_cs=$p["cantidad"]; $to=$to+$p["cantidad"];}
-            if($p["depto"]=='ORURO') {$or_cs=$p["cantidad"]; $to=$to+$p["cantidad"];}
-            if($p["depto"]=='POTOSI') {$pt_cs=$p["cantidad"]; $to=$to+$p["cantidad"];}
-            if($p["depto"]=='TARIJA') {$ta_cs=$p["cantidad"]; $to=$to+$p["cantidad"];}
-            if($p["depto"]=='BENI') {$be_cs=$p["cantidad"]; $to=$to+$p["cantidad"];}
-            if($p["depto"]=='COCHABAMBA') {$co_cs=$p["cantidad"]; $to=$to+$p["cantidad"];}
-            if($p["depto"]=='CHUQUISACA') {$ch_cs=$p["cantidad"]; $to=$to+$p["cantidad"];}
-            if($p["depto"]=='PANDO') {$pa_cs=$p["cantidad"]; $to=$to+$p["cantidad"];}
-        }
-        $to_cs=$to;
-//Cantidad de subidos real
-        $query = "
-                select depto,count(depto) as  cantidad from ( 
-select DISTINCT persona.carnet, persona.nombre, persona.paterno, persona.materno,
-                    institucioneducativa_curso.fecha_inicio, institucioneducativa_curso.fecha_fin,
-                    institucioneducativa_curso.ciclo_tipo_id, institucioneducativa_curso.grado_tipo_id,
-            
-
-                    CASE
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 80480300 THEN
-                                    'CHUQUISACA'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 80730794 THEN
-                                    'LA PAZ'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 80980569 THEN
-                                    'COCHABAMBA'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 81230297 THEN
-                                    'ORURO'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 81480201 THEN
-                                    'POTOSI'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 81730264 THEN
-                                    'TARIJA'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 81981501 THEN
-                                    'SANTA CRUZ'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 82230130 THEN
-                                    'BENI'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 82480050 THEN
-                                    'PANDO'                         
-                              END AS depto,
-                         institucioneducativa_curso.lugar
-
-                from institucioneducativa_curso 
-                inner join maestro_inscripcion 
-                on institucioneducativa_curso.maestro_inscripcion_id_asesor = maestro_inscripcion .id
-                inner join persona 
-                on maestro_inscripcion .persona_id = persona.id
-
-            
-
-                order by                 
-                institucioneducativa_curso.fecha_inicio,
-                institucioneducativa_curso.ciclo_tipo_id, institucioneducativa_curso.grado_tipo_id) as t1
-GROUP BY depto
-                ";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
-        $filaspn = array();
-        $datos_filas = array();
-        $to=0;
-        foreach ($po as $p) {
-            if($p["depto"]=='LA PAZ') {$lp_cv=$p["cantidad"]; $to=$to+$p["cantidad"];}
-            if($p["depto"]=='SANTA CRUZ') {$sc_cv=$p["cantidad"]; $to=$to+$p["cantidad"];}
-            if($p["depto"]=='ORURO') {$or_cv=$p["cantidad"]; $to=$to+$p["cantidad"];}
-            if($p["depto"]=='POTOSI') {$pt_cv=$p["cantidad"]; $to=$to+$p["cantidad"];}
-            if($p["depto"]=='TARIJA') {$ta_cv=$p["cantidad"]; $to=$to+$p["cantidad"];}
-            if($p["depto"]=='BENI') {$be_cv=$p["cantidad"]; $to=$to+$p["cantidad"];}
-            if($p["depto"]=='COCHABAMBA') {$co_cv=$p["cantidad"]; $to=$to+$p["cantidad"];}
-            if($p["depto"]=='CHUQUISACA') {$ch_cv=$p["cantidad"]; $to=$to+$p["cantidad"];}
-            if($p["depto"]=='PANDO') {$pa_cv=$p["cantidad"]; $to=$to+$p["cantidad"];}
-        }
-        $to_cv=$to;
-        
-//////////////// consolidado en una matriz
-        $consolidado = array(
-            array('dpto'=>'LA PAZ','ct'=> $lp_ct,'cs'=>$lp_cs,'cv'=>$lp_cv,'cf'=>($lp_ct-$lp_cv),'cd'=>($lp_cs-$lp_cv)),
-            array('dpto'=>'ORURO', 'ct'=>$or_ct,'cs'=>$or_cs,'cv'=>$or_cv,'cf'=>($or_ct-$or_cv),'cd'=>($or_cs-$or_cv)),
-            array('dpto'=>'COCHABAMBA', 'ct'=>$co_ct,'cs'=>$co_cs,'cv'=>$co_cv,'cf'=>($co_ct-$co_cv),'cd'=>($co_cs-$co_cv)),
-            array('dpto'=>'SANTA CRUZ', 'ct'=>$sc_ct,'cs'=>$sc_cs,'cv'=>$sc_cv,'cf'=>($sc_ct-$sc_cv),'cd'=>($sc_cs-$sc_cv)),
-            array('dpto'=>'TARIJA', 'ct'=>$ta_ct,'cs'=>$ta_cs,'cv'=>$ta_cv,'cf'=>($ta_ct-$ta_cv),'cd'=>($ta_cs-$ta_cv)),
-            array('dpto'=>'POTOSI', 'ct'=>$pt_ct,'cs'=>$pt_cs,'cv'=>$pt_cv,'cf'=>($pt_ct-$pt_cv),'cd'=>($pt_cs-$pt_cv)),
-            array('dpto'=>'BENI', 'ct'=>$be_ct,'cs'=>$be_cs,'cv'=>$be_cv,'cf'=>($be_ct-$be_cv),'cd'=>($be_cs-$be_cv)),
-            array('dpto'=>'PANDO', 'ct'=>$pa_ct,'cs'=>$pa_cs,'cv'=>$pa_cv,'cf'=>($pa_ct-$pa_cv),'cd'=>($pa_cs-$pa_cv)),
-            array('dpto'=>'CHUQUISACA', 'ct'=>$ch_ct,'cs'=>$ch_cs,'cv'=>$ch_cv,'cf'=>($ch_ct-$ch_cv),'cd'=>($ch_cs-$ch_cv)),
-            array('dpto'=>'TOTAL', 'ct'=>$to_ct,'cs'=>$to_cs,'cv'=>$to_cv,'cf'=>($to_ct-$to_cv),'cd'=>($to_cs-$to_cv)),
-        );
-   
-        return $this->render('SiePnpBundle:Estadisticas:nacionales.html.twig', array(
-            'filas' => $filas, 
-            'filasgestion' => $filasgestion, 
-            'filaschu' => $filaschu,
-            'filaslp' => $filaslp,
-            'filasco' => $filasco,
-            'filasor' => $filasor,
-            'filaspt' => $filaspt,
-            'filastj' => $filastj,
-            'filassc' => $filassc,
-            'filasbn' => $filasbn,
-            'filaspn' => $filaspn,
-            'consolidado'=>$consolidado
-        ));
     }
     
     public function personasinsertAction(Request $request){
@@ -1334,17 +531,39 @@ GROUP BY depto
             if ($p["ngrado"]=="Segundo")$datos_filasdos["ngrado"]=2;
             $filasdos[] = $datos_filasdos;
         }
+
+        $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id);
+        $plan=$result->getPlancurricularTipoId();
+
+         // id institucion educativa curso oferta
+        $query = "SELECT ico.id from institucioneducativa_curso ic
+        join institucioneducativa_curso_oferta ico on ico.insitucioneducativa_curso_id=ic.id
+        where ic.id=$id and ico.asignatura_tipo_id=2012
+        ";
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $id_ico=0;
+        foreach ($po as $p) {
+            $id_ico = $p["id"];
+        }
+
+
+        $modulo_emergente=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneByInstitucioneducativaCursoOferta($id_ico);
+
+        if(!$modulo_emergente){
+            $modulo_emergente = array(
+                "id" => 0,
+                "moduloEmergente" => "VACIO",
+            );
+        }
         
         $this->session->getFlashBag()->add('success', 'Proceso realizado exitosamente.');
-        return $this->render('SiePnpBundle:Default:cursolista.html.twig', array('estudiantes' => $filas, 'datosentity' => $filasdos));
+        return $this->render('SiePnpBundle:Default:cursolista.html.twig', array('estudiantes' => $filas, 'datosentity' => $filasdos,'plan'=>$plan,'modulo_emergente'=>$modulo_emergente));
     }
     
-      public function cursoidAction() {
-        $form = $this->createForm(new CursoType(), null, array('action' => $this->generateUrl('sie_pnp_resultado_curso_listado_id'), 'method' => 'POST',));        
-        return $this->render('SiePnpBundle:Default:cursoid.html.twig', array(           
-            'form'   => $form->createView(),
-        ));
-    }
+     
     
     public function cursolistarbusquedaAction(Request $request)
     {
@@ -2573,85 +1792,6 @@ GROUP BY depto
             }
     }
     
-    public function totalesgestiondeptoAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-        //$em = $this->getDoctrine()->getManager();
-        $db = $em->getConnection();
-        //LISTA DE TOTALES POR GESTION DEPTO PARTE Y BLOQUE
-        $query = "
-                SELECT                  
-                  CASE
-                    WHEN institucioneducativa_curso.institucioneducativa_id = 80480300 THEN
-                        'CHUQUISACA'
-                    WHEN institucioneducativa_curso.institucioneducativa_id = 80730794 THEN
-                        'LA PAZ'
-                    WHEN institucioneducativa_curso.institucioneducativa_id = 80980569 THEN
-                        'COCHABAMBA'
-                    WHEN institucioneducativa_curso.institucioneducativa_id = 81230297 THEN
-                        'ORURO'
-                    WHEN institucioneducativa_curso.institucioneducativa_id = 81480201 THEN
-                        'POTOSI'
-                    WHEN institucioneducativa_curso.institucioneducativa_id = 81730264 THEN
-                        'TARIJA'
-                    WHEN institucioneducativa_curso.institucioneducativa_id = 81981501 THEN
-                        'SANTA CRUZ'
-                    WHEN institucioneducativa_curso.institucioneducativa_id = 82230130 THEN
-                        'BENI'
-                    WHEN institucioneducativa_curso.institucioneducativa_id = 82480050 THEN
-                        'PANDO'                         
-                  END AS depto,
-          institucioneducativa_curso.gestion_tipo_id as gestion,
-                  count(CASE 
-                    WHEN (institucioneducativa_curso.ciclo_tipo_id = 1) and (institucioneducativa_curso.grado_tipo_id = 1) THEN
-            1                   
-                  END) AS parte1bloque1,
-
-          count(CASE 
-                    WHEN (institucioneducativa_curso.ciclo_tipo_id = 1) and (institucioneducativa_curso.grado_tipo_id = 2) THEN
-            1                   
-                  END) AS parte1bloque2,
-
-                  count(CASE 
-                    WHEN (institucioneducativa_curso.ciclo_tipo_id = 2) and (institucioneducativa_curso.grado_tipo_id = 1) THEN
-            1                   
-                  END) AS parte2bloque1,
-
-                  count(CASE 
-                    WHEN (institucioneducativa_curso.ciclo_tipo_id = 2) and (institucioneducativa_curso.grado_tipo_id = 2) THEN
-            1                   
-                  END) AS parte2bloque2 
-                  
-                FROM 
-                  public.institucioneducativa_curso
-                WHERE
-                  institucioneducativa_curso.institucioneducativa_id in ('80480300','80730794','80980569','81230297','81480201','81730264','81981501','82230130','82480050')
-                  and institucioneducativa_curso.nivel_tipo_id = 312
-                GROUP BY
-                  institucioneducativa_curso.gestion_tipo_id,
-                  institucioneducativa_curso.institucioneducativa_id
-                ORDER BY 
-                  institucioneducativa_curso.institucioneducativa_id,
-                  institucioneducativa_curso.gestion_tipo_id
-                ";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
-        $filas = array();
-        $datos_filas = array();
-        foreach ($po as $p) {
-            $datos_filas["gestion"] = $p["gestion"];
-            $datos_filas["depto"] = $p["depto"];
-            $datos_filas["parte1bloque1"] = $p["parte1bloque1"];
-            $datos_filas["parte1bloque2"] = $p["parte1bloque2"];
-            $datos_filas["parte2bloque1"] = $p["parte2bloque1"];
-            $datos_filas["parte2bloque2"] = $p["parte2bloque2"];
-            $filas[] = $datos_filas;
-        }        
-        return $this->render('SiePnpBundle:Default:totales.html.twig', array('totales' => $filas));
-        
-    }
     
     public function facilitadorbusquedacarnetAction() {
         $form = $this->createForm(new FacilitadorType(), null, array('action' => $this->generateUrl('sie_pnp_resultado_facilitador_carnet'), 'method' => 'POST',));        
@@ -2926,88 +2066,6 @@ GROUP BY depto
         $response->headers->set('Expires', '0');
         return $response;
     }
-
-    public function listarfacilitadoresAction($id, Request $request)
-    {
-        
-        $form = $this->createForm(new FacilitadorType());
-        
-        $data = $form->getData();
-        switch ($id) {
-            case 1:$id=80480300;break;
-            case 2:$id=80730794;break;
-            case 3:$id=80980569;break;
-            case 4:$id=81230297;break;
-            case 5:$id=81480201;break;
-            case 6:$id=81730264;break;
-            case 7:$id=81981501;break;
-            case 8:$id=82230130;break;
-            case 9:$id=82480050;break;
-            default:
-                $id=0;
-                break;
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $db = $em->getConnection();
-
-               
-        //LISTA DE FACILITADORES
-        $query = "
-               select DISTINCT on (persona.carnet) persona.carnet,persona.complemento, persona.nombre, persona.paterno, persona.materno, persona.fecha_nacimiento, persona.rda,
-                    CASE
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 80480300 THEN
-                                    'CHUQUISACA'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 80730794 THEN
-                                    'LA PAZ'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 80980569 THEN
-                                    'COCHABAMBA'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 81230297 THEN
-                                    'ORURO'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 81480201 THEN
-                                    'POTOSI'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 81730264 THEN
-                                    'TARIJA'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 81981501 THEN
-                                    'SANTA CRUZ'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 82230130 THEN
-                                    'BENI'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 82480050 THEN
-                                    'PANDO'                         
-                              END AS depto,
-                         institucioneducativa_curso.lugar
-
-                from institucioneducativa_curso 
-                inner join maestro_inscripcion 
-                on institucioneducativa_curso.maestro_inscripcion_id_asesor = maestro_inscripcion .id
-                inner join persona 
-                on maestro_inscripcion .persona_id = persona.id
-
-                where 
-                institucioneducativa_curso.institucioneducativa_id = $id
-
-                order by                 
-                persona.carnet";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
-        $filas = array();
-        $datos_filas = array();
-        foreach ($po as $p) {
-            $datos_filas["carnet"] = $p["carnet"];
-            $datos_filas["complemento"] = $p["complemento"];
-            $datos_filas["nombre"] = $p["nombre"];
-            $datos_filas["paterno"] = $p["paterno"];
-            $datos_filas["materno"] = $p["materno"];
-            $datos_filas["fecha_nacimiento"] = $p["fecha_nacimiento"];
-            $datos_filas["rda"] = $p["rda"];
-            $datos_filas["depto"] = $p["depto"];
-            $datos_filas["lugar"] = $p["lugar"];
-            $filas[] = $datos_filas;
-        }        
-        return $this->render('SiePnpBundle:Default:listarfacilitadores.html.twig', array('totales' => $filas,'idd'=>$id));
-    }   
 
     public function eliminarduplicadosAction($id,$id_eliminar, Request $request)
     {
@@ -5222,7 +4280,7 @@ ciclo_tipo_id, grado_tipo_id
     }
     
 
-    public function buscarestudianteAction($ci,$curso_id,$complemento,$rude)//ctv
+    public function buscarestudianteAction($ci,$curso_id,$complemento,$rude)
     {
         $opcion = substr($ci, -2);    // devuelve "ef" //
         $ci = substr($ci, 0, -2);
@@ -7611,6 +6669,77 @@ ORDER BY carnet,bloque,parte,fecha_inicio,municipio
     return $this->render('SiePnpBundle:Default:listar_dep.html.twig',array('contador'=>$contador,'filas'=>$filas));
 }
 
+public function rudealAction(request $Request,$id_inscripcion){ 
+
+    $em = $this->getDoctrine()->getManager();
+    $db = $em->getConnection();
+    // VER SI EXISTE RUDEAL DE ESTA INSCRIPCION id_rude = 0 no existe
+    $estudiante_inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($id_inscripcion);
+    $id_estudiante=$estudiante_inscripcion->getEstudiante()->getId();
+    $id_rude = $em->getRepository('SieAppWebBundle:Rude')->findOneByestudianteInscripcion($id_inscripcion);
+    //$id_rude=$id_rude->getId();
+    if($id_rude){
+        $id_rude=$id_rude->getId();
+    }
+    else{
+        //NO EXISTE, BUSCAR EL ID DE LA INSCRIPCION DEL ULTIMO RUDEAL 
+        $repository = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
+        $query = $repository->createQueryBuilder('ei')
+            ->select('r')
+            ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'e.id = ei.estudiante')
+            ->innerJoin('SieAppWebBundle:Rude', 'r', 'WITH', 'r.estudianteInscripcion = ei.id')
+            ->where('e.id = :id_estudiante')
+            ->setParameter('id_estudiante', $id_estudiante)
+            ->addOrderBy('r.id','desc')
+            ->getQuery();
+            $id_rude_ant = $query->getOneOrNullResult();
+        if($id_rude_ant){
+            $id_rude_ant=$id_rude_ant->getId();       
+        }
+        else{
+            $id_rude_ant=0;//NO EXISTE RUDE ANTERIOES, NUEVO
+        }
+    }
+    ////OBTENEMOS TODOS LOS VALORES
+    //DATOS DEL PARTICIPANTE//ctv
+    $id_departamentos = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array(
+        'id' => array(31654,31655,31656,31657,31658,31659,31660,31661,31662)
+    ));
+    $estado_civil_tipo = $em->getRepository('SieAppWebBundle:EstadoCivilTipo')->findBy(array(
+        'id' => array(1,10,2,3)
+    ));
+    $discapacidad_tipo = $em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findall();
+    //$grado_discapacidad_tipo = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->findBy(array('esvigente' => true));
+    $grado_discapacidad_tipo = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->findall();
+    //ASPECTOS SOCIOECONOMICOS
+    $idioma_tipo = $em->getRepository('SieAppWebBundle:IdiomaTipo')->findall();
+    $nacion_originaria_tipo = $em->getRepository('SieAppWebBundle:NacionOriginariaTipo')->findall();
+    $centro_salud_tipo = $em->getRepository('SieAppWebBundle:CentroSaludTipo')->findall();
+    //SERVICIOS BASICOS
+    $vivienda_ocupa_tipo = $em->getRepository('SieAppWebBundle:ViviendaOcupaTipo')->findall();
+    //ACCESO A INTERNET
+    $acceso_internet_tipo = $em->getRepository('SieAppWebBundle:AccesoInternetTipo')->findall();
+    $frecuencia_uso_internet_tipo = $em->getRepository('SieAppWebBundle:FrecuenciaUsoInternetTipo')->findall();
+    //ACTIVIDAD LABORAL
+
+
+    return $this->render('SiePnpBundle:Default:rudeal.html.twig',array(
+        'id_inscripcion'=>$id_inscripcion,
+        'id_departamentos'=>$id_departamentos,
+        'id_rude_ant'=>$id_rude_ant,
+        'discapacidad_tipo'=>$discapacidad_tipo,
+        'grado_discapacidad_tipo'=>$grado_discapacidad_tipo,
+        'idioma_tipo'=>$idioma_tipo,
+        'nacion_originaria_tipo'=>$nacion_originaria_tipo,
+        'centro_salud_tipo'=>$centro_salud_tipo,
+        'vivienda_ocupa_tipo'=>$vivienda_ocupa_tipo,
+        'acceso_internet_tipo'=>$acceso_internet_tipo,
+        'frecuencia_uso_internet_tipo'=>$frecuencia_uso_internet_tipo,
+        'estado_civil_tipo'=>$estado_civil_tipo,
+        'op'=>$id_rude_ant,//op 0 nuevo
+    ));       
+}
+
 
 /////////////////////////////////busquedas//////////////////////
 // buscar datos estudiantes
@@ -7741,7 +6870,5 @@ ORDER BY carnet,bloque,parte,fecha_inicio,municipio
         }        
         return $filas;
     }
-    //buscar archivos de 2015 para adelante
-
-  
+    //buscar archivos de 2015 para adelante 
 }

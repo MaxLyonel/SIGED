@@ -1,0 +1,466 @@
+{#}op = 0 nuevo si no modificar{#}
+<div class="row">
+<form action="#" class="form-horizontal">
+    <div class="form-body">
+		<div class="panel panel-icon panel-primary">
+		    <div class="panel-heading">
+		        DATOS DEL PARTICIPANTE
+		    </div>
+		    <div class="panel-body">
+		    	<div class="row">
+		    		<div class="col-xs-12 col-lg-12">
+		    		Nombre Completo: Carlos Ariel Trigo Vargas
+		    		</div>
+		    	</div>	
+		    	<div class="row">
+			    	<div class="form-group col-xs-12 col-lg-3">
+	                    <label class="col-sm-6 control-label">N° Hijos:</label>
+	                    <div class="col-sm-6">
+	                        <input type="text" onKeyPress="return SoloNumeros(event)"	 maxlength="2" class="form-control" required="required">
+	                    </div>
+	                </div>
+	                <div class="form-group col-xs-12 col-lg-4">
+	                    <label class="col-sm-4 control-label">Estado Civil:</label>
+	                    <div class="col-sm-8">
+		                    <select required="required" data-placeholder="Seleccionar" name="id_discapacidad" class="form-control chosen-select" >
+	                        	{% for estado_civil in estado_civil_tipo %}
+		                        	<option {% if estado_civil.id == 1 and op == 0 %}selected="selected"{% endif %}value="{{ estado_civil.id }}">{{ estado_civil.estadocivil }}</option>
+		                    	{% endfor %}
+		                	</select>	
+		                </div>
+		            </div>
+		            <div class="form-group col-xs-12 col-lg-5">
+	                    <label class="col-sm-4 control-label">¿Discapacidad?:</label>
+	                    <div class="col-sm-8">
+		                    <select required="required" data-placeholder="Seleccionar" name="id_discapacidad" class="form-control chosen-select" >
+		                    	{% for discapacidad in discapacidad_tipo %}
+			                        <option value="{{ discapacidad.id }}">{{ discapacidad.origendiscapacidad}}</option>
+			                    {% endfor %}
+		                	</select>
+		                </div>
+		            </div>
+		        </div>
+                <div class="form-group col-xs-12 col-lg-3">
+                    <label class="col-sm-3 control-label">Grado:</label>
+                    <div class="col-sm-9">
+	                    <select data-placeholder="Seleccionar" name="id_grado_discapacidad" class="form-control chosen-select" >
+	                    	{% for grado in grado_discapacidad_tipo %}
+		                        <option value="{{ grado.id }}">{{ grado.gradodiscapacidad}}</option>
+		                    {% endfor %}
+	                	</select>
+	                </div>
+	            </div>
+                <div class="form-group col-xs-12 col-lg-5">
+                    <label class="col-sm-5 control-label">Registro de Discapacidad o IBC:</label>
+                    <div class="col-sm-7">
+                        <input type="text" maxlength="20" class="form-control" required="required">
+                    </div>
+                </div>
+                <div class="form-group col-xs-12 col-lg-4">
+                    <label class="col-sm-3 control-label">Ocupación:</label>
+                    <div class="col-sm-9">
+	                    <select data-placeholder="Choose a Country" name="ocupacion_n" class="form-control chosen-select" >
+                            <option value="AMA DE CASA">AMA DE CASA</option>
+                            <option value="AGRICULTOR">AGRICULTOR</option>
+                            <option value="MINERO">MINERO</option>
+                            <option value="CHOFER">CHOFER</option>
+                            <option value="CARPINTERO">CARPINTERO</option>
+                            <option value="ZAPATERO">ZAPATERO</option>
+                            <option value="CHOFER">CHOFER</option>
+                            <option value="COMERCIANTE">COMERCIANTE</option>
+                            <option value="PANADERO">PANADERO</option>
+                            <option value="AVICULTOR">AVICULTOR</option>
+                            <option value="PELUQUERO">PELUQUERO</option>
+                            <option value="OTRO">OTRO</option>
+	                	</select>
+	                </div>
+	            </div>
+		    </div>	
+		    <div class="panel-heading">
+		        DIRECCIÓN ACTUAL DEL PARTICIPANTE
+		    </div>
+		    <div class="panel-body"> 
+		    	<div class="form-group col-xs-12 col-lg-4">
+                    <label class="col-sm-4 control-label">Departamento:</label>
+                    <div class="col-sm-8">
+	                    <select data-placeholder="Seleccionar" id="form_departamento" class="form-control chosen-select" >
+	                    	<option value=""></option>
+	                        {% for id_departamento in id_departamentos %}
+		                        <option value="{{ id_departamento.id }}">{{ id_departamento.lugar }}</option>
+		                    {% endfor %}
+	                	</select>
+	                </div>
+	            </div>
+                <div class="form-group col-xs-12 col-lg-4">
+                    <label class="col-sm-3 control-label">Provincia:</label>
+                    <div class="col-sm-9">
+	                    <select data-placeholder="Seleccionar" id="form_provincia" class="form-control chosen-select">
+	                	</select>
+	                </div>
+	            </div>
+	            <div class="form-group col-xs-12 col-lg-4">
+                    <label class="col-sm-3 control-label">Municipio:</label>
+                    <div class="col-sm-9">
+	                    <select data-placeholder="Seleccionar" id="form_municipio" class="form-control chosen-select" >
+	                	</select>
+	                </div>
+	            </div> 
+                <div class="form-group col-xs-12 col-lg-6">
+                    <label class="col-sm-4 control-label">Localidad/Comunidad:</label>
+                    <div class="col-sm-8">
+                        <input type="text" maxlength="50" class="form-control" required="required">
+                    </div>
+                </div>
+                <div class="form-group col-xs-12 col-lg-6">
+                    <label class="col-sm-4 control-label">Zona/Barrio/Villa:</label>
+                    <div class="col-sm-8">
+                        <input type="text" maxlength="50" class="form-control" required="required">
+                    </div>
+                </div>
+                <div class="form-group col-xs-12 col-lg-5">
+                    <label class="col-sm-3 control-label">Avenida/Calle:</label>
+                    <div class="col-sm-9">
+                        <input type="text" maxlength="50" class="form-control" required="required">
+                    </div>
+                </div>
+	            <div class="form-group col-xs-12 col-lg-3">
+                    <label class="col-sm-6 control-label">N° Vivienda:</label>
+                    <div class="col-sm-6">
+                        <input type="text" maxlength="6" class="form-control" required="required">
+                    </div>
+	            </div>
+	            <div class="form-group col-xs-12 col-lg-4">
+                    <label class="col-sm-6 control-label">Teléfono/Celular:</label>
+                    <div class="col-sm-6">
+                        <input type="text" maxlength="8" onKeyPress="return SoloNumeros(event)" class="form-control" required="required">
+                    </div>
+	            </div>	
+		    </div>
+		    <div class="panel-heading">
+		        DATOS DE INSCRIPCIÓN
+		    </div>
+		    <div class="panel-body">
+				<div class="row"> 
+			    	<div class="form-group col-xs-12 col-lg-6">
+	                    <label class="col-sm-4 control-label">Procedencia:</label>
+	                    <div class="col-sm-8">
+		                    <select data-placeholder="Choose a Country" class="form-control chosen-select" >
+		                    	<option value="">Seleccionar</option>
+		                        <option value="1">Alfabetizado</option>
+		                        <option value="2">Educación Alternativa</option>
+		                        <option value="3">Educación Regular</option>
+		                        <option value="4">Reconocimiento de saberes conocimientos y experiencias</option>
+		                        <option value="5">Ninguno</option>
+		                	</select>
+		                </div>
+		            </div>
+	                <div class="form-group col-xs-12 col-lg-6">
+	                    <label class="col-sm-5 control-label">Modalidad de Estudio:</label>
+	                    <div class="col-sm-7">
+		                    <select data-placeholder="Choose a Country" class="form-control chosen-select" >
+		                    	<option value="">Seleccionar</option>
+		                        <option value="1">Presencial</option>
+		                        <option value="2">Semipresencial</option>
+		                        <option value="3">A distancia</option>
+		                	</select>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		    <div class="panel-heading">
+		        ASPECTOS SOCIOECONÓMICOS DE LA O EL PARTICIPANTE
+		    </div>
+		    <div class="panel-body">
+		    	<div class="form-group col-xs-12 col-lg-6">
+                    <label class="col-sm-5 control-label">Idioma que aprendió a hablar en su niñez:</label>
+                    <div class="col-sm-7">
+	                    <select data-placeholder="Seleccionar Idioma" required="required" class="form-control chosen-select" >
+	                    	<option value=""></option>
+	                        {% for idioma in idioma_tipo %}
+		                        <option value="{{ idioma.id }}">{{ idioma.idioma }}</option>
+		                    {% endfor %}
+	                	</select>
+	                </div>
+	            </div>
+                <div class="form-group col-xs-12 col-lg-6">
+                    <label class="col-sm-5 control-label">Idioma(s) que habla frecuentemente (Max 3):</label>
+                    <div class="col-sm-7">
+	                    <select multiple data-placeholder="Seleccionar Idioma(s)" class="form-control chosen-select-3" >
+	                    	<option value=""></option>
+	                        {% for idioma in idioma_tipo %}
+		                        <option value="{{ idioma.id }}">{{ idioma.idioma }}</option>
+		                    {% endfor %}
+	                	</select>
+	                </div>
+	            </div>
+	            <div class="row">
+		            <div class="form-group col-xs-12 col-lg-6">
+	                    <label class="col-sm-5 control-label">¿Pertenece a una nación, pueblo indigena originario campesino o afroboliviano?:</label>
+	                    <div class="col-sm-7">
+		                    <select data-placeholder="Seleccionar" required="required" class="form-control chosen-select" >
+		                    	<option value=""></option>
+		                        {% for nacion_originaria in nacion_originaria_tipo %}
+		                        	<option value="{{ nacion_originaria.id }}">{{ nacion_originaria.nacionoriginaria }}</option>
+		                    	{% endfor %}
+		                	</select>
+		                </div>
+		            </div>
+		            <div class="form-group col-xs-12 col-lg-6">
+	                    <label class="col-md-8 control-label">¿Existe algun centro de salud/Posta/Hospital en su comunidad/Barrio/Zona?</label>
+	                    <div class="col-md-4">
+	                        <div class="radio">
+	                            <label class="radio-inline">
+	                                <input checked="checked" type="radio" name="salud">
+	                                Si
+	                            </label>
+	                            <label class="radio-inline">
+	                                <input type="radio" name="salud">
+	                                No
+	                            </label>
+	                        </div>
+	                    </div>
+	                </div><!-- /.form-group -->
+				</div>
+                <div class="form-group col-xs-12 col-lg-6">
+                    <label class="col-sm-6 control-label">El año pasado por problemas de salud acudió a:</label>
+                    <div class="col-sm-6">
+	                    <select multiple data-placeholder="Seleccionar" class="form-control chosen-select"  required="required">
+	                    	<option value=""></option>
+		                        {% for centro_salud in centro_salud_tipo %}
+		                        	<option value="{{ centro_salud.id }}">{{ centro_salud.descripcion }}</option>
+		                    	{% endfor %}
+	                	</select>
+	                </div>
+	            </div>
+	            <div class="form-group col-xs-12 col-lg-3">
+                    <label class="col-sm-4 control-label">¿Cuántas veces?:</label>
+                    <div class="col-sm-8">
+	                    <select data-placeholder="Choose a Country" class="form-control chosen-select" >
+	                        <option value="1">1 a 2 veces</option>
+	                        <option value="2">3 a 5 veces</option>
+	                        <option value="3">6 o más veces</option>
+	                        <option value="4">Nunca</option>
+	                	</select>
+	                </div>
+	            </div>
+	            <div class="form-group col-xs-12 col-lg-3">
+                    <label class="col-md-7 control-label">¿Tiene seguro de salud?:</label>
+                    <div class="col-md-5">
+                        <div class="radio">
+                            <label class="radio-inline">
+                                <input type="radio" name="seguro">
+                                Si
+                            </label>
+                            <label class="radio-inline">
+                                <input checked="checked"  type="radio" name="seguro">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </div><!-- /.form-group -->
+		    </div>
+		    <div class="panel-heading">
+		        ACCESO DE LA O EL PARTICIPANTE A SERVICIOS BÁSICOS
+		    </div>
+		    <div class="panel-body">
+		    	<div class="form-group col-xs-12 col-lg-4">
+                    <label class="col-md-7 control-label">¿Tiene acceso a agua por cañerida de red?:</label>
+                    <div class="col-md-5">
+                        <div class="radio">
+                            <label class="radio-inline">
+                                <input checked="checked" type="radio" name="agua">
+                                Si
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="agua">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </div><!-- /.form-group -->
+                <div class="form-group col-xs-12 col-lg-4">
+                    <label class="col-md-7 control-label">¿Usa energia eléctrica en su vivienda?:</label>
+                    <div class="col-md-5">
+                        <div class="radio">
+                            <label class="radio-inline">
+                                <input checked="checked" type="radio" name="energia_electrica">
+                                Si
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="energia_electrica">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </div><!-- /.form-group -->
+                <div class="form-group col-lg-4">
+                    <label class="col-md-6 control-label">¿Tiene baño su casa?:</label>
+                    <div class="col-md-5">
+                        <div class="radio">
+                            <label class="radio-inline">
+                                <input checked="checked" type="radio" name="baño">
+                                Si
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="baño">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </div><!-- /.form-group -->
+                <div class="form-group col-xs-12 col-lg-4">
+                    <label class="col-sm-6 control-label">La vivienda que ocupa el hogar es:</label>
+                    <div class="col-sm-6">
+	                    <select data-placeholder="Seleccionar" required="required" class="form-control chosen-select" >
+	                    	
+		                        {% for vivienda_ocupa in vivienda_ocupa_tipo %}
+		                        	<option value="{{ vivienda_ocupa.id }}">{{ vivienda_ocupa.descripcionviviendaocupa }}</option>
+		                    	{% endfor %}
+	                	</select>
+	                </div>
+	            </div>
+                <div class="form-group col-lg-4">
+                    <label class="col-md-7 control-label">¿Cuenta con servicio de recojo de basura?:</label>
+                    <div class="col-md-5">
+                        <div class="radio">
+                            <label class="radio-inline">
+                                <input checked="checked" type="radio" name="recojo_basura">
+                                Si
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="recojo_basura">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-lg-4">
+                    <label class="col-md-6 control-label">¿Tiene red de alcantarillado?:</label>
+                    <div class="col-md-5">
+                        <div class="radio">
+                            <label class="radio-inline">
+                                <input checked="checked" type="radio" name="alcantarillado">
+                                Si
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="alcantarillado">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </div>
+		    </div>
+		    <div class="panel-heading">
+		        ACCESO A INTERNET DE LA O EL PARTICIPANTE
+		    </div>
+		    <div class="panel-body">
+				<div class="form-group col-xs-12 col-lg-6">
+                    <label class="col-sm-5 control-label">El participante accede a internet en:</label>
+                    <div class="col-sm-7">
+	                    <select multiple data-placeholder="Seleccionar" required="required" class="form-control chosen-select" >
+                    		<option value=""></option>
+	                        {% for acceso_internet in acceso_internet_tipo %}
+	                        	<option value="{{ acceso_internet.id }}">{{ acceso_internet.descripcionaccesointernet }}</option>
+	                    	{% endfor %}
+	                	</select>
+	                </div>
+	            </div>
+                <div class="form-group col-xs-12 col-lg-6">
+                    <label class="col-sm-6 control-label">¿Con qué frecuencia usa internet?:</label>
+                    <div class="col-sm-6">
+	                    <select data-placeholder="Seleccionar" class="form-control chosen-select" >
+	                        <option value=""></option>
+	                        {% for frecuencia_uso_internet in frecuencia_uso_internet_tipo %}
+	                        	<option value="{{ frecuencia_uso_internet.id }}">{{ frecuencia_uso_internet.descripcionfrecuenciainternet }}</option>
+	                    	{% endfor %}
+	                	</select>
+	                </div>
+	            </div>	    	
+		    </div>
+		    <div class="panel-heading">
+		        ACTIVIDAD LABORAL DEL PARTICIPANTE
+		    </div>
+		    <div class="panel-body">
+		    	<div class="form-group col-lg-12">
+                    <label class="col-md-4 control-label">¿El participante tiene alguna ocupación?:</label>
+                    <div class="col-md-3">
+                        <div class="radio">
+                            <label class="radio-inline">
+                                <input type="radio" name="alguna_ocupacion">
+                                Si
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" checked name="alguna_ocupacion">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-xs-12 col-lg-6">
+                    <div class="col-sm-12">
+	                    <select data-placeholder="Choose a Country" class="form-control chosen-select" >
+	                    	<option value="">Seleccionar</option>
+	                        <option value="1">Presencial</option>
+	                        <option value="2">Semipresencial</option>
+	                        <option value="3">A distancia</option>
+	                	</select>
+	                </div>
+	            </div>
+	            <div class="form-group col-xs-12 col-lg-6">
+                    <div class="col-sm-12">
+                        <input type="text" maxlength="50" class="form-control">
+                    </div>
+                </div>
+		    </div>
+		     <div align="center"><button type="submit" align="center" class="btn btn-success">Registrar</button></div>
+		</div>
+	</div>
+</form>
+</div>
+<script>
+	$(".chosen-select-3").chosen({max_selected_options: 3});
+	$(".chosen-select").chosen();
+
+	 $("#form_departamento").change(function(){                            
+            var iddep = $(this).val();            
+            var route = Routing.generate('sie_pnp_buscar_provincia', { ieid: iddep });                    
+            var data;
+            $.ajax({
+                type: 'get',     
+                url: route,
+                data: data,
+                success: function(data) {                        
+                        datos = $.parseJSON(data);
+                        $("#form_provincia").empty();                       
+                        var $province_selector = $('#form_provincia');
+
+                        $province_selector.html('<option value="">Provincia</option>');
+                        for (var i=0, total = datos.length; i < total; i++) {
+                            $province_selector.append('<option value="' + datos[i].id + '">' + datos[i].provincia + '</option>');
+                        }
+                        $('#form_provincia').trigger("chosen:updated");
+                        $('#form_municipio').html("<option>Municipio</option>");
+                    }
+                });            
+            });
+        $("#form_provincia").change(function(){                            
+            var iddep = $(this).val();            
+            var route = Routing.generate('sie_pnp_buscar_provincia', { ieid: iddep });                    
+            var data;
+            $.ajax({
+                type: 'get',     
+                url: route,
+                data: data,
+                success: function(data) {                        
+                        datos = $.parseJSON(data);
+                        $("#form_municipio").html('');                       
+                        var $province_selector = $('#form_municipio');
+                        $province_selector.html('<option value="">Municipio</option>');
+                        for (var i=0, total = datos.length; i < total; i++) {
+                            $province_selector.append('<option value="' + datos[i].id + '">' + datos[i].provincia + '</option>');
+                        }
+                        $('#form_municipio').trigger("chosen:updated");
+                    }
+                });            
+            });
+</script>
