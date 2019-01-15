@@ -185,7 +185,7 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieJuegosBundle");
                 break;
             case '172.20.196.17':
-                $sysname = 'TRAMITES';
+                $sysname = 'TRAMITE';
                 $sysporlet = 'green';
                 $sysbutton = false;
                 $layout = 'layoutTramites.html.twig';
@@ -378,50 +378,52 @@ class DefaultController extends Controller {
         $this->session->set('layout', $layout);
 
         $em = $this->getDoctrine()->getManager();
-
+        // dump($sysname);die;
         //***********************
         //*****CONFIGURACIONES EXTAS PARA SISTEMAS DE REPORTES
         //review if the system is Reportes
         if ($sysname === 'REPORTES') {
-            $reporteController = new ReporteEstaditicoRegular();
-            $reporteController->setContainer($this->container);
-            $em = $this->getDoctrine()->getManager();
-            /*
-             * Define la zona horaria y halla la fecha actual
-             */
-            date_default_timezone_set('America/La_Paz');
-            $fechaActual = new \DateTime(date('Y-m-d'));
-            $gestionActual = date_format($fechaActual,'Y');
-            $entidad = $reporteController->buscaEntidadRol(0,0);
-            $subEntidades = $reporteController->buscaSubEntidadRol(0,0);
-            $entityEstadistica = $reporteController->buscaEstadisticaAreaRol(0,0);
-            //$entityEstadisticaUE = $reporteController->buscaEstadisticaUERol(0,0);
-            //$entityEstadisticaEE = $reporteController->buscaEstadisticaEERol(0,0);
-            $fechaEstadisticaRegular = $reporteController->buscaFechaVistaMaterializadaRegular($gestionActual);
-            $chartMatricula = $reporteController->chartColumnInformacionGeneral($entityEstadistica,"Matrícula",$gestionActual,1,"chartContainerMatricula");
-            $chartNivel = $reporteController->chartDonut3dInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio",$gestionActual,2,"chartContainerEfectivoNivel");
-            $chartNivelGrado = $reporteController->chartDonutInformacionGeneralNivelGrado($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio y Año de Escolaridad ",$gestionActual,6,"chartContainerEfectivoNivelGrado");
-            $chartGenero = $reporteController->chartPieInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Sexo",$gestionActual,3,"chartContainerEfectivoGenero");
-            $chartArea = $reporteController->chartPyramidInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Área Geográfica",$gestionActual,4,"chartContainerEfectivoArea");
-            $chartDependencia = $reporteController->chartColumnInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Dependencia",$gestionActual,5,"chartContainerEfectivoDependencia");
-            return $this->render($this->session->get('pathSystem') . ':Reporte:matriculaEducativaRegular.html.twig', array(
-                'infoEntidad'=>$entidad,
-                'infoSubEntidad'=>$subEntidades,
-                'infoEstadistica'=>$entityEstadistica,
-                //'infoEstadisticaUE'=>$entityEstadisticaUE,
-                //'infoEstadisticaEE'=>$entityEstadisticaEE,
-                'rol'=>0,
-                'datoGraficoMatricula'=>$chartMatricula,
-                'datoGraficoNivel'=>$chartNivel,
-                'datoGraficoNivelGrado'=>$chartNivelGrado,
-                'datoGraficoGenero'=>$chartGenero,
-                'datoGraficoArea'=>$chartArea,
-                'datoGraficoDependencia'=>$chartDependencia,
-                'mensaje'=>'$("#modal-bootstrap-tour").modal("show");',
-                'gestion'=>$gestionActual,
-                'fechaEstadisticaRegular'=>$fechaEstadisticaRegular,
-                'form' => $this->createLoginForm()->createView()
-            ));
+
+            return $this->redirectToRoute('reporte_regular_index');
+            // $reporteController = new ReporteEstaditicoRegular();
+            // $reporteController->setContainer($this->container);
+            // $em = $this->getDoctrine()->getManager();
+            // /*
+            //  * Define la zona horaria y halla la fecha actual
+            //  */
+            // date_default_timezone_set('America/La_Paz');
+            // $fechaActual = new \DateTime(date('Y-m-d'));
+            // $gestionActual = date_format($fechaActual,'Y');
+            // $entidad = $reporteController->buscaEntidadRol(0,0);
+            // $subEntidades = $reporteController->buscaSubEntidadRol(0,0);
+            // $entityEstadistica = $reporteController->buscaEstadisticaAreaRol(0,0);
+            // //$entityEstadisticaUE = $reporteController->buscaEstadisticaUERol(0,0);
+            // //$entityEstadisticaEE = $reporteController->buscaEstadisticaEERol(0,0);
+            // $fechaEstadisticaRegular = $reporteController->buscaFechaVistaMaterializadaRegular($gestionActual);
+            // $chartMatricula = $reporteController->chartColumnInformacionGeneral($entityEstadistica,"Matrícula",$gestionActual,1,"chartContainerMatricula");
+            // $chartNivel = $reporteController->chartDonut3dInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio",$gestionActual,2,"chartContainerEfectivoNivel");
+            // $chartNivelGrado = $reporteController->chartDonutInformacionGeneralNivelGrado($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio y Año de Escolaridad ",$gestionActual,6,"chartContainerEfectivoNivelGrado");
+            // $chartGenero = $reporteController->chartPieInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Sexo",$gestionActual,3,"chartContainerEfectivoGenero");
+            // $chartArea = $reporteController->chartPyramidInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Área Geográfica",$gestionActual,4,"chartContainerEfectivoArea");
+            // $chartDependencia = $reporteController->chartColumnInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Dependencia",$gestionActual,5,"chartContainerEfectivoDependencia");
+            // return $this->render($this->session->get('pathSystem') . ':Reporte:matriculaEducativaRegular.html.twig', array(
+            //     'infoEntidad'=>$entidad,
+            //     'infoSubEntidad'=>$subEntidades,
+            //     'infoEstadistica'=>$entityEstadistica,
+            //     //'infoEstadisticaUE'=>$entityEstadisticaUE,
+            //     //'infoEstadisticaEE'=>$entityEstadisticaEE,
+            //     'rol'=>0,
+            //     'datoGraficoMatricula'=>$chartMatricula,
+            //     'datoGraficoNivel'=>$chartNivel,
+            //     'datoGraficoNivelGrado'=>$chartNivelGrado,
+            //     'datoGraficoGenero'=>$chartGenero,
+            //     'datoGraficoArea'=>$chartArea,
+            //     'datoGraficoDependencia'=>$chartDependencia,
+            //     'mensaje'=>'$("#modal-bootstrap-tour").modal("show");',
+            //     'gestion'=>$gestionActual,
+            //     'fechaEstadisticaRegular'=>$fechaEstadisticaRegular,
+            //     'form' => $this->createLoginForm()->createView()
+            // ));
         }
         //*****FIN DE CONFIGURACIONES PARA OTROS SUBSISTEMAS
         //***********************
@@ -524,45 +526,48 @@ class DefaultController extends Controller {
                         //review if the system is Reportes
                         if ($this->session->get('sysname') === 'REPORTES') {
                             $this->session->set('roluser', $aRoles);
-                            $reporteController = new ReporteEstaditicoRegular();
-                            $reporteController->setContainer($this->container);
-                            $em = $this->getDoctrine()->getManager();
-                            /*
-                            * Define la zona horaria y halla la fecha actual
-                            */
-                            date_default_timezone_set('America/La_Paz');
-                            $fechaActual = new \DateTime(date('Y-m-d'));
-                            $gestionActual = date_format($fechaActual,'Y');
-                            $entidad = $reporteController->buscaEntidadRol(0,0);
-                            $subEntidades = $reporteController->buscaSubEntidadRol(0,0);
-                            $entityEstadistica = $reporteController->buscaEstadisticaAreaRol(0,0);
-                            //$entityEstadisticaUE = $reporteController->buscaEstadisticaUERol(0,0);
-                            //$entityEstadisticaEE = $reporteController->buscaEstadisticaEERol(0,0);
-                            $fechaEstadisticaRegular = $reporteController->buscaFechaVistaMaterializadaRegular($gestionActual);
-                            $chartMatricula = $reporteController->chartColumnInformacionGeneral($entityEstadistica,"Matrícula",$gestionActual,1,"chartContainerMatricula");
-                            $chartNivel = $reporteController->chartDonut3dInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio",$gestionActual,2,"chartContainerEfectivoNivel");
-                            $chartNivelGrado = $reporteController->chartDonutInformacionGeneralNivelGrado($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio y Año de Escolaridad ",$gestionActual,6,"chartContainerEfectivoNivelGrado");
-                            $chartGenero = $reporteController->chartPieInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Sexo",$gestionActual,3,"chartContainerEfectivoGenero");
-                            $chartArea = $reporteController->chartPyramidInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Área Geográfica",$gestionActual,4,"chartContainerEfectivoArea");
-                            $chartDependencia = $reporteController->chartColumnInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Dependencia",$gestionActual,5,"chartContainerEfectivoDependencia");
-                            return $this->render($this->session->get('pathSystem') . ':Reporte:matriculaEducativaRegular.html.twig', array(
-                                'infoEntidad'=>$entidad,
-                                'infoSubEntidad'=>$subEntidades,
-                                'infoEstadistica'=>$entityEstadistica,
-                                //'infoEstadisticaUE'=>$entityEstadisticaUE,
-                                //'infoEstadisticaEE'=>$entityEstadisticaEE,
-                                'rol'=>0,
-                                'datoGraficoMatricula'=>$chartMatricula,
-                                'datoGraficoNivel'=>$chartNivel,
-                                'datoGraficoNivelGrado'=>$chartNivelGrado,
-                                'datoGraficoGenero'=>$chartGenero,
-                                'datoGraficoArea'=>$chartArea,
-                                'datoGraficoDependencia'=>$chartDependencia,
-                                'mensaje'=>'$("#modal-bootstrap-tour").modal("show");',
-                                'gestion'=>$gestionActual,
-                                'fechaEstadisticaRegular'=>$fechaEstadisticaRegular,
-                                'form' => $this->createLoginForm()->createView()
-                            ));
+
+                            return $this->redirectToRoute('reporte_regular_index');
+
+                            // $reporteController = new ReporteEstaditicoRegular();
+                            // $reporteController->setContainer($this->container);
+                            // $em = $this->getDoctrine()->getManager();
+                            // /*
+                            // * Define la zona horaria y halla la fecha actual
+                            // */
+                            // date_default_timezone_set('America/La_Paz');
+                            // $fechaActual = new \DateTime(date('Y-m-d'));
+                            // $gestionActual = date_format($fechaActual,'Y');
+                            // $entidad = $reporteController->buscaEntidadRol(0,0);
+                            // $subEntidades = $reporteController->buscaSubEntidadRol(0,0);
+                            // $entityEstadistica = $reporteController->buscaEstadisticaAreaRol(0,0);
+                            // //$entityEstadisticaUE = $reporteController->buscaEstadisticaUERol(0,0);
+                            // //$entityEstadisticaEE = $reporteController->buscaEstadisticaEERol(0,0);
+                            // $fechaEstadisticaRegular = $reporteController->buscaFechaVistaMaterializadaRegular($gestionActual);
+                            // $chartMatricula = $reporteController->chartColumnInformacionGeneral($entityEstadistica,"Matrícula",$gestionActual,1,"chartContainerMatricula");
+                            // $chartNivel = $reporteController->chartDonut3dInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio",$gestionActual,2,"chartContainerEfectivoNivel");
+                            // $chartNivelGrado = $reporteController->chartDonutInformacionGeneralNivelGrado($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio y Año de Escolaridad ",$gestionActual,6,"chartContainerEfectivoNivelGrado");
+                            // $chartGenero = $reporteController->chartPieInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Sexo",$gestionActual,3,"chartContainerEfectivoGenero");
+                            // $chartArea = $reporteController->chartPyramidInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Área Geográfica",$gestionActual,4,"chartContainerEfectivoArea");
+                            // $chartDependencia = $reporteController->chartColumnInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Dependencia",$gestionActual,5,"chartContainerEfectivoDependencia");
+                            // return $this->render($this->session->get('pathSystem') . ':Reporte:matriculaEducativaRegular.html.twig', array(
+                            //     'infoEntidad'=>$entidad,
+                            //     'infoSubEntidad'=>$subEntidades,
+                            //     'infoEstadistica'=>$entityEstadistica,
+                            //     //'infoEstadisticaUE'=>$entityEstadisticaUE,
+                            //     //'infoEstadisticaEE'=>$entityEstadisticaEE,
+                            //     'rol'=>0,
+                            //     'datoGraficoMatricula'=>$chartMatricula,
+                            //     'datoGraficoNivel'=>$chartNivel,
+                            //     'datoGraficoNivelGrado'=>$chartNivelGrado,
+                            //     'datoGraficoGenero'=>$chartGenero,
+                            //     'datoGraficoArea'=>$chartArea,
+                            //     'datoGraficoDependencia'=>$chartDependencia,
+                            //     'mensaje'=>'$("#modal-bootstrap-tour").modal("show");',
+                            //     'gestion'=>$gestionActual,
+                            //     'fechaEstadisticaRegular'=>$fechaEstadisticaRegular,
+                            //     'form' => $this->createLoginForm()->createView()
+                            // ));
                         }
                         //review if the system is Diplomas
                         if ($this->session->get('pathSystem') === 'SieTramitesBundle') {

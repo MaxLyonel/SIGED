@@ -1239,7 +1239,7 @@ class TramiteController extends Controller {
           from institucioneducativa as ie
           inner join orgcurricular_tipo as oct ON oct.id = ie.orgcurricular_tipo_id
           left join (select distinct institucioneducativa_id, nivel_tipo_id from institucioneducativa_nivel_autorizado where nivel_tipo_id = 6) as iena on iena.institucioneducativa_id = ie.id
-          where ie.institucioneducativa_acreditacion_tipo_id = 1 and ie.id = ".$institucionEducativaId." -- and ie.estadoinstitucion_tipo_id = 10
+          where (case when ie.id in (1,2,3,4,5,6,7,8,9) then true else  ie.institucioneducativa_acreditacion_tipo_id = 1 end) and ie.id = ".$institucionEducativaId." -- and ie.estadoinstitucion_tipo_id = 10
       ");
       $queryEntidad->execute();
       $objEntidad = $queryEntidad->fetchAll();

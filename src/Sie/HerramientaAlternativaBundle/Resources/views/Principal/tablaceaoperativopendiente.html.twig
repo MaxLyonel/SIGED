@@ -46,6 +46,12 @@
                                         {#<td>{{ reg.nombre }} {{ reg.paterno }} {{ reg.materno }}</td>#}
                                         <td>{{ reg.tramite_estado }}</td>
                                         <td class="text-center">
+                                            {% if (reg.gestion_tipo_id <= '2017') %}
+                                                <button type="submit" class="btn-danger btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
+                                                    <i class="fa fa-hand-paper-o"></i>
+                                                    Operativo Cerrado
+                                                </button>
+                                            {% else %}
                                             {% if ((reg.teid == '6') or (reg.teid == '7') or (reg.teid == '11') or (reg.teid == '13') or (reg.teid == '5')) %}
                                                 <button type="submit" class="btn-danger btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
                                                     <i class="fa fa-hand-paper-o"></i>
@@ -91,6 +97,7 @@
                                                         Continuar con operativo Fin de Semestre
                                                     </button>
                                                 </form>
+                                            {% endif %}
                                             {% endif %}
                                         </td>
                                     </tr>
