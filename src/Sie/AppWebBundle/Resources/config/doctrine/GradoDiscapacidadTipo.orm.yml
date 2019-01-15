@@ -18,4 +18,9 @@ Sie\AppWebBundle\Entity\GradoDiscapacidadTipo:
             fixed: false
             comment: ''
             column: grado_discapacidad
+        esVigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente
     lifecycleCallbacks: {  }

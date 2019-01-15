@@ -1,0 +1,62 @@
+Sie\AppWebBundle\Entity\RudeDiscapacidadGrado:
+    type: entity
+    table: rude_discapacidad_grado
+    indexes:
+        IDX_16C57E1539ED8040:
+            columns:
+                - discapacidad_tipo_id
+        IDX_16C57E15443E4890:
+            columns:
+                - rude_id
+        IDX_16C57E15FA6D71F9:
+            columns:
+                - grado_discapacidad_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        discapacidadTipo:
+            targetEntity: DiscapacidadTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                discapacidad_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        rude:
+            targetEntity: Rude
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rude_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gradoDiscapacidadTipo:
+            targetEntity: GradoDiscapacidadTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                grado_discapacidad_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

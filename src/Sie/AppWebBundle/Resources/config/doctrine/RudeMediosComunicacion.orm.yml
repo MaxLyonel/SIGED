@@ -1,0 +1,50 @@
+Sie\AppWebBundle\Entity\RudeMediosComunicacion:
+    type: entity
+    table: rude_medios_comunicacion
+    indexes:
+        IDX_D97B6F73443E4890:
+            columns:
+                - rude_id
+        IDX_D97B6F733EC333D9:
+            columns:
+                - medios_comunicacion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        rude:
+            targetEntity: Rude
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rude_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        mediosComunicacionTipo:
+            targetEntity: MediosComunicacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                medios_comunicacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
