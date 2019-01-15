@@ -15,11 +15,6 @@ class Rude
     private $id;
 
     /**
-     * @var integer
-     */
-    private $discapacidadTipoId;
-
-    /**
      * @var string
      */
     private $esPertenceNacionOriginaria;
@@ -35,7 +30,7 @@ class Rude
     private $centroSalud;
 
     /**
-     * @var string
+     * @var boolean
      */
     private $trabajoGestionPasada;
 
@@ -125,6 +120,36 @@ class Rude
     private $localidad;
 
     /**
+     * @var boolean
+     */
+    private $respuestaPago;
+
+    /**
+     * @var boolean
+     */
+    private $tieneCi;
+
+    /**
+     * @var boolean
+     */
+    private $tienePasaporte;
+
+    /**
+     * @var boolean
+     */
+    private $tieneCarnetDiscapacidad;
+
+    /**
+     * @var string
+     */
+    private $tiempoLlegadaHoras;
+
+    /**
+     * @var string
+     */
+    private $tiempoLlegadaMinutos;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\NacionOriginariaTipo
      */
     private $nacionOriginariaTipo;
@@ -193,29 +218,6 @@ class Rude
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set discapacidadTipoId
-     *
-     * @param integer $discapacidadTipoId
-     * @return Rude
-     */
-    public function setDiscapacidadTipoId($discapacidadTipoId)
-    {
-        $this->discapacidadTipoId = $discapacidadTipoId;
-    
-        return $this;
-    }
-
-    /**
-     * Get discapacidadTipoId
-     *
-     * @return integer 
-     */
-    public function getDiscapacidadTipoId()
-    {
-        return $this->discapacidadTipoId;
     }
 
     /**
@@ -290,7 +292,7 @@ class Rude
     /**
      * Set trabajoGestionPasada
      *
-     * @param string $trabajoGestionPasada
+     * @param boolean $trabajoGestionPasada
      * @return Rude
      */
     public function setTrabajoGestionPasada($trabajoGestionPasada)
@@ -303,7 +305,7 @@ class Rude
     /**
      * Get trabajoGestionPasada
      *
-     * @return string 
+     * @return boolean 
      */
     public function getTrabajoGestionPasada()
     {
@@ -702,6 +704,144 @@ class Rude
     }
 
     /**
+     * Set respuestaPago
+     *
+     * @param boolean $respuestaPago
+     * @return Rude
+     */
+    public function setRespuestaPago($respuestaPago)
+    {
+        $this->respuestaPago = $respuestaPago;
+    
+        return $this;
+    }
+
+    /**
+     * Get respuestaPago
+     *
+     * @return boolean 
+     */
+    public function getRespuestaPago()
+    {
+        return $this->respuestaPago;
+    }
+
+    /**
+     * Set tieneCi
+     *
+     * @param boolean $tieneCi
+     * @return Rude
+     */
+    public function setTieneCi($tieneCi)
+    {
+        $this->tieneCi = $tieneCi;
+    
+        return $this;
+    }
+
+    /**
+     * Get tieneCi
+     *
+     * @return boolean 
+     */
+    public function getTieneCi()
+    {
+        return $this->tieneCi;
+    }
+
+    /**
+     * Set tienePasaporte
+     *
+     * @param boolean $tienePasaporte
+     * @return Rude
+     */
+    public function setTienePasaporte($tienePasaporte)
+    {
+        $this->tienePasaporte = $tienePasaporte;
+    
+        return $this;
+    }
+
+    /**
+     * Get tienePasaporte
+     *
+     * @return boolean 
+     */
+    public function getTienePasaporte()
+    {
+        return $this->tienePasaporte;
+    }
+
+    /**
+     * Set tieneCarnetDiscapacidad
+     *
+     * @param boolean $tieneCarnetDiscapacidad
+     * @return Rude
+     */
+    public function setTieneCarnetDiscapacidad($tieneCarnetDiscapacidad)
+    {
+        $this->tieneCarnetDiscapacidad = $tieneCarnetDiscapacidad;
+    
+        return $this;
+    }
+
+    /**
+     * Get tieneCarnetDiscapacidad
+     *
+     * @return boolean 
+     */
+    public function getTieneCarnetDiscapacidad()
+    {
+        return $this->tieneCarnetDiscapacidad;
+    }
+
+    /**
+     * Set tiempoLlegadaHoras
+     *
+     * @param string $tiempoLlegadaHoras
+     * @return Rude
+     */
+    public function setTiempoLlegadaHoras($tiempoLlegadaHoras)
+    {
+        $this->tiempoLlegadaHoras = $tiempoLlegadaHoras;
+    
+        return $this;
+    }
+
+    /**
+     * Get tiempoLlegadaHoras
+     *
+     * @return string 
+     */
+    public function getTiempoLlegadaHoras()
+    {
+        return $this->tiempoLlegadaHoras;
+    }
+
+    /**
+     * Set tiempoLlegadaMinutos
+     *
+     * @param string $tiempoLlegadaMinutos
+     * @return Rude
+     */
+    public function setTiempoLlegadaMinutos($tiempoLlegadaMinutos)
+    {
+        $this->tiempoLlegadaMinutos = $tiempoLlegadaMinutos;
+    
+        return $this;
+    }
+
+    /**
+     * Get tiempoLlegadaMinutos
+     *
+     * @return string 
+     */
+    public function getTiempoLlegadaMinutos()
+    {
+        return $this->tiempoLlegadaMinutos;
+    }
+
+    /**
      * Set nacionOriginariaTipo
      *
      * @param \Sie\AppWebBundle\Entity\NacionOriginariaTipo $nacionOriginariaTipo
@@ -975,33 +1115,5 @@ class Rude
     public function getMunicipioLugarTipo()
     {
         return $this->municipioLugarTipo;
-    }
-    /**
-     * @var boolean
-     */
-    private $respuestaPago;
-
-
-    /**
-     * Set respuestaPago
-     *
-     * @param boolean $respuestaPago
-     * @return Rude
-     */
-    public function setRespuestaPago($respuestaPago)
-    {
-        $this->respuestaPago = $respuestaPago;
-    
-        return $this;
-    }
-
-    /**
-     * Get respuestaPago
-     *
-     * @return boolean 
-     */
-    public function getRespuestaPago()
-    {
-        return $this->respuestaPago;
     }
 }
