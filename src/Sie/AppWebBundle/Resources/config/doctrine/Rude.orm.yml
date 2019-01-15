@@ -49,10 +49,8 @@ Sie\AppWebBundle\Entity\Rude:
                 strategy: SEQUENCE
     fields:
         esPertenceNacionOriginaria:
-            type: string
+            type: boolean
             nullable: true
-            length: 255
-            fixed: false
             comment: ''
             column: es_pertence_nacion_originaria
         seguroSalud:
