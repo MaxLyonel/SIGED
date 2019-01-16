@@ -141,10 +141,14 @@
             if($('#form_fechainicio').val()==""){alert('Ingrese fecha de inicio del operativo'); return false;}
             if($('#form_fechafin').val()==""){alert('Ingrese fecha de finalización del operativo'); return false;}
             var fi = /^(\d{1,2})(\/|-)(\d{1,2})(\/|-)(\d{4})$/;
-            if(!fi.test($('#form_fechainicio').val())){alert('fecha de inicio incorrecto'); return false;}
-            if(!fi.test($('#form_fechafin').val())){alert('fecha fin incorrecto'); return false;}
-            //alert(new Date());
-            
+            if(!fi.test($('#form_fechainicio').val())){alert('Fecha de inicio incorrecto'); return false;}
+            if(!fi.test($('#form_fechafin').val())){alert('Fecha fin incorrecto'); return false;}
+            if($('#form_fechainicio').val() == $('#form_fechafin').val()){alert('Rango de fechas incorrecto.'); return false;}
+            var fechainicio = $('#form_fechainicio').val().split('-');
+            var fechafin = $('#form_fechafin').val().split('-');
+            var inicio = new Date(fechainicio[2],fechainicio[1],fechainicio[0]);
+            var fin = new Date(fechafin[2],fechafin[1],fechafin[0]);
+            if(inicio > fin){alert('Rango de fechas incorrecto.'); return false;}
             var dataform = $('#form_operativo1').serialize();
             $.ajax({
                 type: 'get',
