@@ -199,6 +199,11 @@ class ProcesoTipoController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+            //dump($request);die;
+            $form = $request->get('sie_appwebbundle_procesotipo');
+            $entity->setProcesoTipo(strtoupper($form['procesoTipo']));
+            $entity->setObs(strtoupper($form['obs']));
+            //dump($entity);die;
             $em->flush();
 
             $mensaje = 'La tarea se modificó con éxito';

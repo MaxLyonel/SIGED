@@ -32,6 +32,7 @@
                         <th>Materno</th>
                         <th>Rol</th>
                         <th>Tarea</th>
+                        <th>Lugar</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -43,18 +44,20 @@
                         <th>Materno</th>
                         <th>Rol</th>
                         <th>Tarea</th>
+                        <th>Lugar</th>
                         <th>Acciones</th>
                     </tr>
                 </tfoot>
                 <tbody>
                 {% for u in usuarios %}
                     <tr>
-                        <td>{{ u.usuario.username }}</a></td>
-                        <td>{{ u.usuario.persona.nombre }}</td>
-                        <td>{{ u.usuario.persona.paterno }}</td>
-                        <td>{{ u.usuario.persona.materno }}</td>
-                        <td>{{ u.flujoProceso.rolTipo.rol }}</td>
-                        <td>{{ u.flujoProceso.proceso.procesoTipo }}</td>
+                        <td>{{ u.username }}</a></td>
+                        <td>{{ u.nombre }}</td>
+                        <td>{{ u.paterno }}</td>
+                        <td>{{ u.materno }}</td>
+                        <td>{{ u.rol }}</td>
+                        <td>{{ u.procesoTipo }}</td>
+                        <td>{{ u.lugar }}</td>
                         <td>
                             <button type="button" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar Usuario" onclick="eliminar({{u.id}})">
                                 Eliminar<i class="glyphicon glyphicon-trash"></i>

@@ -169,8 +169,13 @@ class FlujoUsuariosController extends Controller
         
         $em = $this->getDoctrine()->getManager();
         $wfusuarios = $em->getRepository('SieAppWebBundle:WfUsuarioFlujoProceso')->createQueryBuilder('wfu')
-                    ->select('wfu')
+                    ->select('wfu.id,u.username,p.nombre,p.paterno,p.materno,r.rol,pt.procesoTipo,lt.lugar')
                     ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'fp.id = wfu.flujoProceso')
+                    ->innerJoin('SieAppWebBundle:RolTipo', 'r', 'with', 'r.id = fp.rolTipo')
+                    ->innerJoin('SieAppWebBundle:ProcesoTipo', 'pt', 'with', 'pt.id = fp.proceso')
+                    ->innerJoin('SieAppWebBundle:LugarTipo', 'lt', 'with', 'lt.id = wfu.lugarTipoId')
+                    ->innerJoin('SieAppWebBundle:Usuario', 'u', 'with', 'u.id = wfu.usuario')
+                    ->innerJoin('SieAppWebBundle:Persona', 'p', 'with', 'p.id = u.persona')
                     ->where('fp.flujoTipo='.$flujotipo)
                     ->andWhere('wfu.esactivo=true')
                     ->orderBy('fp.id')

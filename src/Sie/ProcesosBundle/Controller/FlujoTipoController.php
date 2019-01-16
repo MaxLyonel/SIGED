@@ -59,10 +59,13 @@ class FlujoTipoController extends Controller
      */
     public function createAction(Request $request)
     {
+        //dump($request->get('sie_appwebbundle_flujotipo'));die;
+        $datos = $request->get('sie_appwebbundle_flujotipo');
         $entity = new FlujoTipo();
         $form = $this->createCreateForm($entity);
+        
         $form->handleRequest($request);
-
+        //dump($form);die;
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();   
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('flujo_tipo');")->execute();
@@ -70,6 +73,8 @@ class FlujoTipoController extends Controller
             $query->execute();
             $proceso = $query->fetchAll();
             if(!$proceso){
+                $entity->setFlujo(strtoupper($datos['flujo']));
+                $entity->setObs(strtoupper($datos['obs']));
                 $em->persist($entity);
                 $em->flush();
                 $mensaje = 'El proceso ' . $entity->getFlujo() . ' se registró con éxito';
@@ -211,6 +216,10 @@ class FlujoTipoController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+            $form = $request->get('sie_appwebbundle_flujotipo');
+            $entity->setFlujo(strtoupper($form['flujo']));
+            $entity->setObs(strtoupper($form['obs']));
+            //dump($entity);die;
             $em->flush();
 
             $mensaje = 'El proceso se modificó con éxito';
