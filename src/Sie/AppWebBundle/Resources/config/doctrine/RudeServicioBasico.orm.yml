@@ -1,0 +1,50 @@
+Sie\AppWebBundle\Entity\RudeServicioBasico:
+    type: entity
+    table: rude_servicio_basico
+    indexes:
+        IDX_1E666DD1443E4890:
+            columns:
+                - rude_id
+        IDX_1E666DD18C1F6B86:
+            columns:
+                - servicio_basico_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        rude:
+            targetEntity: Rude
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rude_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        servicioBasicoTipo:
+            targetEntity: ServicioBasicoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                servicio_basico_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

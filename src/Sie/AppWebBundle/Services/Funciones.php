@@ -78,7 +78,7 @@ class Funciones {
             }
         }
 
-        if( in_array($this->session->get('roluser'), array(7,8,10)) or $gestion < $this->session->get('currentyear')){
+        if( in_array($this->session->get('roluser'), array(7,8,10)) ){
             $operativo = $operativo - 1;
         }
 

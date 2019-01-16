@@ -43,7 +43,7 @@
                     </div>
                     <div class="clearfix"></div>
                 </div><!-- /.panel-heading -->
-                {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form', 'id': 'form_operativo_edit', 'onsubmit':'return confirm("¿Esta suguro de guardar los cambios?")'} } )}}
+                {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form', 'id': 'form_operativo_edit', 'onsubmit':'validar()'} } )}}
                     <div class="panel-body">
                         <div id="msg1"></div>
                         <div class="row">
@@ -136,62 +136,18 @@
             };
             $.datepicker.setDefaults($.datepicker.regional['es']);
         });
+        function validar(){
+            if($('#form_fechainicio').val() == $('#form_fechafin').val()){alert('Rango de fechas incorrecto.'); return false;}
+            var fechainicio = $('#form_fechainicio').val().split('-');
+            var fechafin = $('#form_fechafin').val().split('-');
+            var inicio = new Date(fechainicio[2],fechainicio[1],fechainicio[0]);
+            var fin = new Date(fechafin[2],fechafin[1],fechafin[0]);
+            if(inicio > fin){alert('Rango de fechas incorrecto.'); return false;}
+            if(confirm('¿Está seguro de guardar los datos?')){
+                return true;
+            }else{
+                return false;
+            }
+        }
     </script>
-{% endblock %}   
-{#<div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Datos del operativo</h4>
-        </div>
-        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form', 'id': 'form_operativo_edit', 'onsubmit':'return confirm("¿Esta suguro de guardar los cambios?")'} } )}}
-            <div class="modal-body">
-                <div id="msg1"></div>
-                <div class="row">
-                    <div class="form-group col-md-12">
-                        <div class="col-md-4">
-                            {{ form_label(form.operativo)}}
-                        </div>
-                        <div class="col-md-6">
-                            {{form_widget(form.operativo) }}
-                        </div>
-                    </div>
-                    <div class="form-group col-md-12">
-                        <div class="col-md-4">
-                            {{ form_label(form.distrito)}}
-                        </div>
-                        <div class="col-md-6">
-                            {{form_widget(form.distrito) }}
-                        </div>
-                    </div>
-                    <div class="form-group col-md-12">
-                        <div class="col-md-4">
-                            {{ form_label(form.fechainicio)}}
-                        </div>
-                        <div class="col-md-6">
-                            {{form_widget(form.fechainicio) }}
-                        </div>
-                    </div>
-                    <div class="form-group col-md-12">
-                        <div class="col-md-4">
-                            {{ form_label(form.fechafin)}}
-                        </div>
-                        <div class="col-md-6">
-                            {{form_widget(form.fechafin) }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <div class="form-group">
-                    <div class="col-md-4">
-                        {{ form_widget(form.guardar ) }}
-                    </div>
-                    <div class="col-md-3">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                    </div>
-                </div>
-            </div>
-        {{form_end(form)}}
-    </div>
-</div>#}
+{% endblock %}

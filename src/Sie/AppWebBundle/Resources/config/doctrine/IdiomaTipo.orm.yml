@@ -1,10 +1,6 @@
 Sie\AppWebBundle\Entity\IdiomaTipo:
     type: entity
     table: idioma_tipo
-    uniqueConstraints:
-        idioma_tipo_pk:
-            columns:
-                - id
     id:
         id:
             type: smallint
@@ -21,4 +17,14 @@ Sie\AppWebBundle\Entity\IdiomaTipo:
             length: 45
             fixed: false
             comment: ''
+        obs:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        esVigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente
     lifecycleCallbacks: {  }

@@ -5,6 +5,10 @@ Sie\AppWebBundle\Entity\InstitucioneducativaTipo:
         fki_orgcurricular_tipo:
             columns:
                 - orgcurricular_tipo_id
+    uniqueConstraints:
+        institucioneducativa_tipo_pk:
+            columns:
+                - id
     id:
         id:
             type: smallint

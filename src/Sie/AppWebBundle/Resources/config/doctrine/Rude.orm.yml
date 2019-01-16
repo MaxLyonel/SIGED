@@ -1,0 +1,316 @@
+Sie\AppWebBundle\Entity\Rude:
+    type: entity
+    table: rude
+    indexes:
+        IDX_8E0126C4E4EFFB48:
+            columns:
+                - nacion_originaria_tipo_id
+        IDX_8E0126C4BC2D1A82:
+            columns:
+                - vivienda_ocupa_tipo_id
+        IDX_8E0126C461A6EBE1:
+            columns:
+                - modalidad_estudio_tipo_id
+        IDX_8E0126C4EA72FD21:
+            columns:
+                - procedencia_tipo_id
+        IDX_8E0126C4F928B42F:
+            columns:
+                - cantidad_centro_salud_tipo_id
+        IDX_8E0126C4A5E7208F:
+            columns:
+                - frecuencia_uso_internet_tipo_id
+        IDX_8E0126C4B832EECA:
+            columns:
+                - frecuencia_trabajo_tipo_id
+        IDX_8E0126C483899639:
+            columns:
+                - servicio_militar_tipo_id
+        IDX_8E0126C44080FEFA:
+            columns:
+                - institucioneducativa_tipo_id
+        IDX_8E0126C48E2273C1:
+            columns:
+                - vive_habitualmente_tipo_id
+        IDX_8E0126C4A1104027:
+            columns:
+                - estudiante_inscripcion_id
+        IDX_8E0126C4102FF6F0:
+            columns:
+                - municipio_lugar_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        esPertenceNacionOriginaria:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_pertence_nacion_originaria
+        seguroSalud:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: seguro_salud
+        centroSalud:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: centro_salud
+        trabajoGestionPasada:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: trabajo_gestion_pasada
+        tieneOcupacionTrabajo:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: tiene_ocupacion_trabajo
+        tieneServicioBasicoId:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: tiene_servicio_basico_id
+        tieneAbandono:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: tiene_abandono
+        educacionDiversaTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: educacion_diversa_tipo_id
+        zona:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        avenida:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        numero:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        celular:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        telefonoFijo:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: telefono_fijo
+        cantHijos:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cant_hijos
+        esServicioMilitar:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_servicio_militar
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        tieneDiscapacidad:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: tiene_discapacidad
+        lugarRegistroRude:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: lugar_registro_rude
+        fechaRegistroRude:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro_rude
+        localidad:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        respuestaPago:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: respuesta_pago
+        tieneCi:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: tiene_ci
+        tienePasaporte:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: tiene_pasaporte
+        tieneCarnetDiscapacidad:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: tiene_carnet_discapacidad
+        tiempoLlegadaHoras:
+            type: string
+            nullable: true
+            length: 2
+            fixed: false
+            comment: ''
+            column: tiempo_llegada_horas
+        tiempoLlegadaMinutos:
+            type: string
+            nullable: true
+            length: 2
+            fixed: false
+            comment: ''
+            column: tiempo_llegada_minutos
+        registroFinalizado:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: registro_finalizado
+    manyToOne:
+        nacionOriginariaTipo:
+            targetEntity: NacionOriginariaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nacion_originaria_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        viviendaOcupaTipo:
+            targetEntity: ViviendaOcupaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                vivienda_ocupa_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        modalidadEstudioTipo:
+            targetEntity: ModalidadEstudioTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                modalidad_estudio_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        procedenciaTipo:
+            targetEntity: ProcedenciaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                procedencia_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        cantidadCentroSaludTipo:
+            targetEntity: CantidadCentroSaludTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                cantidad_centro_salud_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        frecuenciaUsoInternetTipo:
+            targetEntity: FrecuenciaUsoInternetTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                frecuencia_uso_internet_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        frecuenciaTrabajoTipo:
+            targetEntity: FrecuenciaTrabajoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                frecuencia_trabajo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        servicioMilitarTipo:
+            targetEntity: ServicioMilitarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                servicio_militar_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaTipo:
+            targetEntity: InstitucioneducativaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        viveHabitualmenteTipo:
+            targetEntity: ViveHabitualmenteTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                vive_habitualmente_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        municipioLugarTipo:
+            targetEntity: LugarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                municipio_lugar_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
