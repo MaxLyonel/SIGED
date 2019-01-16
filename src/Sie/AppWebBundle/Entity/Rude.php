@@ -1116,4 +1116,32 @@ class Rude
     {
         return $this->municipioLugarTipo;
     }
+    /**
+     * @var integer
+     */
+    private $registroFinalizado;
+
+
+    /**
+     * Set registroFinalizado
+     *
+     * @param integer $registroFinalizado
+     * @return Rude
+     */
+    public function setRegistroFinalizado($registroFinalizado)
+    {
+        $this->registroFinalizado = $registroFinalizado;
+    
+        return $this;
+    }
+
+    /**
+     * Get registroFinalizado
+     *
+     * @return integer 
+     */
+    public function getRegistroFinalizado()
+    {
+        return $this->registroFinalizado;
+    }
 }
