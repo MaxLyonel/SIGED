@@ -22,7 +22,7 @@ Sie\AppWebBundle\Entity\ServicioMilitarTipo:
             type: boolean
             nullable: true
             comment: ''
-            column: 'es_activo '
+            column: es_activo
         fechaRegistro:
             type: date
             nullable: true
