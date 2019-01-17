@@ -9,11 +9,6 @@
 		    <div class="panel-body">
 		    	<div class="row">
 		    		<input type="hidden" id="id_curso" name="id_curso" value="{{ id_curso }}">
-		    		<input type="hidden" id="id_curso" name="id_curso" value="{{ id_curso }}">
-		    		<input type="hidden" id="ci_est" name="ci_est" value="{{estudiante_a[1]}}">
-		    		<input type="hidden" id="id_inscripcion" name="id_inscripcion" value="{{ id_inscripcion }}">
-		    		<input type="hidden" id="lugar_registro_rude" name="lugar_registro_rude" value="{{ lugar_registro_rude }}">
-		    		<input type="hidden" id="fecha_registro_rude" name="fecha_registro_rude" value="{{ fecha_registro_rude|date('d/m/Y') }}">
 		    		<div class="form-group col-xs-12 col-lg-4">
                     	<label class="control-label">Nombre: {{estudiante_a[0]}}</label>
 	               	 </div>
@@ -26,10 +21,10 @@
 					<div class="form-group col-xs-12 col-lg-3">
                     	<label class="col-sm-2 control-label">Exp:</label>
                     	<div class="col-sm-10">
-	                    	<select data-placeholder="Seleccionar"  id="exp" name="exp" class="form-control chosen-select" >
+	                    	<select data-placeholder="Seleccionar" required="required" id="exp" name="exp" class="form-control chosen-select" >
 	                    		<option value=""></option>
-	                        	{% for id_departamento_exp in id_departamentos_exp %}
-		                        	<option value="{{ id_departamento_exp.id }}" {% if id_departamento_exp.id  == departamento_exp_usu and op == 0 %}selected="selected"{% endif %}>{{ id_departamento_exp.sigla }}</option>
+	                        	{% for id_departamento in id_departamentos %}
+		                        	<option value="{{ id_departamento.id }}" {% if id_departamento.id  == lugar_tipo_id_usu and op == 0 %}selected="selected"{% endif %}>{{ id_departamento.lugar }}</option>
 		                    	{% endfor %}
 	                		</select>
 	                	</div>
@@ -39,13 +34,13 @@
 			    	<div class="form-group col-xs-12 col-lg-3">
 	                    <label class="col-sm-6 control-label">N° Hijos:</label>
 	                    <div class="col-sm-6">
-	                        <input type="text"  onKeyPress="return SoloNumeros(event)" id="num_hijos" name="num_hijos" maxlength="2" class="form-control"  value="0">
+	                        <input type="text" required="required" onKeyPress="return SoloNumeros(event)" id="num_hijos" name="num_hijos" maxlength="2" class="form-control"  value="0">
 	                    </div>
 	                </div>
 	                <div class="form-group col-xs-12 col-lg-4">
 	                    <label class="col-sm-4 control-label">Estado Civil:</label>
 	                    <div class="col-sm-8">
-		                    <select   data-placeholder="Seleccionar" name="estado_civil" class="form-control chosen-select" id="estado_civil" >
+		                    <select required="required"  data-placeholder="Seleccionar" name="estado_civil" class="form-control chosen-select" id="estado_civil" >
 	                        	{% for estado_civil in estado_civil_tipo %}
 		                        	<option {% if estado_civil.id == 1 and op == 0 %}selected="selected"{% endif %}value="{{ estado_civil.id }}">{{ estado_civil.estadocivil }}</option>
 		                    	{% endfor %}
@@ -55,7 +50,7 @@
 		            <div class="form-group col-xs-12 col-lg-5">
 	                    <label class="col-sm-4 control-label">¿Discapacidad?:</label>
 	                    <div class="col-sm-8">
-		                    <select  data-placeholder="Seleccionar" name="discapacidad" id="discapacidad" class="form-control chosen-select" >
+		                    <select  data-placeholder="Seleccionar" name="discapacidad" id="discapacidad" class="form-control chosen-select" required="required">
 		                    	<option value="0">Ninguno</option>
 		                    	{% for discapacidad in discapacidad_tipo %}
 			                        <option value="{{ discapacidad.id }}">{{ discapacidad.origendiscapacidad}}</option>
@@ -67,7 +62,7 @@
                 <div class="form-group col-xs-12 col-lg-5" id="grado_view">
                     <label class="col-sm-3 control-label">Grado:</label>
                     <div class="col-sm-9">
-	                    <select data-placeholder="Seleccionar" name="grado_discapacidad" id="grado_discapacidad" class="form-control chosen-select" >
+	                    <select data-placeholder="Seleccionar" name="grado_discapacidad" id="grado_discapacidad" class="form-control chosen-select" required="required">
 	                    	{% for grado in grado_discapacidad_tipo %}
 		                        <option value="{{ grado.id }}">{{ grado.gradodiscapacidad}}</option>
 		                    {% endfor %}
@@ -77,7 +72,7 @@
                 <div class="form-group col-xs-12 col-lg-7" id="ibc_view">
                     <label class="col-sm-6 control-label">Registro de Discapacidad o IBC:</label>
                     <div class="col-sm-6">
-                        <input type="text" maxlength="20" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();" name="ibc" id="ibc" class="form-control" >
+                        <input type="text" maxlength="20" name="ibc" id="ibc" class="form-control" >
                     </div>
                 </div>
 		    </div>	
@@ -88,7 +83,7 @@
 		    	<div class="form-group col-xs-12 col-lg-4">
                     <label class="col-sm-4 control-label">Departamento:</label>
                     <div class="col-sm-8">
-	                    <select  data-placeholder="Seleccionar" id="form_departamento" class="form-control chosen-select" >
+	                    <select required="required" data-placeholder="Seleccionar" id="form_departamento" class="form-control chosen-select" >
 	                    	<option value=""></option>
 	                        {% for id_departamento in id_departamentos %}
 		                        <option {% if id_departamento.id  == lugar_tipo_id_usu and op == 0 %}selected="selected"{% endif %} value="{{ id_departamento.id }}">{{ id_departamento.lugar }}</option>
@@ -99,7 +94,7 @@
                 <div class="form-group col-xs-12 col-lg-4">
                     <label class="col-sm-3 control-label">Provincia:</label>
                     <div class="col-sm-9">
-	                    <select  data-placeholder="Seleccionar"  id="form_provincia" class="form-control chosen-select">
+	                    <select required="required" data-placeholder="Seleccionar"  id="form_provincia" class="form-control chosen-select">
 	                    	<option value="">Provincia</option>
 	                    	{% for provincias in provincia_tipo %}
 		                        <option value="{{ provincias.id }}">{{ provincias.lugar }}</option>
@@ -110,46 +105,40 @@
 	            <div class="form-group col-xs-12 col-lg-4">
                     <label class="col-sm-3 control-label">Municipio:</label>
                     <div class="col-sm-9">
-	                    <select  data-placeholder="Seleccionar"  name="municipio" id="form_municipio" class="form-control chosen-select" >
+	                    <select required="required" data-placeholder="Seleccionar"  name="municipio" id="form_municipio" class="form-control chosen-select" >
 	                	</select>
 	                </div>
 	            </div> 
-                <div class="form-group col-xs-12 col-lg-5">
-                    <label class="col-sm-3 control-label">Localidad/ Comunidad:</label>
-                    <div class="col-sm-9">
-                        <input  type="text" maxlength="40" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();" class="form-control" name="localidad" >
-                    </div>
-                </div>
-                <div class="form-group col-xs-12 col-lg-5">
-                    <label class="col-sm-5 control-label">Zona/ Barrio/ Villa:</label>
-                    <div class="col-sm-7">
-                        <input  type="text" maxlength="40" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();" class="form-control" name="zona"  >
-                    </div>
-                </div>
-                <div class="form-group col-xs-12 col-lg-2">
-                    <label class="col-sm-5 control-label">Número vivienda:</label>
-                    <div class="col-sm-7">
-                        <input type="text" maxlength="6" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();" class="form-control" name="nro_vivienda">
-                    </div>
-	            </div>
                 <div class="form-group col-xs-12 col-lg-6">
+                    <label class="col-sm-4 control-label">Localidad/Comunidad:</label>
+                    <div class="col-sm-8">
+                        <input required="required" type="text" maxlength="50" class="form-control" name="localidad" >
+                    </div>
+                </div>
+                <div class="form-group col-xs-12 col-lg-6">
+                    <label class="col-sm-4 control-label">Zona/Barrio/Villa:</label>
+                    <div class="col-sm-8">
+                        <input required="required" type="text" maxlength="50" class="form-control" name="zona"  >
+                    </div>
+                </div>
+                <div class="form-group col-xs-12 col-lg-5">
                     <label class="col-sm-3 control-label">Avenida/Calle:</label>
                     <div class="col-sm-9">
-                        <input  type="text" maxlength="40" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();" class="form-control"  name="calle">
+                        <input required="required" type="text" maxlength="50" class="form-control"  name="calle">
                     </div>
                 </div>
 	            <div class="form-group col-xs-12 col-lg-3">
-                    <label class="col-sm-4 control-label">Teléfono:</label>
-                    <div class="col-sm-8">
-                        <input type="text" maxlength="8" minlength="8" onKeyPress="return SoloNumeros(event)" class="form-control" name="telf">
+                    <label class="col-sm-6 control-label">N° Vivienda:</label>
+                    <div class="col-sm-6">
+                        <input type="text" maxlength="6" class="form-control" name="nro_vivienda">
                     </div>
 	            </div>
-	            <div class="form-group col-xs-12 col-lg-3">
-                    <label class="col-sm-4 control-label">Celular:</label>
-                    <div class="col-sm-8">
-                        <input type="text" maxlength="8" minlength="8" onKeyPress="return SoloNumeros(event)" class="form-control" name="cel">
+	            <div class="form-group col-xs-12 col-lg-4">
+                    <label class="col-sm-6 control-label">Teléfono/Celular:</label>
+                    <div class="col-sm-6">
+                        <input type="text" maxlength="8" onKeyPress="return SoloNumeros(event)" class="form-control" name="cel">
                     </div>
-	            </div>		
+	            </div>	
 		    </div>
 		    <div class="panel-heading">
 		        DATOS DE INSCRIPCIÓN
@@ -159,7 +148,7 @@
 			    	<div class="form-group col-xs-12 col-lg-6">
 	                    <label class="col-sm-4 control-label">Procedencia:</label>
 	                    <div class="col-sm-8">
-		                    <select  data-placeholder="Choose a Country" name="procedencia"  class="form-control chosen-select" >
+		                    <select required="required" data-placeholder="Choose a Country" name="procedencia"  class="form-control chosen-select" >
 		                        {% for procedencias in procedencia_tipo %}
 		                        	<option value="{{ procedencias.id }}">{{ procedencias.procedencia }}</option>
 		                    	{% endfor %}
@@ -169,7 +158,7 @@
 	                <div class="form-group col-xs-12 col-lg-6">
 	                    <label class="col-sm-5 control-label">Modalidad de Estudio:</label>
 	                    <div class="col-sm-7">
-		                    <select  data-placeholder="Choose a Country" name="modalidad" class="form-control chosen-select" >
+		                    <select required="required" data-placeholder="Choose a Country" name="modalidad" class="form-control chosen-select" >
 		                        {% for modalidad_estudio in modalidad_estudio_tipo %}
 		                        	<option value="{{ modalidad_estudio.id }}">{{ modalidad_estudio.modalidadestudio }}</option>
 		                    	{% endfor %}
@@ -185,7 +174,7 @@
 		    	<div class="form-group col-xs-12 col-lg-6">
                     <label class="col-sm-5 control-label">Idioma que aprendió a hablar en su niñez:</label>
                     <div class="col-sm-7">
-	                    <select  data-placeholder="Seleccionar Idioma" name="idioma_hablar"  class="form-control chosen-select" >
+	                    <select required="required" data-placeholder="Seleccionar Idioma" name="idioma_hablar"  class="form-control chosen-select" >
 	                    	<option value=""></option>
 	                        {% for idioma in idioma_tipo %}
 		                        <option value="{{ idioma.id }}">{{ idioma.idioma }}</option>
@@ -196,7 +185,7 @@
                 <div class="form-group col-xs-12 col-lg-6">
                     <label class="col-sm-5 control-label">Idioma(s) que habla frecuentemente (Max 3):</label>
                     <div class="col-sm-7">
-	                    <select multiple data-placeholder="Seleccionar Idioma(s)" name="idioma_frecuencia[]" class="form-control chosen-select-3" >
+	                    <select multiple data-placeholder="Seleccionar Idioma(s)" name="idioma_frecuencia" class="form-control chosen-select-3" >
 	                    	<option value=""></option>
 	                        {% for idioma in idioma_tipo %}
 		                        <option value="{{ idioma.id }}">{{ idioma.idioma }}</option>
@@ -208,7 +197,7 @@
 		            <div class="form-group col-xs-12 col-lg-6">
 	                    <label class="col-sm-5 control-label">¿Pertenece a una nación, pueblo indigena originario campesino o afroboliviano?:</label>
 	                    <div class="col-sm-7">
-		                    <select  data-placeholder="Seleccionar" name="nacion"  class="form-control chosen-select" >
+		                    <select required="required" data-placeholder="Seleccionar" name="nacion"  class="form-control chosen-select" >
 		                    	<option value=""></option>
 		                        {% for nacion_originaria in nacion_originaria_tipo %}
 		                        	<option value="{{ nacion_originaria.id }}">{{ nacion_originaria.nacionoriginaria }}</option>
@@ -221,11 +210,11 @@
 	                    <div class="col-md-4">
 	                        <div class="radio">
 	                            <label class="radio-inline">
-	                                <input checked="checked" type="radio" value="true" name="salud">
+	                                <input checked="checked" type="radio" name="salud">
 	                                Si
 	                            </label>
 	                            <label class="radio-inline">
-	                                <input type="radio" value="false" name="salud">
+	                                <input type="radio" name="salud">
 	                                No
 	                            </label>
 	                        </div>
@@ -235,7 +224,7 @@
                 <div class="form-group col-xs-12 col-lg-6">
                     <label class="col-sm-6 control-label">El año pasado por problemas de salud acudió a:</label>
                     <div class="col-sm-6">
-	                    <select  multiple data-placeholder="Puede seleccionar más de una opción" class="form-ccontrol chosen-select"   name="centrosalud[]" id="centrosalud">
+	                    <select required="required" multiple data-placeholder="Seleccionar" class="form-ccontrol chosen-select"   name="centrosalud" id="centrosalud">
 	                    	<option value=""></option>
 		                        {% for centro_salud in centro_salud_tipo %}
 		                        	<option value="{{ centro_salud.id }}">{{ centro_salud.descripcion }}</option>
@@ -258,11 +247,11 @@
                     <div class="col-md-5">
                         <div class="radio">
                             <label class="radio-inline">
-                                <input type="radio" value="true" name="seguro">
+                                <input type="radio" name="seguro">
                                 Si
                             </label>
                             <label class="radio-inline">
-                                <input checked="checked"  type="radio" value="false" name="seguro">
+                                <input checked="checked"  type="radio" name="seguro">
                                 No
                             </label>
                         </div>
@@ -278,11 +267,11 @@
                     <div class="col-md-5">
                         <div class="radio">
                             <label class="radio-inline">
-                                <input checked="checked" type="radio" value="1" name="agua">
+                                <input checked="checked" type="radio" name="agua">
                                 Si
                             </label>
                             <label class="radio-inline">
-                                <input type="radio" value="0" name="agua">
+                                <input type="radio" name="agua">
                                 No
                             </label>
                         </div>
@@ -293,11 +282,11 @@
                     <div class="col-md-5">
                         <div class="radio">
                             <label class="radio-inline">
-                                <input checked="checked" type="radio" value="1" name="energia_electrica">
+                                <input checked="checked" type="radio" name="energia_electrica">
                                 Si
                             </label>
                             <label class="radio-inline">
-                                <input type="radio" value="0" name="energia_electrica">
+                                <input type="radio" name="energia_electrica">
                                 No
                             </label>
                         </div>
@@ -308,11 +297,11 @@
                     <div class="col-md-5">
                         <div class="radio">
                             <label class="radio-inline">
-                                <input checked="checked" type="radio" value="1" name="bano">
+                                <input checked="checked" type="radio" name="baño">
                                 Si
                             </label>
                             <label class="radio-inline">
-                                <input type="radio" value="0" name="baño">
+                                <input type="radio" name="baño">
                                 No
                             </label>
                         </div>
@@ -334,11 +323,11 @@
                     <div class="col-md-5">
                         <div class="radio">
                             <label class="radio-inline">
-                                <input checked="checked" type="radio" value="1" name="recojo_basura">
+                                <input checked="checked" type="radio" name="recojo_basura">
                                 Si
                             </label>
                             <label class="radio-inline">
-                                <input type="radio" value="0" name="recojo_basura">
+                                <input type="radio" name="recojo_basura">
                                 No
                             </label>
                         </div>
@@ -349,16 +338,42 @@
                     <div class="col-md-5">
                         <div class="radio">
                             <label class="radio-inline">
-                                <input checked="checked" type="radio" value="1" name="alcantarillado">
+                                <input checked="checked" type="radio" name="alcantarillado">
                                 Si
                             </label>
                             <label class="radio-inline">
-                                <input type="radio" value="0" name="alcantarillado">
+                                <input type="radio" name="alcantarillado">
                                 No
                             </label>
                         </div>
                     </div>
                 </div>
+		    </div>
+		    <div class="panel-heading">
+		        ACCESO A INTERNET DE LA O EL PARTICIPANTE
+		    </div>
+		    <div class="panel-body">
+				<div class="form-group col-xs-12 col-lg-6">
+                    <label class="col-sm-5 control-label">El participante accede a internet en:</label>
+                    <div class="col-sm-7">
+	                    <select required="required" multiple data-placeholder="Seleccionar" name="internet" id="internet"  class="form-control chosen-select" >
+                    		<option value=""></option>
+	                        {% for acceso_internet in acceso_internet_tipo %}
+	                        	<option value="{{ acceso_internet.id }}">{{ acceso_internet.descripcionaccesointernet }}</option>
+	                    	{% endfor %}
+	                	</select>
+	                </div>
+	            </div>
+                <div class="form-group col-xs-12 col-lg-6" id="frecuencia_internet_view">
+                    <label class="col-sm-6 control-label">¿Con qué frecuencia usa internet?:</label>
+                    <div class="col-sm-6">
+	                    <select data-placeholder="Seleccionar" class="form-control chosen-select" name="frecuencia_internet" id="frecuencia_internet" >
+	                        {% for frecuencia_uso_internet in frecuencia_uso_internet_tipo %}
+	                        	<option value="{{ frecuencia_uso_internet.id }}" {% if frecuencia_uso_internet.id  == 5 and op == 0 %}selected="selected"{% endif %}>{{ frecuencia_uso_internet.descripcionfrecuenciainternet }}</option>
+	                    	{% endfor %}
+	                	</select>
+	                </div>
+	            </div>	    	
 		    </div>
 		    <div class="panel-heading">
 		        ACTIVIDAD LABORAL DEL PARTICIPANTE
@@ -369,11 +384,11 @@
                     <div class="col-md-7">
                         <div class="radio">
                             <label class="radio-inline">
-                                <input type="radio" value="true" name="alguna_actividad" id="alguna_actividad" onclick="al_oc_si();">
+                                <input type="radio" name="alguna_actividad" id="alguna_actividad" onclick="al_oc_si();">
                                 Si
                             </label>
                             <label class="radio-inline">
-                                <input type="radio" value="false" checked name="alguna_actividad" id="alguna_actividad" onclick="al_oc_no();">
+                                <input type="radio" checked name="alguna_actividad" id="alguna_actividad" onclick="al_oc_no();">
                                 No
                             </label>
                         </div>
@@ -392,31 +407,11 @@
 	            <div class="form-group col-xs-12 col-lg-5" id="actividad_laboral_new_view">
                     <label class="col-sm-3 control-label">Especificar:</label>
                     <div class="col-sm-9">
-                        <input  type="text" maxlength="40" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();"class="form-control" name="actividad_laboral_new" id="actividad_laboral_new">
+                        <input  type="text" maxlength="50" class="form-control" name="actividad_laboral_new" id="actividad_laboral_new">
                     </div>
-                </div><!--
-                <hr style="color:RED">
-                <div class="form-group col-xs-12 col-lg-6">
-                	<label class="col-sm-4 control-label">Lugar de Registro:</label>
-                	<div class="col-sm-8">
-                    	<select data-placeholder="Seleccionar"  id="lugar_registro" name="lugar_registro" class="form-control chosen-select" >
-                    		{% if lugar_tipo_id_usu == 1 %}<option value=""></option>{% endif %}
-                    		{% for id_departamento in id_departamentos %}
-								{% if id_departamento.id  == lugar_tipo_id_usu %}
-									<option value="{{ id_departamento.lugar }}" selected="selected">{{ id_departamento.lugar }}</option>
-								{% endif %}
-                    		{% endfor %}	
-                		</select>
-                	</div>
-            	</div>
-                <div class="form-group col-xs-12 col-lg-6">
-                    <label class="col-sm-4 control-label">Fecha de Registro:</label>
-                    <div class="col-sm-8">
-                        <input  type="text" maxlength="50" class="form-control" name="fecha_registro" id="fecha_registro" onKeyPress="return false" >
-                    </div>
-                </div>-->
+                </div>
 		    </div>
-		     <div align="center"><button onclick="return validar_fecha()" type="submit" align="center" class="btn btn-success">Registrar</button></div>
+		     <div align="center"><button type="submit" align="center" class="btn btn-success">Registrar</button></div>
 		</div>
 	</div>
 </form>
@@ -431,35 +426,10 @@
         $('#frecuencia_internet_view').hide();
         $('#actividad_laboral_view').hide();
         $('#actividad_laboral_new_view').hide();
-         $("#fecha_registro").datepicker({
-            autoclose: true,
-            todayHighlight: true,
-            format: 'dd/mm/yyyy',
-            language: "es",
-        });
 	});
 	$(".chosen-select-3").chosen({max_selected_options: 3});
 	$(".chosen-select").chosen();
 	
-	function validar_fecha(){
-        var f1 = document.getElementById("fecha_registro").value;
-        //Contar dias entre fechas fecha inicial y fecha actual
-        var aFecha1a = f1.split('/'); 
-        var fecha_actual = moment().format("DD/MM/YYYY"); //fecha actual
-        var aFecha2a = fecha_actual.split('/'); 
-        var fFecha1a = Date.UTC(aFecha1a[2],aFecha1a[1]-1,aFecha1a[0]);
-        var fFecha2a = Date.UTC(aFecha2a[2],aFecha2a[1]-1,aFecha2a[0]); 
-        var difa = fFecha1a - fFecha2a;
-        var dias_a = Math.floor(difa / (1000 * 60 * 60 * 24));
-        if((dias_a >= -200 && dias_a <= 200 ) || roluser == 8 || roluser == 21){
-        	return true;
-        }
-         else{
-         	alert("Error, Fecha de registro fuera de tiempo");
-        	return false;
-        }
-     }
-
 	$("#actividad_laboral").change(function(){                            
         var val = $(this).val();            
         if (val == 99){

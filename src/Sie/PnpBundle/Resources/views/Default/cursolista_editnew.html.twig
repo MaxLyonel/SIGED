@@ -50,7 +50,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -68,7 +68,7 @@
                     </div>
                 </div>
                  <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
           </div>                 
             </div>                
         </div>
@@ -78,7 +78,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h5 class="modal-title" id="flexModalLabel">NOTAS CONSOLIDADAS DEL ESTUDIANTE.</h5>             
+                    <h5 class="modal-title" id="flexModalLabel">FORMULARIO RUDEAL PNP.</h5>             
                 </div>
                 <div class="modal-body">
                     <div id="rudealModal">
@@ -86,7 +86,7 @@
                     </div>
                 </div>
                  <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
           </div>                 
             </div>                
         </div>
@@ -120,7 +120,7 @@
                         </div>
                         <div class="col-lg-4">
                             </br>
-                            <button type="button" class="btn btn-primary" href= "#" onclick="BuscarEstudiante()">Buscar</button>
+                            <button type="button" class="btn btn-success" href= "#" onclick="BuscarEstudiante()">Buscar</button>
                         </div>
                     </div>     
                 </form>
@@ -130,7 +130,7 @@
                 </div>             
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -239,7 +239,7 @@
                     </div>
                 </div>
                  <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
                   </div>
             </div>                
         </div>
@@ -350,7 +350,7 @@
                                                     <a role="button" class="btn btn-xs btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_boletaelectronica', { 'id': estudiante.inscripcion_id~"|"~datos.ciclo_tipo_id~"|"~datos.grado_tipo_id}) }}" title="Imprimir Rudeal"></a>    
                                                 {% else %}
                                                     <a role="button" class="btn btn-xs btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_boletaelectronica', { 'id': estudiante.inscripcion_id~"|"~datos.ciclo_tipo_id~"|"~datos.grado_tipo_id}) }}" title="Imprimir Rudeal"></a>    
-                                                    <a href="#" role="button" onclick="SeeRudeal('{{estudiante.inscripcion_id}}')" class="btn btn-xs btn-success glyphicon glyphicon-edit" title="Editar Rudeal"></a>
+                                                    <a href="#" role="button" onclick="SeeRudeal('{{estudiante.inscripcion_id}}',{{ datos.id }})" class="btn btn-xs btn-success glyphicon glyphicon-edit" title="Editar Rudeal"></a>
                                                 {% endif %}    
                                             </td>
                                         {% endif %}
@@ -514,11 +514,11 @@
         });
         $('#ModalUser').modal('show');
     }
-     function SeeRudeal(id_inscripcion){
+     function SeeRudeal(id_inscripcion,id_curso){
         var formData = $('#formxls').serialize();
         $.ajax({
             type: 'get',
-            url: Routing.generate('sie_pnp_rudeal', {'id_inscripcion': id_inscripcion}),
+            url: Routing.generate('sie_pnp_rudeal', {'id_inscripcion': id_inscripcion,'id_curso':id_curso}),
             data: formData,
             beforeSend: function () {
                 $("#rudealModal").empty();
