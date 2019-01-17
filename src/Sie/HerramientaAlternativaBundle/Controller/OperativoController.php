@@ -64,6 +64,7 @@ class OperativoController extends Controller {
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
         $gestion = date('Y');
+        //dump(new \DateTime('17-01-2019'));die;
         //$gestion = 2018;
         //dump($gestion);die;
         //validation if the user is logged
@@ -442,6 +443,9 @@ class OperativoController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         $gestion = (new \DateTime($request->get('fechainicio')))->format('Y');
+        $fechainicio = (new \DateTime($request->get('fechainicio')))->format('Y-m-d');
+        $fechafin = (new \DateTime($request->get('fechafin')))->format('Y-m-d');
+
         //dump($request->get('ies'));die;
         $iesOperativo = $request->get('ies');
         try {
@@ -452,13 +456,12 @@ class OperativoController extends Controller {
                     $oc = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
                         ->select('oc')
                         ->where('oc.operativoTipo = '.$request->get('operativo'))
-                        ->andWhere("oc.fechaInicio = '".$request->get('fechainicio')."'")
-                        ->andWhere("oc.fechaFin = '".$request->get('fechafin')."'")
+                        ->andWhere("oc.fechaInicio = '".$fechainicio."'")
+                        ->andWhere("oc.fechaFin = '".$fechafin."'")
                         ->andWhere("oc.distritoTipo = " . $distrito) 
                         ->getQuery()
                         ->getResult();
-                    //dump($oc);die;
-                    if($oc){
+                   if($oc){
                         //dump($op);die;
                         $datos=json_decode($oc[0]->getObs(),true);
                         $obs = array_merge($datos,array($op));
@@ -490,8 +493,8 @@ class OperativoController extends Controller {
                 $oc = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
                     ->select('oc')
                     ->where('oc.operativoTipo = '.$request->get('operativo'))
-                    ->andWhere("oc.fechaInicio = '".$request->get('fechainicio')."'")
-                    ->andWhere("oc.fechaFin = '".$request->get('fechafin')."'")
+                    ->andWhere("oc.fechaInicio = '".$fechainicio."'")
+                    ->andWhere("oc.fechaFin = '".$fechafin."'")
                     ->andWhere("oc.distritoTipo = " .$request->get('distrito')) 
                     ->getQuery()
                     ->getResult();
