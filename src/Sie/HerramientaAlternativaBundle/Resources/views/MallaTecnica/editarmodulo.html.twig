@@ -1,0 +1,115 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        {{form_start(form,{'attr':{'id':'formModulo','class':'form-horizontal form-group'} })}}
+        <div class="panel panel-danger">
+            <div class="panel-heading ">
+                <div class="pull-left">
+                    <h3 class="panel-title">Creación de Modulo</h3>
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+        <div class="row">
+            <div class="form-body col-lg-12 col-md-12">
+                <label> Nombre del Modulo</label>
+                <strong>{{form_widget(form.modulo)}}</strong>
+             </div>
+            {#<div class="form-body col-lg-12 col-md-12">#}
+                {#<label> Horas</label>#}
+                {#<strong>{{form_widget(form.horas)}}</strong>#}
+            {#</div>#}
+
+
+        </div>
+            </div>
+            <div class="panel-footer">
+                <div class="text-right">
+                    <strong>{{form_widget(form.guardar)}}</strong>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i> Cerrar</button>
+                </div>
+
+            </div>
+        </div>
+
+{{ form_end(form) }}
+    </div>
+</div>
+<script>
+
+    var updateModulo= function () {
+
+       var formData = $('#formModulo').serialize();
+      $('#modal').modal('hide');
+
+        $.ajax({
+            type: 'post',
+            url: "{{ path('herramienta_malla_update_modulo') }}",
+            data:formData,
+            beforeSend: function () {
+
+
+//                swal({
+//                    title: "Guardando...",
+//                    text: "Espere un momento por favor",
+//                    icon: imagen,
+//                    buttons: false
+//                });
+                $("#listamodulos").empty();
+                $("#listamodulos").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+            },
+            success: function (data) {
+                $('#listamodulos').empty();
+                $('#listamodulos').html(data);
+
+            },
+            complete: function () {
+//                swal.stopLoading();
+//                swal.close();
+//                $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+//                    $(".alert").slideUp(1000);
+//                });
+            }
+
+
+        });
+    };
+
+
+
+
+    {#var asignarCursoCorto = function(){#}
+        {#var nuevoCurso = $('#form_curso').val();#}
+        {#if(nuevoCurso == ''){#}
+            {#alert('Campo requerido, Ingrese el Nombre del curso');#}
+            {#return false;#}
+        {#}#}
+        {#var formData = $('#formCursos').serialize();#}
+        {#$.ajax({#}
+            {#type: 'post',#}
+            {#data: formData,#}
+            {#url: "{{ path('herramienta_per_add_curso_nuevo') }}",#}
+            {#beforeSend: function () {#}
+
+            {#},#}
+            {#success: function (data) {#}
+                {#$('#menestado').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");#}
+                {#if(data.reinicio == true)#}
+                {#{#}
+                    {#window.location.href =  Routing.generate('herramienta_permanente_admin');#}
+                {#}#}
+                {#//#}
+
+            {#},#}
+            {#statusCode: {#}
+                {#500: function () {#}
+
+                {#},#}
+                {#404: function () {#}
+
+                {#}#}
+            {#}#}
+        {#});#}
+    {#};#}
+
+</script>
