@@ -1924,13 +1924,16 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             $semestre = $em->getRepository('SieAppWebBundle:PeriodoTipo')->find($periodo);
             if($gestion<(new \DateTime())->format('Y'))
             {
-                $estadostramite = '5';
-                //$periodo ='2,3';
-                $titulo = 'Gestiones Pasadas-'. $semestre->getPeriodo() . ' ' . $gestion;    
+                if($operativo == 9) {
+                    $estadostramite = '5,9,12';
+                    $titulo = 'Gestiones Pasadas (Inscripciones) - '. $semestre->getPeriodo() . ' ' . $gestion; 
+                } else {                    
+                    $estadostramite = '5,8,14';
+                    $titulo = 'Gestiones Pasadas (Notas) - '. $semestre->getPeriodo() . ' ' . $gestion; 
+                }   
             }else{
-                if($operativo == 9)
-                {
-                    $estadostramite = '9,12,8,14';
+                if($operativo == 9) {
+                    $estadostramite = '9,12';
                     $titulo = $gestion. ' ' . $semestre->getPeriodo() . '-Inscripciones';    
                 }else{
                     $estadostramite = '8,14';
@@ -1983,20 +1986,20 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                     }
                 }
             } */           
-        }else{
+        } else {
             $periodotecho = '3';
             $gestion = (new \DateTime())->format('Y');
             //dump($gestion);die;
             $periodo = '2';                    
             $estadostramite = '9,12';
-            $titulo = 'Primer Semestre 2018-Inscripciones';
+            $titulo = 'Primer Semestre '.$gestion.'- Inscripciones';
         }        
 
         //$sesion = $request->getSession();
         $em = $this->getDoctrine()->getManager();
         //$em = $this->getDoctrine()->getEntityManager();
         $db = $em->getConnection();
-        $query = "  select lugar, canttecho, (canttecho - cantconcluido) as cantfaltante from (  
+        $queryAnterior = " select lugar, canttecho, (canttecho - cantconcluido) as cantfaltante from (  
                     select lugar, canttecho, COALESCE(cantconcluido,'0') as cantconcluido
                         from (
                                 select dd.lugar, count(*) as canttecho
@@ -2052,13 +2055,63 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                                         and w.tramite_estado_id in (".$estadostramite.") 
                                         group by k.lugar, ie.id, ie.institucioneducativa
                                         order by k.lugar, ie.id) dd
-                                      group by dd.lugar ) b on a.lugar=b.lugarcount ) abc";        
+                                      group by dd.lugar ) b on a.lugar=b.lugarcount ) abc ";
+            
+        $query = "     
+            select lugar, canttecho, (canttecho - COALESCE(cantconcluido,'0')) as cantfaltante
+            from (
+                select dd.departamento_id AS lugar_id, dd.departamento as lugar, count(*) as canttecho
+                from (
+                    select lt14.id as departamento_id, lt14.lugar as departamento
+                    , lt15.id as distrito_id, lt15.lugar as distrito
+                    , d.id as ieue, d.institucioneducativa
+                    from jurisdiccion_geografica a 
+                    inner join (
+                        select a.id, a.institucioneducativa, a.le_juridicciongeografica_id              
+                        from institucioneducativa a                                                        
+                        where a.orgcurricular_tipo_id = 2 and a.institucioneducativa_tipo_id = 2
+                        and a.estadoinstitucion_tipo_id = 10 and a.institucioneducativa_acreditacion_tipo_id = 1
+                    ) d on a.id=d.le_juridicciongeografica_id
+                    inner join lugar_tipo as lt10 on lt10.id = a.lugar_tipo_id_localidad
+                    inner join lugar_tipo as lt11 on lt11.id = lt10.lugar_tipo_id
+                    inner join lugar_tipo as lt12 on lt12.id = lt11.lugar_tipo_id
+                    inner join lugar_tipo as lt13 on lt13.id = lt12.lugar_tipo_id
+                    inner join lugar_tipo as lt14 on lt14.id = lt13.lugar_tipo_id
+                    inner join lugar_tipo as lt15 on lt15.id = a.lugar_tipo_id_distrito
+                    group by lt14.id, lt14.lugar, lt15.id, lt15.lugar, d.id, d.institucioneducativa
+                ) dd
+                group by dd.departamento_id, dd.departamento
+            ) a 
+            left join (
+                select departamento_id as lugar_id, sum(case when subconcluido = subtotal then 1 else 0 end) as cantconcluido  from (
+                select ie.id, lt15.id as distrito_id, lt14.id as departamento_id
+                , sum(case iest.tramite_estado_id when 8 then 1 when 9 then 1 when 12 then 1 when 14 then 1 when 10 then 1 else 0 end) as subconcluido
+                , sum(case iest.tramite_estado_id when 6 then 1 when 7 then 1 when 11 then 1 when 13 then 1 when 5 then 1 else 0 end) as subabierto
+                , count(ies.sucursal_tipo_id) as subtotal
+                from institucioneducativa_sucursal as ies
+                inner join institucioneducativa_sucursal_tramite as iest on iest.institucioneducativa_sucursal_id = ies.id
+                inner join tramite_estado as te on te.id = iest.tramite_estado_id
+                inner join institucioneducativa as ie on ie.id = ies.institucioneducativa_id
+                inner join jurisdiccion_geografica as jg on jg.id = ies.le_juridicciongeografica_id
+                left join lugar_tipo as lt10 on lt10.id = jg.lugar_tipo_id_localidad
+                left join lugar_tipo as lt11 on lt11.id = lt10.lugar_tipo_id
+                left join lugar_tipo as lt12 on lt12.id = lt11.lugar_tipo_id
+                left join lugar_tipo as lt13 on lt13.id = lt12.lugar_tipo_id
+                left join lugar_tipo as lt14 on lt14.id = lt13.lugar_tipo_id
+                left join lugar_tipo as lt15 on lt15.id = jg.lugar_tipo_id_distrito
+                where ies.gestion_tipo_id = ".$gestion." and ies.periodo_tipo_id = ".$periodo." and iest.tramite_estado_id in (".$estadostramite.")-- and lt14.codigo = '8' 
+                group by ie.id, lt15.id, lt14.id
+                ) as operativo
+                group by departamento_id
+            ) b on a.lugar_id=b.lugar_id 
+            order by a.lugar
+        ";        
         $porcentajes = $db->prepare($query);
         $params = array();
         $porcentajes->execute($params);
         $po = $porcentajes->fetchAll();
         
-        $querytot = "
+        $querytotAnterior = "
             select tottecho, (tottecho - COALESCE(cantconcluido,'0')) as totfaltante from(
                 
             select sum(canttecho) as tottecho, sum(cantconcluido) as cantconcluido
@@ -2119,6 +2172,56 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                                             order by k.lugar, ie.id) dd
                                           group by dd.lugar ) b on a.lugar=b.lugar
                                ) ff) abcds";        
+        $querytot = "   
+            select tottecho, (tottecho - COALESCE(totconcluido,0)) as totfaltante from(  
+                select sum(canttecho) as tottecho, sum(COALESCE(cantconcluido,0)) as totconcluido
+                from (
+                    select dd.departamento_id AS lugar_id, dd.departamento as lugar, count(*) as canttecho
+                    from (
+                        select lt14.id as departamento_id, lt14.lugar as departamento
+                        , lt15.id as distrito_id, lt15.lugar as distrito
+                        , d.id as ieue, d.institucioneducativa
+                        from jurisdiccion_geografica a 
+                        inner join (
+                            select a.id, a.institucioneducativa, a.le_juridicciongeografica_id              
+                            from institucioneducativa a                                                        
+                            where a.orgcurricular_tipo_id = 2 and a.institucioneducativa_tipo_id = 2
+                            and a.estadoinstitucion_tipo_id = 10 and a.institucioneducativa_acreditacion_tipo_id = 1
+                        ) d on a.id=d.le_juridicciongeografica_id
+                        inner join lugar_tipo as lt10 on lt10.id = a.lugar_tipo_id_localidad
+                        inner join lugar_tipo as lt11 on lt11.id = lt10.lugar_tipo_id
+                        inner join lugar_tipo as lt12 on lt12.id = lt11.lugar_tipo_id
+                        inner join lugar_tipo as lt13 on lt13.id = lt12.lugar_tipo_id
+                        inner join lugar_tipo as lt14 on lt14.id = lt13.lugar_tipo_id
+                        inner join lugar_tipo as lt15 on lt15.id = a.lugar_tipo_id_distrito
+                        group by lt14.id, lt14.lugar, lt15.id, lt15.lugar, d.id, d.institucioneducativa
+                    ) dd
+                    group by dd.departamento_id, dd.departamento
+                ) a 
+                left join (
+                    select departamento_id as lugar_id, sum(case when subconcluido = subtotal then 1 else 0 end) as cantconcluido  from (
+                    select ie.id, lt15.id as distrito_id, lt14.id as departamento_id
+                    , sum(case iest.tramite_estado_id when 8 then 1 when 9 then 1 when 12 then 1 when 14 then 1 when 10 then 1 else 0 end) as subconcluido
+                    , sum(case iest.tramite_estado_id when 6 then 1 when 7 then 1 when 11 then 1 when 13 then 1 when 5 then 1 else 0 end) as subabierto
+                    , count(ies.sucursal_tipo_id) as subtotal
+                    from institucioneducativa_sucursal as ies
+                    inner join institucioneducativa_sucursal_tramite as iest on iest.institucioneducativa_sucursal_id = ies.id
+                    inner join tramite_estado as te on te.id = iest.tramite_estado_id
+                    inner join institucioneducativa as ie on ie.id = ies.institucioneducativa_id
+                    inner join jurisdiccion_geografica as jg on jg.id = ies.le_juridicciongeografica_id
+                    left join lugar_tipo as lt10 on lt10.id = jg.lugar_tipo_id_localidad
+                    left join lugar_tipo as lt11 on lt11.id = lt10.lugar_tipo_id
+                    left join lugar_tipo as lt12 on lt12.id = lt11.lugar_tipo_id
+                    left join lugar_tipo as lt13 on lt13.id = lt12.lugar_tipo_id
+                    left join lugar_tipo as lt14 on lt14.id = lt13.lugar_tipo_id
+                    left join lugar_tipo as lt15 on lt15.id = jg.lugar_tipo_id_distrito
+                    where ies.gestion_tipo_id = ".$gestion." and ies.periodo_tipo_id = ".$periodo." and iest.tramite_estado_id in (".$estadostramite.")-- and lt14.codigo = '8' 
+                    group by ie.id, lt15.id, lt14.id
+                    ) as operativo
+                    group by departamento_id
+                ) b on a.lugar_id=b.lugar_id 
+            ) as abc
+        ";
         $totales = $db->prepare($querytot);
         $params = array();
         $totales->execute($params);

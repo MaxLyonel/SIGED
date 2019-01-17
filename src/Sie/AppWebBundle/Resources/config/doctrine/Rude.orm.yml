@@ -198,6 +198,12 @@ Sie\AppWebBundle\Entity\Rude:
             fixed: false
             comment: ''
             column: tiempo_llegada_minutos
+        registroFinalizado:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: registro_finalizado
     manyToOne:
         nacionOriginariaTipo:
             targetEntity: NacionOriginariaTipo
