@@ -1025,7 +1025,7 @@ class InfoEstudianteBjpController extends Controller {
                 ->setParameter('sie', $form['sie'])
                 ->setParameter('gestion', $form['gestion'])
                 ->setParameter('estudiante', $estudiante->getId())
-                ->setParameter('matricula', array(0,4,5,11,55))
+                ->setParameter('matricula', array(0,4,5,11,55,70,71,72,73))
                 ->getQuery();
 
             $estudianteInscripcion = $query->getOneOrNullResult();
