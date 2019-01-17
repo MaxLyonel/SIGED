@@ -220,4 +220,32 @@ class SuperiorModuloTipo
     {
         return $this->superiorAreaSaberesTipo;
     }
+    /**
+     * @var boolean
+     */
+    private $esvigente;
+
+
+    /**
+     * Set esvigente
+     *
+     * @param boolean $esvigente
+     * @return SuperiorModuloTipo
+     */
+    public function setEsvigente($esvigente)
+    {
+        $this->esvigente = $esvigente;
+    
+        return $this;
+    }
+
+    /**
+     * Get esvigente
+     *
+     * @return boolean 
+     */
+    public function getEsvigente()
+    {
+        return $this->esvigente;
+    }
 }

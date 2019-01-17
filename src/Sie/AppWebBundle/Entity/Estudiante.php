@@ -184,6 +184,11 @@ class Estudiante
      */
     private $sangreTipo;
 
+    /**
+     * @var \Sie\AppWebBundle\Entity\DepartamentoTipo
+     */
+    private $expedido2;
+
 
     /**
      * Get id
@@ -975,5 +980,28 @@ class Estudiante
     public function getSangreTipo()
     {
         return $this->sangreTipo;
+    }
+
+    /**
+     * Set expedido2
+     *
+     * @param \Sie\AppWebBundle\Entity\DepartamentoTipo $expedido2
+     * @return Estudiante
+     */
+    public function setExpedido2(\Sie\AppWebBundle\Entity\DepartamentoTipo $expedido2 = null)
+    {
+        $this->expedido2 = $expedido2;
+    
+        return $this;
+    }
+
+    /**
+     * Get expedido2
+     *
+     * @return \Sie\AppWebBundle\Entity\DepartamentoTipo 
+     */
+    public function getExpedido2()
+    {
+        return $this->expedido2;
     }
 }

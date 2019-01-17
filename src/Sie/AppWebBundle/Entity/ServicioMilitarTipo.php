@@ -34,7 +34,9 @@ class ServicioMilitarTipo
      */
     private $fechaModificacion;
 
-
+    public function __toString(){
+        return $this->lugarServicioMilitar;
+    }
     /**
      * Get id
      *

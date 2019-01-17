@@ -1,4 +1,14 @@
 {% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .higherWider {
+            width:800px;
+            margin-top:100px;
+        }
+    </style>
+
+{% endblock %}
 
 {% block contentoption %} 
 
@@ -6,11 +16,11 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="page-title">
-                <h1><i class="fa fa-home"></i>Boletín Centralizador - Unidad Educativa
+                <h1><i class="fa fa-cc-amex animated flip"></i>Consultar Calificaciones
                     <small></small>
                 </h1>
                 <ol class="breadcrumb">
-                    <li><span class="glyphicon glyphicon-search"></span>  <a href="#">Buscar </a>
+                    <li><i class="fa fa-dashboard"></i>  <a href="#">Buscar </a>
                     </li>
 
 
@@ -23,7 +33,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            {% for flashMessage in app.session.flashbag.get('warningconsultaue') %}
+            {% for flashMessage in app.session.flashbag.get('warningrein') %}
                 <div class="alert alert-danger alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
@@ -53,22 +63,14 @@
                     {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
                     <div class="form-group">
                         <label for="form_codigoRude" class="col-sm-2 control-label">
-                            {{form_label(form.sie)}}
+                            {{form_label(form.rude)}}
                         </label>
                         <div class="col-sm-10">
-                            {{ form_widget(form.sie) }}
+                            {{ form_widget(form.rude) }}
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="form_codigoRude" class="col-sm-2 control-label">
-                            {{form_label(form.gestion)}}
-                        </label>
-                        <div class="col-sm-10">
-                            {{ form_widget(form.gestion) }}
-                            <div class="help-block with-errors"></div>
-                        </div>
-                    </div>
+
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
 
@@ -95,7 +97,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="flexModalLabel">Notas</h4>
+                <h4 class="modal-title" id="flexModalLabel">Calificaciones</h4>
 
             </div>
             <div class="modal-body">
@@ -124,17 +126,16 @@
 
         var findInscription = function () {
             //get the values
-            sie = $('#form_sie').val();
-            gestion = $('#form_gestion').val();
-            if (sie.length <= 0) {
-                alert("Necesita código SIE para realizar la busqueda");
+            rude = $('#form_rude').val();
+            if (rude.length <= 0) {
+                alert("Necesita código RUDE para realizar la busqueda");
                 return false;
             }
 
             $.ajax({
                 type: 'post',
-                data: ({sie: sie, gestion: gestion}),
-                url: Routing.generate('note_consultation_ues_sie_result'),
+                data: ({rude: rude}),
+                url: Routing.generate('note_consultation_parents_sie_result'),
                 beforeSend: function () {
                     $("#result").empty();
                     $("#result").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
@@ -155,12 +156,12 @@
         }
 
 
-        var seeNota = function (idstudent, nivel, grado, paralelo, turno, gestion) {
+        var seeNota = function (idstudent, nivel, grado, paralelo, turno, gestion, sie) {
 
             $('#myModalNotas').modal('show');
             $.ajax({
                 type: 'get',
-                url: Routing.generate('note_consultation_parents_sie_nota', {'idstudent': idstudent, 'nivel': nivel, 'grado': grado, 'paralelo': paralelo, 'turno': turno, 'gestion': gestion}),
+                url: Routing.generate('note_consultation_parents_sie_nota', {'idstudent': idstudent, 'nivel': nivel, 'grado': grado, 'paralelo': paralelo, 'turno': turno, 'gestion': gestion, 'sie': sie}),
                 beforeSend: function () {
                     $("#idNotas").empty();
                     $("#idNotas").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');

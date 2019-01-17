@@ -1,0 +1,75 @@
+{% if malla is not empty %}
+    {% for malla in malla %}
+        <div class="panel panel-danger">
+            <div class="panel-heading">{{ malla.especialidad }} - {{ malla.acreditacion }} - {{ malla.cantidad }} </div>
+            <div class="panel-body">
+                <button type="button" class="btn btn-danger" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }});" >Nuevo</button>
+                {% if (malla.modulo!='') %}
+
+                    <div>
+                        <div class="table-responsive col-md-12">
+                            <table class="table table-bordered table-striped" id="listaEsp">
+                                <thead>
+                                <tr>
+                                    <th class="text-center border-right">N°</th>
+                                    <th class="text-center border-right">Modulo</th>
+                                    <th class="text-center border-right">Horas</th>
+                                    <th class="text-center border-right">Operaciones</th>
+
+
+
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                {#{{ dump(malla.modulo |split(',')) }}#}
+                                {% set foo = malla.modulo|split(',') %}
+                                {% set horas = malla.horas|split(',') %}
+                                {% set idmodulo = malla.idmodulo|split(',') %}
+                                {% set idspm = malla.idspm|split(',') %}
+                                {#{{ dump(foo) }}#}
+                                {% for i in 0..foo|length-1 %}
+                                    <tr>
+                                        <td data-title="N°" class="text-center">{{ loop.index }}</td>
+                                        <td data-title="Especialidad" class="text-center"> {{  foo[i]}}</td>
+                                        <td data-title="Especialidad" class="text-center">{{ horas[i] }}</td>
+                                        <td data-title="Acciones" class="text-center">
+                                            {#<a href="#" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="View detail"><i class="fa fa-eye"></i></a>#}
+                                            {#<button class="btn btn-lilac btn-xs btn-stroke" onclick="showEditCursoCorto();">#}
+                                            <button class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar" onclick="editarModulo({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }});"><i class="fa fa-pencil"></i></a>
+                                                <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="eliminarModuloCL({{ idmodulo[i]}},{{ idspm[i]}},'{{ foo[i]}}',{{ horas[i]}},{{malla.idespecialidad }});"><i class="fa fa-times"></i></button>
+
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+
+
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+
+
+                {% else %}
+                    No hay Modulos Registrados
+                {% endif %}
+            </div>
+            <div class="panel-footer"> </div>
+        </div>
+    {% endfor %}
+
+
+
+{% else %}
+    {% for mallaniv in mallaniv %}
+        <div class="panel panel-danger">
+            <div class="panel-heading">{{ mallaniv.especialidad }} - {{ mallaniv.acreditacion }}</div>
+            <div class="panel-body">
+                <button type="button" class="btn btn-danger" onclick="nuevoModulo({{ mallaniv.idsip }},{{ mallaniv.idespecialidad }});" >Nuevo</button>
+                No hay modulos Registrados
+            </div>
+            <div class="panel-footer"> </div>
+        </div>
+    {% endfor %}
+{% endif %}
