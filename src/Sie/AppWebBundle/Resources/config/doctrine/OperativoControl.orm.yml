@@ -31,13 +31,13 @@ Sie\AppWebBundle\Entity\OperativoControl:
                 strategy: SEQUENCE
     fields:
         fechaInicio:
-            type: datetime
+            type: date
             nullable: false
             comment: ''
             column: fecha_inicio
         fechaFin:
-            type: datetime
-            nullable: true
+            type: date
+            nullable: false
             comment: ''
             column: fecha_fin
         obs:

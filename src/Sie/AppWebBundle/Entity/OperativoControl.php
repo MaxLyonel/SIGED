@@ -50,11 +50,6 @@ class OperativoControl
     private $distritoTipo;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\InstitucioneducativaSucursal
-     */
-    private $institucioneducativaSucursal;
-
-    /**
      * @var \Sie\AppWebBundle\Entity\Usuario
      */
     private $usuarioRegistro;
@@ -63,6 +58,16 @@ class OperativoControl
      * @var \Sie\AppWebBundle\Entity\Usuario
      */
     private $usuarioModificacion;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\Institucioneducativa
+     */
+    private $institucioneducativa;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\GestionTipo
+     */
+    private $gestionTipo;
 
 
     /**
@@ -237,29 +242,6 @@ class OperativoControl
     }
 
     /**
-     * Set institucioneducativaSucursal
-     *
-     * @param \Sie\AppWebBundle\Entity\InstitucioneducativaSucursal $institucioneducativaSucursal
-     * @return OperativoControl
-     */
-    public function setInstitucioneducativaSucursal(\Sie\AppWebBundle\Entity\InstitucioneducativaSucursal $institucioneducativaSucursal = null)
-    {
-        $this->institucioneducativaSucursal = $institucioneducativaSucursal;
-    
-        return $this;
-    }
-
-    /**
-     * Get institucioneducativaSucursal
-     *
-     * @return \Sie\AppWebBundle\Entity\InstitucioneducativaSucursal 
-     */
-    public function getInstitucioneducativaSucursal()
-    {
-        return $this->institucioneducativaSucursal;
-    }
-
-    /**
      * Set usuarioRegistro
      *
      * @param \Sie\AppWebBundle\Entity\Usuario $usuarioRegistro
@@ -304,11 +286,6 @@ class OperativoControl
     {
         return $this->usuarioModificacion;
     }
-    /**
-     * @var \Sie\AppWebBundle\Entity\Institucioneducativa
-     */
-    private $institucioneducativa;
-
 
     /**
      * Set institucioneducativa
@@ -332,11 +309,6 @@ class OperativoControl
     {
         return $this->institucioneducativa;
     }
-    /**
-     * @var \Sie\AppWebBundle\Entity\GestionTipo
-     */
-    private $gestionTipo;
-
 
     /**
      * Set gestionTipo
