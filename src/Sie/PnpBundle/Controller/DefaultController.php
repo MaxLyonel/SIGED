@@ -38,6 +38,19 @@ use Sie\AppWebBundle\Entity\CentroSaludTipo;
 use Sie\AppWebBundle\Entity\ViviendaOcupaTipo;
 use Sie\AppWebBundle\Entity\AccesoInternetTipo;
 use Sie\AppWebBundle\Entity\FrecuenciaUsoInternetTipo;
+use Sie\AppWebBundle\Entity\ProcedenciaTipo;
+use Sie\AppWebBundle\Entity\ModalidadEstudioTipo;
+use Sie\AppWebBundle\Entity\CantidadCentroSaludTipo;
+use Sie\AppWebBundle\Entity\ActividadTipo;
+use Sie\AppWebBundle\Entity\InstitucioneducativaTipo;
+use Sie\AppWebBundle\Entity\DepartamentoTipo;
+use Sie\AppWebBundle\Entity\RudeDiscapacidadGrado;
+use Sie\AppWebBundle\Entity\RudeIdioma;
+use Sie\AppWebBundle\Entity\HablaTipo;
+use Sie\AppWebBundle\Entity\RudeCentroSalud;
+use Sie\AppWebBundle\Entity\RudeServicioBasico;
+use Sie\AppWebBundle\Entity\RudeActividad;
+use Sie\AppWebBundle\Entity\ServicioBasicoTipo;
 //use Sie\AppWebBundle\Entity\PnpSerialRude;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -172,6 +185,34 @@ class DefaultController extends Controller
         foreach ($po as $p) {
             $datos_filas["id"] = $p["id"];            
             $datos_filas["provincia"] = $p["provincia"];            
+            $filas[] = $datos_filas;
+        }
+
+        $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('message' => new JsonEncoder()));
+        $jsonContent = $serializer->serialize($filas, 'json');
+        echo $jsonContent;
+        exit;
+    }
+    public function buscar_grado_discapacidadAction($val){
+        if($val==10)$buscar="and id in (5,6)";
+        else $buscar="and id in (1,2,7,8)";
+        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager(); 10 visual
+        $db = $em->getConnection();
+        $query = " select id,grado_discapacidad
+                    from grado_discapacidad_tipo 
+                    where es_vigente=true $buscar
+                    order by id asc
+                ";
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $filas = array();
+        $datos_filas = array();
+        foreach ($po as $p) {
+            $datos_filas["id"] = $p["id"];            
+            $datos_filas["grado_discapacidad"] = $p["grado_discapacidad"];            
             $filas[] = $datos_filas;
         }
 
@@ -6295,7 +6336,7 @@ public function cerrar_cursoAction(Request $request){
         $stmt->execute($params);
         $po = $stmt->fetchAll();
         $em->getConnection()->beginTransaction();
-        try{//carlos
+        try{
             foreach ($po as $p) {
                 $id = $p["id_curso_cerrar"];
                 $obs = $p["obs"];
@@ -6669,15 +6710,16 @@ ORDER BY carnet,bloque,parte,fecha_inicio,municipio
     return $this->render('SiePnpBundle:Default:listar_dep.html.twig',array('contador'=>$contador,'filas'=>$filas));
 }
 
-public function rudealAction(request $Request,$id_inscripcion){ 
+public function rudealAction(request $Request,$id_inscripcion,$id_curso){ 
 
     $em = $this->getDoctrine()->getManager();
     $db = $em->getConnection();
     // VER SI EXISTE RUDEAL DE ESTA INSCRIPCION id_rude = 0 no existe
     $estudiante_inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($id_inscripcion);
     $id_estudiante=$estudiante_inscripcion->getEstudiante()->getId();
+
     $id_rude = $em->getRepository('SieAppWebBundle:Rude')->findOneByestudianteInscripcion($id_inscripcion);
-    //$id_rude=$id_rude->getId();
+    
     if($id_rude){
         $id_rude=$id_rude->getId();
     }
@@ -6694,52 +6736,346 @@ public function rudealAction(request $Request,$id_inscripcion){
             ->getQuery();
             $id_rude_ant = $query->getOneOrNullResult();
         if($id_rude_ant){
-            $id_rude_ant=$id_rude_ant->getId();       
+            $id_rude_ant=$id_rude_ant->getId();  
         }
         else{
             $id_rude_ant=0;//NO EXISTE RUDE ANTERIOES, NUEVO
         }
     }
+
     ////OBTENEMOS TODOS LOS VALORES
-    //DATOS DEL PARTICIPANTE//ctv
+    //LUGAR DEL USUARIO
+     $userId = $this->session->get('userId');
+        $query = "
+               SELECT lt.lugar as lugar
+               FROM lugar_tipo lt,
+               usuario_rol ur 
+               WHERE ur.lugar_tipo_id=lt.id and ur.esactivo=true and ur.usuario_id=$userId";
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $filas = array();
+        $datos_filas = array();
+        foreach ($po as $p) {
+            $lugar_usuario = $p["lugar"];
+        }
+        $lugar_usuario=strtoupper($lugar_usuario);
+        switch ($lugar_usuario) {
+            case 'CHUQUISACA':{$lugar_tipo_nombre_usu="CHUQUISACA";$lugar_tipo_id_usu=31654;$ie=80480300;$departamento_exp_usu=1;}break;
+            case 'LA PAZ':{$lugar_tipo_nombre_usu="LA PAZ";$lugar_tipo_id_usu=31655;$ie=80730794;$departamento_exp_usu=2;}break;
+            case 'COCHABAMBA':{$lugar_tipo_nombre_usu="COCHABAMBA";$lugar_tipo_id_usu=31656;$ie=80980569;$departamento_exp_usu=3;}break;
+            case 'ORURO':{$lugar_tipo_nombre_usu="ORURO";$lugar_tipo_id_usu=31657;$ie=81230297;$departamento_exp_usu=4;}break;
+            case 'POTOSI':{$lugar_tipo_nombre_usu="POTOSI";$lugar_tipo_id_usu=31658;$ie=81480201;$departamento_exp_usu=5;}break;
+            case 'TARIJA':{$lugar_tipo_nombre_usu="TARIJA";$lugar_tipo_id_usu=31659;$ie=81730264;$departamento_exp_usu=6;}break;
+            case 'SANTA CRUZ':{$lugar_tipo_nombre_usu="SANTA CRUZ";$lugar_tipo_id_usu=31660;$ie=81981501;$departamento_exp_usu=7;}break;
+            case 'BENI':{$lugar_tipo_nombre_usu="BENI";$lugar_tipo_id_usu=31661;$ie=82230130;$departamento_exp_usu=8;}break;
+            case 'PANDO':{$lugar_tipo_nombre_usu="PANDO";$lugar_tipo_id_usu=31662;$ie=82480050;$departamento_exp_usu=9;}break;
+            default:
+                $lugar_tipo_id_usu=-1;
+                $departamento_exp_usu=-1;
+                $lugar_tipo_nombre_usu="Bolivia";
+                break;
+        }    
+    $roluser = $this->session->get('roluser');    
+    //DATOS DEL CURSO
+    $institucioneducativa_curso=$em->getRepository('SieAppWebBundle:institucionEducativaCurso')->find($id_curso);
+    $institucioneducativa_id=$institucioneducativa_curso->getInstitucioneducativa()->getId();
+      switch ($institucioneducativa_id) {
+            case 80480300:{$lugar_registro_rude="CHUQUISACA";}break;
+            case 80730794:{$lugar_registro_rude="LA PAZ";}break;
+            case 80980569:{$lugar_registro_rude="COCHABAMBA";}break;
+            case 81230297:{$lugar_registro_rude="ORURO";}break;
+            case 81480201:{$lugar_registro_rude="POTOSI";}break;
+            case 81730264:{$lugar_registro_rude="TARIJA";}break;
+            case 81981501:{$lugar_registro_rude="SANTA CRUZ";}break;
+            case 82230130:{$lugar_registro_rude="BENI";}break;
+            case 82480050:{$lugar_registro_rude="PANDO";}break;
+            default:
+                $lugar_registro_rude="Bolivia";
+                break;
+        }    
+    $fecha_registro_rude=$institucioneducativa_curso->getFechaInicio();
+    //DATOS DEL PARTICIPANTE//
+    $estudiante_actual=$em->getRepository('SieAppWebBundle:Estudiante')->find($id_estudiante);
+    $estudiante_a[]=$estudiante_actual->getNombre()." ".$estudiante_actual->getPaterno()." ".$estudiante_actual->getMaterno();
+    $estudiante_a[]=$estudiante_actual->getCarnetIdentidad();
+    $estudiante_a[]=$estudiante_actual->getComplemento();
+    $estudiante_a[]=$estudiante_actual->getFechaNacimiento();
+    
     $id_departamentos = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array(
         'id' => array(31654,31655,31656,31657,31658,31659,31660,31661,31662)
     ));
+    $id_departamentos_exp = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findAll();
     $estado_civil_tipo = $em->getRepository('SieAppWebBundle:EstadoCivilTipo')->findBy(array(
         'id' => array(1,10,2,3)
     ));
-    $discapacidad_tipo = $em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findall();
-    //$grado_discapacidad_tipo = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->findBy(array('esvigente' => true));
-    $grado_discapacidad_tipo = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->findall();
+    $discapacidad_tipo = $em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findBy(array('esVigente' => true));
+    $grado_discapacidad_tipo = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->findBy(array('esVigente' => true));
+
+    $ocupacion_tipo = $em->getRepository('SieAppWebBundle:ActividadTipo')->findBy(array('esVigente' => true));
+    ///DIRECCION ACTUAL EL PARTIICIPANTE
+    $provincia_tipo = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarTipo' => $lugar_tipo_id_usu));
+    //DATOS DE INSCIPCIÓN
+    $procedencia_tipo= $em->getRepository('SieAppWebBundle:ProcedenciaTipo')->findBy(array('esVigente' => true));
+    $modalidad_estudio_tipo= $em->getRepository('SieAppWebBundle:ModalidadEstudioTipo')->findBy(array('esVigente' => true));
     //ASPECTOS SOCIOECONOMICOS
-    $idioma_tipo = $em->getRepository('SieAppWebBundle:IdiomaTipo')->findall();
-    $nacion_originaria_tipo = $em->getRepository('SieAppWebBundle:NacionOriginariaTipo')->findall();
-    $centro_salud_tipo = $em->getRepository('SieAppWebBundle:CentroSaludTipo')->findall();
+    $idioma_tipo = $em->getRepository('SieAppWebBundle:IdiomaTipo')->findBy(array('esVigente' => true));
+    $nacion_originaria_tipo = $em->getRepository('SieAppWebBundle:NacionOriginariaTipo')->findBy(array('esVigente' => true));
+    $centro_salud_tipo = $em->getRepository('SieAppWebBundle:CentroSaludTipo')->findBy(array('esVigente' => true));
+    $cantidad_centro_salud_tipo= $em->getRepository('SieAppWebBundle:CantidadCentroSaludTipo')->findBy(array('esVigente' => true));
     //SERVICIOS BASICOS
-    $vivienda_ocupa_tipo = $em->getRepository('SieAppWebBundle:ViviendaOcupaTipo')->findall();
+    $vivienda_ocupa_tipo = $em->getRepository('SieAppWebBundle:ViviendaOcupaTipo')->findBy(array('esVigente' => true));
     //ACCESO A INTERNET
-    $acceso_internet_tipo = $em->getRepository('SieAppWebBundle:AccesoInternetTipo')->findall();
-    $frecuencia_uso_internet_tipo = $em->getRepository('SieAppWebBundle:FrecuenciaUsoInternetTipo')->findall();
-    //ACTIVIDAD LABORAL
+    //$acceso_internet_tipo = $em->getRepository('SieAppWebBundle:AccesoInternetTipo')->findBy(array('esVigente' => true));
+    //$frecuencia_uso_internet_tipo = $em->getRepository('SieAppWebBundle:FrecuenciaUsoInternetTipo')->findBy(array('esVigente' => true));
 
 
     return $this->render('SiePnpBundle:Default:rudeal.html.twig',array(
         'id_inscripcion'=>$id_inscripcion,
         'id_departamentos'=>$id_departamentos,
         'id_rude_ant'=>$id_rude_ant,
+        'id_estudiante'=>$id_estudiante,
         'discapacidad_tipo'=>$discapacidad_tipo,
         'grado_discapacidad_tipo'=>$grado_discapacidad_tipo,
         'idioma_tipo'=>$idioma_tipo,
         'nacion_originaria_tipo'=>$nacion_originaria_tipo,
         'centro_salud_tipo'=>$centro_salud_tipo,
         'vivienda_ocupa_tipo'=>$vivienda_ocupa_tipo,
-        'acceso_internet_tipo'=>$acceso_internet_tipo,
-        'frecuencia_uso_internet_tipo'=>$frecuencia_uso_internet_tipo,
+        'departamento_exp_usu'=>$departamento_exp_usu,
+        //'acceso_internet_tipo'=>$acceso_internet_tipo,
+        //'frecuencia_uso_internet_tipo'=>$frecuencia_uso_internet_tipo,
+        'id_departamentos_exp'=>$id_departamentos_exp,
         'estado_civil_tipo'=>$estado_civil_tipo,
+        'procedencia_tipo'=>$procedencia_tipo,
+        'modalidad_estudio_tipo'=>$modalidad_estudio_tipo,
+        'cantidad_centro_salud_tipo'=>$cantidad_centro_salud_tipo,
+        'ocupacion_tipo'=>$ocupacion_tipo,
+        'estudiante_a'=>$estudiante_a,
+        'lugar_tipo_id_usu'=>$lugar_tipo_id_usu,
+        'provincia_tipo'=>$provincia_tipo,
         'op'=>$id_rude_ant,//op 0 nuevo
+        'id_curso'=>$id_curso,
+        'roluser'=>$roluser,
+        'lugar_registro_rude'=>$lugar_registro_rude,
+        'fecha_registro_rude'=>$fecha_registro_rude,
     ));       
 }
 
+public function rudeal_guardarAction(Request $request){
+    $em = $this->getDoctrine()->getManager();
+    $db = $em->getConnection();
+    if($request->getMethod()=="POST") {
+        $curso_id=$request->get("id_curso");
+        $id_estudiante=$request->get("id_estudiante");
+        $lugar_registro_rude=$request->get("lugar_registro_rude");
+        $fecha_registro_rude=$request->get("fecha_registro_rude");
+        $id_inscripcion=$request->get("id_inscripcion");
+        $expedido=$request->get("exp");
+        $num_hijos=$request->get("num_hijos");
+        $estado_civil=$request->get("estado_civil");
+        $discapacidad=$request->get("discapacidad");
+        $grado_discapacidad=$request->get("grado_discapacidad");
+        $ibc=$request->get("ibc");
+        $municipio=$request->get("municipio");
+        $localidad=$request->get("localidad");
+        $zona=$request->get("zona");
+        $calle=$request->get("calle");
+        $nro_vivienda=$request->get("nro_vivienda");
+        $cel=$request->get("cel");
+        $telf=$request->get("telf");
+        $procedencia=$request->get("procedencia");
+        $modalidad=$request->get("modalidad");
+        $idioma_hablar=$request->get("idioma_hablar");
+        $idioma_frecuencia=$request->get("idioma_frecuencia");
+        $nacion=$request->get("nacion");
+        $salud=$request->get("salud");
+        $centrosalud=$request->get("centrosalud");
+        $cant_salud=$request->get("cant_salud");
+        $seguro=$request->get("seguro");
+        $agua=$request->get("agua");
+        $energia_electrica=$request->get("energia_electrica");
+        $bano=$request->get("bano");
+        $viviendaocupa=$request->get("viviendaocupa");
+        $recojo_basura=$request->get("recojo_basura");
+        $alcantarillado=$request->get("alcantarillado");
+        //$internet=$request->get("internet");
+        //$frecuencia_internet=$request->get("frecuencia_internet");
+        $alguna_actividad=$request->get("alguna_actividad");
+        $actividad_laboral=$request->get("actividad_laboral");
+        $actividad_laboral_new=$request->get("actividad_laboral_new");
+        $lugar_registro=$request->get("lugar_registro");
+        $fecha_registro=$request->get("fecha_registro");
+        $ci_tiene=$request->get("ci_est");
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        try {
+            //RUDE ctv
+            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude');");
+            $query->execute();
+            $newrude = new Rude();
+            $newrude->setEstudianteInscripcion($id_inscripcion);
+            $newrude->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->findOneById(10)); // 10 PNP
+            $newrude->setFechaRegistro(new \DateTime('now'));
+            $newrude->setFechaModificacion(new \DateTime('now'));
+            $newrude->setFechaRegistroRude(\DateTime::createFromFormat('d/m/Y', $fecha_registro_rude));
+            $newrude->setLugarRegistroRude($lugar_registro_rude);
+            $newrude->setCantHijos($num_hijos);
+            if($ci_tiene!="")$newrude->setTieneCi(true);else $newrude->setTieneCi(false);
+            if($discapacidad!=0)$newrude->setTieneDiscapacidad(true);else $newrude->setTieneDiscapacidad(false);
+            if($ibc!="")$newrude->setTieneCarnetDiscapacidad(true);else $newrude->setTieneCarnetDiscapacidad(false);
+            $newrude->setMunicipioLugarTipo($em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($municipio));
+            $newrude->setLocalidad($localidad);
+            $newrude->setZona($zona);
+            $newrude->setAvenida($calle);
+            $newrude->setNumero($nro_vivienda);
+            $newrude->setCelular($cel);
+            $newrude->setTelefonoFijo($telf);
+            $newrude->setProcedenciaTipo($em->getRepository('SieAppWebBundle:ProcedenciaTipo')->findOneById($procedencia));
+            $newrude->setModalidadEstudioTipo($em->getRepository('SieAppWebBundle:modalidadEstudioTipo')->findOneById($modalidad));
+            if($nacion!=0)$newrude->setEsPerteneceNacionOriginaria(true);else $newrude->setEsPerteneceNacionOriginaria(false);
+            $newrude->setNacionOriginariaTipo($em->getRepository('SieAppWebBundle:NacionOriginariaTipo')->findOneById($nacion));
+            $newrude->setCentroSalud($salud);
+            $newrude->setSeguroSalud($seguro);
+            $newrude->setViviendaOcupaTipo($em->getRepository('SieAppWebBundle:ViviendaOcupaTipo')->findOneById($viviendaocupa));
+            $newrude->setTieneOcupacionTrabajo($alguna_actividad);
+            $cantidad_existe=0;
+            foreach ($centrosalud as $p) {
+                if($p>=1 && $p<=3)$cantidad_existe=1;
+            }
+            if($cantidad_existe==1)
+                $newrude->setCantidadCentroSaludTipo($em->getRepository('SieAppWebBundle:CantidadCentroSaludTipo')->findOneById($cant_salud));
+            else
+                $newrude->setCantidadCentroSaludTipo($em->getRepository('SieAppWebBundle:CantidadCentroSaludTipo')->findOneById(0));//ninguno
+            $em->persist($newrude);
+            $em->flush();
+            //ESTUDIANTE
+            $estudiante=$em->getRepository('SieAppWebBundle:Estudiante')->findOneById($id_estudiante);
+            $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneById($expedido));
+            $estudiante->setEstadoCivil($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->findOneById($estado_civil));
+            if($ibc!="")$estudiante->setCarnetIbc($ibc);
+            $em->flush();
+            //DISCAPACIDAD TIPO
+            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_discapacidad_grado');");
+            $query->execute();
+            $newdiscapacidadgrado = new RudeDiscapacidadGrado();
+            $newdiscapacidadgrado->setRude($newrude);
+            $newdiscapacidadgrado->setDiscapacidadTipo($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findOneById($discapacidad));
+            if($discapacidad!=0)
+                $newdiscapacidadgrado->setGradoDiscapacidadTipo($em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->findOneById($grado_discapacidad));
+            else
+                $newdiscapacidadgrado->setGradoDiscapacidadTipo($em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->findOneById(0));//ninguno
+            $newdiscapacidadgrado->setFechaRegistro(new \DateTime('now'));
+            $newdiscapacidadgrado->setFechaModificacion(new \DateTime('now'));
+            $em->flush();
+            //IDIOMA NIÑEZ
+            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_idioma');");
+            $query->execute();
+            $newrudeidioma = new RudeIdioma();
+            $newrudeidioma->setRude($newrude);
+            $newrudeidioma->setHablaTipo($em->getRepository('SieAppWebBundle:HablaTipo')->findOneById(1));//1 Niñez
+            $newrudeidioma->setIdiomaTipo($em->getRepository('SieAppWebBundle:IdiomaTipo')->findOneById($idioma_hablar));
+            $newrudeidioma->setFechaRegistro(new \DateTime('now'));
+            $newrudeidioma->setFechaModificacion(new \DateTime('now'));
+            $em->flush();
+            //IDIOMA FRECUENCIA
+            foreach ($idioma_frecuencia as $p) {
+                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_idioma');");
+                $query->execute();
+                $newrudeidioma = new RudeIdioma();
+                $newrudeidioma->setRude($newrude);
+                $newrudeidioma->setHablaTipo($em->getRepository('SieAppWebBundle:HablaTipo')->findOneById(2));//2 FRECUENCIA
+                $newrudeidioma->setIdiomaTipo($em->getRepository('SieAppWebBundle:IdiomaTipo')->findOneById($p));
+                $newrudeidioma->setFechaRegistro(new \DateTime('now'));
+                $newrudeidioma->setFechaModificacion(new \DateTime('now'));
+                $em->flush();
+            }
+            //SALUD
+            foreach ($centrosalud as $p) {
+                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_centro_salud');");
+                $query->execute();
+                $newrudecentrosalud = new RudeCentroSalud();
+                $newrudecentrosalud->setRude($newrude);
+                $newrudecentrosalud->setCentroSaludTipo($em->getRepository('SieAppWebBundle:CentroSaludTipo')->findOneById($p));
+                $newrudecentrosalud->setFechaRegistro(new \DateTime('now'));
+                $newrudecentrosalud->setFechaModificacion(new \DateTime('now'));
+                $em->flush();
+            }
+            //SERVICIOS BASICOS
+            if($agua==1){
+                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_servicio_basico');");
+                $query->execute();
+                $newrudeserviciobasico = new RudeServicioBasico();
+                $newrudeserviciobasico->setRude($newrude);
+                $newrudeserviciobasico->setServicioBasicoTipo($em->getRepository('SieAppWebBundle:ServicioBasicoTipo')->findOneById(1));//agua por red
+                $newrudeserviciobasico->setFechaRegistro(new \DateTime('now'));
+                $newrudeserviciobasico->setFechaModificacion(new \DateTime('now'));
+                $em->flush();    
+            }
+            if($energia_electrica==1){
+                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_servicio_basico');");
+                $query->execute();
+                $newrudeserviciobasico = new RudeServicioBasico();
+                $newrudeserviciobasico->setRude($newrude);
+                $newrudeserviciobasico->setServicioBasicoTipo($em->getRepository('SieAppWebBundle:ServicioBasicoTipo')->findOneById(4));//energia electrica
+                $newrudeserviciobasico->setFechaRegistro(new \DateTime('now'));
+                $newrudeserviciobasico->setFechaModificacion(new \DateTime('now'));
+                $em->flush();    
+            }
+            if($bano==1){
+                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_servicio_basico');");
+                $query->execute();
+                $newrudeserviciobasico = new RudeServicioBasico();
+                $newrudeserviciobasico->setRude($newrude);
+                $newrudeserviciobasico->setServicioBasicoTipo($em->getRepository('SieAppWebBundle:ServicioBasicoTipo')->findOneById(2));//baño
+                $newrudeserviciobasico->setFechaRegistro(new \DateTime('now'));
+                $newrudeserviciobasico->setFechaModificacion(new \DateTime('now'));
+                $em->flush();    
+            }
+            if($recojo_basura==1){
+                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_servicio_basico');");
+                $query->execute();
+                $newrudeserviciobasico = new RudeServicioBasico();
+                $newrudeserviciobasico->setRude($newrude);
+                $newrudeserviciobasico->setServicioBasicoTipo($em->getRepository('SieAppWebBundle:ServicioBasicoTipo')->findOneById(5));//recojo basura
+                $newrudeserviciobasico->setFechaRegistro(new \DateTime('now'));
+                $newrudeserviciobasico->setFechaModificacion(new \DateTime('now'));
+                $em->flush();    
+            }
+            if($alcantarillado==1){
+                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_servicio_basico');");
+                $query->execute();
+                $newrudeserviciobasico = new RudeServicioBasico();
+                $newrudeserviciobasico->setRude($newrude);
+                $newrudeserviciobasico->setServicioBasicoTipo($em->getRepository('SieAppWebBundle:ServicioBasicoTipo')->findOneById(3));//alcantarillado
+                $newrudeserviciobasico->setFechaRegistro(new \DateTime('now'));
+                $newrudeserviciobasico->setFechaModificacion(new \DateTime('now'));
+                $em->flush();    
+            }
+            //ACTIVIDAD LABORAL ctv
+            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_actividad');");
+            $query->execute();
+            $newrudeactividad = new RudeActividad();
+            $newrudeactividad->setRude($newrude);
+            $newrudeactividad->setActividadTipo($em->getRepository('SieAppWebBundle:ActividadTipo')->findOneById($actividad_laboral));
+            $newrudeactividad->setFechaRegistro(new \DateTime('now'));
+            $newrudeactividad->setFechaModificacion(new \DateTime('now'));
+            if($actividad_laboral==99)
+                $newrudeactividad->setActividadOtro($actividad_laboral_new);
+            $em->flush();
+            echo "llego";die;  
+            //$em->getConnection()->commit();
+            
+            $this->session->getFlashBag()->add('success', 'Rudeal Guardado Correctamente.');        
+            return $this->redirectToRoute('sie_pnp_curso_listado_editnew',array('id'=>$curso_id));
+            } 
+        catch (Exception $ex) {
+            $em->getConnection()->rollback();
+            $this->session->getFlashBag()->add('error', 'Proceso detenido. Se ha detectado inconsistencia de datos.'.$ex);
+            return $this->redirectToRoute('sie_pnp_curso_listado_editnew',array('id'=>$curso_id));
+        }
+    }
+}
 
 /////////////////////////////////busquedas//////////////////////
 // buscar datos estudiantes
