@@ -173,7 +173,7 @@
             // Setup - add a text input to each footer cell
             $('#datatable tfoot th').each( function () {
                 var title = $(this).text();
-                if(title.trim() === "" || title === "No." || title === "Acciones"){
+                if(title.trim() === "" || title === "No."){
                     $(this).html('');
                 } else {
                     $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
