@@ -160,7 +160,7 @@
                                                   {% if data.estadomatriculaId == 4 %}
                                                   <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
                                                   {% else %}
-                                                   <button type="button" class="btn btn-default btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
+                                                   <button type="button" class="btn btn-default btn-stroke btn-xs"  onclick="#">
                                                   {% endif %}
                                                      {{data.estadomatricula}}
                                                    </button>
@@ -184,6 +184,13 @@
                                       {% else %}
                                         {% set styleButton = 'info' %}
                                       {% endif %}
+                                    {% if  data.esvalidoPlena %}
+                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="CUT">
+                                            <a class="btn btn-circle btn-success btn-stroke" href="{{path('download_cut', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
+                                              <i class="fa fa-file-pdf-o" style="color:#11AA00"></i>
+                                            </a>
+                                        </div>
+                                    {% endif %}  
 
                                     {% if imprimirLibreta == true and data.estadomatriculaId in estadosPermitidosImprimir %}
                                             <a class="btn btn-circle btn-lilac" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
