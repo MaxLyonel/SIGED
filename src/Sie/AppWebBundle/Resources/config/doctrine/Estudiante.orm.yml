@@ -210,12 +210,6 @@ Sie\AppWebBundle\Entity\Estudiante:
             length: 255
             fixed: false
             comment: ''
-        expedido:
-            type: string
-            nullable: true
-            length: 6
-            fixed: false
-            comment: ''
     manyToOne:
         generoTipo:
             targetEntity: GeneroTipo
@@ -271,7 +265,7 @@ Sie\AppWebBundle\Entity\Estudiante:
                 sangre_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
-        expedido2:
+        expedido:
             targetEntity: DepartamentoTipo
             cascade: {  }
             mappedBy: null
