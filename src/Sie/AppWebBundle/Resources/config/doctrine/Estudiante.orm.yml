@@ -1,7 +1,6 @@
 Sie\AppWebBundle\Entity\Estudiante:
     type: entity
     table: estudiante
-    repositoryClass: Sie\AppWebBundle\Entity\EstudianteRepository
     indexes:
         indx_ci:
             columns:
@@ -29,6 +28,9 @@ Sie\AppWebBundle\Entity\Estudiante:
         IDX_3B3F3FAD70591119:
             columns:
                 - sangre_tipo_id
+        IDX_3B3F3FAD1C73F6E:
+            columns:
+                - expedido_id
     uniqueConstraints:
         estudiante_codigo_rude_key:
             columns:
@@ -267,6 +269,15 @@ Sie\AppWebBundle\Entity\Estudiante:
             inversedBy: null
             joinColumns:
                 sangre_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        expedido2:
+            targetEntity: DepartamentoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                expedido_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
