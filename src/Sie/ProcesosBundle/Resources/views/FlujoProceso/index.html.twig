@@ -164,6 +164,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Adicionar tarea</h4>
+                    <div class="clearfix"></div>
                 </div>
                 <div class="modal-body">
                     <div class="form-group col-md-12">
@@ -226,11 +227,18 @@
                             {{ form_widget(form.ruta, {'attr':{'class':'form-control'} }) }}
                         </div>
                     </div>
-                    {{ form_end(form) }}  
+                    <div class="form-group col-md-12">
+                        <label class="col-sm-4">Ruta del reporte</label>
+                        <div class="col-md-8">
+                            {{ form_widget(form.rutaReporte, {'attr':{'class':'form-control'} }) }}
+                        </div>
+                    </div>
+                    {{ form_end(form) }}                      
                 </div>
                 <div class="modal-footer">
                     <button id="adicionartarea" class="btn btn-primary" onclick="cargartarea()">Guardar</button>
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <div class="clearfix"></div>
                 </div>
             </div>
         </div>
@@ -337,7 +345,12 @@
         }); 
         $('#id_adicionar3').click(function(){
             if($('#form_proceso').val()==""){ alert('Debe seleccionar un proceso'); return false;}
-        });        
+        });
+        $('#form_evaluacion').change(function(){
+            if($('#form_evaluacion').val() == 0){
+                $('#form_varevaluacion').val('');
+            }
+        });
         $('#form_proceso').change(function(){
             //alert('hola');
             if($('#form_proceso').val()!="")
@@ -808,7 +821,7 @@
             else{ if (evaluacion==1 && varevaluacion==''){alert('Debe ingresar la variable de evaluacion'); return false;} }
             formData = $('#form_edit_tarea').serialize();
             $.ajax({
-                type: 'POST',
+                type: 'get',
                 url: "{{path('flujoproceso_tarea_update')}}",
                 data: formData,
                 beforeSend: function () {

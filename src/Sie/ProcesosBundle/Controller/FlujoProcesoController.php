@@ -76,6 +76,7 @@ class FlujoProcesoController extends Controller
             ->add('tareasig','choice',array('label'=>'Tarea','required'=>false,'empty_value' => 'Seleccionar tarea siguiente'))
             ->add('plazo','text',array('label'=>'Plazo','required'=>false,'attr'=>array('title'=>'solo números')))
             ->add('ruta','text',array('label'=>'Ruta de la tarea','required'=>false,'attr'=>array('style'=>'text-transform:lowercase')))
+            ->add('rutaReporte','text',array('label'=>'Ruta del reporte','required'=>false,'attr'=>array('style'=>'text-transform:lowercase')))
             //->add('usuarios', 'choice', array('required'=>false, 'attr' => array('class' => 'form-control')))
             //->add('usuarios','choice',array('required'=>false,'multiple' => true,'expanded' => true,))
             ->getForm();
@@ -172,6 +173,7 @@ class FlujoProcesoController extends Controller
                 $flujoproceso->setFlujoTipo($flujotipo);
                 $flujoproceso->setRolTipo($roltipo);
                 $flujoproceso->setRutaFormulario($form['ruta']);
+                $flujoproceso->setRutaReporte($form['rutaReporte']);
                 //dump($flujoproceso);die;
                 $em->persist($flujoproceso);
                 $em->flush();
@@ -435,6 +437,7 @@ class FlujoProcesoController extends Controller
         fp.es_evaluacion,
         fp.plazo,
         fp.ruta_formulario,
+        fp.ruta_reporte,
         pt_a.proceso_tipo as tarea_ant,
         pt_s.proceso_tipo as tarea_sig,
         fp.variable_evaluacion,
@@ -875,6 +878,7 @@ class FlujoProcesoController extends Controller
             ->add('varevaluacion_edit','text',array('label'=>'Variable a evaluar','required'=>false,'data'=>$entity->getVariableEvaluacion(),'attr'=>array('style'=>'text-transform:uppercase')))
             ->add('plazo_edit','text',array('label'=>'Plazo','required'=>false,'data'=>$entity->getPlazo()))
             ->add('ruta_edit','text',array('label'=>'Ruta de la tarea','required'=>false,'data'=>$entity->getRutaFormulario(),'attr'=>array('style'=>'text-transform:lowercase')))
+            ->add('rutaReporte_edit','text',array('label'=>'Ruta del reporte:','required'=>false,'data'=>$entity->getRutaReporte(),'attr'=>array('style'=>'text-transform:lowercase')))
             ->getForm();
             //dump($form);die;
         
@@ -919,6 +923,7 @@ class FlujoProcesoController extends Controller
                 }
                 $entity->setEsEvaluacion($form['evaluacion_edit']);
                 $entity->setRutaFormulario($form['ruta_edit']);
+                $entity->setRutaReporte($form['rutaReporte_edit']);
                 $em->flush();
                 //dump($entity);die;
                 $mensaje = 'Los datos se modificaron con éxito';

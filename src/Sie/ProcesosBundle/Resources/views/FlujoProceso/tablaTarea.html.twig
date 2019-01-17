@@ -32,7 +32,8 @@
                     <th>Tarea Anterior</th>
                     <th>Tarea siguiente</th>
                     <th>Plazo(dias)</th>
-                    <th>Ruta</th>
+                    <th>Ruta Formulario</th>
+                    <th>Ruta Reporte</th>
                     <th>Acciones</th>                                        
             </tr>
     </thead>
@@ -57,6 +58,7 @@
             <td>{{tarea.tarea_sig}}</td>
             <td>{{tarea.plazo}}</td>
             <td>{{tarea.ruta_formulario}}</td>
+            <td>{{tarea.ruta_reporte}}</td>
             <td>
                 <a class="btn btn-primary btn-xs text-primary" data-toggle="modal" data-target="#modal" data-placement="top" title="Editar" onclick="ediatartarea({{tarea.id}})">
                     <i class="glyphicon glyphicon-pencil"></i>

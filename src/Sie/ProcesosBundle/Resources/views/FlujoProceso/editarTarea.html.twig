@@ -4,6 +4,7 @@
             <div class="panel-heading">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h4 class="modal-title">Modificar datos</h4>
+                <div class="clearfix"></div>
             </div>
             <div class="panel-body">
                 {{ form_start(form,{ 'attr': {'class': 'tab-content form-horizontal','id':'form_edit_tarea','onsubmit':'return false;'} } ) }}
@@ -49,6 +50,12 @@
                         {{ form_widget(form.ruta_edit, {'attr':{'class':'form-control'} }) }}
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="col-sm-4">Ruta del reporte</label>
+                    <div class="col-md-8">
+                        {{ form_widget(form.rutaReporte_edit, {'attr':{'class':'form-control'} }) }}
+                    </div>
+                </div>
                 {{ form_end(form) }}  
             </div>
             <div class="panel-footer">
@@ -62,12 +69,17 @@
     </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->
 <script>
-            $(function(){
-            $(".validar").keydown(function(event){
+    $('#form_evaluacion_edit').change(function(){
+        if($('#form_evaluacion_edit').val() == 0){
+            $('#form_varevaluacion_edit').val('');
+        }
+    }); 
+    $(function(){
+        $(".validar").keydown(function(event){
             //alert(event.keyCode);
-                if((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !==190  && event.keyCode !==110 && event.keyCode !==8 && event.keyCode !==9  ){
-                    return false;
-                }
-            });
+            if((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !==190  && event.keyCode !==110 && event.keyCode !==8 && event.keyCode !==9  ){
+                return false;
+            }
         });
+    });
 </script>
