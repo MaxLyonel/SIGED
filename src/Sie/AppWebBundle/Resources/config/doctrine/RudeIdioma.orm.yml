@@ -28,12 +28,12 @@ Sie\AppWebBundle\Entity\RudeIdioma:
             fixed: false
             comment: ''
         fechaRegistro:
-            type: date
+            type: datetime
             nullable: true
             comment: ''
             column: fecha_registro
         fechaModificacion:
-            type: date
+            type: datetime
             nullable: true
             comment: ''
             column: fecha_modificacion

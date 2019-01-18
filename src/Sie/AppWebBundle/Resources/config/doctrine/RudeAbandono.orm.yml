@@ -26,12 +26,12 @@ Sie\AppWebBundle\Entity\RudeAbandono:
             comment: ''
             column: motivo_abandono
         fechaRegistro:
-            type: date
+            type: datetime
             nullable: true
             comment: ''
             column: fecha_registro
         fechaModificacion:
-            type: date
+            type: datetime
             nullable: true
             comment: ''
             column: fecha_modificacion

@@ -73,11 +73,6 @@ Sie\AppWebBundle\Entity\Rude:
             nullable: true
             comment: ''
             column: tiene_ocupacion_trabajo
-        tieneServicioBasicoId:
-            type: boolean
-            nullable: true
-            comment: ''
-            column: tiene_servicio_basico_id
         tieneAbandono:
             type: boolean
             nullable: true
@@ -132,12 +127,12 @@ Sie\AppWebBundle\Entity\Rude:
             comment: ''
             column: es_servicio_militar
         fechaRegistro:
-            type: date
+            type: datetime
             nullable: true
             comment: ''
             column: fecha_registro
         fechaModificacion:
-            type: date
+            type: datetime
             nullable: true
             comment: ''
             column: fecha_modificacion

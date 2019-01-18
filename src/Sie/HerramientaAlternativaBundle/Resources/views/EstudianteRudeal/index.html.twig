@@ -1,0 +1,1254 @@
+<style type="text/css">
+    .jupper{
+        text-transform: uppercase;
+    }
+    #p_mensaje{
+        padding: 10px;
+        border: 1px dashed #5F62A8;
+        text-align: center;
+        color: #6496BA;
+        background: #E1EBFA;
+    }
+    #m_mensaje{
+        padding: 10px;
+        border: 1px dashed #5F62A8;
+        text-align: center;
+        color: #6496BA;
+        background: #E1EBFA;
+    }
+    #t_mensaje{
+        padding: 10px;
+        border: 1px dashed #5F62A8;
+        text-align: center;
+        color: #6496BA;
+        background: #E1EBFA;
+    }
+
+    .view{
+        border: none;
+        background: none;
+    }
+    .btn-wizard{
+        display: inline-block;
+        padding: 5px 14px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 15px;
+        color: #34495e;
+        float: right;
+    }
+
+    .pager button:hover{
+        background: #EBEBEB;
+    }
+    .row{
+        margin-bottom: 2px;
+    }
+
+    .readonly{
+        background: #EEEEEE;
+    }
+    .block-print{
+        /* border: 1px dashed #EE0EE0; */
+        color: #CCCCCC;
+        text-align: center;
+        padding: 10px;
+        border-left: 10px solid #E9E9E9;
+    }
+    .block-print:hover{
+        color: #4590E5;
+        /* cursor: pointer; */
+    }
+    .close{
+        margin-right: 15px;
+    }
+    .sinCarnet{
+        background: #FFFFFF;
+        color: #8A868B;
+        border: 1px solid #E0D8E3;
+        padding: 4px;
+    }
+
+    input[type=radio]{
+        margin-left: 15px;
+        margin-right: 5px;
+    }
+
+    .submitted{
+        border-color: red !important;
+    }
+
+    
+</style>
+<div class="modal-dialog" style="width: 1000px">
+    <div class="modal-content">
+        <div class="panel panel-tab panel-tab-double">
+            <div class="panel-heading no-padding">
+                <div style="height:50px; background:#70AC16; color:#FFFFFF; margin-top:-10px;">
+                    <h4 style="padding:10px 0px 0px 10px; text-align:center">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        FORMULARIO DE INSCRIPCIÓN / ACTUALIZACIÓN <br>
+                        <b>REGISTRO ÚNICO DE ESTUDIANTES</b>
+                    </h4>
+                    
+                </div>
+            </div>
+            <div class="panel-body no-padding" id="modal-body">
+
+                <div id="basic-wizard-vertical">
+                    <div class="panel panel-tab panel-tab-double panel-tab-vertical row no-margin rounded shadow">
+                        <!-- Start tabs heading -->
+                        <div class="panel-heading no-padding col-md-3">
+                            <ul class="nav nav-tabs">
+                                <li class="active">
+                                    <a id="paso1" href="#tab1" data-toggle="tab" aria-expanded="true">
+                                        <i class="fa fa-home"></i>
+                                        <div>
+                                            <span class="">DATOS</span>
+                                            <span><small>ESTUDIANTE/PARTICIPANTE</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li {% if rude.registroFinalizado < 1 %} class="disabled" {% endif %}>
+                                    <a id="paso2" href="#tab2" {% if rude.registroFinalizado >= 1 %} data-toggle="tab" {% endif %} aria-expanded="false">
+                                        <i class="fa fa-file"></i>
+                                        <div>
+                                            <span class="text-strong">DIRECCIÓN</span>
+                                            <span><small>ESTUDIANTE/PARTICIPANTE</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li {% if rude.registroFinalizado < 2 %} class="disabled" {% endif %}>
+                                    <a id="paso3" href="#tab3" {% if rude.registroFinalizado >= 2 %} data-toggle="tab" {% endif %} aria-expanded="false">
+                                        <i class="fa fa-check-circle"></i>
+                                        <div>
+                                            <span class="text-strong">DISCAPACIDAD</span>
+                                            <span><small>ESTUDIANTE/PARTICIPANTE</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li {% if rude.registroFinalizado < 3 %} class="disabled" {% endif %}>
+                                    <a id="paso4" href="#tab4" {% if rude.registroFinalizado >= 3 %} data-toggle="tab" {% endif %} aria-expanded="false">
+                                        <i class="fa fa-check-circle"></i>
+                                        <div>
+                                            <span class="text-strong">ASPECTOS</span>
+                                            <span><small>SOCIALES</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li {% if rude.registroFinalizado < 4 %} class="disabled" {% endif %}>
+                                    <a id="paso5" href="#tab5" {% if rude.registroFinalizado >= 4 %} data-toggle="tab" {% endif %} aria-expanded="false">
+                                        <i class="fa fa-print"></i>
+                                        <div>
+                                            <span class="text-strong">FINALIZAR</span>
+                                            <span><small>IMPRIMIR</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div><!-- /.panel-heading -->
+                        <!--/ End tabs heading -->
+
+                        <!-- Start tabs content -->
+                        <div class="panel-body col-md-9 tab-content">
+                            <div class="tab-pane fade inner-all active in" id="tab1">
+                                <h4 class="page-header">
+                                    II. DATOS DE LA O EL ESTUDIANTE/PARTICIPANTE <br>
+                                </h4>
+                                
+                                <form id="formEstudiante" onsubmit="saveFormEstudiante(); return false;" method="post">
+                                    {{ form_widget(formEstudiante.rudeId) }}
+                                    {{ form_widget(formEstudiante.estudianteId) }}
+
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12">
+                                            <p>2.3 DOCUMENTO DE IDENTIFICACIÓN</p>
+                                        </div>
+                                        <div class="col-md-7 col-sm-7">
+                                            <p>Carnet:</p>
+                                            <fieldset style="border:1px solid #CCCCCC; padding:7px;">
+                                                {% if estudiante.carnetIdentidad == "" %}
+                                                    <div class="row">
+                                                        <div class="col-md-5">
+                                                            <p>Número</p>
+                                                            {{ form_widget(formEstudiante.carnet, {'attr':{'class':'form-control'} }) }}
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <p>Complemento</p>
+                                                            {{ form_widget(formEstudiante.complemento, {'attr':{'class':'form-control'} }) }}
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <p>Expedido</p>
+                                                            {{ form_widget(formEstudiante.expedido, {'attr':{'class':'form-control'} }) }}
+                                                        </div>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="row">
+                                                        <div class="col-md-5">
+                                                            <p>Número</p>
+                                                            {{ estudiante.carnetIdentidad }}
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <p>Complemento</p>
+                                                            {{ estudiante.complemento }}
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <p>Expedido</p>
+                                                            {{ estudiante.expedido.departamento }}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-5 col-sm-5">
+                                            <p>Pasaporte:</p>
+                                            <fieldset style="border:1px solid #CCCCCC; padding:7px;">
+                                                <div class="col-md-12 col-sm-12">
+                                                    {{ form_widget(formEstudiante.pasaporte, {'attr':{'class':'form-control'} }) }}
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6">
+                                            <p>2.6 ESTADO CIVIL</p>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="row form-group">
+                                                <div class="col-md-12 col-sm-12">
+                                                    {{ form_widget(formEstudiante.estadoCivil, {'attr':{'class':'form-control'} }) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6">
+                                            <p>2.8 Nº DE HIJOS</p>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="row form-group">
+                                                <div class="col-md-12 col-sm-12">
+                                                    {{ form_widget(formEstudiante.cantHijos, {'attr':{'class':'form-control'} }) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6">
+                                            <p>2.9 ¿ACTUALMENTE PRESTA SERVICIO MILITAR?</p>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="row form-group">
+                                                <div class="col-md-12 col-sm-12">
+                                                    {{ form_widget(formEstudiante.esServicioMilitar, {'attr':{'class':'radioServicioMilitar'} }) }}
+                                                </div>
+                                            </div>
+                                            <p>En caso afirmativo, la formación educativa del estudiante/participante se realiza en:</p>
+                                            <div class="row form-group">
+                                                <div class="col-md-12 col-sm-12">
+                                                    {{ form_widget(formEstudiante.formacionEducativa, {'attr':{'class':'form-control jupper'} }) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="panel-footer no-bg">
+                                        <ul class="pager wizard no-margin">
+                                            <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                            <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                        </ul>
+                                    </div>
+                                </form>
+                                <br>
+                            </div>
+                            <div class="tab-pane fade inner-all" id="tab2">
+                                <h4 class="page-header">III. DIRECCIÓN DE LA O EL ESTUDIANTE/PARTICIPANTE</h4>
+                                <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
+                                    <div class="row">
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-sm-4">Departamento</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                {{ form_widget(formDireccion.departamentoDir, {'attr':{'class':'form-control jupper', 'onchange':'listarProvincias(this.value)'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-sm-4">Provincia</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                {{ form_widget(formDireccion.provinciaDir, {'attr':{'class':'form-control jupper', 'onchange':'listarMunicipios(this.value)'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-sm-4">Municipio</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                {{ form_widget(formDireccion.municipioLugarTipo, {'attr':{'class':'form-control jupper'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-sm-4">Localidad</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                {{ form_widget(formDireccion.localidad, {'attr':{'class':'form-control jupper'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-sm-4">Zona / Barrio / Villa</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                {{ form_widget(formDireccion.zona, {'attr':{'class':'form-control jupper'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-sm-4">Avenida / Calle</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                {{ form_widget(formDireccion.avenida, {'attr':{'class':'form-control jupper'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-sm-4">Número de vivienda</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                {{ form_widget(formDireccion.numero, {'attr':{'class':'form-control jupper','max':'9999'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-sm-4"> Celular</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                {{ form_widget(formDireccion.celular, {'attr':{'class':'form-control'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-sm-4"> Teléfono</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                {{ form_widget(formDireccion.telefonoFijo, {'attr':{'class':'form-control'} }) }}
+                                            </div>
+                                        </div>
+
+                                        {{ form_widget(formDireccion) }}
+                                    </div>
+                                    <div class="panel-footer no-bg">
+                                        <ul class="pager wizard no-margin">
+                                            <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                            <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                        </ul>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="tab-pane fade inner-all" id="tab3">
+                                <h4 class="page-header">IV. DISCAPACIDAD DE LA O EL ESTUDIANTE/PARTICIPANTE</h4>
+                                <form id="formDiscapacidad" onsubmit="saveFormDiscapacidad(); return false;">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12">4.1 DISCAPACIDAD</div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6">
+                                            <p>¿La o el estudiante/participante tiene Carnet de Discapacidad?</p>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="row form-group">
+                                                <div class="col-md-12 col-sm-12">
+                                                    {{ form_widget(formDiscapacidad.tieneCarnetDiscapacidad, {'attr':{'class':'radioDiscapacidad'} }) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <fieldset id="fieldsetDiscapacidad">
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p>Nº de Discapacidad</p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="row form-group">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        {{ form_widget(formDiscapacidad.carnetDiscapacidad, {'attr':{'class':'form-control'} }) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p>TIPO DE DISCAPACIDAD</p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="row form-group">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        {{ form_widget(formDiscapacidad.discapacidad, {'attr':{'class':'form-control jupper'} }) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p>GRADO</p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="row form-group">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        {{ form_widget(formDiscapacidad.gradoDiscapacidad, {'attr':{'class':'form-control jupper'} }) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p>¿La o el estudiante/participante con discapacidad visual tiene Carnet de Registro IBC?</p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="row form-group">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        {{ form_widget(formDiscapacidad.esDiscapacidadVisual, {'attr':{'class':'radioDiscapacidadVisual'} }) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <fieldset id="fieldsetDiscapacidadVisual">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <p>Código de registro IBC</p>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <div class="row form-group">
+                                                        <div class="col-md-12 col-sm-12">
+                                                            {{ form_widget(formDiscapacidad.carnetIbc, {'attr':{'class':'form-control'} }) }}
+                                                            {{ form_widget(formDiscapacidad.gradoDiscapacidadVisual, {'attr':{'class':'form-control jupper'} }) }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </fieldset>
+                                    {{ form_widget(formDiscapacidad) }}
+
+                                    <div class="panel-footer no-bg">
+                                        <ul class="pager wizard no-margin">
+                                            <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                            <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                        </ul>
+                                    </div>
+
+                                </form>
+                            </div>
+                            <div class="tab-pane fade inner-all" id="tab4">
+                                <h4 class="page-header">V. ASPECTOS SOCIALES</h4>
+                                <form id="formSocioeconomicos" onsubmit="saveFormSocioeconomicos(); return false;">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12">5.1 IDIOMAS Y CULTURA</div>
+                                    </div>
+                                    
+
+                                    <div class="row form-group">
+                                        <label class="col-md-12">5.1.1. ¿Qué idiomas habla la o el estudiante/participante?</label>
+                                        <div class="col-md-4 col-sm-4">
+                                            <small>a) Más frecuente (*)</small>
+                                            {{ form_widget(formSocioeconomico.idioma1, {'attr':{'class':'form-control jupper'} }) }}
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <small>b) Medianamente frecuente</small>
+                                            {{ form_widget(formSocioeconomico.idioma2, {'attr':{'class':'form-control jupper'} }) }}
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <small>c) Menos frecuente</small>
+                                            {{ form_widget(formSocioeconomico.idioma3, {'attr':{'class':'form-control jupper'} }) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-6">5.1.2. ¿la o el estudiante/participante pertenece a alguna nación o pueblo indígena originario campesino y afroboliviano?</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.esPertenceNacionOriginaria, {'attr':{'class':'radioNacionOriginaria jupper'} }) }}
+                                            <p>En caso afirmativo, especificar a cual:</p>
+                                            {{ form_widget(formSocioeconomico.nacionOriginariaTipo, {'attr':{'class':'form-control jupper'} }) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12">5.2 OCUPACIÓN</div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">5.2.1. ¿La o el estudiante/participante tiene alguna ocupación?</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.tieneOcupacionTrabajo, {'attr':{'class':'jupper radioOcupacion'} }) }}
+                                            {{ form_widget(formSocioeconomico.actividades, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                            {{ form_widget(formSocioeconomico.actividadOtro, {'attr':{'class':'form-control jupper'} }) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12">5.3 SALUD</div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">5.3.1. ¿La o el estudiante/participante tiene seguro de salud?</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.seguroSalud, {'attr':{'class':'radioSeguro jupper'} }) }}
+                                            <p>En caso negativo, ¿Donde acude la o el estudiante/participante en caso de enfermedad o accidente?</p>
+                                            {{ form_widget(formSocioeconomico.acudioCentro, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">5.3.2 Grupo sanguineo del estudiante/participante</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.sangreTipo, {'attr':{'class':'form-control jupper'} }) }}
+                                        </div>
+                                    </div>
+
+                                    
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12">5.4 ACCESO A MEDIOS DE COMUNICACION Y TRANSPORTE</div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">5.4.1 La o el estudiante/participante tiene acceso a:</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.medioComunicacion, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">5.4.2 ¿Qué medio de transporte utiliza frecuentemente la o el estudiante/participante para trasladarse al Centro de Educación Alternativa? (Puede seleccionar varias opciones)</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.medioTransporte, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">5.4.3 ¿Cuanto tiempo demora en llegar hasta el Centro de Educación Alternativa?</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6 text-right">Horas</div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    {{ form_widget(formSocioeconomico.tiempoLlegadaHoras, {'attr':{'class':'form-control jupper','maxlength':'2', 'autocomplete':'off'} }) }}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6 text-right">Minutos</div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    {{ form_widget(formSocioeconomico.tiempoLlegadaMinutos, {'attr':{'class':'form-control jupper','maxlength':'2', 'autocomplete':'off'} }) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <h4 class="page-header">VI DATOS DE INSCRIPCION DE LA GESTIÓN ACTUAL</h4>
+                                    </div>
+                                    
+                                    <div class="row form-group">
+                                        <label class="col-md-6">6.1 Modalidad de estudio</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.modalidadEstudioTipo, {'attr':{'class':'form-control radioAbandono'} }) }}
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">6.4 Interrupción de estudios</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.abandono, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                            {{ form_widget(formSocioeconomico.abandonoOtro, {'attr':{'class':'form-control jupper','placeholder':'Especificar...','autocomplete':'off'} }) }}
+                                        </div>
+                                    </div>                                    
+
+                                    {{ form_widget(formSocioeconomico) }}
+
+                                    <div class="panel-footer no-bg">
+                                        <ul class="pager wizard no-margin">
+                                            <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                            <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                        </ul>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="tab-pane fade inner-all" id="tab5">
+                                <h4 class="page-header">VII. FINALIZAR REGISTRO RUDEAL</h4>
+                                <div class="ml-10">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <form id="formLugar" onsubmit="saveFormLugar(); return false;" method="post">
+                                                <div class="form-group row">
+                                                    <label class="col-md-6">Lugar de registro</label>
+                                                    <div class="col-md-6 col-sm-6">
+                                                        {{ form_widget(formLugar.lugarRegistroRude, {'attr':{'class':'form-control jupper','readonly':'readonly'} }) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-6">Fecha de registro</label>
+                                                    <div class="col-md-6 col-sm-6">
+                                                        {{ form_widget(formLugar.fechaRegistroRude, {'attr':{'class':'form-control jupper'} }) }}
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <div class="panel-footer no-bg">
+                                                    <ul class="pager wizard no-margin">
+                                                        <li class="next"><button class="btn-wizard" type="submit">Guardar y finalizar</button></li>
+                                                    </ul>
+                                                </div>
+                                                {{ form_widget(formLugar) }}
+                                            </form>
+                                        </div>
+                                        <div id="btnImprimir" class="col-md-4" {% if rude.registroFinalizado < 5 %} style="display:none" {% endif %}>
+                                            <div class="block-print">
+                                                <p>Imprimir Formulario RUDEAL</p>
+                                                <a class="btn btn-info" style="padding:20px" href="{{path('herramienta_alter_reporte_socioeconomico', {'inscripcionId':inscripcion.id, 'rude': inscripcion.estudiante.codigoRude} )}}">
+                                                    <i class="fa fa-print" style="font-size:40px" ></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-footer no-bg">
+                                        <ul class="pager wizard no-margin">
+                                            <li class="next"><button class="btn-wizard" data-dismiss="modal" aria-hidden="true">Cerrar</button></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!--/ End pager -->
+                        </div><!-- /.panel-body -->
+                        <!--/ End tabs content -->
+                    </div><!-- /.panel -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    // APLICANDO BUSCADOR A LOS SELECTS
+    $('#form_idioma1').chosen({width: "100%"});
+    $('#form_idioma2').chosen({width: "100%"});
+    $('#form_idioma3').chosen({width: "100%"});
+
+    $('#form_nacionOriginariaTipo').chosen({width: "100%"});
+
+    $('#form_actividades').chosen({width: "100%"});
+    $('#form_medioComunicacion').chosen({width: "100%"});
+    $('#form_medioTransporte').chosen({width: "100%"});
+
+    // $('#form_medioTransporte').chosen({
+    //             no_results_text: "yourText",
+    //             disable_search_threshold: 9,
+    //             search_contains: true
+    //             //your parameters
+    // }).on('invalid', function(){
+    //     $('#form_medioTransporte_chosen').after('<p>Complete este campo</p>')
+    // });
+
+    $('#form_abandono').chosen({width: "100%"});
+
+    $.validator.setDefaults({ ignore: ":hidden:not(select)" });
+
+    // // validation of chosen on change
+    // if ($("select.chosen-select").length > 0) {
+    //     $("select.chosen-select").each(function() {
+    //         if ($(this).attr('required') !== undefined) {
+    //             $(this).on("change", function() {
+    //                 $(this).valid();
+    //             });
+    //         }
+    //     });
+    // }
+
+    $(".readonly").keydown(function(e){
+        e.preventDefault();
+    });
+    $(".readonly").focus(function(e){
+        $(this).blur();
+    });
+
+    // VALIDAR EXPEDIDO
+    function validarExpedido(){
+        if($('#form_carnet').val() == ""){
+            $('#form_complemento').val('');
+            $('#form_expedido').val('');
+            $('#form_complemento').removeAttr('required');
+            $('#form_expedido').removeAttr('required');
+        }else{
+            $('#form_expedido').attr('required','required');
+        }
+    }
+
+    $('#form_carnet').on('keyup', function(){
+        validarExpedido();
+    });
+
+    validarExpedido();
+
+    // VALIDACION DE SERVICIO MILITAR
+    function validarServicioMilitar(){
+        if($('#form_esServicioMilitar_1').is(':checked')){
+            $('#form_formacionEducativa').val('');
+            $('#form_formacionEducativa').removeAttr('required');
+            $('#form_formacionEducativa').attr('disabled','disabled');
+        }else{
+            $('#form_formacionEducativa').attr('required','required');
+            $('#form_formacionEducativa').removeAttr('disabled');
+        }
+    }
+
+    $('.radioServicioMilitar').on('change', function(){
+        validarServicioMilitar();
+    });
+
+    validarServicioMilitar();
+
+
+    // VALIDACION DE DISCAPACIDAD
+    function validarTieneDiscapacidad(){
+        if($('#form_tieneCarnetDiscapacidad_1').is(':checked')){
+            $('#form_carnetDiscapacidad').val('');
+            $('#form_discapacidad').val('');
+            $('#form_gradoDiscapacidad').val('');
+            $('#form_esDiscapacidadVisual_1').attr('checked','checked');
+            $('#form_carnetIbc').val('');
+            $('#form_gradoDiscapacidadVisual').val('');
+
+            $('#form_carnetDiscapacidad').removeAttr('required');
+            $('#form_discapacidad').removeAttr('required');
+            $('#form_gradoDiscapacidad').removeAttr('required');
+            $('#form_carnetIbc').removeAttr('required');
+            $('#form_gradoDiscapacidadVisual').removeAttr('required');
+
+            $('#fieldsetDiscapacidad').attr('disabled','disabled');            
+        }else{
+            $('#form_carnetDiscapacidad').attr('required', 'required');
+            $('#form_discapacidad').attr('required', 'required');
+            $('#form_gradoDiscapacidad').attr('required', 'required');
+            $('#form_carnetIbc').attr('required', 'required');
+            $('#form_gradoDiscapacidadVisual').attr('required', 'required');
+
+            $('#fieldsetDiscapacidad').removeAttr('disabled');
+        }
+    }
+
+    $('.radioDiscapacidad').on('change', function(){
+        validarTieneDiscapacidad();
+    })
+
+    validarTieneDiscapacidad();
+
+    // VALIDACION DE DISCAPACIDAD VISUAL
+    function validarTieneDiscapacidadVisual(){
+        if($('#form_esDiscapacidadVisual_1').is(':checked')){
+            $('#form_carnetIbc').val('');
+            $('#form_gradoDiscapacidadVisual').val('');
+            $('#form_carnetIbc').removeAttr('required');
+            $('#form_gradoDiscapacidadVisual').removeAttr('required');
+
+            $('#fieldsetDiscapacidadVisual').attr('disabled','disabled');            
+        }else{
+            $('#form_carnetIbc').attr('required', 'required');
+            $('#form_gradoDiscapacidadVisual').attr('required', 'required');
+
+            $('#fieldsetDiscapacidadVisual').removeAttr('disabled');
+        }
+    }
+
+    $('.radioDiscapacidadVisual').on('change', function(){
+        validarTieneDiscapacidadVisual();
+    })
+
+    validarTieneDiscapacidadVisual();
+    //////////////
+    
+
+    // ACCESO NACION ORIGINARIA
+    function validarNacionOriginaria(){
+        if($('#form_esPertenceNacionOriginaria_1').is(':checked')){
+            $('#form_nacionOriginariaTipo').val('');
+            $('#form_nacionOriginariaTipo').removeAttr('required');
+            $('#form_nacionOriginariaTipo').prop('disabled', true).trigger("chosen:updated");
+        }else{
+            $('#form_nacionOriginariaTipo').attr('required','required');
+            $('#form_nacionOriginariaTipo').prop('disabled', false).trigger("chosen:updated");
+        }
+    }
+
+    $('.radioNacionOriginaria').on('change',function(e){
+        validarNacionOriginaria();
+    });
+    validarNacionOriginaria();
+    ////////////
+
+    // VALIDAR OCUPACION
+    function validarSiTrabajo(){
+        if($('#form_tieneOcupacionTrabajo_1').is(':checked')){
+            $('#form_actividades').val('');
+            $('#form_actividades').removeAttr('required');
+            $('#form_actividades').prop('disabled', true).trigger("chosen:updated");
+        }else{
+            $('#form_actividades').attr('required','required');
+            $('#form_actividades').prop('disabled', false).trigger("chosen:updated");
+        }
+        validarOtraActividad();
+    }
+
+    $('.radioOcupacion').on('change', function(){
+        validarSiTrabajo();
+    })
+
+    validarSiTrabajo();
+
+    // VALIDAR SI TIENE OTRA ACTIVIDAD
+    function validarOtraActividad(){
+        var accesos = $('#form_actividades').val();
+        if($.inArray('99', accesos) !== -1){
+            $('#form_actividadOtro').css('display','block');
+            $('#form_actividadOtro').attr('required','required');
+        }else{
+            $('#form_actividadOtro').val('');
+            $('#form_actividadOtro').css('display','none');
+            $('#form_actividadOtro').removeAttr('required');
+        }
+    }
+    $('#form_actividades').on('change', function(){
+        validarOtraActividad();
+    })
+    validarOtraActividad();
+
+
+    // VALIDAR SEGURO SALUD
+    function validarSeguroSalud(){
+        if($('#form_seguroSalud_0').is(':checked')){
+            $('#form_acudioCentro').val('');
+            $('#form_acudioCentro').attr('disabled','disabled');
+        }else{
+            $('#form_acudioCentro').removeAttr('disabled');
+        }
+    }
+
+    $('.radioSeguro').on('change', function(){
+        validarSeguroSalud();
+    })
+    validarSeguroSalud();
+
+    // VALIDAR MEDIO COMUNICACION
+    function validarMedioComunicacion(){
+        var medios = $('#form_medioComunicacion').val();
+        if($.inArray('0', medios) !== -1){
+        // }else{
+            $('#form_medioComunicacion').val([0]);
+            $('#form_medioComunicacion').trigger("chosen:updated");
+        }
+    }
+    $('#form_medioComunicacion').on('change', function(){
+        validarMedioComunicacion();
+    })
+    validarMedioComunicacion();
+
+    // VALIDAR OTRO TIPO DE ABANDONO
+    function validarOtroAbandono(){
+        var accesos = $('#form_abandono').val();
+        if($.inArray('12', accesos) !== -1){
+            $('#form_abandonoOtro').css('display','block');
+            $('#form_abandonoOtro').attr('required','required');
+        }else{
+            $('#form_abandonoOtro').val('');
+            $('#form_abandonoOtro').css('display','none');
+            $('#form_abandonoOtro').removeAttr('required');
+        }
+    }
+    $('#form_abandono').on('change', function(){
+        validarOtroAbandono();
+    })
+
+    validarOtroAbandono();
+
+    /* Funciones para actualizar lugar de nacimiento */
+    function dep(pais) {
+        if(pais == 1){
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('info_estudiante_rude_departamentos_nac', {'pais': parseInt(pais)}),
+                beforeSend: function () {
+                    $("#form_departamento").empty();
+                    $("#form_provincia").empty();
+                    $("#form_localidadNac").val('');
+                    $("#form_departamento").append('<option value="">Seleccionar...</option>');
+                    $("#form_provincia").append('<option value="">Seleccionar...</option>');
+                },
+                success: function (data) {
+                    $("#form_departamento").empty();
+                    $("#form_provincia").empty();
+                    $("#form_localidadNac").val('');
+                    $("#form_departamento").append('<option value="">Seleccionar...</option>');
+                    $("#form_provincia").append('<option value="">Seleccionar...</option>');
+
+                    $.each(data.departamento, function (i, value) {
+                        $("#form_departamento").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+            $("#form_departamento").attr('required','required');
+            $("#form_provincia").attr('required','required');
+            $("#form_localidad").attr('required','required');
+            $('#bloqueNacimiento').css('display','block');
+        }else{
+            $("#form_localidad").val('');
+            $("#form_departamento").removeAttr('required');
+            $("#form_provincia").removeAttr('required');
+            $("#form_localidad").removeAttr('required');
+            $('#bloqueNacimiento').css('display','none');
+        }
+    }
+
+
+    function prov(d) {
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('info_estudiante_rude_provincias_nac', {'departamento': parseInt(d)}),
+            beforeSend: function () {
+                $("#form_provincia").empty();
+                $("#form_localidadNac").val('');
+                $("#form_provincia").append('<option value="">Seleccionar...</option>');
+            },
+            success: function (data) {
+                $("#form_provincia").empty();
+                $("#form_localidadNac").val('');
+                $("#form_provincia").append('<option value="">Seleccionar...</option>');
+                $.each(data.provincia, function (i, value) {
+                    $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                });
+            }
+        });
+    }
+
+    function verificarPaisNacimiento(){
+        var pais = $('#form_pais').val();
+        if(pais == 1){
+            $("#form_departamento").attr('required','required');
+            $("#form_provincia").attr('required','required');
+            $("#form_localidadNac").attr('required','required');
+            $('#bloqueNacimiento').css('display','block');
+        }else{
+            $("#form_localidadNac").val('');
+            $("#form_departamento").removeAttr('required');
+            $("#form_provincia").removeAttr('required');
+            $("#form_localidadNac").removeAttr('required');
+            $('#bloqueNacimiento').css('display','none');
+        }
+    }
+
+    function validarCIEstudiante(){
+        var paterno = $('#form_paterno').val();
+        var materno = $('#form_materno').val();
+        var nombre = $('#form_nombre').val();
+
+        var carnet = $('#form_carnet').val();
+        var complemento = $('#form_complemento').val();
+        var fechaNacimiento = $('#form_fechaNacimiento').val();
+
+        var validarci = $('#verificarCarnet').val();
+
+        if(validarci == 1 && carnet.length > 0){
+            $.ajax({
+                url: Routing.generate('info_estudiante_rude_buscar_persona', {'paterno':paterno, 'materno':materno, 'nombre':nombre, 'carnet':carnet, 'complemento':complemento, 'fechaNacimiento':fechaNacimiento}),
+                type: 'post',
+                beforeSend: function(){
+                    console.log('enviando')
+                },
+                success: function(data){
+                    if(data.status == 200){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                },
+                error: function(){
+                    return 0;
+                }
+            });
+        }
+
+        return 1;
+    }
+
+    // FORM ESTUDIANTE
+    function saveFormEstudiante(){
+        var data = $('#formEstudiante').serialize();
+        $.ajax({
+            url: Routing.generate('estudiante_rudeal_save_formEstudiante'),
+            type: 'post',
+            data: data,
+            beforeSend: function(){
+                console.log('enviando')
+            },
+            success: function(data){
+                $('#paso2').parent('li').removeClass('disabled');
+                $('#paso2').attr('data-toggle','tab');
+                $('#paso2').click();
+            },
+            error: function(){
+                console.log('error');
+            }
+        });
+    }
+
+    // DATOS DIRECCION
+    var peticion1;
+    function listarProvincias(idDpto) {
+        if (peticion1 && peticion1.readyState != 4) {
+            peticion1.abort();
+        }
+
+        peticion1 = $.ajax({
+            type: 'get',
+            url: Routing.generate('info_estudiante_rude_listarprovincias', {'dpto': idDpto}),
+            beforeSend: function () {
+                $('#form_provinciaDir').empty();
+                $('#form_municipioLugarTipo').empty();
+                $("#form_provinciaDir").append('<option value="">Seleccionar...</option>');
+                $("#form_municipioLugarTipo").append('<option value="">Seleccionar...</option>');
+            },
+            success: function (data) {
+                $('#form_provinciaDir').empty();
+                $('#form_municipioLugarTipo').empty();
+                $('#form_seccionivDescLocalidad').empty();
+                $("#form_provinciaDir").append('<option value="">Seleccionar...</option>');
+                $("#form_municipioLugarTipo").append('<option value="">Seleccionar...</option>');
+                $("#form_seccionivDescLocalidad").append('<option value="">Seleccionar...</option>');
+                $.each(data.listaprovincias, function (i, value) {
+                    $("#form_provinciaDir").append('<option value="' + i + '">' + value + '</option>');
+                });
+            }
+        });
+    }
+    
+    var peticion2;
+    function listarMunicipios(idProv) {
+        if (peticion2 && peticion2.readyState != 4) {
+            peticion2.abort();
+        }
+
+        peticion2 = $.ajax({
+            type: 'get',
+            url: Routing.generate('info_estudiante_rude_listarmunicipios', {'prov': idProv}),
+            beforeSend: function () {
+                $('#form_municipioLugarTipo').empty();
+                $("#form_municipioLugarTipo").append('<option value="">Seleccionar...</option>');
+            },
+            success: function (data) {
+                $('#form_municipioLugarTipo').empty();
+                $('#form_seccionivDescLocalidad').empty();
+                $("#form_municipioLugarTipo").append('<option value="">Seleccionar...</option>');
+                $("#form_seccionivDescLocalidad").append('<option value="">Seleccionar...</option>');
+                $.each(data.listamunicipios, function (i, value) {
+                    $("#form_municipioLugarTipo").append('<option value="' + i + '">' + value + '</option>');
+                });
+            }
+        });
+    }
+
+    function saveFormDireccion(){
+        var data = $('#formDireccion').serialize();
+        $.ajax({
+            url: Routing.generate('estudiante_rudeal_save_formDireccion'),
+            type: 'post',
+            data: data,
+            beforeSend: function(){
+                console.log('enviando')
+            },
+            success: function(data){
+                $('#paso3').parent('li').removeClass('disabled');
+                $('#paso3').attr('data-toggle','tab');
+                $('#paso3').click();
+            },
+            error: function(){
+
+            }
+        });
+    }
+
+    // DATOS SOCIOECONOMICOS
+    $('#form_idioma1').on('change',function(){
+        var idioma1 = $('#form_idioma1').val();
+        var idioma2 = $('#form_idioma2').val();
+        var idioma3 = $('#form_idioma3').val();
+
+        if(idioma1 != '' && (idioma2 != '' || idioma3 != '')){
+            if(idioma1 == idioma2 || idioma1 == idioma3){
+                alert('El idioma ya fue seleccionado !\nDebe seleccionar otro idioma.')
+                $(this).val('');
+                $(this).chosen({width: "100%"});
+            }
+        }
+    });
+    $('#form_idioma2').on('change',function(){
+        var idioma1 = $('#form_idioma1').val();
+        var idioma2 = $('#form_idioma2').val();
+        var idioma3 = $('#form_idioma3').val();
+
+        if(idioma2 != '' && (idioma1 != '' || idioma3 != '')){
+            if(idioma2 == idioma1 || idioma2 == idioma3){
+                alert('El idioma ya fue seleccionado !\nDebe seleccionar otro idioma.')
+                $(this).val('');
+                $('#form_idioma2').trigger("chosen:updated");
+            }
+        }
+    });
+    $('#form_idioma3').on('change',function(){
+        var idioma1 = $('#form_idioma1').val();
+        var idioma2 = $('#form_idioma2').val();
+        var idioma3 = $('#form_idioma3').val();
+
+        if(idioma3 != '' && (idioma1 != '' || idioma2 != '')){
+            if(idioma3 == idioma1 || idioma3 == idioma2){
+                alert('El idioma ya fue seleccionado !\nDebe seleccionar otro idioma.')
+                $(this).val('');
+                $('#form_idioma3').trigger("chosen:updated");
+            }
+        }
+    });
+
+    // // Bloqueo de discapacidad
+    // $('#form_seccionvEstudianteEsdiscapacidadSensorialComunicacion').change(function(){
+    //     bloquearDiscapacidad();
+    // });
+    // $('#form_seccionvEstudianteEsdiscapacidadMotriz').change(function(){
+    //     bloquearDiscapacidad();
+    // });
+    // $('#form_seccionvEstudianteEsdiscapacidadMental').change(function(){
+    //     bloquearDiscapacidad();
+    // });
+    // $('#form_seccionvEstudianteDiscapacidadOtro').on('change', function(){
+    //     bloquearDiscapacidad();
+    // });
+
+    // function bloquearDiscapacidad(){
+    //     var blocked = true;
+    //     if($('#form_seccionvEstudianteEsdiscapacidadSensorialComunicacion').val() == 1){ blocked = false; }
+    //     if($('#form_seccionvEstudianteEsdiscapacidadMotriz').val() == 1){ blocked = false; }
+    //     if($('#form_seccionvEstudianteEsdiscapacidadMental').val() == 1){ blocked = false; }
+    //     if($('#form_seccionvEstudianteDiscapacidadOtro').val() != ""){ blocked = false; }
+
+    //     if(blocked == true){
+    //         $('#form_seccionvDiscapacidadTipo').removeAttr('required');
+    //         $('#form_seccionvDiscapacidadTipo').val('');
+    //         $('#form_seccionvDiscapacidadTipo').attr('disabled','disabled');
+    //     }else{
+    //         $('#form_seccionvDiscapacidadTipo').removeAttr('disabled');
+    //         $('#form_seccionvDiscapacidadTipo').attr('required','required');
+    //     }
+        
+    // }
+
+    // bloquearDiscapacidad();
+
+    // Trabajo
+    $('#form_seccionvActividadTipo').on('change', function(){
+        if(this.value == 9){
+            $('#form_seccionvEstudianteCuantosdiastrabajo').val(0);
+            $('#form_seccionvEstudianteCuantosdiastrabajo').attr('readonly','readonly');
+            $('#form_seccionvEstudianteEspagoTrabajorealizado').val(0);
+        }else{
+            $('#form_seccionvEstudianteCuantosdiastrabajo').val(1);
+            $('#form_seccionvEstudianteCuantosdiastrabajo').removeAttr('readonly');
+            $('#form_seccionvEstudianteEspagoTrabajorealizado').val(1);
+        }
+    });
+
+    $('#form_seccionvEstudianteCuantosdiastrabajo').on('keyup', function(){
+        var actividad = $('#form_seccionvActividadTipo').val();
+        if(actividad == 9){
+            this.value = 0;
+        }
+    });
+
+    $('#form_seccionvEstudianteEspagoTrabajorealizado').on('change', function(){
+        var actividad = $('#form_seccionvActividadTipo').val();
+        if(actividad == 9){
+            this.value = 0;
+        }
+    });
+
+    function saveFormDiscapacidad(){
+        var data = $('#formDiscapacidad').serialize();
+        $.ajax({
+            url: Routing.generate('estudiante_rudeal_save_formDiscapacidad'),
+            type: 'post',
+            data: data,
+            beforeSend: function(){
+                console.log('enviando');
+            },
+            success: function(data){
+                $('#paso4').parent('li').removeClass('disabled');
+                $('#paso4').attr('data-toggle','tab');
+                $('#paso4').click();
+            },
+            error: function(){
+
+            }
+        });
+    }
+
+    // $('#formSocioeconomicos').validate({
+    //     errorPlacement: function (error, element, e) {
+    //         console.log("placement");
+    //         if (element.is("select")) {
+    //             console.log("placement for chosen");
+    //             // placement for chosen
+    //             element.next("div.chzn-container").append(error);
+    //             alert('falta medio transporte');
+    //             e.preventDefault();
+    //         } else {
+    //             // standard placement
+    //             error.insertAfter(element);
+    //         }
+    //         return false;
+    //     }
+    // });
+
+    function saveFormSocioeconomicos(){
+
+        var data = $('#formSocioeconomicos').serialize();
+        $.ajax({
+            url: Routing.generate('estudiante_rudeal_save_formSocioeconomicos'),
+            type: 'post',
+            data: data,
+            beforeSend: function(){
+                console.log('enviando');
+            },
+            success: function(data){
+                $('#paso5').parent('li').removeClass('disabled');
+                $('#paso5').attr('data-toggle','tab');
+                $('#paso5').click();
+            },
+            error: function(){
+
+            }
+        });
+    }
+
+    function next(){
+        var $active = $('.nav-tabs li.active');
+        $active.next().removeClass('disabled');
+        nextTab($active);
+    }
+
+    function prev(){
+        var $active = $('.nav-tabs li.active');
+        $active.next().removeClass('disabled');
+        prevTab($active);
+    }
+
+    function nextTab(elem) {
+        $(elem).next().find('a[data-toggle="tab"]').click();
+    }
+    function prevTab(elem) {
+        $(elem).prev().find('a[data-toggle="tab"]').click();
+    }
+
+    function saveFormLugar(){
+        var data = $('#formLugar').serialize();
+        $.ajax({
+            url: Routing.generate('estudiante_rudeal_save_formLugar'),
+            type: 'post',
+            data: data,
+            beforeSend: function(){
+                console.log('enviando')
+            },
+            success: function(data){
+                
+                $('#btnImprimir').css('display','block');
+                
+            },
+            error: function(){
+
+            }
+        });
+    }
+
+</script>

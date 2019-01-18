@@ -150,11 +150,6 @@ class Estudiante
     private $observacion;
 
     /**
-     * @var string
-     */
-    private $expedido;
-
-    /**
      * @var \Sie\AppWebBundle\Entity\GeneroTipo
      */
     private $generoTipo;
@@ -183,6 +178,11 @@ class Estudiante
      * @var \Sie\AppWebBundle\Entity\SangreTipo
      */
     private $sangreTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\DepartamentoTipo
+     */
+    private $expedido;
 
 
     /**
@@ -817,29 +817,6 @@ class Estudiante
     }
 
     /**
-     * Set expedido
-     *
-     * @param string $expedido
-     * @return Estudiante
-     */
-    public function setExpedido($expedido)
-    {
-        $this->expedido = $expedido;
-    
-        return $this;
-    }
-
-    /**
-     * Get expedido
-     *
-     * @return string 
-     */
-    public function getExpedido()
-    {
-        return $this->expedido;
-    }
-
-    /**
      * Set generoTipo
      *
      * @param \Sie\AppWebBundle\Entity\GeneroTipo $generoTipo
@@ -975,5 +952,28 @@ class Estudiante
     public function getSangreTipo()
     {
         return $this->sangreTipo;
+    }
+
+    /**
+     * Set expedido
+     *
+     * @param \Sie\AppWebBundle\Entity\DepartamentoTipo $expedido
+     * @return Estudiante
+     */
+    public function setExpedido(\Sie\AppWebBundle\Entity\DepartamentoTipo $expedido = null)
+    {
+        $this->expedido = $expedido;
+    
+        return $this;
+    }
+
+    /**
+     * Get expedido
+     *
+     * @return \Sie\AppWebBundle\Entity\DepartamentoTipo 
+     */
+    public function getExpedido()
+    {
+        return $this->expedido;
     }
 }
