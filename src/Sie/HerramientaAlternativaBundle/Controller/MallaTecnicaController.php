@@ -1057,10 +1057,11 @@ select idsae,idacr
     public function mallanewacreditacionAction(Request $request) {
 //dump($request);die;
         $form =  $request->get('form');
-        dump($form);die;
+       // dump($form);die;
         $idcea=$this->session->get('ie_id');
         $idespec=$form['especialidad'];
         $idnivel = $form['nivel'];
+        $idarea = $form['area'];
         //   dump($idespec);dump($idnivel);die;
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
@@ -1078,35 +1079,57 @@ select idsae,idacr
         $em->getConnection()->beginTransaction();
         //comprueba si existe la expecialidad y el nivel en la ie
         try {
-            $query = "     select e.id as siea, g.id as siepid, g.superior_periodo_tipo_id as superior_periodo_tipo, a.codigo as facultad_area_cod, a.facultad_area as facultad_area, b.id as especialidad_id, b.codigo as ciclo_id, b.especialidad as especialidad, d.codigo as acreditacion_cod, d.acreditacion as acreditacion
-                         from superior_facultad_area_tipo a  
-                            inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id 
-                                inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
-                                    inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id 
-                                        inner join superior_institucioneducativa_acreditacion e on e.acreditacion_especialidad_id=c.id 
-                                            inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id 
-                                                inner join superior_institucioneducativa_periodo g on g.superior_institucioneducativa_acreditacion_id=e.id                                                                                                             
-                                             --       inner join institucioneducativa_curso h on h.superior_institucioneducativa_periodo_id = g.id                   
-                        where f.gestion_tipo_id=".$this->session->get('ie_gestion')." and f.institucioneducativa_id=".$this->session->get('ie_id')."  
-                        and f.sucursal_tipo_id=".$this->session->get('ie_subcea')." and f.periodo_tipo_id=".$this->session->get('ie_per_cod')."
-                        and a.id =40 and b.id=".$idespec." and c.id =".$idnivel."
-                        order by a.codigo, b.codigo, d.codigo 
-                    ";
+            $query = "   select e.id as siea
+                               from superior_facultad_area_tipo a
+                                  inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id
+                                      inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id
+                                          inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id
+                                              inner join superior_institucioneducativa_acreditacion e on e.acreditacion_especialidad_id=c.id
+                                                  inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id
+                                                      inner join superior_institucioneducativa_periodo g on g.superior_institucioneducativa_acreditacion_id=e.id
+                                                            --  inner join superior_turno_tipo q on e.superior_turno_tipo_id = q.id
+                                                               --   inner join institucioneducativa_curso h on h.superior_institucioneducativa_periodo_id = g.id
+                              where f.gestion_tipo_id=".$this->session->get('ie_gestion')." 
+                               and f.institucioneducativa_id=".$this->session->get('ie_id')."  
+                             and f.sucursal_tipo_id=".$this->session->get('ie_subcea')." 
+                              and f.periodo_tipo_id=".$this->session->get('ie_per_cod')."
+                              and a.id =".$idarea."
+							  and b.id = ".$idespec."
+						      and d.id =".$idnivel."
+                              order by a.codigo, b.codigo, d.codigo
+                                ";
             $sieav = $db->prepare($query);
             $params = array();
             $sieav->execute($params);
             $saerow = $sieav->fetchAll();
-            //         dump($saerow);die;
+                // dump($saerow);die;
 //            die;
 
 
             if (count($saerow) == 0){
                 //Comprueba que exista dicha combinacion con especialidad
+                $query = "
+                            select c.id as saeid, d.*
+                              from superior_facultad_area_tipo a
+                                  inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id
+                                      inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id
+                                          inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id
+                              where 
+                               b.id=".$idespec."
+	  						 and d.id=".$idnivel."
+                                                            
+                              order by d.codigo";
+
+                $sae= $db->prepare($query);
+                $params = array();
+                $sae->execute($params);
+                $saeid = $sae->fetchAll();
+//dump($saeid);die;
 
                 $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_institucioneducativa_acreditacion');")->execute();
                 $siea = new SuperiorInstitucioneducativaAcreditacion();
                 $siea->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
-                $siea->setAcreditacionEspecialidad($em->getRepository('SieAppWebBundle:SuperiorAcreditacionEspecialidad')->findOneBy(array('id' =>$idnivel )));
+                $siea->setAcreditacionEspecialidad($em->getRepository('SieAppWebBundle:SuperiorAcreditacionEspecialidad')->findOneBy(array('id' =>$saeid['0']['saeid'] )));
                 $siea->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('ie_gestion')));
                 $siea->setInstitucioneducativaSucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find($this->session->get('ie_suc_id')));
                 $siea->setSuperiorTurnoTipo($em->getRepository('SieAppWebBundle:SuperiorTurnoTipo')->find(10));
@@ -1118,21 +1141,21 @@ select idsae,idacr
                 $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_institucioneducativa_periodo');")->execute();
                 $siep = new SuperiorInstitucioneducativaPeriodo();
                 $siep->setSuperiorInstitucioneducativaAcreditacion($siea);
-                $siep->setSuperiorPeriodoTipo($em->getRepository('SieAppWebBundle:SuperiorPeriodoTipo')->find('1'));
+                $siep->setSuperiorPeriodoTipo($em->getRepository('SieAppWebBundle:SuperiorPeriodoTipo')->find('2'));
                 $em->persist($siep);
                 $em->flush();
 
 //
                 $em->getConnection()->commit();
                 $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron actualizados correctamente.');
-                return $this->redirect($this->generateUrl('permanente_malla_tecnica_index'));
+                return $this->redirect($this->generateUrl('herramienta_alter_malla_tecnica_index'));
                 //  return $this->render('SiePermanenteBundle:MallaTecnica:index.html.twig');
             }
             else{
                 //return $response->setData(array('mensaje'=>'¡Ya existe la especialidad!'));
                 // return $this->render('SiePermanenteBundle:MallaTecnica:index.html.twig');
                 $this->get('session')->getFlashBag()->add('newOk', '¡Ya existe la especialidad!');
-                return $this->redirect($this->generateUrl('permanente_malla_tecnica_index'));
+                return $this->redirect($this->generateUrl('herramienta_alter_malla_tecnica_index'));
             }
 
         } catch (Exception $ex) {
