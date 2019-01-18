@@ -73,11 +73,6 @@ Sie\AppWebBundle\Entity\Rude:
             nullable: true
             comment: ''
             column: tiene_ocupacion_trabajo
-        tieneServicioBasicoId:
-            type: boolean
-            nullable: true
-            comment: ''
-            column: tiene_servicio_basico_id
         tieneAbandono:
             type: boolean
             nullable: true
