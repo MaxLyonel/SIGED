@@ -208,7 +208,7 @@ group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,id
         $params = array();
         $especialidadnivel->execute($params);
         $po = $especialidadnivel->fetchAll();
-        // dump($po);die();
+       // dump($po);die();
         if ($po){
             $exist = true;
         }
@@ -1376,7 +1376,7 @@ group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,id
             $especialidadnivel->execute($params);
             $po = $especialidadnivel->fetchAll();
 
-           //  dump($po);die();
+               //  dump($po);die();
             if ($po){
                 $exist = true;
             }

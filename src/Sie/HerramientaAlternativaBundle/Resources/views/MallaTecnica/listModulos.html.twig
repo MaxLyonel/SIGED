@@ -3,7 +3,20 @@
         <div class="panel panel-danger">
             <div class="panel-heading">{{ malla.especialidad }} - {{ malla.acreditacion }} - {{ malla.cantidad }} </div>
             <div class="panel-body">
-                <button type="button" class="btn btn-danger" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }});" >Nuevo</button>
+                {% if (malla.idacreditacion == '1') %}
+                    {% if (malla.cantidad < '5') %}
+                        <button type="button" class="btn btn-danger" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }});" >Nuevo</button>
+                    {% endif %}
+                {% elseif (malla.idacreditacion == '20') %}
+                    {% if (malla.cantidad < '5') %}
+                        <button type="button" class="btn btn-danger" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }});" >Nuevo</button>
+                    {% endif %}
+                {% elseif (malla.idacreditacion == '32') %}
+                    {% if (malla.cantidad <= '10') %}
+                        <button type="button" class="btn btn-danger" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }});" >Nuevo</button>
+                    {% endif %}
+                {% endif %}
+
                 {% if (malla.modulo!='') %}
 
                     <div>
