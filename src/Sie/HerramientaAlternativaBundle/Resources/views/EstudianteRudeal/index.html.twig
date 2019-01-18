@@ -109,8 +109,8 @@
                                         </div>
                                     </a>
                                 </li>
-                                <li {% if rude.registroFinalizado < 2 %} class="disabled" {% endif %}>
-                                    <a id="paso2" href="#tab2" {% if rude.registroFinalizado >= 2 %} data-toggle="tab" {% endif %} aria-expanded="false">
+                                <li {% if rude.registroFinalizado < 1 %} class="disabled" {% endif %}>
+                                    <a id="paso2" href="#tab2" {% if rude.registroFinalizado >= 1 %} data-toggle="tab" {% endif %} aria-expanded="false">
                                         <i class="fa fa-file"></i>
                                         <div>
                                             <span class="text-strong">DIRECCIÓN</span>
@@ -118,8 +118,8 @@
                                         </div>
                                     </a>
                                 </li>
-                                <li {% if rude.registroFinalizado < 3 %} class="disabled" {% endif %}>
-                                    <a id="paso3" href="#tab3" {% if rude.registroFinalizado >= 3 %} data-toggle="tab" {% endif %} aria-expanded="false">
+                                <li {% if rude.registroFinalizado < 2 %} class="disabled" {% endif %}>
+                                    <a id="paso3" href="#tab3" {% if rude.registroFinalizado >= 2 %} data-toggle="tab" {% endif %} aria-expanded="false">
                                         <i class="fa fa-check-circle"></i>
                                         <div>
                                             <span class="text-strong">DISCAPACIDAD</span>
@@ -127,8 +127,8 @@
                                         </div>
                                     </a>
                                 </li>
-                                <li {% if rude.registroFinalizado < 4 %} class="disabled" {% endif %}>
-                                    <a id="paso4" href="#tab4" {% if rude.registroFinalizado >= 4 %} data-toggle="tab" {% endif %} aria-expanded="false">
+                                <li {% if rude.registroFinalizado < 3 %} class="disabled" {% endif %}>
+                                    <a id="paso4" href="#tab4" {% if rude.registroFinalizado >= 3 %} data-toggle="tab" {% endif %} aria-expanded="false">
                                         <i class="fa fa-check-circle"></i>
                                         <div>
                                             <span class="text-strong">ASPECTOS</span>
@@ -161,29 +161,55 @@
                                     {{ form_widget(formEstudiante.estudianteId) }}
 
                                     <div class="row">
-                                        <div class="col-md-6 col-sm-6">
+                                        <div class="col-md-12 col-sm-12">
                                             <p>2.3 DOCUMENTO DE IDENTIFICACIÓN</p>
                                         </div>
-                                        <div class="col-md-6 col-sm-6">
-                                            <div class="row form-group">
-                                                <label class="col-md-4 col-sm-4">Carnet:</label>
-                                                <div class="col-md-8 col-sm-8">
-                                                    {% if estudiante.carnetIdentidad == "" %}
-                                                        {{ form_widget(formEstudiante.carnet, {'attr':{'class':'form-control'} }) }}
-                                                    {% else %}
-                                                        {{ estudiante.carnetIdentidad }}
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                            <div class="row form-group">
-                                                <label class="col-md-4 col-sm-4">Pasaporte:</label>
-                                                <div class="col-md-8 col-sm-8">
+                                        <div class="col-md-7 col-sm-7">
+                                            <p>Carnet:</p>
+                                            <fieldset style="border:1px solid #CCCCCC; padding:7px;">
+                                                {% if estudiante.carnetIdentidad == "" %}
+                                                    <div class="row">
+                                                        <div class="col-md-5">
+                                                            <p>Número</p>
+                                                            {{ form_widget(formEstudiante.carnet, {'attr':{'class':'form-control'} }) }}
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <p>Complemento</p>
+                                                            {{ form_widget(formEstudiante.complemento, {'attr':{'class':'form-control'} }) }}
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <p>Expedido</p>
+                                                            {{ form_widget(formEstudiante.expedido, {'attr':{'class':'form-control'} }) }}
+                                                        </div>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="row">
+                                                        <div class="col-md-5">
+                                                            <p>Número</p>
+                                                            {{ estudiante.carnetIdentidad }}
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <p>Complemento</p>
+                                                            {{ estudiante.complemento }}
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <p>Expedido</p>
+                                                            {{ estudiante.expedido.departamento }}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-5 col-sm-5">
+                                            <p>Pasaporte:</p>
+                                            <fieldset style="border:1px solid #CCCCCC; padding:7px;">
+                                                <div class="col-md-12 col-sm-12">
                                                     {{ form_widget(formEstudiante.pasaporte, {'attr':{'class':'form-control'} }) }}
                                                 </div>
-                                            </div>
+                                            </fieldset>
                                         </div>
                                     </div>
-                                    
+                                    <br>
                                     <div class="row">
                                         <div class="col-md-6 col-sm-6">
                                             <p>2.6 ESTADO CIVIL</p>
@@ -237,7 +263,7 @@
                                 <br>
                             </div>
                             <div class="tab-pane fade inner-all" id="tab2">
-                                <h4 class="page-header">III. DE LA O EL ESTUDIANTE/PARTICIPANTE</h4>
+                                <h4 class="page-header">III. DIRECCIÓN DE LA O EL ESTUDIANTE/PARTICIPANTE</h4>
                                 <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
                                     <div class="row">
                                         <div class="form-group row">
@@ -306,7 +332,7 @@
                                 </form>
                             </div>
                             <div class="tab-pane fade inner-all" id="tab3">
-                                <h4 class="page-header">III. DISCAPACIDAD DE LA O EL ESTUDIANTE/PARTICIPANTE</h4>
+                                <h4 class="page-header">IV. DISCAPACIDAD DE LA O EL ESTUDIANTE/PARTICIPANTE</h4>
                                 <form id="formDiscapacidad" onsubmit="saveFormDiscapacidad(); return false;">
                                     <div class="row">
                                         <div class="col-md-12 col-sm-12">4.1 DISCAPACIDAD</div>
@@ -402,7 +428,7 @@
                                 </form>
                             </div>
                             <div class="tab-pane fade inner-all" id="tab4">
-                                <h4 class="page-header">IV. ASPECTOS SOCIALES</h4>
+                                <h4 class="page-header">V. ASPECTOS SOCIALES</h4>
                                 <form id="formSocioeconomicos" onsubmit="saveFormSocioeconomicos(); return false;">
                                     <div class="row">
                                         <div class="col-md-12 col-sm-12">5.1 IDIOMAS Y CULTURA</div>
@@ -410,12 +436,16 @@
                                     
 
                                     <div class="row form-group">
-                                        <label class="col-md-6">5.1.1. ¿Qué idiomas habla la o el estudiante/participante?</label>
-                                        <div class="col-md-6 col-sm-6">
+                                        <label class="col-md-12">5.1.1. ¿Qué idiomas habla la o el estudiante/participante?</label>
+                                        <div class="col-md-4 col-sm-4">
                                             <small>a) Más frecuente (*)</small>
                                             {{ form_widget(formSocioeconomico.idioma1, {'attr':{'class':'form-control jupper'} }) }}
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
                                             <small>b) Medianamente frecuente</small>
                                             {{ form_widget(formSocioeconomico.idioma2, {'attr':{'class':'form-control jupper'} }) }}
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
                                             <small>c) Menos frecuente</small>
                                             {{ form_widget(formSocioeconomico.idioma3, {'attr':{'class':'form-control jupper'} }) }}
                                         </div>
@@ -433,8 +463,8 @@
                                         <div class="col-md-12 col-sm-12">5.2 OCUPACIÓN</div>
                                     </div>
                                     <div class="row form-group">
-                                        <label class="col-md-8">5.2.1. ¿La o el estudiante/participante tiene alguna ocupación?</label>
-                                        <div class="col-md-4 col-sm-4">
+                                        <label class="col-md-6">5.2.1. ¿La o el estudiante/participante tiene alguna ocupación?</label>
+                                        <div class="col-md-6 col-sm-6">
                                             {{ form_widget(formSocioeconomico.tieneOcupacionTrabajo, {'attr':{'class':'jupper radioOcupacion'} }) }}
                                             {{ form_widget(formSocioeconomico.actividades, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
                                             {{ form_widget(formSocioeconomico.actividadOtro, {'attr':{'class':'form-control jupper'} }) }}
@@ -445,8 +475,8 @@
                                         <div class="col-md-12 col-sm-12">5.3 SALUD</div>
                                     </div>
                                     <div class="row form-group">
-                                        <label class="col-md-8">5.3.1. ¿La o el estudiante/participante tiene seguro de salud?</label>
-                                        <div class="col-md-4 col-sm-4">
+                                        <label class="col-md-6">5.3.1. ¿La o el estudiante/participante tiene seguro de salud?</label>
+                                        <div class="col-md-6 col-sm-6">
                                             {{ form_widget(formSocioeconomico.seguroSalud, {'attr':{'class':'radioSeguro jupper'} }) }}
                                             <p>En caso negativo, ¿Donde acude la o el estudiante/participante en caso de enfermedad o accidente?</p>
                                             {{ form_widget(formSocioeconomico.acudioCentro, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
@@ -494,7 +524,7 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-12 col-sm-12">VI DATOS DE INSCRIPCION DE LA GESTIÓN ACTUAL</div>
+                                        <h4 class="page-header">VI DATOS DE INSCRIPCION DE LA GESTIÓN ACTUAL</h4>
                                     </div>
                                     
                                     <div class="row form-group">
@@ -522,7 +552,7 @@
                                 </form>
                             </div>
                             <div class="tab-pane fade inner-all" id="tab5">
-                                <h4 class="page-header">VI. FINALIZAR REGISTRO RUDE</h4>
+                                <h4 class="page-header">VII. FINALIZAR REGISTRO RUDEAL</h4>
                                 <div class="ml-10">
                                     <div class="row">
                                         <div class="col-md-8">
@@ -550,8 +580,8 @@
                                         </div>
                                         <div id="btnImprimir" class="col-md-4" {% if rude.registroFinalizado < 5 %} style="display:none" {% endif %}>
                                             <div class="block-print">
-                                                <p>Imprimir Formulario RUDE</p>
-                                                <a class="btn btn-info" style="padding:20px" href="{{path('download_rude', {'codue': inscripcion.institucioneducativaCurso.institucioneducativa.id, 'rude': inscripcion.estudiante.codigoRude, 'gestion': inscripcion.institucioneducativaCurso.gestionTipo.id, 'eins':inscripcion.id} )}}">
+                                                <p>Imprimir Formulario RUDEAL</p>
+                                                <a class="btn btn-info" style="padding:20px" href="{{path('herramienta_alter_reporte_socioeconomico', {'inscripcionId':inscripcion.id, 'rude': inscripcion.estudiante.codigoRude} )}}">
                                                     <i class="fa fa-print" style="font-size:40px" ></i>
                                                 </a>
                                             </div>
@@ -618,6 +648,24 @@
     $(".readonly").focus(function(e){
         $(this).blur();
     });
+
+    // VALIDAR EXPEDIDO
+    function validarExpedido(){
+        if($('#form_carnet').val() == ""){
+            $('#form_complemento').val('');
+            $('#form_expedido').val('');
+            $('#form_complemento').removeAttr('required');
+            $('#form_expedido').removeAttr('required');
+        }else{
+            $('#form_expedido').attr('required','required');
+        }
+    }
+
+    $('#form_carnet').on('keyup', function(){
+        validarExpedido();
+    });
+
+    validarExpedido();
 
     // VALIDACION DE SERVICIO MILITAR
     function validarServicioMilitar(){

@@ -230,19 +230,19 @@
                                                             {% else %}
                                                                     <li>
                                                                         <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getRudealNew('{{infoUe}}', '{{jsnInfoStudent}}');" >
-                                                                            <span class="label label-info"><i class="fa fa-edit"></i> Registro nuevo Rudeal</span>
-                                                                        </a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getRudeal('{{infoUe}}', '{{jsnInfoStudent}}');" >
                                                                             <span class="label label-success"><i class="fa fa-edit"></i> Registro de Rudeal</span>
                                                                         </a>
                                                                     </li>
-                                                                    <li>
+                                                                    {# <li>
+                                                                        <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getRudeal('{{infoUe}}', '{{jsnInfoStudent}}');" >
+                                                                            <span class="label label-success"><i class="fa fa-edit"></i> Registro de Rudeal</span>
+                                                                        </a>
+                                                                    </li> #}
+                                                                    {# <li>
                                                                         <a href="{{path('herramienta_alter_reporte_socioeconomico', {'inscripcionId': data.eInsId,'rude': data.codigoRude })}}">
                                                                             <span class="label label-warning"> <i class="fa fa-credit-card"></i> Imprimir Formulario Rudeal</span>
                                                                         </a>
-                                                                    </li>
+                                                                    </li> #}
                                                                 {% endif %}                                                            
                                                     {% endif %} 
                                                     
@@ -433,7 +433,7 @@
             listarmenu($('#form_seccioniiEducacionDiversa').val());
         });*/
       //  alert($('#form_seccioniiEducacionDiversa').val());return false;
-        $("#answerID").trigger(onchange(listarmenu($('#form_seccioniiEducacionDiversaTipo').val())));
+        //$("#answerID").trigger(onchange(listarmenu($('#form_seccioniiEducacionDiversaTipo').val())));
        // $("#answerIDUM").trigger(onchange(tipomili($('#form_seccioniiUnidadMilitarTipo').val())));
         //$("#answerIDP").trigger(onchange(tipopenal($('#form_seccioniiPenalTipo').val())));
     }
