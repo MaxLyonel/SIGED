@@ -293,8 +293,8 @@ class InstitucioneducativaController extends Controller {
                     $operativoControl = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
                                         ->select('oc')
                                         ->where('oc.operativoTipo =' . $operativo)
-                                        ->andWhere('oc.distritoTipo = ' . $ies->getInstitucioneducativa()->getLejuridicciongeografica()->getDistritoTipo())
-                                        ->andWhere('oc.gestionTipo = ' . $ies->getGestionTipo())
+                                        ->andWhere('oc.distritoTipo = ' . $ies->getInstitucioneducativa()->getLejuridicciongeografica()->getDistritoTipo()->getId())
+                                        ->andWhere('oc.gestionTipo = ' . $ies->getGestionTipo()->getId())
                                         ->getQuery()
                                         ->getResult();
                     foreach($operativoControl as $o){
@@ -326,8 +326,8 @@ class InstitucioneducativaController extends Controller {
                     $operativoControl = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
                                         ->select('oc')
                                         ->where('oc.operativoTipo =' . $operativo)
-                                        ->andWhere('oc.distritoTipo = ' . $ies->getInstitucioneducativa()->getLejuridicciongeografica()->getDistritoTipo())
-                                        ->andWhere('oc.gestionTipo = ' . $ies->getGestionTipo())
+                                        ->andWhere('oc.distritoTipo = ' . $ies->getInstitucioneducativa()->getLejuridicciongeografica()->getDistritoTipo()->getId())
+                                        ->andWhere('oc.gestionTipo = ' . $ies->getGestionTipo()->getId())
                                         ->getQuery()
                                         ->getResult();
                     foreach($operativoControl as $o){
@@ -406,8 +406,8 @@ class InstitucioneducativaController extends Controller {
                     $operativoControl = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
                                         ->select('oc')
                                         ->where('oc.operativoTipo =' . $operativo)
-                                        ->andWhere('oc.distritoTipo = ' . $ies->getInstitucioneducativa()->getLejuridicciongeografica()->getDistritoTipo())
-                                        ->andWhere('oc.gestionTipo = ' . $ies->getGestionTipo())
+                                        ->andWhere('oc.distritoTipo = ' . $ies->getInstitucioneducativa()->getLejuridicciongeografica()->getDistritoTipo()->getId())
+                                        ->andWhere('oc.gestionTipo = ' . $ies->getGestionTipo()->getId())
                                         ->getQuery()
                                         ->getResult();
                     foreach($operativoControl as $o){
