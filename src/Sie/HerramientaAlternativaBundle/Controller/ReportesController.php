@@ -439,38 +439,48 @@ class ReportesController extends Controller {
         $sucursalId = $this->session->get('ie_suc_id');
         $rude = $request->get('rude');
         $inscripcionId = $request->get('inscripcionId');
-        $socioalteIdEntity = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findByEstudianteInscripcion($inscripcionId);
-        $socioalteId = $socioalteIdEntity[0]->getId();
+        $rude = $em->getRepository('SieAppWebBundle:Rude')->findOneBy(array('estudianteInscripcion'=>$inscripcionId));
 
-        $em = $this->getDoctrine()->getManager();
-        //$em = $this->getDoctrine()->getEntityManager();
         $db = $em->getConnection();    
         
-        $idlocalidad = $socioalteIdEntity[0]->getSeccioniiiLocalidadTipo()->getId();
-        //dump($idlocalidad);die;
+        //dump($idMunicipio);die;
         //si el estudiante no es inmigrante
-        if ($idlocalidad != 0){
-            $query = "select socioeconomico_lugar_recursivo(".$idlocalidad.");";
-            $stmt = $db->prepare($query);
-            $params = array();
-            $stmt->execute($params);        
-            $po = $stmt->fetchAll();
-        //dump($po);die;
-        //$countdir = count($po);
-        
-            $porciones = explode("|", $po[0]['socioeconomico_lugar_recursivo']);
-        //dump($porciones);die;
-        
-            $dirDep = $porciones[2];        
-            $dirProv = $porciones[3];
-            $dirSec = $porciones[4];
-            $dirLoc = $porciones[6];
+        if($rude->getMunicipioLugarTipo() != null){
+
+                $lt5_id = $rude->getMunicipioLugarTipo()->getLugarTipo();
+                $lt4_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getLugarTipo();
+                $lt3_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getLugarTipo();
+
+                $m_id = $rude->getMunicipioLugarTipo()->getId();
+                $p_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getId();
+                $d_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getId();
         }else{
-            $dirDep = 0;        
-            $dirProv = 0;
-            $dirSec = 0;
-            $dirLoc = 0;
+            $m_id = 0;
+            $p_id = 0;
+            $d_id = 0;
         }
+        // if ($idMunicipio != 0){
+        //     $query = "select socioeconomico_lugar_recursivo(".$idMunicipio.");";
+        //     $stmt = $db->prepare($query);
+        //     $params = array();
+        //     $stmt->execute($params);        
+        //     $po = $stmt->fetchAll();
+        // //dump($po);die;
+        // //$countdir = count($po);
+        
+        //     $porciones = explode("|", $po[0]['socioeconomico_lugar_recursivo']);
+        // //dump($porciones);die;
+        
+        //     $dirDep = $porciones[2];        
+        //     $dirProv = $porciones[3];
+        //     $dirSec = $porciones[4];
+        //     $dirLoc = $porciones[6];
+        // }else{
+        //     $dirDep = 0;        
+        //     $dirProv = 0;
+        //     $dirSec = 0;
+        //     $dirLoc = 0;
+        // }
           //get the values of report
 //        //create the response object to down load the file
         
@@ -479,7 +489,7 @@ class ReportesController extends Controller {
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'rudelal_' . $rude . '_' . $gestion . '.pdf'));
         // $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_rude_socioeconomico_gral_v2_vcj.rptdesign&socioalteId=' . $socioalteId . '&rude=' . $rude . '&sucursalId=' . $sucursalId . '&inscripcionId=' . $inscripcionId . '&dirDep=' . $dirDep . '&dirProv=' . $dirProv . '&dirSec=' . $dirSec . '&dirLoc=' . $dirLoc . '&&__format=pdf&'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_rude_socioeconomico_gral_v3_afv.rptdesign&socioalteId=' . $socioalteId . '&rude=' . $rude . '&sucursalId=' . $sucursalId . '&inscripcionId=' . $inscripcionId . '&dirDep=' . $dirDep . '&dirProv=' . $dirProv . '&dirSec=' . $dirSec . '&dirLoc=' . $dirLoc . '&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_rude_socioeconomico_gral_v3_afv.rptdesign&rude=' . $rude . '&sucursalId=' . $sucursalId . '&inscripcionId=' . $inscripcionId . '&dirDep=' . $d_id . '&dirProv=' . $p_id . '&dirSec=' . $m_id . '&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
