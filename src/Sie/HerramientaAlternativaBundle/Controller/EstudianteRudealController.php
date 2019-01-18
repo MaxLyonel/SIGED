@@ -93,6 +93,69 @@ class EstudianteRudealController extends Controller {
                 $em->persist($rude);
                 $em->flush();
 
+                // REGISTRO DE DISCAPACIDADES
+                $discapacidades = $em->getRepository('SieAppWebBundle:RudeDiscapacidadGrado')->findBy(array('rude'=>$rude));
+                foreach ($discapacidades as $d) {
+                    $newDiscapacidad = clone $d;
+                    $newDiscapacidad->setRude($rude);
+                    $em->persist($newDiscapacidad);
+                    $em->flush();
+                }
+
+                // REGISTRO DE IDIOMS
+                $idiomas = $em->getRepository('SieAppWebBundle:RudeIdioma')->findBy(array('rude'=>$rude));
+                foreach ($idiomas as $i) {
+                    $newIdioma = clone $i;
+                    $newIdioma->setRude($rude);
+                    $em->persist($newIdioma);
+                    $em->flush();
+                }
+
+                // REGISTRO DE ACTIVIDADES OCUPACIONES
+                $actividades = $em->getRepository('SieAppWebBundle:RudeActividad')->findBy(array('rude'=>$rude));
+                foreach ($actividades as $a) {
+                    $newActividad = clone $a;
+                    $newActividad->setRude($rude);
+                    $em->persist($newActividad);
+                    $em->flush();
+                }
+
+                // REGISTRO DE ACUDIO CENTRO SALUD
+                $centrosSalud = $em->getRepository('SieAppWebBundle:RudeCentroSalud')->findBy(array('rude'=>$rude));
+                foreach ($centrosSalud as $cs) {
+                    $newCentroSalud = clone $cs;
+                    $newCentroSalud->setRude($rude);
+                    $em->persist($newCentroSalud);
+                    $em->flush();
+                }
+
+                // REGISTRO DE MEDIOS DE COMUNICACION
+                $mediosComunicacion = $em->getRepository('SieAppWebBundle:RudeMediosComunicacion')->findBy(array('rude'=>$rude));
+                foreach ($mediosComunicacion as $mc) {
+                    $newMedioComunicacion = clone $mc;
+                    $newMedioComunicacion->setRude($rude);
+                    $em->persist($newMedioComunicacion);
+                    $em->flush();
+                }
+
+                // REGISTRO DE MEDIOS DE TRANSPORTE
+                $mediosTransporte = $em->getRepository('SieAppWebBundle:RudeMedioTransporte')->findBy(array('rude'=>$rude));
+                foreach ($mediosTransporte as $mt) {
+                    $newMedioTransporte = clone $mt;
+                    $newMedioTransporte->setRude($rude);
+                    $em->persist($newMedioTransporte);
+                    $em->flush();
+                }
+
+                // REGISTRO DE MOTIVOS DE ABANDONO
+                $motivosAbandono = $em->getRepository('SieAppWebBundle:RudeAbandono')->findBy(array('rude'=>$rude));
+                foreach ($motivosAbandono as $ma) {
+                    $newMotivoAbandono = clone $ma;
+                    $newMotivoAbandono->setRude($rude);
+                    $em->persist($newMotivoAbandono);
+                    $em->flush();
+                }
+
             }else{
                 $jg = $em->createQueryBuilder()
                             ->select('jg')
@@ -105,6 +168,7 @@ class EstudianteRudealController extends Controller {
 
                 $direccion = $jg[0]->getDistritoTipo()->getDepartamentoTipo()->getDepartamento();
 
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude');")->execute();
                 $rude = new Rude();
                 $rude->setEstudianteInscripcion($inscripcion);
                 $rude->setFechaRegistro(new \DateTime('now'));
@@ -531,6 +595,7 @@ class EstudianteRudealController extends Controller {
             // REGISTRAMOS EL DOCUMENTO
             $estudiante->setCarnetcodepedis($form['carnetDiscapacidad']);
             // REGISTRAMOS LA DISCAPACIDAD y el grado
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_discapacidad_grado');")->execute();
             $discapacidad = new RudeDiscapacidadGrado();
             $discapacidad->setRude($rude);
             $discapacidad->setDiscapacidadTipo($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->find($form['discapacidad']));
@@ -860,7 +925,7 @@ class EstudianteRudealController extends Controller {
                         ->getResult();
 
         // REGISTRAMOS LOS IDIOMAS
-        
+        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_idioma');")->execute();
         $rudeIdioma = new RudeIdioma();
         if($form['idioma1']){
             $rudeIdioma->setRude($rude);
@@ -916,6 +981,7 @@ class EstudianteRudealController extends Controller {
         if($form['tieneOcupacionTrabajo'] == true and isset($form['actividades'])){
             $actividades = $form['actividades'];
             for ($i=0; $i < count($actividades); $i++) { 
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_actividad');")->execute();
                 $actividadEstudiante = new RudeActividad();
                 $actividadEstudiante->setRude($rude);
                 $actividadEstudiante->setActividadTipo($em->getRepository('SieAppWebBundle:ActividadTipo')->find($actividades[$i]));
@@ -947,6 +1013,7 @@ class EstudianteRudealController extends Controller {
         if(!$form['seguroSalud'] and isset($form['acudioCentro'])){
             $acudioCentro = $form['acudioCentro'];
             for ($i=0; $i < count($acudioCentro); $i++) { 
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_centro_salud');")->execute();
                 $centroEstudiante = new RudeCentroSalud();
                 $centroEstudiante->setRude($rude);
                 $centroEstudiante->setCentroSaludTipo($em->getRepository('SieAppWebBundle:CentroSaludTipo')->find($acudioCentro[$i]));
@@ -973,6 +1040,7 @@ class EstudianteRudealController extends Controller {
         // REGISTRAMOS LOS MEDIOS DE TRANSPORTE
         $medioComunicacion = $form['medioComunicacion'];
         for ($i=0; $i < count($medioComunicacion); $i++) { 
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_medios_comunicacion');")->execute();
             $medioComunicacionEstudiante = new RudeMediosComunicacion();
             $medioComunicacionEstudiante->setRude($rude);
             $medioComunicacionEstudiante->setMediosComunicacionTipo($em->getRepository('SieAppWebBundle:MediosComunicacionTipo')->find($medioComunicacion[$i]));
@@ -995,6 +1063,7 @@ class EstudianteRudealController extends Controller {
         // REGISTRAMOS LOS MEDIOS DE TRANSPORTE
         $medioTransporte = $form['medioTransporte'];
         for ($i=0; $i < count($medioTransporte); $i++) { 
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_medio_transporte');")->execute();
             $medioTransporteEstudiante = new RudeMedioTransporte();
             $medioTransporteEstudiante->setRude($rude);
             $medioTransporteEstudiante->setMedioTransporteTipo($em->getRepository('SieAppWebBundle:MedioTransporteTipo')->find($medioTransporte[$i]));
@@ -1024,6 +1093,7 @@ class EstudianteRudealController extends Controller {
         if(isset($form['abandono']) and $form['abandono'] != ""){
             $abandono = $form['abandono'];
             for ($i=0; $i < count($abandono); $i++) { 
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_abandono');")->execute();
                 $abandonoEstudiante = new RudeAbandono();
                 $abandonoEstudiante->setRude($rude);
                 $abandonoEstudiante->setAbandonoTipo($em->getRepository('SieAppWebBundle:AbandonoTipo')->find($abandono[$i]));
