@@ -24,12 +24,12 @@ Sie\AppWebBundle\Entity\CantidadCentroSaludTipo:
             comment: ''
             column: es_vigente
         fechaRegistro:
-            type: date
+            type: datetime
             nullable: true
             comment: ''
             column: fecha_registro
         fechaModificaion:
-            type: date
+            type: datetime
             nullable: true
             comment: ''
             column: fecha_modificaion

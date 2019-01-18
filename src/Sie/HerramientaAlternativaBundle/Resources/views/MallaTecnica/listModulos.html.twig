@@ -1,8 +1,9 @@
-{% if malla is not empty %}
-    {% for malla in malla %}
-        <div class="panel panel-danger">
+{% if mallafin is not empty %}
+    {% for malla in mallafin %}
+        <div class="panel panel-teal">
             <div class="panel-heading">{{ malla.especialidad }} - {{ malla.acreditacion }} - {{ malla.cantidad }} </div>
             <div class="panel-body">
+
                 {% if (malla.idacreditacion == '1') %}
                     {% if (malla.cantidad < '5') %}
                         <button type="button" class="btn btn-danger" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }});" >Nuevo</button>
@@ -12,12 +13,13 @@
                         <button type="button" class="btn btn-danger" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }});" >Nuevo</button>
                     {% endif %}
                 {% elseif (malla.idacreditacion == '32') %}
-                    {% if (malla.cantidad <= '10') %}
+                    {% if (malla.cantidad < '10') %}
                         <button type="button" class="btn btn-danger" onclick="nuevoModulo({{ malla.idsip }},{{ malla.idespecialidad }});" >Nuevo</button>
                     {% endif %}
                 {% endif %}
 
                 {% if (malla.modulo!='') %}
+
 
                     <div>
                         <div class="table-responsive col-md-12">
@@ -44,7 +46,7 @@
                                 {% for i in 0..foo|length-1 %}
                                     <tr>
                                         <td data-title="N°" class="text-center">{{ loop.index }}</td>
-                                        <td data-title="Especialidad" class="text-center"> {{  foo[i]}}</td>
+                                        <td data-title="Especialidad" class="text-center"> {{foo[i]}}</td>
                                         <td data-title="Especialidad" class="text-center">{{ horas[i] }}</td>
                                         <td data-title="Acciones" class="text-center">
                                             {#<a href="#" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="View detail"><i class="fa fa-eye"></i></a>#}
@@ -65,24 +67,13 @@
 
 
                 {% else %}
+
                     No hay Modulos Registrados
                 {% endif %}
             </div>
             <div class="panel-footer"> </div>
         </div>
     {% endfor %}
-
-
-
 {% else %}
-    {% for mallaniv in mallaniv %}
-        <div class="panel panel-danger">
-            <div class="panel-heading">{{ mallaniv.especialidad }} - {{ mallaniv.acreditacion }}</div>
-            <div class="panel-body">
-                <button type="button" class="btn btn-danger" onclick="nuevoModulo({{ mallaniv.idsip }},{{ mallaniv.idespecialidad }});" >Nuevo</button>
-                No hay modulos Registrados
-            </div>
-            <div class="panel-footer"> </div>
-        </div>
-    {% endfor %}
+    No hay niveles de especialidad
 {% endif %}
