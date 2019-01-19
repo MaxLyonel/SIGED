@@ -37,52 +37,57 @@
             <div class="panel-body no-padding rounded-bottom">  
                 {% if form is defined  %}
                     {{ form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'class': ""} } )}}
-                        <div class="form-body">      
-                            <div class="form-group">
-                                    <label class="control-label">{{ form_label(form.departamento) }}</label>
-                                {{ form_widget(form.departamento) }}
-                            </div><!-- /.form-group -->
+                        <div class="form-body"> 
+                            <div class="row">  
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                        <label class="control-label">{{ form_label(form.departamento) }}</label>
+                                    {{ form_widget(form.departamento) }}
+                                </div><!-- /.form-group -->
 
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">{{ form_label(form.provincia) }}</label>
-                                    {{ form_widget(form.provincia) }}
-                            </div><!-- /.form-group -->
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{ form_label(form.provincia) }}</label>
+                                        {{ form_widget(form.provincia) }}
+                                </div><!-- /.form-group -->
 
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">{{ form_label(form.municipio) }}</label>
-                                    {{ form_widget(form.municipio) }}
-                            </div><!-- /.form-group -->
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{ form_label(form.municipio) }}</label>
+                                        {{ form_widget(form.municipio) }}
+                                </div><!-- /.form-group -->
 
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">{{ form_label(form.canton) }}</label>
-                                    {{ form_widget(form.canton) }}
-                            </div><!-- /.form-group -->
+                                <div class="form-group">
+                                        <label class="col-sm-3 control-label">{{ form_label(form.canton) }}</label>
+                                            {{ form_widget(form.canton) }}
+                                    </div><!-- /.form-group -->
 
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">{{ form_label(form.localidad) }}</label>
-                                    {{ form_widget(form.localidad) }}
-                            </div><!-- /.form-group -->
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{ form_label(form.localidad) }}</label>
+                                        {{ form_widget(form.localidad) }}
+                                </div><!-- /.form-group -->
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{ form_label(form.subcea) }}</label>
+                                        {{ form_widget(form.subcea) }}
+                                </div><!-- /.form-group -->
 
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">{{ form_label(form.distrito) }}</label>
-                                    {{ form_widget(form.distrito) }}
-                            </div><!-- /.form-group -->
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{ form_label(form.direccion) }}</label>
+                                        {{ form_widget(form.direccion) }}
+                                </div><!-- /.form-group -->
 
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">{{ form_label(form.subcea) }}</label>
-                                    {{ form_widget(form.subcea) }}
-                            </div><!-- /.form-group -->
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{ form_label(form.zona) }}</label>
+                                        {{ form_widget(form.zona) }}
+                                </div><!-- /.form-group -->
 
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">{{ form_label(form.direccion) }}</label>
-                                    {{ form_widget(form.direccion) }}
-                            </div><!-- /.form-group -->
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{ form_label(form.distrito) }}</label>
+                                        {{ form_widget(form.distrito) }}
+                                </div><!-- /.form-group -->
 
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">{{ form_label(form.zona) }}</label>
-                                    {{ form_widget(form.zona) }}
-                            </div><!-- /.form-group -->
-
+                            </div>
+                        </div> 
                         </div><!-- /.form-body -->
                         <div class="form-footer">
                             {{ form_widget(form.search,{ 'attr':{'class':'btn btn-primary mb-15 btn-block' } } ) }}
