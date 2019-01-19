@@ -294,7 +294,7 @@ class InstitucioneducativaController extends Controller {
                 ->add('subcea', 'text', array('label' => 'Nombre Sub Centro', 'attr' => array('value' => $zona, 'class' => 'form-control', 'placeholder' => 'Nombre del Sub Centro', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
                 ->add('direccion', 'text', array('label' => 'Direccion', 'attr' => array('value' => $direccion, 'class' => 'form-control', 'placeholder' => 'Dirección', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
                 ->add('zona', 'text', array('label' => 'Zona', 'attr' => array('value' => $zona, 'class' => 'form-control', 'placeholder' => 'Zona', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
-                ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-blue')))
+                ->add('search', 'submit', array('label' => 'Registrar', 'attr' => array('class' => 'btn btn-blue')))
                 ->getForm();
         return $form;
     }
@@ -306,6 +306,7 @@ class InstitucioneducativaController extends Controller {
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
     public function verIgualdadJurisdiccionSucursal($institucionEducativaSucursalId){
+        //dump($institucionEducativaSucursalId);die;
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("
             select ies.le_juridicciongeografica_id as sucursal_jurisdiccion_id, jg.id as cea_jurisdiccion_id from institucioneducativa_sucursal as ies
@@ -368,8 +369,6 @@ class InstitucioneducativaController extends Controller {
             $entityValidacionGeograficaTipo = $em->getRepository('SieAppWebBundle:ValidacionGeograficaTipo')->findOneBy(array('id' => 0));
             $entityJuridiccionAcreditacionTipo = $em->getRepository('SieAppWebBundle:JurisdiccionGeograficaAcreditacionTipo')->findOneBy(array('id' => 4));
             
-            $entityInstitucionEducativaSucursal->setNombreSubcea($subcea);
-            $em->persist($entityInstitucionEducativaSucursal);
 
             $idjurgeocentral = $entityInstitucionEducativaSucursal->getLeJuridicciongeografica()->getId();
             $entityJurisdiccionGeograficaCentral = $em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneBy(array('id' => $idjurgeocentral));
@@ -402,6 +401,11 @@ class InstitucioneducativaController extends Controller {
             $entityJurisdiccionGeografica->setUsuarioId($id_usuario);
             $em->persist($entityJurisdiccionGeografica);
 
+            
+            $entityInstitucionEducativaSucursal->setNombreSubcea($subcea);
+            $entityInstitucionEducativaSucursal->setLeJuridicciongeografica($entityJurisdiccionGeografica);
+            $em->persist($entityInstitucionEducativaSucursal);
+
             $em->flush();
             $em->getConnection()->commit();
             
@@ -430,6 +434,7 @@ class InstitucioneducativaController extends Controller {
         // $jurisdiccionGeograficaId = $entidadInstitucionEducativaSucursal->getLeJuridicciongeografica()->getId();
 
         $valIgualdadJurisdiccionSucursal = $this->verIgualdadJurisdiccionSucursal($idiesuc);
+        //dump($valIgualdadJurisdiccionSucursal);die;
 
         if ($subcea > 0 and $valIgualdadJurisdiccionSucursal[0]){ 
             //dump($gestion);dump($subcea);dump($semestre);dump($idiesuc);die;            
