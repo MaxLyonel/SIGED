@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Sie\AppWebBundle\Entity\InstitucioneducativaSucursalTramite;
 use Sie\AppWebBundle\Entity\Consolidacion;
 use Doctrine\ORM\EntityRepository;
-
+use Sie\AppWebBundle\Entity\JurisdiccionGeografica;
 
 /**
  * Institucioneducativa Controller
@@ -253,13 +253,195 @@ class InstitucioneducativaController extends Controller {
         ));
     }
 
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que genera un formulario para la actualizacion del edificio educativo del sub cea
+    // PARAMETROS: routing, jurisdiccionGeograficaId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function creaFormRegistroJuridiccionGeografica($routing, $jurisdiccionGeograficaId) {
+        $em = $this->getDoctrine()->getManager();
+        $entidadJurisdiccionGeografica = $em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneBy(array('id' => $jurisdiccionGeograficaId));
+        
+        $entidadDepartamento = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 1), array('id' => 'asc'));
+        //dump($entidadDepartamento);die;
+        $entidadDep = array();
+        foreach ($entidadDepartamento as $dato)
+        {
+           $entidadDep[$dato->getCodigo()] = $dato->getLugar();
+        }
+        $departamentoId = null;
+        $entidadProvincia = array();
+        $provinciaId = null;
+        $entidadMunicipio = array();
+        $municipioId = null;
+        $entidadCanton = array();
+        $cantonId = null;
+        $entidadLocalidad = array();
+        $localidadId = null;
+        $entidadDistrito = array();
+        $distritoId = null;
+        $direccion = "";
+        $zona = "";        
+        $form = $this->createFormBuilder()
+                ->setAction($this->generateUrl($routing))
+                ->add('departamento', 'choice', array('label' => 'Departamento', 'empty_value' => 'Seleccione Departamento', 'choices' => $entidadDep, 'data' => $departamentoId, 'attr' => array('class' => 'form-control', 'required' => true, 'onchange' => 'listaProvincia(this.value)')))
+                ->add('provincia', 'choice', array('label' => 'Provincia', 'empty_value' => 'Seleccione Provincia', 'choices' => $entidadProvincia, 'data' => $provinciaId, 'attr' => array('class' => 'form-control', 'required' => true, 'onchange' => 'listaMunicipio(this.value)')))
+                ->add('municipio', 'choice', array('label' => 'Municipio', 'empty_value' => 'Seleccione Municipio', 'choices' => $entidadMunicipio, 'data' => $municipioId, 'attr' => array('class' => 'form-control', 'required' => true, 'onchange' => 'listaCanton(this.value)')))
+                ->add('canton', 'choice', array('label' => 'Canton', 'empty_value' => 'Seleccione Canton', 'choices' => $entidadCanton, 'data' => $cantonId, 'attr' => array('class' => 'form-control', 'required' => true, 'onchange' => 'listaLocalidad(this.value)')))
+                ->add('localidad', 'choice', array('label' => 'Localidad', 'empty_value' => 'Seleccione Localidad', 'choices' => $entidadLocalidad, 'data' => $localidadId, 'attr' => array('class' => 'form-control', 'required' => true)))
+                ->add('distrito', 'choice', array('label' => 'Distrito', 'empty_value' => 'Seleccione Distrito', 'choices' => $entidadDistrito, 'data' => $distritoId, 'attr' => array('class' => 'form-control', 'required' => true)))
+                ->add('subcea', 'text', array('label' => 'Nombre Sub Centro', 'attr' => array('value' => $zona, 'class' => 'form-control', 'placeholder' => 'Nombre del Sub Centro', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
+                ->add('direccion', 'text', array('label' => 'Direccion', 'attr' => array('value' => $direccion, 'class' => 'form-control', 'placeholder' => 'Dirección', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
+                ->add('zona', 'text', array('label' => 'Zona', 'attr' => array('value' => $zona, 'class' => 'form-control', 'placeholder' => 'Zona', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
+                ->add('search', 'submit', array('label' => 'Registrar', 'attr' => array('class' => 'btn btn-blue')))
+                ->getForm();
+        return $form;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funsion que lista verifica si el id de jurisdiccion geografica del sub centro es igual al del c.e.a. principal
+    // PARAMETROS: por POST  institucionEducativaSucursalId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function verIgualdadJurisdiccionSucursal($institucionEducativaSucursalId){
+        //dump($institucionEducativaSucursalId);die;
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("
+            select ies.le_juridicciongeografica_id as sucursal_jurisdiccion_id, jg.id as cea_jurisdiccion_id from institucioneducativa_sucursal as ies
+            inner join institucioneducativa as ie on ie.id = ies.institucioneducativa_id
+            inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+            where ies.id = ".$institucionEducativaSucursalId."
+        ");      
+        $query->execute();
+        $entity = $query->fetchAll();
+        if(count($entity)>0){
+            if ($entity[0]['sucursal_jurisdiccion_id'] == $entity[0]['cea_jurisdiccion_id']) {
+                $msg = array('0'=>true, '1'=>'El registro de jurisdicción geográfica no fue registrado hasta la fecha');
+            } else {
+                $msg = array('0'=>false, '1'=>'El registro de jurisdicción geográfica ya fue registrada anteriormente');
+            }
+        } else {
+            $msg = array('0'=>false, '1'=>'No existe el registro solicitado');
+        }
+        return $msg;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que guarda el nombre del sub centro y jurisdiccion geografica segun censo 2001
+    // PARAMETROS: por POST  localidadId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function saveJurisdiccionSubCeaAction(Request $request) {
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $session = $request->getSession();
+        $id_usuario = $session->get('userId');
+        //dump($session->get('ie_suc_id'));die;
+        
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        try {
+            $idiesuc = $session->get('ie_suc_id');
+            $form = $request->get('form');
+            // dump($form);die;
+            if ($form) {
+                $departamentoId = $form['departamento'];
+                $provinciaId = $form['provincia'];
+                $municipioId = $form['municipio'];
+                $cantonId = $form['canton'];
+                $localidadId = $form['localidad'];
+                $distritoId = $form['distrito'];
+                $subcea = $form['subcea'];
+                $direccion = $form['direccion'];
+                $zona = $form['zona'];
+            } else {
+                $em->getConnection()->rollback();
+                return $this->redirectToRoute('herramienta_ceducativa_seleccionar_cea');
+            }
+            $entityInstitucionEducativaSucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('id' => $idiesuc));
+            $entityLocalidadLugarTipo = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $localidadId));
+            $entityDistritoLugarTipo = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $distritoId));
+            $entityDistritoTipo = $em->getRepository('SieAppWebBundle:DistritoTipo')->findOneBy(array('id' => $entityDistritoLugarTipo->getCodigo()));
+            $distritoCodigo = $entityDistritoLugarTipo->getCodigo();
+            $entityValidacionGeograficaTipo = $em->getRepository('SieAppWebBundle:ValidacionGeograficaTipo')->findOneBy(array('id' => 0));
+            $entityJuridiccionAcreditacionTipo = $em->getRepository('SieAppWebBundle:JurisdiccionGeograficaAcreditacionTipo')->findOneBy(array('id' => 4));
+            
+
+            $idjurgeocentral = $entityInstitucionEducativaSucursal->getLeJuridicciongeografica()->getId();
+            $entityJurisdiccionGeograficaCentral = $em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneBy(array('id' => $idjurgeocentral));
+            $institucioneducativaId = $entityInstitucionEducativaSucursal->getInstitucioneducativa()->getId();
+            $sucursalId = $entityInstitucionEducativaSucursal->getSucursalTipo()->getId();
+            //dump($idjurgeocentral);die;
+            $nuevoId = str_pad($sucursalId,2,"0",STR_PAD_LEFT);
+
+            $query = $em->getConnection()->prepare("
+                select cast(coalesce(max(cast(substring(cast(id as varchar) from (length(cast(id as varchar))-2) for 3) as integer)),0) + 1 as varchar) as id
+                from jurisdiccion_geografica 
+                where juridiccion_acreditacion_tipo_id = 4
+            ");      
+            $query->execute();
+            $entityId = $query->fetchAll();
+            $nuevoId = $distritoCodigo.str_pad($entityId[0]['id'],3,"0",STR_PAD_LEFT);
+
+            $entityJurisdiccionGeografica  = new JurisdiccionGeografica(); 
+            //dump($nuevoId);die;
+            $entityJurisdiccionGeografica->setId($nuevoId); 
+            $entityJurisdiccionGeografica->setLugarTipoLocalidad($entityLocalidadLugarTipo);           
+            $entityJurisdiccionGeografica->setLugarTipoIdDistrito($distritoId);
+            $entityJurisdiccionGeografica->setObs('SUCURSAL SUB C.E.A.');
+            $entityJurisdiccionGeografica->setDistritoTipo($entityDistritoTipo);
+            $entityJurisdiccionGeografica->setDireccion($direccion);
+            $entityJurisdiccionGeografica->setZona($zona);
+            $entityJurisdiccionGeografica->setJuridiccionAcreditacionTipo($entityJuridiccionAcreditacionTipo);
+            $entityJurisdiccionGeografica->setValidacionGeograficaTipo($entityValidacionGeograficaTipo);
+            $entityJurisdiccionGeografica->setFechaRegistro($fechaActual);
+            $entityJurisdiccionGeografica->setUsuarioId($id_usuario);
+            $em->persist($entityJurisdiccionGeografica);
+
+            
+            $entityInstitucionEducativaSucursal->setNombreSubcea($subcea);
+            $entityInstitucionEducativaSucursal->setLeJuridicciongeografica($entityJurisdiccionGeografica);
+            $em->persist($entityInstitucionEducativaSucursal);
+
+            $em->flush();
+            $em->getConnection()->commit();
+            
+            return $this->redirectToRoute('herramienta_ceducativa_seleccionar_cea');
+        } catch (\Doctrine\ORM\NoResultException $exc) {
+            $em->getConnection()->rollback();
+            return $this->redirectToRoute('herramienta_ceducativa_seleccionar_cea');
+        }
+    }
+   
+
     public function gessubsemopenAction(Request $request, $teid, $gestion, $subcea, $semestre, $idiesuc) {
         $sesion = $request->getSession();
         $sesion->set('ie_gestion', $gestion);
         $sesion->set('ie_subcea', $subcea);
         $sesion->set('ie_per_cod', $semestre);
         $sesion->set('ie_suc_id', $idiesuc);
+        
+        if ($subcea < 0){
+            return $this->redirectToRoute('herramienta_ceducativa_seleccionar_cea');
+        }
+
         $em = $this->getDoctrine()->getManager();
+
+        // $entidadInstitucionEducativaSucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('id' => $idiesuc));
+        // $jurisdiccionGeograficaId = $entidadInstitucionEducativaSucursal->getLeJuridicciongeografica()->getId();
+
+        $valIgualdadJurisdiccionSucursal = $this->verIgualdadJurisdiccionSucursal($idiesuc);
+        //dump($valIgualdadJurisdiccionSucursal);die;
+
+        if ($subcea > 0 and $valIgualdadJurisdiccionSucursal[0]){ 
+            //dump($gestion);dump($subcea);dump($semestre);dump($idiesuc);die;            
+            return $this->render($this->session->get('pathSystem') . ':Principal:registrosubcea.html.twig', array(
+                'form' => $this->creaFormRegistroJuridiccionGeografica('herramienta_ceducativa_registro_jurisdiccion_subcea_save',0)->createView(),
+            ));
+        } 
         
         switch ($semestre) {
             case 1:
@@ -293,8 +475,8 @@ class InstitucioneducativaController extends Controller {
                     $operativoControl = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
                                         ->select('oc')
                                         ->where('oc.operativoTipo =' . $operativo)
-                                        ->andWhere('oc.distritoTipo = ' . $ies->getInstitucioneducativa()->getLejuridicciongeografica()->getDistritoTipo())
-                                        ->andWhere('oc.gestionTipo = ' . $ies->getGestionTipo())
+                                        ->andWhere('oc.distritoTipo = ' . $ies->getInstitucioneducativa()->getLejuridicciongeografica()->getDistritoTipo()->getId())
+                                        ->andWhere('oc.gestionTipo = ' . $ies->getGestionTipo()->getId())
                                         ->getQuery()
                                         ->getResult();
                     foreach($operativoControl as $o){
@@ -326,8 +508,8 @@ class InstitucioneducativaController extends Controller {
                     $operativoControl = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
                                         ->select('oc')
                                         ->where('oc.operativoTipo =' . $operativo)
-                                        ->andWhere('oc.distritoTipo = ' . $ies->getInstitucioneducativa()->getLejuridicciongeografica()->getDistritoTipo())
-                                        ->andWhere('oc.gestionTipo = ' . $ies->getGestionTipo())
+                                        ->andWhere('oc.distritoTipo = ' . $ies->getInstitucioneducativa()->getLejuridicciongeografica()->getDistritoTipo()->getId())
+                                        ->andWhere('oc.gestionTipo = ' . $ies->getGestionTipo()->getId())
                                         ->getQuery()
                                         ->getResult();
                     foreach($operativoControl as $o){
@@ -406,8 +588,8 @@ class InstitucioneducativaController extends Controller {
                     $operativoControl = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
                                         ->select('oc')
                                         ->where('oc.operativoTipo =' . $operativo)
-                                        ->andWhere('oc.distritoTipo = ' . $ies->getInstitucioneducativa()->getLejuridicciongeografica()->getDistritoTipo())
-                                        ->andWhere('oc.gestionTipo = ' . $ies->getGestionTipo())
+                                        ->andWhere('oc.distritoTipo = ' . $ies->getInstitucioneducativa()->getLejuridicciongeografica()->getDistritoTipo()->getId())
+                                        ->andWhere('oc.gestionTipo = ' . $ies->getGestionTipo()->getId())
                                         ->getQuery()
                                         ->getResult();
                     foreach($operativoControl as $o){
@@ -1231,7 +1413,6 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
     }
     
     public function seleccionarceaAction() {
-
         $historialForm = $this->historialceasForm($this->session->get('roluser'),$this->session->get('ie_id'));
         //dump($historialForm);die;
         return $this->render($this->session->get('pathSystem') . ':Principal:seleccionarcea.html.twig',array(
@@ -1244,7 +1425,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
         $form = $request->get('form');
         /*
          * verificamos si tiene tuicion
-         */        
+         */    
         $usuario_id = $this->session->get('userId');        
         $usuario_rol = $this->session->get('roluser');
         
@@ -2462,8 +2643,19 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                 $provinciasArray[$c->getId()] = $c->getLugar();
             }
 
+            $query = $em->getConnection()->prepare("
+                select id, codigo, lugar from lugar_tipo where lugar_nivel_id = 7 and cast(substring(codigo from 1 for 1) as integer) = ".$dpto
+            );
+            $query->execute();
+            $distritos = $query->fetchAll();
+
+            $distritosArray = array();
+            foreach ($distritos as $c) {
+                $distritosArray[$c['id']] = $c['lugar'];
+            }            
+
             $response = new JsonResponse();
-            return $response->setData(array('listaprovincias' => $provinciasArray));
+            return $response->setData(array('listaprovincias' => $provinciasArray, 'listadistritos' => $distritosArray));
         } catch (Exception $ex) {
             //$em->getConnection()->rollback();
         }
@@ -2472,7 +2664,6 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
     public function listarmunicipiosAction($prov) {
         try {
             $em = $this->getDoctrine()->getManager();
-
 
             $query = $em->createQuery(
                 'SELECT lt
@@ -2487,7 +2678,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             $municipiosArray = array();
             foreach ($municipios as $c) {
                 $municipiosArray[$c->getId()] = $c->getLugar();
-            }
+            }     
 
             $response = new JsonResponse();
             return $response->setData(array('listamunicipios' => $municipiosArray));

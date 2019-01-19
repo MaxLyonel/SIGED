@@ -149,27 +149,33 @@
 
     var eliminarModuloCL= function (idmodulo,idspm,modulo,horas,idesp) {
        // alert('dsfasdfasd');
-        $.ajax({
-            type: 'post',
-            url: "{{ path('herramienta_show_modulo_delete') }}",
-            data: ({idmodulo:idmodulo,idspm:idspm,modulo:modulo,horas:horas,idesp:idesp}),
-            beforeSend: function () {
-                $('#modal').empty();
-            },
-            success: function (data) {
-                $("#listamodulos").empty();
-                $('#mengestionmod').empty();
-            //    $('#mengestioncurso').empty();
-                $("#listamodulos").append(data);
+        if(confirm('Esta seguro que desea eliminar el modulo?')){
+            $.ajax({
+                type: 'post',
+                url: "{{ path('herramienta_show_modulo_delete') }}",
+                data: ({idmodulo:idmodulo,idspm:idspm,modulo:modulo,horas:horas,idesp:idesp}),
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $("#listamodulos").empty();
+                    $('#mengestionmod').empty();
+                    //    $('#mengestioncurso').empty();
+                    $("#listamodulos").append(data);
 //                $('#modal').modal('show');
 //                $('#modal').append(data);
-            },
-            error: function(data){
-                $('#mengestionmod').empty();
-                $('#mengestionmod').html("<div class='alert alert-warning alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Proceso detenido!</strong> Si desea borrar el modulo antes debe eliminar lo siguiente:  modulo asignado al curso, participantes y notas.</div>");
-                //window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
-            }
-        });
+                },
+                error: function(data){
+                    $('#mengestionmod').empty();
+                    $('#mengestionmod').html("<div class='alert alert-warning alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Proceso detenido!</strong> Si desea borrar el modulo antes debe eliminar lo siguiente:  modulo asignado al curso, participantes y notas.</div>");
+                    //window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
+                }
+            });
+
+        }else{
+            return false;
+        }
+
     };
 
 

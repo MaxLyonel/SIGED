@@ -39,15 +39,16 @@
 
 
                     <div class="tab">
-                        <button class="tablinks" onclick="openCity(event, 'uno')" >Antigua</button>
-                        <button class="tablinks" onclick="openCity(event, 'dos')"id="defaultOpen">Nueva</button>
+                        <button class="tablinks" onclick="openCity(event, 'uno')" >Carga Horaria Antigua</button>
+                        <button class="tablinks" onclick="openCity(event, 'dos')"id="defaultOpen">Carga Horaria Nueva</button>
 
                     </div>
 
                     <div id="uno" class="tabcontent " >
-
+ <pre>Aplica a estudiantes que continuan su proceso Educativo (Esta carga Horaria se ira cerrando en el Sistema paulatinamente)</pre>
                         <small>
                             <div class="tree well">
+
                                 <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nueva Acreditación">
                                     {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
                                         <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevaAcreditacion();">
@@ -91,7 +92,12 @@
 
 
                         <small>
+                             <pre>De acuerdo a la R.M. 001/2019 Art. 28. Aplica en el Nivel de Técnico Básico a:
+- Nuevos Estudiantes - Gestión 2019
+- Estudiantes inscritos en el Segundo Semestre de la gestión 2018 con al menos 500 horas.
+                            </pre>
                             <div class="tree well">
+
                                 <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nueva Acreditación">
                                     {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
                                         <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevaMallaAcreditacion();">

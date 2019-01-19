@@ -94,7 +94,7 @@ class EstudianteRudealController extends Controller {
                 $em->flush();
 
                 // REGISTRO DE DISCAPACIDADES
-                $discapacidades = $em->getRepository('SieAppWebBundle:RudeDiscapacidadGrado')->findBy(array('rude'=>$rude));
+                $discapacidades = $em->getRepository('SieAppWebBundle:RudeDiscapacidadGrado')->findBy(array('rude'=>$rudeAnterior));
                 foreach ($discapacidades as $d) {
                     $newDiscapacidad = clone $d;
                     $newDiscapacidad->setRude($rude);
@@ -102,8 +102,8 @@ class EstudianteRudealController extends Controller {
                     $em->flush();
                 }
 
-                // REGISTRO DE IDIOMS
-                $idiomas = $em->getRepository('SieAppWebBundle:RudeIdioma')->findBy(array('rude'=>$rude));
+                // REGISTRO DE IDIOMAS
+                $idiomas = $em->getRepository('SieAppWebBundle:RudeIdioma')->findBy(array('rude'=>$rudeAnterior));
                 foreach ($idiomas as $i) {
                     $newIdioma = clone $i;
                     $newIdioma->setRude($rude);
@@ -112,7 +112,7 @@ class EstudianteRudealController extends Controller {
                 }
 
                 // REGISTRO DE ACTIVIDADES OCUPACIONES
-                $actividades = $em->getRepository('SieAppWebBundle:RudeActividad')->findBy(array('rude'=>$rude));
+                $actividades = $em->getRepository('SieAppWebBundle:RudeActividad')->findBy(array('rude'=>$rudeAnterior));
                 foreach ($actividades as $a) {
                     $newActividad = clone $a;
                     $newActividad->setRude($rude);
@@ -121,7 +121,7 @@ class EstudianteRudealController extends Controller {
                 }
 
                 // REGISTRO DE ACUDIO CENTRO SALUD
-                $centrosSalud = $em->getRepository('SieAppWebBundle:RudeCentroSalud')->findBy(array('rude'=>$rude));
+                $centrosSalud = $em->getRepository('SieAppWebBundle:RudeCentroSalud')->findBy(array('rude'=>$rudeAnterior));
                 foreach ($centrosSalud as $cs) {
                     $newCentroSalud = clone $cs;
                     $newCentroSalud->setRude($rude);
@@ -130,7 +130,7 @@ class EstudianteRudealController extends Controller {
                 }
 
                 // REGISTRO DE MEDIOS DE COMUNICACION
-                $mediosComunicacion = $em->getRepository('SieAppWebBundle:RudeMediosComunicacion')->findBy(array('rude'=>$rude));
+                $mediosComunicacion = $em->getRepository('SieAppWebBundle:RudeMediosComunicacion')->findBy(array('rude'=>$rudeAnterior));
                 foreach ($mediosComunicacion as $mc) {
                     $newMedioComunicacion = clone $mc;
                     $newMedioComunicacion->setRude($rude);
@@ -139,7 +139,7 @@ class EstudianteRudealController extends Controller {
                 }
 
                 // REGISTRO DE MEDIOS DE TRANSPORTE
-                $mediosTransporte = $em->getRepository('SieAppWebBundle:RudeMedioTransporte')->findBy(array('rude'=>$rude));
+                $mediosTransporte = $em->getRepository('SieAppWebBundle:RudeMedioTransporte')->findBy(array('rude'=>$rudeAnterior));
                 foreach ($mediosTransporte as $mt) {
                     $newMedioTransporte = clone $mt;
                     $newMedioTransporte->setRude($rude);
@@ -148,7 +148,7 @@ class EstudianteRudealController extends Controller {
                 }
 
                 // REGISTRO DE MOTIVOS DE ABANDONO
-                $motivosAbandono = $em->getRepository('SieAppWebBundle:RudeAbandono')->findBy(array('rude'=>$rude));
+                $motivosAbandono = $em->getRepository('SieAppWebBundle:RudeAbandono')->findBy(array('rude'=>$rudeAnterior));
                 foreach ($motivosAbandono as $ma) {
                     $newMotivoAbandono = clone $ma;
                     $newMotivoAbandono->setRude($rude);
@@ -247,12 +247,25 @@ class EstudianteRudealController extends Controller {
                     ->add('rudeId', 'hidden', array('data' => $rude->getId(),'mapped'=>false))
                     ->add('estudianteId', 'hidden', array('data' => $e->getId()))
                     ->add('carnet', 'text', array('required' => false, 'data'=>$e->getCarnetIdentidad()))
+                    ->add('complemento', 'text', array('required' => false, 'data'=>$e->getCarnetIdentidad()))
+                    ->add('expedido', 'entity', array(
+                            'class' => 'SieAppWebBundle:DepartamentoTipo',
+                            'query_builder' => function (EntityRepository $e) {
+                                return $e->createQueryBuilder('dt')
+                                        ->where('dt.id not in (0)');
+                            },
+                            'property'=>'sigla',
+                            'empty_value' => 'Seleccionar...',
+                            'required' => true,
+                            'data'=>($e->getExpedido())?$e->getExpedido():'',
+                            'mapped'=>false
+                        ))
                     ->add('pasaporte', 'text', array('required' => false, 'data'=>$e->getPasaporte()))
                     ->add('estadoCivil', 'entity', array(
                             'class' => 'SieAppWebBundle:EstadoCivilTipo',
                             'query_builder' => function (EntityRepository $e) {
                                 return $e->createQueryBuilder('ec')
-                                        ->where('ec.id not in (0,9)');
+                                        ->where('ec.esactivo = true');
                             },
                             'empty_value' => 'Seleccionar...',
                             'required' => true,
@@ -272,7 +285,7 @@ class EstudianteRudealController extends Controller {
                             'class' => 'SieAppWebBundle:ServicioMilitarTipo',
                             'query_builder' => function (EntityRepository $e) {
                                 return $e->createQueryBuilder('smt')
-                                        ->where('smt.id not in (0)');
+                                        ->where('smt.esActivo = true');
                             },
                             'empty_value' => 'Seleccionar...',
                             'required' => true,
@@ -299,6 +312,8 @@ class EstudianteRudealController extends Controller {
 
         if(isset($form['carnet'])){
             $estudiante->setCarnetIdentidad($form['carnet']);
+            $estudiante->setComplemento($form['complemento']);
+            $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($form['expedido']));
         }
         $estudiante->setPasaporte($form['pasaporte']);
 
@@ -507,6 +522,9 @@ class EstudianteRudealController extends Controller {
 
         $discapacidadVisual = $em->getRepository('SieAppWebBundle:RudeDiscapacidadGrado')->findOneBy(array('rude'=>$rude->getId(), 'discapacidadTipo'=>10));
 
+        // obtener CATALOGOS
+        // $catalogos = $this->obtenerCatalogos($rude->getEstudianteInscripcion()->getInstitucioneducativaCurso()->getGestionTipo()->getId());
+
         $form = $this->createFormBuilder($rude)
                     ->add('id', 'hidden')
                     ->add('estudianteId', 'hidden', array('data'=>$e->getId(), 'mapped'=>false))
@@ -523,7 +541,7 @@ class EstudianteRudealController extends Controller {
                             'class' => 'SieAppWebBundle:DiscapacidadTipo',
                             'query_builder' => function (EntityRepository $e) {
                                 return $e->createQueryBuilder('dt')
-                                        ->where('dt.id not in (0,1)');
+                                        ->where('dt.esVigente = true');
                             },
                             'empty_value' => 'Seleccionar...',
                             'required' => true,
@@ -534,8 +552,7 @@ class EstudianteRudealController extends Controller {
                             'class' => 'SieAppWebBundle:GradoDiscapacidadTipo',
                             'query_builder' => function (EntityRepository $e){
                                 return $e->createQueryBuilder('gdt')
-                                        ->where('gdt.id in (:ids)')
-                                        ->setParameter('ids', [1,2,7,8]);
+                                        ->where('gdt.esVigente = true');
                             },
                             'empty_value' => 'Seleccionar...',
                             'required' => true,
@@ -660,8 +677,7 @@ class EstudianteRudealController extends Controller {
         $idiomasArray = array();
         $cont = 1;
         foreach ($idiomasHablados as $value) {
-            $idioma_aux = $em->getRepository('SieAppWebBundle:IdiomaTipo')->find($value->getHablaTipo()->getId());
-            $idiomasArray[$cont] = $idioma_aux->getId();
+            $idiomasArray[$cont] = $value->getIdiomaTipo()->getId();
             $cont++;
         }
 
@@ -685,15 +701,17 @@ class EstudianteRudealController extends Controller {
                     break;
         }
 
-        // NACIONES ORIGINARIAS
-        $naciones = $em->getRepository('SieAppWebBundle:NacionOriginariaTipo')->findAll();
-        $arrayNaciones = [];
-        foreach ($naciones as $nacion) {
-            $arrayNaciones[$nacion->getId()] = $nacion->getNacionOriginaria();
+        // ACTIVIDADES DEL ESTUDIANTE
+        $actividadesEstudiante = $em->getRepository('SieAppWebBundle:RudeActividad')->findBy(array('rude'=>$rude));
+        $arrayActividades = [];
+        foreach ($actividadesEstudiante as $ae) {
+            $arrayActividades[] = $ae->getActividadTipo()->getId();
         }
 
+        // OTRA ACTIVIDAD
+        $actividadOtro = $em->getRepository('SieAppWebBundle:RudeActividad')->findOneBy(array('rude'=>$rude, 'actividadTipo'=>3));
+
         // CENTROS DE SALUD
-        $centros = $em->getRepository('SieAppWebBundle:CentroSaludTipo')->findAll();
         $centrosEstudiante = $em->getRepository('SieAppWebBundle:RudeCentroSalud')->findBy(array('rude'=>$rude));
         $arrayCentros = [];
         foreach ($centrosEstudiante as $ce) {
@@ -706,17 +724,6 @@ class EstudianteRudealController extends Controller {
         foreach ($mediosComunicacionEstudiante as $mce) {
             $arrayMediosComunicacion[] = $mce->getMediosComunicacionTipo()->getId();
         }
-
-        // ACTIVIDADES DEL ESTUDIANTE
-        $actividades = $em->getRepository('SieAppWebBundle:ActividadTipo')->findAll();
-        $actividadesEstudiante = $em->getRepository('SieAppWebBundle:RudeActividad')->findBy(array('rude'=>$rude));
-        $arrayActividades = [];
-        foreach ($actividadesEstudiante as $ae) {
-            $arrayActividades[] = $ae->getActividadTipo()->getId();
-        }
-
-        // OTRA ACTIVIDAD
-        $actividadOtro = $em->getRepository('SieAppWebBundle:RudeActividad')->findOneBy(array('rude'=>$rude, 'actividadTipo'=>3));
 
         // COMO LLEGA ESTUDAINTE MEDIO TRANSPORTE
         $medioTransporteEstudiante = $em->getRepository('SieAppWebBundle:RudeMedioTransporte')->findBy(array('rude'=>$rude));
@@ -745,8 +752,7 @@ class EstudianteRudealController extends Controller {
                             'class' => 'SieAppWebBundle:IdiomaTipo',
                             'query_builder' => function (EntityRepository $e) {
                                 return $e->createQueryBuilder('it')
-                                        ->where('it.id not in (:ids)')
-                                        ->setParameter('ids', [0,97,98])
+                                        ->where('it.esVigente = true')
                                         ->orderBy('it.id', 'ASC')
                                 ;
                             },
@@ -759,8 +765,7 @@ class EstudianteRudealController extends Controller {
                             'class' => 'SieAppWebBundle:IdiomaTipo',
                             'query_builder' => function (EntityRepository $e) {
                                 return $e->createQueryBuilder('it')
-                                        ->where('it.id not in (:ids)')
-                                        ->setParameter('ids', [0,97,98])
+                                        ->where('it.esVigente = true')
                                         ->orderBy('it.id', 'ASC')
                                 ;
                             },
@@ -773,8 +778,7 @@ class EstudianteRudealController extends Controller {
                             'class' => 'SieAppWebBundle:IdiomaTipo',
                             'query_builder' => function (EntityRepository $e) {
                                 return $e->createQueryBuilder('it')
-                                        ->where('it.id not in (:ids)')
-                                        ->setParameter('ids', [0,97,98])
+                                        ->where('it.esVigente = true')
                                         ->orderBy('it.id', 'ASC')
                                 ;
                             },
@@ -793,6 +797,12 @@ class EstudianteRudealController extends Controller {
                         ))
                     ->add('nacionOriginariaTipo', 'entity', array(
                             'class' => 'SieAppWebBundle:NacionOriginariaTipo',
+                            'query_builder' => function (EntityRepository $e) {
+                                return $e->createQueryBuilder('no')
+                                        ->where('no.esVigente = true')
+                                        ->orderBy('no.id', 'ASC')
+                                ;
+                            },
                             'empty_value' => 'Seleccionar...',
                             'multiple'=>false,
                             'property'=>'nacionOriginaria',
@@ -808,6 +818,12 @@ class EstudianteRudealController extends Controller {
                         ))
                     ->add('actividades', 'entity', array(
                             'class' => 'SieAppWebBundle:ActividadTipo',
+                            'query_builder' => function (EntityRepository $e) {
+                                return $e->createQueryBuilder('at')
+                                        ->where('at.esVigente = true')
+                                        ->orderBy('at.id', 'ASC')
+                                ;
+                            },
                             'multiple'=>true,
                             'property'=>'descripcionOcupacion',
                             'required'=>true,
@@ -826,6 +842,12 @@ class EstudianteRudealController extends Controller {
                         ))
                     ->add('acudioCentro', 'entity', array(
                             'class' => 'SieAppWebBundle:CentroSaludTipo',
+                            'query_builder' => function (EntityRepository $e) {
+                                return $e->createQueryBuilder('ct')
+                                        ->where('ct.esVigente = true')
+                                        ->orderBy('ct.id', 'ASC')
+                                ;
+                            },
                             'empty_value' => 'Seleccionar...',
                             'multiple'=>false,
                             'property'=>'descripcion',
@@ -850,6 +872,12 @@ class EstudianteRudealController extends Controller {
                     // MEDIOS DE COMUNICACION
                     ->add('medioComunicacion', 'entity', array(
                             'class' => 'SieAppWebBundle:MediosComunicacionTipo',
+                            'query_builder' => function (EntityRepository $e) {
+                                return $e->createQueryBuilder('mct')
+                                        ->where('mct.esVigente = true')
+                                        ->orderBy('mct.id', 'ASC')
+                                ;
+                            },
                             'multiple'=>true,
                             'property'=>'descripcionMediosComunicacion',
                             'required'=>false,
@@ -861,10 +889,9 @@ class EstudianteRudealController extends Controller {
                     ->add('medioTransporte', 'entity', array(
                             'class' => 'SieAppWebBundle:MedioTransporteTipo',
                             'query_builder' => function (EntityRepository $e) {
-                                return $e->createQueryBuilder('mt')
-                                        ->where('mt.id in (:ids)')
-                                        ->setParameter('ids', [1,7,4,8,5,9,10,11])
-                                        ->orderBy('mt.id', 'ASC')
+                                return $e->createQueryBuilder('mtt')
+                                        ->where('mtt.esVigente = true')
+                                        ->orderBy('mtt.id', 'ASC')
                                 ;
                             },
                             'multiple'=>true,
@@ -880,6 +907,12 @@ class EstudianteRudealController extends Controller {
                     // MODALIDAD ESTUDIO
                     ->add('modalidadEstudioTipo', 'entity', array(
                             'class' => 'SieAppWebBundle:ModalidadEstudioTipo',
+                            'query_builder' => function (EntityRepository $e) {
+                                return $e->createQueryBuilder('met')
+                                        ->where('met.esVigente = true')
+                                        ->orderBy('met.id', 'ASC')
+                                ;
+                            },
                             'empty_value' => 'Seleccionar...',
                             'multiple'=>false,
                             'property'=>'modalidadEstudio',
@@ -889,6 +922,12 @@ class EstudianteRudealController extends Controller {
                         ))
                     ->add('abandono', 'entity', array(
                             'class' => 'SieAppWebBundle:AbandonoTipo',
+                            'query_builder' => function (EntityRepository $e) {
+                                return $e->createQueryBuilder('at')
+                                        ->where('at.esVigente = true')
+                                        ->orderBy('at.id', 'ASC')
+                                ;
+                            },
                             'multiple'=>true,
                             'property'=>'descripcionAbandono',
                             'required'=>false,
@@ -1150,5 +1189,22 @@ class EstudianteRudealController extends Controller {
 
         $response = new JsonResponse();
         return $response->setData(['msg'=>'ok']);
+    }
+
+    public function obtenerCatalogos($gestion){
+        $em = $this->getDoctrine()->getManager();
+        /**
+         * OBTENER CATALOGOS
+         */
+        $catalogos = $em->createQueryBuilder()
+                            ->select('rc')
+                            ->from('SieAppWebBundle:RudeCatalogo','rc')
+                            ->where('rc.gestionTipo = :gestion')
+                            ->andWhere('rc.institucioneducativaTipo = 2')
+                            ->setParameter('gestion', $gestion)
+                            ->getQuery()
+                            ->getResult();
+
+        dump($catalogos);die;
     }
 }
