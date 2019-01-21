@@ -159,6 +159,7 @@
                                 <form id="formEstudiante" onsubmit="saveFormEstudiante(); return false;" method="post">
                                     {{ form_widget(formEstudiante.rudeId) }}
                                     {{ form_widget(formEstudiante.estudianteId) }}
+                                    {{ form_widget(formEstudiante.diversaId) }}
 
                                     <div class="row">
                                         <div class="col-md-12 col-sm-12">
@@ -251,6 +252,25 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+
+                                    <hr>
+
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6">
+                                            <p>EDUCACIÓN DIVERSA</p>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="row form-group">
+                                                <div class="col-md-12 col-sm-12">
+                                                    {{ form_widget(formEstudiante.diversa, {'attr':{'class':'form-control'} }) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="divDiversa">
+                                        
                                     </div>
 
                                     <div class="panel-footer no-bg">
@@ -684,6 +704,38 @@
     });
 
     validarServicioMilitar();
+
+    function validarDiversa(){
+        var diversaId = $('#form_diversaId').val();
+        var diversa = $('#form_diversa').val();
+        if(diversa == 2 || diversa == 3){
+            $.ajax({
+                url: Routing.generate('estudiante_rudeal_diversa'),
+                type: 'post',
+                data: {diversa:diversa, diversaId: diversaId},
+                beforeSend: function(){
+                    $('#divDiversa').empty();
+                },
+                success: function(data){
+                    $('#divDiversa').empty();
+                    $('#divDiversa').append(data);
+                    $('#divDiversa').css('display','block');
+                },
+                error: function(){
+
+                }
+            });            
+        }else{
+            $('#divDiversa').empty();
+            $('#divDiversa').css('display','none');
+        }
+    }
+
+    $('#form_diversa').on('change', function(){
+        validarDiversa();
+    });
+
+    validarDiversa();
 
 
     // VALIDACION DE DISCAPACIDAD
