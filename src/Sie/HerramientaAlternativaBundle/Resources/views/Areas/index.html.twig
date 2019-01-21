@@ -92,7 +92,7 @@
                         </thead>
                         <tbody>
                             {% for co in cursoOferta %}
-                                <tr>
+                                <tr {% if co.esvigente == true %}class="text-strong"{% endif %}>
                                     <td class="text-center border-right">{{loop.index}}</td>
                                     <td>{{co.codigo}}</td>
                                     <td>

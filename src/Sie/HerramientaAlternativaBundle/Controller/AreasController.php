@@ -335,7 +335,7 @@ class AreasController extends Controller {
 
         // Curso oferta asignaturas del curso
         $cursoOferta = $em->createQueryBuilder()
-                ->select('l.id as smpid, k.modulo, g.id as iecoid, k.codigo as codigo')
+                ->select('l.id as smpid, k.modulo, g.id as iecoid, k.codigo as codigo, k.esvigente')
                 ->from('SieAppWebBundle:InstitucioneducativaCursoOferta', 'g')
                 ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.id = g.insitucioneducativaCurso')                
                 ->innerJoin('SieAppWebBundle:SuperiorModuloPeriodo', 'l', 'WITH', 'l.id = g.superiorModuloPeriodo')              
@@ -442,8 +442,6 @@ class AreasController extends Controller {
 //                ->setParameter('idAsignaturas', $codAsignaturas)
 //                ->getQuery()
 //                ->getResult();
-//        dump($curso);
-//        die;
         $nivelCurso = $aInfoUeducativa['ueducativaInfo']['ciclo'];
         $gradoParaleloCurso = $aInfoUeducativa['ueducativaInfo']['grado'] . " - " . $aInfoUeducativa['ueducativaInfo']['paralelo'];
         return array('cursoOferta' => $cursoOferta, 'asignaturas' => $curso, 'infoUe' => $infoUe, 'operativo' => '', 'nivel' => $nivel, 'grado' => $grado, 'nivelCurso' => $nivelCurso, 'gradoParaleloCurso' => $gradoParaleloCurso);
