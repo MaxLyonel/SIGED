@@ -18,7 +18,7 @@
                 </li>
                 <li>
                     <i class="fa fa-university"></i>
-                    Datos del CEA
+                    Datos del C.E.A.
                     <i class="fa fa-angle-right"></i>
                 </li>
             </ol>
@@ -92,23 +92,23 @@
                     <div class="panel-body">
                         <div class="panel-body panel-primary">
                             {% if(ieducativa) %}
-                                {{ form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form','onsubmit': 'return validarDatos();'} }) }}
-                                <div class="row">
+                                {{ form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form','onsubmit': 'return validarDatos();'} }) }}     
+                                {% set iedu = ieducativa[0] %}
+                                {% set iedusu = ieducativa[1] %}
+                                {% set idsuc = iedusu.sucursalTipo.id %}
+                                {% set ubicacion = ubicacion[0] %}
+                                <div class="row">                                    
                                     <div class="col-md-9 col-sm-9 col-xs-9">
                                         <div class="panel panel-lilac">
                                             <div class="panel-heading">
                                                 <h3 class="panel-title">1.- Datos de Identificación</h3>
                                             </div><!-- /.panel-heading -->
                                             <div class="panel-body">
-
-                                                {% set iedu = ieducativa[0] %}
-                                                {% set iedusu = ieducativa[1] %}
-                                                {% set ubicacion = ubicacion[0] %}
                                                 <div class="row">
                                                     <div class="col-md-4">
                                                         <div class="row">
                                                             <div class="col-md-12">
-                                                                <strong>Código del Centro de Educación Alternativa (CEA)</strong>
+                                                                <strong>Código del Centro de Educación Alternativa (C.E.A.) </strong>
                                                             </div>
                                                         </div>
                                                         <div class="row">
@@ -120,7 +120,7 @@
                                                     <div class="col-md-8">
                                                         <div class="row">
                                                             <div class="col-md-12">
-                                                                <strong>Nombre del Centro de Educación Alternativa (CEA)</strong>
+                                                                <strong>Nombre del Centro de Educación Alternativa (C.E.A.)</strong>
                                                             </div>
                                                         </div>
                                                         <div class="row">
@@ -134,8 +134,8 @@
                                                     {% if director %}
                                                         <div class="col-md-6">
                                                             <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <strong>Nombre de la Directora ó Director encargada/o del CEA</strong>
+                                                                <div class="col-md-12">
+                                                                    <strong>Nombre de la Directora ó Director encargada/o del C.E.A.</strong>
                                                                 </div>
                                                             </div>
                                                             <div class="row">
@@ -172,12 +172,12 @@
                                                         <div class="col-md-12">
                                                             <div class="row">
                                                                 <div class="col-md-12">
-                                                                    <strong>Nombre de la Directora ó Director encargada/o del CEA</strong>
+                                                                    <strong>Nombre de la Directora ó Director encargada/o del C.E.A.</strong>
                                                                 </div>
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-md-12">
-                                                                    <p>El CEA no ha registrado a la Directora o al Director. <span class="text-danger">(Verifique en el módulo de Gestión de Personal Administrativo)</span></p>
+                                                                    <p>El C.E.A. no ha registrado a la Directora o al Director. <span class="text-danger">(Verifique en el módulo de Gestión de Personal Administrativo)</span></p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -215,9 +215,23 @@
                                         </div><!-- /.panel -->
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-3">
+                                        {% if idsuc > 0 %}
+                                            <div class="panel panel-lilac">
+                                                <div class="panel-heading">
+                                                    <h3 class="panel-title">Nombre del Sub C.E.A.</h3>
+                                                </div><!-- /.panel-heading -->
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <input value="{{ iedusu.nombreSubcea }}" class="form-control text-center" readonly="readonly" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div><!-- /.panel-body -->
+                                            </div><!-- /.panel -->                                        
+                                        {% endif %}
                                         <div class="panel panel-lilac">
                                             <div class="panel-heading">
-                                                <h3 class="panel-title">¿El CEA está cerrado?</h3>
+                                                <h3 class="panel-title">¿El {% if idsuc > 0 %}Sub {% endif %}C.E.A. está cerrado?</h3>
                                             </div><!-- /.panel-heading -->
                                             <div class="panel-body">
                                                 <div class="row">
@@ -235,7 +249,7 @@
                                     <div class="col-md-12 col-sm-12 col-xs-12">
                                         <div class="panel panel-lilac">
                                             <div class="panel-heading">
-                                                <h3 class="panel-title">2.- Datos de Ubicación del Edificio Escolar</h3>
+                                                <h3 class="panel-title">2.- Datos de Ubicación del Edificio Escolar{% if idsuc > 0 %} (Sub Centro de Educación Alternativa){% endif %}</h3>
                                             </div><!-- /.panel-heading -->
                                             <div class="panel-body">
                                                 <div class="row">
@@ -308,6 +322,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
+                                                    {% if idsuc == 0 %}
                                                     <div class="col-md-3">
                                                         <div class="row">
                                                             <div class="col-md-12">
@@ -320,7 +335,8 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    {% endif %}
+                                                    <div class="col-md-{% if idsuc == 0 %}6{% else %}9{% endif %}">
                                                         <div class="row">
                                                             <div class="col-md-12">
                                                                 Dirección
@@ -354,7 +370,7 @@
                                     <div class="col-md-12 col-sm-12 col-xs-12">
                                         <div class="panel panel-lilac">
                                             <div class="panel-heading">
-                                                <h3 class="panel-title">3.- Jurisdicción Administrativa</h3>
+                                                <h3 class="panel-title">3.- Jurisdicción Administrativa{% if idsuc > 0 %} (Sub Centro de Educación Alternativa){% endif %}</h3>
                                             </div><!-- /.panel-heading -->
                                             <div class="panel-body">
                                                 <div class="row">
@@ -392,7 +408,7 @@
                                     <div class="col-md-12 col-sm-12 col-xs-12">
                                         <div class="panel panel-lilac">
                                             <div class="panel-heading">
-                                                <h3 class="panel-title">4.- Dependencia</h3>
+                                                <h3 class="panel-title">4.- Dependencia{% if idsuc > 0 %} (Sub Centro de Educación Alternativa){% endif %}</h3>
                                             </div><!-- /.panel-heading -->
                                             <div class="panel-body">
                                                 <div class="row">
@@ -451,7 +467,7 @@
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <div class="callout callout-warning">
-                                            <strong>¡Advertencia!</strong> No Existe información para el CEA en la presente gestión.
+                                            <strong>¡Advertencia!</strong> No Existe información para el C.E.A. en la presente gestión.
                                         </div>
                                     </div>
                                 </div>
