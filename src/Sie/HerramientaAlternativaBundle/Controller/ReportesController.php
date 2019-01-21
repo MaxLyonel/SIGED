@@ -29,7 +29,11 @@ class ReportesController extends Controller {
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_sie100_hoja1_caratula_v1_rcm.rptdesign&__format=pdf&gestion_id='.$this->session->get('ie_gestion').'&cod_ue='.$this->session->get('ie_id').'&periodo='.$this->session->get('ie_per_cod').'&sucursal='.$this->session->get('ie_subcea').'&&__format=pdf&'));        
+        if((int)$this->session->get('ie_subcea')>0){
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_sie100_hoja1_caratula_subcea_v1_rcm.rptdesign&__format=pdf&gestion_id='.$this->session->get('ie_gestion').'&cod_ue='.$this->session->get('ie_id').'&periodo='.$this->session->get('ie_per_cod').'&sucursal='.$this->session->get('ie_subcea').'&&__format=pdf&'));        
+        } else {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_sie100_hoja1_caratula_v1_rcm.rptdesign&__format=pdf&gestion_id='.$this->session->get('ie_gestion').'&cod_ue='.$this->session->get('ie_id').'&periodo='.$this->session->get('ie_per_cod').'&sucursal='.$this->session->get('ie_subcea').'&&__format=pdf&'));        
+        }
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
