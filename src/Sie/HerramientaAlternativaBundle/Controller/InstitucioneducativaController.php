@@ -104,13 +104,13 @@ class InstitucioneducativaController extends Controller {
                         estt.estadoinstitucion,
                         jg.direccion,
                         jg.zona')
-                ->join('SieAppWebBundle:Institucioneducativa', 'inst', 'WITH', 'inst.leJuridicciongeografica = jg.id')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'jg.lugarTipoLocalidad = lt.id')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'lt1', 'WITH', 'lt.lugarTipo = lt1.id')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'lt2', 'WITH', 'lt1.lugarTipo = lt2.id')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'lt3', 'WITH', 'lt2.lugarTipo = lt3.id')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'lt4', 'WITH', 'lt3.lugarTipo = lt4.id')
-                ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'inss', 'WITH', 'inss.institucioneducativa = inst.id')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'inss', 'WITH', 'inss.leJuridicciongeografica = jg.id')
+                ->innerJoin('SieAppWebBundle:Institucioneducativa', 'inst', 'WITH', 'inst.id = inss.institucioneducativa')
                 ->innerJoin('SieAppWebBundle:EstadoinstitucionTipo', 'estt', 'WITH', 'inst.estadoinstitucionTipo = estt.id')
                 ->join('SieAppWebBundle:DistritoTipo', 'dist', 'WITH', 'jg.distritoTipo = dist.id')
                 ->join('SieAppWebBundle:OrgcurricularTipo', 'orgt', 'WITH', 'inst.orgcurricularTipo = orgt.id')
@@ -169,6 +169,7 @@ class InstitucioneducativaController extends Controller {
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($institucion);
         $sucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestionSuc));
         
+        //dump($infoUe);die;
         return $this->render($this->session->get('pathSystem') . ':Institucioneducativa:index.html.twig', array(
                     'ieducativa' => $infoUe,
                     'institucion' => $institucion,
