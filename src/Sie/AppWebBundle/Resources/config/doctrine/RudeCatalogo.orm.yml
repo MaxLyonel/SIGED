@@ -1,0 +1,87 @@
+Sie\AppWebBundle\Entity\RudeCatalogo:
+    type: entity
+    table: rude_catalogo
+    indexes:
+        IDX_919369AC12A743E8:
+            columns:
+                - clase_tabla_tipo_id
+        IDX_919369AC4080FEFA:
+            columns:
+                - institucioneducativa_tipo_id
+        IDX_919369AC179FF95:
+            columns:
+                - gestion_tipo_id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nombreTabla:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: nombre_tabla
+        campoTabla:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: campo_tabla
+        llaveTabla:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: llave_tabla
+        esVigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        claseTablaTipo:
+            targetEntity: ClaseTablaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                clase_tabla_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaTipo:
+            targetEntity: InstitucioneducativaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
