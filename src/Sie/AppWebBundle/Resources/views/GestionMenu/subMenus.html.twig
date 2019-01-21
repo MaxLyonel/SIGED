@@ -64,7 +64,7 @@
                             <th><strong>Ruta</strong></th>
                             <th><strong>Orden</strong></th>
                             <th><strong>Observaciones</strong></th>
-                            <th><strong>Nivel</strong></th>
+                            {#<th><strong>Nivel</strong></th>#}
                             {#<th>Id menuTipo</th>#}
                             <th class="text-center"><strong>Opciones</strong></th>
                         </tr>
@@ -79,7 +79,7 @@
                                 <td class="text-center" >{{ menu.orden }}</td>
                                 <td data-title="Obs" >{{ menu.obs }}</td>
                                 {#<td data-title="Obs" >{{ menu.menu_nivel_tipo_id }}</td>#}
-                                <td class="text-center" >{{ menu.menu_nivel_tipo_id }}</td>
+                                {#<td class="text-center" >{{ menu.menu_nivel_tipo_id }}</td>#}
                                 <td class="text-center">
                                     {% if menu.ruta == '#' %}
                                         <a  href="{{ path('gestionmenu_submenus',{'id':menu.id,'nivel':menu.menu_nivel_tipo_id}) }}" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" title="Ver Sub Menús" ><i class="fa fa-eye"></i></a>

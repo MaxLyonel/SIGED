@@ -1,7 +1,5 @@
 {% extends 'layoutGestmenu.html.twig' %}
 {% block contentoption %}
-
-
     <div class="header-content">
         <h2><i class="fa fa-pencil"></i> <strong>Asignación de Menús a Roles</strong>  <span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
@@ -18,10 +16,8 @@
         </div><!-- /.breadcrumb-wrapper -->
     </div><!-- /.header-content -->
     <!--/ End page header -->
-
     <div class="panel-heading">
         <div class="pull-left" >
-
         </div>
         <div class="pull-right">
             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo">
@@ -58,14 +54,12 @@
     <br>
     <div class="row">
         <div class="container-fluid">
-
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h5><strong>Asignar</strong></h5>
                 </div>
                 <div class="panel-body">
                   {{form_start(form,{'attr':{'id':'formMenuRol','class':'form-horizontal form-group has-primary'} })}}
-
                     <div class="row">
                         <div class="col-md-4">
                              <h5><strong>Sistema</strong></h5>
@@ -76,7 +70,6 @@
                         <div class="col-md-4">
                             <h5><strong>Rol</strong></h5>
                         </div>
-
                     </div>
                     <div class="row">
                         <div class="col-md-4">
@@ -89,11 +82,8 @@
                             {{form_widget(form.rol)}}
                         </div>
                     </div>
-
                     <br>
-
                     <div class="row">
-
                         <div class="col-md-2">
                         </div>
 
@@ -177,7 +167,6 @@
                         </div>
                     </div>
                     <br>
-
                     <div class="row">
                         <div class="col-md-4 col-md-offset-4">
                             <div class="col-lg-3 col-md-6">
@@ -188,20 +177,11 @@
                                 {{form_widget(form.guardar)}}
                             </div>
                         </div>
-
                     </div>
                      {{form_end(form)}}
-
-
-
-
-
                 </div>
-
             </div>
-
         </div>
-
         <div class="col-md-12">
             <div class="panel panel-warning rounded shadow">
                 <div class="panel-heading">
@@ -211,15 +191,10 @@
                     <div class="clearfix"></div>
                 </div><!-- /.panel-heading -->
                 <div class="panel-body">
-                    <div id="listamenuroles">
-                        Lista
-                    </div>
+                    <div id="listamenuroles"></div>
                 </div><!-- /.panel-body -->
             </div><!-- /.panel-body -->
         </div>
-
-
-
     </div>
 </div>
 
@@ -240,64 +215,70 @@
         var formData = {
             id_sistema:id_sistema
         };      //alert(formData);
-            $.ajax({
-                type: 'post',
-                url: "{{ path('gestionmenu_cargar_sistema_menu') }}",
-                data:formData,
-                beforeSend: function () {
-                    $("#form_menu").empty();
-                    $("#form_menu").append('<option value="">Buscando...</option>');
-
-                },
-                success: function (data) {
-                    $("#form_menu").empty();
-                    $("#form_menu").append('<option value="">Seleccionar...</option>');
-
-
-
-                    $.each(data.sistemamenu, function (i, value) {
-                        $("#form_menu").append('<option value="' + i + '">' + value + '</option>');
-                    });
+        $.ajax({
+            type: 'post',
+            url: "{{ path('gestionmenu_cargar_sistema_menu') }}",
+            data:formData,
+            beforeSend: function () {
+                $("#form_menu").empty();
+                $("#form_menu").append('<option value="">Buscando...</option>');
+                $("#listamenuroles").empty();
+            },
+            success: function (data) {
+                $("#form_menu").empty();
+                $("#form_menu").append('<option value="">Seleccionar...</option>');
+                $.each(data.sistemamenu, function (i, value) {
+                    $("#form_menu").append('<option value="' + i + '">' + value + '</option>');
+                });
 
 
-                    $("#listamenuroles").append(data.sistemamenuroltabla);
+                $("#listamenuroles").append(data.sistemamenuroltabla);
 
-                }
-            });
-
-
-
+            }
+        });
     }
 
 
     function cargarMenuSistemaRol() {
         var id_sistema = $('#form_sistema').val();
         var id_menu = $('#form_menu').val();
-
         var formData = {id_sistema:id_sistema,id_menu:id_menu};
-
 
         $.ajax({
             type: 'post',
             url: "{{ path('gestionmenu_cargar_sistema_menu_rol') }}",
-            data:formData,
+            data: formData,
             beforeSend: function () {
                 $("#form_rol").empty();
                 $("#form_rol").append('<option value="">Buscando...</option>');
-
+                $("#listamenuroles").empty();
             },
             success: function (data) {
-                /// alert(data.roles);
+                $("#form_rol").empty();
+                $("#form_rol").append('<option value="">Seleccionar...</option>');
+                $.each(data.roles, function (i, value) {
+                    $("#form_rol").append('<option value="' + i + '">' + value + '</option>');
+                });
+                listaMenuRoles();
+            }
+        });
+    }
+    //cargalistasistemamenurolesAction
+    function listaMenuRoles() {
+        var id_sistema = $('#form_sistema').val();
+        var id_menu = $('#form_menu').val();
+        var formData = {id_sistema:id_sistema,id_menu:id_menu};
 
-                 $("#form_rol").empty();
-                 $("#form_rol").append('<option value="">Seleccionar...</option>');
-                 /// alert(data.roles);
-
-                 $.each(data.roles, function (i, value) {
-                     $("#form_rol").append('<option value="' + i + '">' + value + '</option>');
-                 });
+        $.ajax({
+            type: 'post',
+            url: "{{ path('gestionmenu_cargar_sistema_menu_rol_lista') }}",
+            data: formData,
+            beforeSend: function () {
+                $("#listamenuroles").html('Cargando...');
+            },
+            success: function (data) {
                 $("#listamenuroles").empty();
-                $("#listamenuroles").append(data.listamenurol);
+                $("#listamenuroles").append(data);
             }
         });
     }
@@ -322,12 +303,10 @@
          var formData = $('#formMenuRol').serialize();
 
         $('#form_guardar').prop("disabled",true);
-
-         $.ajax({
+            $.ajax({
             type: 'post',
-           url: "{{ path('gestionmenu_createasignacionmenurol') }}",
-
-            data:formData,
+            url: "{{ path('gestionmenu_createasignacionmenurol') }}",
+            data: formData,
             beforeSend: function () {
                 $("#listamenuroles").empty();
             },
@@ -345,43 +324,31 @@
                 $("#listamenuroles").empty();
                 $("#listamenuroles").append(data);
             },
-             error: function () {
-
-               },
-             complete: function () {
-                 $('#form_guardar').prop("disabled",false);
-             }
-
+            complete: function () {
+             $('#form_guardar').prop("disabled",false);
+            }
         });
-
-
     }
 
-
+    $('.calendario').datepicker({
+        format: 'dd-mm-yyyy',
+        todayBtn: 'linked'
+    });
+    $('#sandbox-container .input-daterange').datepicker({
+        format: 'dd-mm-yyyy',
+        todayBtn: 'linked'
+    });
+    $('#form_fechaInicio').on('change',function(){
+        if($("#form_fechaFinal").val().length < 1){
+            $("#form_fechaFinal").val($('#form_fechaInicio').val());
+        }
+    });
+    $('#form_fechaFinal').on('change',function(){
+        if($("#form_fechaFinal").val() < $("#form_fechaInicio").val()){
+            $("#form_fechaInicio").val($('#form_fechaFinal').val());
+        }
+    });
 </script>
-
-    <script type="text/javascript">
-        $('.calendario').datepicker({
-            format: 'dd-mm-yyyy',
-            todayBtn: 'linked'
-        });
-        $('#sandbox-container .input-daterange').datepicker({
-            format: 'dd-mm-yyyy',
-            todayBtn: 'linked'
-        });
-        $('#form_fechaInicio').on('change',function(){
-            if($("#form_fechaFinal").val().length < 1){
-                $("#form_fechaFinal").val($('#form_fechaInicio').val());
-            }
-        });
-        $('#form_fechaFinal').on('change',function(){
-            if($("#form_fechaFinal").val() < $("#form_fechaInicio").val()){
-                $("#form_fechaInicio").val($('#form_fechaFinal').val());
-            }
-        });
-    </script>
-
-
 
 {% endblock %}
 

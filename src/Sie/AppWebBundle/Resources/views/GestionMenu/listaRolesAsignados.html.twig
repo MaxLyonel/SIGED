@@ -1,76 +1,64 @@
-
-            {% if app.session.flashBag.has('exito') %}
-              <div class="alert alert-success">
-                 {% for msg in app.session.flashBag.get('exito') %}
-                       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                 {{ msg }}
-                {% endfor %}
-                </div>
-            {% endif %}
-            {% if app.session.flashBag.has('error') %}
-                <div class="alert alert-danger">
-                    {% for msg in app.session.flashBag.get('error') %}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        {{ msg }}
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-   {% block stylesheets %}
-       <head>
-           <link href="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.css')}}" rel="stylesheet">
-           <link href="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/css/datatables.responsive.css')}}" rel="stylesheet">
-       </head>
-   {% endblock %}
-
-            <body>
-            <div class="body-content  animated fadeIn">
-                <div class="row">
-
-                    <div class="table-responsive">
-                        <table id="myTable" class="table table-bordered table-hover cf dataTable table-success table-responsive">
-
-
-        <thead>
-        <tr>
-            <th style="min-width: 10px" ><strong>No</strong>.</th>
-            <th><strong>Sistema</strong></th>
-            <th><strong>Rol</strong></th>
-
-
-            <th style="min-width: 10px"><strong>Opciones</strong></th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for rolesasigandos in rolesasigandos %}
-            <tr>
-                <td class="text-center">{{ loop.index }}</td>
-                <td data-title="Sistema">{{ rolesasigandos.sistema }}</td>
-                <td data-title="Icono" >{{ rolesasigandos.rol }}</td>
-
-                <td data-title="Opciones" class="text-center" >
-                    {#<i class="glyphicon glyphicon-arrow-left"></i>#}
-                    <button class="btn btn-danger btn-xs" onclick="elimina_sistema_rol({{ rolesasigandos.id }},{{id_sistema}});" title="Asignar"><i class="glyphicon glyphicon-share-alt"></i></button>
-                    {#<button class="btn btn-primary btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" #}{#onclick="editarMenusSistemaSelec({{ menusasignados.id }},{{ id_sistema }})" #}{#title="Editar"><i class="fa fa-pencil"></i></button>
-                    <button class="btn btn-warning btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" #}{#onclick="elimina_menusistema({{ menusasignados.id }},{{id_sistema}});" #}{#title="Asignar"><i class="glyphicon glyphicon-arrow-right"></i></button>#}
-
-                </td>
-            </tr>
+{% if app.session.flashBag.has('exito') %}
+  <div class="alert alert-success">
+     {% for msg in app.session.flashBag.get('exito') %}
+           <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+     {{ msg }}
+    {% endfor %}
+    </div>
+{% endif %}
+{% if app.session.flashBag.has('error') %}
+    <div class="alert alert-danger">
+        {% for msg in app.session.flashBag.get('error') %}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ msg }}
         {% endfor %}
-        </tbody>
-    </table>
-                    </div>
-                </div>
-            </div>
-            </body>
+    </div>
+{% endif %}
 
+{% block stylesheets %}
+   <head>
+       <link href="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.css')}}" rel="stylesheet">
+       <link href="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/css/datatables.responsive.css')}}" rel="stylesheet">
+   </head>
+{% endblock %}
 
-        <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+<div class="body-content  animated fadeIn">
+    <div class="row">
+        <div class="table-responsive">
+            <table id="myTable" class="table table-bordered table-hover cf dataTable table-success table-responsive">
+                <thead>
+                    <tr>
+                        <th style="min-width: 10px" ><strong>No</strong>.</th>
+                        <th><strong>Sistema</strong></th>
+                        <th><strong>Rol</strong></th>
+                        <th style="min-width: 10px"><strong>Opciones</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for rolesasigandos in rolesasigandos %}
+                    <tr>
+                        <td class="text-center">{{ loop.index }}</td>
+                        <td data-title="Sistema">{{ rolesasigandos.sistema }}</td>
+                        <td data-title="Icono" >{{ rolesasigandos.rol }}</td>
+
+                        <td data-title="Opciones" class="text-center" >
+                            {#<i class="glyphicon glyphicon-arrow-left"></i>#}
+                            <button class="btn btn-danger btn-xs" onclick="elimina_sistema_rol({{ rolesasigandos.id }},{{id_sistema}});" title="Asignar"><i class="glyphicon glyphicon-share-alt"></i></button>
+                            {#<button class="btn btn-primary btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" #}{#onclick="editarMenusSistemaSelec({{ menusasignados.id }},{{ id_sistema }})" #}{#title="Editar"><i class="fa fa-pencil"></i></button>
+                            <button class="btn btn-warning btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" #}{#onclick="elimina_menusistema({{ menusasignados.id }},{{id_sistema}});" #}{#title="Asignar"><i class="glyphicon glyphicon-arrow-right"></i></button>#}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
+    </div>
+</div>
+<div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+</div>
 
 <script>
     function elimina_sistema_rol(idrol,id_sistema) {
-
         swal({
             title: "¿Está Segura/o de eliminar el Rol Asignado?",
             //text: "El Sistema seleccionado será eliminado Permanentemente",
@@ -79,72 +67,61 @@
             dangerMode: true,
             buttons: ["Cancelar", "Continuar"],
         })
-            .then(function(willDelete)  {
-                if (willDelete) {
-                    var imagen = '{{ asset("img/loading96.gif") }}';
-                    var formData = {idrol:idrol,id_sistema:id_sistema};
-                    $.ajax({
-                        type: 'post',
-                        url: "{{ path('gestionmenu_eliminar_rol_sistema') }}",
-                        data:formData,
-                        beforeSend: function () {
-                            swal({
-                                title: "Eliminando...",
-                                text: "Espere un momento por favor",
-                                icon: imagen,
-                                buttons: false
-                            });
-                            $("#rolesasignados").empty();
-                        },
-                        success: function (data) {
-
-                            $("#rolesasignados").empty();
-                            $("#rolesasignados").append(data);
-
-                        },
-                        error: function () {
-                        },
-                        complete: function () {
-                            swal.stopLoading();
-                            swal.close();
-                            $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
-                                $(".alert").slideUp(1000);
-                            });
-                        }
-                    });
-
-                    $.ajax({
-                        type: 'post',
-                        url: "{{ path('gestionmenu_cargar_roles_disponible') }}",
-                        data:formData,
-                        beforeSend: function () {
-                            $("#rolesnoasignados").empty();
-                            //$("#myTable").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
-                        },
-                        success: function (data) {
-                            $("#rolesnoasignados").empty();
-                            $("#rolesnoasignados").append(data);
-
-                        }
-                    });
-
-
-                }
-            });
-
-
+        .then(function(willDelete)  {
+            if (willDelete) {
+                var imagen = '{{ asset("img/loading96.gif") }}';
+                var formData = {idrol:idrol,id_sistema:id_sistema};
+                $.ajax({
+                    type: 'post',
+                    url: "{{ path('gestionmenu_eliminar_rol_sistema') }}",
+                    data: formData,
+                    beforeSend: function () {
+                        swal({
+                            title: "Eliminando...",
+                            text: "Espere un momento por favor",
+                            icon: imagen,
+                            buttons: false
+                        });
+                        $("#rolesasignados").html('Cargando...');
+                        $("#rolesnoasignados").html('Cargando...');
+                    },
+                    success: function (data) {
+                        $("#rolesasignados").empty();
+                        $("#rolesasignados").append(data);
+                        cargarRoleDisponible(idrol, id_sistema);
+                    },
+                    complete: function () {
+                        swal.stopLoading();
+                        swal.close();
+                        $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+                            $(".alert").slideUp(1000);
+                        });
+                    }
+                });
+            }
+        });
     }
 
+    function cargarRoleDisponible(idrol, id_sistema) {
+        $.ajax({
+            type: 'post',
+            url: "{{ path('gestionmenu_cargar_roles_disponible') }}",
+            data: { idrol: idrol, id_sistema: id_sistema },
+            beforeSend: function () {
+                $("#rolesnoasignados").html('Cargando...');
+            },
+            success: function (data) {
+                $("#rolesnoasignados").empty();
+                $("#rolesnoasignados").append(data);
+            }
+        });
+    }
 
 </script>
 
-            {% block javascripts %}
-
-                <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
-                <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script>
-                <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/datatables.responsive.js')}}"></script>
-                <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery.gritter/js/jquery.gritter.min.js') }}"></script>
-
-
-
-            {% endblock %}
+{% block javascripts %}
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/datatables.responsive.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery.gritter/js/jquery.gritter.min.js') }}"></script>
+{% endblock %}

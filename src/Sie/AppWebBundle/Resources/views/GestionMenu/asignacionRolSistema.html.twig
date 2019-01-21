@@ -63,9 +63,7 @@
                                     <div class="clearfix"></div>
                                 </div><!-- /.panel-heading -->
                                 <div class="panel-body">
-                                    <div id="rolesasignados">
-                                        Roles Asignados
-                                    </div>
+                                    <div id="rolesasignados"></div>
                                 </div><!-- /.panel-body -->
                             </div>
                         </div>
@@ -78,9 +76,7 @@
                                     <div class="clearfix"></div>
                                 </div><!-- /.panel-heading -->
                                 <div class="panel-body">
-                                    <div id="rolesnoasignados">
-                                        Roles Disponibles
-                                    </div>
+                                    <div id="rolesnoasignados"></div>
                                 </div><!-- /.panel-body -->
                             </div><!-- /.panel-body -->
                         </div>
@@ -88,11 +84,8 @@
                  </div>
             </div>
         </div>
-
     </div>
 </div>
-
-
 
 {% endblock%}
 
@@ -109,9 +102,10 @@
             $.ajax({
                 type: 'post',
                 url: "{{ path('gestionmenu_cargar_roles_asignados') }}",
-                data:formData,
+                data: formData,
                 beforeSend: function () {
-                    $("#rolesasignados").empty();
+                    $("#rolesasignados").html('Cargando...');
+                    $("#rolesnoasignados").html('Cargando...');
                 },
                 success: function (data) {
                     $("#rolesasignados").empty();
@@ -123,7 +117,7 @@
                 url: "{{ path('gestionmenu_cargar_roles_disponible') }}",
                 data:formData,
                 beforeSend: function () {
-                    $("#rolesnoasignados").empty();
+                    $("#rolesnoasignados").html('Cargando...');
                 },
                 success: function (data) {
                     $("#rolesnoasignados").empty();

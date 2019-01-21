@@ -4,44 +4,37 @@
         <link href="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/css/datatables.responsive.css')}}" rel="stylesheet">
     </head>
 {% endblock %}
-<body>
-
 
 <div class="body-content  animated fadeIn">
     <div class="row">
-
-                        <div class="table-responsive">
-                        <table id="myTable1" class="table table-bordered table-hover cf dataTable table-primary table-responsive">
-                            <thead>
-                        <tr>
-                            <th><strong>Detalle</strong></th>
-                            <th><strong>Icono</strong></th>
-                            <th><strong>Ruta</strong></th>
-                            <th><strong>Agregar</strong></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for menusNosasignados in menusNosasignados %}
-                            <tr>
-                                <td data-title="Detalle">{{ menusNosasignados.detalle_menu }}</td>
-                                <td class="text-center"><i class="fa {{ menusNosasignados.icono }}"></i></td>
-                                <td data-title="Ruta" >{{ menusNosasignados.ruta }}</td>
-                                <td data-title="Opciones">
-                                <button class="btn btn-warning btn-xs" onclick="validaasignacionmenusistema({{ menusNosasignados.id }},{{id_sistema}});" title="Asignar"><i class="glyphicon glyphicon-arrow-left"></i></button>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                       </table>
-                       </div>
+        <div class="table-responsive">
+            <table id="myTable1" class="table table-bordered table-hover cf dataTable table-primary table-responsive">
+                <thead>
+                    <tr>
+                        <th><strong>Detalle</strong></th>
+                        <th><strong>Icono</strong></th>
+                        <th><strong>Ruta</strong></th>
+                        <th><strong>Opciones</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for menusNosasignados in menusNosasignados %}
+                    <tr>
+                        <td data-title="Detalle">{{ menusNosasignados.detalle_menu }}</td>
+                        <td class="text-center"><i class="fa {{ menusNosasignados.icono }}"></i></td>
+                        <td data-title="Ruta" >{{ menusNosasignados.ruta }}</td>
+                        <td data-title="Opciones">
+                        <button class="btn btn-warning btn-xs" onclick="validaasignacionmenusistema({{ menusNosasignados.id }},{{id_sistema}});" title="Asignar"><i class="glyphicon glyphicon-arrow-left"></i></button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
-</body>
-
-
 
 <script>
-
     function validaasignacionmenusistema(idmenu,idsistema) {
         swal({
             title: "¿Está Segura/o de asignar el menú al Sistema?",
@@ -51,45 +44,43 @@
             dangerMode: true,
             buttons: ["Cancelar", "Continuar"],
         })
-            .then(function(willDelete)  {
-                if (willDelete) {
-                    var imagen = '{{ asset("img/loading96.gif") }}';
-                    var formData = {idmenu:idmenu,id_sistema:idsistema};
-                    $.ajax({
-                        type: 'post',
-                        url: "{{ path('gestionmenu_valida_menus_asignados') }}",
-                        data:formData,
-                        before: function () {
-                            swal({
-                                title: "Asignando...",
-                                text: "Espere un momento por favor",
-                                icon: imagen,
-                                buttons: false
-                            });
-                        },
-                        success: function (data) {
-                            if (data==0){
-                                guarda_menusistema(idmenu,idsistema);
-                            }
-                            else{
-                                swal("Menú Asigando", "El Menú ya se encuentra asignado", "error");
-                            }
-                        },
-                        complete: function () {
-                            swal.stopLoading();
-                            swal.close();
-                            $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
-                                $(".alert").slideUp(1000);
-                            });
+        .then(function(willDelete)  {
+            if (willDelete) {
+                var imagen = '{{ asset("img/loading96.gif") }}';
+                var formData = { idmenu: idmenu, id_sistema: idsistema };
+                $.ajax({
+                    type: 'post',
+                    url: "{{ path('gestionmenu_valida_menus_asignados') }}",
+                    data:formData,
+                    beforeSend: function () {
+                        swal({
+                            title: "Asignando...",
+                            text: "Espere un momento por favor",
+                            icon: imagen,
+                            buttons: false
+                        });
+                    },
+                    success: function (data) {
+                        if (data==0){
+                            guarda_menusistema(idmenu, idsistema);
+                        } else {
+                            swal("Menú Asigando", "El Menú ya se encuentra asignado", "error");
                         }
-                    });
-                }
-            });
-
+                    },
+                    complete: function () {
+                        swal.stopLoading();
+                        swal.close();
+                        $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+                            $(".alert").slideUp(1000);
+                        });
+                    }
+                });
+            }
+        });
     }
 
-    function guarda_menusistema(idmenu,idsistema) {
-        var formData = {idmenu:idmenu,idsistema:idsistema};
+    function guarda_menusistema(idmenu, idsistema) {
+        var formData = { idmenu: idmenu, idsistema: idsistema };
         $.ajax({
             type: 'post',
             url: "{{ path('gestionmenu_guardar_menu_sistema') }}",
@@ -102,18 +93,13 @@
             }
         });
     }
-
-
-
 </script>
 
 {% block javascripts %}
-
     <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script>
     <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/datatables.responsive.js')}}"></script>
     <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery.gritter/js/jquery.gritter.min.js') }}"></script>
 
     <script src="{{ asset('js/initialize.js')}}"></script>
-
 {% endblock %}

@@ -80,19 +80,13 @@
                     $("#listam").empty();
                     /*$("#tablalista").append( {#{% include 'SieAppWebBundle:GestionMenu:generaListaSistemamenuRol.html.twig' with {'listaSistemamenurol': data} %}#});*/
                     $("#listam").append(data);
-
-                    $( document ).ready(function() {
-                        cargatablas();
-                    });
-
+                    cargatablas();
+//                    $( document ).ready(function() {
+//                        cargatablas();
+//                    });
                 }
             });
-
         }
-
-
-
-
 
         var cargatablas = function (identif){
             // Setup - add a text input to each footer cell
@@ -127,11 +121,5 @@
                 } );
             } );
         };
-
-
-
-
-
-
     </script>
 {% endblock %}
