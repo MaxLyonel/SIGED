@@ -346,7 +346,7 @@ class AreasController extends Controller {
                 ->orderBy('k.id', 'ASC')
                 ->getQuery()
                 ->getResult();
-        
+        dump($cursoOferta);die;
 //                ->select('h.id as iecid, l.id as id, l.modulo as modulo, l.codigo as codigo, k.id as smpId, m.id as iecoid, g.id as siep')
 //                ->from('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g')
 //                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo = g.id')
@@ -365,7 +365,7 @@ class AreasController extends Controller {
             $actuales[] = $co['smpid'];
         }
         //dump($iecId);  dump($actuales); die;
-        
+        // dump($actuales);die;
         if($actuales){
             $curso = $em->createQueryBuilder()                
                 // ->select('smt.id as id, smt.modulo as modulo, smt.codigo as codigo, smt.esvigente, smp.id as smpId')
