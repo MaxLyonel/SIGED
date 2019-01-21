@@ -58,9 +58,8 @@
 	                    <label class="col-sm-4 control-label">¿Discapacidad?:</label>
 	                    <div class="col-sm-8">
 		                    <select  data-placeholder="Seleccionar" name="discapacidad" id="discapacidad" class="form-control chosen-select" required="required" tabindex="4">
-		                    	<option value="0">Ninguno</option>
 		                    	{% for discapacidad in discapacidad_tipo %}
-			                        <option value="{{ discapacidad.id }}" {% if op != 0 and discapacidad.id == rude["discapacidad_id"] %}selected="selected"{% endif %}>{{ discapacidad.origendiscapacidad}}</option>
+			                        <option value="{{ discapacidad.id }}" {% if (op != 0 and discapacidad.id == rude["discapacidad_id"]) or (op == 0 and discapacidad.id == 0) %}selected="selected"{% endif %}>{{ discapacidad.origendiscapacidad}}</option>
 			                    {% endfor %}
 		                	</select>
 		                </div>
@@ -169,7 +168,7 @@
 	                    <div class="col-sm-8">
 		                    <select required="required" data-placeholder="Choose a Country" name="procedencia"  class="form-control chosen-select" >
 		                        {% for procedencias in procedencia_tipo %}
-		                        	<option value="{{ procedencias.id }}" {% if procedencias.id == rude["procedencia_id"] and op != 0 %}selected="selected"{% endif %}>{{ procedencias.procedencia }}</option>
+		                        	<option value="{{ procedencias.id }}" {% if (procedencias.id == rude["procedencia_id"] and op != 0) or (op == 0 and procedencias.id == 0) %}selected="selected"{% endif %}>{{ procedencias.procedencia }}</option>
 		                    	{% endfor %}
 		                	</select>
 		                </div>
@@ -455,9 +454,11 @@
     	}
     	if(actividad!=99){
     		$('#actividad_laboral_new_view').hide();
+    		$('#actividad_laboral_new').removeAttr("required");
     	}
     	else{
     		$('#actividad_laboral_new_view').show();	
+    		$('#actividad_laboral_new').prop("required", true);
     	}
     	
         $('#cant_salud_view').hide();
@@ -527,15 +528,18 @@
 		var actividad = document.getElementById("actividad_laboral").value;
 		if(actividad!=99){
     		$('#actividad_laboral_new_view').hide();
+    		$('#actividad_laboral_new').removeAttr("required");
     	}
     	else{
     		$('#actividad_laboral_new_view').show();	
+    		$('#actividad_laboral_new').prop("required", true);
     	}
 	}
 	
 	function al_oc_no(){
 		$('#actividad_laboral_view').hide();
 		$('#actividad_laboral_new_view').hide();
+		$('#actividad_laboral_new').removeAttr("required");
 	}
 
 	$("#internet").change(function() {
@@ -582,6 +586,7 @@
         if (val != 0){
         	$('#grado_view').show();
         	$('#ibc_view').show();
+        	$('#ibc').val("");
         }
         else{
         	$('#grado_view').hide();
