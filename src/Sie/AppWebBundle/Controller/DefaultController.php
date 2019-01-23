@@ -443,7 +443,7 @@ class DefaultController extends Controller {
         */
         return $this->render($this->session->get('pathSystem') . ':Login:login.html.twig',array(
             'last_username'=>$this->get('request')->getSession()->get(SecurityContext::LAST_USERNAME),
-            'error'=>$this->get('request')->getSession()->get(SecurityContext::AUTHENTICATION_ERROR)
+            'error' => $this->get('request')->getSession()->get(SecurityContext::AUTHENTICATION_ERROR) // 'error'=>array('message'=>'¡Ocurrió un error interno!')
         ));
     }
 

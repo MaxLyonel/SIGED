@@ -104,13 +104,13 @@ class InstitucioneducativaController extends Controller {
                         estt.estadoinstitucion,
                         jg.direccion,
                         jg.zona')
-                ->join('SieAppWebBundle:Institucioneducativa', 'inst', 'WITH', 'inst.leJuridicciongeografica = jg.id')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'jg.lugarTipoLocalidad = lt.id')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'lt1', 'WITH', 'lt.lugarTipo = lt1.id')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'lt2', 'WITH', 'lt1.lugarTipo = lt2.id')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'lt3', 'WITH', 'lt2.lugarTipo = lt3.id')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'lt4', 'WITH', 'lt3.lugarTipo = lt4.id')
-                ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'inss', 'WITH', 'inss.institucioneducativa = inst.id')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'inss', 'WITH', 'inss.leJuridicciongeografica = jg.id')
+                ->innerJoin('SieAppWebBundle:Institucioneducativa', 'inst', 'WITH', 'inst.id = inss.institucioneducativa')
                 ->innerJoin('SieAppWebBundle:EstadoinstitucionTipo', 'estt', 'WITH', 'inst.estadoinstitucionTipo = estt.id')
                 ->join('SieAppWebBundle:DistritoTipo', 'dist', 'WITH', 'jg.distritoTipo = dist.id')
                 ->join('SieAppWebBundle:OrgcurricularTipo', 'orgt', 'WITH', 'inst.orgcurricularTipo = orgt.id')
@@ -169,6 +169,7 @@ class InstitucioneducativaController extends Controller {
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($institucion);
         $sucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestionSuc));
         
+        //dump($infoUe);die;
         return $this->render($this->session->get('pathSystem') . ':Institucioneducativa:index.html.twig', array(
                     'ieducativa' => $infoUe,
                     'institucion' => $institucion,
@@ -290,7 +291,7 @@ class InstitucioneducativaController extends Controller {
                 ->add('municipio', 'choice', array('label' => 'Municipio', 'empty_value' => 'Seleccione Municipio', 'choices' => $entidadMunicipio, 'data' => $municipioId, 'attr' => array('class' => 'form-control', 'required' => true, 'onchange' => 'listaCanton(this.value)')))
                 ->add('canton', 'choice', array('label' => 'Canton', 'empty_value' => 'Seleccione Canton', 'choices' => $entidadCanton, 'data' => $cantonId, 'attr' => array('class' => 'form-control', 'required' => true, 'onchange' => 'listaLocalidad(this.value)')))
                 ->add('localidad', 'choice', array('label' => 'Localidad', 'empty_value' => 'Seleccione Localidad', 'choices' => $entidadLocalidad, 'data' => $localidadId, 'attr' => array('class' => 'form-control', 'required' => true)))
-                ->add('distrito', 'choice', array('label' => 'Distrito', 'empty_value' => 'Seleccione Distrito', 'choices' => $entidadDistrito, 'data' => $distritoId, 'attr' => array('class' => 'form-control', 'required' => true)))
+                ->add('distrito', 'choice', array('label' => 'Distrito Educativo', 'empty_value' => 'Seleccione Distrito', 'choices' => $entidadDistrito, 'data' => $distritoId, 'attr' => array('class' => 'form-control', 'required' => true)))
                 ->add('subcea', 'text', array('label' => 'Nombre Sub Centro', 'attr' => array('value' => $zona, 'class' => 'form-control', 'placeholder' => 'Nombre del Sub Centro', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
                 ->add('direccion', 'text', array('label' => 'Direccion', 'attr' => array('value' => $direccion, 'class' => 'form-control', 'placeholder' => 'Dirección', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
                 ->add('zona', 'text', array('label' => 'Zona', 'attr' => array('value' => $zona, 'class' => 'form-control', 'placeholder' => 'Zona', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
@@ -393,8 +394,8 @@ class InstitucioneducativaController extends Controller {
             $entityJurisdiccionGeografica->setLugarTipoIdDistrito($distritoId);
             $entityJurisdiccionGeografica->setObs('SUCURSAL SUB C.E.A.');
             $entityJurisdiccionGeografica->setDistritoTipo($entityDistritoTipo);
-            $entityJurisdiccionGeografica->setDireccion($direccion);
-            $entityJurisdiccionGeografica->setZona($zona);
+            $entityJurisdiccionGeografica->setDireccion(mb_strtoupper($direccion, 'UTF-8'));
+            $entityJurisdiccionGeografica->setZona(mb_strtoupper($zona, 'UTF-8'));
             $entityJurisdiccionGeografica->setJuridiccionAcreditacionTipo($entityJuridiccionAcreditacionTipo);
             $entityJurisdiccionGeografica->setValidacionGeograficaTipo($entityValidacionGeograficaTipo);
             $entityJurisdiccionGeografica->setFechaRegistro($fechaActual);
@@ -402,16 +403,17 @@ class InstitucioneducativaController extends Controller {
             $em->persist($entityJurisdiccionGeografica);
 
             
-            $entityInstitucionEducativaSucursal->setNombreSubcea($subcea);
+            $entityInstitucionEducativaSucursal->setNombreSubcea(mb_strtoupper($subcea, 'UTF-8'));
             $entityInstitucionEducativaSucursal->setLeJuridicciongeografica($entityJurisdiccionGeografica);
             $em->persist($entityInstitucionEducativaSucursal);
 
             $em->flush();
             $em->getConnection()->commit();
-            
+            $this->get('session')->getFlashBag()->add('successMsg', 'Se guardo el registro correctamente.');
             return $this->redirectToRoute('herramienta_ceducativa_seleccionar_cea');
         } catch (\Doctrine\ORM\NoResultException $exc) {
             $em->getConnection()->rollback();
+            $this->get('session')->getFlashBag()->add('errorMsg', 'Registro no guardado, intente nuevamente.');
             return $this->redirectToRoute('herramienta_ceducativa_seleccionar_cea');
         }
     }
@@ -466,6 +468,9 @@ class InstitucioneducativaController extends Controller {
                 $sesion->set('ie_operativo', '!En operativo de regularización!');
                 break;                       
             case 10: //INSCRIPCIONES - INICIO DE SEMESTRE
+                /**
+                 * Verificamos si el operativo esta dentro de plazo
+                 */
                 if($ies->getGestionTipo()->getId() >= 2019){
                     if($ies->getPeriodoTipoId() == 2){
                         $operativo = 1;
@@ -485,7 +490,7 @@ class InstitucioneducativaController extends Controller {
                             if($ies->getId() == json_decode($d,true)['ies']){
                                 if(date('d-m-Y') > $o->getFechaFin()->format('d-m-Y')){
                                     $sesion->set('ie_per_estado', '0');
-                                    $sesion->set('ie_operativo', '!Operativo fuera de plazo. Vencio el '. $o->getFechaFin()->format('d-m-Y') . ', contactese con su tecnico SIE.!');
+                                    $sesion->set('ie_operativo', '!Operativo fuera de plazo. Venció el '. $o->getFechaFin()->format('d-m-Y') . ', contactese con su tecnico SIE.!');
                                 }else{
                                     $sesion->set('ie_per_estado', '1');
                                     $sesion->set('ie_operativo', '¡En operativo inscripciones!');                
@@ -499,6 +504,9 @@ class InstitucioneducativaController extends Controller {
                 }
                 break;
             case 11: //NOTAS - FIN DE SEMESTRE
+                /**
+                 * Verificamos si el operativo esta dentro de plazo
+                 */
                 if($ies->getGestionTipo()->getId() >= 2019){
                     if($ies->getPeriodoTipoId() == 2){
                         $operativo = 2;
@@ -579,6 +587,9 @@ class InstitucioneducativaController extends Controller {
                 $sesion->set('ie_operativo', '!En modo vista!');
                 break;
             case 100: //MAESTRO DE UNIDAD EDUCATIVA ALTER
+                /**
+                 * Verificamos si el operativo esta dentro de plazo
+                 */
                 if($ies->getGestionTipo()->getId() >= 2019){
                     if($ies->getPeriodoTipoId() == 2){
                         $operativo = 2;
@@ -598,7 +609,7 @@ class InstitucioneducativaController extends Controller {
                             if($ies->getId() == json_decode($d,true)['ies']){
                                 if(date('d-m-Y') > $o->getFechaFin()->format('d-m-Y')){
                                     $sesion->set('ie_per_estado', '0');
-                                    $sesion->set('ie_operativo', '!Operativo fuera de plazo. Vencio el '. $o->getFechaFin()->format('d-m-Y') . ', contactese con su tecnico SIE.!');
+                                    $sesion->set('ie_operativo', '!Operativo fuera de plazo. Venció el '. $o->getFechaFin()->format('d-m-Y') . ', contactese con su tecnico SIE.!');
                                 }else{
                                     $sesion->set('ie_per_estado', '3');
                                     $sesion->set('ie_operativo', '¡En operativo fin de semestre (notas)!');                
@@ -1739,6 +1750,212 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_periodo'));
         }
     }
+
+    public function crearSucursalAction(Request $request){
+        
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $em->getRepository('SieAppWebBundle:GestionTipo');
+        $query = $repository->createQueryBuilder('g')
+            ->orderBy('g.id', 'DESC')
+            ->where('g.id < 2016 AND g.id > 2008')
+            ->getQuery();
+        $gestiones = $query->getResult();
+        $gestionesArray = array();
+        foreach ($gestiones as $g) {
+            $gestionesArray[$g->getId()] = $g->getId();
+        }
+
+        $repository = $em->getRepository('SieAppWebBundle:PeriodoTipo');
+        $query = $repository->createQueryBuilder('p')
+            ->orderBy('p.id')
+            ->where('p.id in (2,3)')
+            ->getQuery();
+        $periodos = $query->getResult();
+        $periodosArray = array();
+        foreach ($periodos as $p) {
+            $periodosArray[$p->getId()] = $p->getPeriodo();
+        }
+
+        $repository = $em->getRepository('SieAppWebBundle:SucursalTipo');
+        $query = $repository->createQueryBuilder('s')
+            ->orderBy('s.id')
+            ->getQuery();
+        $sucursales = $query->getResult();
+        $sucursalesArray = array();
+        foreach ($sucursales as $s) {
+            $sucursalesArray[$s->getId()] = $s->getId();
+        }
+
+        $entidadDepartamento = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 1), array('id' => 'asc'));
+        //dump($entidadDepartamento);die;
+        $entidadDep = array();
+        foreach ($entidadDepartamento as $dato)
+        {
+           $entidadDep[$dato->getCodigo()] = $dato->getLugar();
+        }
+        $departamentoId = null;
+        $entidadProvincia = array();
+        $provinciaId = null;
+        $entidadMunicipio = array();
+        $municipioId = null;
+        $entidadCanton = array();
+        $cantonId = null;
+        $entidadLocalidad = array();
+        $localidadId = null;
+        $entidadDistrito = array();
+        $distritoId = null;
+        $direccion = "";
+        $zona = "";  
+
+        $form = $this->createFormBuilder()
+                ->setAction($this->generateUrl('herramientalt_ceducativa_crear_sucursal_cea'))
+                ->add('idInstitucion', 'text', array('label' => 'Código SIE del CEA', 'required' => true, 'attr' => array('class' => 'form-control', 'autocomplete' => 'off', 'maxlength' => 8, 'pattern' => '[0-9]{8}')))
+                //->add('gestion', 'choice', array('label' => 'Gestión', 'required' => true, 'choices' => $gestionesArray, 'attr' => array('class' => 'form-control')))
+                ->add('periodo', 'choice', array('label' => 'Periodo', 'required' => true, 'choices' => $periodosArray, 'attr' => array('class' => 'form-control')))
+                //->add('subcea', 'choice', array('label' => 'Sub CEA', 'required' => true, 'choices' => $sucursalesArray, 'attr' => array('class' => 'form-control')))
+                ->add('departamento', 'choice', array('label' => 'Departamento', 'empty_value' => 'Seleccione Departamento', 'choices' => $entidadDep, 'data' => $departamentoId, 'attr' => array('class' => 'form-control', 'required' => true, 'onchange' => 'listaProvincia(this.value)')))
+                ->add('provincia', 'choice', array('label' => 'Provincia', 'empty_value' => 'Seleccione Provincia', 'choices' => $entidadProvincia, 'data' => $provinciaId, 'attr' => array('class' => 'form-control', 'required' => true, 'onchange' => 'listaMunicipio(this.value)')))
+                ->add('municipio', 'choice', array('label' => 'Municipio', 'empty_value' => 'Seleccione Municipio', 'choices' => $entidadMunicipio, 'data' => $municipioId, 'attr' => array('class' => 'form-control', 'required' => true, 'onchange' => 'listaCanton(this.value)')))
+                ->add('canton', 'choice', array('label' => 'Canton', 'empty_value' => 'Seleccione Canton', 'choices' => $entidadCanton, 'data' => $cantonId, 'attr' => array('class' => 'form-control', 'required' => true, 'onchange' => 'listaLocalidad(this.value)')))
+                ->add('localidad', 'choice', array('label' => 'Localidad', 'empty_value' => 'Seleccione Localidad', 'choices' => $entidadLocalidad, 'data' => $localidadId, 'attr' => array('class' => 'form-control', 'required' => true)))
+                ->add('distrito', 'choice', array('label' => 'Distrito Educativo', 'empty_value' => 'Seleccione Distrito', 'choices' => $entidadDistrito, 'data' => $distritoId, 'attr' => array('class' => 'form-control', 'required' => true)))
+                ->add('subcea', 'text', array('label' => 'Nombre Sub Centro', 'attr' => array('value' => $zona, 'class' => 'form-control', 'placeholder' => 'Nombre del Sub Centro', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
+                ->add('direccion', 'text', array('label' => 'Direccion', 'attr' => array('value' => $direccion, 'class' => 'form-control', 'placeholder' => 'Dirección', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
+                ->add('zona', 'text', array('label' => 'Zona', 'attr' => array('value' => $zona, 'class' => 'form-control', 'placeholder' => 'Zona', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
+                ->add('crear', 'submit', array('label' => 'Crear Sucursal', 'attr' => array('class' => 'btn btn-primary')))
+                ->getForm();
+
+
+        return $this->render($this->session->get('pathSystem') . ':Principal:crearsucursal.html.twig', array(
+                'form' => $form->createView()
+            ));
+    }
+
+    public function crearSucursalCeaAction(Request $request){
+
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $session = $request->getSession();
+        $usuario_id = $session->get('userId');
+
+        //validation if the user is logged
+        if (!isset($usuario_id)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $form = $request->get('form');
+        $idInstitucion = $form['idInstitucion'];
+        // $gestion = $form['gestion'];
+        $gestion = $fechaActual->format('Y');
+        $periodo = $form['periodo'];
+        $nombre = $form['subcea'];
+        // $subcea = $form['subcea'];
+        $subcea = 0;
+
+        /*dump($idInstitucion);
+        dump($gestion);
+        dump($periodo);
+        dump($subcea);die;*/
+
+        $usuario_lugar = $this->session->get('roluserlugarid');
+        $usuario_rol = $this->session->get('roluser');
+        $persona_id = $this->session->get('personaId');
+
+        /*
+        * verificamos si existe la Institución Educativa
+        */
+        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $idInstitucion, 'institucioneducativaTipo' => 2));
+        if (!$institucioneducativa) {
+            $this->get('session')->getFlashBag()->add('errorMsg', 'El código SIE ingresado no es válido.');
+            return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_sucursal'));
+        }
+
+        /*
+         * verificamos si tiene tuicion
+         */
+        $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
+        $query->bindValue(':user_id', $usuario_id);
+        $query->bindValue(':sie', $idInstitucion);
+        $query->bindValue(':rolId', $usuario_rol);
+        $query->execute();
+        $aTuicion = $query->fetchAll();
+        
+//        dump($usuario_id.' '.$idInstitucion.' '.$usuario_rol);
+//        die;
+
+        if ($aTuicion[0]['get_ue_tuicion']) {          
+
+            $queryEntidad = $em->getConnection()->prepare("
+                select max(sucursal_tipo_id) as sucursal_tipo_id from institucioneducativa_sucursal where institucioneducativa_id = ".$idInstitucion." 
+            ");
+            $queryEntidad->execute();
+            $objEntidad = $queryEntidad->fetchAll();
+
+            if (count($objEntidad)<1) {
+                $this->get('session')->getFlashBag()->add('errorMsg', 'El código SIE ingresado no es válido.');
+                return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_sucursal'));
+            } else {
+                $subcea = ((int)$objEntidad[0]['sucursal_tipo_id'])+1;
+            }       
+
+            $queryEntidad = $em->getConnection()->prepare("
+                select sucursal_tipo_id from institucioneducativa_sucursal where institucioneducativa_id = ".$idInstitucion." and nombre_subcea like trim('".$nombre."')
+            ");
+
+            $queryEntidad->execute();
+            $objEntidadValidaNombre = $queryEntidad->fetchAll();
+            if (count($objEntidadValidaNombre)>0) {
+                $this->get('session')->getFlashBag()->add('errorMsg', 'El nombre del subcentro ya se encuentra registrado con el numero '.$subcea.'.');
+                return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_sucursal'));
+            }
+
+            $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
+            $query = $repository->createQueryBuilder('ie')
+                ->select('ies')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'ies', 'WITH', 'ies.institucioneducativa = ie.id')
+                ->where('ie.id = :idInstitucion')
+                ->andWhere('ies.gestionTipo = :gestions')
+                ->andWhere('ies.periodoTipoId = :periodo')
+                ->andWhere('ies.sucursalTipo = :sucursal')
+                ->setParameter('idInstitucion', $idInstitucion)
+                ->setParameter('gestions', $gestion)
+                ->setParameter('periodo', $periodo)
+                ->setParameter('sucursal', $subcea)
+                ->setMaxResults(1)
+                ->getQuery();
+
+            $inscripciones = $query->getResult();
+            // dump($inscripciones);
+            // die;
+            if($inscripciones) {
+                $this->get('session')->getFlashBag()->add('errorMsg', 'El CEA ya cuenta con la sucursal '.$subcea.' habilitada.');
+                return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_sucursal'));
+            }
+            else {
+                $query = $em->getConnection()->prepare('SELECT sp_genera_inicio_sgte_gestion_alternativa(:sie, :gestion, :periodo, :subcea)');
+                $query->bindValue(':sie', $idInstitucion);
+                $query->bindValue(':gestion', $gestion);
+                $query->bindValue(':periodo', $periodo);
+                $query->bindValue(':subcea', $subcea);
+                $query->execute();
+                $iesid = $query->fetchAll();            
+                if (($iesid[0]["sp_genera_inicio_sgte_gestion_alternativa"] != '0') and ($iesid[0]["sp_genera_inicio_sgte_gestion_alternativa"] != '')){
+                    $this->get('session')->getFlashBag()->add('successMsg', 'Se habilito la sucursal '.$subcea.' - '.$nombre.'.');
+                    return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_sucursal'));
+                }else{
+                    $this->get('session')->getFlashBag()->add('errorMsg', 'Ha ocurrido un problema en la generación de la sucursal.');
+                    return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_sucursal'));                    
+                }
+            }            
+        } else {
+            $this->get('session')->getFlashBag()->add('errorMsg', 'No tiene tuición sobre el Centro de Educación Alternativa.');
+            return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_sucursal'));
+        }
+    }
+
     
     public function ceaspendientesAction(Request $request) {        
         $id_usuario = $this->session->get('userId');

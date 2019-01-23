@@ -23,6 +23,24 @@ estudiante_rudeal_save_formEstudiante:
     options:
          expose: true
 
+estudiante_rudeal_diversa:
+    path:     /diversa
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteRudeal:diversa" }
+    options:
+         expose: true
+
+estudiante_rudeal_cargar_unidades_militares:
+    path:     /cargarUnidadesMilitares
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteRudeal:cargarUnidadesMilitares" }
+    options:
+         expose: true
+
+estudiante_rudeal_cargar_recintos_penitenciarios:
+    path:     /cargarRecintosPenitenciarios
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteRudeal:cargarRecintosPenitenciarios" }
+    options:
+         expose: true
+
 # TAB 4 -  DIRECCION
 estudiante_rudeal_listarprovincias:
     path:     /listarprovincias/{dpto}
