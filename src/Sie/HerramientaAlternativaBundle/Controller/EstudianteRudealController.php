@@ -231,6 +231,7 @@ class EstudianteRudealController extends Controller {
         // EDUCACION DIVERSA
         $diversa = $em->getRepository('SieAppWebBundle:RudeEducacionDiversa')->findOneBy(array('rude'=>$rude));
         if(!$diversa){
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_educacion_diversa');")->execute();
             $newEducacionDiversa = new RudeEducacionDiversa();
             $newEducacionDiversa->setRude($rude);
             $newEducacionDiversa->setEducacionDiversaTipo($em->getRepository('SieAppWebBundle:EducacionDiversaTipo')->find(1));
