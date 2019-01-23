@@ -1,103 +1,129 @@
 {% extends 'layoutHerramientaAlternativa.html.twig' %}
 {% block contentoption %}
+
+    <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-th-large"></i>Gestionar C.E.A. <span>formulario para regularizar información del SUB C.E.A.</span></h2>
+        <h2><i class="fa fa-plus-circle animated flip"></i> Habilitar Sucursal<span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
-               <li>
-                    <i class="glyphicon glyphicon-leaf"></i>
-                    <a href="{{path('principal_web')}}">Bienvenida/o</a>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('principal_web')}}">Inicio </a>
                     <i class="fa fa-angle-right"></i>
+                     <li class="active">Habilitar Sucursal</li>
                 </li>
-                {% if app.session.get('roluser')!= 10 %}
-                <li>
-                    <i class="fa fa-th-large"></i>
-                    Regularizar información del SUB C.E.A.
-                    <i class="fa fa-angle-right"></i>
-                </li>
-                {% endif %}
+
+                <li class="active"></li>
             </ol>
         </div><!-- /.breadcrumb-wrapper -->
-    </div>  
+    </div><!-- /.header-content -->
+
     <div class="body-content animated fadeIn">
-        <div class="panel rounded shadow">
-            <div class="panel-heading">
-                <div class="pull-left">
-                    <h3 class="panel-title">Formulario de registro</h3>
-                </div>
-                <div class="pull-right">
-                    <button class="btn btn-sm" data-container="body" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
-                </div>
-                <div class="clearfix"></div>
-            </div><!-- /.panel-heading -->
-            <div class="panel-sub-heading">
-                <div class="callout callout-info"><p>Debido a que los sub centros no cuentan con el detalle de ubicación geográfica, dicha información debe registrarse mediante el presente formulario.</p></div>
-            </div><!-- /.panel-subheading -->
-            <div class="panel-body no-padding rounded-bottom">  
-                {% if form is defined  %}
-                    {{ form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'class': "",'onsubmit': 'return confirma();'} } )}}
-                        <div class="form-body"> 
-                            <div class="row">  
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                        <label class="control-label">{{ form_label(form.departamento) }}</label>
-                                    {{ form_widget(form.departamento) }}
-                                </div><!-- /.form-group -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel rounded shadow panel-danger">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Habilitar Sucursal</h3>
+                        </div>
+                        <div class="pull-right">
 
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">{{ form_label(form.provincia) }}</label>
-                                        {{ form_widget(form.provincia) }}
-                                </div><!-- /.form-group -->
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="row">
+                            {% for flashMessage in app.session.flashbag.get('errorMsg') %}
+                                        <div class="alert alert-danger alert-dismissible" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                                        </div>
+                            {% endfor %}
+                            {% for flashMessage in app.session.flashbag.get('successMsg') %}
+                                        <div class="alert alert-success alert-dismissible" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                                        </div>
+                            {% endfor %}
+                        </div>
+                        <div class="panel-body panel-primary">
+                        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form','onsubmit': 'return confirma();'} } )}}
+                        <div class="panel-body">
+                            <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                                <label class="control-label">{{ form_label(form.idInstitucion) }}</label>
+                                            {{ form_widget(form.idInstitucion) }}
+                                        </div><!-- /.form-group -->
 
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">{{ form_label(form.municipio) }}</label>
-                                        {{ form_widget(form.municipio) }}
-                                </div><!-- /.form-group -->
+                                        <div class="form-group">
+                                                <label class="control-label">{{ form_label(form.departamento) }}</label>
+                                            {{ form_widget(form.departamento) }}
+                                        </div><!-- /.form-group -->
+        
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">{{ form_label(form.provincia) }}</label>
+                                                {{ form_widget(form.provincia) }}
+                                        </div><!-- /.form-group -->
+        
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">{{ form_label(form.municipio) }}</label>
+                                                {{ form_widget(form.municipio) }}
+                                        </div><!-- /.form-group -->
+        
+                                        <div class="form-group">
+                                                <label class="col-sm-3 control-label">{{ form_label(form.canton) }}</label>
+                                                    {{ form_widget(form.canton) }}
+                                            </div><!-- /.form-group -->
+        
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">{{ form_label(form.localidad) }}</label>
+                                                {{ form_widget(form.localidad) }}
+                                        </div><!-- /.form-group -->
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">{{ form_label(form.periodo) }}</label>
+                                                {{ form_widget(form.periodo) }}
+                                        </div><!-- /.form-group -->
 
-                                <div class="form-group">
-                                        <label class="col-sm-3 control-label">{{ form_label(form.canton) }}</label>
-                                            {{ form_widget(form.canton) }}
-                                    </div><!-- /.form-group -->
-
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">{{ form_label(form.localidad) }}</label>
-                                        {{ form_widget(form.localidad) }}
-                                </div><!-- /.form-group -->
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">{{ form_label(form.subcea) }}</label>
+                                                {{ form_widget(form.subcea) }}
+                                        </div><!-- /.form-group -->
+        
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">{{ form_label(form.direccion) }}</label>
+                                                {{ form_widget(form.direccion) }}
+                                        </div><!-- /.form-group -->
+        
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">{{ form_label(form.zona) }}</label>
+                                                {{ form_widget(form.zona) }}
+                                        </div><!-- /.form-group -->
+        
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">{{ form_label(form.distrito) }}</label>
+                                                {{ form_widget(form.distrito) }}
+                                        </div><!-- /.form-group -->
+        
+                                    </div>                                
                             </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">{{ form_label(form.subcea) }}</label>
-                                        {{ form_widget(form.subcea) }}
-                                </div><!-- /.form-group -->
-
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">{{ form_label(form.direccion) }}</label>
-                                        {{ form_widget(form.direccion) }}
-                                </div><!-- /.form-group -->
-
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">{{ form_label(form.zona) }}</label>
-                                        {{ form_widget(form.zona) }}
-                                </div><!-- /.form-group -->
-
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">{{ form_label(form.distrito) }}</label>
-                                        {{ form_widget(form.distrito) }}
-                                </div><!-- /.form-group -->
-
+                            <div class="row">
+                                <div class="form-group col-lg-6 col-md-6">                                        
+                                    {{ form_widget(form.crear ) }}
+                                    <a href="{{ path('principal_web') }}" class="btn btn-default">Cancelar</a>
+                                </div>
                             </div>
-                        </div> 
-                        </div><!-- /.form-body -->
-                        <div class="form-footer">
-                            {{ form_widget(form.search,{ 'attr':{'class':'btn btn-primary mb-15 btn-block' } } ) }}
-                        </div><!-- /.form-footer -->
-                    {{form_end(form)}}
-                {% endif %}
-            </div><!-- /.panel-body -->
-        </div>
-    </div>      
-{% endblock %}   
+                        </div>
+                        {{form_end(form)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    </div>
+{% endblock %}    
 {% block javascripts %}
     {{ parent() }}
     <script>
@@ -105,7 +131,7 @@
             var r = confirm("¿ Está seguro de guardar el registro ?");
             return r;
         }
-
+        
         var listaProvincia = function(id){
             var peticion;
             if (peticion && peticion.readyState != 4) {
