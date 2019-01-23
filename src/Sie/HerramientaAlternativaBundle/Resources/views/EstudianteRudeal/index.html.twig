@@ -626,6 +626,7 @@
     </div>
 </div>
 
+<script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery.inputmask/dist/jquery.inputmask.bundle.min.js')}}"></script>
 <script type="text/javascript">
 
     // APLICANDO BUSCADOR A LOS SELECTS
@@ -651,6 +652,8 @@
     $('#form_abandono').chosen({width: "100%"});
 
     $.validator.setDefaults({ ignore: ":hidden:not(select)" });
+
+    $("#form_fechaRegistroRude").inputmask({ "alias": "dd-mm-yyyy", 'placeholder':'dd-mm-aaaa' });
 
     // // validation of chosen on change
     // if ($("select.chosen-select").length > 0) {
