@@ -516,8 +516,9 @@
                                 
                                 
                                 {#<li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>#}
-
+                                
                                 <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
+                                
                                 <li><a href="{{path('herramientalt_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
                                 {#<li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
@@ -552,8 +553,9 @@
                             </a>
                             <ul>
                                 <!--li><a href="{{path('history_new_inscription_index')}}">Historial Estudiante/Participante </a></li-->
+                                {#
                                 <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
-
+                                #}
                                 {% if (app.session.get('ie_id') != -1) %}
 
                                     <li><a href="{{path('sie_alt_lista_estudiantes_excel')}}">Exportar listas a Excel </a></li>
@@ -575,6 +577,7 @@
                             <ul>
                                 {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
                                 {#<li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>#}
+                                {#
                                 <li class="submenu">
                                     <a href="javascript:void(0);">
                                         <span class="icon"><i class="fa fa-users"></i></span>
@@ -589,13 +592,14 @@
                                         <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>
                                     </ul>
                                 </li>
+                                #}
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
 
                                 {#<li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
                                 <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>#}
-
+                                {#
                                 <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
-
+                                #}
                                 {% if (app.session.get('ie_id') != -1) %}
 
                                     <li><a href="{{path('sie_alt_lista_estudiantes_excel')}}">Exportar listas a Excel </a></li>
@@ -627,6 +631,7 @@
                             </a>
                             <ul>
                                 {#<li><a onclick="selceadistritoShow();">Listar mis CEAS.</a></li>#}
+                                {#
                                 <li class="submenu">
                                     <a href="javascript:void(0);">
                                         <span class="icon"><i class="glyphicon glyphicon-cog"></i></span>
@@ -641,6 +646,7 @@
                                         <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>
                                     </ul>
                                 </li>
+                                #}
                                 <li><a href="{{path('herramienta_ceducativa_distrito_listaceas')}}">Listar mis CEAS.</a></li>
                                 {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
                                 {#<li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>#}
@@ -669,7 +675,9 @@
                                 <span class="arrow"></span>
                             </a>
                             <ul>
+                                {#
                                 <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Gestionar C.E.A.</a></li>
+                                #}
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
 
                                 <li><a href="{{path('sie_alt_lista_estudiantes_excel')}}">Exportar listas a Excel </a></li>
