@@ -71,7 +71,7 @@ class AreasController extends Controller {
         $gestion = $this->session->get('ie_gestion');
 
         $aInfoUeducativa = unserialize($infoUe);
-
+dump($aInfoUeducativa);
         $idCurso = $aInfoUeducativa['ueducativaInfoId']['iecId'];
         
         $em = $this->getDoctrine()->getManager();
@@ -90,7 +90,7 @@ class AreasController extends Controller {
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
             
             $ieco = new InstitucioneducativaCursoOferta();
-            $ieco->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find(0));
+            $ieco->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find(3));
             $ieco->setInsitucioneducativaCurso($curso);
             $ieco->setSuperiorModuloPeriodo($smp);
             $ieco->setHorasmes(0);
