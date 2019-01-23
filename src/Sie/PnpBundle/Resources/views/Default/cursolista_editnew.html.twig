@@ -149,11 +149,17 @@
                             <div align="center">
                             <input type="hidden" id="estudiante_id" name="estudiante_id" value="" required="required" style="display:" />
                             <input type="hidden" id="plan" name="plan" value="{{plan}}" required="required" style="display:" />
-                            <input type="text" id="fecha_nac" name="fecha_nac" placeholder="Digite Fecha de Nacimiento" required="required" value="" class="form-control" />
-                            <input type="radio" name="genero" id="genero_m" value="1">
-                            <label for="" id="genero_lm">Masculino</label>
-                            <input type="radio" name="genero" id="genero_f" value="2">
-                            <label for="" id="genero_lf">Femenino</label>
+                            <div class="col-lg-6 col-md-3" align="center">
+                                <input type="text" id="fecha_nac" name="fecha_nac" placeholder="Digite Fecha de Nacimiento" required="required" value="" class="form-control" />
+                            </div>
+                            <div class="col-lg-6 col-md-6" align="center">
+                                <input type="radio" name="genero" id="genero_m" value="1">
+                                <label for="" id="genero_lm">Masculino</label>
+                                <input type="radio" name="genero" id="genero_f" value="2">
+                                <label for="" id="genero_lf">Femenino</label>
+                            </div>
+                            {% if plan == 1 %}
+                            <div class="row"></div>
                             <div class="col-lg-4 col-md-3" align="center">
                                 <h5>Alfabetizado</h5>
                                 <select name="alfabetizado" class="form-control" id="alfabetizado">
@@ -220,18 +226,6 @@
                                     <option value="OTRO">OTRO</option>
                                 </select> 
                             </div></br>
-
-                            {% if plan == 2%}
-                                <div class="col-lg-3 col-md-12">&nbsp;</div>
-                                <div class="col-lg-6 col-md-12" align="center">
-                                    <h5>Tiene Discapacidad</h5> 
-                                    <select name="discapacidad" class="form-control" id="discapacidad">
-                                        {% for discapacidad in discapacidades %}
-                                            <option value="{{discapacidad.id}}">{{discapacidad.origendiscapacidad}}</option>
-                                        {% endfor %}
-                                    </select> 
-                                </div>
-                                <div class="col-lg-3 col-md-12">&nbsp;</div>
                             {% endif %}
                             <div class="col-lg-12 col-md-12" align="center">&nbsp;</div>
                             <div><button type="submit" class="btn btn-success btn-large glyphicon glyphicon-pencil"> Guardar Cambios</button></div>
@@ -336,7 +330,11 @@
                                         <th>Matricula:</th>
                                         <th>Fecha de Nacimiento</th>
                                         <th>Género</th>
-                                        <th>Alfabetizado|Idioma|Cultura</th>
+                                        {% if plan == 1 %}
+                                            <th>Alfabetizado|Idioma|Cultura</th>
+                                        {% else %}
+                                            <th>Actividad</th>
+                                        {% endif %}
                                         {% if plan == 2 %}<th>Discapacidad</th>{% endif %}
                                     </tr>
                                 </thead>
@@ -378,8 +376,12 @@
                                         
                                         <td>{% if estudiante.fecha_nacimiento %}{{ estudiante.fecha_nacimiento|date('d/m/Y') }}{% endif %}</td>
                                         <td>{{ estudiante.genero }}</td>
-                                        <td>{{ estudiante.observacionadicional }}</td>
-                                        {% if plan == 2 %}<td>{{ estudiante.discapacidad_nombre }}</td>{% endif %}
+                                        {% if plan == 1 %}
+                                            <td>{{ estudiante.observacionadicional }}</td>
+                                        {% else %}
+                                            <td>{{ estudiante.actividad }}</td>
+                                        {% endif %}
+                                        {% if plan == 2 %}<td>{{ estudiante.discapacidad }}</td>{% endif %}
                                     </tr>
                                 {% endfor %}
                                 </tbody>

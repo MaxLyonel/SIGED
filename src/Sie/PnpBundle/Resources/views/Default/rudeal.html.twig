@@ -195,7 +195,7 @@
 	                    <select required="required" data-placeholder="Seleccionar Idioma" name="idioma_hablar"  class="form-control chosen-select" >
 	                    	<option value=""></option>
 	                        {% for idioma in idioma_tipo %}
-		                        <option value="{{ idioma.id }}" {% if idioma.id == rude["idioma_id"] and op != 0 %}selected="selected"{% endif %}>{{ idioma.idioma }}</option>
+		                        <option value="{{ idioma.id }}" {% if (idioma.id == rude["idioma_id"] and op != 0) or op == 0 and idioma.id == 48 %}selected="selected"{% endif %}>{{ idioma.idioma }}</option>
 		                    {% endfor %}
 	                	</select>
 	                </div>
@@ -263,7 +263,11 @@
                     <div class="col-sm-8">
 	                    <select data-placeholder="Choose a Country" name="cant_salud" id="cant_salud" class="form-control chosen-select" >
 	                        {% for cantidad_centro_salud in cantidad_centro_salud_tipo %}
-	                        	<option value="{{ cantidad_centro_salud.id }}" {% if cantidad_centro_salud.id == rude["cant_centro_id"] and op != 0 %}selected="selected"{% endif %}>{{ cantidad_centro_salud.descripcioncantidad }}</option>
+	                        	<option value="{{ cantidad_centro_salud.id }}" 
+	                        		{% if cantidad_centro_salud.id == rude["cant_centro_id"] %}
+	                        			selected="selected"
+	                        	{% endif %}
+	                        	>{{ cantidad_centro_salud.descripcioncantidad }}</option>
 	                    	{% endfor %}
 	                	</select>
 	                </div>
@@ -375,7 +379,7 @@
                 </div>
 		    </div>
 		    <div class="panel-heading">
-		        ACTIVIDAD LABORAL DEL PARTICIPANTE {{ rude["tiene_ocupacion_trabajo"] }}
+		        ACTIVIDAD LABORAL DEL PARTICIPANTE
 		    </div>
 		    <div class="panel-body">
 		    	<div class="form-group col-lg-12">
@@ -473,11 +477,11 @@
   		}
   		if(op==1){
   			 $('#cant_salud_view').show();
-  			 document.getElementById("cant_salud").selectedIndex = "0";
+  			 //document.getElementById("cant_salud").selectedIndex = "0";
   		}
   		else {
   			 $('#cant_salud_view').hide();
-  			 document.getElementById("cant_salud").selectedIndex = "0";
+  			 //document.getElementById("cant_salud").selectedIndex = "0";
   		}
         
          $("#fecha_registro").datepicker({
@@ -573,11 +577,11 @@
   		}
   		if(op==1){
   			 $('#cant_salud_view').show();
-  			 document.getElementById("cant_salud").selectedIndex = "0";
+  			 //document.getElementById("cant_salud").selectedIndex = "0";
   		}
   		else {
   			 $('#cant_salud_view').hide();
-  			 document.getElementById("cant_salud").selectedIndex = "0";
+  			 //document.getElementById("cant_salud").selectedIndex = "0";
   		}
 	});
 

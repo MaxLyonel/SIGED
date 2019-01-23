@@ -31,90 +31,79 @@
                         <td align="center">{{ filas.ci }}{% if filas.complemento != '' %}-{{filas.complemento}}{% endif %}</td>
                         <td align="center">{{ filas.rude }}</td>
                     </tr>
-                    <tr>
-                        <td align="center"><br/><strong>Alfabetizado</strong></td>
-                        <td align="center"><br/><strong>Idioma</strong></td>
-                        <td align="center"><br/><strong>Ocupación</strong></td>
-                    </tr>
-                     <tr>
-                        <td align="center">
-                            <select name="alfabetizado" class="form-control">
-                                <option value="SI"{% if filas.alfabetizado == "SI" %} selected="selected" {% endif %}>Si</option>
-                                <option value="NO"{% if filas.alfabetizado == "NO" %} selected="selected" {% endif %}>NO</option>
-                            </select>
-                        </td>
-                        <td align="center">
-                            <select name="idioma" class="form-control">
-                                <option {% if filas.idioma == "CASTELLANO" %} selected {% endif %} value="CASTELLANO">CASTELLANO</option>
-                                <option {% if filas.idioma == "ATAONA" %} selected {% endif %} value="ATAONA">ATAONA</option>
-                                <option {% if filas.idioma == "AIMARA" %} selected {% endif %} value="AIMARA">AIMARA</option>
-                                <option {% if filas.idioma == "AYOREO" %} selected {% endif %} value="AYOREO">AYOREO</option>
-                                <option {% if filas.idioma == "BAURE" %} selected {% endif %} value="BAURE">BAURE</option>
-                                <option {% if filas.idioma == "CAVINEÑO" %} selected {% endif %} value="CAVINEÑO">CAVINEÑO</option>
-                                <option {% if filas.idioma == "CANICHANA" %} selected {% endif %} value="CANICHANA">CANICHANA</option>
-                                <option {% if filas.idioma == "CAYUBABA" %} selected {% endif %} value="CAYUBABA">CAYUBABA</option>
-                                <option {% if filas.idioma == "CHÁCOBO" %} selected {% endif %} value="CHÁCOBO">CHÁCOBO</option>
-                                <option {% if filas.idioma == "CHIMAN" %} selected {% endif %} value="CHIMAN">CHIMAN</option>
-                                <option {% if filas.idioma == "CHIQUITANO" %} selected {% endif %} value="CHIQUITANO">CHIQUITANO</option>
-                                <option {% if filas.idioma == "SSE EJJA" %} selected {% endif %} value="ESSE EJJA">ESSE EJJA</option>
-                                <option {% if filas.idioma == "GUARANI" %} selected {% endif %} value="GUARANI">GUARANI</option>
-                                <option {% if filas.idioma == "GUARAYA" %} selected {% endif %} value="GUARAYA">GUARAYA</option>
-                                <option {% if filas.idioma == "ITONOMA" %} selected {% endif %} value="ITONOMA">ITONOMA</option>
-                                <option {% if filas.idioma == "JOAQUINIANO" %} selected {% endif %} value="JOAQUINIANO">JOAQUINIANO</option>
-                                <option {% if filas.idioma == "LECO" %} selected {% endif %} value="LECO">LECO</option>
-                                <option {% if filas.idioma == "MACHINERI" %} selected {% endif %} value="MACHINERI">MACHINERI</option>
-                                <option {% if filas.idioma == "MORÉ" %} selected {% endif %} value="MORÉ">MORÉ</option>
-                                <option {% if filas.idioma == "MOSETÉN" %} selected {% endif %} value="MOSETÉN">MOSETÉN</option>
-                                <option {% if filas.idioma == "MOVIMA" %} selected {% endif %} value="MOVIMA">MOVIMA</option>
-                                <option {% if filas.idioma == "MOXEÑO" %} selected {% endif %} value="MOXEÑO">MOXEÑO</option>
-                                <option {% if filas.idioma == "NAHUA" %} selected {% endif %} value="NAHUA">NAHUA</option>
-                                <option {% if filas.idioma == "PACAHUARA" %} selected {% endif %} value="PACAHUARA">PACAHUARA</option>
-                                <option {% if filas.idioma == "PAICONECA" %} selected {% endif %} value="PAICONECA">PAICONECA</option>
-                                <option {% if filas.idioma == "QUECHUA" %} selected {% endif %} value="QUECHUA">QUECHUA</option>
-                                <option {% if filas.idioma == "SIRIONO" %} selected {% endif %} value="SIRIONO">SIRIONO</option>
-                                <option {% if filas.idioma == "TACANA" %} selected {% endif %} value="TACANA">TACANA</option>
-                                <option {% if filas.idioma == "TAPIETE" %} selected {% endif %} value="TAPIETE">TAPIETE</option>
-                                <option {% if filas.idioma == "TORONOMA" %} selected {% endif %} value="TORONOMA">TORONOMA</option>
-                                <option {% if filas.idioma == "URU" %} selected {% endif %} value="URU">URU</option>
-                                <option {% if filas.idioma == "WEENHAYEK" %} selected {% endif %} value="WEENHAYEK">WEENHAYEK</option>
-                                <option {% if filas.idioma == "YUMINAHUA" %} selected {% endif %} value="YUMINAHUA">YUMINAHUA</option>
-                                <option {% if filas.idioma == "YUKI" %} selected {% endif %} value="YUKI">YUKI</option>
-                                <option {% if filas.idioma == "YURACARÉ" %} selected {% endif %} value="YURACARÉ">YURACARÉ</option>
-                                <option {% if filas.idioma == "NO ORIGINARIO" %} selected {% endif %} value="NO ORIGINARIO">NO ORIGINARIO</option>
-                                <option {% if filas.idioma == "AFRO BOLIVIANO" %} selected {% endif %} value="AFRO BOLIVIANO">AFRO BOLIVIANO</option>
-                            </select>
-                        </td>
-                        <td align="center">
-                            <select name="ocupacion" class="form-control">
-                                <option {% if filas.ocupacion == "AMA DE CASA" %} selected {% endif %} value="AMA DE CASA">AMA DE CASA</option>
-                                <option {% if filas.ocupacion == "AGRICULTOR" %} selected {% endif %} value="AGRICULTOR">AGRICULTOR</option>
-                                <option {% if filas.ocupacion == "MINERO" %} selected {% endif %} value="MINERO">MINERO</option>
-                                <option {% if filas.ocupacion == "CHOFER" %} selected {% endif %} value="CHOFER">CHOFER</option>
-                                <option {% if filas.ocupacion == "CARPINTERO" %} selected {% endif %} value="CARPINTERO">CARPINTERO</option>
-                                <option {% if filas.ocupacion == "ZAPATERO" %} selected {% endif %} value="ZAPATERO">ZAPATERO</option>
-                                <option {% if filas.ocupacion == "CHOFER" %} selected {% endif %} value="CHOFER">CHOFER</option>
-                                <option {% if filas.ocupacion == "COMERCIANTE" %} selected {% endif %} value="COMERCIANTE">COMERCIANTE</option>
-                                <option {% if filas.ocupacion == "PANADERO" %} selected {% endif %} value="PANADERO">PANADERO</option>
-                                <option {% if filas.ocupacion == "AVICULTOR" %} selected {% endif %} value="AVICULTOR">AVICULTOR</option>
-                                <option {% if filas.ocupacion == "PELUQUERO" %} selected {% endif %} value="PELUQUERO">PELUQUERO</option>
-                                <option {% if filas.ocupacion == "OTRO" %} selected {% endif %} value="OTRO">OTRO</option>
-                            </select>
-                        </td>
-                    </tr> 
-                    <tr>
-                        <td colspan="3" align="center"><br/><strong>Tiene alguna discapicidad:</strong></td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td colspan="1" align="">
-                            <select name="discapicidad"  id="discapicidad" class="form-control">
-                            {% for discapacidad in discapacidades %}
-                                <option value="{{discapacidad.id}}">{{discapacidad.origendiscapacidad}}</option>
-                            {% endfor %}
-                            </select>
-                        </td>
-                        <td>&nbsp;</td>
-                    </tr>              
+                    <input type="hidden" value="{{ plan }}" name="plan">
+                    {% if plan == 1 %}
+                        <tr>
+                            <td align="center"><br/><strong>Alfabetizado</strong></td>
+                            <td align="center"><br/><strong>Idioma</strong></td>
+                            <td align="center"><br/><strong>Ocupación</strong></td>
+                        </tr>
+                        <tr>
+                            <td align="center">
+                                <select name="alfabetizado" class="form-control">
+                                    <option value="SI"{% if filas.alfabetizado == "SI" %} selected="selected" {% endif %}>Si</option>
+                                    <option value="NO"{% if filas.alfabetizado == "NO" %} selected="selected" {% endif %}>NO</option>
+                                </select>
+                            </td>
+                            <td align="center">
+                                <select name="idioma" class="form-control">
+                                    <option {% if filas.idioma == "CASTELLANO" %} selected {% endif %} value="CASTELLANO">CASTELLANO</option>
+                                    <option {% if filas.idioma == "ATAONA" %} selected {% endif %} value="ATAONA">ATAONA</option>
+                                    <option {% if filas.idioma == "AIMARA" %} selected {% endif %} value="AIMARA">AIMARA</option>
+                                    <option {% if filas.idioma == "AYOREO" %} selected {% endif %} value="AYOREO">AYOREO</option>
+                                    <option {% if filas.idioma == "BAURE" %} selected {% endif %} value="BAURE">BAURE</option>
+                                    <option {% if filas.idioma == "CAVINEÑO" %} selected {% endif %} value="CAVINEÑO">CAVINEÑO</option>
+                                    <option {% if filas.idioma == "CANICHANA" %} selected {% endif %} value="CANICHANA">CANICHANA</option>
+                                    <option {% if filas.idioma == "CAYUBABA" %} selected {% endif %} value="CAYUBABA">CAYUBABA</option>
+                                    <option {% if filas.idioma == "CHÁCOBO" %} selected {% endif %} value="CHÁCOBO">CHÁCOBO</option>
+                                    <option {% if filas.idioma == "CHIMAN" %} selected {% endif %} value="CHIMAN">CHIMAN</option>
+                                    <option {% if filas.idioma == "CHIQUITANO" %} selected {% endif %} value="CHIQUITANO">CHIQUITANO</option>
+                                    <option {% if filas.idioma == "SSE EJJA" %} selected {% endif %} value="ESSE EJJA">ESSE EJJA</option>
+                                    <option {% if filas.idioma == "GUARANI" %} selected {% endif %} value="GUARANI">GUARANI</option>
+                                    <option {% if filas.idioma == "GUARAYA" %} selected {% endif %} value="GUARAYA">GUARAYA</option>
+                                    <option {% if filas.idioma == "ITONOMA" %} selected {% endif %} value="ITONOMA">ITONOMA</option>
+                                    <option {% if filas.idioma == "JOAQUINIANO" %} selected {% endif %} value="JOAQUINIANO">JOAQUINIANO</option>
+                                    <option {% if filas.idioma == "LECO" %} selected {% endif %} value="LECO">LECO</option>
+                                    <option {% if filas.idioma == "MACHINERI" %} selected {% endif %} value="MACHINERI">MACHINERI</option>
+                                    <option {% if filas.idioma == "MORÉ" %} selected {% endif %} value="MORÉ">MORÉ</option>
+                                    <option {% if filas.idioma == "MOSETÉN" %} selected {% endif %} value="MOSETÉN">MOSETÉN</option>
+                                    <option {% if filas.idioma == "MOVIMA" %} selected {% endif %} value="MOVIMA">MOVIMA</option>
+                                    <option {% if filas.idioma == "MOXEÑO" %} selected {% endif %} value="MOXEÑO">MOXEÑO</option>
+                                    <option {% if filas.idioma == "NAHUA" %} selected {% endif %} value="NAHUA">NAHUA</option>
+                                    <option {% if filas.idioma == "PACAHUARA" %} selected {% endif %} value="PACAHUARA">PACAHUARA</option>
+                                    <option {% if filas.idioma == "PAICONECA" %} selected {% endif %} value="PAICONECA">PAICONECA</option>
+                                    <option {% if filas.idioma == "QUECHUA" %} selected {% endif %} value="QUECHUA">QUECHUA</option>
+                                    <option {% if filas.idioma == "SIRIONO" %} selected {% endif %} value="SIRIONO">SIRIONO</option>
+                                    <option {% if filas.idioma == "TACANA" %} selected {% endif %} value="TACANA">TACANA</option>
+                                    <option {% if filas.idioma == "TAPIETE" %} selected {% endif %} value="TAPIETE">TAPIETE</option>
+                                    <option {% if filas.idioma == "TORONOMA" %} selected {% endif %} value="TORONOMA">TORONOMA</option>
+                                    <option {% if filas.idioma == "URU" %} selected {% endif %} value="URU">URU</option>
+                                    <option {% if filas.idioma == "WEENHAYEK" %} selected {% endif %} value="WEENHAYEK">WEENHAYEK</option>
+                                    <option {% if filas.idioma == "YUMINAHUA" %} selected {% endif %} value="YUMINAHUA">YUMINAHUA</option>
+                                    <option {% if filas.idioma == "YUKI" %} selected {% endif %} value="YUKI">YUKI</option>
+                                    <option {% if filas.idioma == "YURACARÉ" %} selected {% endif %} value="YURACARÉ">YURACARÉ</option>
+                                    <option {% if filas.idioma == "NO ORIGINARIO" %} selected {% endif %} value="NO ORIGINARIO">NO ORIGINARIO</option>
+                                    <option {% if filas.idioma == "AFRO BOLIVIANO" %} selected {% endif %} value="AFRO BOLIVIANO">AFRO BOLIVIANO</option>
+                                </select>
+                            </td>
+                            <td align="center">
+                                <select name="ocupacion" class="form-control">
+                                    <option {% if filas.ocupacion == "AMA DE CASA" %} selected {% endif %} value="AMA DE CASA">AMA DE CASA</option>
+                                    <option {% if filas.ocupacion == "AGRICULTOR" %} selected {% endif %} value="AGRICULTOR">AGRICULTOR</option>
+                                    <option {% if filas.ocupacion == "MINERO" %} selected {% endif %} value="MINERO">MINERO</option>
+                                    <option {% if filas.ocupacion == "CHOFER" %} selected {% endif %} value="CHOFER">CHOFER</option>
+                                    <option {% if filas.ocupacion == "CARPINTERO" %} selected {% endif %} value="CARPINTERO">CARPINTERO</option>
+                                    <option {% if filas.ocupacion == "ZAPATERO" %} selected {% endif %} value="ZAPATERO">ZAPATERO</option>
+                                    <option {% if filas.ocupacion == "CHOFER" %} selected {% endif %} value="CHOFER">CHOFER</option>
+                                    <option {% if filas.ocupacion == "COMERCIANTE" %} selected {% endif %} value="COMERCIANTE">COMERCIANTE</option>
+                                    <option {% if filas.ocupacion == "PANADERO" %} selected {% endif %} value="PANADERO">PANADERO</option>
+                                    <option {% if filas.ocupacion == "AVICULTOR" %} selected {% endif %} value="AVICULTOR">AVICULTOR</option>
+                                    <option {% if filas.ocupacion == "PELUQUERO" %} selected {% endif %} value="PELUQUERO">PELUQUERO</option>
+                                    <option {% if filas.ocupacion == "OTRO" %} selected {% endif %} value="OTRO">OTRO</option>
+                                </select>
+                            </td>
+                        </tr>
+                    {% endif %}           
             </table>
         </div>
     </div>

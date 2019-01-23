@@ -2265,6 +2265,11 @@ class DefaultController extends Controller
                     $em->remove($element);
                 }          
                 $em->flush();
+                $result=$em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findByestudianteInscripcion($estudiante_inscripcion_id);
+                foreach ($result as $element) {
+                    $em->remove($element);
+                }          
+                $em->flush();
                 // 2.- alt_modulo_emergente
                 $result=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findById($alt_moduloemergente_id);
                 foreach ($result as $element) {
@@ -2278,8 +2283,6 @@ class DefaultController extends Controller
                 }          
                 $em->flush();
                 //////////////////FIN PLAN 2
-                
-                //ELIMINAR RUDE
                 //ELIMINAR RUDE 
                 //buscar el id del rude
                 $rude_eliminar = $em->getRepository('SieAppWebBundle:Rude')->findByestudianteInscripcion($estudiante_inscripcion_id);
@@ -2287,6 +2290,7 @@ class DefaultController extends Controller
                 foreach ($rude_eliminar as $results) {
                     $rude_id[]=$results->getId();
                 }
+
                 // ELIMINAR RUDE ACTIVIDAD
                 if($rude_eliminar){
                     $result=$em->getRepository('SieAppWebBundle:RudeActividad')->findByrude($rude_id);
@@ -2318,9 +2322,13 @@ class DefaultController extends Controller
                         $em->remove($results);
                         $em->flush();
                     }
+
                     //ELIMINAR EL RUDE
-                    $em->remove($rude_eliminar);
-                    $em->flush();
+                    foreach ($rude_eliminar as $results) {
+                        $em->remove($results);
+                        $em->flush();
+                    }
+                    
                 }
                 //FIN ELIMINAR RUDE
                 
@@ -4070,26 +4078,27 @@ ciclo_tipo_id, grado_tipo_id
                 $estudiante_id=$request->get("estudiante_id");
                 $fecha_nac=$request->get("fecha_nac"); 
                 $genero=$request->get("genero");
-                $discapacidad=$request->get("discapacidad");
                 $plan=$request->get("plan");
                 
                 
                 if($genero != 1 and $genero != 2) $genero=3;
                 
-                $alfabetizado=$request->get("alfabetizado"); 
-                $idioma=$request->get("idioma");
-                $ocupacion=$request->get("ocupacion");
-                $observacionadicional_n=$alfabetizado."|".$idioma."|".$ocupacion;
+                if($plan == 1){
+                    $alfabetizado=$request->get("alfabetizado"); 
+                    $idioma=$request->get("idioma");
+                    $ocupacion=$request->get("ocupacion");
+                    $observacionadicional_n=$alfabetizado."|".$idioma."|".$ocupacion;
+                }
                 
                 $em = $this->getDoctrine()->getManager();
                 $product = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($estudiante_id);
                 $product->setFechaNacimiento(\DateTime::createFromFormat('d/m/Y', $fecha_nac));
                 $genero = $em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($genero);
                 $product->setGeneroTipo($genero);
-                $product->setObservacionadicional($observacionadicional_n);
+                if($plan == 1)$product->setObservacionadicional($observacionadicional_n);
                 $em->flush();
 
-                if($plan==2){
+                /*if($plan==2){
                     //obtener estudiante_inscripcion_id
                      $estudiante_inscripcion_id = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy([
                         'institucioneducativaCurso' => $id,
@@ -4102,7 +4111,7 @@ ciclo_tipo_id, grado_tipo_id
                     $estinscsocalt->setSeccionvOtroTrabajo($ocupacion);
                     $estinscsocalt->setFechaModificacion(new \DateTime('now'));
                     $em->flush();
-                }
+                }*/
             }
             elseif($val == 2){
                 echo "entro";die;
@@ -4161,7 +4170,7 @@ ciclo_tipo_id, grado_tipo_id
         if($esactivo==1)$esactivo=1;else $esactivo=0;
 
         //LISTA DE ESTUDIANTES
-        //LISTA DE ESTUDIANTES
+        //LISTA DE ESTUDIANTES 
         $query = "SELECT 
                       estudiante.id as estudiante_id,
                       estudiante.codigo_rude, 
@@ -4178,15 +4187,20 @@ ciclo_tipo_id, grado_tipo_id
                       estudiante_inscripcion.estadomatricula_tipo_id as matricula_estado_id,
                       estadomatricula_tipo.estadomatricula,
                       estudiante_inscripcion.id as inscripcion_id,
-                      eisa.seccioniv_discapacitad_tipo_id as discapacidad_id,
-                      dt.origendiscapacidad as discapacidad_nombre
+                      dt.id as discapacidad_id,
+                      dt.origendiscapacidad as discapacidad,
+                      act.id as actividad_id,
+                      act.descripcion_ocupacion as actividad
                     FROM 
                       estudiante INNER JOIN estudiante_inscripcion ON estudiante.id = estudiante_inscripcion.estudiante_id
                       INNER JOIN genero_tipo ON genero_tipo.id = estudiante.genero_tipo_id
                       INNER JOIN estadomatricula_tipo ON estadomatricula_tipo.ID = estudiante_inscripcion.estadomatricula_inicio_tipo_id
                       INNER JOIN institucioneducativa_curso ON estudiante_inscripcion.institucioneducativa_curso_id = institucioneducativa_curso.id
-                      LEFT JOIN estudiante_inscripcion_socioeconomico_alternativa eisa on eisa.estudiante_inscripcion_id=estudiante_inscripcion.id
-                      LEFT JOIN discapacidad_tipo dt on dt.id=eisa.seccioniv_discapacitad_tipo_id
+                      LEFT JOIN rude r ON r.estudiante_inscripcion_id=estudiante_inscripcion.id
+                                          LEFT JOIN  rude_discapacidad_grado rdg ON rdg.rude_id=r.id
+                                            LEFT JOIN discapacidad_tipo dt ON dt.id=rdg.discapacidad_tipo_id
+                                          LEFT JOIN rude_actividad ra ON ra.rude_id=r.id
+                                            LEFT JOIN actividad_tipo act ON act.id=ra.actividad_tipo_id
                     WHERE
                       institucioneducativa_curso.id = ".$id;
         
@@ -4228,14 +4242,10 @@ ciclo_tipo_id, grado_tipo_id
             $datos_filas["estadomatricula"] = $p["matricula_estado_id"];
             $datos_filas["inscripcion_id"] = $p["inscripcion_id"];
             $datos_filas["estudiante_id"] = $p["estudiante_id"];
-            if ($p["discapacidad_id"]==""){
-              $datos_filas["discapacidad_id"] =0;  
-              $datos_filas["discapacidad_nombre"] = "No";
-            }
-            else{
-                $datos_filas["discapacidad_id"] = $p["discapacidad_id"];
-                $datos_filas["discapacidad_nombre"] = $p["discapacidad_nombre"];
-            }
+            $datos_filas["discapacidad_id"] = $p["discapacidad_id"];
+            $datos_filas["discapacidad"] = $p["discapacidad"];
+            $datos_filas["actividad_id"] = $p["actividad_id"];
+            $datos_filas["actividad"] = $p["actividad"];
             $filas[] = $datos_filas;
         }
         
@@ -4352,7 +4362,7 @@ ciclo_tipo_id, grado_tipo_id
             $id_ico = $p["id"];
         }
 
-        $discapacidades= $this->getDoctrine()->getRepository('SieAppWebBundle:DiscapacidadTipo')->findAll();
+        //$discapacidades= $this->getDoctrine()->getRepository('SieAppWebBundle:DiscapacidadTipo')->findAll();
         ///sacamos el modulo emergente
 
         $modulo_emergente=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneByInstitucioneducativaCursoOferta($id_ico);
@@ -4364,7 +4374,7 @@ ciclo_tipo_id, grado_tipo_id
             );
         }
         //$this->session->getFlashBag()->add('success', 'Proceso realizado exitosamente.');
-        return $this->render('SiePnpBundle:Default:cursolista_editnew.html.twig', array('estudiantes' => $filas, 'plan'=>$plan,'datosentity' => $filasdos,'esactivo'=>$esactivo,'id_archivo'=>$id_archivo,'discapacidades'=>$discapacidades,'modulo_emergente'=>$modulo_emergente,'duracionhoras'=>$duracionhoras));
+        return $this->render('SiePnpBundle:Default:cursolista_editnew.html.twig', array('estudiantes' => $filas, 'plan'=>$plan,'datosentity' => $filasdos,'esactivo'=>$esactivo,'id_archivo'=>$id_archivo,'modulo_emergente'=>$modulo_emergente,'duracionhoras'=>$duracionhoras));
     }
     
 
@@ -4375,8 +4385,12 @@ ciclo_tipo_id, grado_tipo_id
         $reconocimiento_saberes=0;//si tiene reconocimiento de saberes 0 no 1 si
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
-        //////discapacidades obtener
-        $discapacidades= $this->getDoctrine()->getRepository('SieAppWebBundle:DiscapacidadTipo')->findAll();
+        
+         $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findByinstitucioneducativaCurso($curso_id);
+            foreach ($result as $results) {
+                $plan=$results->getPlancurricularTipoId();
+            }
+
         
         if($rude==0)
             if($complemento=='0'){
@@ -4431,7 +4445,7 @@ ciclo_tipo_id, grado_tipo_id
                     return $this->render('SiePnpBundle:Default:mostrarestudiante.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'gestion_ini'=>$gestion_ini)); die;
                 }
                 else{*/
-                    return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('discapacidades'=>$discapacidades,'filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>2,'gestion_ini'=>$gestion_ini));  die;          
+                    return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>2,'gestion_ini'=>$gestion_ini,'plan'=>$plan));  die;          
                 /*}*/
             }
             else{
@@ -4724,7 +4738,7 @@ ciclo_tipo_id, grado_tipo_id
                             die;
                         }
                         else{*/
-                            return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('discapacidades'=>$discapacidades,'filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>2,'gestion_ini'=>$gestion_ini));            
+                            return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>2,'gestion_ini'=>$gestion_ini,'plan'=>$plan));            
                         /*}*/
 
                          ////////   
@@ -4811,7 +4825,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                             die;
                         }
                         else{*/
-                            return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('discapacidades'=>$discapacidades,'filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>2,'gestion_ini'=>$gestion_ini));            
+                            return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>2,'gestion_ini'=>$gestion_ini,'plan'=>$plan));            
                         /*}*/
           
                     }
@@ -5032,17 +5046,17 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                 
                 //////////////////////AUMENTAR, SI ES TIPO 2, ES ESTUDIANTE PERO NO TIENE LA PARTE DE ALFABETIZADO, OCUPACION POR TANTO SE DEBE PRIMERO ACTUALIZAR AL ESTUDIANTE ESA PARTE
                 
-                $alfabetizado=$request->get("alfabetizado");
-                $idioma=$request->get("idioma");
-                $ocupacion=$request->get("ocupacion");
-                $discapacidad=$request->get("discapicidad");
-
-                $observacionadicional=$alfabetizado.'|'.$idioma.'|'.$ocupacion;
-                $result=$em->getRepository('SieAppWebBundle:Estudiante')->findOneBycodigoRude($rude);
-                $result->setObservacionadicional($observacionadicional);
-                $em->flush();
-                $lugar_llenar=$result->getLocalidadNac();
-            
+                $plan=$request->get("plan");
+                if($plan == 1){
+                    $alfabetizado=$request->get("alfabetizado");
+                    $idioma=$request->get("idioma");
+                    $ocupacion=$request->get("ocupacion");    
+                    $observacionadicional=$alfabetizado.'|'.$idioma.'|'.$ocupacion;
+                    $result=$em->getRepository('SieAppWebBundle:Estudiante')->findOneBycodigoRude($rude);
+                    $result->setObservacionadicional($observacionadicional);
+                    $em->flush();
+                }
+                            
 
                 $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion');")->execute();
                 $inscripcion = new EstudianteInscripcion();
@@ -5063,7 +5077,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                 $inscripcion->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById('66'));
                 $em->persist($inscripcion);
                 $em->flush();
-                /////////////OCUPACION Y DISCAPACDAD SI EL PLAN 2
+                /*/////////////OCUPACION Y DISCAPACDAD SI EL PLAN 2
                 if ($plan==2){
                     $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion_socioeconomico_alternativa');")->execute();
                     $estinscsocalt = new EstudianteInscripcionSocioeconomicoAlternativa();
@@ -5076,7 +5090,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                     $estinscsocalt->setFecha(new \DateTime('now'));
                     $em->persist($estinscsocalt);
                     $em->flush();
-                }
+                }*/
                 ///////////////////FIN
 
                 if ($plan==1){
@@ -5194,6 +5208,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                         ->where('e.id = :estudiante_id')
                         ->setParameter('estudiante_id', $estudiante_id)
                         ->addOrderBy('r.id','desc')
+                        ->setMaxResults(1) 
                         ->getQuery();
                         $id_rude_ant = $query->getOneOrNullResult();
                     if($id_rude_ant){
@@ -5637,7 +5652,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                 foreach ($result as $element) {
                     $em->remove($element);
                 } 
-                //ELIMINAR RUDE ctv
+                //ELIMINAR RUDE
                 //buscar el id del rude
                 $rude_eliminar = $em->getRepository('SieAppWebBundle:Rude')->findOneByestudianteInscripcion($estudiante_inscripcion_id);
                 // ELIMINAR RUDE ACTIVIDAD
@@ -6523,8 +6538,7 @@ public function crear_curso_automaticoAction(Request $request){
             $em->persist($nuevo_curso);
             $em->flush(); 
             $curso_new_id=$nuevo_curso->getId();
-            
-
+        
             //institucion educativa datos
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_datos');");
             $query->execute();
@@ -6611,7 +6625,7 @@ public function crear_curso_automaticoAction(Request $request){
                     $em->flush();
 
                     /////////////OCUPACION Y DISCAPACDAD SI EL PLAN 2
-                    if ($plan==2){
+                    /*if ($plan==2){
                         //sacamos los datos anteriores para registrar en el  nuevo
                         $result=$em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findOneByestudianteInscripcion($id_estudiante_inscripcion);
                         $discapacidad=$result->getSeccionivDiscapacitadTipo()->getId();
@@ -6629,7 +6643,7 @@ public function crear_curso_automaticoAction(Request $request){
                         $estinscsocalt->setFecha(new \DateTime('now'));
                         $em->persist($estinscsocalt);
                         $em->flush();
-                    }
+                    }*/
                 ///////////////////FIN
 
                     /////buscar las id en la tabla institucion educativa curso oferta para las materias para luego registrar en estudiante asignatura 
@@ -6716,7 +6730,6 @@ public function crear_curso_automaticoAction(Request $request){
                         $registro_nota_cualitativa->setFechaRegistro(new \DateTime('now'));
                         $em->persist($registro_nota_cualitativa);
                         $em->flush();
-
                         ///////////////////RUDEAL-------
                         //DATOS DEL CURSO
                           switch ($ie) {
@@ -6744,8 +6757,10 @@ public function crear_curso_automaticoAction(Request $request){
                             ->where('e.id = :estudiante_id')
                             ->setParameter('estudiante_id', $estudiante_id)
                             ->addOrderBy('r.id','desc')
+                            ->setMaxResults(1) 
                             ->getQuery();
                             $id_rude_ant = $query->getOneOrNullResult();
+
                         if($id_rude_ant){
                             $id_rude_ant=$id_rude_ant->getId();
                             $query = "
@@ -6818,7 +6833,7 @@ public function crear_curso_automaticoAction(Request $request){
                                 $rude["est_civil"] = $p["est_civil"];
                                 $grado_discapacidad=$rude["grado_id"] = $p["grado_id"];
                                 $rude["grado"] = $p["grado"];
-                                $discapicidad=$rude["discapacidad_id"] = $p["discapacidad_id"];
+                                $discapacidad=$rude["discapacidad_id"] = $p["discapacidad_id"];
                                 $rude["discapacidad"] = $p["discapacidad"];
                                 $ibc=$rude["carnet_ibc"] = $p["carnet_ibc"];
                                 $rude["est_depa_id"] = $p["est_depa_id"];
@@ -6970,6 +6985,7 @@ public function crear_curso_automaticoAction(Request $request){
                             $em->flush();
 
                             //DISCAPACIDAD TIPO
+                            
                             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_discapacidad_grado');");
                             $query->execute();
                             $newdiscapacidadgrado = new RudeDiscapacidadGrado();
@@ -7577,6 +7593,7 @@ public function rudealAction(request $Request,$id_inscripcion,$id_curso){
             ->where('e.id = :id_estudiante')
             ->setParameter('id_estudiante', $id_estudiante)
             ->addOrderBy('r.id','desc')
+            ->setMaxResults(1) 
             ->getQuery();
             $id_rude_ant = $query->getOneOrNullResult();
         if($id_rude_ant){
