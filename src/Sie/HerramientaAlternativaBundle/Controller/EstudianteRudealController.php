@@ -91,10 +91,22 @@ class EstudianteRudealController extends Controller {
                 $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude');")->execute();
                 $rude = clone $rudeAnterior;
                 $rude->setEstudianteInscripcion($inscripcion);
+                $rude->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find(2));
                 $em->persist($rude);
                 $em->flush();
 
+                // REGISTRO DE EDUCACION DIVERSA
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_educacion_diversa');")->execute();
+                $diversas = $em->getRepository('SieAppWebBundle:RudeEducacionDiversa')->findBy(array('rude'=>$rudeAnterior));
+                foreach ($diversas as $di) {
+                    $newDiversa = clone $di;
+                    $newDiversa->setRude($rude);
+                    $em->persist($newDiversa);
+                    $em->flush();
+                }
+
                 // REGISTRO DE DISCAPACIDADES
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_discapacidad_grado');")->execute();
                 $discapacidades = $em->getRepository('SieAppWebBundle:RudeDiscapacidadGrado')->findBy(array('rude'=>$rudeAnterior));
                 foreach ($discapacidades as $d) {
                     $newDiscapacidad = clone $d;
@@ -104,6 +116,7 @@ class EstudianteRudealController extends Controller {
                 }
 
                 // REGISTRO DE IDIOMAS
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_idioma');")->execute();
                 $idiomas = $em->getRepository('SieAppWebBundle:RudeIdioma')->findBy(array('rude'=>$rudeAnterior));
                 foreach ($idiomas as $i) {
                     $newIdioma = clone $i;
@@ -113,6 +126,7 @@ class EstudianteRudealController extends Controller {
                 }
 
                 // REGISTRO DE ACTIVIDADES OCUPACIONES
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_actividad');")->execute();
                 $actividades = $em->getRepository('SieAppWebBundle:RudeActividad')->findBy(array('rude'=>$rudeAnterior));
                 foreach ($actividades as $a) {
                     $newActividad = clone $a;
@@ -122,6 +136,7 @@ class EstudianteRudealController extends Controller {
                 }
 
                 // REGISTRO DE ACUDIO CENTRO SALUD
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_centro_salud');")->execute();
                 $centrosSalud = $em->getRepository('SieAppWebBundle:RudeCentroSalud')->findBy(array('rude'=>$rudeAnterior));
                 foreach ($centrosSalud as $cs) {
                     $newCentroSalud = clone $cs;
@@ -131,6 +146,7 @@ class EstudianteRudealController extends Controller {
                 }
 
                 // REGISTRO DE MEDIOS DE COMUNICACION
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_medios_comunicacion');")->execute();
                 $mediosComunicacion = $em->getRepository('SieAppWebBundle:RudeMediosComunicacion')->findBy(array('rude'=>$rudeAnterior));
                 foreach ($mediosComunicacion as $mc) {
                     $newMedioComunicacion = clone $mc;
@@ -140,6 +156,7 @@ class EstudianteRudealController extends Controller {
                 }
 
                 // REGISTRO DE MEDIOS DE TRANSPORTE
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_medio_transporte');")->execute();
                 $mediosTransporte = $em->getRepository('SieAppWebBundle:RudeMedioTransporte')->findBy(array('rude'=>$rudeAnterior));
                 foreach ($mediosTransporte as $mt) {
                     $newMedioTransporte = clone $mt;
@@ -149,6 +166,7 @@ class EstudianteRudealController extends Controller {
                 }
 
                 // REGISTRO DE MOTIVOS DE ABANDONO
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_abandono');")->execute();
                 $motivosAbandono = $em->getRepository('SieAppWebBundle:RudeAbandono')->findBy(array('rude'=>$rudeAnterior));
                 foreach ($motivosAbandono as $ma) {
                     $newMotivoAbandono = clone $ma;
@@ -174,6 +192,7 @@ class EstudianteRudealController extends Controller {
                 $rude->setEstudianteInscripcion($inscripcion);
                 $rude->setFechaRegistro(new \DateTime('now'));
                 $rude->setLugarRegistroRude($direccion);
+                $rude->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find(2));
                 $rude->setRegistroFinalizado(0);
                 $em->persist($rude);
                 $em->flush();
