@@ -91,6 +91,7 @@ class EstudianteRudealController extends Controller {
                 $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude');")->execute();
                 $rude = clone $rudeAnterior;
                 $rude->setEstudianteInscripcion($inscripcion);
+                $rude->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find(2));
                 $em->persist($rude);
                 $em->flush();
 
@@ -191,6 +192,7 @@ class EstudianteRudealController extends Controller {
                 $rude->setEstudianteInscripcion($inscripcion);
                 $rude->setFechaRegistro(new \DateTime('now'));
                 $rude->setLugarRegistroRude($direccion);
+                $rude->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find(2));
                 $rude->setRegistroFinalizado(0);
                 $em->persist($rude);
                 $em->flush();
