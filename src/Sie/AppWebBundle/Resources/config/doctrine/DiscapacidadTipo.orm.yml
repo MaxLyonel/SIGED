@@ -1,10 +1,6 @@
 Sie\AppWebBundle\Entity\DiscapacidadTipo:
     type: entity
     table: discapacidad_tipo
-    uniqueConstraints:
-        discapacidad_tipo_pk:
-            columns:
-                - id
     id:
         id:
             type: smallint
@@ -21,4 +17,9 @@ Sie\AppWebBundle\Entity\DiscapacidadTipo:
             length: 45
             fixed: false
             comment: ''
+        esVigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente
     lifecycleCallbacks: {  }

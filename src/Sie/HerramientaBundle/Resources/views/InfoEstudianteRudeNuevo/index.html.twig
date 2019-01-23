@@ -1,0 +1,1949 @@
+<style type="text/css">
+    .jupper{
+        text-transform: uppercase;
+    }
+    #p_mensaje{
+        padding: 10px;
+        border: 1px dashed #5F62A8;
+        text-align: center;
+        color: #6496BA;
+        background: #E1EBFA;
+    }
+    #m_mensaje{
+        padding: 10px;
+        border: 1px dashed #5F62A8;
+        text-align: center;
+        color: #6496BA;
+        background: #E1EBFA;
+    }
+    #t_mensaje{
+        padding: 10px;
+        border: 1px dashed #5F62A8;
+        text-align: center;
+        color: #6496BA;
+        background: #E1EBFA;
+    }
+
+    .view{
+        border: none;
+        background: none;
+    }
+    .btn-wizard{
+        display: inline-block;
+        padding: 5px 14px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 15px;
+        color: #34495e;
+        float: right;
+    }
+
+    .pager button:hover{
+        background: #EBEBEB;
+    }
+    .row{
+        margin-bottom: 2px;
+    }
+
+    .readonly{
+        background: #EEEEEE;
+    }
+    .block-print{
+        /* border: 1px dashed #EE0EE0; */
+        color: #CCCCCC;
+        text-align: center;
+        padding: 10px;
+        border-left: 10px solid #E9E9E9;
+    }
+    .block-print:hover{
+        color: #4590E5;
+        /* cursor: pointer; */
+    }
+    .close{
+        margin-right: 15px;
+    }
+    .sinCarnet{
+        background: #FFFFFF;
+        color: #8A868B;
+        border: 1px solid #E0D8E3;
+        padding: 4px;
+    }
+
+    input[type=radio]{
+        margin-left: 15px;
+        margin-right: 5px;
+    }
+</style>
+<div class="modal-dialog" style="width: 1000px">
+    <div class="modal-content">
+        <div class="panel panel-tab panel-tab-double">
+            <div class="panel-heading no-padding">
+                <div style="height:50px; background:#64CBE2; color:#FFFFFF; margin-top:-10px;">
+                    <h4 style="padding:10px 0px 0px 10px; text-align:center">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        FORMULARIO DE INSCRIPCIÓN / ACTUALIZACIÓN <br>
+                        <b>REGISTRO ÚNICO DE ESTUDIANTES</b>
+                    </h4>
+                    
+                </div>
+            </div>
+            <div class="panel-body no-padding" id="modal-body">
+
+                <div id="basic-wizard-vertical">
+                    <div class="panel panel-tab panel-tab-double panel-tab-vertical row no-margin rounded shadow">
+                        <!-- Start tabs heading -->
+                        <div class="panel-heading no-padding col-md-3">
+                            <ul class="nav nav-tabs">
+                                <li class="active">
+                                    <a id="paso1" href="#tab1" data-toggle="tab" aria-expanded="true">
+                                        <i class="fa fa-home"></i>
+                                        <div>
+                                            <span class="text-strong">I, II</span>
+                                            <span><small>DATOS GENERALES</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="paso3" href="#tab2" data-toggle="tab" aria-expanded="false">
+                                        <i class="fa fa-file"></i>
+                                        <div>
+                                            <span class="text-strong">III</span>
+                                            <span><small>DIRECCIÓN ACTUAL</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="paso4" href="#tab3" data-toggle="tab" aria-expanded="false">
+                                        <i class="fa fa-check-circle"></i>
+                                        <div>
+                                            <span class="text-strong">IV</span>
+                                            <span><small>ASPECTOS SOCIOECONOMICOS</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="paso5" href="#tab4" data-toggle="tab" aria-expanded="false">
+                                        <i class="fa fa-users"></i>
+                                        <div>
+                                            <span class="text-strong">V</span>
+                                            <span><small>DATOS DEL PADRE,MADRE O TUTOR</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="paso6" href="#tab5" data-toggle="tab" aria-expanded="false">
+                                        <i class="fa fa-print"></i>
+                                        <div>
+                                            <span class="text-strong">VI</span>
+                                            <span><small>FINALIZAR E IMPRIMIR</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div><!-- /.panel-heading -->
+                        <!--/ End tabs heading -->
+
+                        <!-- Start tabs content -->
+                        <div class="panel-body col-md-9 tab-content">
+                            <div class="tab-pane fade inner-all active in" id="tab1">
+                                <h4 class="page-header">I. DATOS DE LA UNIDAD EDUCATIVA</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        1.1 CÓDIGO RUE DE LA UNIDAD EDUCATIVA
+                                    </div>
+                                    <div class="col-md-6">
+                                        <b>{{ sie }}</b>
+                                    </div>
+                                </div>
+                                <br>
+                                <h4 class="page-header">
+                                    II. DATOS DE LA O EL ESTUDIANTE <br>
+                                    <small class="text-danger">
+                                        {% if estudiante.segipId != 1 %}
+                                            Se identificaron inconsistencia en los datos personales del estudiante, debe apersonarse a su distrito para realizar la corrección de datos.
+                                        {% endif %}
+                                    </small>
+                                </h4>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6">
+                                        <p>2.1 APELLIDO(S) Y NOMBRE(S)</p>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6">
+                                        <div class="row">
+                                            <label class="col-md-4 col-sm-4">Apellido Paterno</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                {# {{ form_widget(form2.paterno, {'attr':{'class':'form-control view', 'disabled':'disabled'} }) }} #}
+                                                <b>{{estudiante.paterno}}</b>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-md-4 col-sm-4">Apellido Materno</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                {# {{ form_widget(form2.materno, {'attr':{'class':'form-control view', 'disabled':'disabled'} }) }} #}
+                                                <b>{{estudiante.materno}}</b>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-md-4 col-sm-4">Nombre(s)</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                {# {{ form_widget(form2.nombre, {'attr':{'class':'form-control view', 'disabled':'disabled'} }) }} #}
+                                                <b>{{estudiante.nombre}}</b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <form id="formEstudiante" onsubmit="saveFormEstudiante(); return false;" method="post">
+                                    {{ form_widget(formEstudiante.rudeId) }}
+                                    {{ form_widget(formEstudiante.estudianteId) }}
+                                    {{ form_widget(formEstudiante.discapacidadId) }}
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6">
+                                            <p>2.2 LUGAR DE NACIMIENTO</p>
+                                            {# <p class="text-danger">* (Los campos: departamento, provincia, localidad son obligatorios en caso de que la/el estudiante sea de nacinalidad boliviana)</p> #}
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="row form-group">
+                                                <label class="col-md-4 col-sm-4">Pais:</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    {# {{ form_widget(form2.pais, {'attr':{'class':'form-control jupper readonly', 'onchange':'dep(this.value)'} }) }} #}
+                                                    <b>{{ formEstudiante.pais.vars.data }}</b>
+                                                </div>
+                                            </div>
+                                            {# <div id="bloqueNacimiento"> #}
+                                                <div class="row form-group">
+                                                    <label class="col-md-4 col-sm-4">Departamento:</label>
+                                                    <div class="col-md-8 col-sm-8">
+                                                        {# {{ form_widget(formEstudiante.departamento, {'attr':{'class':'form-control jupper readonly','onchange':'prov(this.value)'} }) }} #}
+                                                        {# <b>{{ formEstudiante.departamento.vars.value }}</b> #}
+                                                        <b>{{ formEstudiante.departamentoNacimiento.vars.data|upper }}</b>
+                                                    </div>
+                                                </div>
+                                                <div class="row form-group">
+                                                    <label class="col-md-4 col-sm-4">Provincia:</label>
+                                                    <div class="col-md-8 col-sm-8">
+                                                        {# {{ form_widget(formEstudiante.provincia, {'attr':{'class':'form-control jupper readonly'} }) }} #}
+                                                        {# <b>{{ formEstudiante.provincia.vars.data }}</b> #}
+                                                        <b>{{ formEstudiante.provinciaNacimiento.vars.data|upper }}</b>
+                                                    </div>
+                                                </div>
+                                                <div class="row form-group">
+                                                    <label class="col-md-4 col-sm-4">Localidad:</label>
+                                                    <div class="col-md-8 col-sm-8">
+                                                        {# {{ form_widget(formEstudiante.localidad, {'attr':{'class':'form-control jupper readonly'} }) }} #}
+                                                        <b>{{ formEstudiante.localidadNac.vars.value }}</b>
+                                                    </div>
+                                                </div>
+                                            {# </div> #}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6">
+                                            <p>2.3 CERTIFICADO DE NACIMIENTO</p>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="row form-group">
+                                                <label class="col-md-4 col-sm-4">Oficialia Nº:</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    {# {{ form_widget(formEstudiante.oficialia, {'attr':{'class':'form-control readonly'} }) }} #}
+                                                    <b>{{ formEstudiante.oficialia.vars.value }}</b>
+                                                </div>
+                                            </div>
+                                            <div class="row form-group">
+                                                <label class="col-md-4 col-sm-4">Libro Nº:</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    {# {{ form_widget(formEstudiante.libro, {'attr':{'class':'form-control readonly'} }) }} #}
+                                                    <b>{{ formEstudiante.libro.vars.value }}</b>
+                                                </div>
+                                            </div>
+                                            <div class="row form-group">
+                                                <label class="col-md-4 col-sm-4">Partida Nº:</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    {# {{ form_widget(formEstudiante.partida, {'attr':{'class':'form-control readonly'} }) }} #}
+                                                    <b>{{ formEstudiante.partida.vars.value }}</b>
+                                                </div>
+                                            </div>
+                                            <div class="row form-group">
+                                                <label class="col-md-4 col-sm-4">Folio Nº:</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    {# {{ form_widget(formEstudiante.folio, {'attr':{'class':'form-control readonly'} }) }} #}
+                                                    <b>{{ formEstudiante.folio.vars.value }}</b>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6">
+                                            <p>2.4 FECHA DE NACIMIENTO</p>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="row form-group">
+                                                <div class="col-md-12 col-sm-12">
+                                                    {# {{ form_widget(formEstudiante.fechaNacimiento, {'attr':{'class':'form-control','disabled':'disabled'} }) }} #}
+                                                    <b>{{ formEstudiante.fechaNacimiento.vars.value }}</b>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6">
+                                            <p>2.5 DOCUMENTO DE IDENTIFICACIÓN</p>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="row form-group">
+                                                <label class="col-md-4 col-sm-4">Carnet:</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    {% if formEstudiante.carnet.vars.value|length > 0 %}
+                                                        <input type="hidden" id="verificarCarnet" value="0">
+                                                        {# {{ form_widget(formEstudiante.carnet, {'attr':{'class':'form-control readonly'} }) }} #}
+                                                        <b>{{ formEstudiante.carnet.vars.value }}</b>
+                                                    {% else %}
+                                                        <input type="hidden" id="verificarCarnet" value="1">
+                                                        {# {{ form_widget(formEstudiante.carnet, {'attr':{'class':'form-control'} }) }} #}
+                                                        <b>{{ formEstudiante.carnet.vars.value }}</b>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="row form-group">
+                                                <label class="col-md-4 col-sm-4">Complemento:</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    {% if formEstudiante.carnet.vars.value|length > 0 %}
+                                                        {# {{ form_widget(formEstudiante.complemento, {'attr':{'class':'form-control readonly'} }) }} #}
+                                                        <b>{{ formEstudiante.complemento.vars.value }}</b>
+                                                    {% else %}
+                                                        {# {{ form_widget(formEstudiante.complemento, {'attr':{'class':'form-control'} }) }} #}
+                                                        <b>{{ formEstudiante.complemento.vars.value }}</b>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6">
+                                            <p>2.6 CÓDIGO RUDE (Código automático generado por el sistema)</p>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="row form-group">
+                                                <div class="col-md-12 col-sm-12">
+                                                    {# {{ form_widget(formEstudiante.rude, {'attr':{'class':'form-control','disabled':'disabled'} }) }} #}
+                                                    <b>{{ formEstudiante.codigoRude.vars.value }}</b>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6">
+                                            <p>2.7 SEXO</p>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="row form-group">
+                                                <div class="col-md-12 col-sm-12">
+                                                    {# {{ form_widget(formEstudiante.sexo, {'attr':{'class':'form-control readonly'} }) }} #}
+                                                    <b>{{ formEstudiante.sexo.vars.data }}</b>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6">
+                                            <p>2.8 ¿EL/LA ESTUDDIANTE PRESENTA ALGUNA DISCAPACIDAD?</p>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="row form-group">
+                                                <div class="col-md-12 col-sm-12">
+                                                    {{ form_widget(formEstudiante.tieneDiscapacidad, {'attr':{'class':'radioDiscapacidad'} }) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <fieldset id="fieldsetDiscapacidad">
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p>2.9 NRO DE REGISTRO DE DISCAPACIDAD O IBC</p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="row form-group">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        {{ form_widget(formEstudiante.carnetIbc, {'attr':{'class':'form-control'} }) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p>2.10 TIPO DE DISCAPACIDAD</p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="row form-group">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        {{ form_widget(formEstudiante.discapacidad, {'attr':{'class':'form-control'} }) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p>2.11 GRADO DE DISCAPACIDAD</p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="row form-group">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        {{ form_widget(formEstudiante.gradoDiscapacidad, {'attr':{'class':'form-control'} }) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
+                                    <div class="panel-footer no-bg">
+                                        <ul class="pager wizard no-margin">
+                                            <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                            <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                        </ul>
+                                    </div>
+                                </form>
+                                <br>
+                            </div>
+                            <div class="tab-pane fade inner-all" id="tab2">
+                                <h4 class="page-header">III. DIRECCIÓN ACTUAL DE LA O EL ESTUDIANTE</h4>
+                                <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
+                                    <div class="row">
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-sm-4">Departamento</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                {{ form_widget(formDireccion.departamentoDir, {'attr':{'class':'form-control jupper', 'onchange':'listarProvincias(this.value)'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-sm-4">Provincia</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                {{ form_widget(formDireccion.provinciaDir, {'attr':{'class':'form-control jupper', 'onchange':'listarMunicipios(this.value)'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-sm-4">Municipio</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                {{ form_widget(formDireccion.municipioLugarTipo, {'attr':{'class':'form-control jupper'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-sm-4">Localidad</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                {{ form_widget(formDireccion.localidad, {'attr':{'class':'form-control jupper'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-sm-4">Zona / Barrio / Villa</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                {{ form_widget(formDireccion.zona, {'attr':{'class':'form-control jupper'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-sm-4">Avenida / Calle</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                {{ form_widget(formDireccion.avenida, {'attr':{'class':'form-control jupper'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-sm-4">Número de vivienda</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                {{ form_widget(formDireccion.numero, {'attr':{'class':'form-control jupper','max':'9999'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-sm-4"> Celular</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                {{ form_widget(formDireccion.celular, {'attr':{'class':'form-control'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-sm-4"> Teléfono</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                {{ form_widget(formDireccion.telefonoFijo, {'attr':{'class':'form-control'} }) }}
+                                            </div>
+                                        </div>
+
+                                        {{ form_widget(formDireccion) }}
+                                    </div>
+                                    <div class="panel-footer no-bg">
+                                        <ul class="pager wizard no-margin">
+                                            <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                            <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                        </ul>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="tab-pane fade inner-all" id="tab3">
+                                <h4 class="page-header">IV. ASPECTOS SOCIOECONOMICOS DE LA O EL ESTUDIANTE</h4>
+                                <form id="formSocioeconomicos" onsubmit="saveFormSocioeconomicos(); return false;">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12">4.1 IDIOMA Y PERTENENCIA CULTURAL DE LA O EL ESTUDIANTE</div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">4.1.1. ¿Cúal es el idioma en el que aprendio a hablar en su niñez?</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.idiomaNines, {'attr':{'class':'form-control'} }) }}
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">4.1.2. ¿Qué idiomas habla frecuentemente?</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            <small>a) Más frecuente (*)</small>
+                                            {{ form_widget(formSocioeconomico.idioma1, {'attr':{'class':'form-control jupper'} }) }}
+                                            <small>b) Medianamente frecuente</small>
+                                            {{ form_widget(formSocioeconomico.idioma2, {'attr':{'class':'form-control jupper'} }) }}
+                                            <small>c) Menos frecuente</small>
+                                            {{ form_widget(formSocioeconomico.idioma3, {'attr':{'class':'form-control jupper'} }) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-6">4.1.3. ¿Pertenece a alguna nación, pueblo indigena originario campesino o afroboliviano?</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.nacionOriginariaTipo, {'attr':{'class':'form-control jupper'} }) }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12">4.2 SALUD DE LA O EL ESTUDIANTE</div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-8">4.2.1. ¿Existe Centro de Salud/Posta/Hospital en su comunidad/barrio/zona?</label>
+                                        <div class="col-md-4 col-sm-4">
+                                            {{ form_widget(formSocioeconomico.centroSalud, {'attr':{'class':'jupper'} }) }}
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">4.2.2. El año pasado, por problemas de salud, ¿acudió o se atendió en...?</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.acudioCentro, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">4.2.3. El año pasado ¿Cuantas veces fue al centro de salud?</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.cantidadCentroSaludTipo, {'attr':{'class':'form-control jupper'} }) }}
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">4.2.4. ¿Tiene seguro de salud?</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.seguroSalud, {'attr':{'class':'jupper'} }) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12">4.3 ACCESO DE LA O EL ESTUDIANTE A SERVICIOS BASICOS</div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">4.3.1. ¿Tiene acceso a agua por cañeria de red?</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.agua, {'attr':{'class':'jupper'} }) }}
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">4.3.2. ¿Tiene baño en su vivienda?</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.banio, {'attr':{'class':'jupper'} }) }}
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">4.3.3. ¿Tiene red de alcantarillado?</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.alcantarillado, {'attr':{'class':'jupper'} }) }}
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">4.3.4. ¿Tiene energia electrica para alumbrar su vivienda?</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.energiaElectrica, {'attr':{'class':'jupper'} }) }}
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">4.3.5. ¿Cuenta con servicio de recojo de basura?</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.recojoBasura, {'attr':{'class':'jupper'} }) }}
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">4.3.6. La vivienda que ocupa el hogar es:</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.viviendaOcupaTipo, {'attr':{'class':'form-control jupper'} }) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12">4.4 ACCESO A INTERNET DE LA O EL ESTUDIANTE</div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">4.4.1. El estudiante accesde a internet en:</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.accesoInternet, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                        </div>
+                                    </div>
+                                    <fieldset id="fieldsetInternet">
+                                        <div class="row form-group">
+                                            <label class="col-md-6">4.4.2. ¿Con que frecuencia usa internet?</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                {{ form_widget(formSocioeconomico.frecuenciaUsoInternetTipo, {'attr':{'class':'form-control jupper'} }) }}
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12">4.5 ACTIVIDAD LABORAL DE LA O EL ESTUDIANTE</div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">4.5.1. En la pasada gestión ¿El estudiante trabajo?</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.trabajoGestionPasada, {'attr':{'class':'jupper radioTrabajo'} }) }}
+                                        </div>
+                                    </div>
+                                    <fieldset id="fieldsetTrabajo">
+                                        <div class="row">
+                                            <div class="col-md-6"></div>
+                                            <div class="col-md-6">
+                                                {{ form_widget(formSocioeconomico.mesesTrabajados, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <label class="col-md-6">4.5.2. En la pasada gestión ¿El en que actividad trabajó el estudiante?</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                {{ form_widget(formSocioeconomico.actividades, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                                {{ form_widget(formSocioeconomico.actividadOtro, {'attr':{'class':'form-control jupper','placeholder':'Especificar otra actividad'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <label class="col-md-6">4.5.3. ¿En que turno trabajo el estudiante?</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                {{ form_widget(formSocioeconomico.turnosTrabajo, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <label class="col-md-6">4.5.4. ¿Con que frecuencia trabajó?</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                {{ form_widget(formSocioeconomico.frecuenciaTrabajoTipo, {'attr':{'class':'form-control jupper'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <label class="col-md-6">4.5.5. ¿Recibió algun pago?</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                {{ form_widget(formSocioeconomico.respuestaPago, {'attr':{'class':'radioTipoPago'} }) }}
+                                                <fieldset id="fieldsetTipoPago">
+                                                    {{ form_widget(formSocioeconomico.recibioTipoPago, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12">4.6 MEDIO DE TRANSPORTE PARA LLEGAR A LA UNIDAD EDUCATIVA</div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">4.6.1 Generalemente ¿Como llega el estudiante a la unidad educativa?</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.medioTransporte, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                            {{ form_widget(formSocioeconomico.medioTransporteOtro, {'attr':{'class':'form-control jupper','placeholder':'ESPECIFIQUE OTRO MEDIO DE TRANSPORTE'} }) }}
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">4.6.2 Segun el medio de transporte señalado, ¿Cuál es el tiempo máximo que demora el estudiante desde su vivienda hasta la Unidad Educativa?</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.tiempoTransporte, {'attr':{'class':'form-control jupper'} }) }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12">4.7 ABANDONO ESCOLAR CORRESPONDIENTE A LA GESTION ANTERIOR</div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">4.7.1 ¿El estudiante abandonó la Unidad Educativa el año pasado?</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.tieneAbandono, {'attr':{'class':'radioAbandono'} }) }}
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <label class="col-md-6">4.7.2 ¿Cuál o cuáles fueron las razones de abandono escolar?</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formSocioeconomico.abandono, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                            {{ form_widget(formSocioeconomico.abandonoOtro, {'attr':{'class':'form-control jupper'} }) }}
+                                        </div>
+                                    </div>                                    
+
+                                    {{ form_widget(formSocioeconomico) }}
+
+                                    <div class="panel-footer no-bg">
+                                        <ul class="pager wizard no-margin">
+                                            <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                            <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                        </ul>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="tab-pane fade inner-all" id="tab4">
+                                <h4 class="page-header">V. DATOS DEL PADRE, MADRE O TUTOR(A) DE LA O EL ESTUDIANTE</h4>
+                                <form id="formConQuienVive">
+                                    <div class="row form-group">
+                                        <label class="col-md-6">5.1 LA O EL ESTUDIANTE VIVE HABITUALMENTE CON:</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            {{ form_widget(formConQuienVive.viveHabitualmenteTipo, {'attr':{'class':'form-control jupper'} }) }}
+                                        </div>
+                                    </div>
+                                    {{ form_widget(formConQuienVive) }}
+                                </form>
+                                
+                                
+                                {# <div class="ml-10"> #}
+                                    <div class="panel panel-tab rounded shadow">
+                                        
+                                        <!-- Start tabs heading -->
+                                        <div class="panel-heading no-padding">
+                                            <ul class="row nav nav-tabs nav-pills">
+                                                <li class="active col-md-4 col-sm-4 col-lg-4" style="float:left">
+                                                    <a id="tabPadre" href="#tab1-11" data-toggle="tab" aria-expanded="false">
+                                                        <i class="fa fa-user"></i>
+                                                        <span>6.1. DATOS DEL PADRE</span>
+                                                    </a>
+                                                </li>
+                                                <li class="col-md-4  col-sm-4 col-lg-4" style="float:right">
+                                                    <a id="tabTutor" href="#tab1-13" data-toggle="tab" aria-expanded="false">
+                                                        <i class="fa fa-user"></i>
+                                                        <span>6.3. DATOS DEL TUTOR(A)</span>
+                                                    </a>
+                                                </li>
+                                                <li class="col-md-4  col-sm-4 col-lg-4" style="float:right">
+                                                    <a id="tabMadre" href="#tab1-12" data-toggle="tab" aria-expanded="false">
+                                                        <i class="fa fa-user"></i>
+                                                        <span>6.2. DATOS DE LA MADRE</span>
+                                                    </a>
+                                                </li>
+                                                
+                                            </ul>
+                                        </div><!-- /.panel-heading -->
+                                        <!--/ End tabs heading -->
+                                        <!-- Start tabs content -->
+                                        <div class="panel-body">
+                                            <div class="tab-content">
+                                                <div class="tab-pane fade active in" id="tab1-11">
+                                                    <form id="formPadre" onsubmit="saveFormPadre(); return false;" method="post">
+                                                        <div id="p_divTienePadre" style="text-align:center">
+                                                            <div class="radio">
+                                                                ¿La o el estudiante tiene padre?&nbsp;&nbsp;
+                                                                <label>
+                                                                    <input type="radio" name="p_tienePadre" id="tienePadre1" value="1" onclick="p_validarTienePadre();" {% if padre.id != 'nuevo' %} checked {% endif %}>
+                                                                    Si
+                                                                </label>
+                                                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                                                <label>
+                                                                    <input type="radio" name="p_tienePadre" id="tienePadre0" value="0" onclick="p_validarTienePadre();" {% if padre.id == 'nuevo' %} checked {% endif %}>
+                                                                    No
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+                                                        <div id="p_divPadre">
+                                                            <div class="col-md-8">
+                                                            
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Cédula de identidad </label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formPadre.carnet, {'id':'p_carnet','attr':{'class':'form-control readonly'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Complemento</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formPadre.complemento, {'id':'p_complemento','attr':{'class':'form-control readonly'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Expedido</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formPadre.expedido, {'id':'p_expedido','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Apellido paterno</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formPadre.paterno, {'id':'p_paterno','attr':{'class':'form-control readonly',} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Apellido materno</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formPadre.materno, {'id':'p_materno','attr':{'class':'form-control readonly'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Nombre(s)</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formPadre.nombre, {'id':'p_nombre','attr':{'class':'form-control readonly'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Fecha de Nacimiento</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formPadre.fechaNacimiento, {'id':'p_fechaNacimiento','attr':{'class':'form-control readonly'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Género</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formPadre.genero, {'id':'p_genero','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Correo electrónico</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formPadre.correo, {'id':'p_correo','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Celular</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formPadre.celular, {'id':'p_telefono','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Idioma que habla frecuentemente</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formPadre.idiomaMaterno, {'id':'p_idioma','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Ocupación laboral actual</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formPadre.ocupacion, {'id':'p_ocupacion','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row" id="p_filaOtroOcupacion">
+                                                                    <label class="col-md-6">Especificar otra ocupación</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formPadre.obs, {'id':'p_ocupacionOtro','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Mayor grado de instrucción alcanzado</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formPadre.instruccionTipo, {'id':'p_instruccion','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">¿Cuál es el parentesco?</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formPadre.apoderadoTipo, {'id':'p_parentesco','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                {{ form_widget(formPadre.idInscripcion, {'id':'p_idInscripcion'}) }}
+                                                                {{ form_widget(formPadre.id, {'id':'p_id'}) }}
+                                                                {{ form_widget(formPadre.idPersona, {'id':'p_idPersona'}) }}
+                                                                {{ form_widget(formPadre) }}
+                                                                <input type="hidden" name="tipo" value="padre">
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div id="p_mensaje">Opciones</div>
+                                                                <div id="p_opciones">
+                                                                    {% if padre.segipId is not null %}
+                                                                        <div id="p_top1" style="padding:10px; border:1px solid #cccccc">
+                                                                            <p>El estudiante ya tiene un padre asignado, puede actualizar los datos que son permitidos.</p>
+                                                                            <!--button type="button" class="btn btn-success btn-block" onclick="p_correcto();">Si, son correctos</button-->
+                                                                            <hr>
+                                                                            <p>Si los datos del padre son incorrectos debe cambiarlo.</p>
+                                                                            <button type="button" class="btn btn-warning btn-block" onclick="p_cambiar();">Cambiar datos padre</button>
+                                                                        </div>
+                                                                        <div id="p_top2" style="padding:10px; border:1px solid #cccccc; display:none">
+                                                                            <p>Para buscar datos del padre, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarlo.</p>
+                                                                            <p class="sinCarnet">
+                                                                                <label><input type="checkbox" id="pb_sinCarnet" autocomplete="off"> El padre no cuenta con carnet</label>
+                                                                            </p>
+                                                                            <input type="text" name="pb_carnet" autocomplete="off" id="pb_carnet" autocomplete="off" class="form-control" placeholder="Nro de Carnet" value="">
+                                                                            <input type="text" name="pb_complemento" autocomplete="off" id="pb_complemento" autocomplete="off" class="form-control" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            <input type="text" name="pb_paterno" autocomplete="off" id="pb_paterno" autocomplete="off" class="form-control" placeholder="Paterno" value="">
+                                                                            <input type="text" name="pb_materno" autocomplete="off" id="pb_materno" autocomplete="off" class="form-control" placeholder="Materno" value="">
+                                                                            <input type="text" name="pb_nombre" autocomplete="off" id="pb_nombre" autocomplete="off" class="form-control" placeholder="Nombre" value="">
+                                                                            <input type="text" name="pb_fechaNacimiento" autocomplete="off" id="pb_fechaNacimiento" autocomplete="off" class="form-control" placeholder="Fecha de nacimiento" value="">
+                                                                            <button type="button" class="btn btn-block btn-info" onclick="p_buscarPadre();"> <i class="fa fa-search"></i> Buscar</button>
+                                                                        </div>
+                                                                    {% else %}
+                                                                        <div id="p_top2" style="padding:10px; border:1px solid #cccccc">
+                                                                            <p>Para buscar datos del padre, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarlo.</p>
+                                                                            <p class="sinCarnet">
+                                                                                <label><input type="checkbox" id="pb_sinCarnet" autocomplete="off"> El padre no cuenta con carnet</label>
+                                                                            </p>
+                                                                            <input type="text" name="pb_carnet" autocomplete="off" id="pb_carnet" autocomplete="off" class="form-control" placeholder="Nro de Carnet" value="">
+                                                                            <input type="text" name="pb_complemento" autocomplete="off" id="pb_complemento" autocomplete="off" class="form-control" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            <input type="text" name="pb_paterno" autocomplete="off" id="pb_paterno" autocomplete="off" class="form-control" placeholder="Paterno" value="">
+                                                                            <input type="text" name="pb_materno" autocomplete="off" id="pb_materno" autocomplete="off" class="form-control" placeholder="Materno" value="">
+                                                                            <input type="text" name="pb_nombre" autocomplete="off" id="pb_nombre" autocomplete="off" class="form-control" placeholder="Nombre" value="">
+                                                                            <input type="text" name="pb_fechaNacimiento" autocomplete="off" id="pb_fechaNacimiento" autocomplete="off" class="form-control" placeholder="Fecha de nacimiento" value="">
+                                                                            <button type="button" class="btn btn-block btn-info" onclick="p_buscarPadre();"> <i class="fa fa-search"></i> Buscar</button>
+                                                                        </div>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                        <hr>
+                                                        <div class="panel-footer no-bg">
+                                                            <ul class="pager wizard no-margin">
+                                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                                            </ul>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="tab-pane fade" id="tab1-12">
+                                                    <form id="formMadre" onsubmit="saveFormMadre(); return false;" method="post">
+                                                        <div id="m_divTieneMadre" style="text-align:center">
+                                                            <div class="radio">
+                                                                ¿La o el estudiante tiene madre?&nbsp;&nbsp;
+                                                                <label>
+                                                                    <input type="radio" name="m_tieneMadre" id="tieneMadre1" value="1" onclick="m_validarTieneMadre();" {% if madre.id != 'nuevo' %} checked {% endif %}>
+                                                                    Si
+                                                                </label>
+                                                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                                                <label>
+                                                                    <input type="radio" name="m_tieneMadre" id="tieneMadre0" value="0" onclick="m_validarTieneMadre();" {% if madre.id == 'nuevo' %} checked {% endif %}>
+                                                                    No
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+                                                        <div id="m_divMadre">
+                                                            <div class="col-md-8">
+                                                            
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Cédula de identidad </label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formMadre.carnet, {'id':'m_carnet','attr':{'class':'form-control readonly'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Complemento</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formMadre.complemento, {'id':'m_complemento','attr':{'class':'form-control readonly'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Expedido</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formMadre.expedido, {'id':'m_expedido','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Apellido paterno</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formMadre.paterno, {'id':'m_paterno','attr':{'class':'form-control readonly',} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Apellido materno</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formMadre.materno, {'id':'m_materno','attr':{'class':'form-control readonly'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Nombre(s)</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formMadre.nombre, {'id':'m_nombre','attr':{'class':'form-control readonly'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Fecha de Nacimiento</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formMadre.fechaNacimiento, {'id':'m_fechaNacimiento','attr':{'class':'form-control readonly'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Género</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formMadre.genero, {'id':'m_genero','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Correo electrónico</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formMadre.correo, {'id':'m_correo','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Celular</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formMadre.celular, {'id':'m_telefono','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Idioma que habla frecuentemente</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formMadre.idiomaMaterno, {'id':'m_idioma','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Ocupación laboral actual</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formMadre.ocupacion, {'id':'m_ocupacion','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row" id="m_filaOtroOcupacion">
+                                                                    <label class="col-md-6">Especificar otra ocupación</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formMadre.obs, {'id':'m_ocupacionOtro','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Mayor grado de instrucción alcanzado</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formMadre.instruccionTipo, {'id':'m_instruccion','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">¿Cuál es el parentesco?</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formMadre.apoderadoTipo, {'id':'m_parentesco','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                {{ form_widget(formMadre.idInscripcion, {'id':'m_idInscripcion'}) }}
+                                                                {{ form_widget(formMadre.id, {'id':'m_id'}) }}
+                                                                {{ form_widget(formMadre.idPersona, {'id':'m_idPersona'}) }}
+                                                                {{ form_widget(formMadre) }}
+                                                                <input type="hidden" name="tipo" value="madre">
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div id="m_mensaje">Opciones</div>
+                                                                <div id="m_opciones">
+                                                                    {% if madre.segipId is not null %}
+                                                                        <div id="m_top1" style="padding:10px; border:1px solid #cccccc">
+                                                                            <p>El estudiante ya tiene una madre asignada, puede actualizar los datos que son permitidos.</p>
+                                                                            <!--button type="button" class="btn btn-success btn-block" onclick="m_correcto();">Si, son correctos</button-->
+                                                                            <hr>
+                                                                            <p>Si los datos de la madre son incorrectos debe cambiarlo.</p>
+                                                                            <button type="button" class="btn btn-warning btn-block" onclick="m_cambiar();">Cambiar datos madre</button>
+                                                                        </div>
+                                                                        <div id="m_top2" style="padding:10px; border:1px solid #cccccc; display:none">
+                                                                            <p>Para buscar datos de la madre, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarla.</p>
+                                                                            <p class="sinCarnet">
+                                                                                <label><input type="checkbox" id="mb_sinCarnet" autocomplete="off"> La madre no cuenta con carnet</label>
+                                                                            </p>
+                                                                            <input type="text" name="mb_carnet" autocomplete="off" id="mb_carnet" autocomplete="off" class="form-control" placeholder="Nro de Carnet" value="">
+                                                                            <input type="text" name="mb_complemento" autocomplete="off" id="mb_complemento" autocomplete="off" class="form-control" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            <input type="text" name="mb_paterno" autocomplete="off" id="mb_paterno" autocomplete="off" class="form-control" placeholder="Paterno" value="">
+                                                                            <input type="text" name="mb_materno" autocomplete="off" id="mb_materno" autocomplete="off" class="form-control" placeholder="Materno" value="">
+                                                                            <input type="text" name="mb_nombre" autocomplete="off" id="mb_nombre" autocomplete="off" class="form-control" placeholder="Nombre" value="">
+                                                                            <input type="text" name="mb_fechaNacimiento" autocomplete="off" id="mb_fechaNacimiento" autocomplete="off" class="form-control" placeholder="Fecha de nacimiento" value="">
+                                                                            <button type="button" class="btn btn-block btn-info" onclick="m_buscarMadre();"> <i class="fa fa-search"></i> Buscar</button>
+                                                                        </div>
+                                                                    {% else %}
+                                                                        <div id="m_top2" style="padding:10px; border:1px solid #cccccc">
+                                                                            <p>Para buscar datos de la madre, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarla.</p>
+                                                                            <p class="sinCarnet">
+                                                                                <label><input type="checkbox" id="mb_sinCarnet" autocomplete="off"> La madre no cuenta con carnet</label>
+                                                                            </p>
+                                                                            <input type="text" name="mb_carnet" autocomplete="off" id="mb_carnet" autocomplete="off" class="form-control" placeholder="Nro de Carnet" value="">
+                                                                            <input type="text" name="mb_complemento" autocomplete="off" id="mb_complemento" autocomplete="off" class="form-control" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            <input type="text" name="mb_paterno" autocomplete="off" id="mb_paterno" autocomplete="off" class="form-control" placeholder="Paterno" value="">
+                                                                            <input type="text" name="mb_materno" autocomplete="off" id="mb_materno" autocomplete="off" class="form-control" placeholder="Materno" value="">
+                                                                            <input type="text" name="mb_nombre" autocomplete="off" id="mb_nombre" autocomplete="off" class="form-control" placeholder="Nombre" value="">
+                                                                            <input type="text" name="mb_fechaNacimiento" autocomplete="off" id="mb_fechaNacimiento" autocomplete="off" class="form-control" placeholder="Fecha de nacimiento" value="">
+                                                                            <button type="button" class="btn btn-block btn-info" onclick="m_buscarMadre();"> <i class="fa fa-search"></i> Buscar</button>
+                                                                        </div>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                        <hr>
+                                                        <div class="panel-footer no-bg">
+                                                            <ul class="pager wizard no-margin">
+                                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                                            </ul>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="tab-pane fade" id="tab1-13">
+                                                    <form id="formTutor" onsubmit="saveFormTutor(); return false;" method="post">
+                                                        <div id="t_divTieneTutor" style="text-align:center">
+                                                            <div class="radio">
+                                                                ¿La o el estudiante tiene tutor?&nbsp;&nbsp;
+                                                                <label>
+                                                                    <input type="radio" name="t_tieneTutor" id="tieneTutor1" value="1" onclick="t_validarTieneTutor();" {% if tutor.id != 'nuevo' %} checked {% endif %}>
+                                                                    Si
+                                                                </label>
+                                                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                                                <label>
+                                                                    <input type="radio" name="t_tieneTutor" id="tieneTutor0" value="0" onclick="t_validarTieneTutor();" {% if tutor.id == 'nuevo' %} checked {% endif %}>
+                                                                    No
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+                                                        <div id="t_divTutor">
+                                                            <div class="col-md-8">
+                                                            
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Cédula de identidad </label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formTutor.carnet, {'id':'t_carnet','attr':{'class':'form-control readonly'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Complemento</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formTutor.complemento, {'id':'t_complemento','attr':{'class':'form-control readonly'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Expedido</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formTutor.expedido, {'id':'t_expedido','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Apellido paterno</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formTutor.paterno, {'id':'t_paterno','attr':{'class':'form-control readonly',} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Apellido materno</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formTutor.materno, {'id':'t_materno','attr':{'class':'form-control readonly'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Nombre(s)</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formTutor.nombre, {'id':'t_nombre','attr':{'class':'form-control readonly'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Fecha de Nacimiento</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formTutor.fechaNacimiento, {'id':'t_fechaNacimiento','attr':{'class':'form-control readonly'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Género</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formTutor.genero, {'id':'t_genero','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Correo electrónico</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formTutor.correo, {'id':'t_correo','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Celular</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formTutor.celular, {'id':'t_telefono','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Idioma que habla frecuentemente</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formTutor.idiomaMaterno, {'id':'t_idioma','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Ocupación laboral actual</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formTutor.ocupacion, {'id':'t_ocupacion','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row" id="t_filaOtroOcupacion">
+                                                                    <label class="col-md-6">Especificar otra ocupación</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formTutor.obs, {'id':'t_ocupacionOtro','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">Mayor grado de instrucción alcanzado</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formTutor.instruccionTipo, {'id':'t_instruccion','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-6">¿Cuál es el parentesco?</label>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        {{ form_widget(formTutor.apoderadoTipo, {'id':'t_parentesco','attr':{'class':'form-control'} }) }}
+                                                                    </div>
+                                                                </div>
+                                                                {{ form_widget(formTutor.idInscripcion, {'id':'t_idInscripcion'}) }}
+                                                                {{ form_widget(formTutor.id, {'id':'t_id'}) }}
+                                                                {{ form_widget(formTutor.idPersona, {'id':'t_idPersona'}) }}
+                                                                {{ form_widget(formTutor) }}
+                                                                <input type="hidden" name="tipo" value="tutor">
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div id="t_mensaje">Opciones</div>
+                                                                <div id="t_opciones">
+                                                                    {% if tutor.segipId is not null %}
+                                                                        <div id="t_top1" style="padding:10px; border:1px solid #cccccc">
+                                                                            <p>El estudiante ya tiene un tutor asignado, puede actualizar los datos que son permitidos.</p>
+                                                                            <!--button type="button" class="btn btn-success btn-block" onclick="t_correcto();">Si, son correctos</button-->
+                                                                            <hr>
+                                                                            <p>Si los datos ddel tutor son incorrectos debe cambiarlo.</p>
+                                                                            <button type="button" class="btn btn-warning btn-block" onclick="t_cambiar();">Cambiar datos tutor</button>
+                                                                        </div>
+                                                                        <div id="t_top2" style="padding:10px; border:1px solid #cccccc; display:none">
+                                                                            <p>Para buscar datos del tutor, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarlo.</p>
+                                                                            <p class="sinCarnet">
+                                                                                <label><input type="checkbox" id="tb_sinCarnet" autocomplete="off"> El tutor no cuenta con carnet</label>
+                                                                            </p>
+                                                                            <input type="text" name="tb_carnet" autocomplete="off" id="tb_carnet" autocomplete="off" class="form-control" placeholder="Nro de Carnet" value="">
+                                                                            <input type="text" name="tb_complemento" autocomplete="off" id="tb_complemento" autocomplete="off" class="form-control" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            <input type="text" name="tb_paterno" autocomplete="off" id="tb_paterno" autocomplete="off" class="form-control" placeholder="Paterno" value="">
+                                                                            <input type="text" name="tb_materno" autocomplete="off" id="tb_materno" autocomplete="off" class="form-control" placeholder="Materno" value="">
+                                                                            <input type="text" name="tb_nombre" autocomplete="off" id="tb_nombre" autocomplete="off" class="form-control" placeholder="Nombre" value="">
+                                                                            <input type="text" name="tb_fechaNacimiento" autocomplete="off" id="tb_fechaNacimiento" autocomplete="off" class="form-control" placeholder="Fecha de nacimiento" value="">
+                                                                            <button type="button" class="btn btn-block btn-info" onclick="t_buscarTutor();"> <i class="fa fa-search"></i> Buscar</button>
+                                                                        </div>
+                                                                    {% else %}
+                                                                        <div id="t_top2" style="padding:10px; border:1px solid #cccccc">
+                                                                            <p>Para buscar datos del tutor, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarlo.</p>
+                                                                            <p class="sinCarnet">
+                                                                                <label><input type="checkbox" id="tb_sinCarnet" autocomplete="off"> El tutor no cuenta con carnet</label>
+                                                                            </p>
+                                                                            <input type="text" name="tb_carnet" autocomplete="off" id="tb_carnet" autocomplete="off" class="form-control" placeholder="Nro de Carnet" value="">
+                                                                            <input type="text" name="tb_complemento" autocomplete="off" id="tb_complemento" autocomplete="off" class="form-control" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            <input type="text" name="tb_paterno" autocomplete="off" id="tb_paterno" autocomplete="off" class="form-control" placeholder="Paterno" value="">
+                                                                            <input type="text" name="tb_materno" autocomplete="off" id="tb_materno" autocomplete="off" class="form-control" placeholder="Materno" value="">
+                                                                            <input type="text" name="tb_nombre" autocomplete="off" id="tb_nombre" autocomplete="off" class="form-control" placeholder="Nombre" value="">
+                                                                            <input type="text" name="tb_fechaNacimiento" autocomplete="off" id="tb_fechaNacimiento" autocomplete="off" class="form-control" placeholder="Fecha de nacimiento" value="">
+                                                                            <button type="button" class="btn btn-block btn-info" onclick="t_buscarTutor();"> <i class="fa fa-search"></i> Buscar</button>
+                                                                        </div>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                        <hr>
+                                                        <div class="panel-footer no-bg">
+                                                            <ul class="pager wizard no-margin">
+                                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                                            </ul>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div><!-- /.panel-body -->
+                                        <!--/ End tabs content -->
+                                    </div>
+                                {# </div> #}
+                            </div>
+                            <div class="tab-pane fade inner-all" id="tab5">
+                                <h4 class="page-header">VI. FINALIZAR REGISTRO RUDE</h4>
+                                <div class="ml-10">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <form id="formLugar" onsubmit="saveFormLugar(); return false;" method="post">
+                                                <div class="form-group row">
+                                                    <label class="col-md-6">Lugar de registro</label>
+                                                    <div class="col-md-6 col-sm-6">
+                                                        {{ form_widget(formLugar.lugarRegistroRude, {'attr':{'class':'form-control jupper','readonly':'readonly'} }) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-6">Fecha de registro</label>
+                                                    <div class="col-md-6 col-sm-6">
+                                                        {{ form_widget(formLugar.fechaRegistroRude, {'attr':{'class':'form-control jupper'} }) }}
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <div class="panel-footer no-bg">
+                                                    <ul class="pager wizard no-margin">
+                                                        <li class="next"><button class="btn-wizard" type="submit">Guardar y finalizar</button></li>
+                                                    </ul>
+                                                </div>
+                                                {{ form_widget(formLugar) }}
+                                            </form>
+                                        </div>
+                                        <div id="btnImprimir" class="col-md-4">
+                                            <div class="block-print">
+                                                <p>Ahora ya puede imprimir el Formulario RUDE</p>
+                                                <a class="btn btn-info" style="padding:20px" href="{{path('download_rude', {'codue': inscripcion.institucioneducativaCurso.institucioneducativa.id, 'rude': inscripcion.estudiante.codigoRude, 'gestion': inscripcion.institucioneducativaCurso.gestionTipo.id, 'eins':inscripcion.id} )}}">
+                                                    <i class="fa fa-print" style="font-size:40px" ></i><br>Imprimir
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-footer no-bg">
+                                        <ul class="pager wizard no-margin">
+                                            <li class="next"><button class="btn-wizard" data-dismiss="modal" aria-hidden="true">Cerrar</button></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!--/ End pager -->
+                        </div><!-- /.panel-body -->
+                        <!--/ End tabs content -->
+                    </div><!-- /.panel -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="{{asset('js/rudePadre.js')}}"></script>
+<script type="text/javascript" src="{{asset('js/rudeMadre.js')}}"></script>
+<script type="text/javascript" src="{{asset('js/rudeTutor.js')}}"></script>
+<script type="text/javascript">
+
+    // var paso = 1;
+    // console.log(paso);
+    
+    // $('.validarTab').on('click', function(e){
+    //  var propHref = e.currentTarget.attributes.href.nodeValue;
+    //  var pasoSeleccionado = propHref.charAt(propHref.length - 1);
+
+    //  if(pasoSeleccionado > paso){
+    //      setTimeout(function(){
+    //          $('#paso'+paso).click();
+    //          $('#paso'+paso).click();
+    //      },1000);
+    //  }
+    // });
+
+    $(function(){
+        verificarPaisNacimiento();
+        // cargarGradoDiscapacidad();
+        validarTieneDiscapacidad();
+        validarAccesoInternet();
+        validarSiTrabajo();
+        validarOtraActividad();
+        validarTipoPago();
+        validarOtroTransporte();
+        validarAbandono();
+        validarOtroAbandono();
+        $("#form_fecha").inputmask({ "alias": "dd-mm-yyyy" });
+    });
+
+    $(".js-example-basic-multiple").select2({
+        tags: "true",
+        placeholder: "Seleccione una opción",
+        allowClear: true
+    });
+
+    function cargarGradoDiscapacidad(){
+        var discapacidad = $('#form_discapacidad').val();
+        if(discapacidad != ""){
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('info_estudiante_rude_nuevo_cargar_grado_discapacidad', {'discapacidad': discapacidad}),
+                beforeSend: function () {
+                    $("#form_gradoDiscapacidad").empty();
+                    $("#form_gradoDiscapacidad").append('<option value="">Seleccionar...</option>');
+                },
+                success: function (data) {
+                    $("#form_gradoDiscapacidad").empty();
+                    $("#form_gradoDiscapacidad").append('<option value="">Seleccionar...</option>');
+
+                    $.each(data.gradosDiscapacidad, function (i, value) {
+                        $("#form_gradoDiscapacidad").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }else{
+            $("#form_gradoDiscapacidad").empty();
+            $("#form_gradoDiscapacidad").append('<option value="">Seleccionar...</option>');
+        }
+    }
+
+    $('#form_discapacidad').on('change', function(){
+        cargarGradoDiscapacidad();
+    });
+
+
+
+    // APLICANDO BUSCADOR A LOS SELECTS
+    $('#form_idiomaNines').chosen({width: "100%"});
+    $('#form_idioma1').chosen({width: "100%"});
+    $('#form_idioma2').chosen({width: "100%"});
+    $('#form_idioma3').chosen({width: "100%"});
+
+    $('#form_nacionOriginariaTipo').chosen({width: "100%"});
+    $('#form_acudioCentro').chosen({width: "100%"});
+    $('#form_viviendaOcupaTipo').chosen({width: "100%"});
+    $('#form_accesoInternet').chosen({width: "100%"});
+    $('#form_frecuenciaUsoInternetTipo').chosen({width: "100%"});
+
+    $('#form_mesesTrabajados').chosen({width: "100%"});
+    $('#form_actividades').chosen({width: "100%"});
+    $('#form_turnosTrabajo').chosen({width: "100%"});
+    $('#form_frecuenciaTrabajoTipo').chosen({width: "100%"});
+    $('#form_recibioTipoPago').chosen({width: "100%"});
+    $('#form_medioTransporte').chosen({width: "100%"});
+    $('#form_tiempoTransporte').chosen({width: "100%"});
+    $('#form_abandono').chosen({width: "100%"});
+
+    $(".readonly").keydown(function(e){
+        e.preventDefault();
+    });
+    $(".readonly").focus(function(e){
+        $(this).blur();
+    });
+
+    // VALIDACION DE DISCAPACIDAD
+    function validarTieneDiscapacidad(){
+        if($('#form_tieneDiscapacidad_1').is(':checked')){
+            $('#form_carnetIbc').val('');
+            $('#form_carnetIbc').removeAttr('required');
+            $('#form_discapacidad').val('');
+            $('#form_discapacidad').removeAttr('required');
+            $('#form_gradoDiscapacidad').val('');
+            $('#form_gradoDiscapacidad').removeAttr('required');
+
+            $('#fieldsetDiscapacidad').attr('disabled','disabled');            
+        }else{
+            $('#form_carnetIbc').attr('required','required');
+            $('#form_discapacidad').attr('required','required');
+            $('#form_gradoDiscapacidad').attr('required','required');
+
+            $('#fieldsetDiscapacidad').removeAttr('disabled');
+        }
+    }
+
+    $('.radioDiscapacidad').on('change', function(){
+        validarTieneDiscapacidad();
+    })
+    //////////////
+    
+
+    // ACCESO A INTERNET
+    function validarAccesoInternet(){
+        var accesos = $('#form_accesoInternet').val();
+        if($.inArray('4', accesos) !== -1){
+            $('#form_accesoInternet').val([5]);
+            $('#fieldsetInternet').attr('disabled','disabled');
+            $('#form_accesoInternet').trigger("chosen:updated");
+            $('#form_frecuenciaUsoInternetTipo').prop('disabled', true).trigger("chosen:updated");
+        }else{
+            $('#fieldsetInternet').removeAttr('disabled');
+            $('#form_frecuenciaUsoInternetTipo').prop('disabled', false).trigger("chosen:updated");
+        }
+    }
+
+    $('#form_accesoInternet').on('change',function(e){
+        validarAccesoInternet();
+    });
+    ////////////
+
+    // VALIDAR SI TRABAJO
+    function validarSiTrabajo(){
+        if(!$('#form_trabajoGestionPasada_0').is(':checked')){
+            $('#form_mesesTrabajados').val([]);
+            $('#form_actividades').val([]);
+            $('#form_actividadOtro').val('');
+            $('#form_turnosTrabajo').val([]);
+            $('#form_frecuenciaTrabajoTipo').val('');
+            $('#form_respuestaPago_1').attr('checked','checked');
+            $('#form_recibioTipoPago').val([]);
+
+            $('#fieldsetTrabajo').attr('disabled','disabled');
+            $('#form_mesesTrabajados').prop('disabled', true).trigger("chosen:updated");
+            $('#form_actividades').prop('disabled', true).trigger("chosen:updated");
+            $('#form_turnosTrabajo').prop('disabled', true).trigger("chosen:updated");
+            $('#form_frecuenciaTrabajoTipo').prop('disabled', true).trigger("chosen:updated");
+            $('#form_recibioTipoPago').prop('disabled', true).trigger("chosen:updated");
+        }else{
+            $('#fieldsetTrabajo').removeAttr('disabled');
+            $('#form_mesesTrabajados').prop('disabled', false).trigger("chosen:updated");
+            $('#form_actividades').prop('disabled', false).trigger("chosen:updated");
+            $('#form_turnosTrabajo').prop('disabled', false).trigger("chosen:updated");
+            $('#form_frecuenciaTrabajoTipo').prop('disabled', false).trigger("chosen:updated");
+            $('#form_recibioTipoPago').prop('disabled', false).trigger("chosen:updated");
+        }
+        validarTipoPago();
+    }
+
+    $('.radioTrabajo').on('change', function(){
+        validarSiTrabajo();
+    })
+
+    // VALIDAR SI TIENE OTRA ACTIVIDAD
+    function validarOtraActividad(){
+        var accesos = $('#form_actividades').val();
+        if($.inArray('99', accesos) !== -1){
+            $('#form_actividadOtro').css('display','block');
+            $('#form_actividadOtro').attr('required','required');
+        }else{
+            $('#form_actividadOtro').val('');
+            $('#form_actividadOtro').css('display','none');
+            $('#form_actividadOtro').removeAttr('required');
+        }
+    }
+    $('#form_actividades').on('change', function(){
+        validarOtraActividad();
+    })
+
+    // VALIDAR SI RECIBIO ALGUN PAGO
+    function validarTipoPago(){
+        if(!$('#form_respuestaPago_0').is(':checked')){
+            $('#form_recibioTipoPago').val([]);
+            $('#fieldsetTipoPago').attr('disabled','disabled');
+            $('#form_recibioTipoPago').prop('disabled', true).trigger("chosen:updated");
+        }else{
+            $('#fieldsetTipoPago').removeAttr('disabled');
+            $('#form_recibioTipoPago').prop('disabled', false).trigger("chosen:updated");
+        }
+    }
+
+    $('.radioTipoPago').on('change', function(){
+        validarTipoPago();
+    })
+
+    // VALIDAR OTRO TIPO DE TRANSPORTE
+    function validarOtroTransporte(){
+        var accesos = $('#form_medioTransporte').val();
+        if($.inArray('99', accesos) !== -1){
+            $('#form_medioTransporteOtro').css('display','block');
+            $('#form_medioTransporteOtro').attr('required','required');
+        }else{
+            $('#form_medioTransporteOtro').val('');
+            $('#form_medioTransporteOtro').css('display','none');
+            $('#form_medioTransporteOtro').removeAttr('required');
+        }
+    }
+    $('#form_medioTransporte').on('change', function(){
+        validarOtroTransporte();
+    })
+
+    // VALIDAR ABANDONO
+    function validarAbandono(){
+        if(!$('#form_tieneAbandono_0').is(':checked')){
+            $('#form_abandono').val([]);
+            $('#form_abandonoOtro').val('');
+            $('#form_abandonoOtro').attr('disabled', 'disabled');
+            $('#form_abandono').prop('disabled', true).trigger("chosen:updated");
+        }else{
+            $('#form_abandonoOtro').removeAttr('disabled');
+            $('#form_abandono').prop('disabled', false).trigger("chosen:updated");
+        }
+    }
+
+    $('.radioAbandono').on('change', function(){
+        validarAbandono();
+    })
+
+    // VALIDAR OTRO TIPO DE ABANDONO
+    function validarOtroAbandono(){
+        var accesos = $('#form_abandono').val();
+        if($.inArray('99', accesos) !== -1){
+            $('#form_abandonoOtro').css('display','block');
+            $('#form_abandonoOtro').attr('required','required');
+        }else{
+            $('#form_abandonoOtro').val('');
+            $('#form_abandonoOtro').css('display','none');
+            $('#form_abandonoOtro').removeAttr('required');
+        }
+    }
+    $('#form_abandono').on('change', function(){
+        validarOtroAbandono();
+    })
+
+    /* Funciones para actualizar lugar de nacimiento */
+    function dep(pais) {
+        if(pais == 1){
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('info_estudiante_rude_departamentos_nac', {'pais': parseInt(pais)}),
+                beforeSend: function () {
+                    $("#form_departamento").empty();
+                    $("#form_provincia").empty();
+                    $("#form_localidadNac").val('');
+                    $("#form_departamento").append('<option value="">Seleccionar...</option>');
+                    $("#form_provincia").append('<option value="">Seleccionar...</option>');
+                },
+                success: function (data) {
+                    $("#form_departamento").empty();
+                    $("#form_provincia").empty();
+                    $("#form_localidadNac").val('');
+                    $("#form_departamento").append('<option value="">Seleccionar...</option>');
+                    $("#form_provincia").append('<option value="">Seleccionar...</option>');
+
+                    $.each(data.departamento, function (i, value) {
+                        $("#form_departamento").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+            $("#form_departamento").attr('required','required');
+            $("#form_provincia").attr('required','required');
+            $("#form_localidad").attr('required','required');
+            $('#bloqueNacimiento').css('display','block');
+        }else{
+            $("#form_localidad").val('');
+            $("#form_departamento").removeAttr('required');
+            $("#form_provincia").removeAttr('required');
+            $("#form_localidad").removeAttr('required');
+            $('#bloqueNacimiento').css('display','none');
+        }
+    }
+
+
+    function prov(d) {
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('info_estudiante_rude_provincias_nac', {'departamento': parseInt(d)}),
+            beforeSend: function () {
+                $("#form_provincia").empty();
+                $("#form_localidadNac").val('');
+                $("#form_provincia").append('<option value="">Seleccionar...</option>');
+            },
+            success: function (data) {
+                $("#form_provincia").empty();
+                $("#form_localidadNac").val('');
+                $("#form_provincia").append('<option value="">Seleccionar...</option>');
+                $.each(data.provincia, function (i, value) {
+                    $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                });
+            }
+        });
+    }
+
+    function verificarPaisNacimiento(){
+        var pais = $('#form_pais').val();
+        if(pais == 1){
+            $("#form_departamento").attr('required','required');
+            $("#form_provincia").attr('required','required');
+            $("#form_localidadNac").attr('required','required');
+            $('#bloqueNacimiento').css('display','block');
+        }else{
+            $("#form_localidadNac").val('');
+            $("#form_departamento").removeAttr('required');
+            $("#form_provincia").removeAttr('required');
+            $("#form_localidadNac").removeAttr('required');
+            $('#bloqueNacimiento').css('display','none');
+        }
+    }
+
+    function validarCIEstudiante(){
+        var paterno = $('#form_paterno').val();
+        var materno = $('#form_materno').val();
+        var nombre = $('#form_nombre').val();
+
+        var carnet = $('#form_carnet').val();
+        var complemento = $('#form_complemento').val();
+        var fechaNacimiento = $('#form_fechaNacimiento').val();
+
+        var validarci = $('#verificarCarnet').val();
+
+        if(validarci == 1 && carnet.length > 0){
+            $.ajax({
+                url: Routing.generate('info_estudiante_rude_buscar_persona', {'paterno':paterno, 'materno':materno, 'nombre':nombre, 'carnet':carnet, 'complemento':complemento, 'fechaNacimiento':fechaNacimiento}),
+                type: 'post',
+                beforeSend: function(){
+                    console.log('enviando')
+                },
+                success: function(data){
+                    if(data.status == 200){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                },
+                error: function(){
+                    return 0;
+                }
+            });
+        }
+
+        return 1;
+    }
+
+    // FORM ESTUDIANTE
+    function saveFormEstudiante(){
+        var data = $('#formEstudiante').serialize();
+
+        // var validar = validarCIEstudiante();
+
+        // if(validar == 1){
+            $.ajax({
+                url: Routing.generate('info_estudiante_rude_nuevo_save_formEstudiante'),
+                type: 'post',
+                data: data,
+                beforeSend: function(){
+                    console.log('enviando')
+                },
+                success: function(data){
+                    $('#paso3').click();
+                },
+                error: function(){
+                    console.log('error');
+                }
+            });
+        // }else{
+        //  alert('Los datos del ci no son validos');
+        //  return false;
+        // }
+    }
+
+    // DATOS DIRECCION
+    var peticion1;
+    function listarProvincias(idDpto) {
+        if (peticion1 && peticion1.readyState != 4) {
+            peticion1.abort();
+        }
+
+        peticion1 = $.ajax({
+            type: 'get',
+            url: Routing.generate('info_estudiante_rude_listarprovincias', {'dpto': idDpto}),
+            beforeSend: function () {
+                $('#form_provinciaDir').empty();
+                $('#form_municipioLugarTipo').empty();
+                $("#form_provinciaDir").append('<option value="">Seleccionar...</option>');
+                $("#form_municipioLugarTipo").append('<option value="">Seleccionar...</option>');
+            },
+            success: function (data) {
+                $('#form_provinciaDir').empty();
+                $('#form_municipioLugarTipo').empty();
+                $('#form_seccionivDescLocalidad').empty();
+                $("#form_provinciaDir").append('<option value="">Seleccionar...</option>');
+                $("#form_municipioLugarTipo").append('<option value="">Seleccionar...</option>');
+                $("#form_seccionivDescLocalidad").append('<option value="">Seleccionar...</option>');
+                $.each(data.listaprovincias, function (i, value) {
+                    $("#form_provinciaDir").append('<option value="' + i + '">' + value + '</option>');
+                });
+            }
+        });
+    }
+    
+    var peticion2;
+    function listarMunicipios(idProv) {
+        if (peticion2 && peticion2.readyState != 4) {
+            peticion2.abort();
+        }
+
+        peticion2 = $.ajax({
+            type: 'get',
+            url: Routing.generate('info_estudiante_rude_listarmunicipios', {'prov': idProv}),
+            beforeSend: function () {
+                $('#form_municipioLugarTipo').empty();
+                $("#form_municipioLugarTipo").append('<option value="">Seleccionar...</option>');
+            },
+            success: function (data) {
+                $('#form_municipioLugarTipo').empty();
+                $('#form_seccionivDescLocalidad').empty();
+                $("#form_municipioLugarTipo").append('<option value="">Seleccionar...</option>');
+                $("#form_seccionivDescLocalidad").append('<option value="">Seleccionar...</option>');
+                $.each(data.listamunicipios, function (i, value) {
+                    $("#form_municipioLugarTipo").append('<option value="' + i + '">' + value + '</option>');
+                });
+            }
+        });
+    }
+
+    function saveFormDireccion(){
+        var data = $('#formDireccion').serialize();
+        $.ajax({
+            url: Routing.generate('info_estudiante_rude_nuevo_save_formDireccion'),
+            type: 'post',
+            data: data,
+            beforeSend: function(){
+                console.log('enviando')
+            },
+            success: function(data){
+                // $('#paso3').attr('data-toggle','tab');
+                $('#paso4').click();
+            },
+            error: function(){
+
+            }
+        });
+    }
+
+    // HABITUALMENTE CON QUIEN VIVEPersona.orm.yml
+
+    function saveFormConQuienVive(){
+        var data = $('#formConQuienVive').serialize();
+        $.ajax({
+            url: Routing.generate('info_estudiante_rude_nuevo_save_formConQuienVive'),
+            type: 'post',
+            data: data,
+            beforeSend: function(){
+                console.log('enviando')
+            },
+            success: function(data){
+                // $('#paso3').attr('data-toggle','tab');
+                // $('#paso4').click();
+            },
+            error: function(){
+
+            }
+        });
+    }
+    $('#form_viveHabitualmenteTipo').on('change', function(){
+        saveFormConQuienVive();
+    });
+
+    // DATOS SOCIOECONOMICOS
+    $('#form_idioma1').on('change',function(){
+        var idioma1 = $('#form_idioma1').val();
+        var idioma2 = $('#form_idioma2').val();
+        var idioma3 = $('#form_idioma3').val();
+
+        if(idioma1 != '' && (idioma2 != '' || idioma3 != '')){
+            if(idioma1 == idioma2 || idioma1 == idioma3){
+                alert('El idioma ya fue seleccionado !\nDebe seleccionar otro idioma.')
+                $(this).val('');
+                $(this).chosen({width: "100%"});
+            }
+        }
+    });
+    $('#form_idioma2').on('change',function(){
+        var idioma1 = $('#form_idioma1').val();
+        var idioma2 = $('#form_idioma2').val();
+        var idioma3 = $('#form_idioma3').val();
+
+        if(idioma2 != '' && (idioma1 != '' || idioma3 != '')){
+            if(idioma2 == idioma1 || idioma2 == idioma3){
+                alert('El idioma ya fue seleccionado !\nDebe seleccionar otro idioma.')
+                $(this).val('');
+                $('#form_idioma2').trigger("chosen:updated");
+            }
+        }
+    });
+    $('#form_idioma3').on('change',function(){
+        var idioma1 = $('#form_idioma1').val();
+        var idioma2 = $('#form_idioma2').val();
+        var idioma3 = $('#form_idioma3').val();
+
+        if(idioma3 != '' && (idioma1 != '' || idioma2 != '')){
+            if(idioma3 == idioma1 || idioma3 == idioma2){
+                alert('El idioma ya fue seleccionado !\nDebe seleccionar otro idioma.')
+                $(this).val('');
+                $('#form_idioma3').trigger("chosen:updated");
+            }
+        }
+    });
+
+    // // Bloqueo de discapacidad
+    // $('#form_seccionvEstudianteEsdiscapacidadSensorialComunicacion').change(function(){
+    //     bloquearDiscapacidad();
+    // });
+    // $('#form_seccionvEstudianteEsdiscapacidadMotriz').change(function(){
+    //     bloquearDiscapacidad();
+    // });
+    // $('#form_seccionvEstudianteEsdiscapacidadMental').change(function(){
+    //     bloquearDiscapacidad();
+    // });
+    // $('#form_seccionvEstudianteDiscapacidadOtro').on('change', function(){
+    //     bloquearDiscapacidad();
+    // });
+
+    // function bloquearDiscapacidad(){
+    //     var blocked = true;
+    //     if($('#form_seccionvEstudianteEsdiscapacidadSensorialComunicacion').val() == 1){ blocked = false; }
+    //     if($('#form_seccionvEstudianteEsdiscapacidadMotriz').val() == 1){ blocked = false; }
+    //     if($('#form_seccionvEstudianteEsdiscapacidadMental').val() == 1){ blocked = false; }
+    //     if($('#form_seccionvEstudianteDiscapacidadOtro').val() != ""){ blocked = false; }
+
+    //     if(blocked == true){
+    //         $('#form_seccionvDiscapacidadTipo').removeAttr('required');
+    //         $('#form_seccionvDiscapacidadTipo').val('');
+    //         $('#form_seccionvDiscapacidadTipo').attr('disabled','disabled');
+    //     }else{
+    //         $('#form_seccionvDiscapacidadTipo').removeAttr('disabled');
+    //         $('#form_seccionvDiscapacidadTipo').attr('required','required');
+    //     }
+        
+    // }
+
+    // bloquearDiscapacidad();
+
+    // Trabajo
+    $('#form_seccionvActividadTipo').on('change', function(){
+        if(this.value == 9){
+            $('#form_seccionvEstudianteCuantosdiastrabajo').val(0);
+            $('#form_seccionvEstudianteCuantosdiastrabajo').attr('readonly','readonly');
+            $('#form_seccionvEstudianteEspagoTrabajorealizado').val(0);
+        }else{
+            $('#form_seccionvEstudianteCuantosdiastrabajo').val(1);
+            $('#form_seccionvEstudianteCuantosdiastrabajo').removeAttr('readonly');
+            $('#form_seccionvEstudianteEspagoTrabajorealizado').val(1);
+        }
+    });
+
+    $('#form_seccionvEstudianteCuantosdiastrabajo').on('keyup', function(){
+        var actividad = $('#form_seccionvActividadTipo').val();
+        if(actividad == 9){
+            this.value = 0;
+        }
+    });
+
+    $('#form_seccionvEstudianteEspagoTrabajorealizado').on('change', function(){
+        var actividad = $('#form_seccionvActividadTipo').val();
+        if(actividad == 9){
+            this.value = 0;
+        }
+    });
+
+    function saveFormSocioeconomicos(){
+        var data = $('#formSocioeconomicos').serialize();
+        $.ajax({
+            url: Routing.generate('info_estudiante_rude_nuevo_save_formSocioeconomicos'),
+            type: 'post',
+            data: data,
+            beforeSend: function(){
+                console.log('enviando');
+            },
+            success: function(data){
+                // $('#paso4').parent('li').removeClass('disabled');
+                // $('#paso4').attr('data-toggle','tab');
+                $('#paso5').click();
+                $('#tabPadre').click();
+
+                // $('#tabPadre').click();
+            },
+            error: function(){
+
+            }
+        });
+    }
+
+    function next(){
+        var $active = $('.nav-tabs li.active');
+        $active.next().removeClass('disabled');
+        nextTab($active);
+    }
+
+    function prev(){
+        var $active = $('.nav-tabs li.active');
+        $active.next().removeClass('disabled');
+        prevTab($active);
+    }
+
+    function nextTab(elem) {
+        $(elem).next().find('a[data-toggle="tab"]').click();
+    }
+    function prevTab(elem) {
+        $(elem).prev().find('a[data-toggle="tab"]').click();
+    }
+
+    function saveFormLugar(){
+        var data = $('#formLugar').serialize();
+        $.ajax({
+            url: Routing.generate('info_estudiante_rude_nuevo_save_formLugar'),
+            type: 'post',
+            data: data,
+            beforeSend: function(){
+                console.log('enviando')
+            },
+            success: function(data){
+                // $('#modal').modal('hide');
+                // paso = 6;
+                // if(paso >= 6){
+                // $('#btnImprimir').css('display','block');
+                // }
+            },
+            error: function(){
+
+            }
+        });
+    }
+
+</script>

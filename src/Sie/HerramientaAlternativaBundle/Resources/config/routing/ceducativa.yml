@@ -53,7 +53,15 @@ herramienta_ceducativa_distrito_listaceas:
 
 herramienta_ceducativa_seleccionar_cea:
     path:     /seleccionarcea/
-    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:seleccionarcea}       
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:seleccionarcea} 
+
+herramienta_ceducativa_registro_jurisdiccion_subcea:
+    path:     /registro/jurisdiccion/subcea
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:registraJurisdiccionSubCea}    
+
+herramienta_ceducativa_registro_jurisdiccion_subcea_save:
+    path:     /save/jurisdiccion/subcea
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:saveJurisdiccionSubCea} 
     
 herramienta_ceducativa_buscar_cea:
     path:     /buscarcea/
@@ -73,6 +81,14 @@ herramientalt_ceducativa_crear_periodo:
 herramientalt_ceducativa_crear_periodo_cea:
     path:     /crearPeriodoCea/
     defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:crearPeriodoCea}
+
+herramientalt_ceducativa_crear_sucursal:
+    path:     /crearSucursal/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:crearSucursal}
+
+herramientalt_ceducativa_crear_sucursal_cea:
+    path:     /crearSucursalCea/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:crearSucursalCea}
 
 sie_alt_ges_sub_sem_ceas_pendinte:
     path:     /ceaspendientes/

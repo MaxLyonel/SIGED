@@ -1,0 +1,90 @@
+info_estudiante_rude_nuevo_index:
+    path:     /
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRudeNuevo:index" }
+    options:
+         expose: true
+
+info_estudiante_rude_nuevo_departamentos_nac:
+    path:     /departamentosNac/{pais}
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRudeNuevo:departamentosNac" }
+    options:
+         expose: true
+
+info_estudiante_rude_nuevo_provincias_nac:
+    path:     /provinciasNac/{departamento}
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRudeNuevo:provinciasNac" }
+    options:
+         expose: true
+
+# TAB 1 -  datos
+info_estudiante_rude_nuevo_save_form1:
+    path:     /saveForm1
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRudeNuevo:saveForm1" }
+    options:
+         expose: true
+
+# TAB 2 -  DATOS ESTUDIANTE
+info_estudiante_rude_nuevo_save_formEstudiante:
+    path:     /saveFormEstudiante
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRudeNuevo:saveFormEstudiante" }
+    options:
+         expose: true
+
+# TAB 4 -  DIRECCION
+info_estudiante_rude_nuevo_listarprovincias:
+    path:     /listarprovincias/{dpto}
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRudeNuevo:listarprovincias" }
+    options:
+         expose: true
+
+info_estudiante_rude_nuevo_listarmunicipios:
+    path:     /listarmunicipios/{prov}
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRudeNuevo:listarmunicipios" }
+    options:
+         expose: true
+
+#DISCAPACDIDAD
+info_estudiante_rude_nuevo_cargar_grado_discapacidad:
+    path:     /cargarGradoDiscapacidad
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRudeNuevo:cargarGradoDiscapacidad" }
+    options:
+         expose: true
+
+info_estudiante_rude_nuevo_save_formDireccion:
+    path:     /saveFormDireccion
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRudeNuevo:saveFormDireccion" }
+    options:
+         expose: true
+
+# SOCIOECONOMICO
+info_estudiante_rude_nuevo_save_formSocioeconomicos:
+    path:     /saveFormSocioeconomicos
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRudeNuevo:saveFormSocioeconomicos" }
+    options:
+         expose: true
+
+# BUSCAR PERSONA SERVICIO SEGIP
+info_estudiante_rude_nuevo_buscar_persona:
+    path:     /buscarPersona
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRudeNuevo:buscarPersona" }
+    options:
+         expose: true
+
+info_estudiante_rude_nuevo_save_formConQuienVive:
+    path:     /saveFormConQuienVive
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRudeNuevo:saveFormConQuienVive" }
+    options:
+         expose: true
+
+info_estudiante_rude_nuevo_save_formApoderado:
+    path:     /saveFormApoderado
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRudeNuevo:saveFormApoderado" }
+    options:
+         expose: true
+
+# TAB 7
+info_estudiante_rude_nuevo_save_formLugar:
+    path:     /saveFormLugar
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRudeNuevo:saveFormLugar" }
+    options:
+         expose: true

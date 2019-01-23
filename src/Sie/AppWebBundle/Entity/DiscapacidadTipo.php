@@ -19,7 +19,14 @@ class DiscapacidadTipo
      */
     private $origendiscapacidad;
 
+    /**
+     * @var boolean
+     */
+    private $esVigente;
 
+    public function __toString(){
+        return $this->origendiscapacidad;
+    }
     /**
      * Get id
      *
@@ -39,7 +46,7 @@ class DiscapacidadTipo
     public function setOrigendiscapacidad($origendiscapacidad)
     {
         $this->origendiscapacidad = $origendiscapacidad;
-
+    
         return $this;
     }
 
@@ -51,5 +58,28 @@ class DiscapacidadTipo
     public function getOrigendiscapacidad()
     {
         return $this->origendiscapacidad;
+    }
+
+    /**
+     * Set esVigente
+     *
+     * @param boolean $esVigente
+     * @return DiscapacidadTipo
+     */
+    public function setEsVigente($esVigente)
+    {
+        $this->esVigente = $esVigente;
+    
+        return $this;
+    }
+
+    /**
+     * Get esVigente
+     *
+     * @return boolean 
+     */
+    public function getEsVigente()
+    {
+        return $this->esVigente;
     }
 }

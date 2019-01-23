@@ -67,7 +67,7 @@
                             <ul class="dropdown-menu dropdown-menu-right animated flipInX" role="menu">
                                 {% if asignaturas|length > 0 %}
                                     {% for a in asignaturas %}                                    
-                                        <li><button onclick="newArea({{a.smpId}},'{{infoUe}}')" class="btn-link">{{a.codigo}} - {{a.modulo}}</button></li>
+                                        <li><button onclick="newArea({{a.smpId}},'{{infoUe}}')" class="btn-link">{% if a.esvigente == true %}<span class="text-primary"> - {{a.modulo}} (nuevo)</span>{% else %}{{a.codigo}} - {{a.modulo}}{% endif %}</button></li>
                                     {% endfor %}
                                 {% else %}
                                     <li style="margin:5px;"><span class="text-warning">No hay asignaturas disponibles</span></li>
@@ -92,7 +92,7 @@
                         </thead>
                         <tbody>
                             {% for co in cursoOferta %}
-                                <tr>
+                                <tr {% if co.esvigente == true %}class="text-strong"{% endif %}>
                                     <td class="text-center border-right">{{loop.index}}</td>
                                     <td>{{co.codigo}}</td>
                                     <td>

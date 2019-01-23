@@ -1,0 +1,111 @@
+{# SOLDADO MARINERO - UNIDAD MILITAR #}
+{% if diversa == 2 %}
+	<div class="row">
+	    <div class="col-md-6 col-sm-6">
+	        <p>FUERZA MILITAR</p>
+	    </div>
+	    <div class="col-md-6 col-sm-6">
+	        <div class="row form-group">
+	            <div class="col-md-12 col-sm-12">
+	                <select name="fuerzaMilitar" id="fuerzaMilitar" class="form-control" onchange="cargarUnidadesMilitares(this.value)">
+	                	{% for fm in fuerzasMilitares %}
+	                		<option value="{{fm.id}}" {% if fuerzaMilitar == fm.id %} selected {% endif %} >{{fm.fuerzaMilitar}}</option>
+	                	{% endfor %}
+	                </select>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="col-md-6 col-sm-6">
+	        <p>UNIDAD MILITAR</p>
+	    </div>
+	    <div class="col-md-6 col-sm-6">
+	        <div class="row form-group">
+	            <div class="col-md-12 col-sm-12">
+	                <select name="unidadMilitar" id="unidadMilitar" class="form-control">
+	                	<option value="">Seleccionar</option>
+	                	{% for um in unidadesMilitares %}
+	                		<option value="{{um.id}}" {% if unidadMilitar == um.id %} selected {% endif %} >{{um.unidadMilitar}}</option>
+	                	{% endfor %}
+	                </select>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+{% endif %}
+
+{# PERSONA EN CONTEXTO DE ENCIERRO - RECINTOS PENITENCIARIOS #}
+{% if diversa == 3 %}
+	<div class="row">
+	    <div class="col-md-6 col-sm-6">
+	        <p>LUGAR DE RECLUSIÓN</p>
+	    </div>
+	    <div class="col-md-6 col-sm-6">
+	        <div class="row form-group">
+	            <div class="col-md-12 col-sm-12">
+	                <select name="lugarReclusion" id="lugarReclusion" class="form-control" onchange="cargarRecintosPenitenciarios(this.value)">
+	                	{% for lr in lugaresReclusion %}
+	                		<option value="{{lr.id}}" {% if lugarReclusion == lr.id %} selected {% endif %} >{{lr.lugarReclusion}}</option>
+	                	{% endfor %}
+	                </select>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="col-md-6 col-sm-6">
+	        <p>RECINTO PENITENCIARIO</p>
+	    </div>
+	    <div class="col-md-6 col-sm-6">
+	        <div class="row form-group">
+	            <div class="col-md-12 col-sm-12">
+	                <select name="recintoPenitenciario" id="recintoPenitenciario" class="form-control">
+	                	<option value="">Seleccionar</option>
+	                	{% for rp in recintosPenitenciarios %}
+	                		<option value="{{rp.id}}" {% if recintoPenitenciario == rp.id %} selected {% endif %} >{{rp.recintoPenitenciario}}</option>
+	                	{% endfor %}
+	                </select>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+{% endif %}
+
+<script type="text/javascript">
+	function cargarUnidadesMilitares(fuerzaMilitar){
+		$.ajax({
+			url: Routing.generate('estudiante_rudeal_cargar_unidades_militares'),
+			type: 'post',
+			data: {fuerzaMilitar: fuerzaMilitar},
+			beforeSend: function () {
+                $('#unidadMilitar').empty();
+                $("#unidadMilitar").append('<option value="">Seleccionar...</option>');
+            },
+            success: function (data) {
+                $('#unidadMilitar').empty();
+                $.each(data.listaUnidades, function (i, value) {
+                    $("#unidadMilitar").append('<option value="' + i + '">' + value + '</option>');
+                });
+            }
+		});
+	}
+
+	function cargarRecintosPenitenciarios(lugarReclusion){
+		$.ajax({
+			url: Routing.generate('estudiante_rudeal_cargar_recintos_penitenciarios'),
+			type: 'post',
+			data: {lugarReclusion: lugarReclusion},
+			beforeSend: function () {
+                $('#recintoPenitenciario').empty();
+                $("#recintoPenitenciario").append('<option value="">Seleccionar...</option>');
+            },
+            success: function (data) {
+                $('#recintoPenitenciario').empty();
+                $.each(data.listaRecintos, function (i, value) {
+                    $("#recintoPenitenciario").append('<option value="' + i + '">' + value + '</option>');
+                });
+            }
+		});
+	}
+</script>

@@ -24,4 +24,19 @@ Sie\AppWebBundle\Entity\NacionOriginariaTipo:
             length: 255
             fixed: false
             comment: ''
+        esVigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
     lifecycleCallbacks: {  }

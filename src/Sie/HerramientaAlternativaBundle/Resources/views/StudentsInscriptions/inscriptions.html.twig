@@ -15,9 +15,10 @@
                     </div>
                 </div>
                 {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'id':'idInscriptionForm', 'class':'form-inline'} } )}}
-                <input type="hidden" id="form_dateStudent" name="form[dateStudent]" class="form-control" value='{{objStudent.fechaNacimiento | date('Y-m-d')}}'>
+                <input type="hidden" id="form_dateStudent" name="form[dateStudent]" class="form-control" value='{{objStudent.fechaNacimiento | date('m-d-Y')}}'>
                 <div class='col-md-3'>
-                    {% if ((app.session.get('roluser') == 8) or (app.session.get('roluser') == 7) or (app.session.get('roluser') == 10)) %}
+
+                    {% if (((app.session.get('roluser') == 8) or (app.session.get('roluser') == 7) or (app.session.get('roluser') == 10)) and showCaseSpecialOption) %}
                         <div>
                     {% else %}
                         <div style="visibility: hidden;">
@@ -26,7 +27,7 @@
                         </div>
                 </div>
                 
-                <div class='col-md-3'>
+                <div class='col-md-12'>
                     <span id="answer1" style="display: none;">
                         <div class="form-group">
                             {{form_row(form.inscriptionExcepacional, {'attr': {'class':'form-control input-sm mb-15"'} })}}
@@ -39,6 +40,7 @@
                 </div>    
                     
                 <div class='col-md-3'>
+                </br>
                   {{form_widget(form.inscription)}}  
                   {{form_end(form)}}
                 </div>        
