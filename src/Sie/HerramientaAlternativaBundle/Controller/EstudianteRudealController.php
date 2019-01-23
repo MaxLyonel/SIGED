@@ -88,7 +88,7 @@ class EstudianteRudealController extends Controller {
             if(count($rudeAnterior) == 1){
 
                 $rudeAnterior = $rudeAnterior[0];
-
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude');")->execute();
                 $rude = clone $rudeAnterior;
                 $rude->setEstudianteInscripcion($inscripcion);
                 $em->persist($rude);
