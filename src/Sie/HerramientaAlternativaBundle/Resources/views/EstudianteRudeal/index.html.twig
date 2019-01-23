@@ -104,7 +104,7 @@
                                     <a id="paso1" href="#tab1" data-toggle="tab" aria-expanded="true">
                                         <i class="fa fa-home"></i>
                                         <div>
-                                            <span class="">DATOS</span>
+                                            <span class="text-strong">DATOS</span>
                                             <span><small>ESTUDIANTE/PARTICIPANTE</small></span>
                                         </div>
                                     </a>
@@ -373,7 +373,7 @@
                                     <fieldset id="fieldsetDiscapacidad">
                                         <div class="row">
                                             <div class="col-md-6 col-sm-6">
-                                                <p>Nº de Discapacidad</p>
+                                                <p>Nº Carnet de Discapacidad</p>
                                             </div>
                                             <div class="col-md-6 col-sm-6">
                                                 <div class="row form-group">
@@ -486,6 +486,7 @@
                                         <label class="col-md-6">5.2.1. ¿La o el estudiante/participante tiene alguna ocupación?</label>
                                         <div class="col-md-6 col-sm-6">
                                             {{ form_widget(formSocioeconomico.tieneOcupacionTrabajo, {'attr':{'class':'jupper radioOcupacion'} }) }}
+                                            <p>En caso afirmativo, marque en que sector o rubro: (puede seleccionar varias opciones)</p>
                                             {{ form_widget(formSocioeconomico.actividades, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
                                             {{ form_widget(formSocioeconomico.actividadOtro, {'attr':{'class':'form-control jupper'} }) }}
                                         </div>
@@ -514,7 +515,7 @@
                                         <div class="col-md-12 col-sm-12">5.4 ACCESO A MEDIOS DE COMUNICACION Y TRANSPORTE</div>
                                     </div>
                                     <div class="row form-group">
-                                        <label class="col-md-6">5.4.1 La o el estudiante/participante tiene acceso a:</label>
+                                        <label class="col-md-6">5.4.1 La o el estudiante/participante tiene acceso a: (Puede seleccionar varias opciones)</label>
                                         <div class="col-md-6 col-sm-6">
                                             {{ form_widget(formSocioeconomico.medioComunicacion, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
                                         </div>
