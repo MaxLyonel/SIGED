@@ -71,7 +71,7 @@ class AreasController extends Controller {
         $gestion = $this->session->get('ie_gestion');
 
         $aInfoUeducativa = unserialize($infoUe);
-dump($aInfoUeducativa);
+
         $idCurso = $aInfoUeducativa['ueducativaInfoId']['iecId'];
         
         $em = $this->getDoctrine()->getManager();
@@ -263,10 +263,11 @@ dump($aInfoUeducativa);
         $iecId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
         $setId = $aInfoUeducativa['ueducativaInfoId']['setId'];
         $satCodigo = $aInfoUeducativa['ueducativaInfoId']['satCodigo'];
-        //$iecId = '';
+        
         $nivel = $aInfoUeducativa['ueducativaInfoId']['nivelId'];
         $grado = $aInfoUeducativa['ueducativaInfoId']['gradoId'];
-        //dump($iecId);dump($nivel);dump($grado);die;
+        $turnoId = $aInfoUeducativa['ueducativaInfoId']['turnoId'];
+        
         $institucion = $this->session->get('ie_id');
         $gestion = $this->session->get('ie_gestion');
         $sucursal = $this->session->get('ie_suc_id');
