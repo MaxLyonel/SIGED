@@ -328,6 +328,8 @@ class EstudianteRudealController extends Controller {
         $recintoPenitenciario = null;
         $recintosPenitenciarios = [];
 
+        // dump($rudeEducacionDiversa);die;
+
         if($rudeEducacionDiversa->getEducacionDiversaTipo()->getId() == 2){
             if($rudeEducacionDiversa->getUnidadMilitarTipo()){
                 $fuerzaMilitar = $rudeEducacionDiversa->getUnidadMilitarTipo()->getFuerzaMilitarTipo()->getId();
@@ -339,7 +341,7 @@ class EstudianteRudealController extends Controller {
             if($rudeEducacionDiversa->getRecintoPenitenciarioTipo()){
                 $lugarReclusion = $rudeEducacionDiversa->getRecintoPenitenciarioTipo()->getLugarReclusionTipo()->getId();
                 $recintoPenitenciario = $rudeEducacionDiversa->getRecintoPenitenciarioTipo()->getId();
-                $recintosPenitenciarios = $em->getRepository('SieAppWebBundle:RecintoPenitenciarioTipo')->findBy(array('recintoPenitenciarioTipo'=>$rudeEducacionDiversa->getRecintoPenitenciarioTipo()->getLugarReclusionTipo()->getId()));
+                $recintosPenitenciarios = $em->getRepository('SieAppWebBundle:RecintoPenitenciarioTipo')->findBy(array('lugarReclusionTipo'=>$rudeEducacionDiversa->getRecintoPenitenciarioTipo()->getLugarReclusionTipo()->getId()));
             }
         }
 
