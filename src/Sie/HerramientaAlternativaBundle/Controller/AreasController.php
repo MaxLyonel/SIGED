@@ -43,7 +43,7 @@ class AreasController extends Controller {
         
         // dump($arrInfoUe);die;
         // check if the course is PRIMARIA
-        if( $this->get('funciones')->validatePrimaria($this->session->get('ie_id'),$this->session->get('currentyear'),$infoUe)
+        if( $this->get('funciones')->validatePrimaria($this->session->get('ie_id'),$this->session->get('ie_gestion'),$infoUe)
           ){
             $primaria = true;
             //set the All data about curricula on the course
