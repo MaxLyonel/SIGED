@@ -266,20 +266,20 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieOlimpiadasBundle");
                 break;
             default :
-                /*$sysname = 'REGULAR';
+                $sysname = 'REGULAR';
                 $sysporlet = 'blue';
                 $sysbutton = true;
                 $layout = 'layoutRegular.html.twig';
                 $this->session->set('pathSystem', "SieRegularBundle");
                 $this->session->set('sistemaid', 1);
-                break;*/
+                break;
 
-                $sysname = 'TRAMITES';
+                /*$sysname = 'TRAMITES';
                 $sysporlet = 'green';
                 $sysbutton = false;
                 $layout = 'layoutCertification.html.twig';
                 $this->session->set('pathSystem', "SieTramitesBundle");
-                break;
+                break;*/
                 /*$sysname = 'PERMANENTE';
                 $sysporlet = 'green';
                 $sysbutton = false;
