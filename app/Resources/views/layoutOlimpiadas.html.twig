@@ -279,7 +279,7 @@
                     </li>
 
                     {#{% if app.session.get('roluser') in [35,8,7,10,9,2] %}#}
-                    {% if app.session.get('roluser') in [35] %}
+                    {#{% if app.session.get('roluser') in [35] %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-globe"></i></span>
@@ -323,10 +323,10 @@
                                 <li><a href="{{ path('olimestadistica_registrados_area_categoria')}}">Registrados por área y categoría</a></li>
                             </ul>
                         </li>
-                    {% endif %}
+                    {% endif %}#}
                     <!-- Start navigation - dashboard -->
 
-
+                    {{ render(controller('SieAppWebBundle:GestionMenu:generamenu',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  '13' ,'userId':app.session.get('userId')  })) }}
                 </ul><!-- /.sidebar-menu -->
                 <!--/ End left navigation - menu -->
 

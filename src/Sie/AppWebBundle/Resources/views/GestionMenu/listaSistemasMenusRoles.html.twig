@@ -33,30 +33,15 @@
                             </div>
                             {{form_end(form)}}
                         </div>
-
-
                         <div id="listam">
 
                         </div>
-
-
-
                     </div>
-
                 </div>
-
             </div>
-
-
-
-
-
         </div>
     </div>
-
 {% endblock %}
-
-
 {% block javascripts %}
     {{parent()}}
     <script>
@@ -68,13 +53,12 @@
             var formData = {
                 id_sistema:id_sistema
             };
-
             $.ajax({
                 type: 'post',
                 url: "{{ path('gestionmenu_lista_sistema_menu_rol') }}",
                 data:formData,
                 beforeSend: function () {
-                    $("#listam").empty();
+                    $("#listam").html('Cargando...');
                 },
                 success: function (data) {
                     $("#listam").empty();
@@ -88,6 +72,54 @@
             });
         }
 
+        function elimina_asignacion_menu_sistema_rol (idmsr, id_sistema, id_rol, tipo_menu) {
+            swal({
+                title: "¿Está Segura/o de eliminar el Menú Asignado?",
+                //text: "El Sistema seleccionado será eliminado Permanentemente",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+                buttons: ["Cancelar", "Continuar"],
+            })
+                .then(function(willDelete)  {
+                    if (willDelete) {
+                        var imagen = '{{ asset("img/loading96.gif") }}';
+                        var formData = {idmsr:idmsr, id_sistema:id_sistema, id_rol:id_rol, tipo_menu:tipo_menu==null?0:1};
+                        $.ajax({
+                            type: 'post',
+                            url: "{{ path('gestionmenu_menu_sistema_rol_delete') }}",
+                            data:formData,
+                            beforeSend: function () {
+                                swal({
+                                    title: "Eliminando...",
+                                    text: "Espere un momento por favor",
+                                    icon: imagen,
+                                    buttons: false
+                                });
+                            },
+                            success: function (data) {
+                                //console.log(data);
+                                if (data=='no'){
+                                    /*swal("Se eliminó correctamente la asignación");
+                                    location.reload();*/
+                                    swal("Notificación", "El menú no puede ser eliminado mientras tenga submenú.", "warning");
+                                }else {
+                                    $("#listam").empty();
+                                    $("#listam").append(data);
+                                }
+                            },
+
+                            complete: function () {
+                                swal.stopLoading();
+                                swal.close();
+                                $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+                                    $(".alert").slideUp(1000);
+                                });
+                            }
+                        });
+                    }
+                });
+        }
         var cargatablas = function (identif){
             // Setup - add a text input to each footer cell
             $('#listaCeas tfoot th').each( function () {

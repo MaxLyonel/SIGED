@@ -849,28 +849,62 @@ class GestionMenuController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_sistema');")->execute();
-        $menusistema = new MenuSistema();
+        $query = $em->getConnection()->prepare("SELECT menu_tipo_id from menu_tipo WHERE id=$idmenu LIMIT 1");
+        $query->execute();
+        $menupadre = $query->fetch();
+        if (!empty($menupadre) && $menupadre['menu_tipo_id']==null) {
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_sistema');")->execute();
+            $menusistema = new MenuSistema();
 
-        $menutipo   = $em->getRepository('SieAppWebBundle:MenuTipo')->find($idmenu);
-        $sistema = $em->getRepository('SieAppWebBundle:SistemaTipo')->find($idsistema);
+            $menutipo   = $em->getRepository('SieAppWebBundle:MenuTipo')->find($idmenu);
+            $sistema = $em->getRepository('SieAppWebBundle:SistemaTipo')->find($idsistema);
 
+            $menusistema->setMenuTipo($menutipo);
+            $menusistema->setSistemaTipo($sistema);
+            $menusistema->setDetalleMenu($menutipo->getDetalleMenu());
+            $menusistema->setIcono($menutipo->getIcono());
 
-        $menusistema->setMenuTipo($menutipo);
-        $menusistema->setSistemaTipo($sistema);
-        $menusistema->setDetalleMenu($menutipo->getDetalleMenu());
-        $menusistema->setIcono($menutipo->getIcono());
+            $em->persist($menusistema);
+            $em->flush();
 
-        $em->persist($menusistema);
-        $em->flush();
-
-        $query = $em->getConnection()->prepare("SELECT menu_sistema.id, menu_tipo.detalle_menu,menu_tipo.icono,menu_sistema.fecha_inicio,menu_sistema.fecha_fin 
+            $query = $em->getConnection()->prepare("SELECT menu_sistema.id, menu_tipo.detalle_menu,menu_tipo.icono,menu_sistema.fecha_inicio,menu_sistema.fecha_fin 
           from menu_sistema  INNER JOIN menu_tipo on menu_sistema.menu_tipo_id = menu_tipo.\"id\"   
          WHERE sistema_tipo_id=$idsistema ORDER BY 1");
-        $query->execute();
-        $menusasignados = $query->fetchAll();
+            $query->execute();
+            $menusasignados = $query->fetchAll();
 
-        return $this->render('SieAppWebBundle:GestionMenu:listaMenusAsignados.html.twig',array( 'menusasignados' => $menusasignados,'id_sistema'=>$idsistema));
+            return $this->render('SieAppWebBundle:GestionMenu:listaMenusAsignados.html.twig',array( 'menusasignados' => $menusasignados,'id_sistema'=>$idsistema));
+        }elseif (!empty($menupadre) && $menupadre['menu_tipo_id']!=null) {
+            $menupadreid=$menupadre['menu_tipo_id'];
+            $query = $em->getConnection()->prepare("SELECT count(id) as canti from menu_sistema WHERE sistema_tipo_id=$idsistema and menu_tipo_id=$menupadreid");
+            $query->execute();
+            $existepadre = $query->fetch();
+            if (!empty($existepadre) && $existepadre['canti']>0) {
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_sistema');")->execute();
+                $menusistema = new MenuSistema();
+
+                $menutipo   = $em->getRepository('SieAppWebBundle:MenuTipo')->find($idmenu);
+                $sistema = $em->getRepository('SieAppWebBundle:SistemaTipo')->find($idsistema);
+
+                $menusistema->setMenuTipo($menutipo);
+                $menusistema->setSistemaTipo($sistema);
+                $menusistema->setDetalleMenu($menutipo->getDetalleMenu());
+                $menusistema->setIcono($menutipo->getIcono());
+
+                $em->persist($menusistema);
+                $em->flush();
+
+                $query = $em->getConnection()->prepare("SELECT menu_sistema.id, menu_tipo.detalle_menu,menu_tipo.icono,menu_sistema.fecha_inicio,menu_sistema.fecha_fin 
+          from menu_sistema  INNER JOIN menu_tipo on menu_sistema.menu_tipo_id = menu_tipo.\"id\"   
+         WHERE sistema_tipo_id=$idsistema ORDER BY 1");
+                $query->execute();
+                $menusasignados = $query->fetchAll();
+
+                return $this->render('SieAppWebBundle:GestionMenu:listaMenusAsignados.html.twig',array( 'menusasignados' => $menusasignados,'id_sistema'=>$idsistema));
+            }else{
+                return new Response('no');
+            }
+        }
     }
 
     public  function editaMenuSistemaAction(Request $request){
@@ -1041,8 +1075,9 @@ class GestionMenuController extends Controller {
     public  function cargasistemamenuAction(Request $request ){
         $id_sistema = $request->get('id_sistema');
         $em = $this->getDoctrine()->getManager();
-        $query = $em->getConnection()->prepare("SELECT * FROM menu_sistema ms
-                                                WHERE ms.sistema_tipo_id=$id_sistema");
+        $query = $em->getConnection()->prepare("SELECT ms.id, mt.detalle_menu FROM menu_sistema ms 
+                                    INNER JOIN menu_tipo mt on ms.menu_tipo_id=mt.id 
+                                    WHERE ms.sistema_tipo_id=$id_sistema and mt.menu_tipo_id is NOT NULL");
         $query->execute();
         $sistemamenu = $query->fetchAll();
 
@@ -1158,7 +1193,7 @@ ORDER BY 2,3,4");
                                                 INNER JOIN menu_tipo mt ON ms.menu_tipo_id=mt.\"id\"
                                                 INNER JOIN sistema_tipo st ON st.\"id\"=ms.sistema_tipo_id
                                                 INNER JOIN sistema_rol sr ON msr.sistema_rol_id = sr.\"id\"
-                                                INNER JOIN permiso per ON msr.\"id\" = per.menu_sistema_rol_id
+                                                LEFT JOIN permiso per ON msr.\"id\" = per.menu_sistema_rol_id
                                                 INNER JOIN rol_tipo rt ON sr.rol_tipo_id=rt.\"id\"
                                                 WHERE msr.menu_sistema_id = $id_menu
                                                 ORDER BY 4");
@@ -1169,7 +1204,6 @@ ORDER BY 2,3,4");
     }
 
     public function createMenuSistemaRolAction(Request $request){
-
         $form = $request->get('form');
         $obs            = $form['observaciones'];
 
@@ -1209,43 +1243,108 @@ ORDER BY 2,3,4");
 
         $em = $this->getDoctrine()->getManager();
 
-        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_sistema_rol');")->execute();
-        $menutipoid = $em->getRepository('SieAppWebBundle:MenuSistema')->find($id_menu);
-        $rol        =   $em->getRepository('SieAppWebBundle:SistemaRol')->find($id_rol);
+        $query = $em->getConnection()->prepare("SELECT menu_tipo_id from menu_sistema WHERE id=$id_menu AND sistema_tipo_id=$id_sistema");
+        $query->execute();
+        $menusistema = $query->fetch();
+        $menutipoid = $menusistema['menu_tipo_id'];
 
-        $menusistemarol =new MenuSistemaRol();
+        $query = $em->getConnection()->prepare("SELECT menu_tipo_id from menu_tipo WHERE id=$menutipoid");
+        $query->execute();
+        $menupadre = $query->fetch();
+        $menupadreid = $menupadre['menu_tipo_id'];
 
-        $menusistemarol->setMenuSistema($menutipoid);
+        $query = $em->getConnection()->prepare("SELECT id from menu_sistema WHERE menu_tipo_id=$menupadreid AND sistema_tipo_id=$id_sistema");
+        $query->execute();
+        $menusistema = $query->fetch();
+        $menusistemaid = $menusistema['id'];
 
-        $menusistemarol->setSistemaRol($rol); //dump($menusistemarol);die;
-        $menusistemarol->setFechaInicio(new \DateTime($fechaInicio));
-        $menusistemarol->setFechaFin(new \DateTime($fechaFinal));
+        $query = $em->getConnection()->prepare("SELECT count(id) as pcant from menu_sistema_rol WHERE menu_sistema_id=$menusistemaid AND sistema_rol_id=$id_rol");
+        $query->execute();
+        $existepadrerol = $query->fetch();
+        if ($existepadrerol['pcant']==0) {
+            //Menu padre
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_sistema_rol');")->execute();
+            $menutipoid = $em->getRepository('SieAppWebBundle:MenuSistema')->find($menusistemaid);
+            $rol        =   $em->getRepository('SieAppWebBundle:SistemaRol')->find($id_rol);
 
-        $menusistemarol->setEsactivo($esactivo);
+            $menusistemarol =new MenuSistemaRol();
+            $menusistemarol->setMenuSistema($menutipoid);
+            $menusistemarol->setSistemaRol($rol);
+            $menusistemarol->setFechaInicio(new \DateTime($fechaInicio));
+            $menusistemarol->setFechaFin(new \DateTime($fechaFinal));
+            $menusistemarol->setEsactivo($esactivo);
 
-        $em->persist($menusistemarol);
-        $em->flush();
+            $em->persist($menusistemarol);
+            $em->flush();
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('permiso');")->execute();
+            $permiso = new Permiso();
+            $permiso->setMenuSistemaRolId($menusistemarol->getId());
+            $permiso->setCreate($crear);
+            $permiso->setRead($leer);
+            $permiso->setUpdate($actualizar);
+            $permiso->setDelete($eliminar);
+            $permiso->setObs($obs);
+            $em->persist($permiso);
+            $em->flush();
 
-        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('permiso');")->execute();
-        $permiso = new Permiso();
+            //Menu hijo
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_sistema_rol');")->execute();
+            $menutipoid = $em->getRepository('SieAppWebBundle:MenuSistema')->find($id_menu);
+            $rol        =   $em->getRepository('SieAppWebBundle:SistemaRol')->find($id_rol);
 
-        $permiso->setMenuSistemaRol($menusistemarol);
-        $permiso->setCreate($crear);
-        $permiso->setRead($leer);
-        $permiso->setUpdate($actualizar);
-        $permiso->setDelete($eliminar);
-        $permiso->setObs($obs);
-        $em->persist($permiso);
-        $em->flush();
+            $menusistemarol =new MenuSistemaRol();
+            $menusistemarol->setMenuSistema($menutipoid);
+            $menusistemarol->setSistemaRol($rol);
+            $menusistemarol->setFechaInicio(new \DateTime($fechaInicio));
+            $menusistemarol->setFechaFin(new \DateTime($fechaFinal));
+            $menusistemarol->setEsactivo($esactivo);
 
+            $em->persist($menusistemarol);
+            $em->flush();
+
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('permiso');")->execute();
+            $permiso = new Permiso();
+            $permiso->setMenuSistemaRolId($menusistemarol->getId());
+            $permiso->setCreate($crear);
+            $permiso->setRead($leer);
+            $permiso->setUpdate($actualizar);
+            $permiso->setDelete($eliminar);
+            $permiso->setObs($obs);
+            $em->persist($permiso);
+            $em->flush();
+        } else {
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_sistema_rol');")->execute();
+            $menutipoid = $em->getRepository('SieAppWebBundle:MenuSistema')->find($id_menu);
+            $rol        =   $em->getRepository('SieAppWebBundle:SistemaRol')->find($id_rol);
+
+            $menusistemarol =new MenuSistemaRol();
+            $menusistemarol->setMenuSistema($menutipoid);
+            $menusistemarol->setSistemaRol($rol);
+            $menusistemarol->setFechaInicio(new \DateTime($fechaInicio));
+            $menusistemarol->setFechaFin(new \DateTime($fechaFinal));
+            $menusistemarol->setEsactivo($esactivo);
+            $em->persist($menusistemarol);
+            $em->flush();
+
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('permiso');")->execute();
+            $permiso = new Permiso();
+            $permiso->setMenuSistemaRolId($menusistemarol->getId());
+            $permiso->setCreate($crear);
+            $permiso->setRead($leer);
+            $permiso->setUpdate($actualizar);
+            $permiso->setDelete($eliminar);
+            $permiso->setObs($obs);
+            $em->persist($permiso);
+            $em->flush();
+        }
         $query = $em->getConnection()->prepare("SELECT msr.id,st.sistema,mt.detalle_menu,rt.rol,per._create,per._delete,per._read,per._update,msr.esactivo
                                                 FROM menu_sistema_rol msr
-                                                INNER JOIN menu_sistema ms ON msr.menu_sistema_id=ms.\"id\"
-                                                INNER JOIN menu_tipo mt ON ms.menu_tipo_id=mt.\"id\"
-                                                INNER JOIN sistema_tipo st ON st.\"id\"=ms.sistema_tipo_id
-                                                INNER JOIN sistema_rol sr ON msr.sistema_rol_id = sr.\"id\"
-                                                INNER JOIN permiso per ON msr.\"id\" = per.menu_sistema_rol_id
-                                                INNER JOIN rol_tipo rt ON sr.rol_tipo_id=rt.\"id\"
+                                                INNER JOIN menu_sistema ms ON msr.menu_sistema_id=ms.id
+                                                INNER JOIN menu_tipo mt ON ms.menu_tipo_id=mt.id
+                                                INNER JOIN sistema_tipo st ON st.id=ms.sistema_tipo_id
+                                                INNER JOIN sistema_rol sr ON msr.sistema_rol_id = sr.id
+                                                LEFT JOIN permiso per ON msr.id = per.menu_sistema_rol_id
+                                                INNER JOIN rol_tipo rt ON sr.rol_tipo_id=rt.id
                                                 WHERE msr.menu_sistema_id = $id_menu
                                                 ORDER BY 4");
         $query->execute();
@@ -1442,46 +1541,76 @@ ORDER BY 2,3,4");
 
     }
 
-
     public function eliminamenusistemarolAction(Request $request){
-
         $idmsr = $request->get('idmsr');
         $id_sistema = $request->get('id_sistema');
+        $id_rol = $request->get('id_rol');
+        $tipo_menu = $request->get('tipo_menu');
         $em = $this->getDoctrine()->getManager();
-        $menusistemarol = $em->getRepository('SieAppWebBundle:MenuSistemaRol')->find($idmsr);
-        $id_menusistemarol=$menusistemarol->getId();
 
-        $query = $em->getConnection()->prepare("SELECT ms.id
+       /* $query = $em->getConnection()->prepare("SELECT ms.id
                                                 FROM menu_sistema_rol msr 
-                                                INNER JOIN menu_sistema ms ON msr.menu_sistema_id=ms.\"id\"
-                                                WHERE msr.id = $id_menusistemarol");
+                                                INNER JOIN menu_sistema ms ON msr.menu_sistema_id=ms.id
+                                                WHERE msr.id = $idmsr");
         $query->execute();
         $menu = $query->fetch();
-        $id_menu=$menu['id'];
+        $menusistemaid=$menu['id'];*/
+        //Se sabe que es padre, entonces buscamos los submenus
+        if ($tipo_menu==0) {
+            $query = $em->getConnection()->prepare("SELECT menu_sistema.menu_tipo_id
+            FROM menu_sistema WHERE menu_sistema.id IN (SELECT menu_sistema_rol.menu_sistema_id 
+            FROM menu_sistema_rol WHERE menu_sistema_rol.id=$idmsr) AND menu_sistema.sistema_tipo_id=$id_sistema");
+            $query->execute();
+            $menutipo = $query->fetch();
+            $menutipoid = $menutipo['menu_tipo_id'];
 
-        $permiso = $em->getRepository('SieAppWebBundle:Permiso')->findOneBy(array('menuSistemaRolId'=> $id_menusistemarol));
-        $em->remove($permiso);
-        $em->flush();
-        $em->remove($menusistemarol);
-        $em->flush();
-        $mensaje = 'La asignación fue eliminada con éxito';
+            $query = $em->getConnection()->prepare("SELECT COUNT (msr.id) AS hcant FROM menu_sistema_rol  msr 
+                                                INNER JOIN sistema_rol sr ON msr.sistema_rol_id = sr.id
+                                                INNER JOIN menu_sistema ms ON msr.menu_sistema_id=ms.id
+                                                INNER JOIN menu_tipo mt ON ms.menu_tipo_id=mt.id
+                                                INNER JOIN sistema_tipo sti ON sti.id = ms.sistema_tipo_id
+                                                INNER JOIN rol_tipo rtip ON rtip.id =sr.rol_tipo_id   
+                                                WHERE sti.id = $id_sistema AND mt.menu_tipo_id = $menutipoid AND rtip.id = $id_rol");
+            $query->execute();
+            $resultado = $query->fetch();
+            if ($resultado['hcant']>0) {
+                return new Response('no');
+            } else {
+                $permiso = $em->getRepository('SieAppWebBundle:Permiso')->findOneBy(array('menuSistemaRolId'=> $idmsr));
+                $menusistemarol = $em->getRepository('SieAppWebBundle:MenuSistemaRol')->find($idmsr);
+                $em->remove($permiso);
+                $em->flush();
+                $em->remove($menusistemarol);
+                $em->flush();
+                $mensaje = 'La asignación fue eliminada con éxito';
+            }
+        } else {
+            $permiso = $em->getRepository('SieAppWebBundle:Permiso')->findOneBy(array('menuSistemaRolId'=> $idmsr));
+            $menusistemarol = $em->getRepository('SieAppWebBundle:MenuSistemaRol')->find($idmsr);
+            $em->remove($permiso);
+            $em->flush();
+            $em->remove($menusistemarol);
+            $em->flush();
+            $mensaje = 'La asignación fue eliminada con éxito';
+        }
+
         $request->getSession()
             ->getFlashBag()
             ->add('exito', $mensaje);
 
-        $query = $em->getConnection()->prepare("SELECT msr.id,st.sistema,mt.detalle_menu,rt.rol,per._create,per._delete,per._read,per._update,msr.esactivo
+        $query = $em->getConnection()->prepare("SELECT msr.id,st.sistema,mt.detalle_menu,mt.icono,mt.ruta,mt.menu_tipo_id,rt.rol,rt.id as rol_id,msr.esactivo
                                                 FROM menu_sistema_rol msr
                                                 INNER JOIN menu_sistema ms ON msr.menu_sistema_id=ms.id
                                                 INNER JOIN menu_tipo mt ON ms.menu_tipo_id=mt.id
                                                 INNER JOIN sistema_tipo st ON st.id=ms.sistema_tipo_id
                                                 INNER JOIN sistema_rol sr ON msr.sistema_rol_id = sr.id
-                                                INNER JOIN permiso per ON msr.id = per.menu_sistema_rol_id
                                                 INNER JOIN rol_tipo rt ON sr.rol_tipo_id=rt.id
-                                                WHERE msr.menu_sistema_id = $id_menu
+                                                WHERE ms.sistema_tipo_id = $id_sistema
                                                 ORDER BY 4");
         $query->execute();
         $sistemamenupermiso = $query->fetchAll();
-        return $this->render('SieAppWebBundle:GestionMenu:listaAsignaMenuSistemaRol.html.twig', array('sistemamenupermiso'=>$sistemamenupermiso,'id_sistema'=>$id_sistema));
+        return $this->render('SieAppWebBundle:GestionMenu:generaListaSistemamenuRol.html.twig', array('listaSistemamenurol'=>$sistemamenupermiso,'id_sistema'=>$id_sistema));
+        /*return $this->render('SieAppWebBundle:GestionMenu:listaAsignaMenuSistemaRol.html.twig', array('sistemamenupermiso'=>$sistemamenupermiso,'id_sistema'=>$id_sistema));*/
     }
 
 
@@ -1499,14 +1628,27 @@ ORDER BY 2,3,4");
 
 
     public function generamenuAction($rol_tipo_id, $idsistema, $userId){
-        //dump($rol_tipo_id);dump($idsistema);dump($userId);die;
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("select * from get_objeto_menu_usuario($userId::INT,'$idsistema'::VARCHAR,$rol_tipo_id::INT) as v");
         $query->execute();
         $menu_arboles = $query->fetchAll();
-        return $this->render(
+        /**
+         * Adecuacion para dibijar los menús en diferentes plantillas
+         */
+
+        if ($idsistema!=1 ){
+            return $this->render(
+                'SieAppWebBundle:GestionMenu:list_menu.html.twig', array('menu_arboles' => $menu_arboles, 'rol_tipo_id' => $rol_tipo_id, 'sistema' => $idsistema)
+            );
+        }else{
+            return $this->render(
+                'SieAppWebBundle:GestionMenu:list_menu_siged.html.twig', array('menu_arboles' => $menu_arboles, 'rol_tipo_id' => $rol_tipo_id, 'sistema' => $idsistema)
+            );
+        }
+
+        /*return $this->render(
             'SieAppWebBundle:GestionMenu:list_menu.html.twig', array('menu_arboles' => $menu_arboles, 'rol_tipo_id' => $rol_tipo_id, 'sistema' => $idsistema)
-        );
+        );*/
     }
 
 
@@ -1656,10 +1798,9 @@ ORDER BY 2,3,4");
     }
 
     public function generalistasistemamenurolAction(Request $request){
-        
         $idsistema = $request->get('id_sistema');
         $em = $this->getDoctrine()->getManager();
-        $query = $em->getConnection()->prepare("SELECT msr.id,sti.sistema, ms.detalle_menu,mt.icono,mt.ruta,rtip.rol,mt.menu_nivel_tipo_id,msr.esactivo
+        $query = $em->getConnection()->prepare("SELECT msr.id,sti.sistema,ms.detalle_menu,mt.menu_tipo_id,mt.icono,mt.ruta,rtip.id as rol_id,rtip.rol,mt.menu_nivel_tipo_id,msr.esactivo
                                                 FROM menu_sistema_rol  msr 
                                                 INNER JOIN sistema_rol sr ON msr.sistema_rol_id = sr.id
                                                 INNER JOIN menu_sistema ms ON msr.menu_sistema_id=ms.id

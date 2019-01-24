@@ -230,8 +230,6 @@
                 $.each(data.sistemamenu, function (i, value) {
                     $("#form_menu").append('<option value="' + i + '">' + value + '</option>');
                 });
-
-
                 $("#listamenuroles").append(data.sistemamenuroltabla);
 
             }
@@ -308,7 +306,7 @@
             url: "{{ path('gestionmenu_createasignacionmenurol') }}",
             data: formData,
             beforeSend: function () {
-                $("#listamenuroles").empty();
+                $("#listamenuroles").html('Cargando...');
             },
             success: function (data) {
                 $("#form_menu").val(0);

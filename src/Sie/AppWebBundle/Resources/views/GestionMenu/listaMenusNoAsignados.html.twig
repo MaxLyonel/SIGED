@@ -89,7 +89,11 @@
                 // $("#menusasignados").empty();
             },
             success: function (data) {
-                cargarMenusAsignados();
+                if (data == 'no') {
+                    swal("Notificación", "Previamente debe asignar el menú padre", "warning");
+                } else {
+                    cargarMenusAsignados();
+                }
             }
         });
     }

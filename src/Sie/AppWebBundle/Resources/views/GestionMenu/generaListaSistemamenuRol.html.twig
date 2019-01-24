@@ -1,50 +1,46 @@
-
-<div class="table-responsive col-md-12" id="lista_asignados">
-        <table class="table table-bordered table-striped table-default" id="listaCeas" >
-            <thead>
-            <tr >
-                <th class="text-center border-right" style="min-width: 10px">No.</th>
-                <th>Menú</th>
-                <th>Icono</th>
-                <th>Ruta</th>
-                <th>Rol</th>
-                <th>Estado</th>
-
-            </tr>
-            </thead>
-            <tfoot>
+<div class="table-responsive col-md-12" id="">
+    <table class="table table-bordered table-striped table-default" id="listaCeas" >
+        <thead>
+        <tr >
+            <th class="text-center border-right" style="min-width: 10px">No.</th>
+            <th>Menú</th>
+            <th>Icono</th>
+            <th>Ruta</th>
+            <th>Rol</th>
+            <th>Estado</th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <th class="text-center border-right">No.</th>
+            <th>Menú</th>
+            <th>Icono</th>
+            <th>Ruta</th>
+            <th>Rol</th>
+            <th>Opciones</th>
+        </tr>
+        </tfoot>
+        <tbody>
+        {% for reg in listaSistemamenurol %}
             <tr>
-                <th class="text-center border-right">No.</th>
-                <th>Menú</th>
-                <th>Icono</th>
-                <th>Ruta</th>
-                <th>Rol</th>
-                <th>Opciones</th>
+                <td class="text-center border-right">{{ loop.index }}</td>
+                <td>{{ reg.detalle_menu }}</td>
+                <td>{{ reg.icono }}</td>
+                <td>{{ reg.ruta }}</td>
+                <td>{{ reg.rol }}</td>
+                <td>
+                {% if reg.esactivo == 1 %}
+                    {#<a class="btn btn-xs btn-success" href="cambiaestadosistemamenurol, 'idSistema': sistema.id" onclick="return confirm('¿Está seguro/a de Eliminar el Sistema?')"   title="Eliminar"><i class="glyphicon glyphicon-trash"></i></a>#}
+                    <button onclick="cambiaestadosistemamenurol({{ reg.id }}, {{ id_sistema }})"  class="btn btn-xs btn-success">Activo</button>
+                {% else %}
+                    <button  onclick="cambiaestadosistemamenurol({{ reg.id }}, {{ id_sistema }})"  class="btn btn-xs btn-danger">Inactivo</button>
+                {% endif %}
+                    <button class="btn btn-danger btn-xs" onclick="elimina_asignacion_menu_sistema_rol({{reg.id }},{{id_sistema}}, {{ reg.rol_id }},{{reg.menu_tipo_id }})"  title="Eliminar"><i class="glyphicon glyphicon-trash"></i></button>
+                </td>
             </tr>
-            </tfoot>
-            <tbody>
-            {% for reg in listaSistemamenurol %}
-                <tr>
-                    <td class="text-center border-right">{{ loop.index }}</td>
-                    <td>{{ reg.detalle_menu }}</td>
-                    <td>{{ reg.icono }}</td>
-                    <td>{{ reg.ruta }}</td>
-                    <td>{{ reg.rol }}</td>
-                    <td>
-                    {% if reg.esactivo == 1 %}
-                        {#<a class="btn btn-xs btn-success" href="cambiaestadosistemamenurol, 'idSistema': sistema.id" onclick="return confirm('¿Está seguro/a de Eliminar el Sistema?')"   title="Eliminar"><i class="glyphicon glyphicon-trash"></i></a>#}
-                        <button onclick="cambiaestadosistemamenurol({{ reg.id }}, {{ id_sistema }})"  class="btn btn-xs btn-success">Activo</button>
-                    {% else %}
-                        <button  onclick="cambiaestadosistemamenurol({{ reg.id }}, {{ id_sistema }})"  class="btn btn-xs btn-danger">Inactivo</button>
-                    {% endif %}
-                        <button class="btn btn-danger btn-xs" onclick="elimina_asignacion_menu_sistema_rol({{reg.id }},{{id_sistema}})"  title="Eliminar"><i class="glyphicon glyphicon-trash"></i></button>
-                    </td>
-
-
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
 
 <script>
@@ -70,57 +66,7 @@
     }
 
 
-    function elimina_asignacion_menu_sistema_rol (idmsr,id_sistema) {
 
-        swal({
-            title: "¿Está Segura/o de eliminar el Menú Asignado?",
-            //text: "El Sistema seleccionado será eliminado Permanentemente",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-            buttons: ["Cancelar", "Continuar"],
-        })
-            .then(function(willDelete)  {
-                if (willDelete) {
-                    var imagen = '{{ asset("img/loading96.gif") }}';
-                    var formData = {idmsr:idmsr,id_sistema:id_sistema};
-                    $.ajax({
-                        type: 'post',
-                        url: "{{ path('gestionmenu_menu_sistema_rol_delete') }}",
-                        data:formData,
-                        beforeSend: function () {
-                            swal({
-                                title: "Eliminando...",
-                                text: "Espere un momento por favor",
-                                icon: imagen,
-                                buttons: false
-                            });
-                        },
-                        success: function (data) {
-                            //console.log(data);
-                            /*if (data==1){
-                                swal("Se eliminó correctamente la asignación");
-                                location.reload();
-                            }else {swal("No se elimino");}*/
-                            $("#lista_asignados").empty();
-                            $("#lista_asignados").append(data);
-                        },
-
-                        complete: function () {
-                            swal.stopLoading();
-                            swal.close();
-                            $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
-                                $(".alert").slideUp(1000);
-                            });
-                        }
-                    });
-
-
-                }
-            });
-
-
-    }
 
 
     var cargatablas = function (identif){

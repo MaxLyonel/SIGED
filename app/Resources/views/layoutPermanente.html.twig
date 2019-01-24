@@ -374,7 +374,7 @@
                             <li><a href="{{path('notascualitativas')}}">Notas Cualitativas</a></li>
                         </ul>
                     </li>#}
-                    {% if (app.session.get('roluser') == 31) %} {#SUPER USUARIO#}
+                    {#{% if (app.session.get('roluser') == 31) %} #}{#SUPER USUARIO#}{#
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-users"></i></span>
@@ -389,7 +389,7 @@
                         </li>
                     {% endif %}
 
-                    {% if (app.session.get('roluser') == 8) %} {#NACIONAL#}
+                    {% if (app.session.get('roluser') == 8) %} #}{#NACIONAL#}{#
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-users"></i></span>
@@ -403,8 +403,8 @@
                                 <li><a href="{{path('herramienta_permanente_admin')}}">Administración de Cursos </a></li>
 
 
-                                {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
-                                  {#<li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>#}
+                                #}{#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}{#
+                                  #}{#<li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>#}{#
                                 {% if (app.session.get('ie_id') != -1) %}
                                     <li><a href="{{path('sie_per_ges_sub_sem')}}">Operativos </a></li>
 
@@ -419,7 +419,7 @@
                     {% endif %}
 
 
-                    {% if (app.session.get('roluser') == 20) %} {#NACIONAL INVITADO#}
+                    {% if (app.session.get('roluser') == 20) %} #}{#NACIONAL INVITADO#}{#
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-users"></i></span>
@@ -435,7 +435,7 @@
                         </li>
                     {% endif %}
 
-                    {% if (app.session.get('roluser') == 7) %} {#DEPTO#}
+                    {% if (app.session.get('roluser') == 7) %} #}{#DEPTO#}{#
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-users"></i></span>
@@ -443,16 +443,16 @@
                                 <span class="arrow"></span>
                             </a>
                             <ul>
-                                {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
-                                {#<li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>#}
+                                #}{#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}{#
+                                #}{#<li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>#}{#
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
                                 <li><a href="{{path('herramienta_per_ceducativa_crear_periodo')}}">Habilitar Gestión </a></li>
                                 <li><a href="{{path('herramienta_permanente_admin')}}">Administración de Cursos </a></li>
 
-                                {#<li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>#}
-                                {#<li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>#}
-                                {#<li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>#}
-                                {#<li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>#}
+                                #}{#<li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>#}{#
+                                #}{#<li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>#}{#
+                                #}{#<li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>#}{#
+                                #}{#<li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>#}{#
                                 {% if (app.session.get('ie_id') != -1) %}
                                     <li><a href="{{path('sie_per_ges_sub_sem')}}">Operativos </a></li>
                                 {% endif %}
@@ -460,7 +460,7 @@
                                 <li><a href="{{path('herramienta_per_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
                             </ul>
                         </li>
-                        {#<li class="submenu">
+                        #}{#<li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
                                 <span class="text">Bachiller de Excelencia</span>
@@ -469,9 +469,9 @@
                             <ul>
                                 <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>
                             </ul>
-                        </li>#}
+                        </li>#}{#
                     {% endif %}
-                    {% if app.session.get('roluser') == 10 %} {#DISTRITAL#}
+                    {% if app.session.get('roluser') == 10 %} #}{#DISTRITAL#}{#
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-users"></i></span>
@@ -483,13 +483,13 @@
                                 <li><a href="{{path('herramienta_per_ceducativa_crear_periodo')}}">Habilitar Gestión </a></li>
                                 <li><a href="{{path('herramienta_permanente_admin')}}">Administración de Cursos </a></li>
 
-                                {#<li><a onclick="selceadistritoShow();">Listar mis CEAS.</a></li>#}
-                                {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
-                                {#<li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>#}
-                                {#<li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>#}
-                                {#<li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>#}
-                                {#<li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>#}
-                                {#<li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>#}
+                                #}{#<li><a onclick="selceadistritoShow();">Listar mis CEAS.</a></li>#}{#
+                                #}{#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}{#
+                                #}{#<li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>#}{#
+                                #}{#<li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>#}{#
+                                #}{#<li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>#}{#
+                                #}{#<li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>#}{#
+                                #}{#<li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>#}{#
                                 {% if (app.session.get('ie_id') != -1) %}
                                     <li><a href="{{path('sie_per_ges_sub_sem')}}">Operativos </a></li>
                                 {% endif %}
@@ -499,7 +499,7 @@
                             </ul>
                         </li>
                     {% endif %}
-                    {% if app.session.get('roluser') == 9 %}{#DIRECTOR#}
+                    {% if app.session.get('roluser') == 9 %}#}{#DIRECTOR#}{#
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-users"></i></span>
@@ -517,24 +517,25 @@
 
                         </li>
 
-                        {#<li class="submenu">#}
-                            {#<a href="javascript:void(0);">#}
-                                {#<span class="icon"><i class="fa fa-home"></i></span>#}
-                                {#<span class="text">Bachiller de Excelencia</span>#}
-                                {#<span class="arrow"></span>#}
-                            {#</a>#}
-                            {#<ul>#}
-                              {#<!-- <li><a href="#">Operativo Concluido</a></li> -->#}
+                        #}{#<li class="submenu">#}{#
+                            #}{#<a href="javascript:void(0);">#}{#
+                                #}{#<span class="icon"><i class="fa fa-home"></i></span>#}{#
+                                #}{#<span class="text">Bachiller de Excelencia</span>#}{#
+                                #}{#<span class="arrow"></span>#}{#
+                            #}{#</a>#}{#
+                            #}{#<ul>#}{#
+                              #}{#<!-- <li><a href="#">Operativo Concluido</a></li> -->#}{#
 
-                              {#<li><a href="{{ path('bach_exc_alt_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li>#}
-                              {#<li><a href="{{ path('bach_exc_alt_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li>#}
-                              {#<li><a href="{{ path('bach_exc_alt')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>#}
-                              {#<li><a href="{{ path('bach_exc_alt_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>#}
-                            {##}
+                              #}{#<li><a href="{{ path('bach_exc_alt_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li>#}{#
+                              #}{#<li><a href="{{ path('bach_exc_alt_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li>#}{#
+                              #}{#<li><a href="{{ path('bach_exc_alt')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>#}{#
+                              #}{#<li><a href="{{ path('bach_exc_alt_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>#}{#
+                            #}{##}{#
 
-                            {#</ul>#}
-                        {#</li>#}
-                    {% endif %}
+                            #}{#</ul>#}{#
+                        #}{#</li>#}{#
+                    {% endif %}#}
+                    {{ render(controller('SieAppWebBundle:GestionMenu:generamenu',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  '14' ,'userId':app.session.get('userId')  })) }}
                 </ul><!-- /.sidebar-menu -->
                 <!--/ End left navigation - menu -->
 
