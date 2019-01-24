@@ -300,9 +300,10 @@ class OperativoController extends Controller {
             $idLugarTipo = "";
         }
         
-        //dump($this->listaAmpliar($rol,$gestionActual,$idLugarTipo));die;
+        $data = $this->listaAmpliar($rol,$gestionActual,$idLugarTipo);
         return $this->render($this->session->get('pathSystem') . ':Operativo:ampliar.html.twig', array(
-            'entities' => $this->listaAmpliar($rol,$gestionActual,$idLugarTipo),
+            'entities' => $data['entities'],
+            'nro' => $data['nro'],
         ));
     }
 
@@ -739,7 +740,14 @@ class OperativoController extends Controller {
                         ->getResult();
         }
 
-        return $entities;
+        $ceasArray = array();
+        foreach ($entities as $e) {
+            $ceasArray[$e->getId()]= count(json_decode($e->getObs(),true));
+        }
+
+        $data['entities'] = $entities;
+        $data['nro'] = $ceasArray;
+        return $data;
     }
 
     public function operativoDeleteAction(Request $request, $id)
