@@ -119,7 +119,7 @@
                                             </td>
                                             <td>{{ entity.proceso_tipo }}</td>
                                             <td>
-                                            {% if entity.id_estado == 15 or entity.id_estado == 16 %} {#si esta enviado/devuelto #}
+                                            {% if entity.id_estado == 15 or entity.id_estado == 4 %} {#si esta enviado/devuelto #}
                                                 <a href="{{ path('wf_tramite_recibido_guardar', { 'id': entity.id }) }}" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="top" title="Recibir para:{{ entity.proceso_tipo }}">
                                                     <i class="glyphicon glyphicon-check"></i>
                                                 </a>
