@@ -462,7 +462,9 @@ class WfTramiteController extends Controller
                 if ($wfcondiciontarea[0]->getCondicionTareaSiguiente() != null){
                     $tarea_sig_id = $wfcondiciontarea[0]->getCondicionTareaSiguiente();
                     $uDestinatario = $this->obtieneUsuarioDestinatario($tarea,$tarea_sig_id,$id_tabla,$tabla,$tramite);
+                    //dump($uDestinatario);die;
                     if($uDestinatario == false){
+                        //dump($uDestinatario);die;
                         $em->getConnection()->rollback();
                         $mensaje['dato'] = false;
                         $mensaje['msg'] = '¡Error, no existe usuario destinatario registrado.!';
@@ -547,6 +549,7 @@ class WfTramiteController extends Controller
             }else{
                $mensaje['msg'] = 'El trámite Nro. '. $tramite->getId() .' se envió correctamente.';
             }
+            $em->getConnection()->commit();
             $mensaje['dato'] = true;
             return $mensaje;
         } catch (Exception $ex) {
@@ -632,6 +635,7 @@ class WfTramiteController extends Controller
 
                             $query->execute();
                             $uDestinatario = $query->fetchAll();
+                            //dump($uDestinatario);die;
                             if($uDestinatario){
                                 $uid = $uDestinatario[0]['id'];
                             }else{
