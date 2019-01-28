@@ -145,3 +145,7 @@ sie_herramienta_tramite_rue:
 sie_herramienta_consultas:
     resource: "@SieHerramientaBundle/Resources/config/routing/consultas.yml"
     prefix:   /sie/consultasmaestros
+
+sie_herramienta_regularization_bth:
+    resource: "@SieHerramientaBundle/Resources/config/routing/regularizationlistdocente.yml"
+    prefix:   /sie/regularizationlistdocente
