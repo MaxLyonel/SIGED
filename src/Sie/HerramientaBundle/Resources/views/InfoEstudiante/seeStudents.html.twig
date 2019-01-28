@@ -45,8 +45,8 @@
                   <i class="fa fa-user"></i> Inscrip. con Rude
               </button>
             { else #}
-              {% if app.session.get('ue_modular') or app.session.get('ue_regularizar') or app.session.get('ue_noturna') or app.session.get('ue_tecteg') or app.session.get('ue_general') or app.session.get('allowInscription') or app.session.get('ie_id')=='80900081' %}
-                  {% if app.session.get('lastOperativo') == 5%}
+              {% if app.session.get('ue_modular') or app.session.get('ue_regularizar') or app.session.get('ue_humanistica_web') or app.session.get('ue_noturna') or app.session.get('ue_tecteg') or app.session.get('ue_general') or app.session.get('allowInscription') or app.session.get('ie_id')=='80900081' %}
+                  {% if app.session.get('lastOperativo') == 5 %}
                   {% else %}
 
                     {% if gestion < app.session.get('currentyear') %}
