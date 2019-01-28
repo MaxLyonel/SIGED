@@ -394,8 +394,8 @@ class InstitucioneducativaController extends Controller {
             $entityJurisdiccionGeografica->setLugarTipoIdDistrito($distritoId);
             $entityJurisdiccionGeografica->setObs('SUCURSAL SUB C.E.A.');
             $entityJurisdiccionGeografica->setDistritoTipo($entityDistritoTipo);
-            $entityJurisdiccionGeografica->setDireccion($direccion);
-            $entityJurisdiccionGeografica->setZona($zona);
+            $entityJurisdiccionGeografica->setDireccion(mb_strtoupper($direccion, 'UTF-8'));
+            $entityJurisdiccionGeografica->setZona(mb_strtoupper($zona, 'UTF-8'));
             $entityJurisdiccionGeografica->setJuridiccionAcreditacionTipo($entityJuridiccionAcreditacionTipo);
             $entityJurisdiccionGeografica->setValidacionGeograficaTipo($entityValidacionGeograficaTipo);
             $entityJurisdiccionGeografica->setFechaRegistro($fechaActual);
@@ -403,7 +403,7 @@ class InstitucioneducativaController extends Controller {
             $em->persist($entityJurisdiccionGeografica);
 
             
-            $entityInstitucionEducativaSucursal->setNombreSubcea($subcea);
+            $entityInstitucionEducativaSucursal->setNombreSubcea(mb_strtoupper($subcea, 'UTF-8'));
             $entityInstitucionEducativaSucursal->setLeJuridicciongeografica($entityJurisdiccionGeografica);
             $em->persist($entityInstitucionEducativaSucursal);
 
@@ -468,6 +468,9 @@ class InstitucioneducativaController extends Controller {
                 $sesion->set('ie_operativo', '!En operativo de regularización!');
                 break;                       
             case 10: //INSCRIPCIONES - INICIO DE SEMESTRE
+                /**
+                 * Verificamos si el operativo esta dentro de plazo
+                 */
                 if($ies->getGestionTipo()->getId() >= 2019){
                     if($ies->getPeriodoTipoId() == 2){
                         $operativo = 1;
@@ -487,7 +490,7 @@ class InstitucioneducativaController extends Controller {
                             if($ies->getId() == json_decode($d,true)['ies']){
                                 if(date('d-m-Y') > $o->getFechaFin()->format('d-m-Y')){
                                     $sesion->set('ie_per_estado', '0');
-                                    $sesion->set('ie_operativo', '!Operativo fuera de plazo. Vencio el '. $o->getFechaFin()->format('d-m-Y') . ', contactese con su tecnico SIE.!');
+                                    $sesion->set('ie_operativo', '!Operativo fuera de plazo. Venció el '. $o->getFechaFin()->format('d-m-Y') . ', contactese con su tecnico SIE.!');
                                 }else{
                                     $sesion->set('ie_per_estado', '1');
                                     $sesion->set('ie_operativo', '¡En operativo inscripciones!');                
@@ -501,6 +504,9 @@ class InstitucioneducativaController extends Controller {
                 }
                 break;
             case 11: //NOTAS - FIN DE SEMESTRE
+                /**
+                 * Verificamos si el operativo esta dentro de plazo
+                 */
                 if($ies->getGestionTipo()->getId() >= 2019){
                     if($ies->getPeriodoTipoId() == 2){
                         $operativo = 2;
@@ -581,6 +587,9 @@ class InstitucioneducativaController extends Controller {
                 $sesion->set('ie_operativo', '!En modo vista!');
                 break;
             case 100: //MAESTRO DE UNIDAD EDUCATIVA ALTER
+                /**
+                 * Verificamos si el operativo esta dentro de plazo
+                 */
                 if($ies->getGestionTipo()->getId() >= 2019){
                     if($ies->getPeriodoTipoId() == 2){
                         $operativo = 2;
@@ -600,7 +609,7 @@ class InstitucioneducativaController extends Controller {
                             if($ies->getId() == json_decode($d,true)['ies']){
                                 if(date('d-m-Y') > $o->getFechaFin()->format('d-m-Y')){
                                     $sesion->set('ie_per_estado', '0');
-                                    $sesion->set('ie_operativo', '!Operativo fuera de plazo. Vencio el '. $o->getFechaFin()->format('d-m-Y') . ', contactese con su tecnico SIE.!');
+                                    $sesion->set('ie_operativo', '!Operativo fuera de plazo. Venció el '. $o->getFechaFin()->format('d-m-Y') . ', contactese con su tecnico SIE.!');
                                 }else{
                                     $sesion->set('ie_per_estado', '3');
                                     $sesion->set('ie_operativo', '¡En operativo fin de semestre (notas)!');                

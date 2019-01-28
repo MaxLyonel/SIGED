@@ -560,7 +560,7 @@ class Funciones {
                                           ->select('ieco')
                                           ->from('SieAppWebBundle:InstitucioneducativaCursoOferta', 'ieco')
                                           ->where('ieco.insitucioneducativaCurso = :iecoId')
-                                          ->andWhere('ieco.asignaturaTipo = 0')
+                                          // ->andWhere('ieco.asignaturaTipo = 0')
                                           ->setParameter('iecoId', $data['iecId']);
                                           
                 $objAreas = $queryInstCursoOferta->getQuery()->getResult();
