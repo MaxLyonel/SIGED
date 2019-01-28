@@ -96,3 +96,11 @@ sie_herramienta_alternativa_estudiante_notas_primaria:
     resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/estudianteNotasPrimaria.yml"
     prefix:   /altsie/estudianteNotasPrimaria
 
+sie_herramienta_alternativa_operativos:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/operativos.yml"
+    prefix:   /altsie/operativos
+
+sie_herramienta_alternativa_rudeal:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/estudianteRudeal.yml"
+    prefix:   /altsie/rudeal
+    

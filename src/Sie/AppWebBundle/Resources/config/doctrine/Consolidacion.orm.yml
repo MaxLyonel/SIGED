@@ -1,0 +1,138 @@
+Sie\AppWebBundle\Entity\Consolidacion:
+    type: entity
+    table: consolidacion
+    indexes:
+        IDX_F22AF2BD3AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_F22AF2BD7A322B24:
+            columns:
+                - institucioneducativa_sucursal_id
+        IDX_F22AF2BD4080FEFA:
+            columns:
+                - institucioneducativa_tipo_id
+        IDX_F22AF2BDAEADF654:
+            columns:
+                - usuario_creacion_id
+        IDX_F22AF2BDDADD026:
+            columns:
+                - usuario_modificacion_id
+        IDX_F22AF2BDC62650C0:
+            columns:
+                - operativo_tipo_id
+        IDX_F22AF2BD34C419BF:
+            columns:
+                - sistema_tipo_id
+        IDX_F22AF2BD179FF95:
+            columns:
+                - gestion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        archivo:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        esonline:
+            type: boolean
+            nullable: false
+            comment: ''
+    manyToOne:
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaSucursal:
+            targetEntity: InstitucioneducativaSucursal
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_sucursal_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaTipo:
+            targetEntity: InstitucioneducativaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuarioCreacion:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_creacion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuarioModificacion:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_modificacion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        operativoTipo:
+            targetEntity: OperativoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                operativo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        sistemaTipo:
+            targetEntity: SistemaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                sistema_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,250 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-th-large"></i>Gestionar C.E.A. <span>formulario para regularizar información del SUB C.E.A.</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+               <li>
+                    <i class="glyphicon glyphicon-leaf"></i>
+                    <a href="{{path('principal_web')}}">Bienvenida/o</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                {% if app.session.get('roluser')!= 10 %}
+                <li>
+                    <i class="fa fa-th-large"></i>
+                    Regularizar información del SUB C.E.A.
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                {% endif %}
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>  
+    <div class="body-content animated fadeIn">
+        <div class="panel rounded shadow">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Formulario de registro</h3>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-sm" data-container="body" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-sub-heading">
+                <div class="callout callout-info"><p>Debido a que los sub centros no cuentan con el detalle de ubicación geográfica, dicha información debe registrarse mediante el presente formulario.</p></div>
+            </div><!-- /.panel-subheading -->
+            <div class="panel-body no-padding rounded-bottom">  
+                {% if form is defined  %}
+                    {{ form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'class': "",'onsubmit': 'return confirma();'} } )}}
+                        <div class="form-body"> 
+                            <div class="row">  
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                        <label class="control-label">{{ form_label(form.departamento) }}</label>
+                                    {{ form_widget(form.departamento) }}
+                                </div><!-- /.form-group -->
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{ form_label(form.provincia) }}</label>
+                                        {{ form_widget(form.provincia) }}
+                                </div><!-- /.form-group -->
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{ form_label(form.municipio) }}</label>
+                                        {{ form_widget(form.municipio) }}
+                                </div><!-- /.form-group -->
+
+                                <div class="form-group">
+                                        <label class="col-sm-3 control-label">{{ form_label(form.canton) }}</label>
+                                            {{ form_widget(form.canton) }}
+                                    </div><!-- /.form-group -->
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{ form_label(form.localidad) }}</label>
+                                        {{ form_widget(form.localidad) }}
+                                </div><!-- /.form-group -->
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{ form_label(form.subcea) }}</label>
+                                        {{ form_widget(form.subcea) }}
+                                </div><!-- /.form-group -->
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{ form_label(form.direccion) }}</label>
+                                        {{ form_widget(form.direccion) }}
+                                </div><!-- /.form-group -->
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{ form_label(form.zona) }}</label>
+                                        {{ form_widget(form.zona) }}
+                                </div><!-- /.form-group -->
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{ form_label(form.distrito) }}</label>
+                                        {{ form_widget(form.distrito) }}
+                                </div><!-- /.form-group -->
+
+                            </div>
+                        </div> 
+                        </div><!-- /.form-body -->
+                        <div class="form-footer">
+                            {{ form_widget(form.search,{ 'attr':{'class':'btn btn-primary mb-15 btn-block' } } ) }}
+                        </div><!-- /.form-footer -->
+                    {{form_end(form)}}
+                {% endif %}
+            </div><!-- /.panel-body -->
+        </div>
+    </div>      
+{% endblock %}   
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        var confirma = function(){
+            var r = confirm("¿ Está seguro de guardar el registro ?");
+            return r;
+        }
+
+        var listaProvincia = function(id){
+            var peticion;
+            if (peticion && peticion.readyState != 4) {
+                peticion.abort();
+            }
+            peticion = $.ajax({
+                type: 'get',
+                url: Routing.generate('sie_alt_clistarprovincias', {'dpto': id}),
+                beforeSend: function () {
+                    $('#form_provincia').empty();
+                    $("#form_provincia").append('<option value="">Cargando Datos..</option>');
+                    $('#form_municipio').empty();
+                    $("#form_municipio").append('<option value="">Seleccionar Municipio</option>');
+                    $('#form_canton').empty();
+                    $("#form_canton").append('<option value="">Seleccionar Cantón</option>');
+                    $('#form_localidad').empty();
+                    $("#form_localidad").append('<option value="">Seleccionar Localidad</option>');
+                    $('#form_distrito').empty();
+                    $("#form_distrito").append('<option value="">Seleccionar Distrito</option>');
+                },
+                success: function (data) {
+                    if (data.lista == '') {
+                        $('#form_provincia').empty();                        
+                        $("#form_provincia").append('<option value="">Seleccionar Provincia</option>');
+                    } else {
+                        $('#form_provincia').empty();
+                        $("#form_provincia").append('<option value="">Seleccionar Provincia</option>');
+                        $.each(data.listaprovincias, function (i, value) {
+                            $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        $('#form_distrito').empty();
+                        $("#form_distrito").append('<option value="">Seleccionar Distrito</option>');
+                        $.each(data.listadistritos, function (i, value) {
+                            $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    $('#form_provincia').empty();
+                    $("#form_provincia").append('<option value="">Seleccionar Provincia</option>');
+                    $("#form_provincia").removeAttr('disabled');
+                },
+            });
+        };
+        var listaMunicipio = function(id){
+            var peticion;
+            if (peticion && peticion.readyState != 4) {
+                peticion.abort();
+            }
+            peticion = $.ajax({
+                type: 'get',
+                url: Routing.generate('sie_alt_clistarmunicipios', {'prov': id}),
+                beforeSend: function () {
+                    $('#form_municipio').empty();
+                    $("#form_municipio").append('<option value="">Cargando Datos..</option>');
+                    $('#form_canton').empty();
+                    $("#form_canton").append('<option value="">Seleccionar Cantón</option>');
+                    $('#form_localidad').empty();
+                    $("#form_localidad").append('<option value="">Seleccionar Localidad</option>');
+                },
+                success: function (data) {
+                    if (data.lista == '') {         
+                        $('#form_municipio').empty();
+                        $("#form_municipio").append('<option value="">Seleccionar Municipio</option>');               
+                    } else {
+                        $('#form_municipio').empty();
+                        $("#form_municipio").append('<option value="">Seleccionar Municipio</option>');
+                        $.each(data.listamunicipios, function (i, value) {
+                            $("#form_municipio").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    $('#form_municipio').empty();
+                    $("#form_municipio").append('<option value="">Seleccionar Municipio</option>');
+                },
+            });
+        };
+        var listaCanton = function(id){
+            var peticion;
+            if (peticion && peticion.readyState != 4) {
+                peticion.abort();
+            }
+            peticion = $.ajax({
+                type: 'get',
+                url: Routing.generate('sie_alt_clistarcantones', {'muni': id}),
+                beforeSend: function () {
+                    $('#form_canton').empty();
+                    $("#form_canton").append('<option value="">Cargando Datos..</option>');
+                    $('#form_localidad').empty();
+                    $("#form_localidad").append('<option value="">Seleccionar Localidad</option>');
+                },
+                success: function (data) {
+                    if (data.lista == '') {                 
+                        $('#form_canton').empty();
+                        $("#form_canton").append('<option value="">Seleccionar Cantón</option>');       
+                    } else {
+                        $('#form_canton').empty();
+                        $("#form_canton").append('<option value="">Seleccionar Cantón</option>');
+                        $.each(data.listacantones, function (i, value) {
+                            $("#form_canton").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    $('#form_canton').empty();
+                    $("#form_canton").append('<option value="">Seleccionar Cantón</option>');
+                },
+            });
+        };
+        var listaLocalidad = function(id){
+            var peticion;
+            if (peticion && peticion.readyState != 4) {
+                peticion.abort();
+            }
+            peticion = $.ajax({
+                type: 'get',
+                url: Routing.generate('sie_alt_clistarlocalidades', {'cantn': id}),
+                beforeSend: function () {
+                    $('#form_localidad').empty();
+                    $("#form_localidad").append('<option value="">Cargando Datos..</option>');
+                },
+                success: function (data) {
+                    if (data.lista == '') {             
+                        $('#form_localidad').empty();
+                        $("#form_localidad").append('<option value="">Seleccionar Localidad</option>');           
+                    } else {
+                        $('#form_localidad').empty();
+                        $("#form_localidad").append('<option value="">Seleccionar Localidad</option>');
+                        $.each(data.listalocalidades, function (i, value) {
+                            $("#form_localidad").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    $('#form_localidad').empty();
+                    $("#form_localidad").append('<option value="">Seleccionar Localidad</option>');
+                },
+            });
+        };      
+    </script>
+{% endblock %} 

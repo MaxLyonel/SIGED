@@ -1,0 +1,65 @@
+{% if mensaje.tipo == "exito" %}
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        {{mensaje.msg}}
+    </div>
+{% else %}
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        {{mensaje.msg}}
+    </div>
+{% endif %}
+<table class="table table-bordered table-striped" id="datatable">
+    <thead>
+        <tr>
+            <th class="text-center" style="min-width:5px">No.</th>
+            <th>Operativo</th>
+            <th>Departamento</th>
+            <th>Distrito</th>
+            <th>Gestión</th>
+            <th>Fecha inicio</th>
+            <th>Fecha fin</th>                                                
+            <th>Usuario Registro</th>                                                
+            <th class="text-center" style="min-width:5px">CEAS</th>                                                
+            <th>Ampliar</th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <th class="text-center" style="min-width:5px">No.</th>
+            <th>Operativo</th>
+            <th>Departamento</th>
+            <th>Distrito</th>
+            <th>Gestión</th>
+            <th>Fecha inicio</th>
+            <th>Fecha fin</th>                                                
+            <th>Usuario Registro</th>
+            <th class="text-center" style="min-width:3px">CEAS</th>                                                                                                
+            <th>Ampliar</th>
+        </tr>
+    </tfoot>
+    <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td class="text-center" style="min-width:5px">{{ loop.index }}</td>
+                <td>{{ entity.operativoTipo.operativo }}</td>
+                <td>{{ entity.distritoTipo.departamentoTipo.departamento }}</td>
+                <td>{{ entity.distritoTipo.distrito }}</td>
+                <td>{{ entity.gestionTipo.id }}</td>
+                <td>{{ entity.fechaInicio.date|date('d-m-Y') }}</td>
+                <td>{{ entity.fechaFin.date|date('d-m-Y') }}</td>
+                <td>{{ entity.usuarioRegistro.persona.nombre }}</td>
+                <td class="text-center" style="min-width:3px">
+                    <a class="btn btn-success btn-xs text-primary" data-toggle="modal" data-target="#modal" data-placement="top" title="Ver Ceas del operativo" onclick="verCeas({{entity.id}})">
+                        <i class="glyphicon glyphicon-eye-open"></i>
+                    </a>
+                </td>
+                <td>
+                    <a class="btn btn-primary btn-xs text-primary" data-toggle="modal" data-target="#modal" data-placement="top" title="Ampliar Operativo" onclick="ediataroperativo({{entity.id}})">
+                        <i class="glyphicon glyphicon-pencil"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

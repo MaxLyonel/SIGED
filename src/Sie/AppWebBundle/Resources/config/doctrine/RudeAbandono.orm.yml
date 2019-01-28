@@ -1,0 +1,64 @@
+Sie\AppWebBundle\Entity\RudeAbandono:
+    type: entity
+    table: rude_abandono
+    indexes:
+        IDX_2763E313443E4890:
+            columns:
+                - rude_id
+        IDX_2763E313682C04C7:
+            columns:
+                - abandono_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        motivoAbandono:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: motivo_abandono
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        abandonoOtro:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: abandono_otro
+    manyToOne:
+        rude:
+            targetEntity: Rude
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rude_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        abandonoTipo:
+            targetEntity: AbandonoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                abandono_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
