@@ -144,7 +144,7 @@ class PromedioCalidadController extends Controller {
     public function listAction(Request $request) {
 
         $id_usuario = $this->session->get('userId');
-        $gestion = $this->session->get('currentyear');
+        $gestion = 2018;//$this->session->get('currentyear');
         $id = 27;
 
         if (!isset($id_usuario)) {
@@ -272,6 +272,12 @@ class PromedioCalidadController extends Controller {
                 $nota = $em->getRepository('SieAppWebBundle:EstudianteNota')->find(intval($idNota[$i]));
                 $nota->setNotaCuantitativa($promedio[$i]);
                 $em->flush();
+
+                // CALCULAMOS EL PROMEDIO
+                $this->get('notas')->calcularPromedioBimestral($nota->getEstudianteAsignatura()->getId());
+
+                // ACTUALIZAMOS EL ESTADO DE MATRICULA SI CORRESPONDE
+                $this->get('notas')->actualizarEstadoMatricula($nota->getEstudianteAsignatura()->getEstudianteInscripcion()->getId());
 
                 $validacion->setEsActivo(true);
                 $em->flush();

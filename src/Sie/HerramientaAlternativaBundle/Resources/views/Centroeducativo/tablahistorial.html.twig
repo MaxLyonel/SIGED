@@ -34,11 +34,21 @@
                                     <td>ANUAL</td>
                                 {% else %}
                                     <td>{{reg.periodoTipoId}}</td>
-                                {% endif %}                
+                                {% endif %}
+                                {% if (reg.gestionTipo <= '2017') %}
+                                    <td>
+                                    <form action="{{path('sie_alt_ges_sub_sem_open', {'teid':'99', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">                            
+                                        <button type="submit" class="btn btn-circle btn-lilac btn-stroke tooltips" data-toggle="tooltip" data-placement="top" title="¡Ver!">                                    
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    </form>
+                                    </td>
+                                {% else %}
                                 {% if (app.session.get('roluser') == 2) %} {#ROL DE MAESTRO#}
                                     <td class="text-center">
                                     {% if (reg.gestionTipo == '2016') and (reg.periodoTipoId == '2') and (reg.teid is null) %}  {#INICIO DE RESISTEMA REGULARIZACIÓN INSCRIPCIONES Y NOTAS herramienta_alter_notas_maestro_index#}
-                                        <form action="{{path('sie_alt_ges_sub_sem_open', {'teid':'100', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">                            
+                                        <form action="{{path('sie_alt_ges_sub_sem_open', {'teid':'99', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">                            
+                                        {#<form action="{{path('sie_alt_ges_sub_sem_open', {'teid':'100', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">                            #}
                                             <button type="submit" class="btn btn-circle btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="¡En operativo inicio de sistema Notas!">                                    
                                                 <i class="fa fa-pencil"></i>
                                             </button>
@@ -48,7 +58,7 @@
                                             <button type="submit" class="btn btn-circle btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="¡En operativo inicio de sistema Notas!">                                    
                                                 <i class="fa fa-pencil"></i>
                                             </button>
-                                        </form>                        
+                                        </form>                                                
                                     {% endif %}
                                     </td>                
                                 {% endif %}                
@@ -186,6 +196,7 @@
                                             </button>
                                         </form>       
                                     </td>
+                                {% endif %}
                                 {% endif %}
 
                             </tr>

@@ -220,52 +220,52 @@ class CursoAlternativaController extends Controller {
                 $em->persist($siep);
                 $em->flush();
                 
-                if ($var['areacod'] == '15'){//id 13 HUMANISTICA
-                    //MATEMATICAS
-                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
-                    $smp = new SuperiorModuloPeriodo();
-                    $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52419'));
-                    $smp->setInstitucioneducativaPeriodo($siep);
-                    $smp->setHorasModulo('0');
-                    $em->persist($smp);
-                    $em->flush();
+                // if ($var['areacod'] == '15'){//id 13 HUMANISTICA
+                //     //MATEMATICAS
+                //     $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
+                //     $smp = new SuperiorModuloPeriodo();
+                //     $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52419'));
+                //     $smp->setInstitucioneducativaPeriodo($siep);
+                //     $smp->setHorasModulo('0');
+                //     $em->persist($smp);
+                //     $em->flush();
 
-                    //LENGUAJE
-                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
-                    $smp = new SuperiorModuloPeriodo();
-                    $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52420'));
-                    $smp->setInstitucioneducativaPeriodo($siep);
-                    $smp->setHorasModulo('0');
-                    $em->persist($smp);
-                    $em->flush();
+                //     //LENGUAJE
+                //     $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
+                //     $smp = new SuperiorModuloPeriodo();
+                //     $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52420'));
+                //     $smp->setInstitucioneducativaPeriodo($siep);
+                //     $smp->setHorasModulo('0');
+                //     $em->persist($smp);
+                //     $em->flush();
 
-                    //CIENCIAS SOCIALES
-                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
-                    $smp = new SuperiorModuloPeriodo();
-                    $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52421'));
-                    $smp->setInstitucioneducativaPeriodo($siep);
-                    $smp->setHorasModulo('0');
-                    $em->persist($smp);
-                    $em->flush();
+                //     //CIENCIAS SOCIALES
+                //     $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
+                //     $smp = new SuperiorModuloPeriodo();
+                //     $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52421'));
+                //     $smp->setInstitucioneducativaPeriodo($siep);
+                //     $smp->setHorasModulo('0');
+                //     $em->persist($smp);
+                //     $em->flush();
 
-                    //CIENCIAS NATURALES
-                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
-                    $smp = new SuperiorModuloPeriodo();
-                    $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52422'));
-                    $smp->setInstitucioneducativaPeriodo($siep);
-                    $smp->setHorasModulo('0');
-                    $em->persist($smp);
-                    $em->flush();
+                //     //CIENCIAS NATURALES
+                //     $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
+                //     $smp = new SuperiorModuloPeriodo();
+                //     $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52422'));
+                //     $smp->setInstitucioneducativaPeriodo($siep);
+                //     $smp->setHorasModulo('0');
+                //     $em->persist($smp);
+                //     $em->flush();
 
-                    //IDIOMA ORIGINARIO
-                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
-                    $smp = new SuperiorModuloPeriodo();
-                    $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52426'));
-                    $smp->setInstitucioneducativaPeriodo($siep);
-                    $smp->setHorasModulo('0');
-                    $em->persist($smp);
-                    $em->flush();
-                }
+                //     //IDIOMA ORIGINARIO
+                //     $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
+                //     $smp = new SuperiorModuloPeriodo();
+                //     $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52426'));
+                //     $smp->setInstitucioneducativaPeriodo($siep);
+                //     $smp->setHorasModulo('0');
+                //     $em->persist($smp);
+                //     $em->flush();
+                // }
 //                else{//TECNICA
 
 //                }

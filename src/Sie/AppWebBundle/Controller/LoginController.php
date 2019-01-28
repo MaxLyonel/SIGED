@@ -109,6 +109,7 @@ class LoginController extends Controller {
 
         //**************
         //**** SE REGISTRA LA SESSION DEL USUARIO         
+        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('usuario_session');")->execute();
         $sesionUsuario = new UsuarioSession();        
         $sesionUsuario->setUsuarioId($sesion->get('userId'));
         $nombreUsuario = $sesion->get('name') . " " . $sesion->get('lastname') . " " . $sesion->get('lastname2');

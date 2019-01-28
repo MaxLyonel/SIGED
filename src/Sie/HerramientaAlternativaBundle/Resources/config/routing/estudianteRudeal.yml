@@ -1,0 +1,83 @@
+estudiante_rudeal_index:
+    path:     /
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteRudeal:index" }
+    options:
+         expose: true
+
+# estudiante_rudeal_departamentos_nac:
+#     path:     /departamentosNac/{pais}
+#     defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteRudeal:departamentosNac" }
+#     options:
+#          expose: true
+
+# estudiante_rudeal_provincias_nac:
+#     path:     /provinciasNac/{departamento}
+#     defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteRudeal:provinciasNac" }
+#     options:
+#          expose: true
+
+# TAB 2 -  DATOS ESTUDIANTE
+estudiante_rudeal_save_formEstudiante:
+    path:     /saveFormEstudiante
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteRudeal:saveFormEstudiante" }
+    options:
+         expose: true
+
+estudiante_rudeal_diversa:
+    path:     /diversa
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteRudeal:diversa" }
+    options:
+         expose: true
+
+estudiante_rudeal_cargar_unidades_militares:
+    path:     /cargarUnidadesMilitares
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteRudeal:cargarUnidadesMilitares" }
+    options:
+         expose: true
+
+estudiante_rudeal_cargar_recintos_penitenciarios:
+    path:     /cargarRecintosPenitenciarios
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteRudeal:cargarRecintosPenitenciarios" }
+    options:
+         expose: true
+
+# TAB 4 -  DIRECCION
+estudiante_rudeal_listarprovincias:
+    path:     /listarprovincias/{dpto}
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteRudeal:listarprovincias" }
+    options:
+         expose: true
+
+estudiante_rudeal_listarmunicipios:
+    path:     /listarmunicipios/{prov}
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteRudeal:listarmunicipios" }
+    options:
+         expose: true
+
+estudiante_rudeal_save_formDireccion:
+    path:     /saveFormDireccion
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteRudeal:saveFormDireccion" }
+    options:
+         expose: true
+
+
+estudiante_rudeal_save_formDiscapacidad:
+    path:     /saveFormDiscapacidad
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteRudeal:saveFormDiscapacidad" }
+    options:
+         expose: true
+
+
+# SOCIOECONOMICO
+estudiante_rudeal_save_formSocioeconomicos:
+    path:     /saveFormSocioeconomicos
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteRudeal:saveFormSocioeconomicos" }
+    options:
+         expose: true
+
+# TAB 7
+estudiante_rudeal_save_formLugar:
+    path:     /saveFormLugar
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteRudeal:saveFormLugar" }
+    options:
+         expose: true

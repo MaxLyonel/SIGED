@@ -29,7 +29,11 @@ class ReportesController extends Controller {
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_sie100_hoja1_caratula_v1_rcm.rptdesign&__format=pdf&gestion_id='.$this->session->get('ie_gestion').'&cod_ue='.$this->session->get('ie_id').'&periodo='.$this->session->get('ie_per_cod').'&sucursal='.$this->session->get('ie_subcea').'&&__format=pdf&'));        
+        if((int)$this->session->get('ie_subcea')>0){
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_sie100_hoja1_caratula_subcea_v1_rcm.rptdesign&__format=pdf&gestion_id='.$this->session->get('ie_gestion').'&cod_ue='.$this->session->get('ie_id').'&periodo='.$this->session->get('ie_per_cod').'&sucursal='.$this->session->get('ie_subcea').'&&__format=pdf&'));        
+        } else {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_sie100_hoja1_caratula_v1_rcm.rptdesign&__format=pdf&gestion_id='.$this->session->get('ie_gestion').'&cod_ue='.$this->session->get('ie_id').'&periodo='.$this->session->get('ie_per_cod').'&sucursal='.$this->session->get('ie_subcea').'&&__format=pdf&'));        
+        }
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -437,48 +441,59 @@ class ReportesController extends Controller {
         //get the data send to the report           
         $gestion = $this->session->get('gestion');
         $sucursalId = $this->session->get('ie_suc_id');
-        $rude = $request->get('rude');
+        $codrude = $request->get('rude');
         $inscripcionId = $request->get('inscripcionId');
-        $socioalteIdEntity = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findByEstudianteInscripcion($inscripcionId);
-        $socioalteId = $socioalteIdEntity[0]->getId();
+        $rude = $em->getRepository('SieAppWebBundle:Rude')->findOneBy(array('estudianteInscripcion'=>$inscripcionId));
 
-        $em = $this->getDoctrine()->getManager();
-        //$em = $this->getDoctrine()->getEntityManager();
         $db = $em->getConnection();    
         
-        $idlocalidad = $socioalteIdEntity[0]->getSeccioniiiLocalidadTipo()->getId();
-        //dump($idlocalidad);die;
+        //dump($idMunicipio);die;
         //si el estudiante no es inmigrante
-        if ($idlocalidad != 0){
-            $query = "select socioeconomico_lugar_recursivo(".$idlocalidad.");";
-            $stmt = $db->prepare($query);
-            $params = array();
-            $stmt->execute($params);        
-            $po = $stmt->fetchAll();
-        //dump($po);die;
-        //$countdir = count($po);
-        
-            $porciones = explode("|", $po[0]['socioeconomico_lugar_recursivo']);
-        //dump($porciones);die;
-        
-            $dirDep = $porciones[2];        
-            $dirProv = $porciones[3];
-            $dirSec = $porciones[4];
-            $dirLoc = $porciones[6];
+        if($rude->getMunicipioLugarTipo() != null){
+
+                $lt5_id = $rude->getMunicipioLugarTipo()->getLugarTipo();
+                $lt4_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getLugarTipo();
+                $lt3_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getLugarTipo();
+
+                $m_id = $rude->getMunicipioLugarTipo()->getId();
+                $p_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getId();
+                $d_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getId();
         }else{
-            $dirDep = 0;        
-            $dirProv = 0;
-            $dirSec = 0;
-            $dirLoc = 0;
+            $m_id = 0;
+            $p_id = 0;
+            $d_id = 0;
         }
+        // if ($idMunicipio != 0){
+        //     $query = "select socioeconomico_lugar_recursivo(".$idMunicipio.");";
+        //     $stmt = $db->prepare($query);
+        //     $params = array();
+        //     $stmt->execute($params);        
+        //     $po = $stmt->fetchAll();
+        // //dump($po);die;
+        // //$countdir = count($po);
+        
+        //     $porciones = explode("|", $po[0]['socioeconomico_lugar_recursivo']);
+        // //dump($porciones);die;
+        
+        //     $dirDep = $porciones[2];        
+        //     $dirProv = $porciones[3];
+        //     $dirSec = $porciones[4];
+        //     $dirLoc = $porciones[6];
+        // }else{
+        //     $dirDep = 0;        
+        //     $dirProv = 0;
+        //     $dirSec = 0;
+        //     $dirLoc = 0;
+        // }
           //get the values of report
 //        //create the response object to down load the file
         
 
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'rudelal_' . $rude . '_' . $gestion . '.pdf'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_rude_socioeconomico_gral_v2_vcj.rptdesign&socioalteId=' . $socioalteId . '&rude=' . $rude . '&sucursalId=' . $sucursalId . '&inscripcionId=' . $inscripcionId . '&dirDep=' . $dirDep . '&dirProv=' . $dirProv . '&dirSec=' . $dirSec . '&dirLoc=' . $dirLoc . '&&__format=pdf&'));
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'rudelal_' . $codrude . '_' . $gestion . '.pdf'));
+        // $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_rude_socioeconomico_gral_v2_vcj.rptdesign&socioalteId=' . $socioalteId . '&rude=' . $rude . '&sucursalId=' . $sucursalId . '&inscripcionId=' . $inscripcionId . '&dirDep=' . $dirDep . '&dirProv=' . $dirProv . '&dirSec=' . $dirSec . '&dirLoc=' . $dirLoc . '&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_rude_socioeconomico_gral_v3_afv.rptdesign&rude=' . $codrude . '&sucursalId=' . $sucursalId . '&inscripcionId=' . $inscripcionId . '&dirDep=' . $d_id . '&dirProv=' . $p_id . '&dirSec=' . $m_id . '&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -502,7 +517,7 @@ class ReportesController extends Controller {
     public function reportEspAction(Request $request, $dataInfo){
 
         $arrDataInfo = unserialize($dataInfo);
-        //dump($arrDataInfo);
+       // dump($arrDataInfo);
        // dump($reporte);die;
         $roluser = $arrDataInfo['roluser'];
         $userId=$arrDataInfo['userId'];
@@ -514,8 +529,9 @@ class ReportesController extends Controller {
         $argum= 'REPORTE SOLDADO MARINERO ESPECIALIDADES ';
 
         $response = new Response();
-
-
+     //   dump($periodo);dump($gestion);dump($lugar);die;
+     //      dump($this->container->getParameter('urlreportweb') . 'alt_esp_edudiv_soldado_o_marinero_distrito_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo.'&DisId=' . $lugar. '&&__format=pdf&');die;
+        // por defecto
         $response->headers->set('Content-type', 'application/pdf');
        // dump($roluser);die;
 
@@ -526,13 +542,15 @@ class ReportesController extends Controller {
 
         }elseif ($roluser== 7)
         {
+            dump($periodo);dump($gestion);dump($lugar);die;
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'DEPARTAMENTAL' . $periodo . '_' . $gestion . '.pdf'));
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_edudiv_soldado_o_marinero_departamental_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&DeptoId=' . $lugar. '&&__format=pdf&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_edudiv_soldado_o_marinero_departamento_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&DeptoId=' . $lugar. '&&__format=pdf&'));
 
         }elseif ($roluser== 10)
         {
+    //        dump($periodo);dump($gestion);dump($lugar);die;
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'DISTRITAL' . $periodo . '_' . $gestion . '.pdf'));
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_edudiv_soldado_o_marinero_distrital_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo.'&DisId=' . $lugar. '&&__format=pdf&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_edudiv_soldado_o_marinero_distrito_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo.'&DisId=' . $lugar. '&&__format=pdf&'));
 
         }elseif ($roluser== 9)
         {
@@ -581,12 +599,12 @@ class ReportesController extends Controller {
         }elseif ($roluser== 7)
         {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'DEPARTAMENTAL' . $periodo . '_' . $gestion . '.pdf'));
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_edudiv_soldado_o_marinero_departamental_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&DeptoId=' . $lugar. '&&__format=pdf&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_edudiv_soldado_o_marinero_departamento_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&DeptoId=' . $lugar. '&&__format=pdf&'));
 
         }elseif ($roluser== 10)
         {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'DISTRITAL' . $periodo . '_' . $gestion . '.pdf'));
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_edudiv_soldado_o_marinero_distrital_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo.'&DisId=' . $lugar.'&&__format=pdf&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_edudiv_soldado_o_marinero_distrito_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo.'&DisId=' . $lugar.'&&__format=pdf&'));
 
         }elseif ($roluser== 9)
         {
@@ -636,12 +654,12 @@ class ReportesController extends Controller {
         }elseif ($roluser== 7)
         {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'DEPARTAMENTAL' . $periodo . '_' . $gestion . '.xlsx'));
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_edudiv_soldado_o_marinero_departamental_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&DeptoId=' . $lugar. '&&__format=xlsx&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_edudiv_soldado_o_marinero_departamento_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&DeptoId=' . $lugar. '&&__format=xlsx&'));
 
         }elseif ($roluser== 10)
         {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'DISTRITAL' . $periodo . '_' . $gestion . '.xlsx'));
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_edudiv_soldado_o_marinero_distrital_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo.'&DisId=' . $lugar. '&&__format=xlsx&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_edudiv_soldado_o_marinero_distrito_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo.'&DisId=' . $lugar. '&&__format=xlsx&'));
 
         }elseif ($roluser== 9)
         {
@@ -687,12 +705,12 @@ class ReportesController extends Controller {
         }elseif ($roluser== 7)
         {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'DEPARTAMENTAL' . $periodo . '_' . $gestion . '.xlsx'));
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_edudiv_soldado_o_marinero_departamental_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&DeptoId=' . $lugar. '&&__format=xlsx&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_edudiv_soldado_o_marinero_departamento_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&DeptoId=' . $lugar. '&&__format=xlsx&'));
 
         }elseif ($roluser== 10)
         {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'DISTRITAL' . $periodo . '_' . $gestion . '.xlsx'));
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_edudiv_soldado_o_marinero_distrital_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo.'&DisId=' . $lugar. '&&__format=xlsx&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_edudiv_soldado_o_marinero_distrito_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo.'&DisId=' . $lugar. '&&__format=xlsx&'));
 
         }elseif ($roluser== 9)
         {

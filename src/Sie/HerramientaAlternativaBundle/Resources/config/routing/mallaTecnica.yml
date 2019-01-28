@@ -3,13 +3,19 @@ herramienta_alter_malla_tecnica_index:
     defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:index}
     options:
          expose: true
-    
+
 herramienta_alter_malla_tecnica_modulos:
     path:     /matecmodulos
     defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:seemodulos}
     options:
          expose: true
-         
+
+herramienta_alter_malla_modulos:
+    path:     /mallamatcmodulos
+    defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:mallaseemodulos}
+    options:
+         expose: true
+
 herramienta_alter_malla_tecnica_modulos_change_semestre:
     path:     /changesemestre
     defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:changesemestre}
@@ -86,4 +92,58 @@ herramienta_acreditacion_alternativa_new:
     path:     /newacreditacion
     defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:newacreditacion }
     options:
-         expose: true         
+         expose: true
+
+herramienta_malla_nueva_acreditacion:
+    path:     /mallanuevaacreditacion
+    defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:mallanuevaacreditacion }
+    options:
+         expose: true
+
+herramienta_malla_acreditacion_alternativa_new:
+    path:     /mallanewacreditacion
+    defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:mallanewacreditacion }
+    options:
+         expose: true
+
+herramienta_listar_especialidades:
+    path:     /listarespecialidades/{idarea}
+    defaults: { _controller: "SieHerramientaAlternativaBundle:MallaTecnica:listarEspecialidades" }
+    options:
+         expose: true
+
+herramienta_listar_niveles:
+    path:     /listarniveles/{idesp}
+    defaults: { _controller: "SieHerramientaAlternativaBundle:MallaTecnica:listarNivelesAlt" }
+    options:
+         expose: true
+
+herramienta_show_modulo_nuevo:
+    path:     /showmodulonuevo/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:MallaTecnica:showModuloNuevo"}
+    options:
+         expose: true
+
+herramienta_show_modulo_edit:
+    path:     /showmoduloedit/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:MallaTecnica:showModuloEdit"}
+    options:
+         expose: true
+
+herramienta_show_modulo_delete:
+    path:     /showmodulodelete/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:MallaTecnica:showModuloDelete"}
+    options:
+         expose: true
+
+herramienta_create_modulo_nuevo:
+    path:     /createmodnuevo/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:MallaTecnica:createModuloNuevo"}
+    options:
+         expose: true
+
+herramienta_malla_update_modulo:
+    path:     /updatemodulo
+    defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:updateModuloNuevo }
+    options:
+         expose: true
