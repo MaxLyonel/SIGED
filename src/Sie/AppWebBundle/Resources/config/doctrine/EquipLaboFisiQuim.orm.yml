@@ -1,0 +1,161 @@
+Sie\AppWebBundle\Entity\EquipLaboFisiQuim:
+    type: entity
+    table: equip_labo_fisi_quim
+    indexes:
+        IDX_AB657913AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_AB6579149C273F7:
+            columns:
+                - secci_alcalde_persona_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        secciCantidadTotEstu:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: secci_cantidad_tot_estu
+        secciCantidad1ersec:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: secci_cantidad_1ersec
+        secciCantidad2dosec:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: secci_cantidad_2dosec
+        secciCantidad3ersec:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: secci_cantidad_3ersec
+        secciCantidad4tosec:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: secci_cantidad_4tosec
+        secciCantidad5tosec:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: secci_cantidad_5tosec
+        secciCantidad6tosec:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: secci_cantidad_6tosec
+        seccivConstruidaPor:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+            column: secciv_construida_por
+        seccivEsLabFisQuim:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: secciv_es_lab_fis_quim
+        seccivCantAmb:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: secciv_cant_amb
+        seccivCuentaMesones:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: secciv_cuenta_mesones
+        seccivEsMesonesCeramica:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: secciv_es_mesones_ceramica
+        seccivCuentaPiletas:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: secciv_cuenta_piletas
+        seccivCantidadPiletas:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: secciv_cantidad_piletas
+        seccivCuentaInstElec:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: secciv_cuenta_inst_elec
+        seccivCantidadTomaCorr:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: secciv_cantidad_toma_corr
+        seccvCuentaEquipLabCiencias:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: seccv_cuenta_equip_lab_ciencias
+        seccvAnioEquipado:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: seccv_anio_equipado
+        seccvInstitucionEquipo:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+            column: seccv_institucion_equipo
+        seccvCantidadItems:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: seccv_cantidad_items
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+    manyToOne:
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        secciAlcaldePersona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                secci_alcalde_persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

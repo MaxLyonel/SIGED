@@ -1,0 +1,46 @@
+Sie\AppWebBundle\Entity\EquipLaboFisiQuimFotos:
+    type: entity
+    table: equip_labo_fisi_quim_fotos
+    indexes:
+        IDX_283BABF64D68CAD7:
+            columns:
+                - equip_labo_fisi_quim_id
+        IDX_283BABF6694687F6:
+            columns:
+                - tipo_foto_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        foto:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+    manyToOne:
+        equipLaboFisiQuim:
+            targetEntity: EquipLaboFisiQuim
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                equip_labo_fisi_quim_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        tipoFoto:
+            targetEntity: EquipLaboFisiQuimTipoFoto
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tipo_foto_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
