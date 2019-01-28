@@ -82,6 +82,7 @@ class EstudianteRudealController extends Controller {
                         ->where('e.id = :estudiante')
                         ->setParameter('estudiante', $estudiante->getId())
                         ->setMaxResults(1)
+                        ->orderBy('r.id','desc')
                         ->getQuery()
                         ->getResult();
 
@@ -491,16 +492,34 @@ class EstudianteRudealController extends Controller {
         // DIRECCION
         $em = $this->getDoctrine()->getManager();
 
-        if($rude->getMunicipioLugarTipo() != null){
+        if($rude->getLocalidadLugarTipo() != null){
 
-                $lt5_id = $rude->getMunicipioLugarTipo()->getLugarTipo();
-                $lt4_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getLugarTipo();
-                $lt3_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getLugarTipo();
+            // $lt5_id = $rude->getMunicipioLugarTipo()->getLugarTipo();
+            // $lt4_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getLugarTipo();
+            // $lt3_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getLugarTipo();
 
-                $m_id = $rude->getMunicipioLugarTipo()->getId();
-                $p_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getId();
-                $d_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getId();
+            // $m_id = $rude->getMunicipioLugarTipo()->getId();
+            // $p_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getId();
+            // $d_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getId();
+
+            $lt5_id = $rude->getLocalidadLugarTipo()->getLugarTipo();
+            $lt4_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getLugarTipo();
+            $lt3_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getLugarTipo();
+            $lt2_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt3_id)->getLugarTipo();
+            $lt1_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt2_id)->getLugarTipo();
+
+            $l_id = $rude->getLocalidadLugarTipo()->getId();
+            $c_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getId();
+            $m_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getId();
+            $p_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt3_id)->getId();
+            $d_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt2_id)->getId();
         }else{
+            // $m_id = 0;
+            // $p_id = 0;
+            // $d_id = 0;
+
+            $l_id = 0;
+            $c_id = 0;
             $m_id = 0;
             $p_id = 0;
             $d_id = 0;
@@ -542,12 +561,45 @@ class EstudianteRudealController extends Controller {
             $muniArray[$value->getId()] = $value->getLugar();
         }
 
+        $query = $em->createQuery(
+            'SELECT lt
+                FROM SieAppWebBundle:LugarTipo lt
+                WHERE lt.lugarNivel = :nivel
+                AND lt.lugarTipo = :lt1
+                ORDER BY lt.id')
+            ->setParameter('nivel', 4)
+            ->setParameter('lt1', $m_id);
+        $cantn = $query->getResult();
+
+        $cantnArray = array();
+        foreach ($cantn as $value) {
+            $cantnArray[$value->getId()] = $value->getLugar();
+        }
+
+        $query = $em->createQuery(
+            'SELECT lt
+                FROM SieAppWebBundle:LugarTipo lt
+                WHERE lt.lugarNivel = :nivel
+                AND lt.lugarTipo = :lt1
+                ORDER BY lt.id')
+            ->setParameter('nivel', 5)
+            ->setParameter('lt1', $c_id);
+        $locald = $query->getResult();
+
+        $localdArray = array();
+        foreach ($locald as $value) {
+            $localdArray[$value->getId()] = $value->getLugar();
+        }
+
         $form = $this->createFormBuilder($rude)
                     ->add('id','hidden')
                     ->add('departamentoDir', 'choice', array('data' => $d_id - 1, 'label' => 'Departamento', 'required' => true, 'choices' => $dptoArray, 'empty_value' => 'Seleccionar...','mapped'=>false))
                     ->add('provinciaDir', 'choice', array('data' => $p_id, 'label' => 'Provincia', 'required' => true, 'choices' => $provArray, 'empty_value' => 'Seleccionar...','mapped'=>false))
-                    ->add('municipioLugarTipo', 'choice', array('data' => $m_id, 'label' => 'Municipio', 'required' => true, 'choices' => $muniArray, 'empty_value' => 'Seleccionar...','mapped'=>false))
-                    ->add('localidad')
+                    ->add('municipioDir', 'choice', array('data' => $m_id, 'label' => 'Municipio', 'required' => true, 'choices' => $muniArray, 'empty_value' => 'Seleccionar...','mapped'=>false))
+                    ->add('cantonDir', 'choice', array('data' => $c_id, 'label' => 'Canton', 'required' => true, 'choices' => $cantnArray, 'empty_value' => 'Seleccionar...','mapped'=>false))
+                    ->add('localidadDir', 'choice', array('data' => $l_id, 'label' => 'Localidad', 'required' => true, 'choices' => $localdArray, 'empty_value' => 'Seleccionar...','mapped'=>false))
+                    // ->add('municipioLugarTipo', 'choice', array('data' => $m_id, 'label' => 'Municipio', 'required' => true, 'choices' => $muniArray, 'empty_value' => 'Seleccionar...','mapped'=>false))
+                    // ->add('localidad')
                     ->add('zona')
                     ->add('avenida')
                     ->add('numero')
@@ -565,8 +617,9 @@ class EstudianteRudealController extends Controller {
 
         $rude = $em->getRepository('SieAppWebBundle:Rude')->find($form['id']);
 
-        $rude->setMunicipioLugarTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find((integer)$form['municipioLugarTipo']));
-        $rude->setLocalidad($form['localidad'] ? mb_strtoupper($form['localidad'], 'utf-8') : '');
+        $rude->setLocalidadLugarTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find((integer)$form['localidadDir']));
+        // $rude->setMunicipioLugarTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find((integer)$form['municipioLugarTipo']));
+        // $rude->setLocalidad($form['localidad'] ? mb_strtoupper($form['localidad'], 'utf-8') : '');
         $rude->setZona($form['zona'] ? mb_strtoupper($form['zona'], 'utf-8') : '');
         $rude->setAvenida($form['avenida'] ? mb_strtoupper($form['avenida'], 'utf-8') : '');
         $rude->setNumero($form['numero'] ? $form['numero'] : '');
@@ -639,6 +692,63 @@ class EstudianteRudealController extends Controller {
 
             $response = new JsonResponse();
             return $response->setData(array('listamunicipios' => $municipiosArray));
+        } catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+        }
+    }
+    /*
+     * Funciones para cargar los combos dependientes via ajax
+     */
+    public function listarcantonesAction($muni) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+
+            $query = $em->createQuery(
+                'SELECT lt
+                    FROM SieAppWebBundle:LugarTipo lt
+                    WHERE lt.lugarNivel = :nivel
+                    AND lt.lugarTipo = :lt1
+                    ORDER BY lt.id')
+                ->setParameter('nivel', 4)
+                ->setParameter('lt1', $muni);
+            $cantones = $query->getResult();
+
+            $cantonesArray = array();
+            foreach ($cantones as $c) {
+                $cantonesArray[$c->getId()] = $c->getLugar();
+            }
+
+            $response = new JsonResponse();
+            return $response->setData(array('listacantones' => $cantonesArray));
+        } catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+        }
+    }
+
+    /*
+     * Funciones para cargar los combos dependientes via ajax
+     */
+    public function listarlocalidadesAction($cantn) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+
+            $query = $em->createQuery(
+                'SELECT lt
+                    FROM SieAppWebBundle:LugarTipo lt
+                    WHERE lt.lugarNivel = :nivel
+                    AND lt.lugarTipo = :lt1
+                    ORDER BY lt.id')
+                ->setParameter('nivel', 5)
+                ->setParameter('lt1', $cantn);
+            $localidades = $query->getResult();
+
+            $localidadesArray = array();
+            foreach ($localidades as $c) {
+                $localidadesArray[$c->getId()] = $c->getLugar();
+            }
+
+            $response = new JsonResponse();
+            return $response->setData(array('listalocalidades' => $localidadesArray));
         } catch (Exception $ex) {
             //$em->getConnection()->rollback();
         }

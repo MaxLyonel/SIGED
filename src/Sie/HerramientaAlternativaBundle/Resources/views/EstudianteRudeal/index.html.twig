@@ -301,6 +301,24 @@
                                         <div class="form-group row">
                                             <label class="col-md-4 col-sm-4">Municipio</label>
                                             <div class="col-md-8 col-sm-8">
+                                                {{ form_widget(formDireccion.municipioDir, {'attr':{'class':'form-control jupper', 'onchange':'listarCantones(this.value)'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-sm-4">Cantón</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                {{ form_widget(formDireccion.cantonDir, {'attr':{'class':'form-control jupper', 'onchange':'listarLocalidades(this.value)'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-sm-4">Localidad</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                {{ form_widget(formDireccion.localidadDir, {'attr':{'class':'form-control jupper', 'onchange':''} }) }}
+                                            </div>
+                                        </div>
+                                        {# <div class="form-group row">
+                                            <label class="col-md-4 col-sm-4">Municipio</label>
+                                            <div class="col-md-8 col-sm-8">
                                                 {{ form_widget(formDireccion.municipioLugarTipo, {'attr':{'class':'form-control jupper'} }) }}
                                             </div>
                                         </div>
@@ -309,7 +327,7 @@
                                             <div class="col-md-8 col-sm-8">
                                                 {{ form_widget(formDireccion.localidad, {'attr':{'class':'form-control jupper'} }) }}
                                             </div>
-                                        </div>
+                                        </div> #}
                                         <div class="form-group row">
                                             <label class="col-md-4 col-sm-4">Zona / Barrio / Villa</label>
                                             <div class="col-md-8 col-sm-8">
@@ -1042,20 +1060,29 @@
 
         peticion1 = $.ajax({
             type: 'get',
-            url: Routing.generate('info_estudiante_rude_listarprovincias', {'dpto': idDpto}),
+            url: Routing.generate('estudiante_rudeal_listarprovincias', {'dpto': idDpto}),
             beforeSend: function () {
                 $('#form_provinciaDir').empty();
-                $('#form_municipioLugarTipo').empty();
+                $('#form_municipioDir').empty();
+                $('#form_cantonDir').empty();
+                $('#form_localidadDir').empty();
+
                 $("#form_provinciaDir").append('<option value="">Seleccionar...</option>');
-                $("#form_municipioLugarTipo").append('<option value="">Seleccionar...</option>');
+                $("#form_municipioDir").append('<option value="">Seleccionar...</option>');
+                $("#form_cantonDir").append('<option value="">Seleccionar...</option>');
+                $("#form_localidadDir").append('<option value="">Seleccionar...</option>');
             },
             success: function (data) {
                 $('#form_provinciaDir').empty();
-                $('#form_municipioLugarTipo').empty();
-                $('#form_seccionivDescLocalidad').empty();
+                $('#form_municipioDir').empty();
+                $('#form_cantonDir').empty();
+                $('#form_localidadDir').empty();
+
                 $("#form_provinciaDir").append('<option value="">Seleccionar...</option>');
-                $("#form_municipioLugarTipo").append('<option value="">Seleccionar...</option>');
-                $("#form_seccionivDescLocalidad").append('<option value="">Seleccionar...</option>');
+                $("#form_municipioDir").append('<option value="">Seleccionar...</option>');
+                $("#form_cantonDir").append('<option value="">Seleccionar...</option>');
+                $("#form_localidadDir").append('<option value="">Seleccionar...</option>');
+
                 $.each(data.listaprovincias, function (i, value) {
                     $("#form_provinciaDir").append('<option value="' + i + '">' + value + '</option>');
                 });
@@ -1071,18 +1098,74 @@
 
         peticion2 = $.ajax({
             type: 'get',
-            url: Routing.generate('info_estudiante_rude_listarmunicipios', {'prov': idProv}),
+            url: Routing.generate('estudiante_rudeal_listarmunicipios', {'prov': idProv}),
             beforeSend: function () {
-                $('#form_municipioLugarTipo').empty();
-                $("#form_municipioLugarTipo").append('<option value="">Seleccionar...</option>');
+                $('#form_municipioDir').empty();
+                $('#form_cantonDir').empty();
+                $('#form_localidadDir').empty();
+
+                $("#form_municipioDir").append('<option value="">Seleccionar...</option>');
+                $("#form_cantonDir").append('<option value="">Seleccionar...</option>');
+                $("#form_localidadDir").append('<option value="">Seleccionar...</option>');
             },
             success: function (data) {
-                $('#form_municipioLugarTipo').empty();
-                $('#form_seccionivDescLocalidad').empty();
-                $("#form_municipioLugarTipo").append('<option value="">Seleccionar...</option>');
-                $("#form_seccionivDescLocalidad").append('<option value="">Seleccionar...</option>');
+                $('#form_municipioDir').empty();
+                $('#form_cantonDir').empty();
+                $('#form_localidadDir').empty();
+
+                $("#form_municipioDir").append('<option value="">Seleccionar...</option>');
+                $("#form_cantonDir").append('<option value="">Seleccionar...</option>');
+                $("#form_localidadDir").append('<option value="">Seleccionar...</option>');
                 $.each(data.listamunicipios, function (i, value) {
-                    $("#form_municipioLugarTipo").append('<option value="' + i + '">' + value + '</option>');
+                    $("#form_municipioDir").append('<option value="' + i + '">' + value + '</option>');
+                });
+            }
+        });
+    }
+
+    var peticion3;
+    function listarCantones(idMuni) {
+        if (peticion3 && peticion3.readyState != 4) {
+            peticion3.abort();
+        }
+
+        peticion3 = $.ajax({
+            type: 'get',
+            url: Routing.generate('estudiante_rudeal_listarcantones', {'muni': idMuni}),
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                $('#form_cantonDir').empty();
+                $('#form_localidadDir').empty();
+
+                $("#form_cantonDir").append('<option value="">Seleccionar...</option>');
+                $("#form_localidadDir").append('<option value="">Seleccionar...</option>');
+                $.each(data.listacantones, function (i, value) {
+                    $("#form_cantonDir").append('<option value="' + i + '">' + value + '</option>');
+                });
+            }
+        });
+    }
+    
+    var peticion4;
+    function listarLocalidades(idCantn) {
+        if (peticion4 && peticion4.readyState != 4) {
+            peticion4.abort();
+        }
+
+        peticion4 = $.ajax({
+            type: 'get',
+            url: Routing.generate('estudiante_rudeal_listarlocalidades', {'cantn': idCantn}),
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                $('#form_localidadDir').empty();
+
+                $("#form_localidadDir").append('<option value="">Seleccionar...</option>');
+                $.each(data.listalocalidades, function (i, value) {
+                    $("#form_localidadDir").append('<option value="' + i + '">' + value + '</option>');
                 });
             }
         });
