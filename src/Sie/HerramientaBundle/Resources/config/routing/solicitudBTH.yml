@@ -7,6 +7,7 @@ solicitud_bth_nuevasolicitud:
 solicitud_bth_enviosolicitud:
     path:     bthenviosolicitud/
     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:guardasolicitud }
+    methods:  POST
 solicitud_bth_imprimeDirector:
     path:     bhtimprimeFormulario/
     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:imprimirDirector}
@@ -31,12 +32,7 @@ solicitud_bth_enviosolicitud_Dep:
 solicitud_bth_departamental_index:
     path:     bthsolicitudDepartamental/
     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:SolicitidBTHDep }
-solicitud_bth_departamental_lista_imprime:
-     path:     bthsolicitudDepartamentalistalimprime/
-     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:SolicitidBTHDeplistaImprime }
-solicitud_bth_departamental_imprime:
-     path:     bthsolicitudDepartamentalimprime/
-     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:SolicitidBTHDepImprime }
+
 solicitud_bth_solicitudBTHDep:
     path:     bthsolicitudBTHDep/
     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:VerSolicitudBTHDep }
@@ -46,12 +42,7 @@ solicitud_bth_guarda_Dep:
 solicitud_bth_departamental_finaliza:
     path:     bthsolicitudDepartamentalfinalizatramite/
     defaults: { _controller: SieHerramientaBundle:SolicitudBTH:finalizatramiteBTHDep }
-solicitud_bth_seguimiento_tramite:
-    path:     bthseguimientotramite/
-    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:createSeguimientoform }
-solicitud_bth_seguimiento_verflujo:
-    path:     bthseguimientotramiteverflujo/
-    defaults: { _controller: SieHerramientaBundle:SolicitudBTH:verFlujo }
+
 
 
 

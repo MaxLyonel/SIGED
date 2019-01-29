@@ -339,18 +339,19 @@
             })
                 .then(function(willDelete)  {
                     if (willDelete) {
-                        var institucionid={{ institucion.id }};
+                        var institucion_id={{ institucion.id }};
 
                         var ip = [];
                         if($('#informe:checked').val())
                             ip.push({ informe : 1});
                         else ip.push({ informe : 0 });
+                        ip.push({institucionid : institucion_id});
                         var especialidades_id = [];
                         $("#select_especialidad").find("option").each(function(index, opc){
                             especialidades_id.push(opc.value);
                         });
                         ip.push({"select_especialidad" : especialidades_id});
-                        ip.push({institucionid : institucionid});
+
                         var obstxt=$('#obstxt').val();
                         if($('#siprocede').is(':checked')) {
                             ip.push({siprocededis: 1})
