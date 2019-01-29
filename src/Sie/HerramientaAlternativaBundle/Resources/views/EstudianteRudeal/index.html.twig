@@ -286,53 +286,79 @@
                                 <h4 class="page-header">III. DIRECCIÓN DE LA O EL ESTUDIANTE/PARTICIPANTE</h4>
                                 <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
                                     <div class="row">
-                                        <div class="form-group row">
-                                            <label class="col-md-4 col-sm-4">Departamento</label>
-                                            <div class="col-md-8 col-sm-8">
-                                                {{ form_widget(formDireccion.departamentoDir, {'attr':{'class':'form-control jupper', 'onchange':'listarProvincias(this.value)'} }) }}
+                                        {% if sie == 80730796 %}
+                                            <div class="form-group row">
+                                                <div class="col-md-4 col-sm-4">
+                                                    <div class="ckbox ckbox-success">
+                                                        {{ form_widget(formDireccion.ckInmigrante) }}
+                                                        {{ form_label(formDireccion.ckInmigrante) }}
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-md-4 col-sm-4">Provincia</label>
-                                            <div class="col-md-8 col-sm-8">
-                                                {{ form_widget(formDireccion.provinciaDir, {'attr':{'class':'form-control jupper', 'onchange':'listarMunicipios(this.value)'} }) }}
+                                            <div id="inmigrante" {% if rude.localidadLugarTipo.id == 0 %} style = "display:block" {% else %} style = "display:none" {% endif %}>
+                                                <div class="form-group row">
+                                                    <label class="col-md-4 col-sm-4">País</label>
+                                                    <div class="col-md-8 col-sm-8">
+                                                        {{ form_widget(formDireccion.paisInmigrante, {'attr':{'class':'form-control jupper'} }) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-4 col-sm-4">Ciudad / Zona / Barrio</label>
+                                                    <div class="col-md-8 col-sm-8">
+                                                        {{ form_widget(formDireccion.zonaInmigrante, {'attr':{'class':'form-control jupper'} }) }}
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-md-4 col-sm-4">Municipio</label>
-                                            <div class="col-md-8 col-sm-8">
-                                                {{ form_widget(formDireccion.municipioDir, {'attr':{'class':'form-control jupper', 'onchange':'listarCantones(this.value)'} }) }}
+                                        {% endif %}
+                                        <div id="inmigranteNo" {% if sie != 80730796 or (sie == 80730796 and rude.localidadLugarTipo.id != 0) %} style = "display:block" {% else %} style = "display:none" {% endif %}>
+                                            <div class="form-group row">
+                                                <label class="col-md-4 col-sm-4">Departamento</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    {{ form_widget(formDireccion.departamentoDir, {'attr':{'class':'form-control jupper', 'onchange':'listarProvincias(this.value)'} }) }}
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-md-4 col-sm-4">Cantón</label>
-                                            <div class="col-md-8 col-sm-8">
-                                                {{ form_widget(formDireccion.cantonDir, {'attr':{'class':'form-control jupper', 'onchange':'listarLocalidades(this.value)'} }) }}
+                                            <div class="form-group row">
+                                                <label class="col-md-4 col-sm-4">Provincia</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    {{ form_widget(formDireccion.provinciaDir, {'attr':{'class':'form-control jupper', 'onchange':'listarMunicipios(this.value)'} }) }}
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-md-4 col-sm-4">Localidad</label>
-                                            <div class="col-md-8 col-sm-8">
-                                                {{ form_widget(formDireccion.localidadDir, {'attr':{'class':'form-control jupper', 'onchange':''} }) }}
+                                            <div class="form-group row">
+                                                <label class="col-md-4 col-sm-4">Municipio</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    {{ form_widget(formDireccion.municipioDir, {'attr':{'class':'form-control jupper', 'onchange':'listarCantones(this.value)'} }) }}
+                                                </div>
                                             </div>
-                                        </div>
-                                        {# <div class="form-group row">
+                                            <div class="form-group row">
+                                                <label class="col-md-4 col-sm-4">Cantón</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    {{ form_widget(formDireccion.cantonDir, {'attr':{'class':'form-control jupper', 'onchange':'listarLocalidades(this.value)'} }) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-md-4 col-sm-4">Localidad</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    {{ form_widget(formDireccion.localidadDir, {'attr':{'class':'form-control jupper', 'onchange':''} }) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-md-4 col-sm-4">Zona / Barrio / Villa</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    {{ form_widget(formDireccion.zona, {'attr':{'class':'form-control jupper'} }) }}
+                                                </div>
+                                            </div>
+                                            {# <div class="form-group row">
                                             <label class="col-md-4 col-sm-4">Municipio</label>
                                             <div class="col-md-8 col-sm-8">
                                                 {{ form_widget(formDireccion.municipioLugarTipo, {'attr':{'class':'form-control jupper'} }) }}
                                             </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-md-4 col-sm-4">Localidad</label>
-                                            <div class="col-md-8 col-sm-8">
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-md-4 col-sm-4">Localidad</label>
+                                                <div class="col-md-8 col-sm-8">
                                                 {{ form_widget(formDireccion.localidad, {'attr':{'class':'form-control jupper'} }) }}
                                             </div>
-                                        </div> #}
-                                        <div class="form-group row">
-                                            <label class="col-md-4 col-sm-4">Zona / Barrio / Villa</label>
-                                            <div class="col-md-8 col-sm-8">
-                                                {{ form_widget(formDireccion.zona, {'attr':{'class':'form-control jupper'} }) }}
-                                            </div>
+                                            </div> #}
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-md-4 col-sm-4">Avenida / Calle</label>
@@ -647,6 +673,44 @@
 <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery.inputmask/dist/jquery.inputmask.bundle.min.js')}}"></script>
 <script type="text/javascript">
 
+    //VALIDACIONES PARA CEA CEPEAD INMIGARNTE
+     $('#form_ckInmigrante').click(function(){
+             //alert('hola');
+             var estaSeleccionado = $('#form_ckInmigrante').is(":checked");
+            if(  estaSeleccionado == true )
+            {
+                $('#inmigranteNo').css('display', 'none');
+                $('#inmigrante').css('display', 'block');
+                $('#form_zonaInmigrante').prop("required", true);
+                $('#form_paisInmigrante').prop("required", true);
+                $('#form_departamentoDir').removeAttr("required");
+                $('#form_provinciaDir').removeAttr("required");
+                $('#form_municipioDir').removeAttr("required");
+                $('#form_cantonDir').removeAttr("required");
+                $('#form_localidadDir').removeAttr("required");
+                $('#form_zona').removeAttr("required");
+                $('#form_avenida').removeAttr("required");
+                $('#form_numero').removeAttr("required");
+                $('#form_inmigrante').val('SI');
+            }else{
+                
+                $('#inmigranteNo').css('display', 'block');
+                $('#inmigrante').css('display', 'none');
+                $('#form_zonaInmigrante').removeAttr("required");
+                $('#form_paisInmigrante').removeAttr("required");
+                $('#form_departamentoDir').prop("required", true);
+                $('#form_provinciaDir').prop("required", true);
+                $('#form_municipioDir').prop("required", true);
+                $('#form_cantonDir').prop("required", true);
+                $('#form_localidadDir').prop("required", true);
+                $('#form_zona').prop("required", true);
+                $('#form_avenida').prop("required", true);
+                $('#form_numero').prop("required", true);
+                $('#form_inmigrante').val('NO');
+               
+            }
+        
+        });
     // APLICANDO BUSCADOR A LOS SELECTS
     $('#form_idioma1').chosen({width: "100%"});
     $('#form_idioma2').chosen({width: "100%"});
