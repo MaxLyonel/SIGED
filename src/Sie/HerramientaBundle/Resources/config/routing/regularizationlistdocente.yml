@@ -1,0 +1,26 @@
+
+regularization_docente_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:RegularizationListDocente:index }
+
+regularization_docente_find:
+    path:     /find
+    defaults: { _controller: SieHerramientaBundle:RegularizationListDocente:find }
+
+regularization_docente_getnivel:
+    path:     /getnivel/{idturno}/{sie}/{gestion}
+    defaults: { _controller: SieHerramientaBundle:RegularizationListDocente:getnivel }
+    options:
+         expose: true
+
+regularization_docente_getgrado:
+    path:     /getgrado/{idnivel}/{sie}/{gestion}/{idturno}
+    defaults: { _controller: SieHerramientaBundle:RegularizationListDocente:getgrado }
+    options:
+         expose: true
+
+regularization_docente_getparalelo:
+    path:     /getgrado/{sie}/{gestion}/{idturno}/{idnivel}/{idgrado}
+    defaults: { _controller: SieHerramientaBundle:RegularizationListDocente:getparalelo }
+    options:
+         expose: true
