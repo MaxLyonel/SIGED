@@ -82,6 +82,14 @@ herramientalt_ceducativa_crear_periodo_cea:
     path:     /crearPeriodoCea/
     defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:crearPeriodoCea}
 
+herramientalt_ceducativa_crear_sucursal:
+    path:     /crearSucursal/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:crearSucursal}
+
+herramientalt_ceducativa_crear_sucursal_cea:
+    path:     /crearSucursalCea/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:crearSucursalCea}
+
 sie_alt_ges_sub_sem_ceas_pendinte:
     path:     /ceaspendientes/
     defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:ceaspendientes}

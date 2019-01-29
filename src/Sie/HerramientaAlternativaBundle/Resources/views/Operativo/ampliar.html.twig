@@ -56,7 +56,8 @@
                                         <th>Gestión</th>
                                         <th>Fecha inicio</th>
                                         <th>Fecha fin</th>                                                
-                                        <th>Usuario Registro</th>                                                
+                                        <th>Usuario Registro</th>     
+                                        <th class="text-center" style="min-width:5px">Nro. CEAS</th>                                           
                                         <th class="text-center" style="min-width:5px">CEAS</th>                                                
                                         <th>Ampliar</th>
                                     </tr>
@@ -71,6 +72,7 @@
                                         <th>Fecha inicio</th>
                                         <th>Fecha fin</th>                                                
                                         <th>Usuario Registro</th>
+                                        <th class="text-center" style="min-width:5px">Nro. CEAS</th>
                                         <th class="text-center" style="min-width:3px">CEAS</th>                                                                                                
                                         <th>Ampliar</th>
                                     </tr>
@@ -86,6 +88,7 @@
                                             <td>{{ entity.fechaInicio.date|date('d-m-Y') }}</td>
                                             <td>{{ entity.fechaFin.date|date('d-m-Y') }}</td>
                                             <td>{{ entity.usuarioRegistro.persona.nombre }}</td>
+                                            <td class="text-center" style="min-width:5px">{{ nro[entity.id] }}</td>
                                             <td class="text-center" style="min-width:3px">
                                                 <a class="btn btn-success btn-xs text-primary" data-toggle="modal" data-target="#modal" data-placement="top" title="Ver Ceas del operativo" onclick="verCeas({{entity.id}})">
                                                     <i class="glyphicon glyphicon-eye-open"></i>

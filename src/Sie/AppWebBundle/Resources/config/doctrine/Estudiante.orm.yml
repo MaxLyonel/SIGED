@@ -1,6 +1,7 @@
 Sie\AppWebBundle\Entity\Estudiante:
     type: entity
     table: estudiante
+    repositoryClass: Sie\AppWebBundle\Entity\EstudianteRepository
     indexes:
         indx_ci:
             columns:

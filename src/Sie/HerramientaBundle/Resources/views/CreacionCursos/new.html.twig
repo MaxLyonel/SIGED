@@ -19,22 +19,7 @@
     </div><!-- /.header-content -->
 
     <div class="body-content animated fadeIn">
-        <div class="row">
-            <div class="col-md-12 col-sm-12">
-                <!-- Start widget newsletter -->
-                <div class="panel text-center rounded shadow">
-                    <div class="panel-body bg-lilac rounded">
-                        <div class="inner-all">
-                            <h4 class="text-uc">Información Unidad Educativa</h4>
-                            <p>SIE : {{institucion.id}}</p>
-                            <p>Unidad Educativa :{{institucion.institucioneducativa}} - {{gestion}}</p>
-                            <h5 class="text-uc">Opción: Crear Curso</h5>
-                        </div>
-                    </div><!-- /.panel-body -->
-                </div><!-- /.panel -->
-                <!--/ End widget newsletter -->
-            </div>
-        </div><!-- /.row -->
+        {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Información Unidad Educativa', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Nuevo Curso'} %}
         <div class="row">
             <div class="col-md-12">
                 {% for flashMessage in app.session.flashbag.get('msgError') %}

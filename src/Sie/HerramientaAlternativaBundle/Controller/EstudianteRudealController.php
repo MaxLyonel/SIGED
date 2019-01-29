@@ -24,6 +24,7 @@ use Sie\AppWebBundle\Entity\RudeMediosComunicacion;
 use Sie\AppWebBundle\Entity\RudeMedioTransporte;
 use Sie\AppWebBundle\Entity\RudeAbandono;
 use Sie\AppWebBundle\Entity\RudeApoderadoInscripcion;
+use Sie\AppWebBundle\Entity\RudeEducacionDiversa;
 use Sie\AppWebBundle\Entity\Persona;
 
 use Doctrine\ORM\EntityRepository;
@@ -87,13 +88,25 @@ class EstudianteRudealController extends Controller {
             if(count($rudeAnterior) == 1){
 
                 $rudeAnterior = $rudeAnterior[0];
-
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude');")->execute();
                 $rude = clone $rudeAnterior;
                 $rude->setEstudianteInscripcion($inscripcion);
+                $rude->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find(2));
                 $em->persist($rude);
                 $em->flush();
 
+                // REGISTRO DE EDUCACION DIVERSA
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_educacion_diversa');")->execute();
+                $diversas = $em->getRepository('SieAppWebBundle:RudeEducacionDiversa')->findBy(array('rude'=>$rudeAnterior));
+                foreach ($diversas as $di) {
+                    $newDiversa = clone $di;
+                    $newDiversa->setRude($rude);
+                    $em->persist($newDiversa);
+                    $em->flush();
+                }
+
                 // REGISTRO DE DISCAPACIDADES
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_discapacidad_grado');")->execute();
                 $discapacidades = $em->getRepository('SieAppWebBundle:RudeDiscapacidadGrado')->findBy(array('rude'=>$rudeAnterior));
                 foreach ($discapacidades as $d) {
                     $newDiscapacidad = clone $d;
@@ -103,6 +116,7 @@ class EstudianteRudealController extends Controller {
                 }
 
                 // REGISTRO DE IDIOMAS
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_idioma');")->execute();
                 $idiomas = $em->getRepository('SieAppWebBundle:RudeIdioma')->findBy(array('rude'=>$rudeAnterior));
                 foreach ($idiomas as $i) {
                     $newIdioma = clone $i;
@@ -112,6 +126,7 @@ class EstudianteRudealController extends Controller {
                 }
 
                 // REGISTRO DE ACTIVIDADES OCUPACIONES
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_actividad');")->execute();
                 $actividades = $em->getRepository('SieAppWebBundle:RudeActividad')->findBy(array('rude'=>$rudeAnterior));
                 foreach ($actividades as $a) {
                     $newActividad = clone $a;
@@ -121,6 +136,7 @@ class EstudianteRudealController extends Controller {
                 }
 
                 // REGISTRO DE ACUDIO CENTRO SALUD
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_centro_salud');")->execute();
                 $centrosSalud = $em->getRepository('SieAppWebBundle:RudeCentroSalud')->findBy(array('rude'=>$rudeAnterior));
                 foreach ($centrosSalud as $cs) {
                     $newCentroSalud = clone $cs;
@@ -130,6 +146,7 @@ class EstudianteRudealController extends Controller {
                 }
 
                 // REGISTRO DE MEDIOS DE COMUNICACION
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_medios_comunicacion');")->execute();
                 $mediosComunicacion = $em->getRepository('SieAppWebBundle:RudeMediosComunicacion')->findBy(array('rude'=>$rudeAnterior));
                 foreach ($mediosComunicacion as $mc) {
                     $newMedioComunicacion = clone $mc;
@@ -139,6 +156,7 @@ class EstudianteRudealController extends Controller {
                 }
 
                 // REGISTRO DE MEDIOS DE TRANSPORTE
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_medio_transporte');")->execute();
                 $mediosTransporte = $em->getRepository('SieAppWebBundle:RudeMedioTransporte')->findBy(array('rude'=>$rudeAnterior));
                 foreach ($mediosTransporte as $mt) {
                     $newMedioTransporte = clone $mt;
@@ -148,6 +166,7 @@ class EstudianteRudealController extends Controller {
                 }
 
                 // REGISTRO DE MOTIVOS DE ABANDONO
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_abandono');")->execute();
                 $motivosAbandono = $em->getRepository('SieAppWebBundle:RudeAbandono')->findBy(array('rude'=>$rudeAnterior));
                 foreach ($motivosAbandono as $ma) {
                     $newMotivoAbandono = clone $ma;
@@ -173,6 +192,7 @@ class EstudianteRudealController extends Controller {
                 $rude->setEstudianteInscripcion($inscripcion);
                 $rude->setFechaRegistro(new \DateTime('now'));
                 $rude->setLugarRegistroRude($direccion);
+                $rude->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find(2));
                 $rude->setRegistroFinalizado(0);
                 $em->persist($rude);
                 $em->flush();
@@ -227,18 +247,21 @@ class EstudianteRudealController extends Controller {
             }
         }
 
-        // if($e->getCarnetIdentidad() != ""){
-        //     $tipoDocumento = 'carnet';
-        //     $documento = $e->getCarnetIdentidad();
-        // }else{
-        //     if($e->getPasaporte() != ""){
-        //         $tipoDocumento = 'pasaporte';
-        //         $documento = $e->getPasaporte();
-        //     }else{
-        //         $tipoDocumento = 'carnet';
-        //         $documento = '';
-        //     }
-        // }
+        // EDUCACION DIVERSA
+        $diversa = $em->getRepository('SieAppWebBundle:RudeEducacionDiversa')->findOneBy(array('rude'=>$rude));
+        if(!$diversa){
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_educacion_diversa');")->execute();
+            $newEducacionDiversa = new RudeEducacionDiversa();
+            $newEducacionDiversa->setRude($rude);
+            $newEducacionDiversa->setEducacionDiversaTipo($em->getRepository('SieAppWebBundle:EducacionDiversaTipo')->find(1));
+            $newEducacionDiversa->setFechaRegistro(new \DateTime('now'));
+            $em->persist($newEducacionDiversa);
+            $em->flush();
+
+            $diversa = $newEducacionDiversa;
+        }
+
+
 
         // LUGAR DE NACIMIENTO
 
@@ -292,11 +315,115 @@ class EstudianteRudealController extends Controller {
                             'data'=>($rude->getServicioMilitarTipo())?$rude->getServicioMilitarTipo():'',
                             'mapped'=>false
                         ))
+                    // DIVERSA
+                    ->add('diversaId', 'hidden', array('data'=>$diversa->getId()))
+                    ->add('diversa', 'entity', array(
+                            'class' => 'SieAppWebBundle:EducacionDiversaTipo',
+                            'query_builder' => function (EntityRepository $e) {
+                                return $e->createQueryBuilder('ed')
+                                        ->where('ed.id in (1,2,3,4)');
+                            },
+                            'property'=>'educacionDiversa',
+                            'required' => true,
+                            'data'=>($diversa)?$diversa->getEducacionDiversaTipo():1,
+                          
+                        ))
 
                     ->getForm();
 
         return $form;
     }
+
+    public function diversaAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+
+        $diversaId = $request->get('diversaId');
+        $diversa = $request->get('diversa');
+
+        $rudeEducacionDiversa = $em->getRepository('SieAppWebBundle:RudeEducacionDiversa')->find($diversaId);
+        $fuerzaMilitar = null;
+        $unidadMilitar = null;
+        $unidadesMilitares = [];
+        $lugarReclusion = null;
+        $recintoPenitenciario = null;
+        $recintosPenitenciarios = [];
+
+        // dump($rudeEducacionDiversa);die;
+
+        if($rudeEducacionDiversa->getEducacionDiversaTipo()->getId() == 2){
+            if($rudeEducacionDiversa->getUnidadMilitarTipo()){
+                $fuerzaMilitar = $rudeEducacionDiversa->getUnidadMilitarTipo()->getFuerzaMilitarTipo()->getId();
+                $unidadMilitar = $rudeEducacionDiversa->getUnidadMilitarTipo()->getId();
+                $unidadesMilitares = $em->getRepository('SieAppWebBundle:UnidadMilitarTipo')->findBy(array('fuerzaMilitarTipo'=>$rudeEducacionDiversa->getUnidadMilitarTipo()->getFuerzaMilitarTipo()->getId()));
+            }
+        }
+        if($rudeEducacionDiversa->getEducacionDiversaTipo()->getId() == 3){
+            if($rudeEducacionDiversa->getRecintoPenitenciarioTipo()){
+                $lugarReclusion = $rudeEducacionDiversa->getRecintoPenitenciarioTipo()->getLugarReclusionTipo()->getId();
+                $recintoPenitenciario = $rudeEducacionDiversa->getRecintoPenitenciarioTipo()->getId();
+                $recintosPenitenciarios = $em->getRepository('SieAppWebBundle:RecintoPenitenciarioTipo')->findBy(array('lugarReclusionTipo'=>$rudeEducacionDiversa->getRecintoPenitenciarioTipo()->getLugarReclusionTipo()->getId()));
+            }
+        }
+
+        $fuerzasMilitares = $em->getRepository('SieAppWebBundle:FuerzaMilitarTipo')->findAll();
+        $lugaresReclusion = $em->getRepository('SieAppWebBundle:LugarReclusionTipo')->findAll();
+
+        return $this->render('SieHerramientaAlternativaBundle:EstudianteRudeal:diversa.html.twig', array(
+            'diversa'=>$diversa,
+            'rudeEducacionDiversa'=>$rudeEducacionDiversa,
+            'fuerzaMilitar'=>$fuerzaMilitar,
+            'fuerzasMilitares'=>$fuerzasMilitares,
+            'unidadMilitar'=>$unidadMilitar,
+            'unidadesMilitares'=>$unidadesMilitares,
+            'lugarReclusion'=>$lugarReclusion,
+            'lugaresReclusion'=>$lugaresReclusion,
+            'recintoPenitenciario'=>$recintoPenitenciario,
+            'recintosPenitenciarios'=>$recintosPenitenciarios
+        ));
+    }
+
+    public function cargarUnidadesMilitaresAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $fuerzaMilitar = $request->get('fuerzaMilitar');
+        $query = $em->createQuery(
+                        'SELECT umt
+                        FROM SieAppWebBundle:UnidadMilitarTipo umt
+                        WHERE umt.fuerzaMilitarTipo = :fuerzaMilitar
+                        ORDER BY umt.id')
+                        ->setParameter('fuerzaMilitar', $fuerzaMilitar);
+
+        $unidadesMilitares = $query->getResult();
+
+        $unidadesArray = array();
+        foreach ($unidadesMilitares as $um) {
+            $unidadesArray[$um->getId()] = $um->getUnidadMilitar();
+        }
+
+        $response = new JsonResponse();
+        return $response->setData(array('listaUnidades' => $unidadesArray));
+    }
+
+    public function cargarRecintosPenitenciariosAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $lugarReclusion = $request->get('lugarReclusion');
+        $query = $em->createQuery(
+                        'SELECT rpt
+                        FROM SieAppWebBundle:RecintoPenitenciarioTipo rpt
+                        WHERE rpt.lugarReclusionTipo = :lugarReclusion
+                        ORDER BY rpt.id')
+                        ->setParameter('lugarReclusion', $lugarReclusion);
+
+        $recintosPenitenciarios = $query->getResult();
+
+        $recintosArray = array();
+        foreach ($recintosPenitenciarios as $rp) {
+            $recintosArray[$rp->getId()] = $rp->getRecintoPenitenciario();
+        }
+
+        $response = new JsonResponse();
+        return $response->setData(array('listaRecintos' => $recintosArray));
+    }
+
 
     /*
      * GUARDAR DATOS DEL FORMULARIO ESTUDIANTE
@@ -325,6 +452,26 @@ class EstudianteRudealController extends Controller {
         }else{
             $rude->setServicioMilitarTipo(null);
         }
+
+        // EDUCACION DIVERSA
+        $rudeEducacionDiversa = $em->getRepository('SieAppWebBundle:RudeEducacionDiversa')->find($form['diversaId']);
+        $rudeEducacionDiversa->setEducacionDiversaTipo($em->getRepository('SieAppWebBundle:EducacionDiversaTipo')->find($form['diversa']));
+
+        if($form['diversa'] == 2){            
+            $rudeEducacionDiversa->setUnidadMilitarTipo($em->getRepository('SieAppWebBundle:UnidadMilitarTipo')->find($request->get('unidadMilitar')));
+            $rudeEducacionDiversa->setRecintoPenitenciarioTipo(null);
+        }else{
+            if($form['diversa'] == 3){
+                $rudeEducacionDiversa->setUnidadMilitarTipo(null);
+                $rudeEducacionDiversa->setRecintoPenitenciarioTipo($em->getRepository('SieAppWebBundle:RecintoPenitenciarioTipo')->find($request->get('recintoPenitenciario')));
+            }else{
+                $rudeEducacionDiversa->setUnidadMilitarTipo(null);
+                $rudeEducacionDiversa->setRecintoPenitenciarioTipo(null);
+            }
+        }
+        /////////////////////////
+
+        $em->flush();
 
         // ACTUALIZAMOS REGISTRO FINALIZADO DEL RUDE
         if($rude->getRegistroFinalizado() == null or $rude->getRegistroFinalizado() < 1){
@@ -852,7 +999,7 @@ class EstudianteRudealController extends Controller {
                             'multiple'=>false,
                             'property'=>'descripcion',
                             'required'=>false,
-                            'data'=>$em->getRepository('SieAppWebBundle:CentroSaludTipo')->findBy(array('id'=>$arrayCentros)),
+                            'data'=>($arrayCentros)? $em->getReference('SieAppWebBundle:CentroSaludTipo', $arrayCentros[0]):0,
                             'mapped'=>false
                         ))
                     ->add('sangreTipo', 'entity', array(
@@ -938,7 +1085,6 @@ class EstudianteRudealController extends Controller {
                     ->add('abandonoOtro', 'text', array('mapped'=>false, 'required'=>false, 'data'=> ($abandonoOtro)?$abandonoOtro->getAbandonoOtro():''))
 
                     ->getForm();
-
         return $form;
     }
 

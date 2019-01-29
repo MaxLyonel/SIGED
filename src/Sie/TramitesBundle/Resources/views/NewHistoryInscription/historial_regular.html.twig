@@ -1,11 +1,11 @@
 <div class="row">
-  <div class="col-md-12 text-center">
-    <h3 class="text-primary">Educación Regular</h3>
-  </div>
+    <div class="col-md-12 text-center">
+        <h3 class="text-primary">Educación Regular</h3>
+    </div>
 </div>
 <div class="table-responsive">
-  <div id="example-table_wrapper" class="dataTables_wrapper form-inline" role="grid">
-    <table id="example-table" class="table table-striped table-bordered table-hover table-green dataTable" aria-describedby="example-table_info">
+    <div id="example-table_wrapper" class="dataTables_wrapper form-inline" role="grid">
+        <table id="example-table" class="table table-striped table-bordered table-hover table-green dataTable" aria-describedby="example-table_info">
       <thead>
         <tr role="row">
           <th class="text-center">Gestión</th>
@@ -32,7 +32,7 @@
             <td>{{data.turno_raep}} </td>
             <td class="text-center">{{data.estadomatricula_fin_r}}</td>
             <td class="text-center">
-              <a href="#" onclick="seeNotaNew('{{data.estudiante_inscripcion_id_raep}}', '{{data.estudiante_id_raep}}', '{{data.nivel_tipo_id_r}}', '{{data.grado_tipo_id_r}}', '{{data.paralelo_tipo_id_raep}}', '{{data.turno_tipo_id_raep}}', '{{data.gestion_tipo_id_raep}}', '{{data.institucioneducativa_id_raep}}','{{data.estadomatricula_tipo_id_fin_r}}')" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>
+              <a href="#" onclick="seeNotaNew('{{data.estudiante_inscripcion_id_raep}}', '{{data.estudiante_id_raep}}', '{{data.gestion_tipo_id_raep}}', '1')" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>
             </td>
           </tr>
         {% endfor %}
