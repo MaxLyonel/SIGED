@@ -48,7 +48,6 @@ class SolicitudBTHController extends Controller {
     }
 //Director
     public function indexAction (Request $request) {
-
         $this->session  = $request->getSession();
         $id_usuario     = $this->session->get('userId');
         $id_rol     = $this->session->get('roluser');
@@ -166,7 +165,7 @@ class SolicitudBTHController extends Controller {
         $TramiteController->setContainer($this->container);
 
         $lista = $TramiteController->tramiteTarea(34,34,7,$id_usuario,$id_rol,$ie_id);
-        //dump($lista);die;
+
         return $this->render($this->session->get('pathSystem') . ':SolicitudBTH:index.html.twig', array(
             'ieducativa' => $infoUe,
             'institucion' => $institucion,
@@ -187,7 +186,7 @@ class SolicitudBTHController extends Controller {
         $td = $query->fetchAll();
         if ($td[0]['tramite_detalle_id']){
             $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find($td[0]['tramite_detalle_id']);
-            if($tramiteDetalle->getTramiteEstado()->getId()== 16){
+            if($tramiteDetalle->getTramiteEstado()->getId()== 4){
                 $iUE = $tramiteDetalle->getTramite()->getInstitucioneducativa()->getId();
                 return $this->redirectToRoute('solicitud_bth_formulario',array('iUE'=>$iUE,'id_tramite'=>$request->get('id')));
             }
@@ -267,8 +266,6 @@ class SolicitudBTHController extends Controller {
          */
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($institucion);
         $institucionid = $request->getSession()->get('ie_id');
-
-
         // Lista de cursos institucioneducativa
         $query = $em->getConnection()->prepare("SELECT  iue.grado_tipo_id,gt.grado  
                                                 FROM institucioneducativa_curso iue 
@@ -280,7 +277,7 @@ class SolicitudBTHController extends Controller {
         $cursos = $query->fetchAll();
 
         /*
-         * Listasmos los maestros inscritos en la unidad educativa
+         * Listamos los maestros inscritos en la unidad educativa
          */
         $maestros = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion, 'cargoTipo' => 0));
 
@@ -323,35 +320,45 @@ class SolicitudBTHController extends Controller {
             'grado'         => $grado['grado_tipo_id']));
 
     }
-    public function guardasolicitudAction(Request $request){
-        //dump($request);die;
+    public function guardasolicitudAction(Request $request){ //dump($request);die;
         $id_Institucion = $request->get('institucionid');
         $gestion =  $request->getSession()->get('currentyear');
-        $sw = $request->get('sw');
-       // dump($id_Institucion); dump($gestion);die;
         $em = $this->getDoctrine()->getManager();
-        /**
-         * Adecuacion solo para que todas las unidades-BTH puedan realizar su regularizacion
-         */
-
-        $query = $em->getConnection()->prepare("SELECT COUNT(ieht.id) as cantidad_ue_plena FROM institucioneducativa_humanistico_tecnico ieht  
+        $sw = $request->get('sw');
+        if($sw==0){
+            /**
+             * Adecuacion solo para que todas las unidades-BTH puedan realizar su regularizacion
+             */
+            $query = $em->getConnection()->prepare("SELECT COUNT(ieht.id) as cantidad_ue_plena FROM institucioneducativa_humanistico_tecnico ieht  
                                                 WHERE ieht.institucioneducativa_id=$id_Institucion 
                                                 ORDER BY 1");
-        $query->execute();
-        $ue_bth = $query->fetchAll();
-        $es_plena=$ue_bth[0]['cantidad_ue_plena'];
-
-        /**
-         * Verificicacion de que la UE inicio un tramite
-         */
-        $query = $em->getConnection()->prepare("SELECT COUNT(tr.id)AS  cantidad_tramite_bth FROM tramite tr  
+            $query->execute();
+            $ue_bth = $query->fetchAll();
+            $es_plena=$ue_bth[0]['cantidad_ue_plena'];
+            /**
+             * Verificicacion de que la UE inicio un tramite
+             */
+            $query = $em->getConnection()->prepare("SELECT COUNT(tr.id)AS  cantidad_tramite_bth FROM tramite tr  
                                                 WHERE tr.flujo_tipo_id = 7 AND tr.institucioneducativa_id = $id_Institucion
                                                 AND tr.gestion_id = $gestion");
-        $query->execute();
-        $tramite_ue = $query->fetchAll();
-        $tramite_iniciado=$tramite_ue[0]['cantidad_tramite_bth'];
-
-        /**
+            $query->execute();
+            $tramite_ue = $query->fetchAll();
+            $tramite_iniciado=$tramite_ue[0]['cantidad_tramite_bth'];
+        } else{//tramite devuelto
+            $tramite_iniciado=0;
+            $query = $em->getConnection()->prepare("SELECT COUNT(ieht.id) as cantidad_ue_plena FROM institucioneducativa_humanistico_tecnico ieht  
+                                                WHERE ieht.institucioneducativa_id=$id_Institucion 
+                                                ORDER BY 1");
+            $query->execute();
+            $ue_bth = $query->fetchAll();
+            $es_plena=$ue_bth[0]['cantidad_ue_plena'];
+            if($es_plena>1){
+                $es_plena=1;
+            }else{
+                $es_plena=0;
+            }
+        }
+         /**
          * verificamos el tipo de solicitud 45 tramite nuevo
          */
 
@@ -366,10 +373,9 @@ class SolicitudBTHController extends Controller {
                     $tarea          = 34;//Solicita BTH
                     $tabla          = 'institucioneducativa';
                     $datos          = ($request->get('ipt'));
-
                     $id_tipoTramite = 45;//Registro Nuevo
-                   // $informacion    = json_decode($request->get('ipt',true)) ;
                     $idTramite='';
+
                     $wfTramiteController = new WfTramiteController();
                     $wfTramiteController->setContainer($this->container);
                     if($sw == 0){//primer envio de solicitud
@@ -427,124 +433,13 @@ class SolicitudBTHController extends Controller {
                 $res = 3; // esq ya inicio un tramite
             }
         }
-
-        //dump($res);die;
         return  new Response($res);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-       /* $query = $em->getConnection()->prepare("SELECT ieht.id,ieht.gestion_tipo_id,ieht.gestion_tipo_id FROM institucioneducativa_humanistico_tecnico ieht
-                                                WHERE ieht.institucioneducativa_id=$id_Institucion AND ieht.gestion_tipo_id = $gestion 
-                                                ORDER BY 1");
-        $query->execute();
-        $instucioneducativa = $query->fetchAll();
-        $cant = count($instucioneducativa);
-        //Verificicacion de que la UE inicio un tramite
-        $query = $em->getConnection()->prepare("SELECT COUNT(*) FROM tramite tr  WHERE tr.flujo_tipo_id = 7 AND tr.institucioneducativa_id = $id_Institucion
-                                                AND tr.gestion_id = $gestion");
-        $query->execute();
-        $instucioneducativacant = $query->fetch();
-
-            if( $request->get('idsolicitud')== 45 ){
-                if($instucioneducativacant['count'] < 1){
-                    if($cant==0){
-                        $id_rol         = $this->session->get('roluser');
-                        $id_usuario     = $this->session->get('userId');
-                        $id_Institucion = $request->get('institucionid');
-                        $id_distrito    = $request->get('id_distrito');
-                        $flujotipo      = 7;//SOLICITUDBTH
-                        $tarea          = 34;//Solicita BTH
-                        $tabla          = 'institucioneducativa';
-
-                        $id_tipoTramite = 45;//Registro Nuevo
-                        $informacion    = json_decode($request->get('ipt',true)) ;
-                        $idTramite='';
-                        $wfTramiteController = new WfTramiteController();
-                        $wfTramiteController->setContainer($this->container);
-                        $datos = ($request->get('ipt'));
-
-                        if($sw == 0){
-                            $mensaje = $wfTramiteController->guardarTramiteNuevo($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'',$id_tipoTramite,'',$idTramite,$datos,'',$id_distrito);
-                        }
-                        else{
-                            $idTramite = $request->get('id_tramite');
-                            $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'','',$idTramite,$datos,'',$id_distrito);
-                        }
-                        $res = 1;
-
-                    }
-                    else{
-                        $res = 2;//no puede como nuevo
-                    }
-                }else{
-                    $res = 3;
-                    return  new Response($res);
-                }
-            }
-            else{
-
-                if($cant>0){
-                    $id_rol         = $this->session->get('roluser');
-                    $id_usuario     = $this->session->get('userId');
-                    $id_Institucion = $request->get('institucionid');
-                    $id_distrito    = $request->get('id_distrito');
-                    $flujotipo      = 7;//SOLICITUDBTH
-                    $tarea          = 34;//Solicita BTH
-                    $tabla          = 'institucioneducativa';
-
-                    $id_tipoTramite = 46;//Ratificacion
-                    $informacion    = json_decode($request->get('ipt',true)) ;
-
-                    $idTramite ='';
-
-                    $wfTramiteController = new WfTramiteController();
-                    $wfTramiteController->setContainer($this->container);
-                    $datos = ($request->get('ipt'));
-                    if($sw == 0){
-                        $mensaje = $wfTramiteController->guardarTramiteNuevo($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'',$id_tipoTramite,'',$idTramite,$datos,'',$id_distrito);
-                    }
-                    else{
-                        $idTramite = $request->get('id_tramite');
-                        $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'','',$idTramite,$datos,'',$id_distrito);
-                    }
-
-                    $res = 1;
-                }else{
-                    $res = 3;
-                }
-            }
-            return  new Response($res);*/
     }
     public function imprimirDirectorAction(Request $request){
-        //dump($request);die;
         $tramite_id = $request->get('idtramite');
-        //$idUE       = $request->get('idUE');
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('SieAppWebBundle:Tramite')->find($tramite_id);
-
         $idUE       = $repository->getInstitucioneducativa()->getId();
-
-
-       // $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find();
         $repository = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal');
         $query = $repository->createQueryBuilder('inss')
             ->select('max(inss.gestionTipo)')
@@ -553,6 +448,7 @@ class SolicitudBTHController extends Controller {
             ->getQuery();
         $inss = $query->getResult();
         $gestion = $inss[0][1];
+        $gestion=2018;//adecuacion a la gestion anterior hasta que pase la etapa de inscripciones
         $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
             ->select('wf')
             ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wf.tramiteDetalle')
@@ -772,11 +668,7 @@ class SolicitudBTHController extends Controller {
          * institucioneducativa_humanistico_tecnico.
          */
         $id_institucion = $request->get('institucionid');
-       //$gestion =  $request->getSession()->get('currentyear'); para la gestion actual
-
-
         $em = $this->getDoctrine()->getManager();
-
         /**
          * Obtenemos la ultima gestion en la que la UE fue registrada en la tabla
          * institucioneducativa_humanistico_tecnico
@@ -787,24 +679,26 @@ class SolicitudBTHController extends Controller {
         $query->execute();
         $ultima_gestion_registrada = $query->fetchAll();
         $gestion=$ultima_gestion_registrada[0]['max']; // ultima gestion en kla que fue registrada la UE como BTH
-
-
-        $query = $em->getConnection()->prepare("SELECT espt.id, espt.especialidad,ieth.gestion_tipo_id
+        if($gestion != null){//Si la UE nunca fue declarada como BTH
+            $query = $em->getConnection()->prepare("SELECT espt.id, espt.especialidad,ieth.gestion_tipo_id
                                                 FROM institucioneducativa_especialidad_tecnico_humanistico ieth
                                                 INNER JOIN especialidad_tecnico_humanistico_tipo espt ON   ieth.especialidad_tecnico_humanistico_tipo_id =  espt.id
                                                 WHERE ieth.institucioneducativa_id = $id_institucion AND ieth.gestion_tipo_id = $gestion
                                                 ORDER BY 1");
-        $query->execute();
-        $lista_especialidad = $query->fetchAll();
-        $lista_especialidadarray = array();
-        for($i=0;$i<count($lista_especialidad);$i++){
-            $lista_especialidadarray[]=array('id'=>$lista_especialidad[$i]['id'],'especialidad'=>$lista_especialidad[$i]['especialidad'] );
+            $query->execute();
+            $lista_especialidad = $query->fetchAll();
+            $lista_especialidadarray = array();
+            for($i=0;$i<count($lista_especialidad);$i++){
+                $lista_especialidadarray[]=array('id'=>$lista_especialidad[$i]['id'],'especialidad'=>$lista_especialidad[$i]['especialidad'] );
+            }
+            return new JsonResponse($lista_especialidadarray);
+        }else{
+            $lista_especialidadarray="";
+            return new JsonResponse($lista_especialidadarray);
         }
-        return new JsonResponse($lista_especialidadarray);
     }
 //Distrital
-    public  function SolicitidBTHDisAction(Request $request){
-
+    public function SolicitidBTHDisAction(Request $request){
         $id_rol= $this->session->get('roluser');
         $id_usuario= $this->session->get('userId');
         $TramiteController = new TramiteRueController();
@@ -813,6 +707,7 @@ class SolicitudBTHController extends Controller {
         return $this->render('SieHerramientaBundle:SolicitudBTH:inicioDistrital.html.twig',array('lista_tramites'=>$lista['tramites']));
     }
     public function  VerSolicitudBTHDisAction(Request $request){
+
         //validation if the user is logged
 
         $id_tramite = $request->get('id');//ID de Tramite
@@ -950,16 +845,43 @@ class SolicitudBTHController extends Controller {
             ->getResult();
 
         $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
+        //dump($datos);die;
         $informe= $datos[0]['informe'];
+
         $especialidadarray = array();
-        for($i=0;$i<count($datos[2]['select_especialidad']);$i++){
+
+        for($i=0;$i<count($datos[2]['select_especialidad']);$i++) {
             $idespecialidad = $datos[2]['select_especialidad'][$i];
             $query = $em->getConnection()->prepare("SELECT eth.id,eth.especialidad FROM especialidad_tecnico_humanistico_tipo eth WHERE eth. id=$idespecialidad");
             $query->execute();
             $especialidad = $query->fetch();
-            $especialidadarray[]=array('id'=>$especialidad['id'],'especialidad'=>$especialidad['especialidad'] );
+            $especialidadarray[] = array('id' => $especialidad['id'], 'especialidad' => $especialidad['especialidad']);
             $especialidadifno[$i] = $idespecialidad;
         }
+        /*if($datos[1]=='select_especialidad'){
+            $especialidadarray = array();
+
+            for($i=0;$i<count($datos[1]['select_especialidad']);$i++){
+                $idespecialidad = $datos[1]['select_especialidad'][$i];
+                $query = $em->getConnection()->prepare("SELECT eth.id,eth.especialidad FROM especialidad_tecnico_humanistico_tipo eth WHERE eth. id=$idespecialidad");
+                $query->execute();
+                $especialidad = $query->fetch();
+                $especialidadarray[]=array('id'=>$especialidad['id'],'especialidad'=>$especialidad['especialidad'] );
+                $especialidadifno[$i] = $idespecialidad;
+            }
+        }else{
+            $especialidadarray = array();
+
+            for($i=0;$i<count($datos[2]['select_especialidad']);$i++){
+                $idespecialidad = $datos[2]['select_especialidad'][$i];
+                $query = $em->getConnection()->prepare("SELECT eth.id,eth.especialidad FROM especialidad_tecnico_humanistico_tipo eth WHERE eth. id=$idespecialidad");
+                $query->execute();
+                $especialidad = $query->fetch();
+                $especialidadarray[]=array('id'=>$especialidad['id'],'especialidad'=>$especialidad['especialidad'] );
+                $especialidadifno[$i] = $idespecialidad;
+            }
+        }*/
+
         return $this->render('SieHerramientaBundle:SolicitudBTH:SolicitudBTHDis.html.twig',array(
             'ieducativa' => $infoUe,
             'institucion' => $institucion,
@@ -975,7 +897,6 @@ class SolicitudBTHController extends Controller {
 
     }
     public function  guardasolicitudDepAction(Request $request){
-        //dump($request);die;
         $documento = $request->files->get('docpdf');
         if(!empty($documento)){
             $destination_path = 'uploads/archivos/';
@@ -985,8 +906,6 @@ class SolicitudBTHController extends Controller {
             $imagen='default-2x.pdf';
         }
         $em = $this->getDoctrine()->getManager();
-
-
           $id_rol= $this->session->get('roluser');
           $id_usuario= $this->session->get('userId');
           $institucionid    = $request->get('institucionid');
@@ -1012,18 +931,12 @@ class SolicitudBTHController extends Controller {
           $datos = json_decode($request->get('ipt'));
           array_push($datos, $imagen);
           $datos = json_encode($datos);
-
           //ELABORA INFORME
-
           $tarea1            = 36;//elaborainfrorme y envia BTH
-
         $wfTramiteController = new WfTramiteController();
         $wfTramiteController->setContainer($this->container);
-
-
           try{
-
-               $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$institucionid,$obs,$evaluacion,$id_tramite,$datos,'',$id_distrito);
+              $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$institucionid,$obs,$evaluacion,$id_tramite,$datos,'',$id_distrito);
                //dump($mensaje);die;
               if ($evaluacion=='SI'){
                   /*dump($id_usuario);dump($tarea1);dump($id_tramite);dump($id_rol);dump($flujotipo);
@@ -1038,19 +951,14 @@ class SolicitudBTHController extends Controller {
           catch (Exception $exceptione){
               $res = 0;
           }
-
           return  new Response($res);
-
       }
-    function FormularioBTHDisAction(Request $request){
+    public function FormularioBTHDisAction(Request $request){
         //dump( $request);die;
         $id_tramite = $request->get('lista_tramites_id');//ID de Tramite
-
         /**
          * Obtenemos la informacion de la Unidad Educativa
          */
-
-
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT trm.institucioneducativa_id, trm.fecha_tramite,trm.gestion_id,wfsol.datos
                                                 FROM tramite trm 
@@ -1120,13 +1028,10 @@ class SolicitudBTHController extends Controller {
             ->setParameter('gestion', $inss)
             ->getQuery();
         $ubicacionUe = $query->getSingleResult();
-
         /*
          * obtenemos datos de la unidad educativa
          */
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($institucion);
-
-
         // Lista de cursos institucioneducativa
         $query = $em->createQuery(
             'SELECT iec FROM SieAppWebBundle:InstitucioneducativaCurso iec
@@ -1138,187 +1043,9 @@ class SolicitudBTHController extends Controller {
             ->setParameter('gestion', $gestion)
             ->setParameter('niveles', array(1, 2, 3, 11, 12, 13));
         $cursos = $query->getResult();
-
         /*
          * Listasmos los maestros inscritos en la unidad educativa
          */
-        $maestros = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion, 'cargoTipo' => 0));
-//no hay maestros inscritos para la gestion 2019
-        $gestion = 2018;
-        $repository = $em->getRepository('SieAppWebBundle:MaestroInscripcion');
-
-        $query = $repository->createQueryBuilder('mins')
-            ->select('per.carnet, per.paterno, per.materno, per.nombre')
-            ->innerJoin('SieAppWebBundle:Persona', 'per', 'WITH', 'mins.persona = per.id')
-            ->where('mins.institucioneducativa = :idInstitucion')
-            ->andWhere('mins.gestionTipo = :gestion')
-            ->andWhere('mins.cargoTipo = :cargo')
-            ->setParameter('idInstitucion', $institucion)
-            ->setParameter('gestion', $gestion)
-            ->setParameter('cargo', '1')
-            ->setMaxResults(1)
-            ->getQuery();
-
-        $director = $query->getOneOrNullResult();
-
-
-        $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
-            ->select('wf')
-            ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wf.tramiteDetalle')
-            ->innerJoin('SieAppWebBundle:Tramite', 't', 'with', 't.id = td.tramite')
-            ->where('t.id =' . $id_tramite)
-            ->orderBy('wf.id', 'desc')
-            ->setMaxResults('1')
-            ->getQuery()
-            ->getResult();
-
-
-        $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
-        $informe= $datos[0]['informe'];
-        $documento= empty($datos[4])?'':$datos[4];
-
-
-         $especialidadarray = array();
-         for($i=0;$i<count($datos[1]['select_especialidad']);$i++){
-             $idespecialidad = $datos[1]['select_especialidad'][$i];
-             $query = $em->getConnection()->prepare("SELECT eth.id, eth.especialidad FROM especialidad_tecnico_humanistico_tipo eth WHERE eth. id=$idespecialidad");
-             $query->execute();
-             $especialidad = $query->fetch();
-             $especialidadarray[]=array('id'=>$especialidad['id'],'especialidad'=>$especialidad['especialidad'] );
-             $especialidadifno[$i] = $idespecialidad;
-         }
-        /*lista del catalogo de especialidades */
-        $query = $em->getConnection()->prepare("SELECT eth.id,eth.especialidad FROM especialidad_tecnico_humanistico_tipo eth ORDER BY 1 ");
-        $query->execute();
-        $especialidad = $query->fetchAll();
-
-        return $this->render('SieHerramientaBundle:SolicitudBTH:FormularioBTHDis.html.twig',array(
-            'ieducativa' => $infoUe,
-            'institucion' => $institucion,
-            'gestion' => $gestion,
-            'ubicacion' => $ubicacionUe,
-            'director' => $director,
-            'cursos'   => $cursos,
-            'maestros'=>$maestros,
-            'especialidadarray'=>$especialidadarray,
-            'informe'=>$informe,
-            'id_tramite'=>$id_tramite,
-            'documento'=>$documento
-        ));
-    }
-//Departamental
-    public  function SolicitidBTHDepAction(Request $request){
-        $id_rol= $this->session->get('roluser');
-        $id_usuario= $this->session->get('userId');
-        $TramiteController = new TramiteRueController();
-        $TramiteController->setContainer($this->container);
-        $lista = $TramiteController->tramiteTarea(36,37,7,$id_usuario,$id_rol,'');
-        return $this->render('SieHerramientaBundle:SolicitudBTH:inicioDepartamental.html.twig',array('lista_tramites'=>$lista['tramites']));
-    }
-    public function VerSolicitudBTHDepAction(Request $request){
-
-
-        $id_tramite = $request->get('id');//ID de Tramite
-
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->getConnection()->prepare("SELECT trm.institucioneducativa_id, trm.fecha_tramite,trm.gestion_id,wfsol.datos
-                                                FROM tramite trm 
-                                                INNER JOIN tramite_detalle td  ON trm.id=td.tramite_id
-                                                INNER JOIN wf_solicitud_tramite wfsol ON td.id=wfsol.tramite_detalle_id
-                                                WHERE trm.id=$id_tramite
-                                                ORDER BY wfsol.id DESC limit 1");
-        $query->execute();
-        $infoUE = $query->fetch();
-        $gestion    = $infoUE['gestion_id'];
-        $institucion  = $infoUE['institucioneducativa_id'];
-
-        $repository = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal');
-
-        $query = $repository->createQueryBuilder('inss')
-            ->select('max(inss.gestionTipo)')
-            ->where('inss.institucioneducativa = :idInstitucion')
-            ->setParameter('idInstitucion', $institucion)
-            ->getQuery();
-        $inss = $query->getResult();
-        $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
-        $query = $repository->createQueryBuilder('ie')
-            ->select('ie, ies')
-            ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'ies', 'WITH', 'ies.institucioneducativa = ie.id')
-            //->innerJoin('SieAppWebBundle:DependenciaTipo', 'ft', 'WITH', 'mi.formacionTipo = ft.id')
-            ->where('ie.id = :idInstitucion')
-            ->andWhere('ies.gestionTipo in (:gestion)')
-            ->setParameter('idInstitucion', $institucion)
-            ->setParameter('gestion', $inss)
-            ->getQuery();
-
-        $infoUe = $query->getResult();
-
-        $repository = $em->getRepository('SieAppWebBundle:JurisdiccionGeografica');
-
-        $query = $repository->createQueryBuilder('jg')
-            ->select('lt4.codigo AS codigo_departamento,
-                        lt4.lugar AS departamento,
-                        lt3.codigo AS codigo_provincia,
-                        lt3.lugar AS provincia,
-                        lt2.codigo AS codigo_seccion,
-                        lt2.lugar AS seccion,
-                        lt1.codigo AS codigo_canton,
-                        lt1.lugar AS canton,
-                        lt.codigo AS codigo_localidad,
-                        lt.lugar AS localidad,
-                        dist.id AS codigo_distrito,
-                        dist.distrito,
-                        orgt.orgcurricula,
-                        dept.dependencia,
-                        jg.id AS codigo_le,
-                        inst.id,
-                        inst.institucioneducativa,
-                        lt.area2001,
-                        estt.estadoinstitucion,
-                        jg.direccion,
-                        jg.zona')
-            ->join('SieAppWebBundle:Institucioneducativa', 'inst', 'WITH', 'inst.leJuridicciongeografica = jg.id')
-            ->leftJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'jg.lugarTipoLocalidad = lt.id')
-            ->leftJoin('SieAppWebBundle:LugarTipo', 'lt1', 'WITH', 'lt.lugarTipo = lt1.id')
-            ->leftJoin('SieAppWebBundle:LugarTipo', 'lt2', 'WITH', 'lt1.lugarTipo = lt2.id')
-            ->leftJoin('SieAppWebBundle:LugarTipo', 'lt3', 'WITH', 'lt2.lugarTipo = lt3.id')
-            ->leftJoin('SieAppWebBundle:LugarTipo', 'lt4', 'WITH', 'lt3.lugarTipo = lt4.id')
-            ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'inss', 'WITH', 'inss.institucioneducativa = inst.id')
-            ->innerJoin('SieAppWebBundle:EstadoinstitucionTipo', 'estt', 'WITH', 'inst.estadoinstitucionTipo = estt.id')
-            ->join('SieAppWebBundle:DistritoTipo', 'dist', 'WITH', 'jg.distritoTipo = dist.id')
-            ->join('SieAppWebBundle:OrgcurricularTipo', 'orgt', 'WITH', 'inst.orgcurricularTipo = orgt.id')
-            ->join('SieAppWebBundle:DependenciaTipo', 'dept', 'WITH', 'inst.dependenciaTipo = dept.id')
-            ->where('inst.id = :idInstitucion')
-            ->andWhere('inss.gestionTipo in (:gestion)')
-            ->setParameter('idInstitucion', $institucion)
-            ->setParameter('gestion', $inss)
-            ->getQuery();
-        $ubicacionUe = $query->getSingleResult();
-
-        /*
-         * obtenemos datos de la unidad educativa
-         */
-        $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($institucion);
-
-
-        // Lista de cursos institucioneducativa
-        $query = $em->createQuery(
-            'SELECT iec FROM SieAppWebBundle:InstitucioneducativaCurso iec
-                    WHERE iec.institucioneducativa = :idInstitucion
-                    AND iec.gestionTipo = :gestion
-                    AND iec.nivelTipo IN (:niveles)
-                    ORDER BY iec.turnoTipo, iec.nivelTipo, iec.gradoTipo, iec.paraleloTipo')
-            ->setParameter('idInstitucion', $institucion)
-            ->setParameter('gestion', $gestion)
-            ->setParameter('niveles', array(1, 2, 3, 11, 12, 13));
-        $cursos = $query->getResult();
-
-
-
-        /*
-         * Listasmos los maestros inscritos en la unidad educativa
-         */
-
         $maestros = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion, 'cargoTipo' => 0));
         //no hay maestros inscritos para la gestion 2019
         $gestion = 2018;
@@ -1334,9 +1061,7 @@ class SolicitudBTHController extends Controller {
             ->setParameter('cargo', '1')
             ->setMaxResults(1)
             ->getQuery();
-
         $director = $query->getOneOrNullResult();
-
         $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
             ->select('wf')
             ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wf.tramiteDetalle')
@@ -1346,8 +1071,161 @@ class SolicitudBTHController extends Controller {
             ->setMaxResults('1')
             ->getQuery()
             ->getResult();
-
         $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
+        $informe= $datos[0]['informe'];
+        $documento= empty($datos[4])?'':$datos[4];
+         $especialidadarray = array();
+         for($i=0;$i<count($datos[1]['select_especialidad']);$i++){
+             $idespecialidad = $datos[1]['select_especialidad'][$i];
+             $query = $em->getConnection()->prepare("SELECT eth.id, eth.especialidad FROM especialidad_tecnico_humanistico_tipo eth WHERE eth. id=$idespecialidad");
+             $query->execute();
+             $especialidad = $query->fetch();
+             $especialidadarray[]=array('id'=>$especialidad['id'],'especialidad'=>$especialidad['especialidad'] );
+             $especialidadifno[$i] = $idespecialidad;
+         }
+        /*lista del catalogo de especialidades */
+        $query = $em->getConnection()->prepare("SELECT eth.id,eth.especialidad FROM especialidad_tecnico_humanistico_tipo eth ORDER BY 1 ");
+        $query->execute();
+        $especialidad = $query->fetchAll();
+        return $this->render('SieHerramientaBundle:SolicitudBTH:FormularioBTHDis.html.twig',array(
+            'ieducativa' => $infoUe,
+            'institucion' => $institucion,
+            'gestion' => $gestion,
+            'ubicacion' => $ubicacionUe,
+            'director' => $director,
+            'cursos'   => $cursos,
+            'maestros'=>$maestros,
+            'especialidadarray'=>$especialidadarray,
+            'informe'=>$informe,
+            'id_tramite'=>$id_tramite,
+            'documento'=>$documento
+        ));
+    }
+//Departamental
+    public function SolicitidBTHDepAction(Request $request){
+        $id_rol= $this->session->get('roluser');
+        $id_usuario= $this->session->get('userId');
+        $TramiteController = new TramiteRueController();
+        $TramiteController->setContainer($this->container);
+        $lista = $TramiteController->tramiteTarea(36,37,7,$id_usuario,$id_rol,'');
+        return $this->render('SieHerramientaBundle:SolicitudBTH:inicioDepartamental.html.twig',array('lista_tramites'=>$lista['tramites']));
+    }
+    public function VerSolicitudBTHDepAction(Request $request){
+        $id_tramite = $request->get('id');//ID de Tramite
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("SELECT trm.institucioneducativa_id, trm.fecha_tramite,trm.gestion_id,wfsol.datos
+                                                FROM tramite trm 
+                                                INNER JOIN tramite_detalle td  ON trm.id=td.tramite_id
+                                                INNER JOIN wf_solicitud_tramite wfsol ON td.id=wfsol.tramite_detalle_id
+                                                WHERE trm.id=$id_tramite
+                                                ORDER BY wfsol.id DESC limit 1");
+        $query->execute();
+        $infoUE = $query->fetch();
+        $gestion    = $infoUE['gestion_id'];
+        $institucion  = $infoUE['institucioneducativa_id'];
+        $repository = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal');
+        $query = $repository->createQueryBuilder('inss')
+            ->select('max(inss.gestionTipo)')
+            ->where('inss.institucioneducativa = :idInstitucion')
+            ->setParameter('idInstitucion', $institucion)
+            ->getQuery();
+        $inss = $query->getResult();
+        $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
+        $query = $repository->createQueryBuilder('ie')
+            ->select('ie, ies')
+            ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'ies', 'WITH', 'ies.institucioneducativa = ie.id')
+            //->innerJoin('SieAppWebBundle:DependenciaTipo', 'ft', 'WITH', 'mi.formacionTipo = ft.id')
+            ->where('ie.id = :idInstitucion')
+            ->andWhere('ies.gestionTipo in (:gestion)')
+            ->setParameter('idInstitucion', $institucion)
+            ->setParameter('gestion', $inss)
+            ->getQuery();
+        $infoUe = $query->getResult();
+        $repository = $em->getRepository('SieAppWebBundle:JurisdiccionGeografica');
+        $query = $repository->createQueryBuilder('jg')
+            ->select('lt4.codigo AS codigo_departamento,
+                        lt4.lugar AS departamento,
+                        lt3.codigo AS codigo_provincia,
+                        lt3.lugar AS provincia,
+                        lt2.codigo AS codigo_seccion,
+                        lt2.lugar AS seccion,
+                        lt1.codigo AS codigo_canton,
+                        lt1.lugar AS canton,
+                        lt.codigo AS codigo_localidad,
+                        lt.lugar AS localidad,
+                        dist.id AS codigo_distrito,
+                        dist.distrito,
+                        orgt.orgcurricula,
+                        dept.dependencia,
+                        jg.id AS codigo_le,
+                        inst.id,
+                        inst.institucioneducativa,
+                        lt.area2001,
+                        estt.estadoinstitucion,
+                        jg.direccion,
+                        jg.zona')
+            ->join('SieAppWebBundle:Institucioneducativa', 'inst', 'WITH', 'inst.leJuridicciongeografica = jg.id')
+            ->leftJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'jg.lugarTipoLocalidad = lt.id')
+            ->leftJoin('SieAppWebBundle:LugarTipo', 'lt1', 'WITH', 'lt.lugarTipo = lt1.id')
+            ->leftJoin('SieAppWebBundle:LugarTipo', 'lt2', 'WITH', 'lt1.lugarTipo = lt2.id')
+            ->leftJoin('SieAppWebBundle:LugarTipo', 'lt3', 'WITH', 'lt2.lugarTipo = lt3.id')
+            ->leftJoin('SieAppWebBundle:LugarTipo', 'lt4', 'WITH', 'lt3.lugarTipo = lt4.id')
+            ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'inss', 'WITH', 'inss.institucioneducativa = inst.id')
+            ->innerJoin('SieAppWebBundle:EstadoinstitucionTipo', 'estt', 'WITH', 'inst.estadoinstitucionTipo = estt.id')
+            ->join('SieAppWebBundle:DistritoTipo', 'dist', 'WITH', 'jg.distritoTipo = dist.id')
+            ->join('SieAppWebBundle:OrgcurricularTipo', 'orgt', 'WITH', 'inst.orgcurricularTipo = orgt.id')
+            ->join('SieAppWebBundle:DependenciaTipo', 'dept', 'WITH', 'inst.dependenciaTipo = dept.id')
+            ->where('inst.id = :idInstitucion')
+            ->andWhere('inss.gestionTipo in (:gestion)')
+            ->setParameter('idInstitucion', $institucion)
+            ->setParameter('gestion', $inss)
+            ->getQuery();
+        $ubicacionUe = $query->getSingleResult();
+        /*
+         * obtenemos datos de la unidad educativa
+         */
+        $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($institucion);
+        // Lista de cursos institucioneducativa
+        $query = $em->createQuery(
+            'SELECT iec FROM SieAppWebBundle:InstitucioneducativaCurso iec
+                    WHERE iec.institucioneducativa = :idInstitucion
+                    AND iec.gestionTipo = :gestion
+                    AND iec.nivelTipo IN (:niveles)
+                    ORDER BY iec.turnoTipo, iec.nivelTipo, iec.gradoTipo, iec.paraleloTipo')
+            ->setParameter('idInstitucion', $institucion)
+            ->setParameter('gestion', $gestion)
+            ->setParameter('niveles', array(1, 2, 3, 11, 12, 13));
+        $cursos = $query->getResult();
+        /*
+         * Listasmos los maestros inscritos en la unidad educativa
+         */
+        $maestros = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion, 'cargoTipo' => 0));
+        //no hay maestros inscritos para la gestion 2019
+        $gestion = 2018;
+        $repository = $em->getRepository('SieAppWebBundle:MaestroInscripcion');
+        $query = $repository->createQueryBuilder('mins')
+            ->select('per.carnet, per.paterno, per.materno, per.nombre')
+            ->innerJoin('SieAppWebBundle:Persona', 'per', 'WITH', 'mins.persona = per.id')
+            ->where('mins.institucioneducativa = :idInstitucion')
+            ->andWhere('mins.gestionTipo = :gestion')
+            ->andWhere('mins.cargoTipo = :cargo')
+            ->setParameter('idInstitucion', $institucion)
+            ->setParameter('gestion', $gestion)
+            ->setParameter('cargo', '1')
+            ->setMaxResults(1)
+            ->getQuery();
+        $director = $query->getOneOrNullResult();
+        $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
+            ->select('wf')
+            ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wf.tramiteDetalle')
+            ->innerJoin('SieAppWebBundle:Tramite', 't', 'with', 't.id = td.tramite')
+            ->where('t.id =' . $id_tramite)
+            ->orderBy('wf.id', 'desc')
+            ->setMaxResults('1')
+            ->getQuery()
+            ->getResult();
+        $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
+        //dump($datos);die;
         $informe= $datos[0]['informe'];
         $documento= empty($datos[4])?'':$datos[4];
         $especialidadarray = array();
@@ -1375,10 +1253,6 @@ class SolicitudBTHController extends Controller {
 
     }
     public function guardasolicitudDepartamentalAction(Request $request){
-
-
-
-
         $documento = $request->files->get('docpdf');
         if(!empty($documento)){
             $destination_path = 'uploads/archivos/';
@@ -1512,21 +1386,34 @@ class SolicitudBTHController extends Controller {
                           * Si la UE ya se encuentra como BTH en alguna gestion pasada se hace un nuevo registro con la gestion actual
                           */
                          $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_humanistico_tecnico');")->execute();
+                         /**
+                          * Se obtiene informacion de la UE
+                          */
+                         $query = $em->getConnection()->prepare("SELECT ieht.grado_tipo_id AS  grado_tipo_id
+                                                             FROM institucioneducativa_humanistico_tecnico ieht  
+                                                             WHERE ieht.institucioneducativa_id=$institucionid AND ieht.gestion_tipo_id = $ultima_gestion ");
+                         $query->execute();
+                         $grado_ue = $query->fetch();
+                         if($grado_ue['grado_tipo_id']<6){
+                             $grado_tipo_id=$grado_ue['grado_tipo_id']+1;
+                         }else{
+                             $grado_tipo_id=6;
+                         }
+
                          $entity = new InstitucioneducativaHumanisticoTecnico();
-                         $em->getRepository('SieAppWebBundle:GradoTipo')->find(3);
                          $entity->setGestionTipoId($this->session->get('currentyear'));
                          $entity->setInstitucioneducativaId($institucionid);
                          $entity->setInstitucioneducativa($datosUe['institucioneducativa']);
                          $entity->setEsimpreso(false);
-                         $entity->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find(3));
+                         $entity->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find($grado_tipo_id));
                          $entity->setFechaCreacion(new \DateTime($infoUE['fecha_tramite']));
                          $entity->setInstitucioneducativaHumanisticoTecnicoTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnicoTipo')->find(7));
                          $em->persist($entity);
                          $em->flush();
-                         for($i=0;$i<count($datos[1]['select_especialidad']);$i++){
+                         for($i=0;$i<count($datos[2]['select_especialidad']);$i++){
                              $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_especialidad_tecnico_humanistico');")->execute();
                              $entity = new InstitucioneducativaEspecialidadTecnicoHumanistico();
-                             $idespecialidad = $datos[1]['select_especialidad'][$i];
+                             $idespecialidad = $datos[2]['select_especialidad'][$i];
                              $espe = $em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->find($idespecialidad);
                              $ue = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($institucionid);
                              $gestiontipo = $em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear'));
@@ -1548,10 +1435,21 @@ class SolicitudBTHController extends Controller {
                          $instucioneducativaHt->setEsimpreso(true);
                          $em->persist($instucioneducativaHt);
                          $em->flush();
+                         for($i=0;$i<count($datos[2]['select_especialidad']);$i++){
+                             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_especialidad_tecnico_humanistico');")->execute();
+                             $entity = new InstitucioneducativaEspecialidadTecnicoHumanistico();
+                             $idespecialidad = $datos[2]['select_especialidad'][$i];
+                             $espe = $em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->find($idespecialidad);
+                             $ue = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($institucionid);
+                             $gestiontipo = $em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear'));
+                             $entity->setInstitucioneducativa($ue);
+                             $entity->setEspecialidadTecnicoHumanisticoTipo($espe);
+                             $entity->setGestionTipo($gestiontipo);
+                             $entity->setFechaRegistro(new \DateTime($infoUE['fecha_tramite']) );
+                             $em->persist($entity);
+                             $em->flush();
+                         }
                      }
-
-
-
                 }
 
             }
@@ -1561,83 +1459,9 @@ class SolicitudBTHController extends Controller {
             $res = 0;
         }
         return  new Response($res);
-
-
-
     }
 
- //Seguimiento de Tramites
-    public function createSeguimientoformAction()
-    {
-        $form = $this->createFormBuilder()
-            //->setAction($this->generateUrl('flujoproceso_guardar'))
-            ->add('tramite','text',array('label'=>'Tramite','required'=>true,'attr' => array('placeholder'=>'Nro. de trámite')))
-            ->getForm();
 
-        return $this->render('SieHerramientaBundle:SolicitudBTH:seguimientoTramiteBTH.html.twig', array(
-            'form' => $form->createView(),
-        ));
-    }
-    public function verFlujoAction(Request $request )
-    {
-        $sesion = $request->getSession();
-        $id_usuario = $sesion->get('userId');
-        if (!isset($id_usuario)){
-            return $this->redirect($this->generateUrl('login'));
-        }
-        //dump($request);die;
-        $form = $request->get('form');
-        //dump($id);die;
-        $data = $this->listarF(7,$form['tramite']);
-        //dump($data);die;
-        //if (($form['proceso'] == 5 && !$data['nombre']) || ($form['proceso'] == 14 && !$data['nombre_ie']) || ($form['proceso'] == 6 && !$data['estudiante']) || ($form['proceso'] == 7 && !$data['estudiante']))
-        if (!$data['nombre'])
-        {
-            //dump($data['nombre_ie']);die;
-            $mensaje = 'Número de tramite es incorrecto';
-            $request->getSession()
-                ->getFlashBag()
-                ->add('error', $mensaje);
-        }
-        return $this->render('SieHerramientaBundle:SolicitudBTH:flujoTramitesBTH.html.twig',$data);
-    }
-    public function listarF($flujotipo,$tramite)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        if($flujotipo == 7)
-        {
-            $query = $em->getConnection()->prepare('select p.id, p.flujo,d.institucioneducativa, p.proceso_tipo, p.orden, p.es_evaluacion,p.variable_evaluacion, p.condicion, p.nombre,d.valor_evaluacion, p.condicion_tarea_siguiente, p.plazo, p.tarea_ant_id, p.tarea_sig_id, p.rol_tipo_id,d.id as td_id,d.tramite_id,d.obs, d.flujo_proceso_id,d.fecha_registro,d.usuario_remitente_id,d.usuario_destinatario_id,d.datos
-        from
-        (SELECT 
-          fp.id, f.flujo, p.proceso_tipo, fp.orden, fp.es_evaluacion,fp.variable_evaluacion, wftc.condicion, wfc.nombre, wftc.condicion_tarea_siguiente, fp.plazo, fp.tarea_ant_id, fp.tarea_sig_id, fp.rol_tipo_id
-        FROM 
-          flujo_tipo f join flujo_proceso fp on f.id = fp.flujo_tipo_id
-          join proceso_tipo p on p.id = fp.proceso_id
-          left join wf_tarea_compuerta wftc on wftc.flujo_proceso_id = fp.id
-          left join wf_compuerta wfc on wftc.wf_compuerta_id=wfc.id
-        WHERE 
-           f.id='. $flujotipo .' order by fp.orden)p
-        LEFT JOIN
-        (SELECT 
-          t1.id,t1.obs,t1.tramite_id, t1.flujo_proceso_id,t1.fecha_registro,t1.usuario_remitente_id,t1.usuario_destinatario_id,i.institucioneducativa,t1.valor_evaluacion
-        ,wfsol.datos
-        FROM 
-          tramite_detalle t1 join tramite t on t1.tramite_id=t.id
-          left join wf_solicitud_tramite wfsol on t."id"=wfsol.tramite_id
-          join institucioneducativa i on t.institucioneducativa_id=i.id
-        where t1.tramite_id='. $tramite .' order by t1.id)d
-        ON p.id=d.flujo_proceso_id order by d.id,d.fecha_registro');
-
-        }
-        $query->execute();
-        $arrData = $query->fetchAll();
-        //dump($arrData[0]['datos']);die;
-        $data['flujo']=$arrData;
-        $data['flujotipo'] = $flujotipo;
-        $data['nombre']=$arrData[0]['institucioneducativa'];
-        return $data;
-    }
 
 
 }
