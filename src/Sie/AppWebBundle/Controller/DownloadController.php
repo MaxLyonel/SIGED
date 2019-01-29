@@ -605,6 +605,86 @@ class DownloadController extends Controller {
         return $response;
     }
 
+      /**
+     * build the CUT report - cut report download pdf
+     * @param Request $request
+     * @return object cut report
+     */
+    public function downloadCutAction(Request $request) {
+
+        $idInscripcion = $request->get('idInscripcion');
+        $rude = $request->get('rude');
+        $sie = $request->get('sie');
+        $gestion = $request->get('gestion');
+        $nivel = $request->get('nivel');
+        $grado = $request->get('grado');
+        $paralelo = $request->get('paralelo');
+        $turno = $request->get('turno');
+        $ciclo = $request->get('ciclo');
+
+        $em = $this->getDoctrine()->getManager();
+        $informacion = $em->createQueryBuilder()
+                    ->select('IDENTITY(eiht.especialidadTecnicoHumanisticoTipo) as especialidad')
+                    ->from('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico','eiht')
+                    ->where('eiht.estudianteInscripcion = :idInscripcion')
+                    ->setParameter('idInscripcion',$idInscripcion)
+                    ->getQuery()
+                    ->getResult();
+        $especialidad = $informacion[0]['especialidad'];
+        
+
+        //$datos = "2869471|624600252014167A|62460025|2015|11|2|1|1|0";
+        $datos = $idInscripcion.'|'.$rude.'|'.$sie.'|'.$turno.'|'.$grado.'|'.$paralelo.'|'.$especialidad.'|'.$gestion;
+
+        // Cadena de seguridad
+        $codes = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/';
+
+        // Encriptamos los datos
+        $result = "";
+        $a = 0;
+        $b = 0;
+        for($i=0;$i<strlen($datos);$i++){
+            //$x = strpos($codes, $datos[$i]) ;
+            $x = ord($datos[$i]) ;
+            $b = $b * 256 + $x;
+            $a = $a + 8;
+
+            while ( $a >= 6) {
+                $a = $a - 6;
+                $x = floor($b/(1 << $a));
+                $b = $b % (1 << $a);
+                $result = $result.''.substr($codes, $x,1);
+            }
+        }
+        if($a > 0){
+            $x = $b << (6 - $a);
+            $result = $result.''.substr($codes, $x,1);
+        }
+
+        // generanos el link, para codigo QR
+        $link = 'http://academico.sie.gob.bo/bth/'.$result;
+
+        // Validamos que tipo de libreta se ha de imprimir
+        // Modular y plena
+
+        if($this->session->get('ue_plena')){
+           $reporte = 'reg_cert_cut_v1_ma.rptdesign';
+        }
+        //dump($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&&__format=pdf&');die;
+        // Generamos el reporte
+
+        $response = new Response();
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'cut_' . $rude . '_' . $gestion . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb').$reporte.'&rude=' . $rude .'&lk=' . $link . '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
     /**
      * build the DDJJ SPECIALITY - student report download pdf
      * @param Request $request

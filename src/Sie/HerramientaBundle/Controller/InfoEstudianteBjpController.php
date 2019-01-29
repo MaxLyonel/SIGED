@@ -765,7 +765,7 @@ class InfoEstudianteBjpController extends Controller {
 
         foreach($estudiantesBjp as $item) {
             $item->setEsPagado('f');
-            $item->setPagoTipoId($pagoTipo);
+            $item->setPagoTipoId(null);
             $em->persist($item);
             $em->flush();
         }
@@ -1021,9 +1021,11 @@ class InfoEstudianteBjpController extends Controller {
                 ->where('iec.institucioneducativa = :sie')
                 ->andWhere('iec.gestionTipo = :gestion')
                 ->andWhere('e.id = :estudiante')
+                ->andWhere('ei.estadomatriculaTipo in (:matricula)')
                 ->setParameter('sie', $form['sie'])
                 ->setParameter('gestion', $form['gestion'])
                 ->setParameter('estudiante', $estudiante->getId())
+                ->setParameter('matricula', array(0,4,5,11,55,70,71,72,73))
                 ->getQuery();
 
             $estudianteInscripcion = $query->getOneOrNullResult();
@@ -1218,7 +1220,7 @@ class InfoEstudianteBjpController extends Controller {
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_bonojuancitopinto_estadistica_pagados_norezagados_v1_ma.rptdesign&dpto='.$form['dpto'].'&gestion='.$gestion.'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_bonojuancitopinto_estadistica_distrito_v2.rptdesign&dpto='.$form['dpto'].'&gestion='.$gestion.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');

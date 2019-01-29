@@ -439,13 +439,13 @@ class DipHumHomologacionController extends Controller {
                 $studentInscription = new EstudianteInscripcion();
                 $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['institucionEducativa']));
                 $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($form['gestion']));
-                $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
+                $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
                 $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($studentId));
                 $studentInscription->setObservacion(1);
                 $studentInscription->setFechaInscripcion(new \DateTime('now'));
                 $studentInscription->setFechaRegistro(new \DateTime('now'));
                 $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($objCurso->getId()));
-                $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(59));
+                $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(45));
                 $studentInscription->setCodUeProcedenciaId(0);
                 $em->persist($studentInscription);
                 $em->flush();

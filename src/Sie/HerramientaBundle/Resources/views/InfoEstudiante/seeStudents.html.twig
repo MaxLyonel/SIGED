@@ -160,7 +160,7 @@
                                                   {% if data.estadomatriculaId == 4 %}
                                                   <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
                                                   {% else %}
-                                                   <button type="button" class="btn btn-default btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
+                                                   <button type="button" class="btn btn-default btn-stroke btn-xs"  onclick="#">
                                                   {% endif %}
                                                      {{data.estadomatricula}}
                                                    </button>
@@ -176,7 +176,16 @@
 
                                 </td>
                                 <td  align="">
-
+                                  {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
+                                      <button type="button" class="btn btn-circle btn-warning " data-toggle="modal" data-target=".bs-example-modal-table" onclick="rude('{{infoUe}}','{{jsnInfoStudent}}',0);" >
+                                          <i class="fa fa-user"></i>
+                                      </button>
+                                  </div>
+                                  <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
+                                      <button type="button" class="btn btn-circle btn-primary " data-toggle="modal" data-target=".bs-example-modal-table" onclick="rudeNuevo('{{infoUe}}','{{jsnInfoStudent}}',0);" >
+                                          <i class="fa fa-user"></i>
+                                      </button>
+                                  </div> #}
 
                                   {% set styleButton = 'info' %}
                                       {% if data.registroFinalizado %}
@@ -184,6 +193,13 @@
                                       {% else %}
                                         {% set styleButton = 'info' %}
                                       {% endif %}
+                                    {% if  data.esvalidoPlena %}
+                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="CUT">
+                                            <a class="btn btn-circle btn-success btn-stroke" href="{{path('download_cut', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
+                                              <i class="fa fa-file-pdf-o" style="color:#11AA00"></i>
+                                            </a>
+                                        </div>
+                                    {% endif %}  
 
                                     {% if imprimirLibreta == true and data.estadomatriculaId in estadosPermitidosImprimir %}
                                             <a class="btn btn-circle btn-lilac" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
@@ -456,6 +472,38 @@
             type: 'post',
             data: ({infoUe: infoUe, infoStudent: infoStudent, editar: editar}),
             url: "{{ path('info_estudiante_rude_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $('#modal').append('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="panel panel-tab panel-tab-double"><div class="panel-heading no-padding"><div style="height:50px; background:#64CBE2; color:#FFFFFF; margin-top:-10px;"><h4 style="padding:10px 0px 0px 10px; text-align:center">RUDE</h4></div></div><div class="panel-body no-padding" id="modal-body"><div style="text-align:center; color:#69A7E2; font-size:17px; padding:20px"><img src="{{asset("img/loading.gif")}}"><br>Cargando...</div></div></div></div></div>');
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+                $('#sandbox-container input').datepicker({
+                  autoclose: true,
+                  todayHighlight: true,
+                  format: 'dd-mm-yyyy',
+                  language: "es"
+                });
+                //$('#modal').modal({backdrop: 'static', keyboard: false})
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+    var rudeNuevo = function (infoUe, infoStudent, editar) {
+
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent, editar: editar}),
+            url: "{{ path('info_estudiante_rude_nuevo_index') }}",
             beforeSend: function () {
                 $('#modal').empty();
                 $('#modal').append('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="panel panel-tab panel-tab-double"><div class="panel-heading no-padding"><div style="height:50px; background:#64CBE2; color:#FFFFFF; margin-top:-10px;"><h4 style="padding:10px 0px 0px 10px; text-align:center">RUDE</h4></div></div><div class="panel-body no-padding" id="modal-body"><div style="text-align:center; color:#69A7E2; font-size:17px; padding:20px"><img src="{{asset("img/loading.gif")}}"><br>Cargando...</div></div></div></div></div>');

@@ -78,7 +78,8 @@ class Funciones {
             }
         }
 
-        if( in_array($this->session->get('roluser'), array(7,10)) or $gestion < $this->session->get('currentyear')){
+
+        if( in_array($this->session->get('roluser'), array(7,8,10)) ){
             $operativo = $operativo - 1;
         }
 
@@ -560,7 +561,7 @@ class Funciones {
                                           ->select('ieco')
                                           ->from('SieAppWebBundle:InstitucioneducativaCursoOferta', 'ieco')
                                           ->where('ieco.insitucioneducativaCurso = :iecoId')
-                                          ->andWhere('ieco.asignaturaTipo = 0')
+                                          // ->andWhere('ieco.asignaturaTipo = 0')
                                           ->setParameter('iecoId', $data['iecId']);
                                           
                 $objAreas = $queryInstCursoOferta->getQuery()->getResult();
@@ -574,16 +575,18 @@ class Funciones {
                     $oldcurriculaStudent = $this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneBy(array(
                         'institucioneducativaCursoOferta'=>$area->getId(),
                         'estudianteInscripcion' => $data['eInsId'],
-                        'gestionTipo' => $this->session->get('currentyear')
+                        'gestionTipo' => $data['gestion']
                     )); 
                     if(!$oldcurriculaStudent){
                         $studentAsignatura = new EstudianteAsignatura();
-                        $studentAsignatura->setGestionTipo($this->em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear') ));
+                        $studentAsignatura->setGestionTipo($this->em->getRepository('SieAppWebBundle:GestionTipo')->find($data['gestion'] ));
                         $studentAsignatura->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($data['eInsId']));
                         $studentAsignatura->setInstitucioneducativaCursoOferta($this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($area->getId()));
+                        $studentAsignatura->setEstudianteasignaturaEstado($this->em->getRepository('SieAppWebBundle:EstudianteasignaturaEstado')->find(4));
                         $studentAsignatura->setFechaRegistro(new \DateTime('now'));
                         $this->em->persist($studentAsignatura);
                         $this->em->flush();
+                        dump($studentAsignatura);
                     }
                     
                     
@@ -968,7 +971,6 @@ class Funciones {
         }
 
 
-
      /**
      * get the stutdents inscription - the record
      * @param type $id
@@ -1111,6 +1113,97 @@ class Funciones {
         } catch (Exception $ex) {
             return $ex;
         }
+    }
+
+
+
+    function tiempo_transcurrido($fecha_nacimiento, $fecha_control) {
+        $fecha_actual = $fecha_control;
+
+        if (!strlen($fecha_actual)) {
+            $fecha_actual = date('d-m-Y');
+        }
+
+        // separamos en partes las fechas
+        $array_nacimiento = explode("-", str_replace('/', '-', $fecha_nacimiento));
+        $array_actual = explode("-", $fecha_actual);
+
+        $anos = $array_actual[2] - $array_nacimiento[2]; // calculamos años
+        $meses = $array_actual[1] - $array_nacimiento[1]; // calculamos meses
+        $dias = $array_actual[0] - $array_nacimiento[0]; // calculamos días
+        //ajuste de posible negativo en $días
+        if ($dias < 0) {
+            --$meses;
+
+            //ahora hay que sumar a $dias los dias que tiene el mes anterior de la fecha actual
+            switch ($array_actual[1]) {
+                case 1:
+                    $dias_mes_anterior = 31;
+                    break;
+                case 2:
+                    $dias_mes_anterior = 31;
+                    break;
+                case 3:
+                    if (bisiesto($array_actual[2])) {
+                        $dias_mes_anterior = 29;
+                        break;
+                    } else {
+                        $dias_mes_anterior = 28;
+                        break;
+                    }
+                case 4:
+                    $dias_mes_anterior = 31;
+                    break;
+                case 5:
+                    $dias_mes_anterior = 30;
+                    break;
+                case 6:
+                    $dias_mes_anterior = 31;
+                    break;
+                case 7:
+                    $dias_mes_anterior = 30;
+                    break;
+                case 8:
+                    $dias_mes_anterior = 31;
+                    break;
+                case 9:
+                    $dias_mes_anterior = 31;
+                    break;
+                case 10:
+                    $dias_mes_anterior = 30;
+                    break;
+                case 11:
+                    $dias_mes_anterior = 31;
+                    break;
+                case 12:
+                    $dias_mes_anterior = 30;
+                    break;
+            }
+
+            $dias = $dias + $dias_mes_anterior;
+
+            if ($dias < 0) {
+                --$meses;
+                if ($dias == -1) {
+                    $dias = 30;
+                }
+                if ($dias == -2) {
+                    $dias = 29;
+                }
+            }
+        }
+
+        //ajuste de posible negativo en $meses
+        if ($meses < 0) {
+            --$anos;
+            $meses = $meses + 12;
+        }
+
+        $tiempo[0] = $anos;
+        $tiempo[1] = $meses;
+        $tiempo[2] = $dias;
+
+        return $tiempo;
     }
 
 

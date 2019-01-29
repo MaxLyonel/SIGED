@@ -319,7 +319,7 @@ class ConsolidationSieController extends Controller {
                 $aDataExtractFileUE = explode('|', $fileInfoContent[3]);
                 $aFileInfoSie = explode('|', $fileInfoContent[1]);
 
-                $objAllowUEQa = $this->get('seguimiento')->getAllObservationQA(array('sie'=>$aFileInfoSie[2], 'gestion'=>$aFileInfoSie[1],'reglas'=>'1,2,3,10,12,13,16,27'));
+                $objAllowUEQa = $this->get('funciones')->appValidationQuality(array('sie'=>$aFileInfoSie[2], 'gestion'=>$aFileInfoSie[1],'reglas'=>'1,2,3,10,12,13,16,27,48'));
                 if($objAllowUEQa){
                   $session->getFlashBag()->add('warningcons', 'El archivo con código Sie ' . $aDataExtractFileUE[1] . ' tiene observaciones de control de calidad, favor solucionar para poder descargar el archivo ');
                   system('rm -fr ' . $dirtmp);
@@ -353,8 +353,8 @@ class ConsolidationSieController extends Controller {
                 //validate the correct sie send with the correct version in current year
                 if ((strcmp(preg_replace('/\s+/', '', $aFileInfoSie[1]), preg_replace('/\s+/', '', $this->session->get('currentyear')))) == 0) {
                     if (
-                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.8'))) === 0
-                            and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED5'))) === 0    
+                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.9'))) === 0
+                            and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED7'))) === 0    
                     ){
 
                     }else{
@@ -379,7 +379,20 @@ class ConsolidationSieController extends Controller {
 
 
                     
-                }
+                }else{
+                  if ((strcmp(preg_replace('/\s+/', '', $aFileInfoSie[1]), preg_replace('/\s+/', '', $this->session->get('currentyear')-1))) == 0) {
+                    if (
+                          (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.8'))) === 0
+                            and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED5'))) === 0    
+                    ){
+
+                    }else{
+                      $session->getFlashBag()->add('warningcons', 'El archivo ' . $aDataExtractFileUE[1] . ' presenta versión incorrecta para subir el archivo ');
+                      system('rm -fr ' . $dirtmp);
+                      return $this->redirect($this->generateUrl('consolidation_sie_web'));
+                    }
+                  }
+               }
                 //die;
                 //validate the correct sie send with the content of file
                 if ((strcmp(preg_replace('/\s+/', '', $aDataExtractFileUE[1]), preg_replace('/\s+/', '', $id))) !== 0) {

@@ -59,7 +59,7 @@
                                 {% for entity in entities %}
                                     <tr>
                                         <td>
-                                            {% if entity.instituto == 0 %}
+                                            {% if entity.juridiccion_acreditacion_tipo_id == 3 %}
                                             <form action="{{path('lei_edit')}}" method="post" style="display:inline-block">
                                                 <input type="hidden" name="idLe" value="{{entity.id}}">
                                                 <button type="submit" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Editar Datos">
@@ -67,7 +67,7 @@
                                                 </button>
                                             </form>
                                             {% else %}
-                                                <span class="label label-info">ASIGNADO</span> 
+                                                <span class="label label-info">ASIGNADO/ACREDITADO</span> 
                                             {% endif %}
                                         </td>
                                         <td>{{ entity.id }}</td>
