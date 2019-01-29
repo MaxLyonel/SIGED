@@ -43,7 +43,7 @@
                         </div>
                     </div><!-- /.panel-sub-heading -->
                     <div class="panel-body"> 
-                        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'onsubmit': 'return confirmaRegistroSupletorio('~listaDocumento.documentoTipoId~')'} } )}}
                             <div class="input-group">
                                 {{ form_widget(form.serie) }}
                                 <span class="input-group-btn">
@@ -88,14 +88,21 @@
                                                     {{ detalle.departamentoemision }}
                                                 </td>
                                                 <td>
-                                                    <span class="label label-success rounded">{{ detalle.documentoEstado }}</span>
+                                                    {% if detalle.documentoEstadoId == 1 %}
+                                                        <span class="label label-success rounded">{{ detalle.documentoEstado }}</span>
+                                                    {% else %}
+                                                        <span class="label label-danger rounded">{{ detalle.documentoEstado }}</span>
+                                                    {% endif %}
                                                 </td>
                                                 <td class="text-center">
-                                                    <form name="form" role="form" action="{{ path('tramite_documento_supletorio_pdf') }}" method="POST"> 
-                                                        <input type="hidden" name="supletorio" value="{{detalle.id|base64_encode}}"/>   
-                                                        <input type="hidden" name="_token" value="{{ csrf_token(detalle.id) }}">   
-                                                        <button type="submit" class="btn btn-success btn-xs" data-original-title="Descargar"><i class="fa fa-download"></i></button>   
-                                                    </form> 
+                                                    {% if detalle.documentoEstadoId == 1 %}
+                                                        <form name="form" role="form" action="{{ path('tramite_documento_supletorio_pdf') }}" method="POST"> 
+                                                            <input type="hidden" name="supletorio" value="{{detalle.id|base64_encode}}"/>   
+                                                            <input type="hidden" name="_token" value="{{ csrf_token(detalle.id) }}">   
+                                                            <button type="submit" class="btn btn-success btn-xs" data-original-title="Descargar"><i class="fa fa-download"></i></button>   
+                                                        </form> 
+                                                    {% endif %}
+                                                    
                                                 </td>
                                             </tr>
                                         {% endfor %}
@@ -109,4 +116,22 @@
             </div>
         </div><!-- /.row -->
     {% endif %}
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        function confirmaRegistroSupletorio(tipo){
+            var r;
+            if (tipo == 9){
+                r = confirm("¿ Desea anular el actual documento supletorio, para emitir un nuevo ?");
+            } else {
+                r = confirm("¿ Desea anular el diploma de bachiller para emitir su documento supletorio ?");
+            }
+            if (r == true) { 
+                return true; 
+            } else {
+                return false; 
+            }
+        }
+    </script>
 {% endblock %}

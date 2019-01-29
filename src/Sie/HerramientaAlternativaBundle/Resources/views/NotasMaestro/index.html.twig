@@ -1,8 +1,6 @@
 {% extends 'layoutHerramientaAlternativa.html.twig' %}
 
 {% block contentoption %}
-
-
     <!-- Start page header -->
     <div class="header-content">
         <h2><i class="fa fa-table"></i> Centros Educativos <span>Disponibles</span></h2>
@@ -70,11 +68,15 @@
                                     <td>{{a.turno}}</td>
                                     <td>{{a.paralelo}}</td>
                                     <td>
-                                        <form action="{{path('herramienta_alter_notas_maestro_new')}}" method="post">
-                                            <input type="hidden" name="idCursoOferta" value="{{a.idCursoOferta}}">
-                                            <input type="hidden" name="idSucursal" value="{{a.idSucursal}}">
-                                            <button type="submit" class="btn btn-lilac btn-stroke btn-sm">Reg.Notas</button>
-                                        </form>
+                                        {% if app.session.get('ie_per_estado') != '0' %}
+                                            <form action="{{path('herramienta_alter_notas_maestro_new')}}" method="post">
+                                                <input type="hidden" name="idCursoOferta" value="{{a.idCursoOferta}}">
+                                                <input type="hidden" name="idSucursal" value="{{a.idSucursal}}">
+                                                <button type="submit" class="btn btn-lilac btn-stroke btn-sm">Reg.Notas</button>
+                                            </form>
+                                        {% else %}
+                                            <button type="button" class="btn btn-danger btn-stroke btn-sm" data-toggle="tooltip" data-placement="top" data-original-title="¡Operativo fuera de plazo, contactese con su tecnico SIE.!" disabled>Reg.Notas</button>
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}

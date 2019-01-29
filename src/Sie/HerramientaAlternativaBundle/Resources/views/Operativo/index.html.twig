@@ -1,0 +1,227 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-th-large"></i>Habilitar Operativo para la gestión {{app.session.get('currentyear')}}</h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+               <li>
+                    <i class="fa fa-users"></i>
+                    Gestión
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="glyphicon glyphicon-cog"></i>
+                    Operativos
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    Habilitar Operativo
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>  
+    <div class="row">
+        <div class="body-content animated fadeIn">
+            <div class="panel panel-success">
+                {% for flashMessage in app.session.flashbag.get('exito') %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('error') %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Seleccione el operativo</h3>
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+                    {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form', 'id': 'form_operativo1'} } )}}
+                        <div class="row inline">
+                            {% if app.session.get('roluser') == 8 %}
+                                <div class="form-group col-md-2">
+                                    {{ form_label(form.departamento)}}
+                                    {{form_widget(form.departamento) }}
+                                </div>
+                            {% endif %}
+                            <div class="form-group col-md-3">
+                                {{ form_label(form.operativo)}}
+                                {{form_widget(form.operativo) }}
+                            </div>
+                            <div class="form-group col-md-2">
+                                {{ form_label(form.fechainicio)}}
+                                {{form_widget(form.fechainicio) }}
+                            </div>
+                            <div class="form-group col-md-2">
+                                {{ form_label(form.fechafin)}}
+                                {{form_widget(form.fechafin) }}
+                            </div>
+                            <div class="form-group col-md-2"> 
+                                <label></label>
+                                {{ form_widget(form.buscar) }}
+                            </div>
+                        </div>
+                    {{form_end(form)}}
+                    <div id="ceas">
+                    </div>
+                </div><!-- /.panel-body -->
+            </div><!-- /.panel -->
+        </div>
+    </div>
+{% endblock %}   
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $( document ).ready(function() {
+            $(function() {
+                $('.datepicker').datepicker({
+                    dateFormat: 'dd-mm-yy',
+                    showButtonPanel: false,
+                    changeMonth: false,
+                    changeYear: false,
+                    /*showOn: "button",
+                    buttonImage: "images/calendar.gif",
+                    buttonImageOnly: true,
+                    minDate: '+1D',
+                    maxDate: '+3M',*/
+                    inline: true
+                });
+            });
+            $.datepicker.regional['es'] = {
+                closeText: 'Cerrar',
+                prevText: '<Ant',
+                nextText: 'Sig>',
+                currentText: 'Hoy',
+                monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
+                dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+                weekHeader: 'Sm',
+                dateFormat: 'dd-mm-yy',
+                firstDay: 1,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: ''
+            };
+            $.datepicker.setDefaults($.datepicker.regional['es']);
+        });
+       
+        function distrito(depto){
+            var formdata = {depto:depto};
+            $.ajax({
+                type: 'get',
+                data: formdata,
+                url: "{{path('alternativa_operativo_buscar_distrito')}}",
+                beforeSend: function () {
+                    $("#form_distrito").empty();
+                    $("#form_distrito").append('<option value="">Buscando...</option>');
+                },
+                success: function (data) {
+                    $("#form_distrito").empty();
+                    $.each(data.distrito, function (i, value) {
+                        $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+
+        }
+        function buscarCeas(){
+            if($('#form_operativo').val()==""){alert('Seleccione el operativo'); return false;}
+            if($('#form_fechainicio').val()==""){alert('Ingrese fecha de inicio del operativo'); return false;}
+            if($('#form_fechafin').val()==""){alert('Ingrese fecha de finalización del operativo'); return false;}
+            var fi = /^(\d{1,2})(\/|-)(\d{1,2})(\/|-)(\d{4})$/;
+            if(!fi.test($('#form_fechainicio').val())){alert('Fecha de inicio incorrecto'); return false;}
+            if(!fi.test($('#form_fechafin').val())){alert('Fecha fin incorrecto'); return false;}
+            if($('#form_fechainicio').val() == $('#form_fechafin').val()){alert('Rango de fechas incorrecto.'); return false;}
+            var fechainicio = $('#form_fechainicio').val().split('-');
+            var fechafin = $('#form_fechafin').val().split('-');
+            var inicio = new Date(fechainicio[2],fechainicio[1],fechainicio[0]);
+            var fin = new Date(fechafin[2],fechafin[1],fechafin[0]);
+            if(inicio > fin){alert('Rango de fechas incorrecto.'); return false;}
+            var dataform = $('#form_operativo1').serialize();
+            $.ajax({
+                type: 'get',
+                data: dataform,
+                url: "{{path('alternativa_operativo_buscar_oeprativos_ceas')}}",
+                beforeSend: function () {
+                    $('#ceas').empty();
+                    $("#ceas").append('<div style="text-align:center">Cargando datos...<img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $('#ceas').empty();
+                    $('#ceas').append(data);
+                }
+            });
+
+        }
+        /*$( document ).ready(function() {
+            cargatablas();
+        });*/
+
+        var cargatablas = function (identif){
+            // Setup - add a text input to each footer cell
+            $('#datatable tfoot th').each( function () {
+                var title = $(this).text();
+                if(title.trim() === "" || title === "No."){
+                    $(this).html('');
+                } else {
+                    $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+                }
+            } );
+            // DataTable
+            var table = $('#datatable').DataTable( {
+                "order": [[ 0, "asc" ]],
+                "columnDefs": [
+                    { "orderable": false, "targets": [0] }
+                    ],
+                }
+            );
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                        .search( this.value )
+                        .draw();
+                    }
+                } );
+            } );
+        };
+
+        function seleccionar(){ 
+            $("#ok").change(function () {
+                $("input:checkbox").prop('checked', $(this).prop("checked"));
+            });
+        }
+
+        function validar(){
+            var cont = 0;
+            if(confirm('¡AVISO IMPORTANTE! !LEA CON ATENCIÓN!\nLa habilitación del siguiente operativo cerrara toda regularización para los CEAS seleccionados,\ny solo los tec SIE podran realizar ediciones futuras segun normativa vigente.\nSe le comunica que se registrara el usuario y fecha de esta autorización.\n¿Esta seguro de habilitar el siguiente operativo para este centro?\nSi no esta seguro de este mensaje presione CANCELAR.')){
+                $('.checkbox:checked').each(function() {
+                   cont = cont + 1;
+                });
+                if(cont>0){
+                    return true;
+                }else{
+                    alert('Debe seleccionar al menos un CEA de la lista');
+                    return false;
+                }
+            }else{
+                return false;
+            }
+        }
+
+    </script>
+{% endblock %} 

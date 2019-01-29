@@ -1,3 +1,7 @@
+sie_herramienta_info_estudianteRudeNuevo:
+    resource: "@SieHerramientaBundle/Resources/config/routing/infoEstudianteRudeNuevo.yml"
+    prefix:   /sie/infoEstudianteRudeNuevo
+
 sie_herramienta_info_estudianteRude:
     resource: "@SieHerramientaBundle/Resources/config/routing/infoEstudianteRude.yml"
     prefix:   /sie/infoEstudianteRude
@@ -141,3 +145,7 @@ sie_herramienta_tramite_rue:
 sie_herramienta_consultas:
     resource: "@SieHerramientaBundle/Resources/config/routing/consultas.yml"
     prefix:   /sie/consultasmaestros
+
+sie_herramienta_regularization_bth:
+    resource: "@SieHerramientaBundle/Resources/config/routing/regularizationlistdocente.yml"
+    prefix:   /sie/regularizationlistdocente

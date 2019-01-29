@@ -1,0 +1,36 @@
+Sie\AppWebBundle\Entity\CantidadCentroSaludTipo:
+    type: entity
+    table: cantidad_centro_salud_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        descripcionCantidad:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: descripcion_cantidad
+        esVigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificaion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificaion
+    lifecycleCallbacks: {  }

@@ -1,0 +1,68 @@
+Sie\AppWebBundle\Entity\RudeIdioma:
+    type: entity
+    table: rude_idioma
+    indexes:
+        IDX_3DBA0C84443E4890:
+            columns:
+                - rude_id
+        IDX_3DBA0C84D845614E:
+            columns:
+                - habla_tipo_id
+        IDX_3DBA0C849CE1C75E:
+            columns:
+                - idioma_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        observaciones:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        rude:
+            targetEntity: Rude
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rude_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        hablaTipo:
+            targetEntity: HablaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                habla_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idiomaTipo:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

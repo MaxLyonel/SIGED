@@ -1,0 +1,36 @@
+Sie\AppWebBundle\Entity\PagoTipo:
+    type: entity
+    table: pago_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        descripcionPago:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: descripcion_pago
+        esVigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    lifecycleCallbacks: {  }

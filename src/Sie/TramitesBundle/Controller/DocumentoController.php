@@ -102,6 +102,44 @@ class DocumentoController extends Controller {
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
+    // Funcion que lista los documentos supletorios de un diploma
+    // PARAMETROS: id
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getDocumentoSupletorio($tramite) {
+        $em = $this->getDoctrine()->getManager();
+        $entityDocumento = $em->getRepository('SieAppWebBundle:Documento');
+        $query = $entityDocumento->createQueryBuilder('d')
+                ->select("d.id as id, t.id as tramite, ei.id as estudianteInscripcionId, ds.id as serie, d.fechaImpresion as fechaemision, dept.id as departamentoemisionid, dept.departamento as departamentoemision, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, gt1.id as gestionMatricula, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.id as documentoTipoId, dt.documentoTipo as documentoTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad, tt.tramiteTipo as tramiteTipo")
+                ->innerJoin('SieAppWebBundle:DocumentoEstado', 'de', 'WITH', 'de.id = d.documentoEstado')
+                ->innerJoin('SieAppWebBundle:DocumentoTipo', 'dt', 'WITH', 'dt.id = d.documentoTipo')
+                ->innerJoin('SieAppWebBundle:DocumentoSerie', 'ds', 'WITH', 'ds.id = d.documentoSerie')
+                ->innerJoin('SieAppWebBundle:Tramite', 't', 'WITH', 't.id = d.tramite')
+                ->innerJoin('SieAppWebBundle:TramiteTipo', 'tt', 'WITH', 'tt.id = t.tramiteTipo')
+                ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'ei.id = t.estudianteInscripcion')
+                ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'e.id = ei.estudiante')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')
+                ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = iec.institucioneducativa')
+                ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = ds.gestion')
+                ->innerJoin('SieAppWebBundle:GestionTipo', 'gt1', 'WITH', 'gt1.id = iec.gestionTipo')
+                ->innerJoin('SieAppWebBundle:PaisTipo', 'pt', 'WITH', 'pt.id = e.paisTipo')
+                ->innerJoin('SieAppWebBundle:DepartamentoTipo', 'dept', 'WITH', 'dept.id = ds.departamentoTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp.lugarTipo')
+                ->where('t.id = :codTramite')
+                ->andWhere('dt.id in (9)')
+                ->andWhere('de.id in (1)')
+                ->setParameter('codTramite', $tramite);
+        $entityDocumento = $query->getQuery()->getResult();
+        if(count($entityDocumento)>0){
+            return $entityDocumento[0];
+        } else {
+            return $entityDocumento;
+        }
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
     // Funcion que lista un documento en función al número de serie
     // PARAMETROS: serie
     // AUTOR: RCANAVIRI
@@ -200,10 +238,8 @@ class DocumentoController extends Controller {
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp.lugarTipo')
                 ->where('t.id = :codTramite')
-                ->andWhere('de.id = :codDocumentoEstado')
                 ->andWhere('dt.id = :codDocumentoTipo')
                 ->setParameter('codTramite', $tramite)
-                ->setParameter('codDocumentoEstado', 1)
                 ->setParameter('codDocumentoTipo', 9)
                 ->orderBy('d.fechaImpresion', 'DESC');
         $entityDocumento = $query->getQuery()->getResult();
@@ -1583,13 +1619,22 @@ class DocumentoController extends Controller {
             $entityDocumento = $this->getDocumentoSerieActivo($serie);
 
             $msgvalidaNumeroSerieTipoDocumento = $this->validaNumeroSerieParaSupletorio($serie);
-
+            
             if ($msgvalidaNumeroSerieTipoDocumento != ""){
-                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msgvalidaNumeroSerieTipoDocumento));
-                return $this->redirectToRoute('tramite_documento_supletorio');
+                $em = $this->getDoctrine()->getManager();
+                $entityDocumento = $em->getRepository('SieAppWebBundle:Documento')->findOneBy(array('documentoSerie' => $serie));
+                $tramiteId = $entityDocumento->getTramite()->getId();
+                $entityDocumento = $this->getDocumentoSupletorio($tramiteId);      
+                if (count($entityDocumento)<1) {  
+                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'El Documento con número de serie '.$serie.' no es válido para generar un certificado supletorio, intente nuevamente'));
+                    return $this->redirectToRoute('tramite_documento_supletorio');
+                } 
             } 
 
+            $documentoId = $entityDocumento['id'];
+
             $entityDocumentoDetalle = $this->getDocumentoSupletorioDetalle($entityDocumento['tramite']);
+            //dump($entityDocumentoDetalle);die;
             
             return $this->render($this->session->get('pathSystem') . ':Documento:supletorioDetalle.html.twig', array(
                 'form' => $this->creaFormularioSupletorio('tramite_documento_supletorio_guarda', '', $entityDocumento['id'])->createView(),
@@ -1648,17 +1693,14 @@ class DocumentoController extends Controller {
             if ($form) {
                 $numeroSerieSupletorio = $form['serie'];
                 $documentoId = base64_decode($form['codigo']); 
-
+                
                 $entityDocumento = $this->getDocumento($documentoId);                
                 if (count($entityDocumento)<1) {  
-                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Diploma de bachiller no encontrado, intente nuevamente'));
+                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Documento no encontrado, intente nuevamente'));
                     return $this->redirectToRoute('tramite_documento_supletorio');
                 } 
 
                 $formBusqueda = array('serie'=>$entityDocumento['serie']);
-
-                $tramiteProcesoController = new tramiteProcesoController();
-                $tramiteProcesoController->setContainer($this->container);
 
                 $usuarioLugarId = $this->getCodigoLugarRol($id_usuario,$rolPermitido);
                 if (count($usuarioLugarId)<1) {  
@@ -1677,7 +1719,8 @@ class DocumentoController extends Controller {
                     if($msgContenidoDocumento == ""){
                         $documentoFirmaId = 0;
                         $idDocumento = $this->setDocumento($codTramite, $id_usuario, 9, $numeroSerieSupletorio, '', $fechaActual, $documentoFirmaId); 
-                        $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'El certificado supletorio con numero de serie "'.$numeroSerieSupletorio.'" fue generado'));
+                        $documentoAnuladoId = $this->setDocumentoEstado($documentoId,2);
+                        $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'El certificado supletorio con numero de serie "'.$numeroSerieSupletorio.'" fue generado, anulado el documento'.$entityDocumento['serie']));
                         $em->getConnection()->commit();
                     } else {
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msgContenidoDocumento));
