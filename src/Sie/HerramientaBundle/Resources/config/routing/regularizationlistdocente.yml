@@ -24,3 +24,9 @@ regularization_docente_getparalelo:
     defaults: { _controller: SieHerramientaBundle:RegularizationListDocente:getparalelo }
     options:
          expose: true
+
+regularization_docente_loaddatacourse:
+    path:     /loadDataCourse
+    defaults: { _controller: SieHerramientaBundle:RegularizationListDocente:loadDataCourse }
+    options:
+         expose: true
