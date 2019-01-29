@@ -303,3 +303,9 @@ sie_pnp_buscar_grado_discapacidad:
     defaults: { _controller: SiePnpBundle:Default:buscar_grado_discapacidad }
     options:
          expose: true
+
+sie_pnp_imprimir_rudeal:
+    path:     /pnp/imprimir_rudeal/{id_enc}/{id}
+    defaults: { _controller: SiePnpBundle:Default:imprimir_rudeal, id:0,id_enc:0 }
+    options:
+         expose: true

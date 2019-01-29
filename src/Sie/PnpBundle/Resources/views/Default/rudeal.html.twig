@@ -24,11 +24,12 @@
 	               	 <div class="form-group col-xs-12 col-lg-2">
                     	<label class="control-label">CI: {{estudiante_a[1]}} {% if estudiante_a[2]!="" or estudiante_a[2]!=0 %}-{{estudiante_a[2]}}{% endif %}</label>
 	               	 </div>
+	               	 {% if estudiante_a[1] != "" %}
 					<div class="form-group col-xs-12 col-lg-3">
                     	<label class="col-sm-2 control-label">Exp:</label>
                     	<div class="col-sm-10">
 	                    	<select data-placeholder="Seleccionar" required="required" id="exp" name="exp" class="form-control chosen-select" tabindex="1" >
-	                    		<option value=""></option>
+	                    		<option value="0" {% if rude["exp_id"] == 0 %} selected="selected" {% endif %}>&nbsp;</option>
 	                        	{% for id_departamento_exp in id_departamentos_exp %}
 		                        	<option value="{{ id_departamento_exp.id }}" 
 		                        	{% if (id_departamento_exp.id  == departamento_exp_usu and op == 0) or (id_departamento_exp.id == rude["exp_id"] and op != 0 )%}selected="selected"{% endif %}>{{ id_departamento_exp.sigla }}</option>
@@ -36,6 +37,7 @@
 	                		</select>
 	                	</div>
 	            	</div>
+	            	{% endif %}
 		    	</div>	
 		    	<div class="row">
 			    	<div class="form-group col-xs-12 col-lg-3">

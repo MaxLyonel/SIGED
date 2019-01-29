@@ -345,9 +345,13 @@
                                         {% if plan == 2 %}
                                             <td>
                                                 {% if esactivo == 1 %}
-                                                    <a role="button" class="btn btn-xs btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_boletaelectronica', { 'id': estudiante.inscripcion_id~"|"~datos.ciclo_tipo_id~"|"~datos.grado_tipo_id}) }}" title="Imprimir Rudeal"></a>    
-                                                {% else %}
-                                                    <a role="button" class="btn btn-xs btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_boletaelectronica', { 'id': estudiante.inscripcion_id~"|"~datos.ciclo_tipo_id~"|"~datos.grado_tipo_id}) }}" title="Imprimir Rudeal"></a>    
+                                                    {% if estudiante.rude_id != "" %}
+                                                        <a role="button" class="btn btn-xs btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_rudeal', { 'id': estudiante.rude_id }) }}" title="Imprimir Rudeal"></a>
+                                                    {% endif %}
+                                                {% else %}  
+                                                    {% if estudiante.rude_id != "" %}
+                                                        <a role="button" class="btn btn-xs btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_rudeal', { 'id': estudiante.rude_id }) }}" title="Imprimir Rudeal"></a>
+                                                    {% endif %}
                                                     <a href="#" role="button" onclick="SeeRudeal('{{estudiante.inscripcion_id}}',{{ datos.id }})" class="btn btn-xs btn-success glyphicon glyphicon-edit" title="Editar Rudeal"></a>
                                                 {% endif %}    
                                             </td>
@@ -357,7 +361,11 @@
                                             <a role="button" class="btn btn-xs btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_boletaelectronica', { 'id': estudiante.inscripcion_id~"|"~datos.ciclo_tipo_id~"|"~datos.grado_tipo_id}) }}" title="Libreta Electronica"></a>
                                             <a href="#" role="button" title="Ver Calificaciones" onclick="SeeNotasNoEdit('{{estudiante.inscripcion_id}}',{{ datos.id }})" class="glyphicon glyphicon-list btn-xs btn-info"></a>
                                         {% else %}
-                                            <a href="#" role="button" onclick="SeeNotas('{{estudiante.inscripcion_id}}',{{ datos.id }})" class="btn btn-xs btn-primary glyphicon glyphicon-list" title="Editar Calificaciones"></a>
+                                            {% if estudiante.rude_id == "" and plan == 2 %}
+                                                <a role="button" class="btn btn-xs btn-default glyphicon glyphicon-list" title="Debe llenar primero el RUDEAL para editar CALIFICACIONES" disabled="disabled" onclick="alert('Debe llenar primero el RUDEAL para editar CALIFICACIONES')"></a>
+                                            {% else %}
+                                                <a href="#" role="button" onclick="SeeNotas('{{estudiante.inscripcion_id}}',{{ datos.id }})" class="btn btn-xs btn-primary glyphicon glyphicon-list" title="Editar Calificaciones"></a>
+                                            {% endif %}
                                             <a href="#" role="button" onclick="FechaNacEdit('{{estudiante.estudiante_id}}','{{estudiante.fecha_nacimiento|date("d/m/Y")}}','{{ estudiante.id_genero }}','{{estudiante.observacionadicional}}',{{estudiante.pnp}},'{{estudiante.discapacidad_id}}')" class="btn btn-xs btn-success btn-large glyphicon glyphicon-edit" title="Editar Datos"></a>
                                             <a role="button" class="btn btn-danger btn-xs glyphicon glyphicon-remove" onclick="return confirm('¿Está seguro de elminar este registro?, Si ELIMINA el registro, se perderá todos los datos, como la INSCRIPCIÓN y las NOTAS del estudiante y no podrá recuperar!!!')" href="{{ path('sie_pnp_eliminarregistro_estudiante_curso', { 'estudiante_inscripcion_id': estudiante.inscripcion_id,'curso_id':datos.id }) }}" title="Eliminar Inscipción"></a>
                                         {% endif %}
@@ -375,9 +383,9 @@
                                         {% endif %}
                                         
                                         <td>{% if estudiante.fecha_nacimiento %}{{ estudiante.fecha_nacimiento|date('d/m/Y') }}{% endif %}</td>
-                                        <td>{{ estudiante.genero }}</td>
+                                        <td>{{ estudiante.genero|capitalize }}</td>
                                         {% if plan == 1 %}
-                                            <td>{{ estudiante.observacionadicional }}</td>
+                                            <td>{{ estudiante.observacionadicional|capitalize }}</td>
                                         {% else %}
                                             <td>{{ estudiante.actividad }}</td>
                                         {% endif %}

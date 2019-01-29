@@ -24,14 +24,19 @@
                     <tr>
                         <td align="center"><br/><strong>Fecha Nac.</strong></td>
                         <td align="center"><br/><strong>C.I.</strong></td>
-                        <td align="center"><br/><strong>Codigo Rude</strong></td>
+                        {% if opcion != 1 %}
+                            <td align="center"><br/><strong>Codigo Rude</strong></td>
+                        {% endif %}
                     </tr>
                     <tr>
                         <td align="center">{{ filas.fecha_nac|date("d-m-Y") }}</td>
                         <td align="center">{{ filas.ci }}{% if filas.complemento != '' %}-{{filas.complemento}}{% endif %}</td>
-                        <td align="center">{{ filas.rude }}</td>
+                        {% if opcion != 1 %}
+                            <td align="center">{{ filas.rude }}</td>
+                        {% endif %}
                     </tr>
                     <input type="hidden" value="{{ plan }}" name="plan">
+                    <input type="hidden" value="{{ sie }}" name="sie">
                     {% if plan == 1 %}
                         <tr>
                             <td align="center"><br/><strong>Alfabetizado</strong></td>
@@ -103,7 +108,43 @@
                                 </select>
                             </td>
                         </tr>
-                    {% endif %}           
+                    {% else %}
+                        <tr>
+                            <td align="center"><br/><strong>Departamento</strong></td>
+                            <td align="center"><br/><strong>Provincia</strong></td>
+                            <td align="center"><br/><strong>Localidad</strong></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select name="departamento" id="departamento" class="form-control" required="required">
+                                    <option value="">Departamento</option>
+                                    {% for id_departamento in id_departamentos %}
+                                        <option {% if (id_departamento.id  == filas["lugar_nac_tipo_id"]) %}selected="selected"{% endif %} value="{{ id_departamento.id }}">{{ id_departamento.lugar }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <select name="provincia" id="provincia" class="form-control" required="required">
+                                     <option value="">Provincia</option>
+                                    {% for id_provincia in id_provincias %}
+                                        <option {% if (id_provincia.id  == filas["lugar_prov_nac_tipo_id"]) %}selected="selected"{% endif %} value="{{ id_provincia.id }}">{{ id_provincia.lugar }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <input required="required" type="text" maxlength="40" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();" class="form-control" name="localidad" value="{{ filas.localidad_nac }}">
+                            </td>
+                        </tr>
+                        </select>          
+                    {% endif %}
+                    <tr align="center"><td>&nbsp;</td><td><strong>Sexo</strong></td></tr>
+                    <tr><td>&nbsp;</td>
+                        <td><select name="sexo" id="sexo" class="form-control" required="required">
+                             <option value="">Seleccionar</option>
+                             <option value="1" {% if filas["genero_tipo_id"] == 1 %}selected="selected"{% endif %}>Masculino</option>
+                             <option value="2" {% if filas["genero_tipo_id"] == 2 %}selected="selected"{% endif %}>Femenino</option>
+                        </select></td>
+                    </tr>
             </table>
         </div>
     </div>
@@ -120,6 +161,27 @@
     function cambio(){
         document.getElementById("boton").style.visibility = 'hidden';
     }
+    $("#departamento").change(function(){                            
+            var iddep = $(this).val();            
+            var route = Routing.generate('sie_pnp_buscar_provincia', { ieid: iddep });                    
+            var data;
+            $.ajax({
+                type: 'get',     
+                url: route,
+                data: data,
+                success: function(data) {                        
+                        datos = $.parseJSON(data);
+                        $("#provincia").empty();                       
+                        var $province_selector = $('#provincia');
+
+                        $province_selector.html('<option value="">Provincia</option>');
+                        for (var i=0, total = datos.length; i < total; i++) {
+                            $province_selector.append('<option value="' + datos[i].id + '">' + datos[i].provincia + '</option>');
+                        }
+                        $('#provincia').trigger("chosen:updated");
+                    }
+                });            
+            });
 </script>
 {#<!--<div class="row"
     <div class="col-xs-12">

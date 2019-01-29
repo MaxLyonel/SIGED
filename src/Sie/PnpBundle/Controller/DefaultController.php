@@ -1,7 +1,7 @@
 <?php
 
 namespace Sie\PnpBundle\Controller;
-
+use \Datetime;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Response;
@@ -2109,6 +2109,52 @@ class DefaultController extends Controller
         return $response;
     }
 
+     public function imprimir_rudealAction($id,$id_enc, Request $request)
+    {
+        if ($id_enc==0){
+            $id_enc=$this->encriptar($id);
+        }
+        if ($id==0){
+            $id=$this->desencriptar($id_enc);
+        }
+        $arch = 'PNP_RUDEAL_' . date('Ymd') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'pnp_rudeal_v1.rptdesign&__format=pdf&&rude_id=' . $id . '&rude_id_enc=' . $id_enc . '&&__format=pdf&'));
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    public function encriptar ($string) {
+        $key = "PROGRAMA NACIONAL DE POST-ALFABETIZACIÓN";
+        $result = '';
+       for($i=0; $i<strlen($string); $i++) {
+          $char = substr($string, $i, 1);
+          $keychar = substr($key, ($i % strlen($key))-1, 1);
+          $char = chr(ord($char)+ord($keychar));
+          $result.=$char;
+       }
+       return base64_encode($result);
+    }
+
+    public function desencriptar ($string) {
+        $key = "PROGRAMA NACIONAL DE POST-ALFABETIZACIÓN";
+        $result = '';
+        $string = base64_decode($string);
+        for($i=0; $i<strlen($string); $i++) {
+          $char = substr($string, $i, 1);
+          $keychar = substr($key, ($i % strlen($key))-1, 1);
+          $char = chr(ord($char)-ord($keychar));
+          $result.=$char;
+        }
+        return $result;
+    }
+
     public function eliminarduplicadosAction($id,$id_eliminar, Request $request)
     {
          //Conocer el departamento del usuario para que solo pueda ver de su departamento
@@ -4190,17 +4236,18 @@ ciclo_tipo_id, grado_tipo_id
                       dt.id as discapacidad_id,
                       dt.origendiscapacidad as discapacidad,
                       act.id as actividad_id,
-                      act.descripcion_ocupacion as actividad
+                      act.descripcion_ocupacion as actividad,
+                      r.id as rude_id
                     FROM 
                       estudiante INNER JOIN estudiante_inscripcion ON estudiante.id = estudiante_inscripcion.estudiante_id
                       INNER JOIN genero_tipo ON genero_tipo.id = estudiante.genero_tipo_id
                       INNER JOIN estadomatricula_tipo ON estadomatricula_tipo.ID = estudiante_inscripcion.estadomatricula_inicio_tipo_id
                       INNER JOIN institucioneducativa_curso ON estudiante_inscripcion.institucioneducativa_curso_id = institucioneducativa_curso.id
                       LEFT JOIN rude r ON r.estudiante_inscripcion_id=estudiante_inscripcion.id
-                                          LEFT JOIN  rude_discapacidad_grado rdg ON rdg.rude_id=r.id
-                                            LEFT JOIN discapacidad_tipo dt ON dt.id=rdg.discapacidad_tipo_id
-                                          LEFT JOIN rude_actividad ra ON ra.rude_id=r.id
-                                            LEFT JOIN actividad_tipo act ON act.id=ra.actividad_tipo_id
+                      LEFT JOIN  rude_discapacidad_grado rdg ON rdg.rude_id=r.id
+                        LEFT JOIN discapacidad_tipo dt ON dt.id=rdg.discapacidad_tipo_id
+                      LEFT JOIN rude_actividad ra ON ra.rude_id=r.id
+                        LEFT JOIN actividad_tipo act ON act.id=ra.actividad_tipo_id
                     WHERE
                       institucioneducativa_curso.id = ".$id;
         
@@ -4246,6 +4293,7 @@ ciclo_tipo_id, grado_tipo_id
             $datos_filas["discapacidad"] = $p["discapacidad"];
             $datos_filas["actividad_id"] = $p["actividad_id"];
             $datos_filas["actividad"] = $p["actividad"];
+            $datos_filas["rude_id"] = $p["rude_id"];
             $filas[] = $datos_filas;
         }
         
@@ -4384,14 +4432,56 @@ ciclo_tipo_id, grado_tipo_id
         $ci = substr($ci, 0, -2);
         $reconocimiento_saberes=0;//si tiene reconocimiento de saberes 0 no 1 si
         $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getEntityManager();
         $db = $em->getConnection();
+        $po = array();
+        $userId = $this->session->get('userId');   
+        ///$ opc = 1 -> actual    $opc = 0 -> antiguo (2009-2015) 
+        /////////////conocer el departamento
+         $query = "
+               SELECT lt.lugar as lugar
+               FROM lugar_tipo lt,
+               usuario_rol ur 
+               WHERE ur.lugar_tipo_id=lt.id and ur.usuario_id=$userId";
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $filas = array();
+        $datos_filas = array();
+        foreach ($po as $p) {
+            $lugar_usuario = $p["lugar"];
+        }
+        $lugar_usuario=strtoupper($lugar_usuario);
+        switch ($lugar_usuario) {
+            case 'CHUQUISACA':{$nombre_lugar="CHUQUISACA";$lugar_tipo_id=31654;$ie=80480300;}break;
+            case 'LA PAZ':{$nombre_lugar="LA PAZ";$lugar_tipo_id=31655;$ie=80730794;}break;
+            case 'COCHABAMBA':{$nombre_lugar="COCHABAMBA";$lugar_tipo_id=31656;$ie=80980569;}break;
+            case 'ORURO':{$nombre_lugar="ORURO";$lugar_tipo_id=31657;$ie=81230297;}break;
+            case 'POTOSI':{$nombre_lugar="POTOSI";$lugar_tipo_id=31658;$ie=81480201;}break;
+            case 'TARIJA':{$nombre_lugar="TARIJA";$lugar_tipo_id=31659;$ie=81730264;}break;
+            case 'SANTA CRUZ':{$nombre_lugar="SANTA CRUZ";$lugar_tipo_id=31660;$ie=81981501;}break;
+            case 'BENI':{$nombre_lugar="BENI";$lugar_tipo_id=31661;$ie=82230130;}break;
+            case 'PANDO':{$nombre_lugar="PANDO";$lugar_tipo_id=31662;$ie=82480050;}break;
+            default:
+                $lugar_tipo_id=1;
+                $nombre_lugar="Bolivia";
+                $ie="";
+                break;
+        }  
+        //retornar departamentos
+        $id_departamentos = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array(
+        'lugarNivel' => 1, 'gestionTipo'=> 2014
+        ));
+        //retornar provincias
+        $id_provincias = array();
+        
         
          $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findByinstitucioneducativaCurso($curso_id);
             foreach ($result as $results) {
                 $plan=$results->getPlancurricularTipoId();
             }
 
-        
         if($rude==0)
             if($complemento=='0'){
                 $where="estudiante.carnet_identidad = '$ci' AND (estudiante.complemento = '' OR estudiante.complemento is null)";
@@ -4402,8 +4492,9 @@ ciclo_tipo_id, grado_tipo_id
         else 
             $where="estudiante.codigo_rude = '$ci'";
         /////////////////INICAL conocer fecha inicial del curso para permitir o no inscribir
-        $gestion_ini= $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($curso_id);
-        $gestion_ini=$gestion_ini->getFechaInicio();
+        $institucioneducativa_curso= $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($curso_id);
+        $gestion_ini=$institucioneducativa_curso->getFechaInicio();
+        $sie=$institucioneducativa_curso->getInstitucioneducativa()->getId();
         $gestion_ini= date_format($gestion_ini,"Y");
         $usuario_id = $this->session->get('userId');
         $rol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findOneByUsuario($usuario_id);    
@@ -4425,6 +4516,7 @@ ciclo_tipo_id, grado_tipo_id
                 $filas['ci'] = $p["carnet_identidad"];
                 $filas['complemento'] = $p["complemento"];
                 $obs_adicional=$p["observacionadicional"];
+
                 if ( $obs_adicional != "") {
                     $porciones = explode("|", $obs_adicional);
                     $filas['alfabetizado'] = $porciones[0];
@@ -4436,6 +4528,11 @@ ciclo_tipo_id, grado_tipo_id
                     $filas['idioma'] = "";
                     $filas['ocupacion'] = "";    
                 } 
+                 $filas['lugar_prov_nac_tipo_id'] = $p["lugar_prov_nac_tipo_id"];
+                $filas['lugar_nac_tipo_id'] = $p["lugar_nac_tipo_id"];
+                $filas['localidad_nac'] = $p["localidad_nac"];
+                $filas['pais_tipo_id'] = $p["pais_tipo_id"];
+                $filas['genero_tipo_id'] = $p["genero_tipo_id"];
                 $exxx=1;
             }
             //print_r($filas);die;
@@ -4445,18 +4542,23 @@ ciclo_tipo_id, grado_tipo_id
                     return $this->render('SiePnpBundle:Default:mostrarestudiante.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'gestion_ini'=>$gestion_ini)); die;
                 }
                 else{*/
-                    return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>2,'gestion_ini'=>$gestion_ini,'plan'=>$plan));  die;          
+                     $valido=$this->validar_nivel_participanteAction($filas['rude']);
+                    if($valido == 1)
+                        return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>2,'gestion_ini'=>$gestion_ini,'plan'=>$plan,'sie'=>$sie,'id_departamentos'=>$id_departamentos,'id_provincias'=>$id_provincias)); 
+                    else
+                         echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI O CODIGO RUDE '.$ci.' pasó secundaria, por lo tanto no puede ingresar al PNP.</div>'; die; 
+                        die;         
                 /*}*/
             }
             else{
-                if($rude==1){
+                /*if($rude==1){
                     echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante CODIGO RUDE '.$ci.' No existe.</div>'; die; 
                 }
                 else
                 {
                     echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con  CI o CODIGO RUDE '.$ci.' No existe.</div>'; die;   
-                }
-                /*$servicioPersona = $this->get('sie_app_web.persona');
+                }*/
+                $servicioPersona = $this->get('sie_app_web.persona');
                 $persona = $servicioPersona->buscarPersona($ci,$complemento,0);    
                 if($persona->type_msg === "success"){   
                     $filas = array();
@@ -4465,23 +4567,67 @@ ciclo_tipo_id, grado_tipo_id
                     $filas['materno'] = $persona->result[0]->materno;
                     $filas['nombre'] = $persona->result[0]->nombre;
                     $fecha_nac=$persona->result[0]->fecha_nacimiento;
-                    $filas['fecha_nac'] = $fecha_nac;
+                    $fecha_nac = new DateTime($fecha_nac);
+                    $filas['fecha_nac'] = $fecha_nac->format('d-m-Y');
                     $filas['genero'] = $persona->result[0]->genero_tipo_id;
                     $filas['ci'] = $persona->result[0]->carnet;
                     $filas['complemento'] = $persona->result[0]->complemento;
-                    return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>1,'gestion_ini'=>$gestion_ini));  die;
-                    echo $curso_id;die;
-                    die;
+                    $filas['segip_id'] = $persona->result[0]->segip_id;
+                    $filas['alfabetizado'] = "";
+                    $filas['idioma'] = "";
+                    $filas['ocupacion'] = "";
+                    $filas['lugar_prov_nac_tipo_id'] = "";
+                    $filas['lugar_nac_tipo_id'] = "";
+                    $filas['localidad_nac'] = "";
+                    $filas['pais_tipo_id'] = "";
+                    $filas['genero_tipo_id'] = $persona->result[0]->genero_tipo_id;
+                    if($filas['segip_id']!=0){
+                        //verificamos con segip que los datos esten correctos
+                        $opcional = array(
+                            'complemento'=>$filas['complemento'],
+                            'primer_apellido'=>$filas['paterno'],
+                            'segundo_apellido'=>$filas['materno'],
+                            'nombre'=>$filas['nombre'],
+                            'fecha_nacimiento'=>$filas['fecha_nac']
+                        );
+                        // $opcional = array();
+                        $personaSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($filas['ci'], $opcional, 'prod', 'academico');
+                        if($personaSegip){
+                            return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>1,'gestion_ini'=>$gestion_ini,'plan'=>$plan,'sie'=>$sie,'id_departamentos'=>$id_departamentos,'id_provincias'=>$id_provincias));  die;
+                        }
+                        else{
+                            if($rude==1){
+                            echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CODIGO RUDE '.$ci.' No existe.</div>'; die; 
+                            }
+                            else{
+                                echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con  CI '.$ci.' No existe.</div>'; die;   
+                            }
+                        }
+                    }
+                    else{
+                        if($rude==1){
+                            echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CODIGO RUDE '.$ci.' No existe.</div>'; die; 
+                        }
+                        else{
+                            echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con  CI '.$ci.' No existe.</div>'; die;   
+                        }
+                    }
+                    
                 }
                 else{
-                    echo '<div class="alert alert-danger">'.$persona->msg.'</div>';die;
-                }*/
+                    if($rude==1){
+                        echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CODIGO RUDE '.$ci.' No existe.</div>'; die; 
+                    }
+                    else
+                    {
+                        echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con  CI '.$ci.' No existe.</div>'; die;   
+                    }
+                }
             }
         }
 
 
         /////////////////////////////////////////////FIN 
-
         $query = "SELECT
                       estudiante.id as estudiante_id,
                       estudiante.codigo_rude
@@ -4728,17 +4874,19 @@ ciclo_tipo_id, grado_tipo_id
                                     $filas['idioma'] = "";
                                     $filas['ocupacion'] = "";    
                                 } 
-                                
+                                $filas['lugar_prov_nac_tipo_id'] = $p["lugar_prov_nac_tipo_id"];
+                                $filas['lugar_nac_tipo_id'] = $p["lugar_nac_tipo_id"];
+                                $filas['localidad_nac'] = $p["localidad_nac"];
+                                $filas['pais_tipo_id'] = $p["pais_tipo_id"];
+                                $filas['genero_tipo_id'] = $p["genero_tipo_id"];
                             }
-                            //print_r($filas);die;
-                            //echo '<div class="alert alert-success">El Estudiante '.$nombre.' '.$paterno.' '.$materno.' con CI: '.$ci.' con fecha de nacimiento: '.$fecha_nac.' puede ser registrao a este curso.</div>';
-                            
-                        /*if($obs_adicional!=""){
-                            return $this->render('SiePnpBundle:Default:mostrarestudiante.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'gestion_ini'=>$gestion_ini)); 
-                            die;
-                        }
-                        else{*/
-                            return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>2,'gestion_ini'=>$gestion_ini,'plan'=>$plan));            
+                            $id_provincias = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarTipo' => $filas['lugar_nac_tipo_id']));
+                            $valido=$this->validar_nivel_participanteAction($filas['rude']);
+                            if($valido == 1)               
+                                return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>2,'gestion_ini'=>$gestion_ini,'plan'=>$plan,'sie'=>$sie,'id_departamentos'=>$id_departamentos,'id_provincias'=>$id_provincias)); 
+                            else
+                                 echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI O CODIGO RUDE '.$ci.' pasó secundaria, por lo tanto no puede ingresar al PNP.</div>'; die; 
+                                die;
                         /*}*/
 
                          ////////   
@@ -4787,6 +4935,11 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                           estudiante.fecha_nacimiento,
                           estudiante.carnet_identidad,
                           estudiante.observacionadicional
+                          estudiante.lugar_prov_nac_tipo_id,
+                          estudiante.lugar_nac_tipo_id,
+                          estudiante.localidad_nac,
+                          estudiante.pais_tipo_id,
+                          estudiante.genero_tipo_id,
                         FROM 
                           estudiante
                         WHERE
@@ -4815,17 +4968,20 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                                     $filas['alfabetizado'] = "";
                                     $filas['idioma'] = "";
                                     $filas['ocupacion'] = "";    
-                                } 
+                                }
+                                $filas['lugar_prov_nac_tipo_id'] = $p["lugar_prov_nac_tipo_id"];
+                                $filas['lugar_nac_tipo_id'] = $p["lugar_nac_tipo_id"];
+                                $filas['localidad_nac'] = $p["localidad_nac"];
+                                $filas['pais_tipo_id'] = $p["pais_tipo_id"];
+                                $filas['genero_tipo_id'] = $p["genero_tipo_id"]; 
                             }
-                            //print(arg)_r($filas);die;
-                            //echo '<div class="alert alert-success">El Estudiante '.$nombre.' '.$paterno.' '.$materno.' con CI: '.$ci.' con fecha de nacimiento: '.$fecha_nac.' puede ser registrao a este curso.</div>';
-                        //vemos si tiene observacion adicional (Alfabetizado, idioma, Ocupacion)
-                        /*if($obs_adicional!=""){
-                            return $this->render('SiePnpBundle:Default:mostrarestudiante.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'gestion_ini'=>$gestion_ini)); 
-                            die;
-                        }
-                        else{*/
-                            return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>2,'gestion_ini'=>$gestion_ini,'plan'=>$plan));            
+                            $id_provincias = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarTipo' => $filas['lugar_nac_tipo_id']));
+                             $valido=$this->validar_nivel_participanteAction($filas['rude']);
+                            if($valido == 1)               
+                                return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>2,'gestion_ini'=>$gestion_ini,'plan'=>$plan,'sie'=>$sie,'id_departamentos'=>$id_departamentos,'id_provincias'=>$id_provincias)); 
+                            else
+                                 echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI O CODIGO RUDE '.$ci.' pasó secundaria, por lo tanto no puede ingresar al PNP.</div>'; die; 
+                                die;            
                         /*}*/
           
                     }
@@ -4835,14 +4991,6 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
             //////////NO EXISTE EN LA TABLA ESTUDIANTE, BUSCAR EN LA TABLA PERSONA
         //and (p.esvigenteApoderado=1 or p.esvigente=t)
     
-            if($rude==1){
-               echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante CODIGO RUDE '.$ci.' No existe.</div>'; die;  
-            }
-            else
-            {
-                echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI o CODIGO RUDE '.$ci.' No existe.</div>'; die;     
-            }
-            /*else{ ya no buscar en la tabla persona
                 $servicioPersona = $this->get('sie_app_web.persona');
                 $persona = $servicioPersona->buscarPersona($ci,$complemento,0);    
                 if($persona->type_msg === "success"){   
@@ -4852,20 +5000,66 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                     $filas['materno'] = $persona->result[0]->materno;
                     $filas['nombre'] = $persona->result[0]->nombre;
                     $fecha_nac=$persona->result[0]->fecha_nacimiento;
-                    $filas['fecha_nac'] = $fecha_nac;
+                    $fecha_nac = new DateTime($fecha_nac);
+                    $filas['fecha_nac'] = $fecha_nac->format('d-m-Y');
                     $filas['genero'] = $persona->result[0]->genero_tipo_id;
                     $filas['ci'] = $persona->result[0]->carnet;
                     $filas['complemento'] = $persona->result[0]->complemento;
-                    if($opcion==11)
-                        return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>1,'gestion_ini'=>$gestion_ini)); 
-                    else
-                        echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante CODIGO RUDE '.$ci.' le corresponde Primer curso     y no este curso.</div>'; die;     
+                    $filas['segip_id'] = $persona->result[0]->segip_id;
+                    $filas['alfabetizado'] = "";
+                    $filas['idioma'] = "";
+                    $filas['ocupacion'] = "";
+                    $filas['lugar_prov_nac_tipo_id'] = "";
+                    $filas['lugar_nac_tipo_id'] = "";
+                    $filas['localidad_nac'] = "";
+                    $filas['pais_tipo_id'] = "";
+                    $filas['genero_tipo_id'] = $persona->result[0]->genero_tipo_id;
+                    if($filas['segip_id']!=0){
+                        //VERIFICAMOS CON SEGIP
+                         $opcional = array(
+                            'complemento'=>$filas['complemento'],
+                            'primer_apellido'=>$filas['paterno'],
+                            'segundo_apellido'=>$filas['materno'],
+                            'nombre'=>$filas['nombre'],
+                            'fecha_nacimiento'=>$filas['fecha_nac']
+                        );
+                        // $opcional = array();
+                        $personaSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($filas['ci'], $opcional, 'prod', 'academico');
+                        if($personaSegip){
+                            if($opcion==11)
+                                return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>1,'gestion_ini'=>$gestion_ini,'plan'=>$plan,'sie'=>$sie,'id_departamentos'=>$id_departamentos,'id_provincias'=>$id_provincias));
+                            else
+                                echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI '.$ci.' le corresponde Primer curso y no este curso.</div>'; die;         
+                        }
+                        else{
+                            if($rude==1){
+                            echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CODIGO RUDE '.$ci.' No existe.</div>'; die; 
+                            }
+                            else{
+                                echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con  CI '.$ci.' No existe.</div>'; die;   
+                            }
+                        }
+                    }
+                    else{
+                        if($rude==1){
+                            echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante CODIGO RUDE '.$ci.' No existe.</div>'; die;  
+                        }
+                        else{
+                            echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI '.$ci.' No existe.</div>'; die;     
+                        }
+                    }
+    
                 }
                 else{
-                    echo '<div class="alert alert-danger">'.$persona->msg.'</div>';die;
+                    if($rude==1){
+                       echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante CODIGO RUDE '.$ci.' No existe.</div>'; die;  
                     }
-            }*/
-        }       
+                    else{
+                        echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI '.$ci.' No existe.</div>'; die;     
+                    }
+                }
+            }
+            
         return $this->render('SiePnpBundle:Default:mostrarestudiante.html.twig', array('cant'=>$cant));
     }
 
@@ -4891,78 +5085,49 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
 
         ///////////VER SI EL TIPO ES 0, ESTA EN LA TABLA ESTUDIANTE SI ES 1 EN LA TABLA PERSONA
         //POR TANTO DEBEMOS PRIMERO LLEVAR DE LA TABLA PERSONA A LA TABLA ESTUDIANTE PARA CONTINUAR CON LAS DEMAS INSERCIONES
-        /*if($tipo==1){
+        $plan=$request->get("plan");
+        $sexo=$request->get("sexo");
+        $sie=$request->get("sie");
+
+        if($tipo==1){
         
             $id_persona=$rude;
+            $query = $em->getConnection()->prepare('SELECT get_estudiante_nuevo_rude(:sie::VARCHAR,:gestion::VARCHAR)');
+            $query->bindValue(':sie',$sie);            
+            $query->bindValue(':gestion', date('Y'));
+            $query->execute();
+            $codrude = $query->fetchAll();
+            $codrude = $codrude[0]["get_estudiante_nuevo_rude"];
              
             //obtener los tres valores y unirlos
-             $alfabetizado=$request->get("alfabetizado");
-             $idioma=$request->get("idioma");
-             $ocupacion=$request->get("ocupacion");
+            $observacionadicional="";
+             if($plan==1){
+                 $alfabetizado=$request->get("alfabetizado");
+                 $idioma=$request->get("idioma");
+                 $ocupacion=$request->get("ocupacion");
+                 $observacionadicional=$alfabetizado.'|'.$idioma.'|'.$ocupacion;
+            }
 
-             $observacionadicional=$alfabetizado.'|'.$idioma.'|'.$ocupacion;
-            //BUSCAR VALORES
-
-            switch ($institucioneducativa_id) {
-            case 80480300://CHUQUISACA
-                $ie = '80480300';
-                $rude1 = $em->getRepository('SieAppWebBundle:PnpSerialRude')->find('1');
-                break;
-            case 80730794://LA PAZ
-                $ie = '80730794';
-                $rude1 = $em->getRepository('SieAppWebBundle:PnpSerialRude')->find('2');
-                break;
-            case 80980569://COCHABAMBA
-                $ie = '80980569';
-                $rude1 = $em->getRepository('SieAppWebBundle:PnpSerialRude')->find('3');
-                break;
-            case 81230297://ORURO
-                $ie = '81230297';
-                $rude1 = $em->getRepository('SieAppWebBundle:PnpSerialRude')->find('4');
-                break;
-            case 81480201://POTOSI
-                $ie = '81480201';
-                $rude1 = $em->getRepository('SieAppWebBundle:PnpSerialRude')->find('5');
-                break;
-            case 81730264://TARIJA
-                $ie = '81730264';
-                $rude1 = $em->getRepository('SieAppWebBundle:PnpSerialRude')->find('6');
-                break;
-            case 81981501://SANTA CRUZ
-                $ie = '81981501';
-                $rude1 = $em->getRepository('SieAppWebBundle:PnpSerialRude')->find('7');
-                break;
-            case 82230130://BENI
-                $ie = '82230130';
-                $rude1 = $em->getRepository('SieAppWebBundle:PnpSerialRude')->find('8');
-                break;
-            case 82480050://PANDO
-                $ie = '82480050';
-                $rude1 = $em->getRepository('SieAppWebBundle:PnpSerialRude')->find('9');
-                break;
-        }
-
-            //GENERA RUDE
-            $seqrude = (string)$rude1->getSeqrude()+1;
-            $codrude = $ie.$anio.str_pad($seqrude, 6, "0", STR_PAD_LEFT);
-
+            //falra $codrue
             //BUSCA DATOS PERSONA    
             $persona = $this->getDoctrine()->getRepository('SieAppWebBundle:Persona')->findOneById($id_persona);
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante');")->execute();
             $estudiante = new Estudiante();
             $estudiante->setCodigoRude($codrude);
-            $rude=$codrude;                
-            $estudiante->setCarnetIdentidad($persona->getCarnet());                
+            $rude=$codrude;          
+            $estudiante->setCarnetIdentidad($persona->getCarnet());
             $estudiante->setPaterno($persona->getPaterno());
             $estudiante->setMaterno($persona->getMaterno());
             $estudiante->setNombre($persona->getNombre());
-            //$genero=$persona->getGeneroTipo()->getId();
-
-            //$estudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById(3));//
-            //echo $genero;die;
-            $estudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($persona->getGeneroTipo()->getId()));
+            $estudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($sexo));
             $estudiante->setEstadoCivil($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find($persona->getEstadoCivilTipo()->getId()));
-            $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('1'));                    
+            $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($persona->getExpedido()->getId()));
+            if($plan==1)
+                $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('1'));
+            else{
+                $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($request->get("departamento")));
+                $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($request->get("provincia")));                    
+            }
             $estudiante->setOficialia('');
             $estudiante->setLibro('');
             $estudiante->setPartida('');
@@ -4974,9 +5139,13 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
             $estudiante->setBolean(false);
             $estudiante->setFechaNacimiento($persona->getFechaNacimiento());                                               
             $estudiante->setFechaModificacion(new \DateTime('now'));
-            $estudiante->setCorreo('');
-            $estudiante->setPaisTipo($this->getDoctrine()->getRepository('SieAppWebBundle:PaisTipo')->find('1'));
-            $estudiante->setLocalidadNac($this->getDoctrine()->getRepository('SieAppWebBundle:Persona')->find('1'));
+            $estudiante->setCorreo($persona->getCorreo());
+            $estudiante->setCelular($persona->getCelular());
+            $estudiante->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find('1'));
+            if($plan==1)
+                $estudiante->setLocalidadNac($em->getRepository('SieAppWebBundle:Persona')->find('1'));
+            else
+                $estudiante->setLocalidadNac($request->get("localidad"));
             //$estudiante->setFoto();
             //$estudiante->setCelular('');
             //$estudiante->setResolucionaprovatoria('');
@@ -4986,28 +5155,9 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
             //$estudiante->setLibretaMilitar('');
             $em->persist($estudiante);
             $em->flush();
-
-            //ACTUALIZA SECUANCIA DE RUDES
-            $rude1->setSeqrude($seqrude);
-            $em->persist($rude1);
-            $em->flush();
-        } */ 
+        } 
         ////////////////////DATOS
         $estado=61; //62 En Clase 
-        ////si la gestion es menor a 2016 los datos lugar,LugarCurso,Facilitadorcurso 
-
-        /*if($anio < 2016){
-                // id de la tabla estudiante_inscripcion para traer el lugar, lugarcurso y facilitadorcurso
-            //**********************TENER CUIDADO AL REGISTRAR NUEVO ESTUDIANTE EN UN CURSO PQ LOS DATOS SALDRIAN AL CREAR EL CURSO
-            $result=$em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findByinstitucioneducativaCurso($curso_id);
-            foreach ($result as $results) {
-                $municipio=$results->getLugar();
-                $localidad=$results->getLugarCurso();
-                $facilitador=$results->getfacilitadorcurso();
-            }
-            
-        }*/
-        //else{
             //primero obtenemos municipio y localidad
             $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findByinstitucioneducativaCurso($curso_id);
             foreach ($result as $results) {
@@ -5044,26 +5194,39 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
 
         try {/////insertar carnet_identidad
                 
-                //////////////////////AUMENTAR, SI ES TIPO 2, ES ESTUDIANTE PERO NO TIENE LA PARTE DE ALFABETIZADO, OCUPACION POR TANTO SE DEBE PRIMERO ACTUALIZAR AL ESTUDIANTE ESA PARTE
+                //////////////////////AUMENTAR, SI ES TIPO 2, ES ESTUDIANTE PERO NO TIENE LA PARTE DE ALFABETIZADO, OCUPACION POR TANTO SE DEBE PRIMERO ACTUALIZAR AL ESTUDIANTE ESA PARTE ctv
                 
-                $plan=$request->get("plan");
-                if($plan == 1){
+                
+                if($plan == 1 and ($tipo == 0 or $tipo == 2)){
                     $alfabetizado=$request->get("alfabetizado");
                     $idioma=$request->get("idioma");
                     $ocupacion=$request->get("ocupacion");    
+                    $sexo=$request->get("sexo"); 
                     $observacionadicional=$alfabetizado.'|'.$idioma.'|'.$ocupacion;
                     $result=$em->getRepository('SieAppWebBundle:Estudiante')->findOneBycodigoRude($rude);
                     $result->setObservacionadicional($observacionadicional);
+                    $result->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($sexo));
+                    $em->flush();
+                }
+                if($plan == 2 and ($tipo == 0 or $tipo == 2)){
+                    $sexo=$request->get("sexo");
+                    $departamento=$request->get("departamento");
+                    $provincia=$request->get("provincia");
+                    $localidad=$request->get("localidad");
+                    $result=$em->getRepository('SieAppWebBundle:Estudiante')->findOneBycodigoRude($rude);
+                    $result->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($sexo));
+                    $result->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($departamento));
+                    $result->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($provincia));
+                    $result->setLocalidadNac($localidad);
                     $em->flush();
                 }
                             
-
                 $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion');")->execute();
                 $inscripcion = new EstudianteInscripcion();
                 $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById($estado));
-                //if($tipo==0 or $tipo==2)
+                if($tipo==0 or $tipo==2)
                 $inscripcion->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->findOneBycodigoRude($rude));
-                //else $inscripcion->setEstudiante($estudiante);
+                else $inscripcion->setEstudiante($estudiante);
                 $inscripcion->setNumMatricula(0);
                 $inscripcion->setObservacionId(0);
                 $inscripcion->setObservacion(0);
@@ -7984,6 +8147,7 @@ public function rudeal_guardarAction(Request $request){
     if($request->getMethod()=="POST") {
         $rude_id=$request->get("rude_id");//si rude_id == 0 nuevo caso contrario modificar
         $curso_id=$request->get("id_curso");
+        $ci_est=$request->get("ci_est");
         $id_estudiante=$request->get("id_estudiante");
         $lugar_registro_rude=$request->get("lugar_registro_rude");
         $fecha_registro_rude=$request->get("fecha_registro_rude");
@@ -8076,7 +8240,10 @@ public function rudeal_guardarAction(Request $request){
 
             //ESTUDIANTE
             $estudiante=$em->getRepository('SieAppWebBundle:Estudiante')->findOneById($id_estudiante);
-            $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneById($expedido));
+            if($ci_est != "")
+                $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneById($expedido));
+            else
+                $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneById(0));
             $estudiante->setEstadoCivil($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->findOneById($estado_civil));
             $estudiante->setCarnetIbc($ibc);
             $em->flush();
@@ -8284,7 +8451,11 @@ public function rudeal_guardarAction(Request $request){
                       estadomatricula_tipo.estadomatricula,
                       estudiante_inscripcion.id as inscripcion_id,
                       institucioneducativa_curso.ciclo_tipo_id,
-                      institucioneducativa_curso.grado_tipo_id
+                      institucioneducativa_curso.grado_tipo_id,
+                      estudiante.lugar_prov_nac_tipo_id,
+                      estudiante.lugar_nac_tipo_id,
+                      estudiante.localidad_nac,
+                      estudiante.pais_tipo_id
                     FROM 
                       estudiante 
                       LEFT JOIN estudiante_inscripcion ON estudiante.id = estudiante_inscripcion.estudiante_id
@@ -8392,5 +8563,30 @@ public function rudeal_guardarAction(Request $request){
         }        
         return $filas;
     }
-    //buscar archivos de 2015 para adelante 
+///retornar nivel del estudiante
+    public function validar_nivel_participanteAction($rude){
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $nivel=0;
+    $query = "
+            SELECT ic.nivel_tipo_id from estudiante e
+join estudiante_inscripcion ei on e.id=ei.estudiante_id
+join institucioneducativa_curso ic on ic.id=ei.institucioneducativa_curso_id
+where e.codigo_rude='$rude'
+order by ic.gestion_tipo_id desc limit 1
+                ";
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $filas = array();
+        $datos_filas = array();
+        foreach ($po as $p) {
+            $nivel = $p["nivel_tipo_id"];       
+        }        
+        if($nivel==13 or $nivel == 3 or $nivel == 4 or $nivel == 9 )
+            return 0;
+        else
+            return 1;
+    }
 }
