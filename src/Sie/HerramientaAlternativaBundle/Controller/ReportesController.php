@@ -472,7 +472,7 @@ class ReportesController extends Controller {
             $p_id = 0;
             $d_id = 0;
         }
-        dump($codrude,$sucursalId,$inscripcionId,$l_id,$c_id,$m_id,$p_id,$d_id);die;
+        //dump($codrude,$sucursalId,$inscripcionId,$l_id,$c_id,$m_id,$p_id,$d_id);die;
         // if ($idMunicipio != 0){
         //     $query = "select socioeconomico_lugar_recursivo(".$idMunicipio.");";
         //     $stmt = $db->prepare($query);
