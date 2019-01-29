@@ -40,6 +40,32 @@
 	            	{% endif %}
 		    	</div>	
 		    	<div class="row">
+		    		<div class="form-group col-xs-12 col-lg-3">
+	                    <label class="col-sm-6 control-label">Oficialia N°</label>
+	                    <div class="col-sm-6">
+	                        <input type="text" id="oficialia" name="oficialia" maxlength="8" class="form-control" value="{{ rude["oficialia"] }}" tabindex="2" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();">
+	                    </div>
+	                </div>
+	                <div class="form-group col-xs-12 col-lg-3">
+	                    <label class="col-sm-5 control-label">Libro N°</label>
+	                    <div class="col-sm-7">
+	                        <input type="text" id="libro" name="libro" maxlength="8" class="form-control" value="{{ rude["libro"] }}" tabindex="2" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();">
+	                    </div>
+	                </div>
+	                <div class="form-group col-xs-12 col-lg-3">
+	                    <label class="col-sm-5 control-label">Partida N°</label>
+	                    <div class="col-sm-7">
+	                        <input type="text" id="partida" name="partida" maxlength="8" class="form-control" value="{{ rude["partida"] }}" tabindex="2" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();">
+	                    </div>
+	                </div>
+	                <div class="form-group col-xs-12 col-lg-3">
+	                    <label class="col-sm-5 control-label">Folio N°</label>
+	                    <div class="col-sm-7">
+	                        <input type="text" id="folio" name="folio" maxlength="8" class="form-control" value="{{ rude["folio"] }}" tabindex="2" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();">
+	                    </div>
+	                </div>
+		    	</div>
+		    	<div class="row">
 			    	<div class="form-group col-xs-12 col-lg-3">
 	                    <label class="col-sm-6 control-label">N° Hijos:</label>
 	                    <div class="col-sm-6">

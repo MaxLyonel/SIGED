@@ -7768,7 +7768,7 @@ public function rudealAction(request $Request,$id_inscripcion,$id_curso){
         $id_rude=0;//NO EXISTE RUDE ANTERIOES, NUEVO
     }
     /////////////////////SACAR VALORES CON EL ID_RUDE
-    $rude = array('exp_id'=>"",'est_civil_id'=>"",'discapacidad_id'=>0,'grado_id'=>"",'est_depa_id'=>"",'est_prova_id'=>"",'est_muna_id'=>"",'procedencia_id'=>"",'modalidad_id'=>"",'idioma_id'=>"",'nac_or_id'=>"",'centro_salud'=>1,'seguro_salud'=>"",'cant_centro_id'=>"",'vivienda_id'=>"",'tiene_ocupacion_trabajo'=>'','actividad_id'=>26,'rude_id'=>0);
+    $rude = array('exp_id'=>"",'est_civil_id'=>"",'discapacidad_id'=>0,'grado_id'=>"",'est_depa_id'=>"",'est_prova_id'=>"",'est_muna_id'=>"",'procedencia_id'=>"",'modalidad_id'=>"",'idioma_id'=>"",'nac_or_id'=>"",'centro_salud'=>1,'seguro_salud'=>"",'cant_centro_id'=>"",'vivienda_id'=>"",'tiene_ocupacion_trabajo'=>'','actividad_id'=>26,'rude_id'=>0,'oficialia'=>"",'libro'=>"",'partida'=>"",'folio'=>"");
     if($id_rude!=0){
         $query = "
               SELECT 
@@ -8158,6 +8158,10 @@ public function rudeal_guardarAction(Request $request){
         $discapacidad=$request->get("discapacidad");
         $grado_discapacidad=$request->get("grado_discapacidad");
         $ibc=$request->get("ibc");
+        $oficialia=$request->get("oficialia");
+        $libro=$request->get("libro");
+        $partida=$request->get("partida");
+        $folio=$request->get("folio");
         $municipio=$request->get("municipio");
         $localidad=$request->get("localidad");
         $zona=$request->get("zona");
@@ -8246,6 +8250,10 @@ public function rudeal_guardarAction(Request $request){
                 $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneById(0));
             $estudiante->setEstadoCivil($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->findOneById($estado_civil));
             $estudiante->setCarnetIbc($ibc);
+            $estudiante->setOficialia($oficialia);
+            $estudiante->setLibro($libro);
+            $estudiante->setPartida($partida);
+            $estudiante->setFolio($folio);
             $em->flush();
 
             //DISCAPACIDAD TIPO
