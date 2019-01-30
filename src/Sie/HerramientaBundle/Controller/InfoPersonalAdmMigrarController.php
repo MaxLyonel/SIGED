@@ -126,11 +126,13 @@ class InfoPersonalAdmMigrarController extends Controller {
                     AND mi.gestionTipo = :gestion
                     AND mi.cargoTipo IN (:cargos)
                     AND mi.esVigenteAdministrativo = :esvigente
+                    AND per.segipId = :segip
                     ORDER BY per.paterno, per.materno, per.nombre')
                 ->setParameter('idInstitucion', $institucion)
                 ->setParameter('gestion', $request->getSession()->get('currentyear'))
                 ->setParameter('cargos', $cargosArray)
-                ->setParameter('esvigente', 't');
+                ->setParameter('esvigente', 't')
+                ->setParameter('segip', 1);
         $personal_aux = $query->getResult();
 
         $personal_auxArray = array();
@@ -149,12 +151,14 @@ class InfoPersonalAdmMigrarController extends Controller {
                 AND mi.cargoTipo IN (:cargos)
                 AND per.id NOT IN (:personas)
                 AND mi.esVigenteAdministrativo = :esvigente
+                AND per.segipId = :segip
                 ORDER BY per.paterno, per.materno, per.nombre')
             ->setParameter('idInstitucion', $institucion)
             ->setParameter('gestion', $gestion)
             ->setParameter('cargos', $cargosArray)
             ->setParameter('personas', $personal_auxArray)
-            ->setParameter('esvigente', 't');
+            ->setParameter('esvigente', 't')
+            ->setParameter('segip', 1);
         } else {
             $query = $em->createQuery(
                 'SELECT mi, per, ft FROM SieAppWebBundle:MaestroInscripcion mi
@@ -164,11 +168,13 @@ class InfoPersonalAdmMigrarController extends Controller {
                 AND mi.gestionTipo = :gestion
                 AND mi.cargoTipo IN (:cargos)
                 AND mi.esVigenteAdministrativo = :esvigente
+                AND per.segipId = :segip
                 ORDER BY per.paterno, per.materno, per.nombre')
             ->setParameter('idInstitucion', $institucion)
             ->setParameter('gestion', $gestion)
             ->setParameter('cargos', $cargosArray)
-            ->setParameter('esvigente', 't');
+            ->setParameter('esvigente', 't')
+            ->setParameter('segip', 1);
         }
 
         $personal = $query->getResult();
@@ -186,7 +192,7 @@ class InfoPersonalAdmMigrarController extends Controller {
         $repository = $em->getRepository('SieAppWebBundle:MaestroInscripcion');
 
         $query = $repository->createQueryBuilder('mi')
-            ->select('p.id perId, p.carnet, p.paterno, p.materno, p.nombre, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, ft.formacion')
+            ->select('p.id perId, p.carnet, p.complemento, p.paterno, p.materno, p.nombre, p.fechaNacimiento, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, ft.formacion')
             ->innerJoin('SieAppWebBundle:Persona', 'p', 'WITH', 'mi.persona = p.id')
             ->innerJoin('SieAppWebBundle:FormacionTipo', 'ft', 'WITH', 'mi.formacionTipo = ft.id')
             ->leftJoin('SieAppWebBundle:MaestroInscripcionIdioma', 'maii', 'WITH', 'maii.maestroInscripcion = mi.id')
@@ -195,10 +201,12 @@ class InfoPersonalAdmMigrarController extends Controller {
             ->andWhere('mi.cargoTipo IN (:cargos)')
             ->andWhere('maii.id IS NULL')
             ->andWhere('mi.esVigenteAdministrativo = :esvigente')
+            ->andWhere('p.segipId = :segip')
             ->setParameter('idInstitucion', $institucion)
             ->setParameter('gestion', $gestion)
             ->setParameter('cargos', $cargosArray)
             ->setParameter('esvigente', 't')
+            ->setParameter('segip', 1)
             ->distinct()
             ->orderBy('p.paterno')
             ->addOrderBy('p.materno')
