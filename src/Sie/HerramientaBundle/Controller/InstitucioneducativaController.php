@@ -134,7 +134,8 @@ class InstitucioneducativaController extends Controller {
                         inst.institucioneducativa,
                         lt.area2001,
                         estt.estadoinstitucion,
-                        inss.direccion')
+                        jg.direccion,
+                        jg.zona')
                 ->join('SieAppWebBundle:Institucioneducativa', 'inst', 'WITH', 'inst.leJuridicciongeografica = jg.id')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'jg.lugarTipoLocalidad = lt.id')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'lt1', 'WITH', 'lt.lugarTipo = lt1.id')
