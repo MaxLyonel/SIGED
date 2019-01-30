@@ -535,7 +535,7 @@
                             #}{#</ul>#}{#
                         #}{#</li>#}{#
                     {% endif %}#}
-                    {{ render(controller('SieAppWebBundle:GestionMenu:generamenu',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  '14' ,'userId':app.session.get('userId')  })) }}
+                    {{ render(controller('SieAppWebBundle:GestionMenu:generamenuSistema',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  app.session.get('sistemaid') ,'userId':app.session.get('userId')  })) }}
                 </ul><!-- /.sidebar-menu -->
                 <!--/ End left navigation - menu -->
 

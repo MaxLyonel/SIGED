@@ -325,8 +325,8 @@
                         </li>
                     {% endif %}#}
                     <!-- Start navigation - dashboard -->
-
-                    {{ render(controller('SieAppWebBundle:GestionMenu:generamenu',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  '13' ,'userId':app.session.get('userId')  })) }}
+                    {{ render(controller('SieAppWebBundle:GestionMenu:generamenuSistema',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  app.session.get('sistemaid') ,'userId':app.session.get('userId')  })) }}
+                    {#{{ render(controller('SieAppWebBundle:GestionMenu:generamenu',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  app.session.get('sistemaid') ,'userId':app.session.get('userId')  })) }}#}
                 </ul><!-- /.sidebar-menu -->
                 <!--/ End left navigation - menu -->
 

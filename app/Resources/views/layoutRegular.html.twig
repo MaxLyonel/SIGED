@@ -260,7 +260,7 @@
                             </li>
                         {% endfor %}#}
                         {#{{ render(controller('SieAppWebBundle:GestionMenu:generamenuGuadalupe',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  app.session.get('sistemaid') ,'userId':app.session.get('userId')  })) }}#}
-                        {{ render(controller('SieAppWebBundle:GestionMenu:generamenu',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  '1' ,'userId':app.session.get('userId')  })) }}
+                        {{ render(controller('SieAppWebBundle:GestionMenu:generamenuSistema',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  app.session.get('sistemaid') ,'userId':app.session.get('userId')  })) }}
 
                         <li class="panel">
                             <a href="{{path('sie_gestion_menu_principal')}}">

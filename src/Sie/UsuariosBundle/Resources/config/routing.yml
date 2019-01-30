@@ -132,4 +132,4 @@ sie_usuarios_estadisticas:
 
 sie_gestion_menu_principal:
     path:     /sie/gestionmenu_principal/
-    defaults: { _controller:  SieAppWebBundle:GestionMenu:index  }
+    defaults: { _controller:  SieAppWebBundle:GestionMenu:inicio  }

@@ -37,7 +37,7 @@ class GestionMenuController extends Controller {
     public function __construct() {
         //init the session values
         $this->session = new Session();
-        $this->session->set('sistemaid', 15);
+        $this->session->set('sistemaid', 1);
     }
 
     /**
@@ -48,8 +48,6 @@ class GestionMenuController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-        $this->session->set('sistemaid', 15);
-        //Listado de menus principales - Nivel 1
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare('SELECT mt.id, mt.detalle_menu,mt.ruta,mt.icono, mt.menu_nivel_tipo_id  
           FROM menu_tipo mt 
@@ -58,10 +56,19 @@ class GestionMenuController extends Controller {
         $query->execute();
         $menu= $query->fetchAll();
         return $this->render('SieAppWebBundle:GestionMenu:index.html.twig', array('menu' => $menu));
+       //return new Response('');
+
+    }
+    public function inicioAction() {
+        $id_usuario = $this->session->get('userId');
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        return $this->render('SieAppWebBundle:GestionMenu:inicio.html.twig');
 
     }
 
-    //Inicio de ADMINISTRACION DE SISTEMAS
+    //Inicio de ADMINISTRACION DE SISTEMAS/**/
 
     public function  administraSistemaAction(){
         $id_usuario = $this->session->get('userId');
@@ -1612,8 +1619,6 @@ ORDER BY 2,3,4");
         return $this->render('SieAppWebBundle:GestionMenu:generaListaSistemamenuRol.html.twig', array('listaSistemamenurol'=>$sistemamenupermiso,'id_sistema'=>$id_sistema));
         /*return $this->render('SieAppWebBundle:GestionMenu:listaAsignaMenuSistemaRol.html.twig', array('sistemamenupermiso'=>$sistemamenupermiso,'id_sistema'=>$id_sistema));*/
     }
-
-
     public function verificasubmenusAction(Request $request){
         $em=$this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT count(*) as cantidad
@@ -1625,8 +1630,9 @@ ORDER BY 2,3,4");
     }
 
 //MODULO GENERACION DE MENUS
-
-
+    /**
+     *Funcion para generar los menús en el sistema de tramites
+     */
     public function generamenuAction($rol_tipo_id, $idsistema, $userId){
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("select * from get_objeto_menu_usuario($userId::INT,'$idsistema'::VARCHAR,$rol_tipo_id::INT) as v");
@@ -1635,7 +1641,6 @@ ORDER BY 2,3,4");
         /**
          * Adecuacion para dibijar los menús en diferentes plantillas
          */
-
         if ($idsistema!=1 ){
             return $this->render(
                 'SieAppWebBundle:GestionMenu:list_menu.html.twig', array('menu_arboles' => $menu_arboles, 'rol_tipo_id' => $rol_tipo_id, 'sistema' => $idsistema)
@@ -1646,17 +1651,64 @@ ORDER BY 2,3,4");
             );
         }
 
-        /*return $this->render(
-            'SieAppWebBundle:GestionMenu:list_menu.html.twig', array('menu_arboles' => $menu_arboles, 'rol_tipo_id' => $rol_tipo_id, 'sistema' => $idsistema)
-        );*/
     }
+    /**
+     *Funcion para generar los menús en los demás sistemas
+     */
 
+    public function generamenuSistemaAction($rol_tipo_id, $idsistema, $userId){
 
-    public function generamenuGuadalupeAction($rol_tipo_id, $idsistema, $userId){
-        //dump($rol_tipo_id);dump($idsistema);dump($userId);die;
+        /*Generacion de menús para los demás sistemas*/
         $em = $this->getDoctrine()->getManager();
-        /*
-         * Adecuación a los Sistemas de Certificacion y diplomas*/
+        $query = $em->getConnection()->prepare("SELECT mt.id,sti.sistema, rtip.rol, ms.detalle_menu,mt.ruta,mt.icono,mt.id,mt.menu_tipo_id,msr.esactivo,mt.menu_nivel_tipo_id
+                                                FROM menu_sistema_rol  msr 
+                                                INNER JOIN sistema_rol sr ON msr.sistema_rol_id = sr.id
+                                                INNER JOIN menu_sistema ms ON msr.menu_sistema_id=ms.id
+                                                INNER JOIN menu_tipo mt ON ms.menu_tipo_id=mt.id
+                                                INNER JOIN sistema_tipo sti ON sti.id = ms.sistema_tipo_id
+                                                INNER JOIN rol_tipo rtip ON rtip.id =sr.rol_tipo_id   
+                                                WHERE sti.id = $idsistema  and rtip.id  = $rol_tipo_id AND msr.esactivo = TRUE
+                                                ORDER BY 7,8");
+        $query->execute();
+        $menu_arboles = $query->fetchAll();
+        $query = $em->getConnection()->prepare("SELECT TRIM(usuario_rol.sub_sistema)as sub_sistema
+                                                FROM usuario_rol
+                                                WHERE  usuario_rol.rol_tipo_id=$rol_tipo_id
+                                                AND usuario_rol.usuario_id=$userId");
+        $query->execute();
+        $subsistemas = $query->fetch();
+        $cadena=$subsistemas['sub_sistema'];
+        $sistemas = explode(",", $cadena);
+        $query = $em->getConnection()->prepare("SELECT TRIM(sistema_tipo.abreviatura) AS abreviatura from sistema_tipo WHERE sistema_tipo.id=$idsistema");
+        $query->execute();
+        $abreviatura = $query->fetch();
+        for ($i = 0; $i < count($sistemas); $i++) {
+            if($sistemas[$i] == $abreviatura['abreviatura'] OR  $sistemas[$i]=='*' OR $rol_tipo_id==8)
+            { $sw=1; break; }
+            else{$sw=0;
+            }
+        }
+        if($sw==1  )
+        {
+            /*
+             * Adecuación de menus Para diferentes Plantillas*/
+            if ($idsistema==1){
+                return $this->render(
+                    'SieAppWebBundle:GestionMenu:list_menu_siged.html.twig', array('menu_arboles' => $menu_arboles, 'rol_tipo_id' => $rol_tipo_id, 'sistema' => $idsistema)
+                );
+            }else{
+                // dump($menu_arboles);die;
+                return $this->render(
+                    'SieAppWebBundle:GestionMenu:list_menu.html.twig', array('menu_arboles' => $menu_arboles, 'rol_tipo_id' => $rol_tipo_id, 'sistema' => $idsistema)
+                );
+            }
+        }
+        else{
+            return new Response('');
+        }
+
+       /* $em = $this->getDoctrine()->getManager();
+        // Adecuación a los Sistemas de Certificacion y diplomas
         switch ($idsistema) {
             case 3:
             case 5:
@@ -1667,21 +1719,17 @@ ORDER BY 2,3,4");
                                                 AND usuario_rol.usuario_id=$userId");
             $query->execute();
             $subsistemas = $query->fetch();
-
             $cadena=$subsistemas['sub_sistema'];
             $sistemas = explode(",", $cadena);
-
             $query = $em->getConnection()->prepare("SELECT TRIM(sistema_tipo.abreviatura) AS abreviatura from sistema_tipo WHERE sistema_tipo.\"id\"=$idsistema");
             $query->execute();
             $abreviatura = $query->fetch();
-
             for ($i = 0; $i < count($sistemas); $i++) {
                 if($sistemas[$i] == $abreviatura['abreviatura'] OR  $sistemas[$i]=='*' OR $rol_tipo_id==8)
                 { $sw=1; break; }
                 else{$sw=0;
                 }
             }
-
             if($sw==1)
             {
                 $query = $em->getConnection()->prepare("SELECT DISTINCT sti.sistema,  ms.detalle_menu,mt.ruta,mt.icono,mt.id,mt.menu_tipo_id,mt.menu_nivel_tipo_id
@@ -1695,7 +1743,6 @@ ORDER BY 2,3,4");
                                                 ORDER BY 1");
                 $query->execute();
                 $menu_arboles = $query->fetchAll();
-                //dump($menu_arboles);die;
 
                 if ($idsistema==5 or $idsistema==3 or $idsistema==1 ){
                     return $this->render(
@@ -1713,8 +1760,8 @@ ORDER BY 2,3,4");
              }
                 break;
             default:
-                /*
-                 * Generacion de menús para los demás sistemas*/
+
+                //Generacion de menús para los demás sistemas
                 $query = $em->getConnection()->prepare("SELECT mt.id,sti.sistema, rtip.rol, ms.detalle_menu,mt.ruta,mt.icono,mt.id,mt.menu_tipo_id,msr.esactivo,mt.menu_nivel_tipo_id
                                                 FROM menu_sistema_rol  msr 
                                                 INNER JOIN sistema_rol sr ON msr.sistema_rol_id = sr.id
@@ -1752,8 +1799,7 @@ ORDER BY 2,3,4");
                 //dump($sw);die;
                 if($sw==1  )
                 {
-                    /*
-                     * Adecuación de menus Para diferentes Plantillas*/
+                    // Adecuación de menus Para diferentes Plantillas
                     if ($idsistema==1){
                         return $this->render(
                             'SieAppWebBundle:GestionMenu:list_menu_siged.html.twig', array('menu_arboles' => $menu_arboles, 'rol_tipo_id' => $rol_tipo_id, 'sistema' => $idsistema)
@@ -1768,11 +1814,9 @@ ORDER BY 2,3,4");
                 else{
                     return new Response('');
                 }
-        }
+        }*/
 
     }
-
-
 //LISTA DE MENUS X SISTEMA
     public function listasistemamenurolAction(Request $request){
 
