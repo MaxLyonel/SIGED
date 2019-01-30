@@ -109,6 +109,9 @@
                         </tr>
                     {% else %}
                         <tr>
+                            <td colspan="3" align="center"><br><strong>Datos de Nacimiento</strong></td>
+                        </tr>
+                        <tr>
                             <td align="center"><br/><strong>Departamento</strong></td>
                             <td align="center"><br/><strong>Provincia</strong></td>
                             <td align="center"><br/><strong>Localidad</strong></td>
@@ -149,12 +152,9 @@
     </div>
 
 </div>
-{% set fecha_nac = filas.fecha_nac|date("Y") %}{% set edad = gestion_ini - fecha_nac + 1 %}
-{% if edad >= 15 or (app.session.get('roluser') == '8') %}
+
     <div align="center"><input type="submit" onclick="cambio()" id="boton" value="Guardar Estudiante" class="btn btn-success btn-large"></div>
-{% else %}
-    <div class="col-xs-12"><h4>!Alerta!. Estudiante menor a 15 años</h4></div>
-{% endif %}
+
  </form> 
  <script type="text/javascript">
     function cambio(){

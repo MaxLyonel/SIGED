@@ -1,10 +1,11 @@
 {#}op = 0 nuevo si no modificar{#}
+<style>small{color: RED}</style>
 <div class="row">
 <form action="{{path('sie_pnp_rudeal_guardar')}}" class="form-horizontal" method="post">
     <div class="form-body">
 		<div class="panel panel-icon panel-primary">
 		    <div class="panel-heading">
-		    	DATOS DEL PARTICIPANTE
+		    	DATOS DEL PARTICIPANTE <small>(*)</small> Campos Requeridos
 		    </div>
 		    <div class="panel-body">
 		    	<div class="row">
@@ -32,7 +33,7 @@
 	                    		<option value="0" {% if rude["exp_id"] == 0 %} selected="selected" {% endif %}>&nbsp;</option>
 	                        	{% for id_departamento_exp in id_departamentos_exp %}
 		                        	<option value="{{ id_departamento_exp.id }}" 
-		                        	{% if (id_departamento_exp.id  == departamento_exp_usu and op == 0) or (id_departamento_exp.id == rude["exp_id"] and op != 0 )%}selected="selected"{% endif %}>{{ id_departamento_exp.sigla }}</option>
+		                        	{% if id_departamento_exp.id == rude["exp_id"] and op != 0 %}selected="selected"{% endif %}>{{ id_departamento_exp.sigla }}</option>
 		                    	{% endfor %}
 	                		</select>
 	                	</div>
@@ -67,23 +68,24 @@
 		    	</div>
 		    	<div class="row">
 			    	<div class="form-group col-xs-12 col-lg-3">
-	                    <label class="col-sm-6 control-label">N° Hijos:</label>
+	                    <label class="col-sm-6 control-label"><small>*</small>N° Hijos:</label>
 	                    <div class="col-sm-6">
 	                        <input type="text" required="required" onKeyPress="return SoloNumeros(event)" id="num_hijos" name="num_hijos" maxlength="2" class="form-control" {% if op != 0 %}value="{{ rude["cant_hijos"] }}"{% else %} value="0"{% endif %} tabindex="2">
 	                    </div>
 	                </div>
 	                <div class="form-group col-xs-12 col-lg-4">
-	                    <label class="col-sm-4 control-label">Estado Civil:</label>
-	                    <div class="col-sm-8">
+	                    <label class="col-sm-5 control-label"><small>*</small>Estado Civil:</label>
+	                    <div class="col-sm-7">
 		                    <select required="required"  data-placeholder="Seleccionar" name="estado_civil" class="form-control chosen-select" id="estado_civil" tabindex="3">
+		                    	<option value="">Seleccionar</option>
 	                        	{% for estado_civil in estado_civil_tipo %}
-		                        	<option {% if (estado_civil.id == 1 and op == 0) or (estado_civil.id == rude["est_civil_id"] and op != 0 )  %}selected="selected"{% endif %}value="{{ estado_civil.id }}">{{ estado_civil.estadocivil }}</option>
+		                        	<option {% if estado_civil.id == rude["est_civil_id"] and op != 0   %}selected="selected"{% endif %}value="{{ estado_civil.id }}">{{ estado_civil.estadocivil }}</option>
 		                    	{% endfor %}
 		                	</select>	
 		                </div>
 		            </div>
 		            <div class="form-group col-xs-12 col-lg-5">
-	                    <label class="col-sm-4 control-label">¿Discapacidad?:</label>
+	                    <label class="col-sm-4 control-label"><small>*</small>¿Discapacidad?:</label>
 	                    <div class="col-sm-8">
 		                    <select  data-placeholder="Seleccionar" name="discapacidad" id="discapacidad" class="form-control chosen-select" required="required" tabindex="4">
 		                    	{% for discapacidad in discapacidad_tipo %}
@@ -93,106 +95,114 @@
 		                </div>
 		            </div>
 		        </div>
-                <div class="form-group col-xs-12 col-lg-5" id="grado_view">
-                    <label class="col-sm-3 control-label">Grado:</label>
-                    <div class="col-sm-9">
-	                    <select data-placeholder="Seleccionar" name="grado_discapacidad" id="grado_discapacidad" class="form-control chosen-select" required="required" tabindex="5">
-	                    	{% for grado in grado_discapacidad_tipo %}
-		                        <option value="{{ grado.id }}" {% if op != 0 and grado.id == rude["grado_id"] %}selected="selected"{% endif %}>{{ grado.gradodiscapacidad}}</option>
-		                    {% endfor %}
-	                	</select>
+		        <div class="row">
+	                <div class="form-group col-xs-12 col-lg-5" id="grado_view">
+	                    <label class="col-sm-3 control-label"><small>*</small>Grado:</label>
+	                    <div class="col-sm-9">
+		                    <select data-placeholder="Seleccionar" name="grado_discapacidad" id="grado_discapacidad" class="form-control chosen-select" required="required" tabindex="5">
+		                    	{% for grado in grado_discapacidad_tipo %}
+			                        <option value="{{ grado.id }}" {% if op != 0 and grado.id == rude["grado_id"] %}selected="selected"{% endif %}>{{ grado.gradodiscapacidad}}</option>
+			                    {% endfor %}
+		                	</select>
+		                </div>
+		            </div>
+	                <div class="form-group col-xs-12 col-lg-7" id="ibc_view">
+	                    <label class="col-sm-6 control-label">Registro de Discapacidad o IBC:</label>
+	                    <div class="col-sm-6">
+	                        <input type="text" maxlength="20" {% if op != 0 %}value="{{ rude["carnet_ibc"] }}"{% endif %} style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();" name="ibc" id="ibc" class="form-control" >
+	                    </div>
 	                </div>
 	            </div>
-                <div class="form-group col-xs-12 col-lg-7" id="ibc_view">
-                    <label class="col-sm-6 control-label">Registro de Discapacidad o IBC:</label>
-                    <div class="col-sm-6">
-                        <input type="text" maxlength="20" {% if op != 0 %}value="{{ rude["carnet_ibc"] }}"{% endif %} style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();" name="ibc" id="ibc" class="form-control" >
-                    </div>
-                </div>
 		    </div>	
 		    <div class="panel-heading">
-		        DIRECCIÓN ACTUAL DEL PARTICIPANTE
+		        DIRECCIÓN ACTUAL DEL PARTICIPANTE <small>(*)</small> Campos Requeridos
 		    </div>
 		    <div class="panel-body"> 
-		    	<div class="form-group col-xs-12 col-lg-4">
-                    <label class="col-sm-4 control-label">Departamento:</label>
-                    <div class="col-sm-8">
-	                    <select required="required" data-placeholder="Seleccionar" id="form_departamento" class="form-control chosen-select" >
-	                    	<option value=""></option>
-	                        {% for id_departamento in id_departamentos %}
-		                        <option {% if (id_departamento.id  == lugar_tipo_id_usu and op == 0) or (id_departamento.id == rude["est_depa_id"] and op != 0 )  %}selected="selected"{% endif %} value="{{ id_departamento.id }}">{{ id_departamento.lugar }}</option>
-		                    {% endfor %}
-	                	</select>
-	                </div>
-	            </div>
-                <div class="form-group col-xs-12 col-lg-4">
-                    <label class="col-sm-3 control-label">Provincia:</label>
-                    <div class="col-sm-9">
-	                    <select required="required" data-placeholder="Seleccionar"  id="form_provincia" class="form-control chosen-select">
-	                    	<option value="">Provincia</option>
-	                    	{% for provincias in provincia_tipo %}
-		                        <option value="{{ provincias.id }}" {% if provincias.id == rude["est_prova_id"] and op != 0 %}selected="selected"{% endif %} >{{ provincias.lugar }}</option>
-		                    {% endfor %}
-	                	</select>
-	                </div>
-	            </div>
-	            <div class="form-group col-xs-12 col-lg-4">
-                    <label class="col-sm-3 control-label">Municipio:</label>
-                    <div class="col-sm-9">
-	                    <select required="required" data-placeholder="Seleccionar"  name="municipio" id="form_municipio" class="form-control chosen-select" >
-	                    	{% if op != 0 %}
-		                    	<option value="">Municipio</option>
-		                    	{% for municipios in municipio_tipo %}
-			                        <option value="{{ municipios.id }}" {% if municipios.id == rude["est_muna_id"] and op != 0 %}selected="selected"{% endif %} >{{ municipios.lugar }}</option>
+		    	<div class="row">
+			    	<div class="form-group col-xs-12 col-lg-4">
+	                    <label class="col-sm-5 control-label"><small>*</small>Departamento:</label>
+	                    <div class="col-sm-7">
+		                    <select required="required" data-placeholder="Seleccionar" id="form_departamento" class="form-control chosen-select" >
+		                    	<option value=""></option>
+		                        {% for id_departamento in id_departamentos %}
+			                        <option {% if (id_departamento.id  == lugar_tipo_id_usu and op == 0) or (id_departamento.id == rude["est_depa_id"] and op != 0 )  %}selected="selected"{% endif %} value="{{ id_departamento.id }}">{{ id_departamento.lugar }}</option>
 			                    {% endfor %}
-			                {% endif %}
-	                	</select>
+		                	</select>
+		                </div>
+		            </div>
+	                <div class="form-group col-xs-12 col-lg-4">
+	                    <label class="col-sm-3 control-label"><small>*</small>Provincia:</label>
+	                    <div class="col-sm-9">
+		                    <select required="required" data-placeholder="Seleccionar"  id="form_provincia" class="form-control chosen-select">
+		                    	<option value="">Provincia</option>
+		                    	{% for provincias in provincia_tipo %}
+			                        <option value="{{ provincias.id }}" {% if provincias.id == rude["est_prova_id"] and op != 0 %}selected="selected"{% endif %} >{{ provincias.lugar }}</option>
+			                    {% endfor %}
+		                	</select>
+		                </div>
+		            </div>
+		            <div class="form-group col-xs-12 col-lg-4">
+	                    <label class="col-sm-3 control-label"><small>*</small>Municipio:</label>
+	                    <div class="col-sm-9">
+		                    <select required="required" data-placeholder="Seleccionar"  name="municipio" id="form_municipio" class="form-control chosen-select" >
+		                    	{% if op != 0 %}
+			                    	<option value="">Municipio</option>
+			                    	{% for municipios in municipio_tipo %}
+				                        <option value="{{ municipios.id }}" {% if municipios.id == rude["est_muna_id"] and op != 0 %}selected="selected"{% endif %} >{{ municipios.lugar }}</option>
+				                    {% endfor %}
+				                {% endif %}
+		                	</select>
+		                </div>
+		            </div>
+		        </div>
+		        <div class="row">
+	                <div class="form-group col-xs-12 col-lg-5">
+	                    <label class="col-sm-3 control-label"><small>*</small>Localidad/ Comunidad:</label>
+	                    <div class="col-sm-9">
+	                        <input required="required" type="text" maxlength="40" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();" class="form-control" name="localidad" {% if op != 0 %}value="{{ rude["est_loca"] }}" {% endif %} >
+	                    </div>
 	                </div>
-	            </div> 
-                <div class="form-group col-xs-12 col-lg-5">
-                    <label class="col-sm-3 control-label">Localidad/ Comunidad:</label>
-                    <div class="col-sm-9">
-                        <input required="required" type="text" maxlength="40" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();" class="form-control" name="localidad" {% if op != 0 %}value="{{ rude["est_loca"] }}" {% endif %} >
-                    </div>
-                </div>
-                <div class="form-group col-xs-12 col-lg-5">
-                    <label class="col-sm-5 control-label">Zona/ Barrio/ Villa:</label>
-                    <div class="col-sm-7">
-                        <input required="required" type="text" maxlength="40" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();" class="form-control" name="zona" {% if op != 0 %}value="{{ rude["zona"] }}" {% endif %}>
-                    </div>
-                </div>
-                <div class="form-group col-xs-12 col-lg-2">
-                    <label class="col-sm-5 control-label">Número vivienda:</label>
-                    <div class="col-sm-7">
-                        <input type="text" maxlength="6" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();" class="form-control" name="nro_vivienda" {% if op != 0 %}value="{{ rude["numero"] }}" {% endif %}>
-                    </div>
-	            </div>
-                <div class="form-group col-xs-12 col-lg-6">
-                    <label class="col-sm-3 control-label">Avenida/Calle:</label>
-                    <div class="col-sm-9">
-                        <input required="required" type="text" maxlength="40" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();" class="form-control"  name="calle" {% if op != 0 %}value="{{ rude["avenida"] }}" {% endif %}>
-                    </div>
-                </div>
-	            <div class="form-group col-xs-12 col-lg-3">
-                    <label class="col-sm-4 control-label">Teléfono:</label>
-                    <div class="col-sm-8">
-                        <input type="text" maxlength="8" minlength="8" onKeyPress="return SoloNumeros(event)" class="form-control" name="telf" {% if op != 0 %}value="{{ rude["telefono_fijo"] }}" {% endif %}>
-                    </div>
-	            </div>
-	            <div class="form-group col-xs-12 col-lg-3">
-                    <label class="col-sm-4 control-label">Celular:</label>
-                    <div class="col-sm-8">
-                        <input type="text" maxlength="8" minlength="8" onKeyPress="return SoloNumeros(event)" class="form-control" name="cel" {% if op != 0 %}value="{{ rude["celular"] }}" {% endif %}>
-                    </div>
-	            </div>		
+	                <div class="form-group col-xs-12 col-lg-4">
+	                    <label class="col-sm-5 control-label"><small>*</small>Zona/ Barrio/ Villa:</label>
+	                    <div class="col-sm-7">
+	                        <input required="required" type="text" maxlength="40" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();" class="form-control" name="zona" {% if op != 0 %}value="{{ rude["zona"] }}" {% endif %}>
+	                    </div>
+	                </div>
+	                <div class="form-group col-xs-12 col-lg-3">
+	                    <label class="col-sm-6 control-label">N° Vivienda:</label>
+	                    <div class="col-sm-6">
+	                        <input type="text" maxlength="6" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();" class="form-control" name="nro_vivienda" {% if op != 0 %}value="{{ rude["numero"] }}" {% endif %}>
+	                    </div>
+		            </div>
+		        </div> 
+	            <div class="row">
+	                <div class="form-group col-xs-12 col-lg-6">
+	                    <label class="col-sm-3 control-label"><small>*</small>Avenida/Calle:</label>
+	                    <div class="col-sm-9">
+	                        <input required="required" type="text" maxlength="40" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();" class="form-control"  name="calle" {% if op != 0 %}value="{{ rude["avenida"] }}" {% endif %}>
+	                    </div>
+	                </div>
+		            <div class="form-group col-xs-12 col-lg-3">
+	                    <label class="col-sm-4 control-label">Teléfono:</label>
+	                    <div class="col-sm-8">
+	                        <input type="text" maxlength="8" minlength="8" onKeyPress="return SoloNumeros(event)" class="form-control" name="telf" {% if op != 0 %}value="{{ rude["telefono_fijo"] }}" {% endif %}>
+	                    </div>
+		            </div>
+		            <div class="form-group col-xs-12 col-lg-3">
+	                    <label class="col-sm-4 control-label">Celular:</label>
+	                    <div class="col-sm-8">
+	                        <input type="text" maxlength="8" minlength="8" onKeyPress="return SoloNumeros(event)" class="form-control" name="cel" {% if op != 0 %}value="{{ rude["celular"] }}" {% endif %}>
+	                    </div>
+		            </div>
+		        </div>		
 		    </div>
 		    <div class="panel-heading">
-		        DATOS DE INSCRIPCIÓN
+		        DATOS DE INSCRIPCIÓN <small>(*)</small> Campos Requeridos
 		    </div>
 		    <div class="panel-body">
 				<div class="row"> 
 			    	<div class="form-group col-xs-12 col-lg-6">
-	                    <label class="col-sm-4 control-label">Procedencia:</label>
+	                    <label class="col-sm-4 control-label"><small>*</small>Procedencia:</label>
 	                    <div class="col-sm-8">
 		                    <select required="required" data-placeholder="Choose a Country" name="procedencia"  class="form-control chosen-select" >
 		                        {% for procedencias in procedencia_tipo %}
@@ -202,7 +212,7 @@
 		                </div>
 		            </div>
 	                <div class="form-group col-xs-12 col-lg-6">
-	                    <label class="col-sm-5 control-label">Modalidad de Estudio:</label>
+	                    <label class="col-sm-5 control-label"><small>*</small>Modalidad de Estudio:</label>
 	                    <div class="col-sm-7">
 		                    <select required="required" data-placeholder="Choose a Country" name="modalidad" class="form-control chosen-select" >
 		                        {% for modalidad_estudio in modalidad_estudio_tipo %}
@@ -213,39 +223,41 @@
 		            </div>
 		        </div>
 		    </div>
-		    <div class="panel-heading">
-		        ASPECTOS SOCIOECONÓMICOS DE LA O EL PARTICIPANTE
+		    <div class="panel-heading"> 
+		        ASPECTOS SOCIOECONÓMICOS DE LA O EL PARTICIPANTE <small>(*)</small> Campos Requeridos
 		    </div>
 		    <div class="panel-body">
-		    	<div class="form-group col-xs-12 col-lg-6">
-                    <label class="col-sm-5 control-label">Idioma que aprendió a hablar en su niñez:</label>
-                    <div class="col-sm-7">
-	                    <select required="required" data-placeholder="Seleccionar Idioma" name="idioma_hablar"  class="form-control chosen-select" >
-	                    	<option value=""></option>
-	                        {% for idioma in idioma_tipo %}
-		                        <option value="{{ idioma.id }}" {% if (idioma.id == rude["idioma_id"] and op != 0) or op == 0 and idioma.id == 48 %}selected="selected"{% endif %}>{{ idioma.idioma }}</option>
-		                    {% endfor %}
-	                	</select>
-	                </div>
-	            </div>
-                <div class="form-group col-xs-12 col-lg-6">
-                    <label class="col-sm-5 control-label">Idioma(s) que habla frecuentemente (Max 3):</label>
-                    <div class="col-sm-7">
-	                    <select multiple data-placeholder="Seleccionar Idioma(s)" name="idioma_frecuencia[]" class="form-control chosen-select-3" >
-	                    	<option value=""></option>
-	                        {% for idioma in idioma_tipo %}
-		                        <option value="{{ idioma.id }}"
-								{% for idiomass in idiomas %}
-									{% if idioma.id == idiomass.id %} selected="select"{% endif %}			
-								{% endfor %}
-		                        >{{ idioma.idioma }}</option>
-		                    {% endfor %}
-	                	</select>
-	                </div>
-	            </div>
+		    	<div class="row">
+			    	<div class="form-group col-xs-12 col-lg-6">
+	                    <label class="col-sm-5 control-label"><small>*</small>Idioma que aprendió a hablar en su niñez:</label>
+	                    <div class="col-sm-7">
+		                    <select required="required" data-placeholder="Seleccionar Idioma" name="idioma_hablar"  class="form-control chosen-select" >
+		                    	<option value=""></option>
+		                        {% for idioma in idioma_tipo %}
+			                        <option value="{{ idioma.id }}" {% if (idioma.id == rude["idioma_id"] and op != 0) or op == 0 and idioma.id == 48 %}selected="selected"{% endif %}>{{ idioma.idioma }}</option>
+			                    {% endfor %}
+		                	</select>
+		                </div>
+		            </div>
+	                <div class="form-group col-xs-12 col-lg-6">
+	                    <label class="col-sm-5 control-label"><small>*</small>Idioma(s) que habla frecuentemente (Max 3):</label>
+	                    <div class="col-sm-7">
+		                    <select multiple data-placeholder="Seleccionar Idioma(s)" name="idioma_frecuencia[]" class="form-control chosen-select-3" >
+		                    	<option value=""></option>
+		                        {% for idioma in idioma_tipo %}
+			                        <option value="{{ idioma.id }}"
+									{% for idiomass in idiomas %}
+										{% if idioma.id == idiomass.id %} selected="select"{% endif %}			
+									{% endfor %}
+			                        >{{ idioma.idioma }}</option>
+			                    {% endfor %}
+		                	</select>
+		                </div>
+		            </div>
+		        </div>
 	            <div class="row">
 		            <div class="form-group col-xs-12 col-lg-6">
-	                    <label class="col-sm-5 control-label">¿Pertenece a una nación, pueblo indigena originario campesino o afroboliviano?:</label>
+	                    <label class="col-sm-5 control-label"><small>*</small>¿Pertenece a una nación, pueblo indigena originario campesino o afroboliviano?:</label>
 	                    <div class="col-sm-7">
 		                    <select required="required" data-placeholder="Seleccionar" name="nacion"  class="form-control chosen-select" >
 		                    	<option value=""></option>
@@ -256,7 +268,7 @@
 		                </div>
 		            </div>
 		            <div class="form-group col-xs-12 col-lg-6">
-	                    <label class="col-md-8 control-label">¿Existe algun centro de salud/Posta/Hospital en su comunidad/Barrio/Zona?</label>
+	                    <label class="col-md-8 control-label"><small>*</small>¿Existe algun centro de salud/Posta/Hospital en su comunidad/Barrio/Zona?</label>
 	                    <div class="col-md-4">
 	                        <div class="radio">
 	                            <label class="radio-inline">
@@ -271,57 +283,60 @@
 	                    </div>
 	                </div><!-- /.form-group -->
 				</div>
-                <div class="form-group col-xs-12 col-lg-6">
-                    <label class="col-sm-6 control-label">El año pasado por problemas de salud acudió a:</label>
-                    <div class="col-sm-6">
-	                    <select required="required" multiple data-placeholder="Puede seleccionar más de una opción" class="form-ccontrol chosen-select"   name="centrosalud[]" id="centrosalud">
-	                    	<option value=""></option>
-		                        {% for centro_salud in centro_salud_tipo %}
-		                        	<option value="{{ centro_salud.id }}"
-									{% for centro in centros %}
-										{% if centro_salud.id == centro.id %} selected="select"{% endif %}			
-									{% endfor %}
-		                        	>{{ centro_salud.descripcion }}</option>
+				<div class="row">
+	                <div class="form-group col-xs-12 col-lg-6">
+	                    <label class="col-sm-6 control-label"><small>*</small>El año pasado por problemas de salud acudió a:</label>
+	                    <div class="col-sm-6">
+		                    <select required="required" multiple data-placeholder="Puede seleccionar más de una opción" class="form-ccontrol chosen-select"   name="centrosalud[]" id="centrosalud">
+		                    	<option value=""></option>
+			                        {% for centro_salud in centro_salud_tipo %}
+			                        	<option value="{{ centro_salud.id }}"
+										{% for centro in centros %}
+											{% if centro_salud.id == centro.id %} selected="select"{% endif %}			
+										{% endfor %}
+			                        	>{{ centro_salud.descripcion }}</option>
+			                    	{% endfor %}
+		                	</select>
+		                </div>
+		            </div>
+		            <div class="form-group col-xs-12 col-lg-3" id="cant_salud_view">
+	                    <label class="col-sm-4 control-label"><small>*</small>¿Cuántas veces?:</label>
+	                    <div class="col-sm-8">
+		                    <select data-placeholder="Choose a Country" name="cant_salud" id="cant_salud" class="form-control chosen-select" >
+		                        {% for cantidad_centro_salud in cantidad_centro_salud_tipo %}
+		                        	<option value="{{ cantidad_centro_salud.id }}" 
+		                        		{% if cantidad_centro_salud.id == rude["cant_centro_id"] %}
+		                        			selected="selected"
+		                        	{% endif %}
+		                        	>{{ cantidad_centro_salud.descripcioncantidad }}</option>
 		                    	{% endfor %}
-	                	</select>
-	                </div>
+		                	</select>
+		                </div>
+		            </div>
+		            <div class="form-group col-xs-12 col-lg-3">
+	                    <label class="col-md-7 control-label"><small>*</small>¿Tiene seguro de salud?:</label>
+	                    <div class="col-md-5">
+	                        <div class="radio">
+	                            <label class="radio-inline">
+	                                <input {% if rude["seguro_salud"] == 1  %}checked="checked"{% endif %} type="radio" value="true" name="seguro">
+	                                Si
+	                            </label>
+	                            <label class="radio-inline">
+	                                <input {% if rude["seguro_salud"] == "" %}checked="checked"{% endif %}  type="radio" value="false" name="seguro">
+	                                No
+	                            </label>
+	                        </div>
+	                    </div>
+	                </div><!-- /.form-group -->
 	            </div>
-	            <div class="form-group col-xs-12 col-lg-3" id="cant_salud_view">
-                    <label class="col-sm-4 control-label">¿Cuántas veces?:</label>
-                    <div class="col-sm-8">
-	                    <select data-placeholder="Choose a Country" name="cant_salud" id="cant_salud" class="form-control chosen-select" >
-	                        {% for cantidad_centro_salud in cantidad_centro_salud_tipo %}
-	                        	<option value="{{ cantidad_centro_salud.id }}" 
-	                        		{% if cantidad_centro_salud.id == rude["cant_centro_id"] %}
-	                        			selected="selected"
-	                        	{% endif %}
-	                        	>{{ cantidad_centro_salud.descripcioncantidad }}</option>
-	                    	{% endfor %}
-	                	</select>
-	                </div>
-	            </div>
-	            <div class="form-group col-xs-12 col-lg-3">
-                    <label class="col-md-7 control-label">¿Tiene seguro de salud?:</label>
-                    <div class="col-md-5">
-                        <div class="radio">
-                            <label class="radio-inline">
-                                <input {% if rude["seguro_salud"] == 1  %}checked="checked"{% endif %} type="radio" value="true" name="seguro">
-                                Si
-                            </label>
-                            <label class="radio-inline">
-                                <input {% if rude["seguro_salud"] == "" %}checked="checked"{% endif %}  type="radio" value="false" name="seguro">
-                                No
-                            </label>
-                        </div>
-                    </div>
-                </div><!-- /.form-group -->
 		    </div>
+		    <div class="row"></div>
 		    <div class="panel-heading">
-		        ACCESO DE LA O EL PARTICIPANTE A SERVICIOS BÁSICOS
+		        DIRECCIÓN ACTUAL DEL PARTICIPANTE <small>(*)</small> Campos Requeridos
 		    </div>
 		    <div class="panel-body">
 		    	<div class="form-group col-xs-12 col-lg-4">
-                    <label class="col-md-7 control-label">¿Tiene acceso a agua por cañerida de red?:</label>
+                    <label class="col-md-7 control-label"><small>*</small>¿Tiene acceso a agua por cañerida de red?:</label>
                     <div class="col-md-5">
                         <div class="radio">
                             <label class="radio-inline">
@@ -336,7 +351,7 @@
                     </div>
                 </div><!-- /.form-group -->
                 <div class="form-group col-xs-12 col-lg-4">
-                    <label class="col-md-7 control-label">¿Usa energia eléctrica en su vivienda?:</label>
+                    <label class="col-md-7 control-label"><small>*</small>¿Usa energia eléctrica en su vivienda?:</label>
                     <div class="col-md-5">
                         <div class="radio">
                             <label class="radio-inline">
@@ -351,7 +366,7 @@
                     </div>
                 </div><!-- /.form-group -->
                 <div class="form-group col-lg-4">
-                    <label class="col-md-6 control-label">¿Tiene baño su casa?:</label>
+                    <label class="col-md-6 control-label"><small>*</small>¿Tiene baño su casa?:</label>
                     <div class="col-md-5">
                         <div class="radio">
                             <label class="radio-inline">
@@ -366,7 +381,7 @@
                     </div>
                 </div><!-- /.form-group -->
                 <div class="form-group col-xs-12 col-lg-4">
-                    <label class="col-sm-6 control-label">La vivienda que ocupa el hogar es:</label>
+                    <label class="col-sm-6 control-label"><small>*</small>La vivienda que ocupa el hogar es:</label>
                     <div class="col-sm-6">
 	                    <select data-placeholder="Seleccionar" id="viviendaocupa" name="viviendaocupa"  class="form-control chosen-select" >
 		                        {% for vivienda_ocupa in vivienda_ocupa_tipo %}
@@ -376,7 +391,7 @@
 	                </div>
 	            </div>
                 <div class="form-group col-lg-4">
-                    <label class="col-md-7 control-label">¿Cuenta con servicio de recojo de basura?:</label>
+                    <label class="col-md-7 control-label"><small>*</small>¿Cuenta con servicio de recojo de basura?:</label>
                     <div class="col-md-5">
                         <div class="radio">
                             <label class="radio-inline">
@@ -391,7 +406,7 @@
                     </div>
                 </div>
                 <div class="form-group col-lg-4">
-                    <label class="col-md-6 control-label">¿Tiene red de alcantarillado?:</label>
+                    <label class="col-md-6 control-label"><small>*</small>¿Tiene red de alcantarillado?:</label>
                     <div class="col-md-5">
                         <div class="radio">
                             <label class="radio-inline">
@@ -407,11 +422,11 @@
                 </div>
 		    </div>
 		    <div class="panel-heading">
-		        ACTIVIDAD LABORAL DEL PARTICIPANTE
+		        ACTIVIDAD LABORAL DEL PARTICIPANTE <small>(*)</small> Campos Requeridos
 		    </div>
 		    <div class="panel-body">
 		    	<div class="form-group col-lg-12">
-                    <label class="col-md-5 control-label">¿El participante tiene alguna actividad laboral?:</label>
+                    <label class="col-md-5 control-label"><small>*</small>¿El participante tiene alguna actividad laboral?:</label>
                     <div class="col-md-7">
                         <div class="radio">
                             <label class="radio-inline">
@@ -426,7 +441,7 @@
                     </div>
                 </div>
                 <div class="form-group col-xs-12 col-lg-7" id="actividad_laboral_view">
-                    <label class="col-sm-4 control-label">Actividad Laboral:</label>
+                    <label class="col-sm-4 control-label"><small>*</small>Actividad Laboral:</label>
                     <div class="col-sm-8">
 	                    <select data-placeholder="Choose a Country"  id="actividad_laboral" name="actividad_laboral" class="form-control chosen-select" >
                             {% for ocupacion in ocupacion_tipo %}
@@ -436,7 +451,7 @@
 	                </div>
 	            </div>
 	            <div class="form-group col-xs-12 col-lg-5" id="actividad_laboral_new_view">
-                    <label class="col-sm-3 control-label">Especificar:</label>
+                    <label class="col-sm-3 control-label"><small>*</small>Especificar:</label>
                     <div class="col-sm-9">
                         <input  type="text" maxlength="40" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();"class="form-control" name="actividad_laboral_new" id="actividad_laboral_new" {% if op != 0 %}value="{{ rude["actividad_otro"]}}"{% endif %}>
                     </div>
