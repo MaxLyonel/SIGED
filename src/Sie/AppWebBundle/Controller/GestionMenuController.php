@@ -37,7 +37,7 @@ class GestionMenuController extends Controller {
     public function __construct() {
         //init the session values
         $this->session = new Session();
-        $this->session->set('sistemaid', 1);
+        //$this->session->set('sistemaid', 1);
     }
 
     /**
