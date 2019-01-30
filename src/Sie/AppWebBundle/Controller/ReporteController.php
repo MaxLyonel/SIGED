@@ -4396,10 +4396,10 @@ class ReporteController extends Controller {
          */
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d H:i:s'));
-        $gestionActual = date_format($fechaActual,'Y');
+        $gestionActual = date_format($fechaActual,'Y') - 1;
         $fechaEstadistica = $fechaActual->format('d-m-Y H:i:s');
         
-        $gestionProcesada = $gestionActual - 1;
+        $gestionProcesada = $gestionActual;
 
         $codigo = 0;
 		$nivel = 0;	
@@ -4844,7 +4844,7 @@ class ReporteController extends Controller {
          */
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
-        $gestionActual = date_format($fechaActual,'Y');
+        $gestionActual = date_format($fechaActual,'Y') - 1;
         $gestionProcesada = $this->buscaGestionVistaMaterializadaRegular();
         //$gestionActual = 2016;
 
