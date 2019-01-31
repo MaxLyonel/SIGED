@@ -30,3 +30,15 @@ regularization_docente_loaddatacourse:
     defaults: { _controller: SieHerramientaBundle:RegularizationListDocente:loadDataCourse }
     options:
          expose: true
+
+regularization_docente_maestros:
+    path:     /maestros
+    defaults: { _controller: SieHerramientaBundle:RegularizationListDocente:maestros }
+    options:
+         expose: true
+
+regularization_docente_maestrosasignar:
+    path:     /maestrosasignar
+    defaults: { _controller: SieHerramientaBundle:RegularizationListDocente:maestrosasignar }
+    options:
+         expose: true
