@@ -900,7 +900,6 @@ class DefaultController extends Controller
 
                     $em->persist($maestroinscripcion);
                     $em->flush();
-                   // echo "holas1";die;    
 
                 }
                 else{
@@ -2022,6 +2021,7 @@ class DefaultController extends Controller
             $datos_filas["ciclo_tipo_id"] = $p["ciclo_tipo_id"];
             $datos_filas["grado_tipo_id"] = $p["grado_tipo_id"];
             $datos_filas["id"] = $p["id"];
+            $datos_filas["id_enc"] = $this->encriptar($p["id"]);
             $datos_filas["depto"] = $p["depto"];
             $datos_filas["lugar"] = $p["lugar"];
             $datos_filas["nciclo"] = $p["nciclo"];
@@ -2034,16 +2034,31 @@ class DefaultController extends Controller
         return $this->render('SiePnpBundle:Default:listararchivos.html.twig', array('totales' => $filas,'idd'=>$id));
     }
     
-    public function imprimirconsolidadoAction($id,$esactivo, Request $request)
+    public function imprimirconsolidadoAction($id_enc,$id, Request $request)
     {
-        $porciones = explode("|", $id);
-        $id=$porciones[0];
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $porciones = explode("|", $id_enc);
+        $id_enc=$porciones[0];
         $b=$porciones[1];
         $p=$porciones[2];
+        if($b==34 or $b==35){//plan 2
+            if($id==9)$id=$this->desencriptar($id_enc);
+            if($id_enc==0)$id_enc=$this->encriptar($id);
+        }
+        else{//plan1
+            if($id==9)$id=$this->desencriptar($id_enc);else $id=$id_enc;
+        }
+        //recoger si esactivo
+        $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id);
+            $esactivo=$result->getEsactivo();
+
+        if($esactivo==1)$esactivo=1;else $esactivo=0;
         $arch = 'PNP_CONSOLIDADO_' . $id . '_' . date('Ymd') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        //$esactivo
         //plan 1
         if($b==1 and $p==1)
             if($esactivo==0)//PDF SIN VALOR LEGAL
@@ -2068,9 +2083,11 @@ class DefaultController extends Controller
         //plan 2
         else
             if($esactivo==0)//PDF SIN VALOR LEGAL
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'pnp_lst_NoLegalEstudiantesBoletinCentralizador_p2_v1.rptdesign&__format=pdf&&curso_id=' . $id . '&&__format=pdf&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'pnp_lst_NoLegalEstudiantesBoletinCentralizador_p2_v1.rptdesign&__format=pdf&&curso_id_enc=' . $id_enc . '&curso_id=' . $id . '&&__format=pdf&'));
             else //PDF CON VALOR LEGAL
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'pnp_lst_EstudiantesBoletinCentralizador_p2_v1.rptdesign&__format=pdf&&curso_id=' . $id . '&&__format=pdf&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'pnp_lst_EstudiantesBoletinCentralizador_p2_v1.rptdesign&__format=pdf&&curso_id_enc=' . $id_enc . '&curso_id=' . $id . '&&__format=pdf&'));
+
+            //pnp_rudeal_v1.rptdesign&__format=pdf&&rude_id=' . $id . '&rude_id_enc=' . $id_enc . '&&__format=pdf&'));
 
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
@@ -2079,16 +2096,24 @@ class DefaultController extends Controller
         return $response;
     }
 
-    public function imprimirboletaelectronicaAction($id, Request $request)
+    public function imprimirboletaelectronicaAction($id_enc,$id, Request $request)
     {
-        $porciones = explode("|", $id);
-        $id=$porciones[0];
+        $porciones = explode("|", $id_enc);
+        $id_enc=$porciones[0];
         $b=$porciones[1];
         $p=$porciones[2];
+        if($b==3 or $b==34){//plan 2
+            if($id==9 or $id==0)$id=$this->desencriptar($id_enc);
+            if($id_enc==0)$id_enc=$this->encriptar($id);
+        }
+        else{//plan1
+            if($id==9 or $id==0)$id=$this->desencriptar($id_enc);else $id=$id_enc;
+        }
         $arch = 'PNP_LIBRETA_ELECTRONICA_' . $id . '_' . date('Ymd') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        echo $b;echo " ";echo $id;echo " ";echo $id_enc;die;
         //plan 1
         if($b==1 and $p==1)
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'pnp_libreta_electronica_1_1_v1.rptdesign&__format=pdf&&estudiante_inscripcion_id=' . $id . '&&__format=pdf&'));
@@ -2100,7 +2125,7 @@ class DefaultController extends Controller
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'pnp_libreta_electronica_2_2_v1.rptdesign&__format=pdf&&estudiante_inscripcion_id=' . $id . '&&__format=pdf&'));
         //plan 2
         else
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'pnp_libreta_electronica_p2_v1.rptdesign&__format=pdf&&estudiante_inscripcion_id=' . $id . '&&__format=pdf&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'pnp_libreta_electronica_p2_v1.rptdesign&__format=pdf&&estudiante_inscripcion_id_enc=' . $id_enc . '&estudiante_inscripcion_id=' . $id . '&&__format=pdf&'));
 
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
@@ -2109,19 +2134,15 @@ class DefaultController extends Controller
         return $response;
     }
 
-     public function imprimir_rudealAction($id,$id_enc, Request $request)
+     public function imprimir_rudealAction($id_enc, Request $request)
     {
-        if ($id_enc==0){
-            $id_enc=$this->encriptar($id);
-        }
-        if ($id==0){
-            $id=$this->desencriptar($id_enc);
-        }
+        
+        $id=$this->desencriptar($id_enc);
         $arch = 'PNP_RUDEAL_' . date('Ymd') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'pnp_rudeal_v1.rptdesign&__format=pdf&&rude_id=' . $id . '&rude_id_enc=' . $id_enc . '&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'pnp_rudeal_v1.rptdesign&__format=pdf&&rude_id_enc=' . $id_enc . '&rude_id=' . $id . '&&__format=pdf&'));
 
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
@@ -2158,6 +2179,7 @@ class DefaultController extends Controller
     public function eliminarduplicadosAction($id,$id_eliminar, Request $request)
     {
          //Conocer el departamento del usuario para que solo pueda ver de su departamento
+        $id_eliminar=$this->desencriptar($id_eliminar);
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
 
@@ -2430,7 +2452,6 @@ class DefaultController extends Controller
            }
         }
 
-        //echo '<script>alert("holas: "+ '.$maestroinscripcion_id.');</script>';
 
         $form = $this->createForm(new FacilitadorType());
         $dep=$id;
@@ -2541,6 +2562,7 @@ order by t2.fecha_inicio";
             $datos_filas["ciclo_tipo_id"] = $p["ciclo_tipo_id"];
             $datos_filas["grado_tipo_id"] = $p["grado_tipo_id"];
             $datos_filas["id"] = $p["id"];
+            $datos_filas["id_enc"] = $this->encriptar($p["id"]);
             $datos_filas["depto"] = $p["depto"];
             $datos_filas["lugar"] = $p["lugar"];
             $datos_filas["esactivo"] = $p["esactivo"];
@@ -2844,7 +2866,8 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
         //echo "<script>alert('$lugar_usuario')</script>";
 
 
-        if($id_eliminar!=0){
+        if($request->getMethod()=="POST") {
+            $id_eliminar=$request->get("id_curso");
             // id de la tabla institucion_educativa
             $institucioneducativa_curso_id=$id_eliminar;    
             $em = $this->getDoctrine()->getManager();
@@ -2928,7 +2951,7 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
                 $params = array();
                 $stmt->execute($params);
                 $po = $stmt->fetchAll();
-                
+                $id_ico = array();
                 foreach ($po as $p) {
                     $id_ico = $p["id"];
                 }
@@ -3104,6 +3127,7 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
             $datos_filas["ciclo_tipo_id"] = $p["ciclo_tipo_id"];
             $datos_filas["grado_tipo_id"] = $p["grado_tipo_id"];
             $datos_filas["id"] = $p["id"];
+            $datos_filas["id_enc"] = $this->encriptar($p["id"]);
             $datos_filas["dep"] = $p["departamento"];
             $datos_filas["lugar"] = $p["provincia"];
             $datos_filas["nciclo"] = $p["nciclo"];
@@ -3214,6 +3238,7 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
             $datos_filas["ciclo_tipo_id"] = $p["ciclo_tipo_id"];
             $datos_filas["grado_tipo_id"] = $p["grado_tipo_id"];
             $datos_filas["id"] = $p["id"];
+            $datos_filas["id_enc"] = $this->encriptar($p["id"]);
             $datos_filas["depto"] = $p["depto"];
             $datos_filas["lugar"] = $p["lugar"];
             $filas[] = $datos_filas;
@@ -3223,6 +3248,7 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
 
      public function listararchivos_editnewAction($id,$gestion,Request $request)
     {
+                
         $form = $this->createForm(new FacilitadorType());
         $data = $form->getData();
         $em = $this->getDoctrine()->getManager();
@@ -3326,11 +3352,12 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
             $product->setMaestroInscripcionAsesor($maestroinscripcion);
             $em->flush();
         }
+        $id_enc=$id;
+        $id=$this->desencriptar($id_enc);
 /////////////////////////////////////
-        
         if($id!=0){
             $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id);
-        $plan=$result->getPlancurricularTipoId();
+            $plan=$result->getPlancurricularTipoId();
             //VER SU CUMPLE LOS REQUESITIVOS PARA CERRAR EL CURSO
             $curso_ok=0;
             // 1.- QUE LA CANTIDAD DE ESTUDIANTES NO SEAN MENOR Q 8
@@ -3506,9 +3533,6 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
         $username = $usu->getUsername();        
         $roluser = $this->session->get('roluser');
 
-
-
-
         if($id==0)$consulta="";else $consulta="AND institucioneducativa_curso.institucioneducativa_id = $id";
         //print_r($lugar_usuario); die;      
         //LISTA DE TOTALES POR GESTION DEPTO PARTE Y BLOQUE
@@ -3599,6 +3623,7 @@ ciclo_tipo_id, grado_tipo_id
                 $datos_filas["ciclo_tipo_id"] = $p["ciclo_tipo_id"];
                 $datos_filas["grado_tipo_id"] = $p["grado_tipo_id"];
                 $datos_filas["id"] = $p["id"];
+                $datos_filas["id_enc"] = $this->encriptar($p["id"]);
                 $datos_filas["depto"] = $p["depto"];
                 $datos_filas["provincia"] = $p["provincia"];
                 $datos_filas["lugar"] = $p["lugar"];
@@ -3635,6 +3660,7 @@ ciclo_tipo_id, grado_tipo_id
             if ($p["ngrado"]=="Primero")$datos_filas["ngrado"]=1;
             if ($p["ngrado"]=="Segundo")$datos_filas["ngrado"]=2;
             $datos_filas["id"] = $p["id"];
+            $datos_filas["id_enc"] = $this->encriptar($p["id"]);
             $datos_filas["depto"] = $p["depto"];
             $datos_filas["provincia"] = $p["provincia"];
             $datos_filas["lugar"] = $p["lugar"];
@@ -3952,9 +3978,11 @@ ciclo_tipo_id, grado_tipo_id
         $this->session->getFlashBag()->add('success', 'Proceso realizado exitosamente.');
         return $this->render('SiePnpBundle:Default:cursolista_edit.html.twig', array('estudiantes' => $filas, 'datosentity' => $filasdos));
     }
-        ////listado del nuevo listar edit para la gestion 2016 adelante
+        ////listado del nuevo listar edit para la gestion 2016 adelante 
     public function cursolistar_editnewAction($id,$val,Request $request)
     {
+        $id_enc=$id;
+        $id=$this->desencriptar($id_enc);
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
         $userId = $this->session->get('userId');
@@ -4237,7 +4265,8 @@ ciclo_tipo_id, grado_tipo_id
                       dt.origendiscapacidad as discapacidad,
                       act.id as actividad_id,
                       act.descripcion_ocupacion as actividad,
-                      r.id as rude_id
+                      r.id as rude_id,
+                      estudiante.segip_id
                     FROM 
                       estudiante INNER JOIN estudiante_inscripcion ON estudiante.id = estudiante_inscripcion.estudiante_id
                       INNER JOIN genero_tipo ON genero_tipo.id = estudiante.genero_tipo_id
@@ -4288,12 +4317,15 @@ ciclo_tipo_id, grado_tipo_id
             $datos_filas["observacionadicional"] = $p["observacionadicional"];
             $datos_filas["estadomatricula"] = $p["matricula_estado_id"];
             $datos_filas["inscripcion_id"] = $p["inscripcion_id"];
+            $datos_filas["inscripcion_id_enc"] = $this->encriptar($p["inscripcion_id"]);
             $datos_filas["estudiante_id"] = $p["estudiante_id"];
             $datos_filas["discapacidad_id"] = $p["discapacidad_id"];
             $datos_filas["discapacidad"] = $p["discapacidad"];
             $datos_filas["actividad_id"] = $p["actividad_id"];
             $datos_filas["actividad"] = $p["actividad"];
             $datos_filas["rude_id"] = $p["rude_id"];
+            $datos_filas["rude_id_enc"] = $this->encriptar($p["rude_id"]);
+            $datos_filas["segip_id"] = $p["segip_id"];
             $filas[] = $datos_filas;
         }
         
@@ -4422,7 +4454,8 @@ ciclo_tipo_id, grado_tipo_id
             );
         }
         //$this->session->getFlashBag()->add('success', 'Proceso realizado exitosamente.');
-        return $this->render('SiePnpBundle:Default:cursolista_editnew.html.twig', array('estudiantes' => $filas, 'plan'=>$plan,'datosentity' => $filasdos,'esactivo'=>$esactivo,'id_archivo'=>$id_archivo,'modulo_emergente'=>$modulo_emergente,'duracionhoras'=>$duracionhoras));
+        $id_curso_enc=$this->encriptar($id_archivo);
+        return $this->render('SiePnpBundle:Default:cursolista_editnew.html.twig', array('estudiantes' => $filas, 'plan'=>$plan,'datosentity' => $filasdos,'esactivo'=>$esactivo,'id_archivo'=>$id_archivo,'modulo_emergente'=>$modulo_emergente,'duracionhoras'=>$duracionhoras,'id_curso_enc'=>$id_curso_enc));
     }
     
 
@@ -5207,8 +5240,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
 
         try {/////insertar carnet_identidad
                 
-                //////////////////////AUMENTAR, SI ES TIPO 2, ES ESTUDIANTE PERO NO TIENE LA PARTE DE ALFABETIZADO, OCUPACION POR TANTO SE DEBE PRIMERO ACTUALIZAR AL ESTUDIANTE ESA PARTE ctv
-                
+                //////////////////////AUMENTAR, SI ES TIPO 2, ES ESTUDIANTE PERO NO TIENE LA PARTE DE ALFABETIZADO, OCUPACION POR TANTO SE DEBE PRIMERO ACTUALIZAR AL ESTUDIANTE ESA PARTE 
                 
                 if($plan == 1 and ($tipo == 0 or $tipo == 2)){
                     $alfabetizado=$request->get("alfabetizado");
@@ -5751,7 +5783,8 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                     );      
                 throw $e;
            }
-        return $this->redirectToRoute('sie_pnp_curso_listado_editnew',array('id'=>$curso_id));
+           $curso_id_enc=$this->encriptar($curso_id);
+        return $this->redirectToRoute('sie_pnp_curso_listado_editnew',array('id'=>$curso_id_enc));
    }
 
    public function elminarregistroestudiantecursoAction($estudiante_inscripcion_id,$curso_id,Request $request){
@@ -5896,7 +5929,8 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
         /*if($anio < 2016)
             return $this->redirectToRoute('sie_pnp_curso_listado_edit',array('id'=>$curso_id));
         else */
-            return $this->redirectToRoute('sie_pnp_curso_listado_editnew',array('id'=>$curso_id));
+            $curso_id_enc=$this->encriptar($curso_id);
+            return $this->redirectToRoute('sie_pnp_curso_listado_editnew',array('id'=>$curso_id_enc));
    }
 
     public function vernotas_editAction($idinscripcion,$id_curso)
@@ -5960,9 +5994,9 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
             $filas[] = $datos_filas;
         } 
 
-
+        $id_curso_enc=$this->encriptar($id_curso);
         if($plan==1)
-            return $this->render('SiePnpBundle:Default:vernotas_edit.html.twig', array('notas' => $filas,'cant_notas'=>$cant_notas,'id_curso'=>$id_curso,'idinscripcion'=>$idinscripcion,'carnet'=>$carnet,'complemento'=>$complemento,'nombre'=>$nombre));
+            return $this->render('SiePnpBundle:Default:vernotas_edit.html.twig', array('notas' => $filas,'cant_notas'=>$cant_notas,'id_curso'=>$id_curso,'idinscripcion'=>$idinscripcion,'carnet'=>$carnet,'complemento'=>$complemento,'nombre'=>$nombre,'id_curso_enc'=>$id_curso_enc));
         if($plan==2){
             //recoger nombre modulo emergente 
 
@@ -5980,7 +6014,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
             }
             $modulo_emergente=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findOneByInstitucioneducativaCursoOferta($id_ico);
 
-            return $this->render('SiePnpBundle:Default:vernotas_edit_p2.html.twig', array('notas' => $filas,'cant_notas'=>$cant_notas,'id_curso'=>$id_curso,'idinscripcion'=>$idinscripcion,'carnet'=>$carnet,'complemento'=>$complemento,'nombre'=>$nombre,'modulo_emergente'=>$modulo_emergente));
+            return $this->render('SiePnpBundle:Default:vernotas_edit_p2.html.twig', array('notas' => $filas,'cant_notas'=>$cant_notas,'id_curso'=>$id_curso,'idinscripcion'=>$idinscripcion,'carnet'=>$carnet,'complemento'=>$complemento,'nombre'=>$nombre,'modulo_emergente'=>$modulo_emergente,'id_curso_enc'=>$id_curso_enc));
         }
     }
 
@@ -6210,7 +6244,8 @@ public function registrar_cursoAction(Request $request, $plan){
                     );      
                 throw $e;
         }
-        return $this->redirectToRoute('sie_pnp_curso_listado_editnew',array('id'=>$curso_id));
+        $curso_id_enc=$this->encriptar($curso_id);
+        return $this->redirectToRoute('sie_pnp_curso_listado_editnew',array('id'=>$curso_id_enc));
     }
 
     $formBuscarPersona = $this->createForm(new BuscarPersonaType(array('opcion'=>1)), null, array('action' => $this->generateUrl('sie_usuario_persona_buscar_carnet'), 'method' => 'POST',));
@@ -7304,7 +7339,8 @@ public function crear_curso_automaticoAction(Request $request){
                     );      
                 throw $e;
         }
-        return $this->redirectToRoute('sie_pnp_curso_listado_editnew',array('id'=>$curso_new_id));
+        $curso_id_enc=$this->encriptar($curso_new_id);
+        return $this->redirectToRoute('sie_pnp_curso_listado_editnew',array('id'=>$curso_id_enc));
 
     }   
 }
@@ -7660,6 +7696,7 @@ public function cambiar_facilitador_encontradoAction(Request $request,$ci,$compl
         $curso["bloque"] = $p["bloque"];
         $curso["parte"] = $p["parte"];
         $curso["id"] = $p["id"];
+        $curso["id_enc"] = $this->encriptar($p["id"]);
         $curso["depto"] = $p["depto"];
         $curso["provincia"] = $p["provincia"];
         $curso["municipio"] = $p["municipio"];
@@ -8439,14 +8476,15 @@ public function rudeal_guardarAction(Request $request){
             $em->persist($newrudeactividad);
             $em->flush();
             $em->getConnection()->commit();
-            
+            $curso_id_enc=$this->encriptar($curso_id);
             $this->session->getFlashBag()->add('success', 'Rudeal Guardado Correctamente.');        
-            return $this->redirectToRoute('sie_pnp_curso_listado_editnew',array('id'=>$curso_id));
+            return $this->redirectToRoute('sie_pnp_curso_listado_editnew',array('id'=>$curso_id_enc));
             } 
         catch (Exception $ex) {
             $em->getConnection()->rollback();
+            $curso_id_enc=$this->encriptar($curso_id);
             $this->session->getFlashBag()->add('error', 'Proceso detenido. Se ha detectado inconsistencia de datos.'.$ex);
-            return $this->redirectToRoute('sie_pnp_curso_listado_editnew',array('id'=>$curso_id));
+            return $this->redirectToRoute('sie_pnp_curso_listado_editnew',array('id'=>$curso_id_enc));
         }
     }
 }
@@ -8577,6 +8615,7 @@ public function rudeal_guardarAction(Request $request){
             $datos_filas["ciclo"] = $p["ciclo"];
             $datos_filas["grado"] = $p["grado"];
             $datos_filas["id"] = $p["id"];
+            $datos_filas["id_enc"] = $this->encriptar($p["id"]); 
             $datos_filas["depto"] = $p["depto"];
             $datos_filas["lugar"] = $p["lugar"];
             $datos_filas["esactivo"] = $p["esactivo"];

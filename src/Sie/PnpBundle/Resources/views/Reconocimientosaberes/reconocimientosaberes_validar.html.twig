@@ -80,7 +80,7 @@
                                             <td>{{ fila.usuario_id }}</td>
                                             {% if fila.homologado == true %}    
                                                 <td>
-                                                    <a role="button" class="btn btn-xs btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_reconocimiento_saberes_imprimir', { 'id': fila.reconocimiento_saberes_id}) }}" title="Certificación"></a>
+                                                    <a role="button" class="btn btn-xs btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_reconocimiento_saberes_imprimir', { 'id_enc': fila.reconocimiento_saberes_id_enc}) }}" title="Certificación"></a>
                                                 </td>
                                             {% else %}
                                                 <td>

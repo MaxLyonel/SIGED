@@ -178,6 +178,7 @@ class ReconocimientosaberesController extends Controller
         $datos_filas = array();
         foreach ($po as $p) {
             $datos_filas["reconocimiento_saberes_id"] = $p["reconocimiento_saberes_id"];
+            $datos_filas["reconocimiento_saberes_id_enc"] = $this->encriptar($p["reconocimiento_saberes_id"]);
             $datos_filas["estudiante_id"] = $p["estudiante_id"];
             $datos_filas["codigo_rude"] = $p["codigo_rude"];
             $datos_filas["carnet_identidad"] = $p["carnet_identidad"];
@@ -435,6 +436,7 @@ class ReconocimientosaberesController extends Controller
         $datos_filas = array();
         foreach ($po as $p) {
             $datos_filas["reconocimiento_saberes_id"] = $p["reconocimiento_saberes_id"];
+            $datos_filas["reconocimiento_saberes_id_enc"] = $this->encriptar($p["reconocimiento_saberes_id"]);
             $datos_filas["estudiante_id"] = $p["estudiante_id"];
             $datos_filas["codigo_rude"] = $p["codigo_rude"];
             $datos_filas["carnet_identidad"] = $p["carnet_identidad"];
@@ -460,12 +462,15 @@ class ReconocimientosaberesController extends Controller
             )); 
     }
 
-    public function imprimir_certificacionAction($id){
+    public function imprimir_certificacionAction($id_enc){
+        $id=$this->desencriptar($id_enc);
+        echo $id;echo "  ";echo $id_enc;die;
         $arch = 'PNP_RECONOCIMIENTO_SABERES_' . date('Ymd') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'pnp_reconocimiento_saberes_v1_ctv.rptdesign&__format=pdf&&pnp_reconocimiento_saberes_id=' . $id . '&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'pnp_reconocimiento_saberes_v1_ctv.rptdesign&__format=pdf&&pnp_reconocimiento_saberes_id_enc=' . $id_enc . '&pnp_reconocimiento_saberes_id=' . $id . '&&__format=pdf&'));
+
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -473,6 +478,30 @@ class ReconocimientosaberesController extends Controller
         return $response;
     }
 
+    public function encriptar ($string) {
+        $key = "PROGRAMA NACIONAL DE POST-ALFABETIZACIÓN";
+        $result = '';
+       for($i=0; $i<strlen($string); $i++) {
+          $char = substr($string, $i, 1);
+          $keychar = substr($key, ($i % strlen($key))-1, 1);
+          $char = chr(ord($char)+ord($keychar));
+          $result.=$char;
+       }
+       return base64_encode($result);
+    }
+
+    public function desencriptar ($string) {
+        $key = "PROGRAMA NACIONAL DE POST-ALFABETIZACIÓN";
+        $result = '';
+        $string = base64_decode($string);
+        for($i=0; $i<strlen($string); $i++) {
+          $char = substr($string, $i, 1);
+          $keychar = substr($key, ($i % strlen($key))-1, 1);
+          $char = chr(ord($char)-ord($keychar));
+          $result.=$char;
+        }
+        return $result;
+    }
 /////////////////////////////////busquedas//////////////////////
 // buscar datos estudiantes
     public function retornar_estudianteAction($ci,$where){

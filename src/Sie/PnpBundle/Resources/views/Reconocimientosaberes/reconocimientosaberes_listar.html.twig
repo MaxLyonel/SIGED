@@ -82,7 +82,7 @@
                                             <td>En Revisi&oacute;n...</td>
                                         {% else %}
                                             <td>
-                                                <a role="button" class="btn btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_reconocimiento_saberes_imprimir', { 'id': fila.reconocimiento_saberes_id}) }}" > Certificaci&oacute;n</a>
+                                                <a role="button" class="btn btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_reconocimiento_saberes_imprimir', { 'id_enc': fila.reconocimiento_saberes_id_enc}) }}" > Certificaci&oacute;n</a>
                                             </td>
                                         {% endif %}
                                     </tr>

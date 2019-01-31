@@ -121,14 +121,14 @@ sie_pnp_buscar_estudiante:
          expose: true
 
 sie_pnp_imprimir_consolidado:
-    path:     /pnp/imprimirconsolidado/{id}/{esactivo}
-    defaults: { _controller: SiePnpBundle:Default:imprimirconsolidado, id:0,esactivo:1 }
+    path:     /pnp/imprimirconsolidado/{id_enc}/{id}
+    defaults: { _controller: SiePnpBundle:Default:imprimirconsolidado, id:9,id_enc:0 }
     options:
          expose: true
 
 sie_pnp_imprimir_boletaelectronica:
-    path:     /pnp/imprimirboletaelectronica/{id}
-    defaults: { _controller: SiePnpBundle:Default:imprimirboletaelectronica, id:0 }
+    path:     /pnp/imprimirboletaelectronica/{id_enc}/{id}
+    defaults: { _controller: SiePnpBundle:Default:imprimirboletaelectronica, id:9,id_enc:0 }
     options:
          expose: true
 
@@ -245,8 +245,8 @@ sie_pnp_reconocimiento_saberes_listar:
          expose: true
 
 sie_pnp_reconocimiento_saberes_imprimir:
-    path:     /pnp/reconocimiento_saberes/imprimir_certificacion/{id}
-    defaults: { _controller: SiePnpBundle:Reconocimientosaberes:imprimir_certificacion, id:0 }
+    path:     /pnp/reconocimiento_saberes/imprimir_certificacion/{id_enc}
+    defaults: { _controller: SiePnpBundle:Reconocimientosaberes:imprimir_certificacion, id_enc:0 }
     options:
          expose: true
 
@@ -305,7 +305,7 @@ sie_pnp_buscar_grado_discapacidad:
          expose: true
 
 sie_pnp_imprimir_rudeal:
-    path:     /pnp/imprimir_rudeal/{id_enc}/{id}
-    defaults: { _controller: SiePnpBundle:Default:imprimir_rudeal, id:0,id_enc:0 }
+    path:     /pnp/imprimir_rudeal/{id_enc}
+    defaults: { _controller: SiePnpBundle:Default:imprimir_rudeal, id_enc:0 }
     options:
          expose: true
