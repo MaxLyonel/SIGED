@@ -464,7 +464,6 @@ class ReconocimientosaberesController extends Controller
 
     public function imprimir_certificacionAction($id_enc){
         $id=$this->desencriptar($id_enc);
-        echo $id;echo "  ";echo $id_enc;die;
         $arch = 'PNP_RECONOCIMIENTO_SABERES_' . date('Ymd') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
@@ -501,6 +500,15 @@ class ReconocimientosaberesController extends Controller
           $result.=$char;
         }
         return $result;
+    }
+
+    public function reconocimiento_saberes_validadosAction(){
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $filas=0;
+        return $this->render('SiePnpBundle:Reconocimientosaberes:reconocimientosaberes_validados.html.twig', array(
+            'filas'=>$filas
+            )); 
     }
 /////////////////////////////////busquedas//////////////////////
 // buscar datos estudiantes

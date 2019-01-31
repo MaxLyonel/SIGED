@@ -2113,7 +2113,6 @@ class DefaultController extends Controller
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        echo $b;echo " ";echo $id;echo " ";echo $id_enc;die;
         //plan 1
         if($b==1 and $p==1)
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'pnp_libreta_electronica_1_1_v1.rptdesign&__format=pdf&&estudiante_inscripcion_id=' . $id . '&&__format=pdf&'));
@@ -4566,6 +4565,7 @@ ciclo_tipo_id, grado_tipo_id
                 $filas['localidad_nac'] = $p["localidad_nac"];
                 $filas['pais_tipo_id'] = $p["pais_tipo_id"];
                 $filas['genero_tipo_id'] = $p["genero_tipo_id"];
+                 $id_provincias = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarTipo' => $filas['lugar_nac_tipo_id']));
                 $exxx=1;
             }
             //print_r($filas);die;
@@ -4627,6 +4627,7 @@ ciclo_tipo_id, grado_tipo_id
                             'nombre'=>$filas['nombre'],
                             'fecha_nacimiento'=>$filas['fecha_nac']
                         );
+                         $id_provincias = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarTipo' => $filas['lugar_nac_tipo_id']));
                         // $opcional = array();
                         $personaSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($filas['ci'], $opcional, 'prod', 'academico');
                         if($personaSegip){
