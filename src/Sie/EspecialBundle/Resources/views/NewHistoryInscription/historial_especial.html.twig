@@ -32,8 +32,7 @@
         <td>{{data.turno_raep}} </td>
         <td>{{data.tecnica_e}} </td>
         <td class="text-center">
-          {#<a href="#" onclick="seeNotaNew('{{data.eiid}}', '{{data.eid}}', '{{data.nivel_tipo_id}}', '{{data.grado_tipo_id}}', '{{data.pid}}', '{{data.turno_tipo_id}}', '{{data.gestion_tipo_id}}', '{{data.institucioneducativa_id}}','{{data.estadomatricula_tipo_id}}')" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>#}
-          Calificaciones
+          <a href="#" onclick="seeNotaNew('{{data.estudiante_inscripcion_id_raep}}', '{{data.estudiante_id_raep}}', '{{data.gestion_tipo_id_raep}}', '4')" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>
         </td>
       </tr>
     {% endfor %}
