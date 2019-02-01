@@ -95,7 +95,9 @@ class DefaultController extends Controller {
                 $layout = 'layoutHerramientaAlternativa.html.twig';
                 $this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
                 break;
+
             case 'eduper.sie.gob.bo':
+            case '172.20.196.237':
                 $sysname = 'PERMANENTE';
                 $sysporlet = 'green';
                 $sysbutton = false;
@@ -280,6 +282,7 @@ class DefaultController extends Controller {
                 $layout = 'layoutCertification.html.twig';
                 $this->session->set('pathSystem', "SieTramitesBundle");
                 break;*/
+
                 /*$sysname = 'PERMANENTE';
                 $sysporlet = 'green';
                 $sysbutton = false;

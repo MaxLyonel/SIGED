@@ -56,8 +56,6 @@ class GestionMenuController extends Controller {
         $query->execute();
         $menu= $query->fetchAll();
         return $this->render('SieAppWebBundle:GestionMenu:index.html.twig', array('menu' => $menu));
-       //return new Response('');
-
     }
     public function inicioAction() {
         $id_usuario = $this->session->get('userId');
@@ -65,11 +63,11 @@ class GestionMenuController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
         return $this->render('SieAppWebBundle:GestionMenu:inicio.html.twig');
-
     }
 
-    //Inicio de ADMINISTRACION DE SISTEMAS/**/
-
+    /**
+     * Administracíon de Meús Princpales.
+     */
     public function  administraSistemaAction(){
         $id_usuario = $this->session->get('userId');
         if (!isset($id_usuario)) {
@@ -139,7 +137,6 @@ class GestionMenuController extends Controller {
         $query->execute();
         $listasistema = $query->fetchAll();
 
-        //return $this->redirectToRoute('gestionmenu_administra_sistema');
         return $this->render('SieAppWebBundle:GestionMenu:listaSistemas.html.twig',array('listasistema'=>$listasistema));
 
     }
