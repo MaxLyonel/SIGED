@@ -264,25 +264,25 @@ class InfoMaestroMigrarController extends Controller {
                 $contador++;
                 if($contador > 2){
                     $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($key);
-                    $maestro_inscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('persona' => $persona, 'institucioneducativa' => $institucioneducativa, 'gestionTipo' => $gestionTipo, 'esVigenteAdministrativo' => false));
+                    $maestro_inscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('persona' => $persona, 'institucioneducativa' => $institucioneducativa, 'gestionTipo' => $gestionTipo, 'esVigenteAdministrativo' => true));
                     $gestionTipo_aux = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($request->getSession()->get('currentyear'));
-                    $maestro_inscripcion_aux = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('persona' => $persona, 'institucioneducativa' => $institucioneducativa, 'gestionTipo' => $gestionTipo_aux, 'esVigenteAdministrativo' => false));
+                    $maestro_inscripcion_aux = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('persona' => $persona, 'institucioneducativa' => $institucioneducativa, 'gestionTipo' => $gestionTipo_aux, 'esVigenteAdministrativo' => true));
                     if(!$maestro_inscripcion_aux){
                         $maestrosArray[$key] = $maestro_inscripcion;
                     }
                 }
             }
         }
-
+        
         $gestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($request->getSession()->get('currentyear'));
         
         foreach ($maestrosArray as $key => $maestro_inscripcion) {
             //Registrar maestro_inscriocion gestión actual
-            //$query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('maestro_inscripcion');")->execute();
             $persona_verificar = $em->getRepository('SieAppWebBundle:Persona')->findOneById($key);
             $maestro_verificar = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('persona' => $persona_verificar, 'gestionTipo' => $gestionTipo, 'cargoTipo' => '0', 'institucioneducativa' => $institucioneducativa));
-
+            
             if (!$maestro_verificar) {
+                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('maestro_inscripcion');")->execute();
                 $maestro_inscripcion_aux = clone $maestro_inscripcion;
                 $maestro_inscripcion_aux->setGestionTipo($gestionTipo);
                 $maestro_inscripcion_aux->setFechaRegistro(new \DateTime('now'));
@@ -297,6 +297,7 @@ class InfoMaestroMigrarController extends Controller {
                 $maestro_inscripcion_idioma = $em->getRepository('SieAppWebBundle:MaestroInscripcionIdioma')->findBy(array('maestroInscripcion' => $maestro_inscripcion));
 
                 foreach ($maestro_inscripcion_idioma as $key => $value) {
+                    $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('maestro_inscripcion_idioma');")->execute();
                     $maestro_inscripcion_idioma_aux = clone $value;
                     $maestro_inscripcion_idioma_aux->setMaestroInscripcion($maestro_inscripcion_aux);
                     $em->persist($maestro_inscripcion_idioma_aux);
@@ -306,7 +307,6 @@ class InfoMaestroMigrarController extends Controller {
         }
 
         $em->getConnection()->commit();
-        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('maestro_inscripcion');")->execute();
 
         $request->getSession()->set('idInstitucion', $sie);
         $request->getSession()->set('idGestion', $request->getSession()->get('currentyear'));

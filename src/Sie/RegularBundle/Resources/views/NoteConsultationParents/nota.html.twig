@@ -20,32 +20,42 @@
                 </tr>
             </table>
             {% elseif subsistema == 2 %}
-                {# {% if inscripcion.institucioneducativaCurso.nivelTipo.id == 15 %}
+                <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                    <tr>
+                        <th>Gestión</th><td>{{gestion}}</td>
+                        <th>Periodo</th>
+                        <td>
+                            {% set periodo = inscripcion.institucioneducativaCurso.superiorInstitucioneducativaPeriodo.superiorInstitucioneducativaAcreditacion.institucioneducativaSucursal.periodoTipoId %}
+                            {% if periodo == 1 %}ANUAL{% elseif periodo == 2 %}PRIMER SEMESTRE{% elseif periodo == 3 %}SEGUNDO SEMESTRE{% endif %}
+                        </td>
+                    </tr>
+                </table>
+                {% if inscripcion.institucioneducativaCurso.superiorInstitucioneducativaPeriodo.superiorInstitucioneducativaAcreditacion.acreditacionEspecialidad.superiorEspecialidadTipo.superiorFacultadAreaTipo.id == 15 %}
                     <table class="table table-condensed table-bordered" style="background:#EEEEEE">
                         <tr>
-                            <th>Nivel</th><td>{{especialidad}}</td>
-                            <th>Turno</th><td>{{turno}}</td>
+                            <th>Nivel</th><td>{{inscripcion.institucioneducativaCurso.superiorInstitucioneducativaPeriodo.superiorInstitucioneducativaAcreditacion.acreditacionEspecialidad.superiorEspecialidadTipo.especialidad}}</td>
+                            <th>Turno</th><td>{{inscripcion.institucioneducativaCurso.turnoTipo.turno}}</td>
                         </tr>
                         <tr>
-                            <th>Etapa</th><td>{{acreditacion}}</td>
-                            <th>Paralelo</th><td>{{paralelo}}</td>
+                            <th>Etapa</th><td>{{inscripcion.institucioneducativaCurso.superiorInstitucioneducativaPeriodo.superiorInstitucioneducativaAcreditacion.acreditacionEspecialidad.superiorAcreditacionTipo.acreditacion}}</td>
+                            <th>Paralelo</th><td>{{inscripcion.institucioneducativaCurso.paraleloTipo.paralelo|upper}}</td>
                         </tr>
                     </table>
                 {% else %}
                     <table class="table table-condensed table-bordered" style="background:#EEEEEE">
                         <tr>
-                            <th>Area</th><td>{{area}}</td>
-                            <th>Turno</th><td>{{turno}}</td>
+                            <th>Area</th><td>{{inscripcion.institucioneducativaCurso.superiorInstitucioneducativaPeriodo.superiorInstitucioneducativaAcreditacion.acreditacionEspecialidad.superiorEspecialidadTipo.superiorFacultadAreaTipo.facultadArea}}</td>
+                            <th>Turno</th><td>{{inscripcion.institucioneducativaCurso.turnoTipo.turno}}</td>
                         </tr>
                         <tr>
-                            <th>Especialidad</th><td>{{especialidad}}</td>
-                            <th>Paralelo</th><td>{{paralelo}}</td>
+                            <th>Especialidad</th><td>{{inscripcion.institucioneducativaCurso.superiorInstitucioneducativaPeriodo.superiorInstitucioneducativaAcreditacion.acreditacionEspecialidad.superiorEspecialidadTipo.especialidad}}</td>
+                            <th>Paralelo</th><td>{{inscripcion.institucioneducativaCurso.paraleloTipo.paralelo|upper}}</td>
                         </tr>
                         <tr>
-                            <th>Nivel de Acreditación</th><td colspan="3">{{acreditacion}}</td>
+                            <th>Nivel de Acreditación</th><td colspan="3">{{inscripcion.institucioneducativaCurso.superiorInstitucioneducativaPeriodo.superiorInstitucioneducativaAcreditacion.acreditacionEspecialidad.superiorAcreditacionTipo.acreditacion}}</td>
                         </tr>
                     </table>
-                {% endif %} #}
+                {% endif %}
             {% endif %}
 
             <h5 class="text-info">Datos del Estudiante</h5>
