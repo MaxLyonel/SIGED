@@ -5,10 +5,11 @@
         <thead class="cf">
             <tr>
                 <th>Asignatura / Módulo</th>
-                <th>P.T.</th>
-                <th>A.P.</th>
-                <th>C.O.</th>
-                <th>Promedio</th>
+                <th class="text-center">P.T.</th>
+                <th class="text-center">A.P.</th>
+                <th class="text-center">C.O.</th>
+                <th class="text-center">Promedio</th>
+                <th class="text-center">Estado</th>
             </tr>
         </thead>
         <tbody>
@@ -19,6 +20,7 @@
                     <td class="text-center">{{notas.ap_cuant}}</td>
                     <td class="text-center">{{notas.co_cuant}}</td>
                     <td class="text-center"><strong>{{notas.p_cuant}}</strong></td>
+                    <td class="text-center">{{notas.estado}}</td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -27,7 +29,7 @@
             <tr>
                 <th rowspan="2" style="vertical-align: middle">Módulo</th>
                 <th colspan="1" style="text-align:center">Valoración Cuantitativa</th>
-                <th rowspan="2">Estado</th>
+                <th rowspan="2" style="vertical-align: middle" class="text-center">Estado</th>
             </tr>
             <tr>
                 <th style="text-align:center">Promedio Semestral</th>
@@ -38,6 +40,7 @@
                 <tr>
                     <td><strong>{{notas.asignatura}}</strong></td>
                     <td class="text-center">{{notas.p_cuant}}</td>
+                    <td class="text-center">{% if notas.estado %}{{notas.estado}}{% endif %}</td>
                 </tr>
             {% endfor %}
         </tbody>

@@ -447,22 +447,32 @@ class ReportesController extends Controller {
 
         $db = $em->getConnection();    
         
-        //dump($idMunicipio);die;
+        //dump($codrude,$sucursalId,$inscripcionId);die;
         //si el estudiante no es inmigrante
-        if($rude->getMunicipioLugarTipo() != null){
-
-                $lt5_id = $rude->getMunicipioLugarTipo()->getLugarTipo();
+        //if($rude->getMunicipioLugarTipo() != null and $rude->getMunicipioLugarTipo() != 0){
+        //dump($rude->getLocalidadLugarTipo());die;
+        if($rude->getLocalidadLugarTipo() != null and $rude->getLocalidadLugarTipo()->getId() != 0){
+                $lt5_id = $rude->getLocalidadLugarTipo()->getLugarTipo();
+                //$lt5_id = $rude->getMunicipioLugarTipo()->getLugarTipo();
                 $lt4_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getLugarTipo();
                 $lt3_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getLugarTipo();
+                $lt2_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt3_id)->getLugarTipo();
+                $lt1_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt2_id)->getLugarTipo();
 
-                $m_id = $rude->getMunicipioLugarTipo()->getId();
-                $p_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getId();
-                $d_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getId();
+                //$m_id = $rude->getMunicipioLugarTipo()->getId();
+                $l_id = $rude->getLocalidadLugarTipo()->getId();
+                $c_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getId();
+                $m_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getId();
+                $p_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt3_id)->getId();
+                $d_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt2_id)->getId();
         }else{
+            $l_id = 0;
+            $c_id = 0;
             $m_id = 0;
             $p_id = 0;
             $d_id = 0;
         }
+        //dump($codrude,$sucursalId,$inscripcionId,$l_id,$c_id,$m_id,$p_id,$d_id);die;
         // if ($idMunicipio != 0){
         //     $query = "select socioeconomico_lugar_recursivo(".$idMunicipio.");";
         //     $stmt = $db->prepare($query);
@@ -493,7 +503,8 @@ class ReportesController extends Controller {
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'rudelal_' . $codrude . '_' . $gestion . '.pdf'));
         // $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_rude_socioeconomico_gral_v2_vcj.rptdesign&socioalteId=' . $socioalteId . '&rude=' . $rude . '&sucursalId=' . $sucursalId . '&inscripcionId=' . $inscripcionId . '&dirDep=' . $dirDep . '&dirProv=' . $dirProv . '&dirSec=' . $dirSec . '&dirLoc=' . $dirLoc . '&&__format=pdf&'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_rude_socioeconomico_gral_v3_afv.rptdesign&rude=' . $codrude . '&sucursalId=' . $sucursalId . '&inscripcionId=' . $inscripcionId . '&dirDep=' . $d_id . '&dirProv=' . $p_id . '&dirSec=' . $m_id . '&&__format=pdf&'));
+        //$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_rude_socioeconomico_gral_v3_afv.rptdesign&rude=' . $codrude . '&sucursalId=' . $sucursalId . '&inscripcionId=' . $inscripcionId . '&dirDep=' . $d_id . '&dirProv=' . $p_id . '&dirSec=' . $m_id . '&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_rude_socioeconomico_gral_v3_afv.rptdesign&rude=' . $codrude . '&sucursalId=' . $sucursalId . '&inscripcionId=' . $inscripcionId . '&dirDep=' . $d_id . '&dirProv=' . $p_id . '&dirSec=' . $m_id. '&dirLoc=' . $l_id . '&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');

@@ -1144,4 +1144,32 @@ class Rude
     {
         return $this->registroFinalizado;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\LugarTipo
+     */
+    private $localidadLugarTipo;
+
+
+    /**
+     * Set localidadLugarTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\LugarTipo $localidadLugarTipo
+     * @return Rude
+     */
+    public function setLocalidadLugarTipo(\Sie\AppWebBundle\Entity\LugarTipo $localidadLugarTipo = null)
+    {
+        $this->localidadLugarTipo = $localidadLugarTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get localidadLugarTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\LugarTipo 
+     */
+    public function getLocalidadLugarTipo()
+    {
+        return $this->localidadLugarTipo;
+    }
 }
