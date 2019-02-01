@@ -585,7 +585,7 @@ class Funciones {
                         $studentAsignatura->setFechaRegistro(new \DateTime('now'));
                         $this->em->persist($studentAsignatura);
                         $this->em->flush();
-                        dump($studentAsignatura);
+                        // dump($studentAsignatura);
                     }
                     
                     
