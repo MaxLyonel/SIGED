@@ -477,31 +477,6 @@ class ReconocimientosaberesController extends Controller
         return $response;
     }
 
-    public function encriptar ($string) {
-        $key = "PROGRAMA NACIONAL DE POST-ALFABETIZACIÓN";
-        $result = '';
-       for($i=0; $i<strlen($string); $i++) {
-          $char = substr($string, $i, 1);
-          $keychar = substr($key, ($i % strlen($key))-1, 1);
-          $char = chr(ord($char)+ord($keychar));
-          $result.=$char;
-       }
-       return base64_encode($result);
-    }
-
-    public function desencriptar ($string) {
-        $key = "PROGRAMA NACIONAL DE POST-ALFABETIZACIÓN";
-        $result = '';
-        $string = base64_decode($string);
-        for($i=0; $i<strlen($string); $i++) {
-          $char = substr($string, $i, 1);
-          $keychar = substr($key, ($i % strlen($key))-1, 1);
-          $char = chr(ord($char)-ord($keychar));
-          $result.=$char;
-        }
-        return $result;
-    }
-
     public function reconocimiento_saberes_validadosAction(){
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
@@ -509,6 +484,21 @@ class ReconocimientosaberesController extends Controller
         return $this->render('SiePnpBundle:Reconocimientosaberes:reconocimientosaberes_validados.html.twig', array(
             'filas'=>$filas
             )); 
+    }
+
+     public function encriptar ($string) {
+        $data = base64_encode($string);
+        $data = str_replace(array('+','/','='),array('-','_','.'),$data);
+        return $data; 
+    }
+
+    public function desencriptar ($string) {
+        $data = str_replace(array('-','_','.'),array('+','/','='),$string);
+        $mod4 = strlen($data) % 4;
+        if ($mod4) {
+            $data .= substr('====', $mod4);
+        }
+        return base64_decode($data); 
     }
 /////////////////////////////////busquedas//////////////////////
 // buscar datos estudiantes

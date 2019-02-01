@@ -5483,7 +5483,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                             $rude["est_civil"] = $p["est_civil"];
                             $grado_discapacidad=$rude["grado_id"] = $p["grado_id"];
                             $rude["grado"] = $p["grado"];
-                            $discapicidad=$rude["discapacidad_id"] = $p["discapacidad_id"];
+                            $discapacidad=$rude["discapacidad_id"] = $p["discapacidad_id"];
                             $rude["discapacidad"] = $p["discapacidad"];
                             $ibc=$rude["carnet_ibc"] = $p["carnet_ibc"];
                             $rude["est_depa_id"] = $p["est_depa_id"];
