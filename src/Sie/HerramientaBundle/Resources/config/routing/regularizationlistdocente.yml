@@ -42,3 +42,9 @@ regularization_docente_maestrosasignar:
     defaults: { _controller: SieHerramientaBundle:RegularizationListDocente:maestrosasignar }
     options:
          expose: true
+
+regularization_docente_enviarsolicitud:
+    path:     /enviarsolicitud
+    defaults: { _controller: SieHerramientaBundle:RegularizationListDocente:enviarSolicitud }
+    options:
+         expose: true
