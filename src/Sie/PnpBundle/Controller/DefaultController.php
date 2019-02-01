@@ -2083,9 +2083,9 @@ class DefaultController extends Controller
         //plan 2
         else
             if($esactivo==0)//PDF SIN VALOR LEGAL
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'pnp_lst_NoLegalEstudiantesBoletinCentralizador_p2_v1.rptdesign&__format=pdf&&curso_id=' . $id . '&&__format=pdf&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'pnp_lst_NoLegalEstudiantesBoletinCentralizador_p2_v1.rptdesign&__format=pdf&&curso_id_enc=' . $id_enc . '&curso_id=' . $id . '&&__format=pdf&'));
             else //PDF CON VALOR LEGAL
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'pnp_lst_EstudiantesBoletinCentralizador_p2_v1.rptdesign&__format=pdf&&curso_id_enc=' . '$id_enc' . '&curso_id=' . $id . '&&__format=pdf&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'pnp_lst_EstudiantesBoletinCentralizador_p2_v1.rptdesign&__format=pdf&&curso_id_enc=' . $id_enc . '&curso_id=' . $id . '&&__format=pdf&'));
 
             //pnp_rudeal_v1.rptdesign&__format=pdf&&rude_id=' . $id . '&rude_id_enc=' . $id_enc . '&&__format=pdf&'));
 
@@ -2124,7 +2124,7 @@ class DefaultController extends Controller
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'pnp_libreta_electronica_2_2_v1.rptdesign&__format=pdf&&estudiante_inscripcion_id=' . $id . '&&__format=pdf&'));
         //plan 2
         else
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'pnp_libreta_electronica_p2_v1.rptdesign&__format=pdf&&estudiante_inscripcion_id_enc=' . '$id_enc' . '&estudiante_inscripcion_id=' . $id . '&&__format=pdf&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'pnp_libreta_electronica_p2_v1.rptdesign&__format=pdf&&estudiante_inscripcion_id_enc=' . $id_enc . '&estudiante_inscripcion_id=' . $id . '&&__format=pdf&'));
 
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
@@ -2135,13 +2135,14 @@ class DefaultController extends Controller
 
      public function imprimir_rudealAction($id_enc, Request $request)
     {
-        
+        //echo $id_enc;echo "             -";
         $id=$this->desencriptar($id_enc);
+        //echo $id; echo " ";echo $id_enc;die;
         $arch = 'PNP_RUDEAL_' . date('Ymd') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'pnp_rudeal_v1.rptdesign&__format=pdf&&rude_id_enc=' . '$id_enc' . '&rude_id=' . $id . '&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'pnp_rudeal_v1.rptdesign&__format=pdf&&rude_id_enc=' . $id_enc . '&rude_id=' . $id . '&&__format=pdf&'));
 
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
@@ -2151,28 +2152,18 @@ class DefaultController extends Controller
     }
 
     public function encriptar ($string) {
-        $key = "PROGRAMA NACIONAL DE POST-ALFABETIZACIÓN";
-        $result = '';
-       for($i=0; $i<strlen($string); $i++) {
-          $char = substr($string, $i, 1);
-          $keychar = substr($key, ($i % strlen($key))-1, 1);
-          $char = chr(ord($char)+ord($keychar));
-          $result.=$char;
-       }
-       return base64_encode($result);
+        $data = base64_encode($string);
+        $data = str_replace(array('+','/','='),array('-','_','.'),$data);
+        return $data; 
     }
 
     public function desencriptar ($string) {
-        $key = "PROGRAMA NACIONAL DE POST-ALFABETIZACIÓN";
-        $result = '';
-        $string = base64_decode($string);
-        for($i=0; $i<strlen($string); $i++) {
-          $char = substr($string, $i, 1);
-          $keychar = substr($key, ($i % strlen($key))-1, 1);
-          $char = chr(ord($char)-ord($keychar));
-          $result.=$char;
+        $data = str_replace(array('-','_','.'),array('+','/','='),$string);
+        $mod4 = strlen($data) % 4;
+        if ($mod4) {
+            $data .= substr('====', $mod4);
         }
-        return $result;
+        return base64_decode($data); 
     }
 
     public function eliminarduplicadosAction($id,$id_eliminar, Request $request)
