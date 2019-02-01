@@ -477,12 +477,31 @@ class ReconocimientosaberesController extends Controller
         return $response;
     }
 
-    public function reconocimiento_saberes_validadosAction(){
+    public function reconocimiento_saberes_validadosAction(Request $request){
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
-        $filas=0;
+          $query = "SELECT  max(date_part('year', fecha_homologacion) ) as maximo,min(date_part('year', fecha_homologacion) ) as minimo FROM pnp_reconocimiento_saberes 
+                      ";
+        
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $gestion = array();
+        foreach ($po as $p) {
+            $gestion["maximo"] = $p["maximo"];
+            $gestion["minimo"] = $p["minimo"];
+        }
+        $filas = array();
+        if($request->getMethod()=="POST") { 
+            $lugar=$request->get("lugar");
+            $inicio=$request->get("inicio");
+            $fin=$request->get("fin");
+            
+        }
         return $this->render('SiePnpBundle:Reconocimientosaberes:reconocimientosaberes_validados.html.twig', array(
-            'filas'=>$filas
+            'gestion'=>$gestion,
+            'filas'=>$filas,
             )); 
     }
 
