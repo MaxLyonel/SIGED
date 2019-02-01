@@ -1,18 +1,23 @@
 {% extends 'layoutPnp.html.twig' %}
 
 {% block body -%}
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="page-title">
-                <h1 class="fa fa-shield"> RECONOCIMIENTO DE SABERES</h1>
+    <div class="header-content">
+            <h2><i class="fa fa-shield animated flip"></i>REGISTRAR RECONOCIMIENTO DE SABERES<span></span></h2>
+            <div class="breadcrumb-wrapper hidden-xs">
+                <span class="label">Usted esta aqui:</span>
                 <ol class="breadcrumb">
                     <li>
+                        <i class="fa fa-shield"></i>
+                        <a href="#">
+                        Reconoc. de Saberes
+                        </a>
+                        <i class="fa fa-angle-right"></i>
                     </li>
+
+                    <li class="active">Registrar</li>
                 </ol>
-            </div>
-        </div>
-        <!-- /.col-lg-12 -->
-    </div>
+            </div><!-- /.breadcrumb-wrapper -->
+        </div><!-- /.header-content -->
 
     <div style="width: 100%;">
         <div class="row">
@@ -36,58 +41,54 @@
                 {% endfor %}
 
         <!-- /.row -->
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="portlet portlet-blue">
-                <div class="portlet-heading">
-                    <div class="portlet-title">
-                        <h4>Buscar Estudiante</h4>
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-xs-12 col-lg-12">
+                <div class="panel panel-icon panel-primary">
+                    <div class="panel-heading">
+                        Buscar Estudiante
                     </div>
-                    <div class="portlet-widgets">
-                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation"><i class="fa fa-chevron-down"></i></a>
-                    </div>
-                    <div class="clearfix"></div>
+                    <div class="panel-body">
+                        <div class="col-lg-2">&nbsp;</div>
+                            <div class="col-lg-10">
+                                <form class="">
+                                    <input type="radio" name="rude" id="rude" value="0" checked onclick="carnet_identidad()">
+                                    Carnet Identidad&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="radio" name="rude" id="rude" value="1" onclick="codigo_rude()">
+                                    Código Rude
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label class="" for="ci_buscar" id="l_ci">Carnet de identidad</label>
+                                            <input type="text" required="true" class="form-control" id="ci_buscar" onkeypress="return ValidarEspacios(event,this)">
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <label class="" for="complemento" id="l_complemento">Complemento</label>
+                                            <input type="text" class="form-control" id="complemento" onkeypress="return ValidarEspacios(event,this)" style="text-transform: uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                        </div>
+                                        {#}BORRAR LINEA PARA ANTIGUO O NO{#}
+                                        <div class="hidden">
+                                            <div class="col-lg-3 radio">
+                                                <input type="radio" class="form-control" id="opc" name="opc" value="1" checked> Actual<br>
+                                                <input type="radio" class="form-control" id="opc" name="opc" value="0"> Antiguo (2009-2016)<br>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-1">
+                                            </br>
+                                            <a type="button" class="btn btn-primary" href= "#" onclick="BuscarEstudiante()">Buscar</a>
+                                        </div>
+                                    </div>     
+                                </form>
+                            </div>
+                            <div class="row"><br/></div>
+                        </div>
+                    </div> 
                 </div>
-                <div class="col-lg-2">&nbsp;</div>
-                <div class="col-lg-10">
-                <form class="">
-                    <input type="radio" name="rude" id="rude" value="0" checked onclick="carnet_identidad()">
-                    Carnet Identidad&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input type="radio" name="rude" id="rude" value="1" onclick="codigo_rude()">
-                    Código Rude
-                    <div class="row">
-                        <div class="col-lg-4">
-                            <label class="" for="ci_buscar" id="l_ci">Carnet de identidad</label>
-                            <input type="text" required="true" class="form-control" id="ci_buscar" onkeypress="return ValidarEspacios(event,this)">
-                        </div>
-                        <div class="col-lg-2">
-                            <label class="" for="complemento" id="l_complemento">Complemento</label>
-                            <input type="text" class="form-control" id="complemento" onkeypress="return ValidarEspacios(event,this)" style="text-transform: uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();">
-                        </div>
-                        {#}BORRAR LINEA PARA ANTIGUO O NO{#}
-                        <div class="hidden">
-                            <div class="col-lg-3 radio">
-                            <input type="radio" class="form-control" id="opc" name="opc" value="1" checked> Actual<br>
-                            <input type="radio" class="form-control" id="opc" name="opc" value="0"> Antiguo (2009-2016)<br>
-                        </div>
-                        </div>
-                        <div class="col-lg-1">
-                            </br>
-                            <a type="button" class="btn btn-primary" href= "#" onclick="BuscarEstudiante()">Buscar</a>
-                        </div>
-                    </div>     
-                </form>
-                </div>
-                    <div class="row"><br/>   
-                </div>
-                    
-                    </div>
-                </div> 
             </div>
-        </div>
-    </div>    
-    <div id="estudiante"></div>         
-</div>
+            <div id="estudiante"></div>
+        
+
+
+    
 {% endblock %}
 
 {% block javascripts %}

@@ -1,0 +1,157 @@
+{% extends 'layoutPnp.html.twig' %}
+
+{% block body -%}
+     <div class="header-content">
+        <h2><i class="fa fa-shield animated flip"></i>VALIDADOS DE RECONOCIMIENTO DE SABERES <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-shield"></i>
+                    <a href="#">
+                    Reconoc. de Saberes
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Lista de Validados</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+  
+    <div style="width: 100%;">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-danger alert-dismissible" role="alert" id="result" style="display: none;">
+                    <strong>¡Advertencia!</strong> <input type="text" id="errorxls" class="form-control input-sm" readonly='true'>
+                </div>
+            </div>
+        </div>
+          {% for flashMessage in app.session.flashbag.get('success') %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Bien!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('error') %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>¡Advertencia!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+         <!-- /.row -->
+
+        <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-xs-12 col-lg-12">
+                <div class="panel panel-icon panel-primary">
+                    <div class="panel-heading">
+                        Validados de Reconocimientos de Saberes Listar 
+                    </div>
+                    <div class="panel-body">
+                                                
+                    </div>
+                    <div class="panel-heading">
+                        Resultado de búsqueda
+                    </div>
+                    <div class="panel-body">
+                        <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+                            <table id="tablaTotales" class="display" cellspacing="0" width="100%">    
+                                <thead>
+                                    <tr>
+                                        <th>Rude</th>
+                                        <th>Lugar</th>
+                                        <th>Nombre</th>
+                                        <th>Paterno</th>
+                                        <th>Materno</th>                            
+                                        <th>Carnet</th>
+                                        <th>Fecha Nac.</th>                            
+                                        <th>Homologado a</th>                            
+                                        <th>Fecha</th>                            
+                                        <th>Usuario</th>                            
+                                        <th>Certificación</th>  
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for fila in filas %}
+                                    <tr>
+                                        <td>{{ fila.codigo_rude }}</td>
+                                        <td>{{ fila.depto }}</td>
+                                        <td>{{ fila.nombre }}</td>                            
+                                        <td>{{ fila.paterno }}</td>
+                                        <td>{{ fila.materno }}</td> 
+                                        <td>{{ fila.carnet_identidad }}{% if fila.complemento != '' %}-{{fila.complemento}}{% endif %}</td>
+                                        <td>{{ fila.fecha_nacimiento|date('d-m-Y') }}</td>
+                                        <td>{{ fila.curso_nombre }}</td>
+                                        <td>{{ fila.fecha_creacion|date('d-m-Y') }}</td>
+                                        <td>{{ fila.usuario_id }}</td>
+                                        {% if fila.homologado == false %}    
+                                            <td>En Revisi&oacute;n...</td>
+                                        {% else %}
+                                            <td>
+                                                <a role="button" class="btn btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_reconocimiento_saberes_imprimir', { 'id_enc': fila.reconocimiento_saberes_id_enc}) }}" > Certificaci&oacute;n</a>
+                                            </td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+              
+
+                
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+    var espanol = {"sProcessing": "Procesando...",
+                     "sLengthMenu": "Mostrar _MENU_ registros",
+                     "sZeroRecords": "No se encontraron resultados",
+                     "sInfo": "Mostrando desde _START_ hasta _END_ de _TOTAL_ registros",
+                     "sInfoEmpty": "No existen registros",
+                     "sInfoFiltered": "(filtrado de un total de _MAX_ líneas)",
+                     "sInfoPostFix": "",
+                     "sSearch": "Buscar:",
+                     "sUrl": "",
+                     "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                     },
+                     "buttons":{
+                        "copy": "Copiar",
+                        "print":"Imprimir"
+                     }
+                    };
+
+    var currentLang = espanol;    
+        
+    $(document).ready(function() {
+        
+        var dtable = $('#tablaTotales').dataTable( {"oLanguage": espanol} );
+        
+        $('#tablaTotales tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                dtable.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+        
+        {#$('#btn').click(function(){
+            dtable.fnDestroy();
+            dtable = null;
+            currentLang = (currentLang == english) ? espanol : english;
+            dtable = $('#tablaTotales').dataTable( {"oLanguage": currentLang} );
+        });#}
+        
+    });
+    </script>
+{% endblock %}

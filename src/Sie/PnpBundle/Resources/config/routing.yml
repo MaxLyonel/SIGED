@@ -50,11 +50,7 @@ sie_pnp_curso_id:
     
 sie_pnp_resultado_curso_listado_id:
     path:     /curso_listado_busqueda/
-    defaults: { _controller: SiePnpBundle:Default:cursolistarbusqueda }    
-    
-sie_pnp_estadisticas:
-    path:     /pnp/estadisticas/
-    defaults: { _controller: SiePnpBundle:Default:estadisticas }       
+    defaults: { _controller: SiePnpBundle:Default:cursolistarbusqueda }        
     
 sie_pnp_reportes:
     path:     /pnp/reportesfiltro/
@@ -125,14 +121,14 @@ sie_pnp_buscar_estudiante:
          expose: true
 
 sie_pnp_imprimir_consolidado:
-    path:     /pnp/imprimirconsolidado/{id}/{esactivo}
-    defaults: { _controller: SiePnpBundle:Default:imprimirconsolidado, id:0,esactivo:1 }
+    path:     /pnp/imprimirconsolidado/{id_enc}/{id}
+    defaults: { _controller: SiePnpBundle:Default:imprimirconsolidado, id:9,id_enc:0 }
     options:
          expose: true
 
 sie_pnp_imprimir_boletaelectronica:
-    path:     /pnp/imprimirboletaelectronica/{id}
-    defaults: { _controller: SiePnpBundle:Default:imprimirboletaelectronica, id:0 }
+    path:     /pnp/imprimirboletaelectronica/{id_enc}/{id}
+    defaults: { _controller: SiePnpBundle:Default:imprimirboletaelectronica, id:9,id_enc:0 }
     options:
          expose: true
 
@@ -248,9 +244,15 @@ sie_pnp_reconocimiento_saberes_listar:
     options:
          expose: true
 
+sie_pnp_reconocimiento_saberes_validados:
+    path:     /pnp/reconocimiento_saberes/validados
+    defaults: { _controller: SiePnpBundle:Reconocimientosaberes:reconocimiento_saberes_validados }
+    options:
+         expose: true
+
 sie_pnp_reconocimiento_saberes_imprimir:
-    path:     /pnp/reconocimiento_saberes/imprimir_certificacion/{id}
-    defaults: { _controller: SiePnpBundle:Reconocimientosaberes:imprimir_certificacion, id:0 }
+    path:     /pnp/reconocimiento_saberes/imprimir_certificacion/{id_enc}
+    defaults: { _controller: SiePnpBundle:Reconocimientosaberes:imprimir_certificacion, id_enc:0 }
     options:
          expose: true
 
@@ -289,4 +291,27 @@ sie_pnp_listar_dep:
     defaults: { _controller: SiePnpBundle:Default:listar_dep }
     options:
          expose: true
-         
+
+sie_pnp_rudeal:
+    path:     /pnp/rudeal/{id_inscripcion}/{id_curso}
+    defaults: { _controller: SiePnpBundle:Default:rudeal , id_inscripcion:0 ,id_curso:0 }
+    options:
+         expose: true
+
+sie_pnp_rudeal_guardar:
+    path:     /pnp/rudeal_guardar
+    defaults: { _controller: SiePnpBundle:Default:rudeal_guardar }
+    options:
+         expose: true
+
+sie_pnp_buscar_grado_discapacidad:
+    path:     /pnp/buscar_grado_discapacidad/{val}
+    defaults: { _controller: SiePnpBundle:Default:buscar_grado_discapacidad }
+    options:
+         expose: true
+
+sie_pnp_imprimir_rudeal:
+    path:     /pnp/imprimir_rudeal/{id_enc}
+    defaults: { _controller: SiePnpBundle:Default:imprimir_rudeal, id_enc:0 }
+    options:
+         expose: true
