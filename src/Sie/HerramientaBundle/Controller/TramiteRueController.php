@@ -114,7 +114,9 @@ class TramiteRueController extends Controller
         }
         return $dato;
     }
-
+    /***
+     * Formulario de recepcion distrital
+     */
     public function createRecepcionForm($flujotipo,$tarea)
     {
         $em = $this->getDoctrine()->getManager();
@@ -308,6 +310,9 @@ class TramiteRueController extends Controller
 
     }
 
+    /**
+     * Formulario de informe del distrito
+     */
     public function createInformeDistritoForm($flujotipo,$tarea,$ie,$idrue,$tipotramite,$tipoeducacion,$dependenciatipo,$idtramite)
     {
         $form = $this->createFormBuilder()
@@ -316,9 +321,9 @@ class TramiteRueController extends Controller
             ->add('flujotipo', 'hidden', array('data' =>$flujotipo ))
             ->add('tramite', 'hidden', array('data' =>$idtramite ))
             ->add('idrue','hidden',array('data'=>$idrue))
-            ->add('informe','text',array('label'=>'Nro. de Informe','attr' => array('data-mask'=>'0000/0000', 'placeholder'=>'0000/AAAA','maxlength' => '9')))
-            ->add('fechainforme', 'text', array('label' => 'Fecha de Informe','required' => true, 'attr' => array('placeholder' => 'dd-mm-aaaa')))
-            ->add('observacion','textarea',array('label'=>'Observación','attr'=>array('style' => 'text-transform:uppercase')))
+            ->add('informe','text',array('label'=>'Nro. de Informe:','attr' => array('data-mask'=>'0000/0000', 'placeholder'=>'0000/AAAA','maxlength' => '9')))
+            ->add('fechainforme', 'text', array('label' => 'Fecha de Informe (dia-mes-año):','required' => true, 'attr' => array('placeholder' => 'dd-mm-aaaa')))
+            ->add('observacion','textarea',array('label'=>'Observación:','attr'=>array('style' => 'text-transform:uppercase')))
             ->add('guardar','submit',array('label'=>'Enviar Informe'))
             ->getForm();
         return $form;
@@ -804,8 +809,8 @@ class TramiteRueController extends Controller
             ->add('varevaluacion1','choice',array('label'=>'¿Observar y devolver?','expanded'=>true,'multiple'=>false,'required'=>true,'choices'=>array('NO' => 'SI','SI' => 'NO'),'attr' => array('class' => 'form-control')))
             ->add('observacion2','textarea',array('label'=>'Observación:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase')))
             ->add('varevaluacion2','choice',array('label'=>'¿Informe Procedente?','expanded'=>true,'multiple'=>false,'required'=>true,'choices'=>array('SI' => 'SI','NO' => 'NO'),'attr' => array('class' => 'form-control')))
-            ->add('informesubdireccion','text',array('label'=>'Nro. Informe:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase')))
-            ->add('fechainformesubdireccion', 'text', array('label'=>'Fecha de Informe:','required'=>false,'attr' => array('class' => 'form-control')))
+            ->add('informesubdireccion','text',array('label'=>'Nro. Informe:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase','placeholder'=>'0000/AAAA')))
+            ->add('fechainformesubdireccion', 'text', array('label'=>'Fecha de Informe (dia-mes-año):','required'=>false,'attr' => array('class' => 'form-control','placeholder'=>'dd-mm-aaaa')))
             ->add('guardar','submit',array('label'=>'Enviar Informe'))
             ->getForm();
         return $form;
@@ -1466,7 +1471,7 @@ class TramiteRueController extends Controller
             }else{
                 $request->getSession()
                         ->getFlashBag()
-                        ->add('exito', $mensaje);
+                        ->add('exito', $mensaje['msg']);
             }
         }else{
             $request->getSession()

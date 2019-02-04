@@ -115,35 +115,6 @@ class WfTramiteController extends Controller
                     return $this->redirectToRoute('wf_tramite_index');    
             }
         }
-        //dump($wfusuario);die;
-        //Verificamos si tiene competencia para un nuevo tramite
-        
-        /*switch ($id) {
-            case 5: //RITT
-            
-                break;
-            case 6: //RUE
-                if($rol == 10){
-                    return $this->redirectToRoute('tramite_rue_recepcion_distrito_nuevo');
-                }else{
-                    $request->getSession()
-                    ->getFlashBag()
-                    ->add('error', "No tiene tuición para un nuevo tramite RUE");
-                    return $this->redirectToRoute('wf_tramite_index');
-                }    
-                break;
-            case 7://BTH
-                if($rol == 9){
-                    return $this->redirectToRoute('solicitud_bth_nuevasolicitud');
-                }else{
-                    $request->getSession()
-                    ->getFlashBag()
-                    ->add('error', "No tiene tuición para un nuevo tramite BTH");
-                    return $this->redirectToRoute('wf_tramite_index');
-                }
-                break;
-        }*/
-        
     }
 
     /**
@@ -331,7 +302,7 @@ class WfTramiteController extends Controller
             $tramiteDetalle->setFechaEnvio(new \DateTime(date('Y-m-d')));
             $tramiteDetalle->setFlujoProceso($flujoproceso);
             $tramiteDetalle->setUsuarioRemitente($usuario);
-            $tramiteDetalle->setObs($observacion);
+            $tramiteDetalle->setObs(mb_strtoupper($observacion, 'UTF-8'));
             $tramiteDetalle->setTramiteEstado($tramiteestado);
             $em->persist($tramiteDetalle);
             $em->flush();
@@ -504,7 +475,7 @@ class WfTramiteController extends Controller
             }else{
                 $tramiteestado = $em->getRepository('SieAppWebBundle:TramiteEstado')->find(15); //enviado
             }
-            $tramiteDetalle->setObs($observacion);
+            $tramiteDetalle->setObs(mb_strtoupper($observacion,'UTF-8'));
             $tramiteDetalle->setFechaEnvio(new \DateTime(date('Y-m-d')));
             $tramiteDetalle->setTramiteEstado($tramiteestado);
             $em->flush();
