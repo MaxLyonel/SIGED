@@ -4461,6 +4461,7 @@ ciclo_tipo_id, grado_tipo_id
         $userId = $this->session->get('userId');   
         ///$ opc = 1 -> actual    $opc = 0 -> antiguo (2009-2015) 
         /////////////conocer el departamento
+
          $query = "
                SELECT lt.lugar as lugar
                FROM lugar_tipo lt,
@@ -4475,6 +4476,7 @@ ciclo_tipo_id, grado_tipo_id
         foreach ($po as $p) {
             $lugar_usuario = $p["lugar"];
         }
+
         $lugar_usuario=strtoupper($lugar_usuario);
         switch ($lugar_usuario) {
             case 'CHUQUISACA':{$nombre_lugar="CHUQUISACA";$lugar_tipo_id=31654;$ie=80480300;}break;
@@ -4491,7 +4493,8 @@ ciclo_tipo_id, grado_tipo_id
                 $nombre_lugar="Bolivia";
                 $ie="";
                 break;
-        }  
+        }
+
         //retornar departamentos
         $id_departamentos = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array(
         'lugarNivel' => 1, 'gestionTipo'=> 2014
@@ -4522,7 +4525,6 @@ ciclo_tipo_id, grado_tipo_id
         $usuario_id = $this->session->get('userId');
         $rol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findOneByUsuario($usuario_id);    
         $rol=$rol->getRolTipo()->getId();
-        
         if($gestion_ini<=2015 or $rol==8){////////como es 2009-2015 no debe entrar por los controles o si mi usuario ingrsa
             $po = array();
             $po=$this->retornar_estudianteAction($where);
@@ -4556,7 +4558,8 @@ ciclo_tipo_id, grado_tipo_id
                 $filas['localidad_nac'] = $p["localidad_nac"];
                 $filas['pais_tipo_id'] = $p["pais_tipo_id"];
                 $filas['genero_tipo_id'] = $p["genero_tipo_id"];
-                 $id_provincias = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarTipo' => $filas['lugar_nac_tipo_id']));
+                if($filas['lugar_nac_tipo_id']!= "")
+                $id_provincias = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarTipo' => $filas['lugar_nac_tipo_id']));
                 $exxx=1;
             }
             //print_r($filas);die;
@@ -4618,7 +4621,9 @@ ciclo_tipo_id, grado_tipo_id
                             'nombre'=>$filas['nombre'],
                             'fecha_nacimiento'=>$filas['fecha_nac']
                         );
-                         $id_provincias = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarTipo' => $filas['lugar_nac_tipo_id']));
+                        if($filas['lugar_nac_tipo_id']!= ""){
+                        $id_provincias = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarTipo' => $filas['lugar_nac_tipo_id']));
+                        }
                         // $opcional = array();
                         $personaSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($filas['ci'], $opcional, 'prod', 'academico');
                         if($personaSegip){
@@ -4654,7 +4659,6 @@ ciclo_tipo_id, grado_tipo_id
                 }
             }
         }
-
 
         /////////////////////////////////////////////FIN 
         $query = "SELECT
@@ -4909,6 +4913,7 @@ ciclo_tipo_id, grado_tipo_id
                                 $filas['pais_tipo_id'] = $p["pais_tipo_id"];
                                 $filas['genero_tipo_id'] = $p["genero_tipo_id"];
                             }
+                            if($filas['lugar_nac_tipo_id']!= "")
                             $id_provincias = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarTipo' => $filas['lugar_nac_tipo_id']));
                             $valido=$this->validar_nivel_participanteAction($filas['rude']);
                             if($gestion_ini-substr($filas['fecha_nac'], 0, 4)<15){
@@ -5009,6 +5014,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                                 $filas['pais_tipo_id'] = $p["pais_tipo_id"];
                                 $filas['genero_tipo_id'] = $p["genero_tipo_id"]; 
                             }
+                            if($filas['lugar_nac_tipo_id']!= "")
                             $id_provincias = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarTipo' => $filas['lugar_nac_tipo_id']));
                              if($gestion_ini-substr($filas['fecha_nac'], 0, 4)<15){
                                 echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI O CODIGO RUDE '.$ci.' no es mayor de 15 años, por tanto no puede ser registrado al PNP.</div>';
