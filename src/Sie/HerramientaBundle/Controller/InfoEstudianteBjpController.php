@@ -49,7 +49,7 @@ class InfoEstudianteBjpController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-
+        return $this->redirect($this->generateUrl('principal_web'));
         $pagoTipo = 0; //En tiempo
         if($request->getMethod()=='POST'){
             $pagoTipo = 1; //Rezagados
