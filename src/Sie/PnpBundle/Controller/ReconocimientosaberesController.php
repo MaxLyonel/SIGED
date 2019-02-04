@@ -477,12 +477,103 @@ class ReconocimientosaberesController extends Controller
         return $response;
     }
 
-    public function reconocimiento_saberes_validadosAction(){
+    public function reconocimiento_saberes_validadosAction(Request $request){
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
+        $lugar=0;$inicio="";$fin="";
         $filas=0;
+         if($request->getMethod()=="POST") { 
+            $lugar=$request->get("lugar");
+            $inicio=$request->get("inicio");
+            $fin=$request->get("fin");
+            if($lugar==0)$where="";else $where="and rs.institucioneducativa_id=$lugar";
+            $query = "SELECT 
+                      e.id as estudiante_id,
+                      e.codigo_rude, 
+                      e.carnet_identidad,
+                      e.complemento, 
+                      e.paterno, 
+                      e.materno, 
+                      e.nombre, 
+                      e.fecha_nacimiento,
+                      rs.id as reconocimiento_saberes_id,
+                      rs.institucioneducativa_id,
+                      rs.curso,
+                      rs.homologado,
+                      rs.usuario_id,
+                      rs.usuario_homologado_id,
+                      rs.fecha_creacion,
+                      rs.fecha_homologacion,
+                      CASE
+                            WHEN rs.institucioneducativa_id = 80480300 THEN
+                                'CHUQUISACA'
+                            WHEN rs.institucioneducativa_id = 80730794 THEN
+                                'LA PAZ'
+                            WHEN rs.institucioneducativa_id = 80980569 THEN
+                                'COCHABAMBA'
+                            WHEN rs.institucioneducativa_id = 81230297 THEN
+                                'ORURO'
+                            WHEN rs.institucioneducativa_id = 81480201 THEN
+                                'POTOSI'
+                            WHEN rs.institucioneducativa_id = 81730264 THEN
+                                'TARIJA'
+                            WHEN rs.institucioneducativa_id = 81981501 THEN
+                                'SANTA CRUZ'
+                            WHEN rs.institucioneducativa_id = 82230130 THEN
+                                'BENI'
+                            WHEN rs.institucioneducativa_id = 82480050 THEN
+                                'PANDO'                         
+                          END AS depto,
+                      CASE
+                            WHEN rs.curso = 2 THEN
+                                'SEGUNDO'
+                            WHEN rs.curso = 3 THEN
+                                'TERCERO'
+                            WHEN rs.curso = 5 THEN
+                                'QUINTO'
+                            WHEN rs.curso = 6 THEN
+                                'SEXTO'                       
+                          END AS curso_nombre
+                    FROM 
+                      estudiante e
+                      INNER JOIN pnp_reconocimiento_saberes rs ON e.id = rs.estudiante_id
+                      where rs.homologado=true $where and  fecha_homologacion BETWEEN '$inicio'AND '$fin'  
+order by fecha_homologacion
+                      ";
+        
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $filas = array();
+        $datos_filas = array();
+        foreach ($po as $p) {
+            $datos_filas["reconocimiento_saberes_id"] = $p["reconocimiento_saberes_id"];
+            $datos_filas["reconocimiento_saberes_id_enc"] = $this->encriptar($p["reconocimiento_saberes_id"]);
+            $datos_filas["estudiante_id"] = $p["estudiante_id"];
+            $datos_filas["codigo_rude"] = $p["codigo_rude"];
+            $datos_filas["carnet_identidad"] = $p["carnet_identidad"];
+            $datos_filas["complemento"] = $p["complemento"];
+            $datos_filas["paterno"] = $p["paterno"];
+            $datos_filas["materno"] = $p["materno"];
+            $datos_filas["nombre"] = $p["nombre"];
+            $datos_filas["fecha_nacimiento"] = $p["fecha_nacimiento"];
+            $datos_filas["institucioneducativa_id"] = $p["institucioneducativa_id"];
+            $datos_filas["curso"] = $p["curso"];
+            $datos_filas["homologado"] = $p["homologado"];
+            $datos_filas["usuario_id"] = $p["usuario_id"];
+            $datos_filas["usuario_homologado_id"] = $p["usuario_homologado_id"];
+            $datos_filas["fecha_creacion"] = $p["fecha_creacion"];
+            $datos_filas["fecha_homologacion"] = $p["fecha_homologacion"];
+            $datos_filas["depto"] = $p["depto"];
+            $datos_filas["curso_nombre"] = $p["curso_nombre"];
+            $filas[] = $datos_filas;
+        }
+
+        }
+        
         return $this->render('SiePnpBundle:Reconocimientosaberes:reconocimientosaberes_validados.html.twig', array(
-            'filas'=>$filas
+            'filas'=>$filas,'lugar'=>$lugar,'inicio'=>$inicio,'fin'=>$fin
             )); 
     }
 
