@@ -295,7 +295,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div id="inmigrante" {% if rude.localidadLugarTipo.id == 0 %} style = "display:block" {% else %} style = "display:none" {% endif %}>
+                                            <div id="inmigrante" {% if rude.localidadLugarTipo != null and rude.localidadLugarTipo.id == 0 %} style = "display:block" {% else %} style = "display:none" {% endif %}>
                                                 <div class="form-group row">
                                                     <label class="col-md-4 col-sm-4">País</label>
                                                     <div class="col-md-8 col-sm-8">
@@ -310,7 +310,7 @@
                                                 </div>
                                             </div>
                                         {% endif %}
-                                        <div id="inmigranteNo" {% if sie != 80730796 or (sie == 80730796 and rude.localidadLugarTipo.id != 0) %} style = "display:block" {% else %} style = "display:none" {% endif %}>
+                                        <div id="inmigranteNo" {% if sie != 80730796 or (sie == 80730796 and (rude.localidadLugarTipo == null or rude.localidadLugarTipo.id != 0)) %} style = "display:block" {% else %} style = "display:none" {% endif %}>
                                             <div class="form-group row">
                                                 <label class="col-md-4 col-sm-4">Departamento</label>
                                                 <div class="col-md-8 col-sm-8">
