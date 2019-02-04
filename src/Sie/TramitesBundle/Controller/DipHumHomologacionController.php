@@ -71,7 +71,7 @@ class DipHumHomologacionController extends Controller {
         $defaultTramiteController->setContainer($this->container);
         $route = $request->get('_route');
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        //$activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $em = $this->getDoctrine()->getManager();
 
@@ -118,7 +118,7 @@ class DipHumHomologacionController extends Controller {
                 ->add('materno', 'text', array('label' => 'Materno', 'mapped' => false, 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[a-zñ A-ZÑ]{3,45}', 'style' => 'text-transform:uppercase')))
                 ->add('nombre', 'text', array('label' => 'Nombre', 'mapped' => false, 'required' => true, 'attr' => array('class' => 'form-control', 'pattern' => '[a-zñ A-ZÑ]{3,40}', 'style' => 'text-transform:uppercase')))
                 //->add('fnacimiento', 'text', array('mapped' => false, 'required' => true, 'label' => 'Fecha Nacimiento', 'attr' => array('class' => 'form-control')))
-                ->add('fnacimiento', 'text', array('mapped' => false, 'label' => 'Fecha Nacimiento', 'attr' => array('class' => 'form-control')))
+                ->add('fnacimiento', 'text', array('mapped' => false, 'label' => 'Fecha Nacimiento', 'attr' => array('class' => 'form-control', 'placeholder'=>'DD-MM-YYYY', 'title'=>'DD-MM-YYYY', 'required'=>true, 'pattern'=>'[0-9]{2}-[0-9]{2}-[0-9]{4}')))
                 ->add('pais', 'entity', array('label' => 'Pais', 'attr' => array('class' => 'form-control'),
                     'mapped' => false, 'class' => 'SieAppWebBundle:PaisTipo',
                     'query_builder' => function (EntityRepository $e) {
@@ -439,13 +439,13 @@ class DipHumHomologacionController extends Controller {
                 $studentInscription = new EstudianteInscripcion();
                 $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['institucionEducativa']));
                 $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($form['gestion']));
-                $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
+                $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
                 $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($studentId));
                 $studentInscription->setObservacion(1);
                 $studentInscription->setFechaInscripcion(new \DateTime('now'));
                 $studentInscription->setFechaRegistro(new \DateTime('now'));
                 $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($objCurso->getId()));
-                $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(59));
+                $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(45));
                 $studentInscription->setCodUeProcedenciaId(0);
                 $em->persist($studentInscription);
                 $em->flush();
@@ -762,6 +762,7 @@ class DipHumHomologacionController extends Controller {
         // separamos en partes las fechas 
         $array_nacimiento = explode("-", $fecha_nacimiento);
         $array_actual = explode("-", $fecha_actual);
+        //dump($array_nacimiento);dump($array_actual);die;
 
         $anos = $array_actual[2] - $array_nacimiento[2]; // calculamos años 
         $meses = $array_actual[1] - $array_nacimiento[1]; // calculamos meses 
