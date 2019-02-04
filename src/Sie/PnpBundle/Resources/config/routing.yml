@@ -315,3 +315,9 @@ sie_pnp_imprimir_rudeal:
     defaults: { _controller: SiePnpBundle:Default:imprimir_rudeal, id_enc:0 }
     options:
          expose: true
+
+sie_pnp_reconocimiento_saberes_reporte_rs:
+    path:     /pnp/reconocimiento_saberes/reporte
+    defaults: { _controller: SiePnpBundle:Reconocimientosaberes:reconocimiento_saberes_reporte }
+    options:
+         expose: true

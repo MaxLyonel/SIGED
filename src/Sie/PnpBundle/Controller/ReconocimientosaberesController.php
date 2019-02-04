@@ -577,6 +577,91 @@ order by fecha_homologacion
             )); 
     }
 
+      public function reconocimiento_saberes_reporteAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $inicio="";$fin="";
+        $tot = array('segundo' => 0,'tercero' => 0,'quinto' => 0,'sexto' => 0,'total' => 0, );
+        $filas=0;
+         if($request->getMethod()=="POST") { 
+            $inicio=$request->get("inicio");
+            $fin=$request->get("fin");
+            $query = "SELECT depto,
+SUM(CASE WHEN curso_nombre='SEGUNDO' THEN cantidad ELSE 0 END) AS segundo,
+SUM(CASE WHEN curso_nombre='TERCERO' THEN cantidad ELSE 0 END) AS tercero,
+SUM(CASE WHEN curso_nombre='QUINTO' THEN cantidad ELSE 0 END) AS quinto,
+SUM(CASE WHEN curso_nombre='SEXTO' THEN cantidad ELSE 0 END) AS sexto,
+SUM (cantidad) as total
+from (
+select *, count(*) as cantidad from (
+SELECT
+                      
+                      CASE
+                            WHEN rs.institucioneducativa_id = 80480300 THEN
+                                'CHUQUISACA'
+                            WHEN rs.institucioneducativa_id = 80730794 THEN
+                                'LA PAZ'
+                            WHEN rs.institucioneducativa_id = 80980569 THEN
+                                'COCHABAMBA'
+                            WHEN rs.institucioneducativa_id = 81230297 THEN
+                                'ORURO'
+                            WHEN rs.institucioneducativa_id = 81480201 THEN
+                                'POTOSI'
+                            WHEN rs.institucioneducativa_id = 81730264 THEN
+                                'TARIJA'
+                            WHEN rs.institucioneducativa_id = 81981501 THEN
+                                'SANTA CRUZ'
+                            WHEN rs.institucioneducativa_id = 82230130 THEN
+                                'BENI'
+                            WHEN rs.institucioneducativa_id = 82480050 THEN
+                                'PANDO'                         
+                          END AS depto,
+                      CASE
+                            WHEN rs.curso = 2 THEN
+                                'SEGUNDO'
+                            WHEN rs.curso = 3 THEN
+                                'TERCERO'
+                            WHEN rs.curso = 5 THEN
+                                'QUINTO'
+                            WHEN rs.curso = 6 THEN
+                                'SEXTO'                       
+                          END AS curso_nombre
+                    FROM 
+                      estudiante e
+                      INNER JOIN pnp_reconocimiento_saberes rs ON e.id = rs.estudiante_id
+                      where rs.homologado=true  and  fecha_homologacion BETWEEN '$inicio'AND '$fin'  
+order by fecha_homologacion) as t1 
+GROUP BY depto,curso_nombre) as t2
+GROUP BY depto
+                      ";
+        
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $filas = array();
+        $datos_filas = array();
+        foreach ($po as $p) {
+            $datos_filas["depto"] = $p["depto"];
+            $datos_filas["segundo"] = $p["segundo"];
+            $tot["segundo"]=$tot["segundo"]+$p["segundo"];
+            $datos_filas["tercero"] = $p["tercero"];
+            $tot["tercero"]=$tot["tercero"]+$p["tercero"];
+            $datos_filas["quinto"] = $p["quinto"];
+            $tot["quinto"]=$tot["quinto"]+$p["quinto"];
+            $datos_filas["sexto"] = $p["sexto"];
+            $tot["sexto"]=$tot["sexto"]+$p["sexto"];
+            $datos_filas["total"] = $p["total"];
+            $tot["total"]=$tot["total"]+$p["total"];
+            $filas[] = $datos_filas;
+        }
+
+    }
+        return $this->render('SiePnpBundle:Reconocimientosaberes:reconocimientosaberes_reporte.html.twig', array(
+            'filas'=>$filas,'tot'=>$tot,'inicio'=>$inicio,'fin'=>$fin
+            )); 
+    }
+
      public function encriptar ($string) {
         $data = base64_encode($string);
         $data = str_replace(array('+','/','='),array('-','_','.'),$data);
