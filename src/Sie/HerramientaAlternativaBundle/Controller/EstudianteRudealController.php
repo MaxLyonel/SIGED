@@ -623,7 +623,7 @@ class EstudianteRudealController extends Controller {
                     ->add('id','hidden',array('data'=>$rude->getId()));
                     
                     if ($institucion == 80730796){
-                        if ($rude->getLocalidadLugarTipo()->getId() == 0){
+                        if ($rude->getLocalidadLugarTipo() !=null  and $rude->getLocalidadLugarTipo()->getId() == 0){
                             $form=$form
                             ->add('inmigrante', 'hidden', array('data'=>"SI" ))
                             ->add('ckInmigrante', CheckboxType::class, array('label'=>'Inmigrante','required' => false, 'attr' => array('onclick' => 'verInmigrante(this.value)','checked'   => 'checked')))
