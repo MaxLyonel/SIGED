@@ -9,3 +9,11 @@ herramienta_ieducativa_equipamiento_laboratorio_detalle:
 herramienta_ieducativa_equipamiento_laboratorio_registro:
     path:     /registro
     defaults: { _controller: SieHerramientaBundle:IeducativaEquipamientoLaboratorio:registro}
+    
+herramienta_ieducativa_equipamiento_laboratorio_vista:
+    path:     /vista
+    defaults: { _controller: SieHerramientaBundle:IeducativaEquipamientoLaboratorio:vista}
+    
+herramienta_ieducativa_equipamiento_laboratorio_vista_pdf:
+    path:     /vista/pdf
+    defaults: { _controller: SieHerramientaBundle:IeducativaEquipamientoLaboratorio:vistaPdf}

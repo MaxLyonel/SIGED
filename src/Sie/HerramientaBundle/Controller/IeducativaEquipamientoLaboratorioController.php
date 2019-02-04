@@ -6,10 +6,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta;
-use Sie\AppWebBundle\Entity\EstudianteAsignatura;
-use Sie\AppWebBundle\Entity\EstudianteNota;
-use Sie\AppWebBundle\Entity\acreditacionEspecialidad;
+use Sie\AppWebBundle\Entity\EquipLaboFisiQuim;
+use Sie\AppWebBundle\Entity\EquipLaboFisiQuimFotos;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Malla Curricular controller.
@@ -75,23 +74,259 @@ class IeducativaEquipamientoLaboratorioController extends Controller {
 
         $sie = $form['sie'];
 
-        $entityIntitucionEducativaGestion = $this->getInstitucionEducativaGestion($sie,$gestionActual);
-        if (!$entityIntitucionEducativaGestion){
-            $entityIntitucionEducativaGestion = $this->getInstitucionEducativaGestion($sie,($gestionActual-1));
+        /*
+        * verificamos si tiene tuicion
+        */
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
+        $query->bindValue(':user_id', $this->session->get('userId'));
+        $query->bindValue(':sie', $sie);
+        $query->bindValue(':rolId', $this->session->get('roluser'));
+        $query->execute();
+        $aTuicion = $query->fetchAll();
+
+        if (!$aTuicion[0]['get_ue_tuicion']) {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No tiene tuición sobre la unidad educativa'));
+            return $this->redirect($this->generateUrl('herramienta_ieducativa_equipamiento_laboratorio_index'));
+        }
+
+        $entityIntitucionEducativa = $this->getInstitucionEducativa($sie);
+        if (!$entityIntitucionEducativa) {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'La unidad educativa '.$sie.' no pertence al Sub Sistema de Educación Regular'));
+            return $this->redirect($this->generateUrl('herramienta_ieducativa_equipamiento_laboratorio_index'));
+        }
+
+        $entityInstitucionEducativaSecundaria = $this->getInstitucionEducativaSecundaria($sie);
+        if (!$entityInstitucionEducativaSecundaria) {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'La unidad educativa '.$sie.' no esta autorizado en el Nivel de Educación Secundaria Comunitaria Productiva'));
+            return $this->redirect($this->generateUrl('herramienta_ieducativa_equipamiento_laboratorio_index'));
+        }
+
+        $entityInstitucionEducativaDependencia = $this->getInstitucionEducativaDependencia($sie);
+        if (!$entityInstitucionEducativaDependencia) {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'La unidad educativa '.$sie.' no cuenta con dependencia Fiscal o Convenio'));
+            return $this->redirect($this->generateUrl('herramienta_ieducativa_equipamiento_laboratorio_index'));
+        }
+
+        do {
+            $entityIntitucionEducativaGestion = $this->getInstitucionEducativaGestion($sie,$gestionActual);
             $gestionActual = $gestionActual-1;
-        } 
+        } while (count($entityIntitucionEducativaGestion)==0 and $gestionActual > 2009);
+
+        // $entityIntitucionEducativaGestion = $this->getInstitucionEducativaGestion($sie,$gestionActual);
+        // if (!$entityIntitucionEducativaGestion){
+        //     $entityIntitucionEducativaGestion = $this->getInstitucionEducativaGestion($sie,($gestionActual-1));
+        //     $gestionActual = $gestionActual-1;
+        // } 
+
+        if (!$entityIntitucionEducativaGestion) {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'La unidad educativa '.$sie.' no cuenta con registros desde la gestión 2010 en adelante'));
+            return $this->redirect($this->generateUrl('herramienta_ieducativa_equipamiento_laboratorio_index'));
+        }
 
         $entityInstitucionEducativaSecundariaGrados = $this->getInstitucionEducativaSecundariaGrados($sie,$gestionActual);
 
         $entityInstitucionEducativaEdificio = $this->getInstitucionEducativaEdificio($sie,$gestionActual);
+
+        $entityInstitucionEducativaEquipoLaboratorio = $this->getInstitucionEducativaEquipoLaboratorio($sie);
+        //dump($entityInstitucionEducativaEquipoLaboratorio);die;
+        if ($entityInstitucionEducativaEquipoLaboratorio) {
+            $this->session->getFlashBag()->set('warning', array('title' => 'Error', 'message' => 'La unidad educativa '.$sie.' ya registro su Fomulario para el Equipamiento de Laboratorio en fecha: '.$entityInstitucionEducativaEquipoLaboratorio[0]['fecha_modificacion']));
+            return $this->render($this->session->get('pathSystem') . ':IeducativaEquipamientoLaboratorio:equipamientoLaboratorioVista.html.twig', array(
+                'entity' => $entityIntitucionEducativaGestion[0]
+                , 'entityGrado' => $entityInstitucionEducativaSecundariaGrados
+                , 'entityEdificio' => $entityInstitucionEducativaEdificio
+                , 'entityEquipoLaboratorio' => $entityInstitucionEducativaEquipoLaboratorio[0]
+                , 'formPdf' => $this->creaFormularioVistaPdf($sie,$gestionActual)->createView()
+            ));
+        }
+
         //dump($entityInstitucionEducativaEdificio);die;
         return $this->render($this->session->get('pathSystem') . ':IeducativaEquipamientoLaboratorio:equipamientoLaboratorio.html.twig', array(
             'form' => $this->creaFormularioBusqueda('herramienta_ieducativa_equipamiento_laboratorio_detalle',$sie)->createView()
             , 'entity' => $entityIntitucionEducativaGestion[0]
             , 'entityGrado' => $entityInstitucionEducativaSecundariaGrados
             , 'entityEdificio' => $entityInstitucionEducativaEdificio
-            ,'formLaboratorio' => $this->creaFormularioLaboratorio()->createView()
+            , 'formLaboratorio' => $this->creaFormularioLaboratorio($sie,$gestionActual)->createView()
         ));
+    }
+
+    public function registroAction(Request $request){
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d g:i:s'));
+        $gestionActual = (int)$fechaActual->format('Y');
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+       
+        $form = $request->get('form');
+
+        if(!$form){
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+            return $this->redirectToRoute('herramienta_ieducativa_equipamiento_laboratorio_detalle', ['form' => $formBusqueda], 307);
+        }
+        
+        $sie= base64_decode($form['sie']);
+        $ges = base64_decode($form['ges']);
+        $foto = $request->files->get('form');
+        $formBusqueda = array('sie'=>$sie);
+
+        if(!$foto){
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+            return $this->redirectToRoute('herramienta_ieducativa_equipamiento_laboratorio_detalle', ['form' => $formBusqueda], 307);
+        }
+
+        $entityInstitucionEducativaEquipoLaboratorio = $this->getInstitucionEducativaEquipoLaboratorio($sie);
+        if ($entityInstitucionEducativaEquipoLaboratorio) {
+            $this->session->getFlashBag()->set('warning', array('title' => 'Error', 'message' => 'La unidad educativa '.$sie.' ya registro su Fomulario para el Equipamiento de Laboratorio en fecha: '.$entityInstitucionEducativaEquipoLaboratorio[0]['fecha_modificacion']));
+            return $this->redirectToRoute('herramienta_ieducativa_equipamiento_laboratorio_detalle', ['form' => $formBusqueda], 307);
+        }
+
+        //dump($request->get('form'));die;
+        $filename1 = "";
+        if (null != $foto['foto61']) {
+            $file = $foto['foto61'];
+            // $file = $entityEstudianteDatopersonal->getFoto();
+            $filename1 = $sie . '_General.' . $file->guessExtension();
+            $filesize = $file->getClientSize();
+            if ($filesize/1024 < 501) {                
+                $adjuntoDir = $this->container->getParameter('kernel.root_dir') . '/../web/uploads/equipamiento_laboratorio';
+                $file->move($adjuntoDir, $filename1);
+                if (!file_exists($adjuntoDir.'/'.$filename1)){
+                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'La fotografía adjunta '.$file->getClientOriginalName().', no fue registrada.'));
+                    return $this->redirectToRoute('herramienta_ieducativa_equipamiento_laboratorio_detalle', ['form' => $formBusqueda], 307);
+                }                
+            } else {                
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'La fotografía adjunta '.$file->getClientOriginalName().' excede el tamaño permitido, Fotografia muy grande, favor ingresar una fotografía que no exceda los 500KiB.'));
+                return $this->redirectToRoute('herramienta_ieducativa_equipamiento_laboratorio_detalle', ['form' => $formBusqueda], 307);
+            } 
+        }
+
+        //dump($request->get('form'));die;
+        $filename2 = "";
+        if (null != $foto['foto62']) {
+            $file = $foto['foto62'];
+            // $file = $entityEstudianteDatopersonal->getFoto();
+            $filename2 = $sie . '_Conexion.' . $file->guessExtension();
+            $filesize = $file->getClientSize();
+            if ($filesize/1024 < 501) {                
+                $adjuntoDir = $this->container->getParameter('kernel.root_dir') . '/../web/uploads/equipamiento_laboratorio';
+                $file->move($adjuntoDir, $filename2);
+                if (!file_exists($adjuntoDir.'/'.$filename2)){
+                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'La fotografía adjunta '.$file->getClientOriginalName().', no fue registrada.'));
+                    return $this->redirectToRoute('herramienta_ieducativa_equipamiento_laboratorio_detalle', ['form' => $formBusqueda], 307);
+                }                
+            } else {                
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'La fotografía adjunta '.$file->getClientOriginalName().' excede el tamaño permitido, Fotografia muy grande, favor ingresar una fotografía que no exceda los 500KiB.'));
+                return $this->redirectToRoute('herramienta_ieducativa_equipamiento_laboratorio_detalle', ['form' => $formBusqueda], 307);
+            } 
+        } 
+
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        try {
+            // $entityUsuarioRemitente = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('id' => $usuarioId));
+            // $entityTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $entityTramiteDetalle[0]->getTramite()->getId()));
+            // $entityTramiteDetalleEstado = $em->getRepository('SieAppWebBundle:TramiteEstado')->findOneBy(array('id' => 1));
+            // $entityFlujoProceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('id' => $flujoProcesoId));
+
+            $entityEquipLaboFisiQuim = new EquipLaboFisiQuim();
+            $entityEquipLaboFisiQuimFotos = new EquipLaboFisiQuimFotos();
+
+            $entityInstitucionEducativaSecundariaGrados = $this->getInstitucionEducativaSecundariaGrados($sie,$ges);
+            
+            $entityEquipLaboFisiQuim->setSecciCantidadTotEstu($entityInstitucionEducativaSecundariaGrados['matricula']);
+            $entityEquipLaboFisiQuim->setSecciCantidad1ersec($entityInstitucionEducativaSecundariaGrados['primero']);
+            $entityEquipLaboFisiQuim->setSecciCantidad2dosec($entityInstitucionEducativaSecundariaGrados['segundo']);
+            $entityEquipLaboFisiQuim->setSecciCantidad3ersec($entityInstitucionEducativaSecundariaGrados['tercero']);
+            $entityEquipLaboFisiQuim->setSecciCantidad4tosec($entityInstitucionEducativaSecundariaGrados['cuarto']);
+            $entityEquipLaboFisiQuim->setSecciCantidad5tosec($entityInstitucionEducativaSecundariaGrados['quinto']);
+            $entityEquipLaboFisiQuim->setSecciCantidad6tosec($entityInstitucionEducativaSecundariaGrados['sexto']);
+            $entityEquipLaboFisiQuim->setNombreAlcalde($form['nombreAlcalde']);
+            $entityEquipLaboFisiQuim->setTelefonoAlcalde($form['telefonoAlcalde']);
+            $entityEquipLaboFisiQuimConstruidaTipo = $em->getRepository('SieAppWebBundle:EquipLaboFisiQuimConstruidaTipo')->findOneBy(array('id' => $form['constructor']));
+            $entityEquipLaboFisiQuim->setSeccivConstruidaTipo($entityEquipLaboFisiQuimConstruidaTipo);
+            
+            $radio42 = $request->get('radio42');
+            $entityEquipLaboFisiQuim->setSeccivEsLabFisQuim($radio42);
+            if ($radio42 == 'true' or $radio42 === true){
+                $cantidadAmbiente = $form['cantidadAmbiente'];
+                $entityEquipLaboFisiQuim->setSeccivCantAmb($cantidadAmbiente);
+            } 
+            
+            $radio43 = $request->get('radio43');
+            $entityEquipLaboFisiQuim->setSeccivCuentaMesones($radio43);
+            if ($radio43 == 'true' or $radio43 === true){
+                $esCeramica = $request->get('rad431');
+                $entityEquipLaboFisiQuim->setSeccivEsMesonesCeramica($esCeramica);
+            } 
+            
+            $radio44 = $request->get('radio44');
+            $entityEquipLaboFisiQuim->setSeccivCuentaPiletas($radio44);
+            if ($radio44 == 'true' or $radio44 === true){
+                $cantidadPiletaLavadero = $form['cantidadPiletaLavadero'];
+                $entityEquipLaboFisiQuim->setSeccivCantidadPiletas($cantidadPiletaLavadero);
+            }
+            
+            $radio45 = $request->get('radio45');
+            $entityEquipLaboFisiQuim->setSeccivCuentaInstElec($radio45);
+            if ($radio45 == 'true' or $radio45 === true){
+                $cantidadTomaCorriente = $form['cantidadTomaCorriente'];
+                $entityEquipLaboFisiQuim->setSeccivCantidadTomaCorr($cantidadTomaCorriente);
+            }
+
+            $radio51 = $request->get('radio51');
+            $entityEquipLaboFisiQuim->setSeccvCuentaEquipLabCiencias($radio51);
+            if ($radio51 == 'true' or $radio51 === true){
+                $gestionEquipado = $form['gestionEquipado'];
+                $institucionEquipo = $form['institucionEquipo'];
+                $cantidadEquipo = $form['cantidadEquipo'];
+                $entityEquipLaboFisiQuim->setSeccvAnioEquipado($gestionEquipado);
+                $entityEquipLaboFisiQuim->setSeccvInstitucionEquipo($institucionEquipo);
+                $entityEquipLaboFisiQuim->setSeccvCantidadItems($cantidadEquipo);
+            }
+
+            $entityEquipLaboFisiQuim->setFechaRegistro($fechaActual);
+            $entityEquipLaboFisiQuim->setFechaModificacion($fechaActual);
+
+            $entityInstitucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $sie));
+            $entityEquipLaboFisiQuim->setInstitucioneducativa($entityInstitucioneducativa);
+            
+            $em->persist($entityEquipLaboFisiQuim);
+
+            if (null != $foto['foto61']) {
+                $entityEquipLaboFisiQuimFotos = new EquipLaboFisiQuimFotos();
+                $entityEquipLaboFisiQuimFotos->setFoto($filename1);
+                $entityEquipLaboFisiQuimFotos->setEquipLaboFisiQuim($entityEquipLaboFisiQuim);
+                $entityEquipLaboFisiQuimTipoFoto = $em->getRepository('SieAppWebBundle:EquipLaboFisiQuimTipoFoto')->findOneBy(array('id' => 1));
+                $entityEquipLaboFisiQuimFotos->setTipoFoto($entityEquipLaboFisiQuimTipoFoto);
+                $em->persist($entityEquipLaboFisiQuimFotos);
+            }
+    
+            //dump($request->get('form'));die;
+            if (null != $foto['foto62']) {
+                $entityEquipLaboFisiQuimFotos = new EquipLaboFisiQuimFotos();
+                $entityEquipLaboFisiQuimFotos->setFoto($filename2);
+                $entityEquipLaboFisiQuimFotos->setEquipLaboFisiQuim($entityEquipLaboFisiQuim);
+                $entityEquipLaboFisiQuimTipoFoto = $em->getRepository('SieAppWebBundle:EquipLaboFisiQuimTipoFoto')->findOneBy(array('id' => 2));
+                $entityEquipLaboFisiQuimFotos->setTipoFoto($entityEquipLaboFisiQuimTipoFoto);
+                $em->persist($entityEquipLaboFisiQuimFotos);
+            } 
+
+            $em->flush();          
+
+            $em->getConnection()->commit();
+            $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'Registro guardado correctamente'));
+            return $this->redirect($this->generateUrl('herramienta_ieducativa_equipamiento_laboratorio_index'));
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar el registro, intente nuevamente'));
+            return $this->redirectToRoute('herramienta_ieducativa_equipamiento_laboratorio_detalle', ['form' => $formBusqueda], 307);
+        }
     }
 
     /**
@@ -103,6 +338,72 @@ class IeducativaEquipamientoLaboratorioController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("
             select * from vw_institucion_educativa_gestion where institucioneducativa_id = ".$sie." and gestion_tipo_id = ".$gestion."
+        ");
+        $query->execute();
+        $objeto = $query->fetchAll();
+        return $objeto;
+    }
+
+    /**
+     * remove inscription Index 
+     * @param Request $request
+     * @return type
+     */
+    private function getInstitucionEducativa($sie) {
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("
+            select * from vw_institucion_educativa_gestion where institucioneducativa_id = ".$sie."
+        ");
+        $query->execute();
+        $objeto = $query->fetchAll();
+        return $objeto;
+    }
+
+    /**
+     * remove inscription Index 
+     * @param Request $request
+     * @return type
+     */
+    private function getInstitucionEducativaSecundaria($sie) {
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("
+            select * from vw_institucion_educativa_gestion where institucioneducativa_id = ".$sie." and niveles_id like '%13%'
+        ");
+        $query->execute();
+        $objeto = $query->fetchAll();
+        return $objeto;
+    }
+
+    /**
+     * remove inscription Index 
+     * @param Request $request
+     * @return type
+     */
+    private function getInstitucionEducativaDependencia($sie) {
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("
+            select * from vw_institucion_educativa_gestion where institucioneducativa_id = ".$sie." and dependencia_id in (1,2,5)
+        ");
+        $query->execute();
+        $objeto = $query->fetchAll();
+        return $objeto;
+    }
+
+
+    /**
+     * remove inscription Index 
+     * @param Request $request
+     * @return type
+     */
+    private function getInstitucionEducativaEquipoLaboratorio($sie) {
+        $adjuntoDir = '/siged/web/uploads/equipamiento_laboratorio/';
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("
+            select elfq.*, elfqct.construccion, '".$adjuntoDir."'||elfqf1.foto as foto1, '".$adjuntoDir."'||elfqf2.foto as foto2 from equip_labo_fisi_quim as elfq 
+            inner join equip_labo_fisi_quim_construida_tipo as elfqct on elfqct.id = elfq.secciv_construida_tipo_id
+            left join equip_labo_fisi_quim_fotos as elfqf1 on elfqf1.equip_labo_fisi_quim_id = elfq.id and elfqf1.tipo_foto_id = 1
+            left join equip_labo_fisi_quim_fotos as elfqf2 on elfqf2.equip_labo_fisi_quim_id = elfq.id and elfqf2.tipo_foto_id = 2
+            where elfq.institucioneducativa_id = ".$sie."
         ");
         $query->execute();
         $objeto = $query->fetchAll();
@@ -175,7 +476,7 @@ class IeducativaEquipamientoLaboratorioController extends Controller {
                                 select id from institucioneducativa 
                                 where le_juridicciongeografica_id in (select le_juridicciongeografica_id from institucioneducativa where id = ".$sie.")
                                 and institucioneducativa_acreditacion_tipo_id = 1 and estadoinstitucion_tipo_id = 10 )) AND 
-                        (iec1.nivel_tipo_id = ANY (ARRAY[11, 12, 13, 1, 2, 3])))
+                        (iec1.nivel_tipo_id = ANY (ARRAY[13, 3])))
                         GROUP BY iec1.institucioneducativa_id, iec1.gestion_tipo_id) v
                     GROUP BY v.institucioneducativa_id, v.gestion_tipo_id, v.turno
                     ORDER BY
@@ -187,7 +488,7 @@ class IeducativaEquipamientoLaboratorioController extends Controller {
                         END
                 ) vv
                 JOIN institucioneducativa as ie on ie.id = vv.institucioneducativa_id
-                where vv.institucioneducativa_id not in (".$sie.")
+                where vv.institucioneducativa_id not in (".$sie.") and ie.orgcurricular_tipo_id = 1
                 GROUP BY ie.id, ie.institucioneducativa, vv.gestion_tipo_id
             ) as vvv
         ");
@@ -205,13 +506,15 @@ class IeducativaEquipamientoLaboratorioController extends Controller {
         return $form;
     }
 
-    private function creaFormularioLaboratorio()
+    private function creaFormularioLaboratorio($sie, $ges)
     { 
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl('herramienta_ieducativa_equipamiento_laboratorio_registro'))
+            ->add('sie', 'hidden', array('attr' => array('value' => base64_encode($sie))))
+            ->add('ges', 'hidden', array('attr' => array('value' => base64_encode($ges))))
             ->add('constructor',
                 'choice',  
-                array('label' => '',
+                array('label' => '', 'empty_value' => 'SELECCIONE UNA INSTITUCIÓN', 
                     'choices' => array( 
                         '1' => 'UPRE - PROGRAMA BOLIVIA CAMBIA, EVO CUMPLE'
                         ,'2' => 'MUNICIPIO'
@@ -219,67 +522,62 @@ class IeducativaEquipamientoLaboratorioController extends Controller {
                         ,'4' => 'OTRO'
                     ),
             ))
-            ->add('cantidadAmbiente', 'number', array('label' => 'Cantidad de ambientes', 'attr' => array('value' => '', 'class' => 'form-control', 'pattern' => '[0-9]', 'maxlength' => '3', 'autocomplete' => 'on', 'required' => true, 'placeholder' => 'Cantidad', 'style' => 'text-transform:uppercase')))
-            ->add('cantidadPiletaLavadero', 'number', array('label' => 'Cantidad de de piletas y lavaderos', 'attr' => array('value' => '', 'class' => 'form-control', 'pattern' => '[0-9]', 'maxlength' => '3', 'autocomplete' => 'on', 'required' => true, 'placeholder' => 'Cantidad', 'style' => 'text-transform:uppercase')))
-            ->add('cantidadTomaCorriente', 'number', array('label' => 'Cantidad de toma corrientes', 'attr' => array('value' => '', 'class' => 'form-control', 'pattern' => '[0-9]', 'maxlength' => '3', 'autocomplete' => 'on', 'required' => true, 'placeholder' => 'Cantidad', 'style' => 'text-transform:uppercase')))
-            ->add('gestionEquipado', 'number', array('label' => 'Año en la que fue equipado', 'attr' => array('value' => '', 'class' => 'form-control', 'pattern' => '[0-9]', 'maxlength' => '4', 'autocomplete' => 'on', 'required' => true, 'placeholder' => 'Año', 'style' => 'text-transform:uppercase')))
+            ->add('cantidadAmbiente', 'number', array('label' => 'Cantidad de ambientes', 'attr' => array('value' => '', 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{1,3}', 'maxlength' => '3', 'autocomplete' => 'on', 'required' => true, 'placeholder' => 'Cantidad', 'style' => 'text-transform:uppercase')))
+            ->add('cantidadPiletaLavadero', 'number', array('label' => 'Cantidad de de piletas y lavaderos', 'attr' => array('value' => '', 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{1,3}', 'maxlength' => '3', 'autocomplete' => 'on', 'required' => true, 'placeholder' => 'Cantidad', 'style' => 'text-transform:uppercase')))
+            ->add('cantidadTomaCorriente', 'number', array('label' => 'Cantidad de toma corrientes', 'attr' => array('value' => '', 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{1,3}', 'maxlength' => '3', 'autocomplete' => 'on', 'required' => true, 'placeholder' => 'Cantidad', 'style' => 'text-transform:uppercase')))
+            ->add('gestionEquipado', 'number', array('label' => 'Año en la que fue equipado', 'attr' => array('value' => '', 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{1,4}', 'maxlength' => '4', 'autocomplete' => 'on', 'required' => true, 'placeholder' => 'Año', 'style' => 'text-transform:uppercase')))
             ->add('institucionEquipo', 'text', array('label' => 'Institución que equipo', 'attr' => array('value' => '', 'class' => 'form-control', 'autocomplete' => 'on', 'required' => true, 'placeholder' => 'Institución', 'style' => 'text-transform:uppercase')))
-            ->add('cantidadEquipo', 'number', array('label' => 'Cantidad de equipos', 'attr' => array('value' => '', 'class' => 'form-control', 'pattern' => '[0-9]', 'maxlength' => '5', 'autocomplete' => 'on', 'required' => true, 'placeholder' => 'Cantidad', 'style' => 'text-transform:uppercase')))
+            ->add('cantidadEquipo', 'number', array('label' => 'Cantidad de equipos', 'attr' => array('value' => '', 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{1,5}', 'maxlength' => '5', 'autocomplete' => 'on', 'required' => true, 'placeholder' => 'Cantidad', 'style' => 'text-transform:uppercase')))
             ->add('nombreAlcalde', 'text', array('label' => 'Nombre del alcalde', 'attr' => array('value' => '', 'class' => 'form-control',  'autocomplete' => 'on', 'required' => true, 'placeholder' => 'Nombre', 'style' => 'text-transform:uppercase')))
-            ->add('telefonoAlcalde', 'number', array('label' => 'Telefono del alcalde', 'attr' => array('value' => '', 'class' => 'form-control', 'pattern' => '[0-9]', 'maxlength' => '8', 'autocomplete' => 'on', 'required' => true, 'placeholder' => 'Cantidad', 'style' => 'text-transform:uppercase')))
-            ->add('foto61', 'file', array('label' => 'Fotografía (.bmp)', 'required' => true, 'data_class' => null)) 
-            ->add('foto62', 'file', array('label' => 'Fotografía (.bmp)', 'required' => true, 'data_class' => null)) 
+            ->add('telefonoAlcalde', 'number', array('label' => 'Telefono del alcalde', 'attr' => array('value' => '', 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '8', 'autocomplete' => 'on', 'required' => true, 'placeholder' => 'Número de teléfono', 'style' => 'text-transform:uppercase')))
+            ->add('foto61', 'file', array('label' => 'Fotografía (.bmp)', 'required' => false)) 
+            ->add('foto62', 'file', array('label' => 'Fotografía (.bmp)', 'required' => false)) 
             ->add('save', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-blue')))
             ->getForm();
         return $form;        
     }
 
-    private function craeteformsearch() {
-        return $this->createFormBuilder()
-                        ->setAction($this->generateUrl('herramienta_inscription_find_inscription'))
-                        ->add('rude', 'text', array('label' => 'SIE', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9\sñÑ]{3,18}', 'maxlength' => '20', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
-                        ->add('gestion', 'choice', array('label' => 'Gestión', 'choices' => array('2016' => '2016', '2015' => '2015'), 'attr' => array('class' => 'form-control', 'autocomplete' => 'off')))
-                        ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary')))
-                        ->getForm();
+    public function creaFormularioVistaPdf($sie, $ges)
+    { 
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl('herramienta_ieducativa_equipamiento_laboratorio_vista_pdf'))  
+            ->add('sie', 'hidden', array('attr' => array('value' => base64_encode($sie))))
+            ->add('ges', 'hidden', array('attr' => array('value' => base64_encode($ges))))          
+            ->add('download', 'submit', array('label' => 'Descargar Pdf', 'attr' => array('class' => 'btn btn-lilac')))
+            ->getForm();
+        return $form;        
     }
 
-
-
-    public function findInscriptionAction(Request $request) {
-        //get the data send
-        $form = $request->get('form');
-        //do the conexion
-        $em = $this->getDoctrine()->getManager();
-        //validate if the student has been registered on nivel=13 and (grado = 6 or grado = 5) 
-        $objInscriptionTec = $em->getRepository('SieAppWebBundle:Estudiante')->getInscriptionStudentTecnica($form['rude'], $form['gestion']);
-        if (!$objInscriptionTec) {
-            $message = 'Estudiante cuenta con  inscripción en Unidad Educativa Técnica';
-            $this->addFlash('warinscriptiontec', $message);
-            return $this->redirectToRoute('herramienta_inscription_tecnica_index');
+    public function vistaPdfAction(Request $request) {
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        $gestionActual = new \DateTime("Y");
+        $this->session->set('save', false);
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
         }
 
-        return $this->render($this->session->get('pathSystem') . ':InscriptionTec:findInscription.html.twig', array(
-                    'form' => $this->createInscriptionForm()->createView()
-        ));
+        try {
+            $form = $request->get('form');
+            $sie = base64_decode($form['sie']);
+            $ges = base64_decode($form['ges']);
+            $adjuntoDir = $this->container->getParameter('kernel.root_dir') . '/../web/uploads/equipamiento_laboratorio/';
 
-        dump($objInscriptionTec);
-        die;
-    }
-
-    /**
-     * create form to do the inscription 
-     * @return type form inscription
-     */
-    private function createInscriptionForm() {
-        return $this->createFormBuilder()
-                        ->setAction($this->generateUrl('herramienta_inscription_save_inscription'))
-                        ->add('tecnicaProd', 'text')
-                        ->add('especialidad', 'text')
-                        ->add('nivel', 'text')
-                        ->add('paralelo', 'text')
-                        ->add('turno', 'text')
-                        ->add('modalidadEnsenanza')
-                        ->getForm();
+            $arch = $sie.'_'.$ges.'_legalizacion'.date('YmdHis').'.pdf';
+            $response = new Response();
+            $response->headers->set('Content-type', 'application/pdf');
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_formulario_requerimiento_equipamiento_laboratorio.rptdesign&sie='.$sie.'&dir'.$adjuntoDir.'&gestion='.$ges.'&&__format=pdf&'));
+            $response->setStatusCode(200);
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->headers->set('Pragma', 'no-cache');
+            $response->headers->set('Expires', '0');
+            return $response;
+        } catch (\Doctrine\ORM\NoResultException $exc) {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al generar el listado, intente nuevamente'));
+            return $this->redirectToRoute('herramienta_ieducativa_equipamiento_laboratorio_index');
+        }
     }
 
 }

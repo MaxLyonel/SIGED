@@ -19,7 +19,23 @@
     </div><!-- /.header-content -->
     <!--/ End page header -->
     <div class="body-content animated fadeIn">
-
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-content">
+                    {% for type, flashMessage in app.session.flashbag.all() %}
+                        <div class="alert alert-{{ type }} alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            {% if flashMessage.title is defined %}
+                                <strong><i class='fa fa-envelope'></i> {{ flashMessage.title }}: </strong>
+                                {{ flashMessage.message }}
+                            {% else %}
+                                &nbsp;
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <section id="welcome" class="page-section">
@@ -53,10 +69,6 @@
                 </section>
             </div>
         </div>
-
-
-
-
 
         <div class='row'>
             <div class='col-md-12'>

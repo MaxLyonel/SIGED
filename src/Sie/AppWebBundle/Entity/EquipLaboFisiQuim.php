@@ -50,11 +50,6 @@ class EquipLaboFisiQuim
     private $secciCantidad6tosec;
 
     /**
-     * @var string
-     */
-    private $seccivConstruidaPor;
-
-    /**
      * @var boolean
      */
     private $seccivEsLabFisQuim;
@@ -120,14 +115,29 @@ class EquipLaboFisiQuim
     private $fechaRegistro;
 
     /**
+     * @var \DateTime
+     */
+    private $fechaModificacion;
+
+    /**
+     * @var string
+     */
+    private $nombreAlcalde;
+
+    /**
+     * @var string
+     */
+    private $telefonoAlcalde;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\Institucioneducativa
      */
     private $institucioneducativa;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\Persona
+     * @var \Sie\AppWebBundle\Entity\EquipLaboFisiQuimConstruidaTipo
      */
-    private $secciAlcaldePersona;
+    private $seccivConstruidaTipo;
 
 
     /**
@@ -299,29 +309,6 @@ class EquipLaboFisiQuim
     public function getSecciCantidad6tosec()
     {
         return $this->secciCantidad6tosec;
-    }
-
-    /**
-     * Set seccivConstruidaPor
-     *
-     * @param string $seccivConstruidaPor
-     * @return EquipLaboFisiQuim
-     */
-    public function setSeccivConstruidaPor($seccivConstruidaPor)
-    {
-        $this->seccivConstruidaPor = $seccivConstruidaPor;
-    
-        return $this;
-    }
-
-    /**
-     * Get seccivConstruidaPor
-     *
-     * @return string 
-     */
-    public function getSeccivConstruidaPor()
-    {
-        return $this->seccivConstruidaPor;
     }
 
     /**
@@ -624,6 +611,75 @@ class EquipLaboFisiQuim
     }
 
     /**
+     * Set fechaModificacion
+     *
+     * @param \DateTime $fechaModificacion
+     * @return EquipLaboFisiQuim
+     */
+    public function setFechaModificacion($fechaModificacion)
+    {
+        $this->fechaModificacion = $fechaModificacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaModificacion
+     *
+     * @return \DateTime 
+     */
+    public function getFechaModificacion()
+    {
+        return $this->fechaModificacion;
+    }
+
+    /**
+     * Set nombreAlcalde
+     *
+     * @param string $nombreAlcalde
+     * @return EquipLaboFisiQuim
+     */
+    public function setNombreAlcalde($nombreAlcalde)
+    {
+        $this->nombreAlcalde = $nombreAlcalde;
+    
+        return $this;
+    }
+
+    /**
+     * Get nombreAlcalde
+     *
+     * @return string 
+     */
+    public function getNombreAlcalde()
+    {
+        return $this->nombreAlcalde;
+    }
+
+    /**
+     * Set telefonoAlcalde
+     *
+     * @param string $telefonoAlcalde
+     * @return EquipLaboFisiQuim
+     */
+    public function setTelefonoAlcalde($telefonoAlcalde)
+    {
+        $this->telefonoAlcalde = $telefonoAlcalde;
+    
+        return $this;
+    }
+
+    /**
+     * Get telefonoAlcalde
+     *
+     * @return string 
+     */
+    public function getTelefonoAlcalde()
+    {
+        return $this->telefonoAlcalde;
+    }
+
+    /**
      * Set institucioneducativa
      *
      * @param \Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa
@@ -647,25 +703,25 @@ class EquipLaboFisiQuim
     }
 
     /**
-     * Set secciAlcaldePersona
+     * Set seccivConstruidaTipo
      *
-     * @param \Sie\AppWebBundle\Entity\Persona $secciAlcaldePersona
+     * @param \Sie\AppWebBundle\Entity\EquipLaboFisiQuimConstruidaTipo $seccivConstruidaTipo
      * @return EquipLaboFisiQuim
      */
-    public function setSecciAlcaldePersona(\Sie\AppWebBundle\Entity\Persona $secciAlcaldePersona = null)
+    public function setSeccivConstruidaTipo(\Sie\AppWebBundle\Entity\EquipLaboFisiQuimConstruidaTipo $seccivConstruidaTipo = null)
     {
-        $this->secciAlcaldePersona = $secciAlcaldePersona;
+        $this->seccivConstruidaTipo = $seccivConstruidaTipo;
     
         return $this;
     }
 
     /**
-     * Get secciAlcaldePersona
+     * Get seccivConstruidaTipo
      *
-     * @return \Sie\AppWebBundle\Entity\Persona 
+     * @return \Sie\AppWebBundle\Entity\EquipLaboFisiQuimConstruidaTipo 
      */
-    public function getSecciAlcaldePersona()
+    public function getSeccivConstruidaTipo()
     {
-        return $this->secciAlcaldePersona;
+        return $this->seccivConstruidaTipo;
     }
 }
