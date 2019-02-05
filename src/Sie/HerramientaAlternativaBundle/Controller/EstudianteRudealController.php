@@ -311,9 +311,11 @@ class EstudianteRudealController extends Controller {
                         ))
                     ->add('formacionEducativa', 'entity', array(
                             'class' => 'SieAppWebBundle:ServicioMilitarTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude) {
                                 return $e->createQueryBuilder('smt')
-                                        ->where('smt.esActivo = true');
+                                        // ->where('smt.esActivo = true');
+                                        ->where('smt.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'servicio_militar_tipo'));
                             },
                             'empty_value' => 'Seleccionar...',
                             'required' => true,
@@ -324,9 +326,11 @@ class EstudianteRudealController extends Controller {
                     ->add('diversaId', 'hidden', array('data'=>$diversa->getId()))
                     ->add('diversa', 'entity', array(
                             'class' => 'SieAppWebBundle:EducacionDiversaTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('ed')
-                                        ->where('ed.id in (1,2,3,4)');
+                                        // ->where('ed.id in (1,2,3,4)');
+                                        ->where('ed.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'educacion_diversa_tipo'));
                             },
                             'property'=>'educacionDiversa',
                             'required' => true,
@@ -862,9 +866,10 @@ class EstudianteRudealController extends Controller {
                     ->add('carnetDiscapacidad', 'text', array('required' => false, 'mapped'=>false, 'data'=>$e->getCarnetCodepedis()))
                     ->add('discapacidad', 'entity', array(
                             'class' => 'SieAppWebBundle:DiscapacidadTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('dt')
-                                        ->where('dt.esVigente = true');
+                                        ->where('dt.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'discapacidad_tipo'));
                             },
                             'empty_value' => 'Seleccionar...',
                             'required' => true,
@@ -873,9 +878,10 @@ class EstudianteRudealController extends Controller {
                         ))
                     ->add('gradoDiscapacidad', 'entity', array(
                             'class' => 'SieAppWebBundle:GradoDiscapacidadTipo',
-                            'query_builder' => function (EntityRepository $e){
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('gdt')
-                                        ->where('gdt.esVigente = true');
+                                        ->where('gdt.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'grado_discapacidad_tipo'));
                             },
                             'empty_value' => 'Seleccionar...',
                             'required' => true,
@@ -1079,11 +1085,11 @@ class EstudianteRudealController extends Controller {
                     // 4.1 IDIOMA Y PERTENENCIA
                     ->add('idioma1', 'entity', array(
                             'class' => 'SieAppWebBundle:IdiomaTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('it')
-                                        ->where('it.esVigente = true')
-                                        ->orderBy('it.id', 'ASC')
-                                ;
+                                        ->where('it.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'idioma_tipo'))
+                                        ->orderBy('it.idioma', 'ASC');
                             },
                             'empty_value' => 'Seleccionar...',
                             'required'=>true,
@@ -1092,11 +1098,11 @@ class EstudianteRudealController extends Controller {
                         ))
                     ->add('idioma2', 'entity', array(
                             'class' => 'SieAppWebBundle:IdiomaTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('it')
-                                        ->where('it.esVigente = true')
-                                        ->orderBy('it.id', 'ASC')
-                                ;
+                                        ->where('it.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'idioma_tipo'))
+                                        ->orderBy('it.idioma', 'ASC');
                             },
                             'empty_value' => 'Seleccionar...',
                             'required'=>false,
@@ -1105,11 +1111,11 @@ class EstudianteRudealController extends Controller {
                         ))
                     ->add('idioma3', 'entity', array(
                             'class' => 'SieAppWebBundle:IdiomaTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('it')
-                                        ->where('it.esVigente = true')
-                                        ->orderBy('it.id', 'ASC')
-                                ;
+                                        ->where('it.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'idioma_tipo'))
+                                        ->orderBy('it.idioma', 'ASC');
                             },
                             'empty_value' => 'Seleccionar...',
                             'required'=>false,
@@ -1126,11 +1132,10 @@ class EstudianteRudealController extends Controller {
                         ))
                     ->add('nacionOriginariaTipo', 'entity', array(
                             'class' => 'SieAppWebBundle:NacionOriginariaTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('no')
-                                        ->where('no.esVigente = true')
-                                        ->orderBy('no.id', 'ASC')
-                                ;
+                                        ->where('no.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'nacion_originaria_tipo'));
                             },
                             'empty_value' => 'Seleccionar...',
                             'multiple'=>false,
@@ -1147,11 +1152,10 @@ class EstudianteRudealController extends Controller {
                         ))
                     ->add('actividades', 'entity', array(
                             'class' => 'SieAppWebBundle:ActividadTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('at')
-                                        ->where('at.esVigente = true')
-                                        ->orderBy('at.id', 'ASC')
-                                ;
+                                        ->where('at.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'actividad_tipo'));
                             },
                             'multiple'=>true,
                             'property'=>'descripcionOcupacion',
@@ -1171,11 +1175,10 @@ class EstudianteRudealController extends Controller {
                         ))
                     ->add('acudioCentro', 'entity', array(
                             'class' => 'SieAppWebBundle:CentroSaludTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('ct')
-                                        ->where('ct.esVigente = true')
-                                        ->orderBy('ct.id', 'ASC')
-                                ;
+                                        ->where('ct.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'centro_salud_tipo'));
                             },
                             'empty_value' => 'Seleccionar...',
                             'multiple'=>false,
@@ -1201,11 +1204,10 @@ class EstudianteRudealController extends Controller {
                     // MEDIOS DE COMUNICACION
                     ->add('medioComunicacion', 'entity', array(
                             'class' => 'SieAppWebBundle:MediosComunicacionTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('mct')
-                                        ->where('mct.esVigente = true')
-                                        ->orderBy('mct.id', 'ASC')
-                                ;
+                                        ->where('mct.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'medios_comunicacion_tipo'));
                             },
                             'multiple'=>true,
                             'property'=>'descripcionMediosComunicacion',
@@ -1217,11 +1219,10 @@ class EstudianteRudealController extends Controller {
                     // MEDIO TRANSPORTE
                     ->add('medioTransporte', 'entity', array(
                             'class' => 'SieAppWebBundle:MedioTransporteTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('mtt')
-                                        ->where('mtt.esVigente = true')
-                                        ->orderBy('mtt.id', 'ASC')
-                                ;
+                                        ->where('mtt.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'medio_transporte_tipo'));
                             },
                             'multiple'=>true,
                             'property'=>'descripcionMedioTrasnporte',
@@ -1236,11 +1237,10 @@ class EstudianteRudealController extends Controller {
                     // MODALIDAD ESTUDIO
                     ->add('modalidadEstudioTipo', 'entity', array(
                             'class' => 'SieAppWebBundle:ModalidadEstudioTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('met')
-                                        ->where('met.esVigente = true')
-                                        ->orderBy('met.id', 'ASC')
-                                ;
+                                        ->where('met.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'modalidad_estudio_tipo'));
                             },
                             'empty_value' => 'Seleccionar...',
                             'multiple'=>false,
@@ -1251,11 +1251,10 @@ class EstudianteRudealController extends Controller {
                         ))
                     ->add('abandono', 'entity', array(
                             'class' => 'SieAppWebBundle:AbandonoTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('at')
-                                        ->where('at.esVigente = true')
-                                        ->orderBy('at.id', 'ASC')
-                                ;
+                                        ->where('at.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'abandono_tipo'));
                             },
                             'multiple'=>true,
                             'property'=>'descripcionAbandono',
@@ -1524,20 +1523,28 @@ class EstudianteRudealController extends Controller {
         return $response->setData(['msg'=>'ok']);
     }
 
-    public function obtenerCatalogos($gestion){
+    public function obtenerCatalogo($rude, $tabla){
         $em = $this->getDoctrine()->getManager();
+        $gestion = $rude->getEstudianteInscripcion()->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+        $gestion = 2019;
         /**
-         * OBTENER CATALOGOS
+         * OBTENER CATALOGO
          */
-        $catalogos = $em->createQueryBuilder()
+        $catalogo = $em->createQueryBuilder()
                             ->select('rc')
                             ->from('SieAppWebBundle:RudeCatalogo','rc')
                             ->where('rc.gestionTipo = :gestion')
                             ->andWhere('rc.institucioneducativaTipo = 2')
+                            ->andWhere('rc.nombreTabla = :tabla')
                             ->setParameter('gestion', $gestion)
+                            ->setParameter('tabla', $tabla)
                             ->getQuery()
                             ->getResult();
+        $ids = [];
+        foreach ($catalogo as $c) {
+            $ids[] = $c->getLlaveTabla();
+        }
 
-        dump($catalogos);die;
+        return $ids;
     }
 }
