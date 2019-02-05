@@ -869,11 +869,19 @@ class OperativoController extends Controller {
         $form = $this->createFormBuilder()
         ->add('codsie','text',array('label'=>'Cod. SIE:', 'required'=>true, 'attr'=>array('maxlength' => '8','class'=>'form-control validar')))
         ->add('operativo','entity',array('label'=>'Operativo:','required'=>true,'class'=>'SieAppWebBundle:OperativoTipo','query_builder'=>function(EntityRepository $o){
-            return $o->createQueryBuilder('o')->where("o.institucioneducativaTipo=2 and o.esvigente=true");},'property'=>'operaTivo','empty_value' => false,'attr'=>array('class'=>'form-control')))
-        ->add('gestion','entity',array('label'=>'Gestión:','required'=>true,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
-            return $g->createQueryBuilder('g')->where('g.id>=2018');},'property'=>'gestion','empty_value' => false,'attr'=>array('class'=>'form-control')))
+            return $o->createQueryBuilder('o')->where("o.institucioneducativaTipo=2 and o.esvigente=true");},'property'=>'operaTivo','empty_value' => false,'attr'=>array('class'=>'form-control')));
+        if($rolusuario == 8){
+            $form = $form
+            ->add('gestion','entity',array('label'=>'Gestión:','required'=>true,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
+                return $g->createQueryBuilder('g')->where('g.id>=2009')->orderBy('g.id');},'property'=>'gestion','empty_value' => false,'attr'=>array('class'=>'form-control')));
+        }else{
+            $form = $form
+            ->add('gestion','entity',array('label'=>'Gestión:','required'=>true,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
+                return $g->createQueryBuilder('g')->where('g.id>=2018')->orderBy('g.id');},'property'=>'gestion','empty_value' => false,'attr'=>array('class'=>'form-control')));
+        }
         //->add('fechainicio','text',array('label'=>'Fecha inicio: (dia-mes-año)','required'=>true,'data'=>date('d-m-Y'), 'attr'=>array('class'=>'form-control datepicker','placeholder'=>'dd-mm-AAAA','maxlength'=>10,'minlength'=>10,'autocomplete'=>'off')))
         //->add('fechafin','text',array('label'=>'Fecha fin: (dia-mes-año)','required'=>true,'data'=>date('d-m-Y'), 'attr'=>array('class'=>'form-control datepicker','placeholder'=>'dd-mm-AAAA','maxlength'=>10,'minlength'=>10,'autocomplete'=>'off')));
+        $form = $form
         ->add('buscar', 'button', array('label'=> 'Buscar', 'attr'=>array('class'=>'form-control btn btn-success','onclick'=>'buscarCea()')))
         ->getForm();
         return $form;
