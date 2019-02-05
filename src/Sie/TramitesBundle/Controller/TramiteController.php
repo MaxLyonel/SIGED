@@ -1716,6 +1716,45 @@ class TramiteController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
                 select estudiante_id, codigo_rude, participante, especialidad_id, especialidad, nivel_id, acreditacion, string_agg(distinct modulo, ',') as modulos, sum(horas_modulo) as carga_horaria from (
+                    select e.id as estudiante_id, e.codigo_rude, e.paterno||' '||e.materno||' '||e.nombre as participante, sest.id as especialidad_id, sest.especialidad, sat.codigo as nivel_id, sat.acreditacion
+                    , smp.horas_modulo, smt.modulo
+                    from superior_facultad_area_tipo as sfat
+                    inner join superior_especialidad_tipo as sest on sfat.id = sest.superior_facultad_area_tipo_id
+                    inner join superior_acreditacion_especialidad as sae on sest.id = sae.superior_especialidad_tipo_id
+                    inner join superior_acreditacion_tipo as sat on sae.superior_acreditacion_tipo_id=sat.id
+                    inner join superior_institucioneducativa_acreditacion as siea on siea.acreditacion_especialidad_id = sae.id
+                    inner join institucioneducativa_sucursal as ies on siea.institucioneducativa_sucursal_id = ies.id
+                    inner join superior_institucioneducativa_periodo as siep on siep.superior_institucioneducativa_acreditacion_id = siea.id
+                    inner join institucioneducativa_curso as iec on iec.superior_institucioneducativa_periodo_id = siep.id
+                    inner join estudiante_inscripcion as ei on iec.id=ei.institucioneducativa_curso_id
+                    inner join (select * from estudiante where id = ".$participanteId.") as e on ei.estudiante_id=e.id
+                    inner join superior_modulo_periodo as smp ON smp.institucioneducativa_periodo_id = siep.id
+                    inner join superior_modulo_tipo smt ON smt.id = smp.superior_modulo_tipo_id
+                    inner join institucioneducativa_curso_oferta as ieco on ieco.superior_modulo_periodo_id = smp.id and ieco.insitucioneducativa_curso_id = iec.id
+                    inner join estudiante_asignatura as ea on ea.institucioneducativa_curso_oferta_id = ieco.id and ea.estudiante_inscripcion_id = ei.id
+                    inner join estudiante_nota as en on en.estudiante_asignatura_id = ea.id
+                    where sest.id = ".$especialidadId." and sat.codigo = ".$nivelId."
+                    and en.nota_tipo_id::integer = 22 AND CASE WHEN ies.gestion_tipo_id <= 2015::double precision THEN en.nota_cuantitativa >=36 ELSE en.nota_cuantitativa >=51 END
+                -- group by e.id, e.codigo_rude, e.paterno, e.materno, e.nombre, sest.id, sest.especialidad, sat.codigo, sat.acreditacion
+                -- , smp.horas_modulo, smt.modulo -- having count(*) < 2
+                ) as v
+                group by estudiante_id, codigo_rude, participante, especialidad_id, especialidad, nivel_id, acreditacion
+        ");
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+        return $objEntidad;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que halla la carga horaria  de un estudiante segun su especialidad y nivel sin contar con los modulos repetidos
+    // PARAMETROS: participanteId, especialidadId, nivelId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getCertTecCargaHorariaDiferenciandoModuloEspecialidadNivel($participanteId, $especialidadId, $nivelId) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+                select estudiante_id, codigo_rude, participante, especialidad_id, especialidad, nivel_id, acreditacion, string_agg(distinct modulo, ',') as modulos, sum(horas_modulo) as carga_horaria from (
                         select e.id as estudiante_id, e.codigo_rude, e.paterno||' '||e.materno||' '||e.nombre as participante, sest.id as especialidad_id, sest.especialidad, sat.codigo as nivel_id, sat.acreditacion
                         , smp.horas_modulo, smt.modulo
                         from superior_facultad_area_tipo as sfat
