@@ -5181,14 +5181,12 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
             $estudiante->setSegipId($persona->getSegipId());
             $estudiante->setComplemento($persona->getComplemento());
             $estudiante->setBolean(false);
-            $estudiante->setFechaNacimiento($persona->getFechaNacimiento());                                               
+            $estudiante->setFechaNacimiento($persona->getFechaNacimiento());                            
             $estudiante->setFechaModificacion(new \DateTime('now'));
             $estudiante->setCorreo($persona->getCorreo());
             $estudiante->setCelular($persona->getCelular());
             $estudiante->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find('1'));
-            if($plan==1)
-                $estudiante->setLocalidadNac($em->getRepository('SieAppWebBundle:Persona')->find('1'));
-            else
+            if($plan==2)
                 $estudiante->setLocalidadNac($request->get("localidad"));
             //$estudiante->setFoto();
             //$estudiante->setCelular('');
@@ -5198,6 +5196,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
             //$estudiante->setCarnetIbc('');
             //$estudiante->setLibretaMilitar('');
             $em->persist($estudiante);
+
             $em->flush();
         } 
         ////////////////////DATOS
@@ -5209,7 +5208,6 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                 $localidad=$results->getLocalidad();
                 $plan=$results->getPlancurricularTipoId();
             }
-
             //obtenemos el nombre del facilitador
             
             $query = "SELECT 

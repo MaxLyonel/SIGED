@@ -1061,4 +1061,44 @@ class Funciones {
         return $tiempo;
     }
 
+
+  /**
+     * save the log information about sie file donwload
+     * @param  [type] $form [description]
+     * @return [type]       [description]
+     */
+
+    public function saveDataInstitucioneducativaOperativoLog($data){
+        //conexion to DB
+        
+        try {
+        
+        $objDownloadFilenewOpe = new InstitucioneducativaOperativoLog();
+
+        //save the log data
+        $objDownloadFilenewOpe->setInstitucioneducativaOperativoLogTipo($this->em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find($data['operativoTipo']));
+        $objDownloadFilenewOpe->setGestionTipoId($data['gestion']);
+        $objDownloadFilenewOpe->setPeriodoTipo($this->em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
+        $objDownloadFilenewOpe->setInstitucioneducativa($this->em->getRepository('SieAppWebBundle:Institucioneducativa')->find($data['id']));
+        $objDownloadFilenewOpe->setInstitucioneducativaSucursal(0);
+        $objDownloadFilenewOpe->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find(0));
+        $objDownloadFilenewOpe->setDescripcion('...');
+        $objDownloadFilenewOpe->setEsexitoso('t');
+        $objDownloadFilenewOpe->setEsonline('t');
+        $objDownloadFilenewOpe->setUsuario($this->session->get('userId'));
+        $objDownloadFilenewOpe->setFechaRegistro(new \DateTime('now'));
+        $dataClient = json_encode(array('userAgent'=>$_SERVER['HTTP_USER_AGENT'], 'ip'=>$_SERVER['HTTP_HOST']));
+        $objDownloadFilenewOpe->setClienteDescripcion($dataClient);
+        $this->em->persist($objDownloadFilenewOpe);
+        $this->em->flush();
+
+        return $objDownloadFilenewOpe;
+        } catch (Exception $e) {  
+          echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+        }
+    }    
+
+
+
+
 }
