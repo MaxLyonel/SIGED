@@ -2239,10 +2239,10 @@ class TramiteController extends Controller {
         }
 
         // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
-        $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, $nivelId);
-        if(count($objModulosObservados)>0){
-            $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en ".$nivel.": ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
-        }
+        // $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, $nivelId);
+        // if(count($objModulosObservados)>0){
+        //     $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en ".$nivel.": ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
+        // }
 
         // VALIDACION DE CARGA HORARIA POR ESTUDIANTE SEGUN MODULOS APROBADOS (MAYORES A 36 O 51)
         $valCertTecCargaHoraria = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, $nivelId);
@@ -2258,16 +2258,16 @@ class TramiteController extends Controller {
         if($nivelId == 3){
             $valCertTecCargaHorariaAuxiliar = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 2);
             // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
-            $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 2);
-            if(count($objModulosObservados)>0){
-                $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel auxiliar: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
-            }
+            // $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 2);
+            // if(count($objModulosObservados)>0){
+            //     $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel auxiliar: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
+            // }
             $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 1);
             // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
-            $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 1);
-            if(count($objModulosObservados)>0){
-                $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel básico: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
-            }
+            // $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 1);
+            // if(count($objModulosObservados)>0){
+            //     $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel básico: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
+            // }
             $cargaHorariaAuxiliar = 0;
             $cargaHorariaBasico = 0;
             if(!$valCertTecCargaHorariaAuxiliar[0]){
@@ -2292,10 +2292,10 @@ class TramiteController extends Controller {
         if($nivelId == 2){
             $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 1);
             // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
-            $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 1);
-            if(count($objModulosObservados)>0){
-                $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel básico: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
-            }
+            // $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 1);
+            // if(count($objModulosObservados)>0){
+            //     $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel básico: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
+            // }
             $cargaHorariaBasico = 0;
             if(!$valCertTecCargaHorariaBasico[0]){
                 $msgContenido = ($msgContenido=="") ? $valCertTecCargaHorariaBasico[1] : $msgContenido.', '.$valCertTecCargaHorariaBasico[1];
