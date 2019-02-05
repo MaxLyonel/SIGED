@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Sie\AppWebBundle\Entity\InstitucioneducativaSucursalTramite;
+use Sie\AppWebBundle\Entity\InstitucioneducativaSucursal;
 use Sie\AppWebBundle\Entity\Consolidacion;
 use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Entity\JurisdiccionGeografica;
@@ -1847,18 +1848,29 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
         $em = $this->getDoctrine()->getManager();
 
         $form = $request->get('form');
-        $idInstitucion = $form['idInstitucion'];
-        // $gestion = $form['gestion'];
-        $gestion = $fechaActual->format('Y');
-        $periodo = $form['periodo'];
-        $nombre = $form['subcea'];
-        // $subcea = $form['subcea'];
-        $subcea = 0;
 
-        /*dump($idInstitucion);
-        dump($gestion);
-        dump($periodo);
-        dump($subcea);die;*/
+        if ($form) {
+            $idInstitucion = $form['idInstitucion'];
+            // $gestion = $form['gestion'];
+            $gestion = $fechaActual->format('Y');
+            $periodo = $form['periodo'];
+            $nombre = strtoupper($form['subcea']);
+            // $subcea = $form['subcea'];
+            $departamentoId = $form['departamento'];
+            $provinciaId = $form['provincia'];
+            $municipioId = $form['municipio'];
+            $cantonId = $form['canton'];
+            $localidadId = $form['localidad'];
+            $distritoId = $form['distrito'];
+            $direccion = strtoupper($form['direccion']);
+            $zona = strtoupper($form['zona']);
+        } else {
+            $em->getConnection()->rollback();
+            $this->get('session')->getFlashBag()->add('errorMsg', 'Ha ocurrido un problema al enviar el formulario, intente nuevamente.');
+            return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_sucursal'));  
+        }
+        
+        $subcea = 0;
 
         $usuario_lugar = $this->session->get('roluserlugarid');
         $usuario_rol = $this->session->get('roluser');
@@ -1882,9 +1894,6 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
         $query->bindValue(':rolId', $usuario_rol);
         $query->execute();
         $aTuicion = $query->fetchAll();
-        
-//        dump($usuario_id.' '.$idInstitucion.' '.$usuario_rol);
-//        die;
 
         if ($aTuicion[0]['get_ue_tuicion']) {          
 
@@ -1912,6 +1921,12 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                 return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_sucursal'));
             }
 
+            $entityInstitucionEducativaSucursalCentral = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa' => $idInstitucion, 'gestionTipo' => $gestion, 'sucursalTipo' => 0, 'periodoTipoId' => $periodo));
+            if(!$entityInstitucionEducativaSucursalCentral) {
+                $this->get('session')->getFlashBag()->add('errorMsg', 'El CEA '.$idInstitucion.' no cuenta con la sucursal 0 habilitada, debe aperturar el CEA principal en la gestion y periodo seleccionado antes de abrir mas sucursales.');
+                return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_sucursal'));
+            }
+
             $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
             $query = $repository->createQueryBuilder('ie')
                 ->select('ies')
@@ -1926,28 +1941,81 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                 ->setParameter('sucursal', $subcea)
                 ->setMaxResults(1)
                 ->getQuery();
-
             $inscripciones = $query->getResult();
-            // dump($inscripciones);
-            // die;
+
             if($inscripciones) {
                 $this->get('session')->getFlashBag()->add('errorMsg', 'El CEA ya cuenta con la sucursal '.$subcea.' habilitada.');
                 return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_sucursal'));
             }
-            else {
-                $query = $em->getConnection()->prepare('SELECT sp_genera_inicio_sgte_gestion_alternativa(:sie, :gestion, :periodo, :subcea)');
-                $query->bindValue(':sie', $idInstitucion);
-                $query->bindValue(':gestion', $gestion);
-                $query->bindValue(':periodo', $periodo);
-                $query->bindValue(':subcea', $subcea);
-                $query->execute();
-                $iesid = $query->fetchAll();            
-                if (($iesid[0]["sp_genera_inicio_sgte_gestion_alternativa"] != '0') and ($iesid[0]["sp_genera_inicio_sgte_gestion_alternativa"] != '')){
-                    $this->get('session')->getFlashBag()->add('successMsg', 'Se habilito la sucursal '.$subcea.' - '.$nombre.'.');
-                    return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_sucursal'));
-                }else{
+            else {                                
+                $em->getConnection()->beginTransaction();
+                try {                    
+                    // $entityInstitucionEducativaSucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('id' => $idiesuc));
+                    $entityLocalidadLugarTipo = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $localidadId));
+                    $entityDistritoLugarTipo = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $distritoId));
+                    $entityDistritoTipo = $em->getRepository('SieAppWebBundle:DistritoTipo')->findOneBy(array('id' => $entityDistritoLugarTipo->getCodigo()));
+                    $distritoCodigo = $entityDistritoLugarTipo->getCodigo();
+                    $entityValidacionGeograficaTipo = $em->getRepository('SieAppWebBundle:ValidacionGeograficaTipo')->findOneBy(array('id' => 0));
+                    $entityJuridiccionAcreditacionTipo = $em->getRepository('SieAppWebBundle:JurisdiccionGeograficaAcreditacionTipo')->findOneBy(array('id' => 4));
+                    
+                    // $idjurgeocentral = $entityInstitucionEducativaSucursal->getLeJuridicciongeografica()->getId();
+                    // $entityJurisdiccionGeograficaCentral = $em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneBy(array('id' => $idjurgeocentral));
+                    // $institucioneducativaId = $entityInstitucionEducativaSucursal->getInstitucioneducativa()->getId();
+                    // $sucursalId = $entityInstitucionEducativaSucursal->getSucursalTipo()->getId();
+                    // dump($idjurgeocentral);die;
+                    // $nuevoId = str_pad($sucursalId,2,"0",STR_PAD_LEFT);
+
+                    $query = $em->getConnection()->prepare("
+                        select cast(coalesce(max(cast(substring(cast(id as varchar) from (length(cast(id as varchar))-2) for 3) as integer)),0) + 1 as varchar) as id
+                        from jurisdiccion_geografica 
+                        where juridiccion_acreditacion_tipo_id = 4
+                    ");      
+                    $query->execute();
+                    $entityId = $query->fetchAll();
+                    $nuevoId = $distritoCodigo.str_pad($entityId[0]['id'],3,"0",STR_PAD_LEFT);
+
+                    $entityJurisdiccionGeografica  = new JurisdiccionGeografica(); 
+                    $entityJurisdiccionGeografica->setId($nuevoId); 
+                    $entityJurisdiccionGeografica->setLugarTipoLocalidad($entityLocalidadLugarTipo);           
+                    $entityJurisdiccionGeografica->setLugarTipoIdDistrito($distritoId);
+                    $entityJurisdiccionGeografica->setObs('NUEVO SUCURSAL SUB C.E.A.');
+                    $entityJurisdiccionGeografica->setDistritoTipo($entityDistritoTipo);
+                    $entityJurisdiccionGeografica->setDireccion(mb_strtoupper($direccion, 'UTF-8'));
+                    $entityJurisdiccionGeografica->setZona(mb_strtoupper($zona, 'UTF-8'));
+                    $entityJurisdiccionGeografica->setJuridiccionAcreditacionTipo($entityJuridiccionAcreditacionTipo);
+                    $entityJurisdiccionGeografica->setValidacionGeograficaTipo($entityValidacionGeograficaTipo);
+                    $entityJurisdiccionGeografica->setFechaRegistro($fechaActual);
+                    $entityJurisdiccionGeografica->setUsuarioId($usuario_id);
+                    $em->persist($entityJurisdiccionGeografica);
+                   
+                    $entityGestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id' => $gestion));
+                    $entityInstitucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $idInstitucion));
+                    $entitySucursalTipo = $em->getRepository('SieAppWebBundle:SucursalTipo')->findOneBy(array('id' => $subcea));
+
+                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_sucursal');")->execute();
+                    $entityInstitucionEducativaSucursal = new InstitucioneducativaSucursal();
+                    $entityInstitucionEducativaSucursal->setNombreSubcea($nombre, 'UTF-8');
+                    $entityInstitucionEducativaSucursal->setCodCerradaId(10);
+                    $entityInstitucionEducativaSucursal->setPeriodoTipoId($periodo);
+                    $entityInstitucionEducativaSucursal->setGestionTipo($entityGestionTipo);
+                    $entityInstitucionEducativaSucursal->setInstitucioneducativa($entityInstitucioneducativa);
+                    $entityInstitucionEducativaSucursal->setLeJuridicciongeografica($entityJurisdiccionGeografica);
+                    $entityInstitucionEducativaSucursal->setSucursalTipo($entitySucursalTipo);
+                    $entityInstitucionEducativaSucursal->setDireccion($direccion);
+                    $entityInstitucionEducativaSucursal->setZona($zona);
+                    $entityInstitucionEducativaSucursal->setEsabierta(true);
+                    
+                    $entityInstitucionEducativaSucursal->setLeJuridicciongeografica($entityJurisdiccionGeografica);
+                    $em->persist($entityInstitucionEducativaSucursal);
+
+                    $em->flush();
+                    $em->getConnection()->commit();
+                    $this->get('session')->getFlashBag()->add('successMsg', 'Se habilito la sucursal '.$subcea.' - '.$nombre.' correctamente.');
+                    return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_sucursal'));       
+                } catch (\Doctrine\ORM\NoResultException $exc) {
+                    $em->getConnection()->rollback();
                     $this->get('session')->getFlashBag()->add('errorMsg', 'Ha ocurrido un problema en la generación de la sucursal.');
-                    return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_sucursal'));                    
+                    return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_sucursal'));          
                 }
             }            
         } else {
@@ -1955,7 +2023,6 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_sucursal'));
         }
     }
-
     
     public function ceaspendientesAction(Request $request) {        
         $id_usuario = $this->session->get('userId');
