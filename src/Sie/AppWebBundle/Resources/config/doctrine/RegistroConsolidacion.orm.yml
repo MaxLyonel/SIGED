@@ -51,7 +51,7 @@ Sie\AppWebBundle\Entity\RegistroConsolidacion:
         descripcionError:
             type: string
             nullable: true
-            length: 150
+            length: 250
             fixed: false
             comment: ''
             column: descripcion_error
@@ -113,4 +113,9 @@ Sie\AppWebBundle\Entity\RegistroConsolidacion:
             unsigned: false
             comment: ''
             column: institucioneducativa_tipo_id
+        cierreSextosec:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: cierre_sextosec
     lifecycleCallbacks: {  }
