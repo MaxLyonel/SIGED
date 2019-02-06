@@ -1067,9 +1067,9 @@ class Funciones {
 
         $response = false;
         // Verificamos si se realizo el cierre de sexto grado
-        if($regConsol[0]->getCierreSextosec() != null){
-            $response = true;
-        }
+        // if($regConsol[0]->getCierreSextosec() != null){
+        //     $response = true;
+        // }
         
         return $response;
 
