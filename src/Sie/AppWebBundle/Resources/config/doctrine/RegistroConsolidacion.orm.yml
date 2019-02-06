@@ -113,9 +113,4 @@ Sie\AppWebBundle\Entity\RegistroConsolidacion:
             unsigned: false
             comment: ''
             column: institucioneducativa_tipo_id
-        cierreSextosec:
-            type: boolean
-            nullable: true
-            comment: ''
-            column: cierre_sextosec
     lifecycleCallbacks: {  }
