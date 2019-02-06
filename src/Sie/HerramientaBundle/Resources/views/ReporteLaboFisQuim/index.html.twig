@@ -1,0 +1,125 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Reporte Laboratorios FIS-QUIM <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+        <!-- Start default panel -->
+            <div class="panel panel-primary rounded shadow">
+            <!-- Start panel heading -->
+            <div class="panel-heading">
+                <h3 class="panel-title">Reporte Laboratorios FIS-QUIM</h3>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <!--/ End panel heading -->
+            <!-- Start panel content -->
+            <div class="panel-body">
+                <hr>
+                <div class="row">
+                    <div class="col-md-12">
+                        {% if registro_labo is not empty %}
+                            <div class="table-responsive col-md-12">
+                                <table class="table table-bordered table-striped" id="listaLabo">
+                                    <thead>
+                                        <tr>
+                                            <th style="min-width:15px">#</th>
+                                            <th>Departamento</th>
+                                            <th>Distrito</th>
+                                            <th>SIE</th>
+                                            <th>Institución Educativa</th>
+                                            <th>Registro</th>
+                                            <th>Fotografía</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th style="min-width:15px">#</th>
+                                            <th>Departamento</th>
+                                            <th>Distrito</th>
+                                            <th>SIE</th>
+                                            <th>Institución Educativa</th>
+                                            <th>Registro</th>
+                                            <th>Fotografía</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        {% for registro in registro_labo %}
+                                            <tr>
+                                                <td class="text-center">{{loop.index}}</td>
+                                                <td>{{registro.departamento}}</td>
+                                                <td>{{registro.distrito}}</td>
+                                                <td>{{registro.rue}}</td>
+                                                <td>{{registro.ue}}</td>
+                                                <td><span class="label label-{% if registro.registro_labo == 'NO' %}danger{% else %}success{% endif %}">{{registro.registro_labo}}</span></td>
+                                                <td>{{registro.foto}}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            No se encontraron registros.
+                        {% endif %}
+                    </div>
+                </div>
+            </div><!-- /.panel-body -->
+            <!--/ End panel content -->
+        </div><!-- /.panel -->
+        <!--/ End default panel -->
+    </div>
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+    var cargatablas = function (){
+        // Setup - add a text input to each footer cell
+        $('#listaLabo tfoot th').each( function () {
+            var title = $(this).text();
+            if(title.trim() === "" || title === "#"){
+                $(this).html('');
+            } else {
+                $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+            }
+        } );
+
+        // DataTable
+        var table = $('#listaLabo').DataTable( {
+                "order": [[ 0, "asc" ]],
+                "columnDefs": [
+                    { "orderable": false, "targets": [] }
+                ],
+            }
+        );
+
+        // Apply the search
+        table.columns().every( function () {
+            var that = this;
+
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+                if ( that.search() !== this.value ) {
+                    that
+                        .search( this.value )
+                        .draw();
+                }
+            } );
+        } );
+    };
+
+    $(document).ready(function(){
+        cargatablas();
+    });
+    </script>
+{% endblock %}

@@ -137,3 +137,7 @@ sie_herramienta_solicitud_bth:
 sie_herramienta_regularizacion_cut:
     resource: "@SieHerramientaBundle/Resources/config/routing/regularizationCUT.yml"
     prefix:   /sie/regcut
+
+sie_herramienta_reportelabofisquim:
+    resource: "@SieHerramientaBundle/Resources/config/routing/reportelabofisquim.yml"
+    prefix:   /sie/labofisquim
