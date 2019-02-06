@@ -246,7 +246,7 @@ class InboxController extends Controller {
               $this->session->set('ue_humanistica_web', true);
                 break;
             default:
-              # code...
+              $this->session->set('ue_humanistica', true);
               break;
           }
 
@@ -262,14 +262,14 @@ class InboxController extends Controller {
         ));
         // dump($this->unidadEducativa);die;
 
-        if($objRegularUe && ( ((int)$this->unidadEducativa <= 71980071 && (int)$this->unidadEducativa >=71980001 )
-        || ((int)$this->unidadEducativa <= 82230136 && (int)$this->unidadEducativa >=82230001 )
-        || ((int)$this->unidadEducativa <= 80730824
-         && (int)$this->unidadEducativa >=80730002 )
+        // if($objRegularUe && ( ((int)$this->unidadEducativa <= 71980071 && (int)$this->unidadEducativa >=71980001 )
+        // || ((int)$this->unidadEducativa <= 82230136 && (int)$this->unidadEducativa >=82230001 )
+        // || ((int)$this->unidadEducativa <= 80730824
+        //  && (int)$this->unidadEducativa >=80730002 )
 
-        ) ){
-            $this->session->set('ue_humanistica', true);
-        }
+        // ) or $this->unidadEducativa == 71700024 ){
+            
+        // }
 
 
         // $this->session->set('ue_general', (array_search("$this->unidadEducativa",$this->arrUeGeneral,true)!=false)?true:false);
