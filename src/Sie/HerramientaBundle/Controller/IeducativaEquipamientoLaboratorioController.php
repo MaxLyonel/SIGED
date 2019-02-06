@@ -564,7 +564,7 @@ class IeducativaEquipamientoLaboratorioController extends Controller {
             $ges = base64_decode($form['ges']);
             $adjuntoDir = $this->container->getParameter('kernel.root_dir') . '/../web/uploads/equipamiento_laboratorio/';
 
-            $arch = $sie.'_'.$ges.'_legalizacion'.date('YmdHis').'.pdf';
+            $arch = $sie.'_'.$ges.'_'.date('YmdHis').'.pdf';
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
