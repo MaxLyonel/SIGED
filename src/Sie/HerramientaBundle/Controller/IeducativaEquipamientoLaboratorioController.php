@@ -568,7 +568,7 @@ class IeducativaEquipamientoLaboratorioController extends Controller {
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_formulario_requerimiento_equipamiento_laboratorio.rptdesign&sie='.$sie.'&dir'.$adjuntoDir.'&gestion='.$ges.'&&__format=pdf&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_formulario_requerimiento_equipamiento_laboratorio_v1_rcm.rptdesign&sie='.$sie.'&dir'.$adjuntoDir.'&gestion='.$ges.'&&__format=pdf&'));
             $response->setStatusCode(200);
             $response->headers->set('Content-Transfer-Encoding', 'binary');
             $response->headers->set('Pragma', 'no-cache');
