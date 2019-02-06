@@ -173,6 +173,7 @@ class EstudianteController extends Controller
                 }
                 //$estudiante->setComplemento('');
                 $estudiante->setSegipId('0');
+                $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));
                 $em->persist($estudiante);
                 $em->flush();
 

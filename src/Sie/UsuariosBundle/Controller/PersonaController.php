@@ -64,7 +64,8 @@ class PersonaController extends Controller
             $newpersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->findOneById(0));
             $newpersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->findOneById(0));
             $newpersona->setRda('0');
-            $newpersona->setSegipId('0');            
+            $newpersona->setSegipId('0');    
+            $newpersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));
             $newpersona->setFechaNacimiento(\DateTime::createFromFormat('d/m/Y', $fecha));
             $newpersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['generoTipo']));
             $newpersona->setCorreo(mb_strtolower($form['correo'], "utf-8"));            
