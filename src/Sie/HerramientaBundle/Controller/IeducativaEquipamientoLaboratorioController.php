@@ -529,9 +529,9 @@ class IeducativaEquipamientoLaboratorioController extends Controller {
             ->add('institucionEquipo', 'text', array('label' => 'Institución que equipo', 'attr' => array('value' => '', 'class' => 'form-control', 'autocomplete' => 'on', 'required' => true, 'placeholder' => 'Institución', 'style' => 'text-transform:uppercase')))
             ->add('cantidadEquipo', 'number', array('label' => 'Cantidad de equipos', 'attr' => array('value' => '', 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{1,5}', 'maxlength' => '5', 'autocomplete' => 'on', 'required' => true, 'placeholder' => 'Cantidad', 'style' => 'text-transform:uppercase')))
             ->add('nombreAlcalde', 'text', array('label' => 'Nombre del alcalde', 'attr' => array('value' => '', 'class' => 'form-control',  'autocomplete' => 'on', 'required' => true, 'placeholder' => 'Nombre', 'style' => 'text-transform:uppercase')))
-            ->add('telefonoAlcalde', 'number', array('label' => 'Telefono del alcalde', 'attr' => array('value' => '', 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '8', 'autocomplete' => 'on', 'required' => true, 'placeholder' => 'Número de teléfono', 'style' => 'text-transform:uppercase')))
-            ->add('foto61', 'file', array('label' => 'Fotografía (.bmp)', 'required' => false)) 
-            ->add('foto62', 'file', array('label' => 'Fotografía (.bmp)', 'required' => false)) 
+            ->add('telefonoAlcalde', 'number', array('label' => 'Telefono del alcalde', 'attr' => array('value' => '', 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '8', 'autocomplete' => 'on', 'required' => false, 'placeholder' => 'Número de teléfono', 'style' => 'text-transform:uppercase')))
+            ->add('foto61', 'file', array('label' => 'Fotografía (.bmp)', 'required' => true)) 
+            ->add('foto62', 'file', array('label' => 'Fotografía (.bmp)', 'required' => true)) 
             ->add('save', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-blue')))
             ->getForm();
         return $form;        

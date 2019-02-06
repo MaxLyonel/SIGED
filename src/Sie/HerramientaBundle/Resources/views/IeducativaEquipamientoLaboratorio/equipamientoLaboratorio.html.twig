@@ -151,7 +151,7 @@
                                         </div>
                                         <div class="form-group col-sm-12">
                                             <div class="radio">
-                                                <label style="padding-left: 0px;">2.6. ¿LA UNIDAD EDUCATIVA COMPARTE LA MISMA INFRAESTRUCTURA CON EL MISMO?</label>
+                                                <label style="padding-left: 0px;">2.6. ¿LA UNIDAD EDUCATIVA COMPARTE LA INFRAESTRUCTURA CON OTRAS UNIDADES EDUCATIVAS?</label>
                                                 <label class="radio-inline">
                                                     <div class="rdio rdio-theme circle radio-inline">
                                                         <input id="radio-type-rounded2" name="radiotype2" type="radio" disabled="disabled" {% if entityEdificio|length > 0 %}checked="true"{% endif %}>
@@ -249,7 +249,7 @@
                                             {{ form_widget(formLaboratorio.constructor, { 'attr': {'class': 'form-control input-sm mt-20'} }) }} 
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label for="radiotype1" class="control-label">4.2. ¿LA UNIDAD EDUCATIVA CUENTA CON AMBIENTE(S) DESTINADO PARA LABORATORIO DE CIENCIAS NATURALES FÍSICA, QUÍMICA Y BIOLOGÍA-GEOGRÁFICA?</label>
+                                            <label for="radiotype1" class="control-label">4.2. ¿LA UNIDAD EDUCATIVA CUENTA CON AMBIENTE(S) DESTINADO PARA LABORATORIO DE CIENCIAS NATURALES FÍSICA, QUÍMICA Y BIOLOGÍA-GEOGRAFÍA?</label>
                                             <div class="rdio rdio-theme circle radio-inline">
                                                 <input id="radio421" name="radio42" type="radio" value=true checked="checked">
                                                 <label for="radio421">SI</label>
@@ -369,7 +369,7 @@
                     <div class="col-md-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title">VI. INSERTAR O PEGAR FOTOGRAFIAS</h3>
+                                <h3 class="panel-title">VI. INSERTAR FOTOGRAFIAS</h3>
                             </div>
                             <div class="panel-body">
                                 <div class="form-body">
@@ -469,7 +469,7 @@
     {{parent()}}  
     <script>
         var confirma = function(){
-            var r = confirm("¿ Está seguro de guardar el registro con los datos ingresados ?");
+            var r = confirm("¿ Está seguro de guardar el registro con los datos ingresados ?, considere que al guardar no podra modificar los datos ingresados");
             return r;
         }
 
