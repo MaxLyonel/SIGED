@@ -46,7 +46,7 @@ class ReporteLaboFisQuimController extends Controller {
             ,upper(a.dependencia)
             ,case when a.tipo_area = 'R' then 'RURAL' when a.tipo_area = 'U' then 'URBANA' else '' end as area
             ,case when w.institucioneducativa_id is null then 'NO' else 'SI' end as registro_labo
-            ,y.foto
+            ,w.id
             from
             (select  a.id as cod_ue_id,a.institucioneducativa as desc_ue,a.orgcurricular_tipo_id,a.estadoinstitucion_tipo_id, h.estadoinstitucion, a.le_juridicciongeografica_id as cod_le_id,a.orgcurricular_tipo_id as cod_org_curr_id,f.orgcurricula
             ,a.dependencia_tipo_id as cod_dependencia_id, e.dependencia,a.convenio_tipo_id as cod_convenio_id,g.convenio,d.cod_dep as id_departamento,d.des_dep as desc_departamento
@@ -76,7 +76,7 @@ class ReporteLaboFisQuimController extends Controller {
             INNER JOIN orgcurricular_tipo f ON a.orgcurricular_tipo_id = f.id
             INNER JOIN convenio_tipo g ON a.convenio_tipo_id = g.id
             INNER JOIN estadoinstitucion_tipo h ON a.estadoinstitucion_tipo_id = h.id
-            where a.institucioneducativa_acreditacion_tipo_id = 1 and a.estadoinstitucion_tipo_id = 10 and a.dependencia_tipo_id in (1,2)) as a
+            where a.institucioneducativa_acreditacion_tipo_id = 1 and a.estadoinstitucion_tipo_id = 10 and a.dependencia_tipo_id in (1,2,3)) as a
             INNER JOIN (
             select institucioneducativa_id
             ,sum(case when nivel_tipo_id=13 then 1 else 0 end) as sec
@@ -89,7 +89,6 @@ class ReporteLaboFisQuimController extends Controller {
                     inner join convenio_tipo f on f.id=a.cod_convenio_id
                         left join equip_labo_fisi_quim w on a.cod_ue_id = w.institucioneducativa_id
                             left join equip_labo_fisi_quim_construida_tipo x on w.secciv_construida_tipo_id = x.id
-                                left join equip_labo_fisi_quim_fotos y on w.id = y.equip_labo_fisi_quim_id
             order by departamento,distrito,rue;
         ");
         $query->execute();
