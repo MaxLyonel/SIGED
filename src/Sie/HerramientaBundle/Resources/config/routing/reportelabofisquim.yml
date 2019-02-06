@@ -1,0 +1,3 @@
+herramienta_reportelabofisquim_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:ReporteLaboFisQuim:index}

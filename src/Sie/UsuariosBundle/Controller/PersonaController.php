@@ -2,6 +2,7 @@
 
 namespace Sie\UsuariosBundle\Controller;
 
+use Proxies\__CG__\Sie\AppWebBundle\Entity\DepartamentoTipo;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -51,7 +52,7 @@ class PersonaController extends Controller
         try {
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('persona');");
             $query->execute();
-            //dump($form );die;
+
             $newpersona = new Persona();            
             $newpersona->setPaterno(mb_strtoupper($form['paterno'], "utf-8"));
             $newpersona->setMaterno(mb_strtoupper($form['materno'], "utf-8"));    
@@ -64,7 +65,7 @@ class PersonaController extends Controller
             $newpersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->findOneById(0));
             $newpersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->findOneById(0));
             $newpersona->setRda('0');
-            $newpersona->setSegipId('0');            
+            $newpersona->setSegipId('0');
             $newpersona->setFechaNacimiento(\DateTime::createFromFormat('d/m/Y', $fecha));
             $newpersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['generoTipo']));
             $newpersona->setCorreo(mb_strtolower($form['correo'], "utf-8"));            
@@ -72,6 +73,7 @@ class PersonaController extends Controller
             $newpersona->setEsVigente('1');
             $newpersona->setEsvigenteApoderado('1');
             $newpersona->setCountEdit('1');
+            $newpersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($form['departamentoTipo']));
             $em->persist($newpersona);
             $em->flush();
             

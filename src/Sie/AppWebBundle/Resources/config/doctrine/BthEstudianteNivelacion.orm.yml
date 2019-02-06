@@ -1,0 +1,129 @@
+Sie\AppWebBundle\Entity\BthEstudianteNivelacion:
+    type: entity
+    table: bth_estudiante_nivelacion
+    indexes:
+        IDX_3E42F685A1104027:
+            columns:
+                - estudiante_inscripcion_id
+        IDX_3E42F6856DD9B3B9:
+            columns:
+                - nivel_tipo_id
+        IDX_3E42F685C6447610:
+            columns:
+                - grado_tipo_id
+        IDX_3E42F685756DFBFA:
+            columns:
+                - nota_tipo_id
+        IDX_3E42F685DB38439E:
+            columns:
+                - usuario_id
+        IDX_3E42F685C5C70C5B:
+            columns:
+                - asignatura_id
+        IDX_3E42F68581D1D911:
+            columns:
+                - especialidad_tecnico_humanistico_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        notaCuantitativa:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: nota_cuantitativa
+        docRespaldo:
+            type: string
+            nullable: false
+            length: 150
+            fixed: false
+            comment: ''
+            column: doc_respaldo
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        obs:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+    manyToOne:
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        nivelTipo:
+            targetEntity: NivelTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nivel_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gradoTipo:
+            targetEntity: GradoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                grado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        notaTipo:
+            targetEntity: NotaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nota_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        asignatura:
+            targetEntity: AsignaturaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                asignatura_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        especialidadTecnicoHumanistico:
+            targetEntity: EspecialidadTecnicoHumanisticoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                especialidad_tecnico_humanistico_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

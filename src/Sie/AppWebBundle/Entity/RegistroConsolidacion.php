@@ -541,4 +541,32 @@ class RegistroConsolidacion
     {
         return $this->institucioneducativaTipoId;
     }
+    /**
+     * @var boolean
+     */
+    private $cierreSextosec;
+
+
+    /**
+     * Set cierreSextosec
+     *
+     * @param boolean $cierreSextosec
+     * @return RegistroConsolidacion
+     */
+    public function setCierreSextosec($cierreSextosec)
+    {
+        $this->cierreSextosec = $cierreSextosec;
+    
+        return $this;
+    }
+
+    /**
+     * Get cierreSextosec
+     *
+     * @return boolean 
+     */
+    public function getCierreSextosec()
+    {
+        return $this->cierreSextosec;
+    }
 }

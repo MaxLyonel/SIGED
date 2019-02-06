@@ -55,17 +55,25 @@
                                 <div class="col-lg-3">                                    
                                     <label for="complemento">Complemento</label>
                                     <input class="form-control" type="text" value="{{complemento}}" disabled>                                    
-                                </div>                                                                   
+                                </div>
                                 <div class="col-lg-6">
-                                    {{ form_row(form.fechaNacimiento, { 'id': 'fechanacimiento' }) }}
+                                    {{ form_row(form.departamentoTipo, { 'id': 'sigla' }) }}
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-3">
+                                <div class="col-lg-6">
                                     {{ form_row(form.generoTipo, { 'id': 'genero' }) }}
                                     <div class="help-block with-errors"></div>
                                 </div>
+                                <div class="col-lg-6">
+                                    {{ form_row(form.fechaNacimiento, { 'id': 'fechanacimiento' }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+
                                 <div class="col-lg-9">
                                     {{ form_row(form.correo, { 'id': 'correo' }) }}
                                     <div class="help-block with-errors"></div>

@@ -99,3 +99,9 @@ herramienta_info_estudiante_cerrarRude:
     defaults: { _controller: SieHerramientaBundle:InfoEstudiante:cerrarRude }
     options:
          expose: true
+
+herramienta_info_estudiante_cerrarSextoGrado:
+    path:     /sie/cerrarSextoGrado/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudiante:cerrarSextoGrado }
+    options:
+         expose: true
