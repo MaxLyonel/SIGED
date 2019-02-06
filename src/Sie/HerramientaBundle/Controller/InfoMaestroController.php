@@ -506,6 +506,7 @@ class InfoMaestroController extends Controller {
             $em->flush();
 
             // Registro Maestro inscripcion
+            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('maestro_inscripcion');")->execute();
             $maestroinscripcion = new MaestroInscripcion();
             $maestroinscripcion->setCargoTipo($em->getRepository('SieAppWebBundle:CargoTipo')->findOneById($form['funcion']));
             $maestroinscripcion->setEspecialidadTipo($em->getRepository('SieAppWebBundle:EspecialidadMaestroTipo')->findOneById(0));
@@ -561,7 +562,6 @@ class InfoMaestroController extends Controller {
             }
             
             $em->getConnection()->commit();
-            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('maestro_inscripcion');")->execute();
 
             $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron registrados correctamente');
             return $this->redirect($this->generateUrl('herramienta_info_maestro_index'));

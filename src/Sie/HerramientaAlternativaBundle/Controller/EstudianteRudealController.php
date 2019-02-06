@@ -4,6 +4,7 @@
 namespace Sie\HerramientaAlternativaBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sie\AppWebBundle\Entity\Rude;
 use Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoRegHablaFrec;
@@ -27,6 +28,7 @@ use Sie\AppWebBundle\Entity\RudeApoderadoInscripcion;
 use Sie\AppWebBundle\Entity\RudeEducacionDiversa;
 use Sie\AppWebBundle\Entity\Persona;
 
+
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -35,6 +37,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class EstudianteRudealController extends Controller {
 
     public $session;
+    public $estado;
     public $idInstitucion;
 
     /**
@@ -55,9 +58,10 @@ class EstudianteRudealController extends Controller {
 
         $aInfoUeducativa = unserialize($infoUe);
         $aInfoStudent = json_decode($infoStudent, TRUE);
+        
 
         $iec = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($aInfoUeducativa['ueducativaInfoId']['iecId']);
-        $sie = $iec->getInstitucioneducativa()->getId();
+            $sie = $iec->getInstitucioneducativa()->getId();
         $gestion = $iec->getGestionTipo()->getId();
 
         $idInscripcion = $aInfoStudent['eInsId'];
@@ -82,6 +86,7 @@ class EstudianteRudealController extends Controller {
                         ->where('e.id = :estudiante')
                         ->setParameter('estudiante', $estudiante->getId())
                         ->setMaxResults(1)
+                        ->orderBy('r.id','desc')
                         ->getQuery()
                         ->getResult();
 
@@ -306,9 +311,11 @@ class EstudianteRudealController extends Controller {
                         ))
                     ->add('formacionEducativa', 'entity', array(
                             'class' => 'SieAppWebBundle:ServicioMilitarTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude) {
                                 return $e->createQueryBuilder('smt')
-                                        ->where('smt.esActivo = true');
+                                        // ->where('smt.esActivo = true');
+                                        ->where('smt.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'servicio_militar_tipo'));
                             },
                             'empty_value' => 'Seleccionar...',
                             'required' => true,
@@ -319,9 +326,11 @@ class EstudianteRudealController extends Controller {
                     ->add('diversaId', 'hidden', array('data'=>$diversa->getId()))
                     ->add('diversa', 'entity', array(
                             'class' => 'SieAppWebBundle:EducacionDiversaTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('ed')
-                                        ->where('ed.id in (1,2,3,4)');
+                                        // ->where('ed.id in (1,2,3,4)');
+                                        ->where('ed.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'educacion_diversa_tipo'));
                             },
                             'property'=>'educacionDiversa',
                             'required' => true,
@@ -488,86 +497,200 @@ class EstudianteRudealController extends Controller {
      * CREAR FORMULARIO DE DIRECCION
      */
     public function createFormDireccion($rude){
+        //dump($rude);die;
         // DIRECCION
         $em = $this->getDoctrine()->getManager();
+        //dump($rude->getLocalidadLugarTipo());die;
 
-        if($rude->getMunicipioLugarTipo() != null){
+        if($rude->getLocalidadLugarTipo() != null){
 
-                $lt5_id = $rude->getMunicipioLugarTipo()->getLugarTipo();
+            // $lt5_id = $rude->getMunicipioLugarTipo()->getLugarTipo();
+            // $lt4_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getLugarTipo();
+            // $lt3_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getLugarTipo();
+
+            // $m_id = $rude->getMunicipioLugarTipo()->getId();
+            // $p_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getId();
+            // $d_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getId();
+            if ($rude->getLocalidadLugarTipo()->getId() == 0){
+                $trozos = explode(",", $rude->getZona());
+                $paisInmigrante_id = $em->getRepository('SieAppWebBundle:PaisTipo')->find((int)$trozos[0])->getId();
+                $zonainmigrante = $trozos[2];
+                //dump($trozos);die;
+            }else{
+                $lt5_id = $rude->getLocalidadLugarTipo()->getLugarTipo();
                 $lt4_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getLugarTipo();
                 $lt3_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getLugarTipo();
-
-                $m_id = $rude->getMunicipioLugarTipo()->getId();
-                $p_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getId();
-                $d_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getId();
+                $lt2_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt3_id)->getLugarTipo();
+                $lt1_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt2_id)->getLugarTipo();
+    
+                $l_id = $rude->getLocalidadLugarTipo()->getId();
+                $c_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt5_id)->getId();
+                $m_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt4_id)->getId();
+                $p_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt3_id)->getId();
+                $d_id = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($lt2_id)->getId();
+            }
         }else{
+            // $m_id = 0;
+            // $p_id = 0;
+            // $d_id = 0;
+
+            $l_id = 0;
+            $c_id = 0;
             $m_id = 0;
             $p_id = 0;
             $d_id = 0;
         }
+
         $dpto = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findBy(array('id'=>array(1,2,3,4,5,6,7,8,9)));
         $dptoArray = array();
         foreach($dpto as $value){
             $dptoArray[$value->getId()] = $value->getDepartamento();
         }
 
-        $query = $em->createQuery(
-                        'SELECT lt
+        $pais = $em->getRepository('SieAppWebBundle:PaisTipo')->findAll();
+        $paisArray = array();
+        foreach($pais as $value){
+
+            $paisArray[$value->getId()] = $value->getPais();
+        }
+        //dump($paisArray);die;
+        if ($rude->getLocalidadLugarTipo() == null or $rude->getLocalidadLugarTipo()->getId() != 0){
+            
+            $query = $em->createQuery(
+                'SELECT lt
                 FROM SieAppWebBundle:LugarTipo lt
                 WHERE lt.lugarNivel = :nivel
                 AND lt.lugarTipo = :lt1
                 ORDER BY lt.id')
                 ->setParameter('nivel', 2)
                 ->setParameter('lt1', $d_id);
-        $prov = $query->getResult();
+            $prov = $query->getResult();
+            $provArray = array();
+            foreach ($prov as $value) {
+                $provArray[$value->getId()] = $value->getLugar();
+            }
 
-        $provArray = array();
-        foreach ($prov as $value) {
-            $provArray[$value->getId()] = $value->getLugar();
-        }
-        
-
-        $query = $em->createQuery(
-                        'SELECT lt
+            $query = $em->createQuery(
+                'SELECT lt
                 FROM SieAppWebBundle:LugarTipo lt
                 WHERE lt.lugarNivel = :nivel
                 AND lt.lugarTipo = :lt1
                 ORDER BY lt.id')
                 ->setParameter('nivel', 3)
                 ->setParameter('lt1', $p_id);
-        $muni = $query->getResult();
+            $muni = $query->getResult();
+            $muniArray = array();
+            foreach ($muni as $value) {
+                $muniArray[$value->getId()] = $value->getLugar();
+            }
 
-        $muniArray = array();
-        foreach ($muni as $value) {
-            $muniArray[$value->getId()] = $value->getLugar();
+            $query = $em->createQuery(
+                'SELECT lt
+                FROM SieAppWebBundle:LugarTipo lt
+                WHERE lt.lugarNivel = :nivel
+                AND lt.lugarTipo = :lt1
+                ORDER BY lt.id')
+                ->setParameter('nivel', 4)
+                ->setParameter('lt1', $m_id);
+            $cantn = $query->getResult();
+            $cantnArray = array();
+            foreach ($cantn as $value) {
+                $cantnArray[$value->getId()] = $value->getLugar();
+            }
+
+            $query = $em->createQuery(
+                'SELECT lt
+                FROM SieAppWebBundle:LugarTipo lt
+                WHERE lt.lugarNivel = :nivel
+                AND lt.lugarTipo = :lt1
+                ORDER BY lt.id')
+                ->setParameter('nivel', 5)
+                ->setParameter('lt1', $c_id);
+                $locald = $query->getResult();
+            $localdArray = array();
+            foreach ($locald as $value) {
+                $localdArray[$value->getId()] = $value->getLugar();
+            }
+        }else{
+            $prov = array();
+            $muni = array();
+            $cantn = array();
+            $locald = array();
         }
-
-        $form = $this->createFormBuilder($rude)
-                    ->add('id','hidden')
-                    ->add('departamentoDir', 'choice', array('data' => $d_id - 1, 'label' => 'Departamento', 'required' => true, 'choices' => $dptoArray, 'empty_value' => 'Seleccionar...','mapped'=>false))
-                    ->add('provinciaDir', 'choice', array('data' => $p_id, 'label' => 'Provincia', 'required' => true, 'choices' => $provArray, 'empty_value' => 'Seleccionar...','mapped'=>false))
-                    ->add('municipioLugarTipo', 'choice', array('data' => $m_id, 'label' => 'Municipio', 'required' => true, 'choices' => $muniArray, 'empty_value' => 'Seleccionar...','mapped'=>false))
-                    ->add('localidad')
-                    ->add('zona')
-                    ->add('avenida')
-                    ->add('numero')
-                    ->add('celular')
-                    ->add('telefonoFijo')
+        $institucion = $this->session->get('ie_id');
+        //$form = $this->createFormBuilder($rude)
+        $form = $this->createFormBuilder()
+                    ->add('id','hidden',array('data'=>$rude->getId()));
+                    
+                    if ($institucion == 80730796){
+                        if ($rude->getLocalidadLugarTipo() !=null  and $rude->getLocalidadLugarTipo()->getId() == 0){
+                            $form=$form
+                            ->add('inmigrante', 'hidden', array('data'=>"SI" ))
+                            ->add('ckInmigrante', CheckboxType::class, array('label'=>'Inmigrante','required' => false, 'attr' => array('onclick' => 'verInmigrante(this.value)','checked'   => 'checked')))
+                            ->add('paisInmigrante', 'choice', array('data' => $paisInmigrante_id, 'label' => 'Pais', 'required' => true, 'choices' => $paisArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+                            ->add('zonaInmigrante', 'text', array('data' => $trozos[2], 'required' => true, 'attr' => array('class' => 'form-control')))
+                            ->add('departamentoDir', 'entity', array('label' => 'Departamento', 'required' => false, 'class' => 'SieAppWebBundle:DepartamentoTipo', 'property' => 'departamento', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarProvincias(this.value);')))
+                            ->add('provinciaDir', 'choice', array('label' => 'Provincia', 'required' => false, 'choices' => $prov, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarMunicipios(this.value)')))
+                            ->add('municipioDir', 'choice', array('label' => 'Municipio', 'required' => false, 'choices' => $muni, 'empty_value' => 'Seleccionar...','attr' => array('class' => 'form-control', 'onchange' => 'listarCantones(this.value)')))
+                            ->add('cantonDir', 'choice', array('label' => 'Cantón', 'required' => false, 'choices' => $cantn, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarLocalidades(this.value)')))
+                            ->add('localidadDir', 'choice', array('label' => 'Localidad', 'required' => false, 'choices' => $locald, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+                            ->add('zona', 'text', array('required' => false, 'attr' => array('class' => 'form-control')));
+                        }else{
+                            $form=$form
+                            ->add('inmigrante', 'hidden', array('data'=>"NO" ))
+                            ->add('ckInmigrante', CheckboxType::class, array('label'=>'Inmigrante','required' => false, 'attr' => array('onclick' => 'verInmigrante(this.value)')))
+                            ->add('paisInmigrante', 'choice', array('label' => 'Pais', 'required' => true, 'choices' => $paisArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+                            ->add('zonaInmigrante', 'text', array('required' => false, 'attr' => array('class' => 'form-control')))
+                            ->add('departamentoDir', 'choice', array('data' => $d_id - 1, 'label' => 'Departamento', 'required' => true, 'choices' => $dptoArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarProvincias(this.value);')))
+                            ->add('provinciaDir', 'choice', array('data' => $p_id, 'label' => 'Provincia', 'required' => true, 'choices' => $provArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarMunicipios(this.value)')))
+                            ->add('municipioDir', 'choice', array('data' => $m_id, 'label' => 'Municipio', 'required' => true, 'choices' => $muniArray, 'empty_value' => 'Seleccionar...','attr' => array('class' => 'form-control', 'onchange' => 'listarCantones(this.value)')))
+                            ->add('cantonDir', 'choice', array('data' => $c_id, 'label' => 'Cantón', 'required' => true, 'choices' => $cantnArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarLocalidades(this.value)')))
+                            ->add('localidadDir', 'choice', array('data' => $l_id, 'label' => 'Localidad', 'required' => true, 'choices' => $localdArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+                            ->add('zona', 'text', array('data' => $rude->getZona(), 'required' => true, 'attr' => array('class' => 'form-control')));
+                        }
+                    }else{
+                        $form=$form
+                        ->add('departamentoDir', 'choice', array('data' => $d_id - 1, 'label' => 'Departamento', 'required' => true, 'choices' => $dptoArray, 'empty_value' => 'Seleccionar...','mapped'=>false))
+                        ->add('provinciaDir', 'choice', array('data' => $p_id, 'label' => 'Provincia', 'required' => true, 'choices' => $provArray, 'empty_value' => 'Seleccionar...','mapped'=>false))
+                        ->add('municipioDir', 'choice', array('data' => $m_id, 'label' => 'Municipio', 'required' => true, 'choices' => $muniArray, 'empty_value' => 'Seleccionar...','mapped'=>false))
+                        ->add('cantonDir', 'choice', array('data' => $c_id, 'label' => 'Canton', 'required' => true, 'choices' => $cantnArray, 'empty_value' => 'Seleccionar...','mapped'=>false))
+                        ->add('localidadDir', 'choice', array('data' => $l_id, 'label' => 'Localidad', 'required' => true, 'choices' => $localdArray, 'empty_value' => 'Seleccionar...','mapped'=>false))
+                        // ->add('municipioLugarTipo', 'choice', array('data' => $m_id, 'label' => 'Municipio', 'required' => true, 'choices' => $muniArray, 'empty_value' => 'Seleccionar...','mapped'=>false))
+                        // ->add('localidad')
+                        ->add('zona','text',array('data' => $rude->getZona(), 'required' => true, 'attr' => array('class' => 'form-control')));
+                    }
+                    $form=$form
+                    ->add('avenida','text',array('label'=>'Avenida / Calle','data'=>$rude->getAvenida()))
+                    ->add('numero','text',array('label'=>'Numero','data'=>$rude->getNumero()))
+                    ->add('celular','text',array('label'=>'Celular','data'=>$rude->getCelular()))
+                    ->add('telefonoFijo','text',array('label'=>'Telefono','data'=>$rude->getTelefonoFijo()))
                     ->getForm();
 
         return $form;
     }
 
     public function saveFormDireccionAction(Request $request){
+        //
+        
+        //dump($request);die;
         $form = $request->get('form');
+        $institucion = $this->session->get('ie_id');
         // dump((integer)$form['idLugar']);die;
         $em = $this->getDoctrine()->getManager();
 
         $rude = $em->getRepository('SieAppWebBundle:Rude')->find($form['id']);
 
-        $rude->setMunicipioLugarTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find((integer)$form['municipioLugarTipo']));
-        $rude->setLocalidad($form['localidad'] ? mb_strtoupper($form['localidad'], 'utf-8') : '');
-        $rude->setZona($form['zona'] ? mb_strtoupper($form['zona'], 'utf-8') : '');
+        if(($institucion != 80730796) or  (($institucion == 80730796) and ($form['inmigrante'] == "NO"))){
+            $rude->setLocalidadLugarTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find((integer)$form['localidadDir']));
+            $rude->setZona($form['zona'] ? mb_strtoupper($form['zona'], 'utf-8') : '');
+        }else{
+            $rude->setLocalidadLugarTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find(0));
+            $rude->setZona(mb_strtoupper($form['paisInmigrante'].',INMIGRANTE,'.$form['zonaInmigrante'], 'utf-8'));
+        }
+        
+        // $rude->setMunicipioLugarTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find((integer)$form['municipioLugarTipo']));
+        // $rude->setLocalidad($form['localidad'] ? mb_strtoupper($form['localidad'], 'utf-8') : '');
+        
         $rude->setAvenida($form['avenida'] ? mb_strtoupper($form['avenida'], 'utf-8') : '');
         $rude->setNumero($form['numero'] ? $form['numero'] : '');
         $rude->setCelular($form['celular'] ? $form['celular'] : '');
@@ -643,6 +766,63 @@ class EstudianteRudealController extends Controller {
             //$em->getConnection()->rollback();
         }
     }
+    /*
+     * Funciones para cargar los combos dependientes via ajax
+     */
+    public function listarcantonesAction($muni) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+
+            $query = $em->createQuery(
+                'SELECT lt
+                    FROM SieAppWebBundle:LugarTipo lt
+                    WHERE lt.lugarNivel = :nivel
+                    AND lt.lugarTipo = :lt1
+                    ORDER BY lt.id')
+                ->setParameter('nivel', 4)
+                ->setParameter('lt1', $muni);
+            $cantones = $query->getResult();
+
+            $cantonesArray = array();
+            foreach ($cantones as $c) {
+                $cantonesArray[$c->getId()] = $c->getLugar();
+            }
+
+            $response = new JsonResponse();
+            return $response->setData(array('listacantones' => $cantonesArray));
+        } catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+        }
+    }
+
+    /*
+     * Funciones para cargar los combos dependientes via ajax
+     */
+    public function listarlocalidadesAction($cantn) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+
+            $query = $em->createQuery(
+                'SELECT lt
+                    FROM SieAppWebBundle:LugarTipo lt
+                    WHERE lt.lugarNivel = :nivel
+                    AND lt.lugarTipo = :lt1
+                    ORDER BY lt.id')
+                ->setParameter('nivel', 5)
+                ->setParameter('lt1', $cantn);
+            $localidades = $query->getResult();
+
+            $localidadesArray = array();
+            foreach ($localidades as $c) {
+                $localidadesArray[$c->getId()] = $c->getLugar();
+            }
+
+            $response = new JsonResponse();
+            return $response->setData(array('listalocalidades' => $localidadesArray));
+        } catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+        }
+    }
     /**
      * formulario de discapacidad
      */
@@ -686,9 +866,10 @@ class EstudianteRudealController extends Controller {
                     ->add('carnetDiscapacidad', 'text', array('required' => false, 'mapped'=>false, 'data'=>$e->getCarnetCodepedis()))
                     ->add('discapacidad', 'entity', array(
                             'class' => 'SieAppWebBundle:DiscapacidadTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('dt')
-                                        ->where('dt.esVigente = true');
+                                        ->where('dt.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'discapacidad_tipo'));
                             },
                             'empty_value' => 'Seleccionar...',
                             'required' => true,
@@ -697,9 +878,10 @@ class EstudianteRudealController extends Controller {
                         ))
                     ->add('gradoDiscapacidad', 'entity', array(
                             'class' => 'SieAppWebBundle:GradoDiscapacidadTipo',
-                            'query_builder' => function (EntityRepository $e){
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('gdt')
-                                        ->where('gdt.esVigente = true');
+                                        ->where('gdt.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'grado_discapacidad_tipo'));
                             },
                             'empty_value' => 'Seleccionar...',
                             'required' => true,
@@ -889,6 +1071,12 @@ class EstudianteRudealController extends Controller {
             $arrayAbandono[] = $ae->getAbandonoTipo()->getId();
         }
 
+        $cea = $this->session->get('ie_id');
+        if($cea == 80730796){
+            $this->estdo = false;
+        }else{
+            $this->estado = true;
+        }
         // ABANDONO OTRO
         $abandonoOtro = $em->getRepository('SieAppWebBundle:RudeAbandono')->findOneBy(array('rude'=>$rude, 'abandonoTipo'=>12));
         $form = $this->createFormBuilder($rude)
@@ -897,11 +1085,11 @@ class EstudianteRudealController extends Controller {
                     // 4.1 IDIOMA Y PERTENENCIA
                     ->add('idioma1', 'entity', array(
                             'class' => 'SieAppWebBundle:IdiomaTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('it')
-                                        ->where('it.esVigente = true')
-                                        ->orderBy('it.id', 'ASC')
-                                ;
+                                        ->where('it.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'idioma_tipo'))
+                                        ->orderBy('it.idioma', 'ASC');
                             },
                             'empty_value' => 'Seleccionar...',
                             'required'=>true,
@@ -910,11 +1098,11 @@ class EstudianteRudealController extends Controller {
                         ))
                     ->add('idioma2', 'entity', array(
                             'class' => 'SieAppWebBundle:IdiomaTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('it')
-                                        ->where('it.esVigente = true')
-                                        ->orderBy('it.id', 'ASC')
-                                ;
+                                        ->where('it.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'idioma_tipo'))
+                                        ->orderBy('it.idioma', 'ASC');
                             },
                             'empty_value' => 'Seleccionar...',
                             'required'=>false,
@@ -923,11 +1111,11 @@ class EstudianteRudealController extends Controller {
                         ))
                     ->add('idioma3', 'entity', array(
                             'class' => 'SieAppWebBundle:IdiomaTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('it')
-                                        ->where('it.esVigente = true')
-                                        ->orderBy('it.id', 'ASC')
-                                ;
+                                        ->where('it.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'idioma_tipo'))
+                                        ->orderBy('it.idioma', 'ASC');
                             },
                             'empty_value' => 'Seleccionar...',
                             'required'=>false,
@@ -944,11 +1132,10 @@ class EstudianteRudealController extends Controller {
                         ))
                     ->add('nacionOriginariaTipo', 'entity', array(
                             'class' => 'SieAppWebBundle:NacionOriginariaTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('no')
-                                        ->where('no.esVigente = true')
-                                        ->orderBy('no.id', 'ASC')
-                                ;
+                                        ->where('no.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'nacion_originaria_tipo'));
                             },
                             'empty_value' => 'Seleccionar...',
                             'multiple'=>false,
@@ -965,11 +1152,10 @@ class EstudianteRudealController extends Controller {
                         ))
                     ->add('actividades', 'entity', array(
                             'class' => 'SieAppWebBundle:ActividadTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('at')
-                                        ->where('at.esVigente = true')
-                                        ->orderBy('at.id', 'ASC')
-                                ;
+                                        ->where('at.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'actividad_tipo'));
                             },
                             'multiple'=>true,
                             'property'=>'descripcionOcupacion',
@@ -989,11 +1175,10 @@ class EstudianteRudealController extends Controller {
                         ))
                     ->add('acudioCentro', 'entity', array(
                             'class' => 'SieAppWebBundle:CentroSaludTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('ct')
-                                        ->where('ct.esVigente = true')
-                                        ->orderBy('ct.id', 'ASC')
-                                ;
+                                        ->where('ct.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'centro_salud_tipo'));
                             },
                             'empty_value' => 'Seleccionar...',
                             'multiple'=>false,
@@ -1019,11 +1204,10 @@ class EstudianteRudealController extends Controller {
                     // MEDIOS DE COMUNICACION
                     ->add('medioComunicacion', 'entity', array(
                             'class' => 'SieAppWebBundle:MediosComunicacionTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('mct')
-                                        ->where('mct.esVigente = true')
-                                        ->orderBy('mct.id', 'ASC')
-                                ;
+                                        ->where('mct.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'medios_comunicacion_tipo'));
                             },
                             'multiple'=>true,
                             'property'=>'descripcionMediosComunicacion',
@@ -1035,15 +1219,14 @@ class EstudianteRudealController extends Controller {
                     // MEDIO TRANSPORTE
                     ->add('medioTransporte', 'entity', array(
                             'class' => 'SieAppWebBundle:MedioTransporteTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('mtt')
-                                        ->where('mtt.esVigente = true')
-                                        ->orderBy('mtt.id', 'ASC')
-                                ;
+                                        ->where('mtt.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'medio_transporte_tipo'));
                             },
                             'multiple'=>true,
                             'property'=>'descripcionMedioTrasnporte',
-                            'required'=>true,
+                            'required'=>$this->estado,
                             'data'=>$em->getRepository('SieAppWebBundle:MedioTransporteTipo')->findBy(array('id'=>$arrayMedioTransporte)),
                             'mapped'=>false,
                             'expanded'=>false
@@ -1054,11 +1237,10 @@ class EstudianteRudealController extends Controller {
                     // MODALIDAD ESTUDIO
                     ->add('modalidadEstudioTipo', 'entity', array(
                             'class' => 'SieAppWebBundle:ModalidadEstudioTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('met')
-                                        ->where('met.esVigente = true')
-                                        ->orderBy('met.id', 'ASC')
-                                ;
+                                        ->where('met.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'modalidad_estudio_tipo'));
                             },
                             'empty_value' => 'Seleccionar...',
                             'multiple'=>false,
@@ -1069,11 +1251,10 @@ class EstudianteRudealController extends Controller {
                         ))
                     ->add('abandono', 'entity', array(
                             'class' => 'SieAppWebBundle:AbandonoTipo',
-                            'query_builder' => function (EntityRepository $e) {
+                            'query_builder' => function (EntityRepository $e) use ($rude){
                                 return $e->createQueryBuilder('at')
-                                        ->where('at.esVigente = true')
-                                        ->orderBy('at.id', 'ASC')
-                                ;
+                                        ->where('at.id in (:ids)')
+                                        ->setParameter('ids', $this->obtenerCatalogo($rude, 'abandono_tipo'));
                             },
                             'multiple'=>true,
                             'property'=>'descripcionAbandono',
@@ -1093,7 +1274,7 @@ class EstudianteRudealController extends Controller {
      */
     public function saveFormSocioeconomicosAction(Request $request){
         $form = $request->get('form');
-        // dump($form);die;
+        //dump($request);die;
         $em = $this->getDoctrine()->getManager();
         $rude = $em->getRepository('SieAppWebBundle:Rude')->find($form['id']);
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['estudianteId']);
@@ -1197,11 +1378,13 @@ class EstudianteRudealController extends Controller {
         // REGISTRAMOS LOS CENTROS
         if(!$form['seguroSalud'] and isset($form['acudioCentro'])){
             $acudioCentro = $form['acudioCentro'];
+            //dump($acudioCentro);die;
             for ($i=0; $i < count($acudioCentro); $i++) { 
                 $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_centro_salud');")->execute();
                 $centroEstudiante = new RudeCentroSalud();
                 $centroEstudiante->setRude($rude);
-                $centroEstudiante->setCentroSaludTipo($em->getRepository('SieAppWebBundle:CentroSaludTipo')->find($acudioCentro[$i]));
+                
+                $centroEstudiante->setCentroSaludTipo($em->getRepository('SieAppWebBundle:CentroSaludTipo')->find((int)$acudioCentro[$i]));
                 $centroEstudiante->setFechaRegistro(new \DateTime('now'));
                 $em->persist($centroEstudiante);
                 $em->flush();
@@ -1246,16 +1429,19 @@ class EstudianteRudealController extends Controller {
                         ->getQuery()
                         ->getResult();
         // REGISTRAMOS LOS MEDIOS DE TRANSPORTE
-        $medioTransporte = $form['medioTransporte'];
-        for ($i=0; $i < count($medioTransporte); $i++) { 
-            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_medio_transporte');")->execute();
-            $medioTransporteEstudiante = new RudeMedioTransporte();
-            $medioTransporteEstudiante->setRude($rude);
-            $medioTransporteEstudiante->setMedioTransporteTipo($em->getRepository('SieAppWebBundle:MedioTransporteTipo')->find($medioTransporte[$i]));
-            $medioTransporteEstudiante->setFechaRegistro(new \DateTime('now'));
-            $medioTransporteEstudiante->setTiempoMaximoTrayectoTipo(null);
-            $em->persist($medioTransporteEstudiante);
-            $em->flush();
+        if(array_key_exists('medioTransporte', $form)){
+            $medioTransporte = $form['medioTransporte'];
+            //dump($mediosTransporte);die;
+            for ($i=0; $i < count($medioTransporte); $i++) { 
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_medio_transporte');")->execute();
+                $medioTransporteEstudiante = new RudeMedioTransporte();
+                $medioTransporteEstudiante->setRude($rude);
+                $medioTransporteEstudiante->setMedioTransporteTipo($em->getRepository('SieAppWebBundle:MedioTransporteTipo')->find($medioTransporte[$i]));
+                $medioTransporteEstudiante->setFechaRegistro(new \DateTime('now'));
+                $medioTransporteEstudiante->setTiempoMaximoTrayectoTipo(null);
+                $em->persist($medioTransporteEstudiante);
+                $em->flush();
+            }
         }
 
         $rude->setTiempoLlegadaHoras($form['tiempoLlegadaHoras']);
@@ -1337,20 +1523,28 @@ class EstudianteRudealController extends Controller {
         return $response->setData(['msg'=>'ok']);
     }
 
-    public function obtenerCatalogos($gestion){
+    public function obtenerCatalogo($rude, $tabla){
         $em = $this->getDoctrine()->getManager();
+        $gestion = $rude->getEstudianteInscripcion()->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+        $gestion = 2019;
         /**
-         * OBTENER CATALOGOS
+         * OBTENER CATALOGO
          */
-        $catalogos = $em->createQueryBuilder()
+        $catalogo = $em->createQueryBuilder()
                             ->select('rc')
                             ->from('SieAppWebBundle:RudeCatalogo','rc')
                             ->where('rc.gestionTipo = :gestion')
                             ->andWhere('rc.institucioneducativaTipo = 2')
+                            ->andWhere('rc.nombreTabla = :tabla')
                             ->setParameter('gestion', $gestion)
+                            ->setParameter('tabla', $tabla)
                             ->getQuery()
                             ->getResult();
+        $ids = [];
+        foreach ($catalogo as $c) {
+            $ids[] = $c->getLlaveTabla();
+        }
 
-        dump($catalogos);die;
+        return $ids;
     }
 }

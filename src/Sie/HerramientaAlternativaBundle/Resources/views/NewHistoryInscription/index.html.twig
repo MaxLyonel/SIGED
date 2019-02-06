@@ -147,7 +147,7 @@
                 url: Routing.generate('note_consultation_parents_sie_nota_new', {'inscripcionid': inscripcionid,'estudianteid': estudianteid, 'gestion': gestion, 'subsistema': subsistema}),
                 beforeSend: function () {
                     $("#idNotas").empty();
-                    $("#idNotas").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                    $("#idNotas").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" /></div>');
                 },
                 success: function (data) {
                     $("#idNotas").empty();
