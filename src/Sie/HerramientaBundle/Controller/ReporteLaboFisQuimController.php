@@ -98,4 +98,20 @@ class ReporteLaboFisQuimController extends Controller {
             'registro_labo' => $registro_labo
         ));
     }
+
+    public function fotosAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $id = $request->get('id');
+        $query = $em->getConnection()->prepare("
+            select f.foto, tf.tipo 
+            from equip_labo_fisi_quim_fotos f
+            inner join equip_labo_fisi_quim_tipo_foto tf on f.tipo_foto_id = tf.id
+            where f.equip_labo_fisi_quim_id = $id ");
+        $query->execute();
+        $fotos = $query->fetchAll();
+
+        return $this->render('SieHerramientaBundle:ReporteLaboFisQuim:fotos.html.twig', array(
+            'fotos'=>$fotos
+        ));
+    }
 }
