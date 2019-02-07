@@ -418,6 +418,7 @@ class TramiteController extends Controller {
                         }
                         $msg = array('0'=>true, '1'=>$participante);
                         $msgContenido = $this->getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId);
+                        // $msgContenido = "";
                         //dump($msgContenido);die;
                         // VALIDACION DE SOLO UN TRAMITE POR ESTUDIANTE (RUDE)
                         $valCertTecTramiteEspNivel = $this->getCertTecTramiteEspecialidadNivelEstudiante($participanteId, $especialidadId, $nivelId);
@@ -448,6 +449,8 @@ class TramiteController extends Controller {
                                 $tramiteTipoId = 0;
                                 break;
                         }
+
+                        $gestionId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getInstitucioneducativaSucursal()->getGestionTipo()->getId();
 
                         $tramiteId = $this->setTramiteEstudiante($estudianteInscripcionId, $gestionId, $tramiteTipoId, $flujoTipoId, $em);
 
