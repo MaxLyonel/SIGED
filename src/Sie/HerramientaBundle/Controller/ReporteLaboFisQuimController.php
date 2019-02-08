@@ -26,7 +26,7 @@ class ReporteLaboFisQuimController extends Controller {
     /**
     * Muestra la lista de Unidades Educativas del nivel secundario según RUE
     */
-    public function indexAction(Request $request){
+    public function indexAction(Request $request) {
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
         $username = $this->session->get('userName');
@@ -99,7 +99,7 @@ class ReporteLaboFisQuimController extends Controller {
         ));
     }
 
-    public function fotosAction(Request $request){
+    public function fotosAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $id = $request->get('id');
         $query = $em->getConnection()->prepare("
@@ -113,5 +113,19 @@ class ReporteLaboFisQuimController extends Controller {
         return $this->render('SieHerramientaBundle:ReporteLaboFisQuim:fotos.html.twig', array(
             'fotos'=>$fotos
         ));
+    }
+
+    public function reporteAction(Request $request) {
+
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'REPORTE_LAB_FIS_QUIM.xls'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_rep_labo_fis_quim_afv_v1.rptdesign&&__format=xls&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+
+        return $response;
     }
 }
