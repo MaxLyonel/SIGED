@@ -1,0 +1,87 @@
+
+{% if swError %}
+
+
+<div class="panel rounded shadow">
+    <div class="panel-heading">
+        <div class="pull-left">
+            <h3 class="panel-title">Datos Historicos para la Nivelaci&oacute;n</h3>
+        </div>
+        
+        <div class="clearfix"></div>
+    </div><!-- /.panel-heading -->
+    <div class="panel-body no-padding">
+
+    	<table id="user" class="table table-bordered table-striped" style="clear: both">
+            <tbody>
+            <tr>
+                <td width="55%">RUDE</td>
+                <td style="color: #1f326b;">{{student.codigoRude}}</td>
+            </tr>
+            <tr>
+            	<td>CI - COMPLEMENTO</td>
+                <td style="color: #1f326b;">{{student.carnetIdentidad}} {{student.complemento}}</td>
+            </tr>
+            <tr>
+                <td>PATERNO</td>
+                <td style="color: #1f326b;">{{student.paterno}}</td>
+            </tr>
+            <tr>
+                <td>MATERNO</td>
+                <td style="color: #1f326b;">{{student.materno}}</td>
+            </tr>
+            <tr>
+                <td>NOMBRE(S)</td>
+                <td style="color: #1f326b;">{{student.nombre}}</td>
+            </tr>
+
+            </tbody>
+        </table>
+
+    	<div class="table-responsive mb-20">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-center" style="width: 45px" >#</th>
+                                        <th colspan="">Grado</th>
+                                        <th colspan="">Paralelo</th>
+                                        <th colspan="">Turno</th>
+                                        <th colspan="">Matricula</th>
+                                        <th colspan=""></th>
+                                        
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for history in arrhistory %}	
+	                                    <tr>
+	                                        <td class="text-center">{{loop.index}}</td>
+	                                        <td class="info">{{history.grado}}</td>
+	                                        <td class="info">{{history.paralelo}}</td>
+	                                        <td class="info">{{history.turno}}</td>
+	                                        <td class="info">{{history.estadoMatricula}}</td>
+	                                        <td class="info"><a href="#" onclick="openRegularizationForm('{{history.estInsId}}')"> Nivelaci&oacute;n</a> </td>
+	                                        
+	                                    </tr>
+                                  {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+     
+    </div><!-- /.panel-body -->
+</div>
+
+
+{% else %}
+
+<div class="row">
+	<div class="col-md-12">
+		 {% for flashMessage in app.session.flashbag.get('warningReg') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Warning!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}		
+	</div>
+</div>
+ {% endif %}

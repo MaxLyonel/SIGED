@@ -12,6 +12,9 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints\Date;
 use Sie\TramitesBundle\Controller\DefaultController as defaultTramiteController;
+
+use Sie\AppWebBundle\Entity\Homologacion;
+
 /**
  * Vista controller.
  *
@@ -44,7 +47,7 @@ class HomologacionController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        //$activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         return $this->render('SieTramitesBundle:Homologacion:cerAltIndex.html.twig', array(
                     'form' => $this->creaFormularioCertTecHomologacion('tramite_homologacion_certificacion_guarda', '', $gestionActual)->createView()
@@ -108,6 +111,7 @@ class HomologacionController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
+
         $em = $this->getDoctrine()->getManager();
         $queryId = $em->getConnection()->prepare('SELECT MAX(id) id FROM homologacion');
         $queryId->execute();
@@ -122,8 +126,7 @@ class HomologacionController extends Controller {
         /*
          * se obtiene los datos del estudiante de acuerdo al RUDEAL
          */
-        $queryEntidad = $em->getConnection()->prepare(
-                '
+        $queryEntidad = $em->getConnection()->prepare(                '
                         SELECT *
                         FROM estudiante a
                         WHERE a.codigo_rude = :rudeal
@@ -133,13 +136,17 @@ class HomologacionController extends Controller {
         $estudiante_id = $queryEntidad->fetchAll();
         $estudiante_id = $estudiante_id[0]['id'];
         $nombre_ue = $request->get('nombre_ue');
+        $gradoId = $request->get('form')['grado'];
+        $cargaHorariaBasico = 800;
+        $cargaHorariaAuxiliar = 1200;
+
         switch ($request->get('form')['grado']) {
             case '1':
-                $cargaHoraria = 800;
+                $cargaHoraria = $cargaHorariaBasico;
                 break;
             case '2':
-                $cargaHoraria = 1200;
-                Break;
+                $cargaHoraria = $cargaHorariaAuxiliar;
+                break;
         }
         $queryVerificar = $em->getConnection()->prepare('SELECT * FROM homologacion WHERE rudeal = :rudeal AND grado_id = :grado AND nro_certificado =:certificado');
         $queryVerificar->bindValue(':rudeal', $request->get('form')['rudeal']);
@@ -147,35 +154,89 @@ class HomologacionController extends Controller {
         $queryVerificar->bindValue(':certificado', $request->get('form')['certificado']);
         $queryVerificar->execute();
         $ver = $queryVerificar->fetchAll();
+        $em->getConnection()->beginTransaction();
+
         if (sizeof($ver) == 0) {
-            $query = $em->getConnection()->prepare('
-            INSERT INTO homologacion(institucioneducativa_id, institucioneducativa, gestion_id, rudeal, nivel_id, ciclo_id, grado_id, carga_horaria, nro_certificado, estudiante_id, usuario_id, fecha_reg)
-            VALUES(:sie, :ue, :gestion, :rudeal, :nivel_id, :ciclo, :grado, :carga_horaria, :certificado, :estudiante, :usuario, :fecha)
-                ');
+            $form = $request->get('form');
+
+            // $query = $em->getConnection()->prepare('
+            // INSERT INTO homologacion(institucioneducativa_id, institucioneducativa, gestion_id, rudeal, nivel_id, ciclo_id, grado_id, carga_horaria, nro_certificado, estudiante_id, usuario_id, fecha_reg)
+            // VALUES(:sie, :ue, :gestion, :rudeal, :nivel_id, :ciclo, :grado, :carga_horaria, :certificado, :estudiante, :usuario, :fecha)
+            //     ');
+            // $query->bindValue(':sie', (int) $request->get('form')['sies']);
+            // $query->bindValue(':ue', $nombre_ue);
+            // $query->bindValue(':gestion', (int) $request->get('form')['gestiones']);
+            // $query->bindValue(':rudeal', $request->get('form')['rudeal']);
+            // $query->bindValue(':grado', (int) $request->get('form')['grado']);
+            // $query->bindValue(':nivel_id', (int) $request->get('form')['nivel']);
+            // $query->bindValue(':ciclo', (int) $request->get('form')['especialidad']);
+            // $query->bindValue(':carga_horaria', (int) $cargaHoraria);
+            // $query->bindValue(':estudiante', (int) $estudiante_id);
+            // $query->bindValue(':certificado', $request->get('form')['certificado']);
+            // $query->bindValue(':usuario', $id_usuario);
+            // $query->bindValue(':fecha', date('Y-m-d'));
+            // $query->execute();
 
 
+            $entityHomologacion = new Homologacion();
+            $entityInstitucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => ((int) $form['sies'])));
+            
+            $entityEstudiante= $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('id' => ((int) $estudiante_id)));
+            $entityHomologacion->setInstitucioneducativa($entityInstitucioneducativa);
+            $entityHomologacion->setGestionId((int) $form['gestiones']);
+            $entityHomologacion->setRudeal($form['rudeal']);
+            $entityHomologacion->setNivelId((int) $form['nivel']);
+            $entityHomologacion->setCicloId((int) $form['especialidad']);
+            $entityHomologacion->setGradoId((int) $form['grado']);
+            $entityHomologacion->setCargaHoraria((int) $cargaHoraria);
+            $entityHomologacion->setNroCertificado($form['certificado']);
+            $entityHomologacion->setUsuarioId($id_usuario);
+            $entityHomologacion->setFechaReg(date('Y-m-d'));
+            $entityHomologacion->setEstudiante($entityEstudiante);
+            $entityHomologacion->setNombreInstitucioneducativa($entityInstitucioneducativa->getInstitucioneducativa());
+            $em->persist($entityHomologacion);
+           
+            if ($gradoId == 2){
+                // $query = $em->getConnection()->prepare('
+                // INSERT INTO homologacion(institucioneducativa_id, institucioneducativa, gestion_id, rudeal, nivel_id, ciclo_id, grado_id, carga_horaria, nro_certificado, estudiante_id, usuario_id, fecha_reg)
+                // VALUES(:sie, :ue, :gestion, :rudeal, :nivel_id, :ciclo, :grado, :carga_horaria, :certificado, :estudiante, :usuario, :fecha)
+                //     ');
+                // $query->bindValue(':sie', (int) $request->get('form')['sies']);
+                // $query->bindValue(':ue', $nombre_ue);
+                // $query->bindValue(':gestion', (int) $request->get('form')['gestiones']);
+                // $query->bindValue(':rudeal', $request->get('form')['rudeal']);
+                // $query->bindValue(':grado', (int) (1));
+                // $query->bindValue(':nivel_id', (int) $request->get('form')['nivel']);
+                // $query->bindValue(':ciclo', (int) $request->get('form')['especialidad']);
+                // $query->bindValue(':carga_horaria', (int) $cargaHorariaBasico);
+                // $query->bindValue(':estudiante', (int) $estudiante_id);
+                // $query->bindValue(':certificado', 0);
+                // $query->bindValue(':usuario', $id_usuario);
+                // $query->bindValue(':fecha', date('Y-m-d'));
+                // $query->execute();
 
-            $query->bindValue(':sie', (int) $request->get('form')['sies']);
-            $query->bindValue(':ue', $nombre_ue);
-            $query->bindValue(':gestion', (int) $request->get('form')['gestiones']);
-            $query->bindValue(':rudeal', $request->get('form')['rudeal']);
-            $query->bindValue(':grado', (int) $request->get('form')['grado']);
-            $query->bindValue(':nivel_id', (int) $request->get('form')['nivel']);
-            $query->bindValue(':ciclo', (int) $request->get('form')['especialidad']);
-            $query->bindValue(':carga_horaria', (int) $cargaHoraria);
-            $query->bindValue(':estudiante', (int) $estudiante_id);
-            $query->bindValue(':certificado', $request->get('form')['certificado']);
-            $query->bindValue(':usuario', $id_usuario);
-            $query->bindValue(':fecha', date('Y-m-d'));
-            $query->execute();
-            $em = $this->getDoctrine()->getManager();
-            $em->getConnection()->beginTransaction();
-            $em->getConnection()->rollback();
+                $entityHomologacion2 = new Homologacion();
+                $entityHomologacion2->setInstitucioneducativa($entityInstitucioneducativa);
+                $entityHomologacion2->setGestionId((int) $form['gestiones']);
+                $entityHomologacion2->setRudeal($form['rudeal']);
+                $entityHomologacion2->setNivelId((int) $form['nivel']);
+                $entityHomologacion2->setCicloId((int) $form['especialidad']);
+                $entityHomologacion2->setGradoId((int) 1);
+                $entityHomologacion2->setCargaHoraria((int) $cargaHorariaBasico);
+                $entityHomologacion2->setNroCertificado('0');
+                $entityHomologacion2->setUsuarioId($id_usuario);
+                $entityHomologacion2->setFechaReg(date('Y-m-d'));
+                $entityHomologacion2->setEstudiante($entityEstudiante);
+                $entityHomologacion2->setNombreInstitucioneducativa($entityInstitucioneducativa->getInstitucioneducativa());
+                $em->persist($entityHomologacion2);
+            }
+            
+            $em->flush();
+
+            $em->getConnection()->commit();
             $this->session->getFlashBag()->set('success', array('title' => 'Exito!!', 'message' => 'Se Registro Correctamente'));
             return $this->redirectToRoute('tramite_homologacion_certificacion_index');
         } else {
-            $em = $this->getDoctrine()->getManager();
-            $em->getConnection()->beginTransaction();
             $em->getConnection()->rollback();
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Estos datos ya se encuentran Registrados'));
             return $this->redirectToRoute('tramite_homologacion_certificacion_index');

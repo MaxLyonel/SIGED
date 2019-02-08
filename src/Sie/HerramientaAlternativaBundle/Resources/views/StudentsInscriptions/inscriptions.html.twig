@@ -15,7 +15,7 @@
                     </div>
                 </div>
                 {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'id':'idInscriptionForm', 'class':'form-inline'} } )}}
-                <input type="hidden" id="form_dateStudent" name="form[dateStudent]" class="form-control" value='{{objStudent.fechaNacimiento | date('m-d-Y')}}'>
+                <input type="hidden" id="form_dateStudent" name="form[dateStudent]" class="form-control" value="{{objStudent.fechaNacimiento | date('d-m-Y')}}">
                 <div class='col-md-3'>
 
                     {% if (((app.session.get('roluser') == 8) or (app.session.get('roluser') == 7) or (app.session.get('roluser') == 10)) and showCaseSpecialOption) %}

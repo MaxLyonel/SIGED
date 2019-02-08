@@ -38,6 +38,9 @@ Sie\AppWebBundle\Entity\Rude:
         IDX_8E0126C4102FF6F0:
             columns:
                 - municipio_lugar_tipo_id
+        IDX_8E0126C4A93F0C9:
+            columns:
+                - localidad_lugar_tipo_id
     id:
         id:
             type: integer
@@ -306,6 +309,15 @@ Sie\AppWebBundle\Entity\Rude:
             inversedBy: null
             joinColumns:
                 municipio_lugar_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        localidadLugarTipo:
+            targetEntity: LugarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                localidad_lugar_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

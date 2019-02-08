@@ -76,9 +76,10 @@ class EstudianteController extends Controller
 //        die;
         $em = $this->getDoctrine()->getManager();
         $pt = $em->getRepository('SieAppWebBundle:PaisTipo')->findBy([], ['id' => 'ASC']);
+        $ex = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findBy([], ['id' => 'ASC']);
         //$pt = $em->getRepository('SieAppWebBundle:PaisTipo')->findAll();
         return $this->render('SieUsuariosBundle:Estudiante:siguientedatos.html.twig', array(
-                    'pt' => $pt, 'datbas' => $datbas));
+                    'pt' => $pt, 'datbas' => $datbas,'ex'=>$ex));
     }
        
     public function deptoshowAction(){
@@ -121,7 +122,7 @@ class EstudianteController extends Controller
         exit;
     }
     
-    public function estudianteinsertrudeAction(Request $request) {
+    public function estudianteinsertrudeAction(Request $request) { //dump($request);die;
         $em = $this->getDoctrine()->getManager();        
         $em->getConnection()->beginTransaction();
         $data = $request->request->all();
@@ -173,6 +174,7 @@ class EstudianteController extends Controller
                 }
                 //$estudiante->setComplemento('');
                 $estudiante->setSegipId('0');
+                $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($form['Expedido']));
                 $em->persist($estudiante);
                 $em->flush();
 

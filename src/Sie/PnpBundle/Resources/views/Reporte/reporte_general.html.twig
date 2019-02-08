@@ -1,18 +1,23 @@
 {% extends 'layoutPnp.html.twig' %}
 
 {% block body -%}
-<div class="row">
-        <div class="col-lg-12">
-            <div class="page-title">
-                <h1 class="glyphicon glyphicon-stats"> Reporte General {{ lugar_nombre }} <small>{{ gestion_ini }} al {{ gestion_fin }}</small></h1>
-                <ol class="breadcrumb">
-                    <li>
-                    </li>
-                </ol>
-            </div>
-        </div>
-        <!-- /.col-lg-12 -->
-    </div>
+      <div class="header-content">
+        <h2><i class="fa fa-eye animated flip"></i>Reporte General {{ lugar_nombre }} <small>{{ gestion_ini }} al {{ gestion_fin }}</small></h1> <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-eye"></i>
+                    <a href="#">
+                    Ver
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Reporte General</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
 
  <!--  CONOCER EL NIVEL-->
     <div style="width: 100%;">
@@ -36,8 +41,13 @@
             </div>
         {% endfor %}
         <!-- BUSQUEDA-->
-        <div class="form-group col-lg-12 col-md-12" align="center">
-                    <form class="form-inline" method="post" action="{{path('sie_pnp_reporte_general', {'nivel_ini': nivel_ini,'lugar' : lugar ,'nivel_fin' : nivel_fin})}}">
+
+        <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-xs-12 col-lg-12">
+                <div class="panel panel-icon panel-primary">
+                    <div class="panel-body">
+                        <form class="form-inline" method="post" action="{{path('sie_pnp_reporte_general', {'nivel_ini': nivel_ini,'lugar' : lugar ,'nivel_fin' : nivel_fin})}}">
                         <div class="form-group">
                             <label for="gestion_inicio">Desde la Gestión&nbsp;&nbsp;</label>
                             <select class="form-control" required="required" id="gestion_ini" name="gestion_ini">
@@ -72,252 +82,173 @@
                               <input type="radio" name="m_option" id="option_1" value="1" {% if m_option==1 %} checked="checked" {% else %}{% endif %}> Todos
                             </label>
                         </div>
-                        <button type="submit" onclick="return ver_fechas(gestion_ini,gestion_fin)" class="btn btn-default">&nbsp;Generar Reporte</button>
-                    </form>    
-                </div>
-        <!-- CABEZERA -->
-        <div class="row">
-        <div class="col-lg-12">
-            <div class="portlet portlet-blue">
-                <div class="portlet-heading">
-                    <div class="portlet-title">
-                        <h4>Datos Generales {% if m_option==2 %}(Graduados){% else %}(Todos){% endif %} - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})</h4>
+                        <button type="submit" onclick="return ver_fechas(gestion_ini,gestion_fin)" class="btn btn-success">&nbsp;Generar Reporte</button>
+                    </form> 
                     </div>
-                    <div class="portlet-widgets">
-                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation1"><i class="fa fa-chevron-down"></i></a>
-                    </div>
-                    <div class="clearfix"></div>
                 </div>
-                <div id="pinformation1" class="panel-collapse collapse in">
-                    <div class="portlet-body" align="center">
-                        <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">                    
-                            <div class="col-lg-4 col-sm-6">
-                                <div class="circle-tile">
-                                    <div class="circle-tile-heading green">
-                                    <i class="fa fa-users fa-fw fa-3x"></i>
-                                    </div>
-                                    <div class="circle-tile-content green">
-                                        <div class="circle-tile-description text-faded">
-                                            Total
-                                        </div>
-                                        <div class="circle-tile-number text-faded">
-                                            {{ total_g|number_format }}
-                                        </div>
-                                    </div>
+                <div class="panel panel-icon panel-primary">
+                    <div class="panel-heading">
+                        Datos Generales {% if m_option==2 %}(Graduados){% else %}(Todos){% endif %} - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})
+                    </div>
+                    <div class="panel-body">
+                        <div id="tour-12" class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                            <div class="mini-stat clearfix bg-twitter rounded">
+                                <span class="mini-stat-icon"><i class="fa fa-users fg-twitter"></i></span>
+                                <div class="mini-stat-info">
+                                    <span class="counter">{{ total_g|number_format }}</span>
+                                    Total
                                 </div>
                             </div>
-                            <div class="col-lg-4 col-sm-6">
-                                <div class="circle-tile">
-                                    <div class="circle-tile-heading dark-blue">
-                                        <i class="fa fa-male fa-fw fa-3x"></i>
-                                    </div>
-                                    <div class="circle-tile-content dark-blue">
-                                        <div class="circle-tile-description text-faded">
-                                            Masculino
-                                        </div>
-                                        <div class="circle-tile-number text-faded">
-                                            {{ total_g_m|number_format }}
-                                            <span id="sparklineA"></span>
-                                        </div>
-                                    </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                            <div class="mini-stat clearfix bg-facebook rounded">
+                                <span class="mini-stat-icon"><i class="fa fa-male fg-facebook"></i></span>
+                                <div class="mini-stat-info">
+                                    <span class="counter">{{ total_g_m|number_format }}</span>
+                                    Masculino
                                 </div>
                             </div>
-                            <div class="col-lg-4 col-sm-6">
-                                <div class="circle-tile">
-                                    <div class="circle-tile-heading red">
-                                        <i class="fa fa-female fa-fw fa-3x"></i>
-                                    </div>
-                                    <div class="circle-tile-content red">
-                                        <div class="circle-tile-description text-faded">
-                                            Femenino
-                                        </div>
-                                        <div class="circle-tile-number text-faded">
-                                            {{ total_g_f|number_format }}
-                                            <span id="sparklineC"></span>
-                                        </div>
-                                    </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                            <div class="mini-stat clearfix bg-googleplus rounded">
+                                <span class="mini-stat-icon"><i class="fa fa-female fg-googleplus"></i></span>
+                                <div class="mini-stat-info">
+                                    <span class="counter">{{ total_g_f|number_format }}</span>
+                                    Femenino
                                 </div>
                             </div>
-
+                        </div>
+                    </div><!-- /.row -->
+                    </div>
+                </div>
+                <div class="panel panel-icon panel-primary">
+                    <div class="panel-heading">
+                        Barras - {% if m_option==2 %}Graduados{% else %}Todos{% endif %} - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})
+                    </div>
+                    <div class="panel-body">
+                        <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+                            <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    </div>
-<!-- GRAFICO -->
-        <div class="row">
-        <div class="col-lg-12">
-            <div class="portlet portlet-blue">
-                <div class="portlet-heading">
-                    <div class="portlet-title">
-                        <h4>Barras - {% if m_option==2 %}Graduados{% else %}Todos{% endif %} - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})</h4>
+                <!-- TABLA 1-->
+                <div class="panel panel-icon panel-primary">
+                    <div class="panel-heading">
+                        Reporte de {% if m_option==2 %}Graduados{% else %}Todos{% endif %} por Curso - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})&nbsp;&nbsp;&nbsp;
                     </div>
-                    <div class="portlet-widgets">
-                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation2"><i class="fa fa-chevron-down"></i></a>
+                    <div class="panel-body">
+                        <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+                            <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
+                                <thead>
+                                    <tr>
+                                        <th>{% if nivel_fin == 1 %}Departamentos{% elseif nivel_fin == 2 %}Provincias{% else %}Municipios{% endif %}</th>
+                                        <th>Segundo</th>
+                                        <th>Tercero</th>
+                                        <th>Quinto</th>
+                                        <th>Sexto</th>
+                                        <th>Total</th>
+                                        {% if nivel_fin == 1 %}
+                                            <th>Ver Provincias</th>
+                                        {% endif %}
+                                        {% if nivel_fin == 1 or nivel_fin == 2 %}
+                                            <th>Ver Municipios</th>
+                                        {% endif %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for tab1 in tabla1 %}
+                                        <tr>
+                                            <td>{{ tab1.lugar }}</td>
+                                            <td>{{ tab1.b1p1|number_format }}</td>
+                                            <td>{{ tab1.b1p2|number_format }}</td>
+                                            <td>{{ tab1.b2p1|number_format }}</td>
+                                            <td>{{ tab1.b2p2|number_format }}</td>
+                                            <td><strong>{{ tab1.total|number_format }}</strong></td>
+                                            {% if nivel_fin == 1 %}
+                                                <td>
+                                                    <a type="button" class="btn btn-warning btn-xs btn-block" href="{{path('sie_pnp_reporte_general',{ 'nivel_ini' : nivel_fin, 'lugar' : tab1.id, 'nivel_fin' : 2 }) }}">
+                                                   Provincias
+                                                    </a>
+                                                </td>
+                                            {% endif %}
+                                            {% if nivel_fin == 1 or nivel_fin == 2 %}
+                                                <td>
+                                                    <a type="button" class="btn btn-success btn-xs btn-block" href="{{path('sie_pnp_reporte_general',{ 'nivel_ini' : nivel_fin, 'lugar' : tab1.id, 'nivel_fin' : 3 }) }}">
+                                                   Municipios
+                                                    </a>
+                                                </td>
+                                            {% endif %}
+                                        </tr>
+                                    {% endfor %}
+                                    {% for tab1t in tabla1t %}
+                                        <tr>
+                                            <td><strong><div style="display: none">Z</div>Total</strong></td>
+                                            <td><strong>{{ tab1t.b1p1|number_format }}</strong></td>
+                                            <td><strong>{{ tab1t.b1p2|number_format }}</strong></td>
+                                            <td><strong>{{ tab1t.b2p1|number_format }}</strong></td>
+                                            <td><strong>{{ tab1t.b2p2|number_format }}</strong></td>
+                                            <td><strong>{{ tab1t.total|number_format }}</strong></td>
+                                            <td><strong></strong></td>
+                                            <td><strong></strong></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="clearfix"></div>
                 </div>
-                <div id="pinformation2" class="panel-collapse collapse in">
-                    <div class="portlet-body">
-            <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
-                <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-            </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-
-        <!-- TABLA 1 -->
-        <div class="row">
-        <div class="col-lg-12">
-            <div class="portlet portlet-blue">
-                <div class="portlet-heading">
-                    <div class="portlet-title">
-                        <h4>Reporte de {% if m_option==2 %}Graduados{% else %}Todos{% endif %} por Curso - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})&nbsp;&nbsp;&nbsp;</h4>
+                <!-- TABLA 2-->
+                <div class="panel panel-icon panel-primary col-lg-6">
+                    <div class="panel-heading">
+                        {% if m_option==2 %}Graduados{% else %}Todos{% endif %} Masculino por Curso - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})
                     </div>
-                    <div class="portlet-widgets">
-                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation3"><i class="fa fa-chevron-down"></i></a>
+                    <div class="panel-body">
+                        <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+                            <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
+                                <thead>
+                                    <tr>
+                                        <th>{% if nivel_fin == 1 %}Departamentos{% elseif nivel_fin == 2 %}Provincias{% else %}Municipios{% endif %}</th>
+                                        <th>Segundo</th>
+                                        <th>Tercero</th>
+                                        <th>Quinto</th>
+                                        <th>Sexto</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for tab2 in tabla2 %}
+                                        <tr>
+                                            <td>{{ tab2.lugar }}</td>
+                                            <td>{{ tab2.b1p1|number_format }}</td>
+                                            <td>{{ tab2.b1p2|number_format }}</td>
+                                            <td>{{ tab2.b2p1|number_format }}</td>
+                                            <td>{{ tab2.b2p2|number_format }}</td>
+                                            <td><strong>{{ tab2.total|number_format }}</strong></td>
+                                        </tr>
+                                    {% endfor %}
+                                    {% for tab2t in tabla2t %}
+                                        <tr>
+                                            <td><strong>Total</strong></td>
+                                            <td><strong>{{ tab2t.b1p1|number_format }}</strong></td>
+                                            <td><strong>{{ tab2t.b1p2|number_format }}</strong></td>
+                                            <td><strong>{{ tab2t.b2p1|number_format }}</strong></td>
+                                            <td><strong>{{ tab2t.b2p2|number_format }}</strong></td>
+                                            <td><strong>{{ tab2t.total|number_format }}</strong></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="clearfix"></div>
                 </div>
-                <div id="pinformation3" class="panel-collapse collapse in">
-                    <div class="portlet-body">
-            <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
-                <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
-                    <thead>
-                        <tr>
-                            <th>{% if nivel_fin == 1 %}Departamentos{% elseif nivel_fin == 2 %}Provincias{% else %}Municipios{% endif %}</th>
-                            <th>Segundo</th>
-                            <th>Tercero</th>
-                            <th>Quinto</th>
-                            <th>Sexto</th>
-                            <th>Total</th>
-                            {% if nivel_fin == 1 %}
-                                <th>Ver Provincias</th>
-                            {% endif %}
-                            {% if nivel_fin == 1 or nivel_fin == 2 %}
-                                <th>Ver Municipios</th>
-                            {% endif %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for tab1 in tabla1 %}
-                            <tr>
-                                <td>{{ tab1.lugar }}</td>
-                                <td>{{ tab1.b1p1|number_format }}</td>
-                                <td>{{ tab1.b1p2|number_format }}</td>
-                                <td>{{ tab1.b2p1|number_format }}</td>
-                                <td>{{ tab1.b2p2|number_format }}</td>
-                                <td><strong>{{ tab1.total|number_format }}</strong></td>
-                                {% if nivel_fin == 1 %}
-                                    <td>
-                                        <a type="button" class="btn btn-default btn-block" href="{{path('sie_pnp_reporte_general',{ 'nivel_ini' : nivel_fin, 'lugar' : tab1.id, 'nivel_fin' : 2 }) }}">
-                                       Provincias
-                                        </a>
-                                    </td>
-                                {% endif %}
-                                {% if nivel_fin == 1 or nivel_fin == 2 %}
-                                    <td>
-                                        <a type="button" class="btn btn-success btn-block" href="{{path('sie_pnp_reporte_general',{ 'nivel_ini' : nivel_fin, 'lugar' : tab1.id, 'nivel_fin' : 3 }) }}">
-                                       Municipios
-                                        </a>
-                                    </td>
-                                {% endif %}
-                            </tr>
-                        {% endfor %}
-                        {% for tab1t in tabla1t %}
-                            <tr>
-                                <td><strong><div style="display: none">Z</div>Total</strong></td>
-                                <td><strong>{{ tab1t.b1p1|number_format }}</strong></td>
-                                <td><strong>{{ tab1t.b1p2|number_format }}</strong></td>
-                                <td><strong>{{ tab1t.b2p1|number_format }}</strong></td>
-                                <td><strong>{{ tab1t.b2p2|number_format }}</strong></td>
-                                <td><strong>{{ tab1t.total|number_format }}</strong></td>
-                                <td><strong></strong></td>
-                                <td><strong></strong></td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-     <!-- TABLA 2 -->
-        <div class="row">
-        <div class="col-lg-6">
-            <div class="portlet portlet-blue">
-                <div class="portlet-heading">
-                    <div class="portlet-title">
-                        <h4>{% if m_option==2 %}Graduados{% else %}Todos{% endif %} Masculino por Curso - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})</h4>
+                <!-- TABLA 3-->
+                <div class="panel panel-icon panel-primary col-lg-6">
+                    <div class="panel-heading">
+                        {% if m_option==2 %}Graduados{% else %}Todos{% endif %} Femenino por Curso - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})
                     </div>
-                    <div class="portlet-widgets">
-                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation4"><i class="fa fa-chevron-down"></i></a>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div id="pinformation4" class="panel-collapse collapse in">
-                    <div class="portlet-body">
-            <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
-                <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
-                    <thead>
-                        <tr>
-                            <th>{% if nivel_fin == 1 %}Departamentos{% elseif nivel_fin == 2 %}Provincias{% else %}Municipios{% endif %}</th>
-                            <th>Segundo</th>
-                            <th>Tercero</th>
-                            <th>Quinto</th>
-                            <th>Sexto</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for tab2 in tabla2 %}
-                            <tr>
-                                <td>{{ tab2.lugar }}</td>
-                                <td>{{ tab2.b1p1|number_format }}</td>
-                                <td>{{ tab2.b1p2|number_format }}</td>
-                                <td>{{ tab2.b2p1|number_format }}</td>
-                                <td>{{ tab2.b2p2|number_format }}</td>
-                                <td><strong>{{ tab2.total|number_format }}</strong></td>
-                            </tr>
-                        {% endfor %}
-                        {% for tab2t in tabla2t %}
-                            <tr>
-                                <td><strong>Total</strong></td>
-                                <td><strong>{{ tab2t.b1p1|number_format }}</strong></td>
-                                <td><strong>{{ tab2t.b1p2|number_format }}</strong></td>
-                                <td><strong>{{ tab2t.b2p1|number_format }}</strong></td>
-                                <td><strong>{{ tab2t.b2p2|number_format }}</strong></td>
-                                <td><strong>{{ tab2t.total|number_format }}</strong></td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-                </div>
-            </div>
-        </div>
-    </div>
-     <!-- TABLA 3 -->
-    <div class="col-lg-6">
-        <div class="portlet portlet-blue">
-            <div class="portlet-heading">
-                <div class="portlet-title">
-                    <h4>{% if m_option==2 %}Graduados{% else %}Todos{% endif %} Femenino por Curso - {{ lugar_nombre }} ({{ gestion_ini }} al {{ gestion_fin }})</h4>
-                </div>
-                <div class="portlet-widgets">
-                    <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation5"><i class="fa fa-chevron-down"></i></a>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-            <div id="pinformation5" class="panel-collapse collapse in">
-                <div class="portlet-body">
-                    <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+                    <div class="panel-body">
+                        <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
                         <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
                            <thead>
                         <tr>
@@ -353,14 +284,10 @@
                     </tbody>
                         </table>
                     </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    </div>
-
-</div>
-  
 
 {% endblock %}
 
