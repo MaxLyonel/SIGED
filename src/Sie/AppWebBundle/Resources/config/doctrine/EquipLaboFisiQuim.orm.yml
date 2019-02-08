@@ -5,9 +5,9 @@ Sie\AppWebBundle\Entity\EquipLaboFisiQuim:
         IDX_AB657913AB163FE:
             columns:
                 - institucioneducativa_id
-        IDX_AB6579149C273F7:
+        IDX_AB6579119C3907C:
             columns:
-                - secci_alcalde_persona_id
+                - secciv_construida_tipo_id
     id:
         id:
             type: integer
@@ -60,13 +60,6 @@ Sie\AppWebBundle\Entity\EquipLaboFisiQuim:
             unsigned: false
             comment: ''
             column: secci_cantidad_6tosec
-        seccivConstruidaPor:
-            type: string
-            nullable: true
-            length: 250
-            fixed: false
-            comment: ''
-            column: secciv_construida_por
         seccivEsLabFisQuim:
             type: boolean
             nullable: true
@@ -139,6 +132,25 @@ Sie\AppWebBundle\Entity\EquipLaboFisiQuim:
             nullable: true
             comment: ''
             column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        nombreAlcalde:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: nombre_alcalde
+        telefonoAlcalde:
+            type: string
+            nullable: true
+            length: 80
+            fixed: false
+            comment: ''
+            column: telefono_alcalde
     manyToOne:
         institucioneducativa:
             targetEntity: Institucioneducativa
@@ -149,13 +161,13 @@ Sie\AppWebBundle\Entity\EquipLaboFisiQuim:
                 institucioneducativa_id:
                     referencedColumnName: id
             orphanRemoval: false
-        secciAlcaldePersona:
-            targetEntity: Persona
+        seccivConstruidaTipo:
+            targetEntity: EquipLaboFisiQuimConstruidaTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                secci_alcalde_persona_id:
+                secciv_construida_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
