@@ -132,7 +132,7 @@
         }
         
         function habilitar(iest){
-            if (confirm('¡AVISO IMPORTANTE! ¡LEA CON ATENCIÓN!\nLa habilitación de regularización permitira al director modificar datos del ultimo operativo realizado por el CEA,\nSe le comunica que se registrara el usuario y fecha de esta autorización.\n¿Esta seguro de conceder este acceso?\nSi no esta seguro de este mensaje presione CANCELAR.')){
+            if (confirm('¡AVISO IMPORTANTE! !LEA CON ATENCIÓN!\nLa habilitación del siguiente operativo cerrara toda regularización para el CEA seleccionado,\ny solo los tec SIE podran realizar ediciones futuras segun normativa vigente.\nSe le comunica que se registrara el usuario y fecha de esta autorización.\n¿Esta seguro de habilitar el siguiente operativo para este centro?\nSi no esta seguro de este mensaje presione CANCELAR.')){
                 var dataform = $('#form_regularizar').serialize();
                 $.ajax({
                     type: 'get',
@@ -143,6 +143,7 @@
                         $("#msg").append('<div style="text-align:center">Cargando datos...<img src="{{asset('img/loading.gif')}}" /></div>');
                     },
                     success: function (data) {
+                        $('#msg').empty();
                         $('#cea').empty();
                         if(data.tipo =="exito"){
                             $('#flashMessage').empty();
