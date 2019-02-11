@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sie\AppWebBundle\Entity\EstudianteInscripcion;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Sie\AppWebBundle\Entity\EstudianteAsignatura;
+use Sie\AppWebBundle\Entity\Rude;
 use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * EstudianteInscripcion controller.
@@ -677,6 +678,56 @@ class CursosController extends Controller {
                   $em->flush();
                 }
 
+
+                // this is for the new RUDE dev
+                $objRude = $em->getRepository('SieAppWebBundle:Rude')->findOneBy(array('estudianteInscripcion'=>$arrInfoStudent['eInsId']));
+
+                $objRudeIdioma =  $em->getRepository('SieAppWebBundle:RudeIdioma')->findBy(array('rude'=>$objRude->getId()));
+                foreach ($objRudeIdioma as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+                $objRudeActividad =  $em->getRepository('SieAppWebBundle:RudeActividad')->findBy(array('rude'=>$objRude->getId()));
+                foreach ($objRudeActividad as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+                $objRudeAbandono =  $em->getRepository('SieAppWebBundle:RudeAbandono')->findBy(array('rude'=>$objRude->getId()));
+                foreach ($objRudeAbandono as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+
+                $objRudeMedioTransporte =  $em->getRepository('SieAppWebBundle:RudeMedioTransporte')->findBy(array('rude'=>$objRude->getId()));
+                foreach ($objRudeMedioTransporte as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+                
+
+                $objRudeMediosComunicacion =  $em->getRepository('SieAppWebBundle:RudeMediosComunicacion')->findBy(array('rude'=>$objRude->getId()));
+                foreach ($objRudeMediosComunicacion as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+                
+                
+
+                $objRudeEducacionDiversa =  $em->getRepository('SieAppWebBundle:RudeEducacionDiversa')->findBy(array('rude'=>$objRude->getId()));
+                foreach ($objRudeEducacionDiversa as $element) {
+                    $em->remove($element);
+                }
+                $em->flush();
+                
+
+
+
+                //delete rude information
+                $em->remove($objRude);
+                $em->flush();
+
                 $objStudentInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $arrInfoStudent['id'], 'institucioneducativaCurso' => $arrInfoUe['ueducativaInfoId']['iecId']));
                 if($objStudentInscription){
                     $em->remove($objStudentInscription);
@@ -686,6 +737,11 @@ class CursosController extends Controller {
                     $em->remove($objStudentInscription);
                     $em->flush();
                 }
+
+
+                
+                
+                
 
                 //everythinng ok
                 $em->getConnection()->commit();
