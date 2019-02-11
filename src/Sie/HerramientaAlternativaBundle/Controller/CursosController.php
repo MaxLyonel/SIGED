@@ -721,6 +721,12 @@ class CursosController extends Controller {
                         $em->remove($element);
                     }
                     $em->flush();
+
+                    $objRudeCentroSalud =  $em->getRepository('SieAppWebBundle:RudeCentroSalud')->findBy(array('rude'=>$objRude->getId()));
+                    foreach ($objRudeCentroSalud as $element) {
+                        $em->remove($element);
+                    }
+                    $em->flush();
                     
                     //delete rude information
                     $em->remove($objRude);
