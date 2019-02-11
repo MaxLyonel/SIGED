@@ -124,12 +124,12 @@
             }    
         }
         else{ // PLAN 2
-            if(dias1>=140 && dias1<180){
+            if(dias1>=140 && dias1<=200){
                 document.getElementById("save").style.visibility = 'hidden';
                 return true;
             }
             else{
-                alert("La fecha final debe ser mínimo 140 días mayor que la fecha inicial pero no mayor a 180 días (5 meses a 6 meses)");
+                alert("La fecha final debe ser mínimo 140 días mayor que la fecha inicial pero no mayor a 200 días (5 meses a 6 meses)");
                 return false;
             }   
         }

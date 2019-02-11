@@ -258,8 +258,6 @@ class RegularizationMaestroController extends Controller {
         throw $e;
       }
 
-      dump($form);die;
-
     }
 
     /*
@@ -268,7 +266,7 @@ class RegularizationMaestroController extends Controller {
 
     private function formSearch($gestionactual) {
         $gestiones = array();
-        for($i=$this->session->get('currentyear')-1;$i>=$this->session->get('currentyear')-2;$i--){
+        for($i=$this->session->get('currentyear')-1;$i>=$this->session->get('currentyear')-1;$i--){
             $gestiones[$i] = $i;
         }
         $form = $this->createFormBuilder()
@@ -1236,7 +1234,7 @@ class RegularizationMaestroController extends Controller {
 
     private function formReset($gestionactual) {
         $gestiones = array();
-        for($i=2016;$i>=2016;$i--){
+        for($i=$this->session->get('currentyear')-1;$i>=$this->session->get('currentyear')-1;$i--){
             $gestiones[$i] = $i;
         }
         $form = $this->createFormBuilder()

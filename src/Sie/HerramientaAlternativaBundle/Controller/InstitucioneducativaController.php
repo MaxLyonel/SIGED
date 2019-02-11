@@ -1917,13 +1917,13 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             $queryEntidad->execute();
             $objEntidadValidaNombre = $queryEntidad->fetchAll();
             if (count($objEntidadValidaNombre)>0) {
-                $this->get('session')->getFlashBag()->add('errorMsg', 'El nombre del subcentro ya se encuentra registrado con el numero '.$subcea.'.');
+                $this->get('session')->getFlashBag()->add('errorMsg', 'El nombre del SUB CEA ya se encuentra registrado con el numero '.$subcea.'.');
                 return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_sucursal'));
             }
 
             $entityInstitucionEducativaSucursalCentral = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa' => $idInstitucion, 'gestionTipo' => $gestion, 'sucursalTipo' => 0, 'periodoTipoId' => $periodo));
             if(!$entityInstitucionEducativaSucursalCentral) {
-                $this->get('session')->getFlashBag()->add('errorMsg', 'El CEA '.$idInstitucion.' no cuenta con la sucursal 0 habilitada, debe aperturar el CEA principal en la gestion y periodo seleccionado antes de abrir mas sucursales.');
+                $this->get('session')->getFlashBag()->add('errorMsg', 'El CEA '.$idInstitucion.' no cuenta con el SUB CEA 0 habilitado, debe aperturar el CEA CENTRAL en la gestion y periodo seleccionado antes de abrir otro SUB CEA.');
                 return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_sucursal'));
             }
 
@@ -1944,7 +1944,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             $inscripciones = $query->getResult();
 
             if($inscripciones) {
-                $this->get('session')->getFlashBag()->add('errorMsg', 'El CEA ya cuenta con la sucursal '.$subcea.' habilitada.');
+                $this->get('session')->getFlashBag()->add('errorMsg', 'El CEA ya cuenta con el SUB CEA '.$subcea.' habilitada.');
                 return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_sucursal'));
             }
             else {                                
@@ -2010,11 +2010,11 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
 
                     $em->flush();
                     $em->getConnection()->commit();
-                    $this->get('session')->getFlashBag()->add('successMsg', 'Se habilito la sucursal '.$subcea.' - '.$nombre.' correctamente.');
+                    $this->get('session')->getFlashBag()->add('successMsg', 'Se habilito el SUB CEA '.$subcea.' - '.$nombre.' correctamente.');
                     return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_sucursal'));       
                 } catch (\Doctrine\ORM\NoResultException $exc) {
                     $em->getConnection()->rollback();
-                    $this->get('session')->getFlashBag()->add('errorMsg', 'Ha ocurrido un problema en la generación de la sucursal.');
+                    $this->get('session')->getFlashBag()->add('errorMsg', 'Ha ocurrido un problema en la generación del SUB CEA.');
                     return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_sucursal'));          
                 }
             }            

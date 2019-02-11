@@ -1,0 +1,76 @@
+<div class="panel rounded shadow no-overflow">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title">Datos Nivelaci&oacute;n</h3>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="panel-body no-padding">
+
+
+                                <table id="user" class="table table-bordered table-striped" style="clear: both">
+                                    <tbody>
+                                    <tr>
+                                        <td width="45%">NIVEL</td>
+                                        <td style="color: #1f326b;">{{dataregularization.nivel}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>GRADO</td>
+                                        <td style="color: #1f326b;">{{dataregularization.grado}} </td>
+                                    </tr>
+                                    <tr>
+                                        <td>PARALELO</td>
+                                        <td style="color: #1f326b;">{{dataregularization.paralelo}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>TURNO</td>
+                                        <td style="color: #1f326b;">{{dataregularization.turno}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>MATRICULA</td>
+                                        <td style="color: #1f326b;">{{dataregularization.estadoMatricula}}</td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+
+
+                                
+                                {{form_start(form, { 'attr':{'data-toggle':'validator','role':'form', 'class':'form-horizontal form-bordered', 'id':'regularizationFormId'} } )}}
+                                    <div class="form-body">
+                                       
+                                        <div class="form-group">
+                                            <label for="name" class="col-sm-4 control-label">{{form_label(form.docRespaldo)}}</label>
+                                            <div class="col-sm-7">
+                                                 {{form_widget(form.docRespaldo)}}
+                                            </div>
+                                        </div><!-- /.form-group -->
+                                        <div class="form-group">
+                                            <label for="email" class="col-sm-4 control-label">{{form_label(form.nota)}}</label>
+                                            <div class="col-sm-7">
+                                                 {{form_widget(form.nota)}}
+                                            </div>
+                                        </div><!-- /.form-group -->
+
+                                        <div class="form-group">
+                                            <label for="email" class="col-sm-4 control-label">{{form_label(form.speciality)}}</label>
+                                            <div class="col-sm-7">
+                                                 {{form_widget(form.speciality)}}
+                                            </div>
+                                        </div><!-- /.form-group -->
+                                       
+                                     
+                                    
+                                       
+                                    </div><!-- /.form-body -->
+                                    <div class="form-footer">
+                                        <div class="col-sm-offset-4">
+                                            {{form_widget(form.register)}}
+                                        </div>
+                                    </div><!-- /.form-footer -->
+                                {{form_end(form)}}
+
+                            </div>
+                        </div>
+
+    

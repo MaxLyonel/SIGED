@@ -170,9 +170,14 @@ class NoteConsultationUesController extends Controller {
              
         }
 
+        $data = array(
+            'operativoTipo' => 7,
+            'gestion' => $gestion,
+            'id' => $sie,
 
-
-       
+        );
+ 
+        $operativo = $this->get('funciones')->saveDataInstitucioneducativaOperativoLog($data);
 
         return $this->render($this->session->get('pathSystem') . ':NoteConsultationUes:result.html.twig', array(
                     'unidadEducativa' => $objUe,
