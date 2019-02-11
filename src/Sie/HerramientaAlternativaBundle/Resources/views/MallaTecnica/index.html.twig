@@ -38,11 +38,15 @@
                 <div class="col-md-4">
 
 
-                    <div class="tab">
-                        <button class="tablinks" onclick="openCity(event, 'uno')" >Carga Horaria Antigua</button>
-                        <button class="tablinks" onclick="openCity(event, 'dos')"id="defaultOpen">Carga Horaria Nueva</button>
 
-                    </div>
+
+
+                    {% if (app.session.get('ie_gestion') <= '2018') %}
+                        <div class="tab">
+                            <button class="tablinks" onclick="openCity(event, 'uno')" >Carga Horaria Antigua</button>
+                            {#<button class="tablinks" onclick="openCity(event, 'dos')"id="defaultOpen">Carga Horaria Nueva</button>#}
+
+                        </div>
 
                     <div id="uno" class="tabcontent " >
  <pre>Aplica a estudiantes que continuan su proceso Educativo (Esta carga Horaria se ira cerrando en el Sistema paulatinamente)</pre>
@@ -87,8 +91,56 @@
                         </small>
 
                     </div>
+                    {% else %}
+                        <div class="tab">
+                            <button class="tablinks" onclick="openCity(event, 'uno')" >Carga Horaria Antigua</button>
+                            <button class="tablinks" onclick="openCity(event, 'dos')"id="defaultOpen">Carga Horaria Nueva</button>
 
-                    <div id="dos" class="tabcontent">
+                        </div>
+                        <div id="uno" class="tabcontent " >
+                            <pre>Aplica a estudiantes que continuan su proceso Educativo (Esta carga Horaria se ira cerrando en el Sistema paulatinamente)</pre>
+                            <small>
+                                <div class="tree well">
+
+                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nueva Acreditación">
+                                        {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                            <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevaAcreditacion();">
+                                                <i class="fa fa-outdent"></i> Nueva Acreditación
+                                            </button>
+                                        {% endif %}
+                                        <a class="btn btn-lilac btn-xs btn-stroke" href="{{path('herramienta_alter_reporte_mallatecnica')}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Generar Pdf</a>
+                                    </div>
+                                    {% for turno_superiorKey, dataturno_superior in aInfoUnidadEductiva %}
+                                        <ul>
+                                            <li>
+                                                <span><i class="icon-folder-open"></i>{{ turno_superiorKey }}</span>
+                                                <ul>
+                                                    {% for facultad_areaKey, datafacultad_area in dataturno_superior %}
+                                                        <li>
+                                                            <span><i class="icon-folder-open"></i>{{ facultad_areaKey }}</span>
+                                                            <ul>
+                                                                {% for especialidadKey, dataespecialidad in datafacultad_area %}
+                                                                    <li>
+                                                                <span><i class="icon-minus-sign"></i>{{ especialidadKey }}
+                                                                    <button type="button" class="btn btn-circle btn-warning btn-stroke"  onclick="getModulos('{{ dataespecialidad.infoMallTec }}');">
+                                                                        <i class="glyphicon glyphicon-list-alt"></i>
+                                                                    </button>
+                                                                </span>
+                                                                    </li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    {% endfor %}
+
+                                </div>
+                            </small>
+
+                        </div>
+                        <div id="dos" class="tabcontent">
 
 
                         <small>
@@ -129,7 +181,7 @@
                             </div>
                         </small>
                     </div>
-
+                    {% endif%}
 
 
                 </div>
