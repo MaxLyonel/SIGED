@@ -169,10 +169,11 @@ class CreacionCursosEspecialController extends Controller {
      */
     public function newAction(Request $request){
         try{
+            //dump($request);die;
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idInstitucion'));
-            $gestion = $request->get('gestion');
+            $gestion = $request->get('idGestion');
             /*
              * Listamos los turnos validos
              */
