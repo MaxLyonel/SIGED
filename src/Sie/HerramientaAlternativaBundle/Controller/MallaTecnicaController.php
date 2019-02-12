@@ -466,7 +466,7 @@ select idsae,idacr
                     order by d.codigo, l.modulo";
 //        print_r($query);
 //        die;
-        dump($aInfoUeducativa['ueducativaInfoId']['facultad_area_cod'],$aInfoUeducativa['ueducativaInfoId']['especialidad_cod']);die;
+       // dump($aInfoUeducativa['ueducativaInfoId']['facultad_area_cod'],$aInfoUeducativa['ueducativaInfoId']['especialidad_cod']);die;
         $stmt = $db->prepare($query);
         $params = array();
         $stmt->execute($params);
@@ -1329,6 +1329,57 @@ group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,id
             $params = array();
             $especialidadnivel->execute($params);
             $po = $especialidadnivel->fetchAll();
+
+            $db = $em->getConnection();
+            $query = "  select * from (
+						select distinct on (sae.id, sest.id ,sat.id ) sae.id, sest.id as idespecialidad,sat.id as idacreditacion, sest.especialidad, sat.acreditacion
+						, sia.id as idsia, sip.id as idsip
+from superior_acreditacion_especialidad sae
+		inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
+			inner join 	superior_especialidad_tipo sest on sae.superior_especialidad_tipo_id =sest.id
+				inner join superior_facultad_area_tipo sfat on sest.superior_facultad_area_tipo_id = sfat.id
+					inner join superior_institucioneducativa_acreditacion sia on sae.id = sia.acreditacion_especialidad_id
+						 inner join institucioneducativa_sucursal f on sia.institucioneducativa_sucursal_id=f.id 
+						 inner join superior_institucioneducativa_periodo sip on sia.id = sip.superior_institucioneducativa_acreditacion_id
+				    where sat.id in (1,20,32) 
+					and sest.id='".$idesp."'
+					and sia.gestion_tipo_id= '".$this->session->get('ie_gestion')."'
+					and sia.institucioneducativa_id ='".$this->session->get('ie_id')."'
+					and f.periodo_tipo_id='".$this->session->get('ie_per_cod')."'
+					and f.sucursal_tipo_id ='".$this->session->get('ie_subcea')."'
+							order by sat.id asc, sae.id, sest.id  ,sia.id desc) as nivel
+left join (
+select idsae,idacr
+--,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip 
+, string_agg(modulo, ',') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
+	from(select sae.id as idsae, sest.id as idespecialidad,sest.especialidad,sat.id as idacr, sat.acreditacion, sia.id as idsia, sip.id as idsip, smp.id as idsmp, smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo 
+	from superior_acreditacion_especialidad sae
+			inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
+				inner join 	superior_especialidad_tipo sest on sae.superior_especialidad_tipo_id =sest.id
+					inner join superior_facultad_area_tipo sfat on sest.superior_facultad_area_tipo_id = sfat.id
+						inner join superior_institucioneducativa_acreditacion sia on sae.id  =sia.acreditacion_especialidad_id
+								inner join superior_institucioneducativa_periodo sip on sia.id = sip.superior_institucioneducativa_acreditacion_id
+									left join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
+										left join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
+											 inner join institucioneducativa_sucursal f on sia.institucioneducativa_sucursal_id=f.id 
+						where sat.id in (1,20,32) 
+					and sia.gestion_tipo_id= '".$this->session->get('ie_gestion')."'
+					and sia.institucioneducativa_id ='".$this->session->get('ie_id')."'
+					and sfat.codigo in ('18','19','20','21','22','23','24','25')
+					and sest.id='".$idesp."'
+					and f.periodo_tipo_id='".$this->session->get('ie_per_cod')."'
+					and f.sucursal_tipo_id ='".$this->session->get('ie_subcea')."'
+					and smt.esvigente =true
+	) dat
+	group by  idsae,idespecialidad,especialidad,idacr,acreditacion,idsia,idsip
+) as v on v.idacr = nivel.idacreditacion
+        
+    ";
+            $final = $db->prepare($query);
+            $params = array();
+            $final->execute($params);
+            $mallafinal = $final->fetchAll();
+
             // dump($po);die();
             if ($po){
                 $exist = true;
@@ -1339,7 +1390,8 @@ group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,id
 
             return $this->render('SieHerramientaAlternativaBundle:MallaTecnica:listModulos.html.twig', array(
                 'exist' => $exist,
-                'malla' => $po
+                'malla' => $po,
+                'mallafin' => $mallafinal,
             ));
 
 
