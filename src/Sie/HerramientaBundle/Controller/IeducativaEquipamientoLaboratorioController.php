@@ -110,7 +110,11 @@ class IeducativaEquipamientoLaboratorioController extends Controller {
 
         do {
             $entityIntitucionEducativaGestion = $this->getInstitucionEducativaGestion($sie,$gestionActual);
-            $gestionActual = $gestionActual-1;
+            if (count($entityIntitucionEducativaGestion)>0){
+                $gestionActual = $gestionActual;
+            } else {
+                $gestionActual = $gestionActual-1;
+            }            
         } while (count($entityIntitucionEducativaGestion)==0 and $gestionActual > 2009);
 
         // $entityIntitucionEducativaGestion = $this->getInstitucionEducativaGestion($sie,$gestionActual);
