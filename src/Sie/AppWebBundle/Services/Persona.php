@@ -108,39 +108,23 @@ class Persona {
         if($complemento == '0'){
             $query = $repository->createQueryBuilder('p')
                 ->select('p')
-                ->where('p.carnet = :carnet AND p.segipId >= :valor')
+                ->where('p.carnet = :carnet AND p.segipId = :valor')
                 ->setParameter('carnet', $carnet)
-                ->setParameter('valor', 0)
+                ->setParameter('valor', 1)
                 ->getQuery();
         }
         else{
             $query = $repository->createQueryBuilder('p')
                 ->select('p')
-                ->where('p.carnet = :carnet AND p.complemento = :complemento AND p.segipId >= :valor')
+                ->where('p.carnet = :carnet AND p.complemento = :complemento AND p.segipId = :valor')
                 ->setParameter('carnet', $carnet)
                 ->setParameter('complemento', $complemento)
-                ->setParameter('valor', 0)
+                ->setParameter('valor', 1)
                 ->getQuery();
         }
         $personas = $query->getResult();
 
-        $p = null;
-
-        if ($personas) {
-            if(is_array($personas)) {
-                $p = array(
-                    'personaId'=>$personas[0]->getId(),
-                    'personaCarnet'=>$personas[0]->getCarnet(),
-                    'personaComplemento'=>$personas[0]->getComplemento(),
-                    'personaPaterno'=>$personas[0]->getPaterno(),
-                    'personaMaterno'=>$personas[0]->getMaterno(),
-                    'personaNombre'=>$personas[0]->getNombre(),
-                    'personaFechaNac'=>$personas[0]->getFechaNacimiento(),
-                );
-            }
-        }
-
-        return($p);
+        return($personas);
 	}
 
 }
