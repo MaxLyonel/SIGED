@@ -217,7 +217,7 @@
                                       ( app.session.get('ue_tecteg') )
                                     %}
                                       
-                                      {% if data.estadomatriculaId == 4 or (data.estadomatriculaId in [5,11,55] and gestion == app.session.get('currentyear')) or app.session.get('ie_id') == '81981478'  or app.session.get('ie_id') == '81700043' or app.session.get('ie_id') == '80980175' %}
+                                      {% if data.estadomatriculaId == 4 or (data.estadomatriculaId in [5,11,55] and gestion == app.session.get('currentyear')) or app.session.get('ie_id') == '81981478'  or app.session.get('ie_id') == '81700043' or app.session.get('ie_id') == '80980175' or (data.estadomatriculaId == 55 and gestion < app.session.get('currentyear')) %}
                                           {% if
                                             ( app.session.get('ue_humanistica') ) or
                                             (app.session.get('ue_plena')  and app.session.get('ue_humanistica') ) or
