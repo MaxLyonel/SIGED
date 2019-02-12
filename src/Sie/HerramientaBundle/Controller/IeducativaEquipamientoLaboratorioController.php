@@ -32,8 +32,9 @@ class IeducativaEquipamientoLaboratorioController extends Controller {
      * @param Request $request
      * @return type
      */
-    public function indexAction(Request $request) {     
+    public function indexAction(Request $request) {    
         $sesion = $request->getSession();
+        //dump($sesion->get('ie_id'));die; 
         $id_usuario = $sesion->get('userId');
         //validation if the user is logged
         if (!isset($id_usuario)) {
@@ -68,11 +69,12 @@ class IeducativaEquipamientoLaboratorioController extends Controller {
         $sie = 0;
 
         if(!$form){
-            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('herramienta_ieducativa_equipamiento_laboratorio_index'));
+            $sie = $sesion->get('ie_id');
+            // $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+            // return $this->redirect($this->generateUrl('herramienta_ieducativa_equipamiento_laboratorio_index'));
+        } else {
+            $sie = $form['sie'];
         }
-
-        $sie = $form['sie'];
 
         /*
         * verificamos si tiene tuicion
