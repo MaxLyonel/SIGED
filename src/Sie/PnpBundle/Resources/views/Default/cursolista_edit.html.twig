@@ -158,14 +158,14 @@
                             <td>{{ estudiante.genero }}</td>
                             <td>{{ estudiante.observacionadicional }}</td>
                             <td>{{ estudiante.estadomatricula }}</td>
-                            <td> <a role="button" class="btn btn-danger btn-large glyphicon glyphicon-remove" onclick="return confirm('¿Está seguro de elminar este registro?, Si ELIMINA el registro, se perderá todos los datos, como la INSCRIPCIÓN y las NOTAS del estudiante y no podrá recuperar!!!')" href="{{ path('sie_pnp_eliminarregistro_estudiante_curso', { 'estudiante_inscripcion_id': estudiante.inscripcion_id,'curso_id':datos.id }) }}"> Eliminar</a></td>
+                            <td> <a role="button" class="btn rounded btn-danger btn-large glyphicon glyphicon-remove" onclick="return confirm('¿Está seguro de elminar este registro?, Si ELIMINA el registro, se perderá todos los datos, como la INSCRIPCIÓN y las NOTAS del estudiante y no podrá recuperar!!!')" href="{{ path('sie_pnp_eliminarregistro_estudiante_curso', { 'estudiante_inscripcion_id': estudiante.inscripcion_id,'curso_id':datos.id }) }}"> Eliminar</a></td>
                         </tr>
                     {% endfor %}
                     </tbody>
                 </table> 
                 {% endfor %}
                 <hr/>
-                    <a role="button" onclick="SeeBuscarEstudiante()" class="btn btn-primary glyphicon glyphicon-plus-sign" href="#" > Agregar Estudiante</a><br/><br/>
+                    <a role="button" onclick="SeeBuscarEstudiante()" class="btn rounded btn-primary glyphicon glyphicon-plus-sign" href="#" > Agregar Estudiante</a><br/><br/>
             </div>
         </div>
     </div>
@@ -203,7 +203,7 @@
                     <label class="sr-only" for="ci_buscar">CI O CODIGO RUDE</label>
                     <input type="text" required="true" class="form-control" id="ci_buscar" placeholder="CI o Codigo RUDE estudiante">
                   </div>
-                <button type="submit" class="btn btn-primary" href= "#" onclick="BuscarEstudiante()">Buscar</button>
+                <button type="submit" class="btn rounded btn-primary" href= "#" onclick="BuscarEstudiante()">Buscar</button>
                 </form>
 
                 <div id="ResultCI" style="display:none">
@@ -211,7 +211,7 @@
                 </div>             
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn rounded btn-primary" data-dismiss="modal">Cerrar</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->

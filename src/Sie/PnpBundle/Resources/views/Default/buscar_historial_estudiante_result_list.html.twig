@@ -105,7 +105,7 @@
                                         <td><small>{{data.bloque}}</small></td>
                                         <td><small>{{data.parte}}</small></td>
                                         {% if data.sie == "80480300" or data.sie == "80730794" or data.sie == "80980569" or data.sie == "81230297" or data.sie == "81480201" or data.sie == "81730264" or data.sie == "81981501" or data.sie == "82230130" or data.sie == "82480050" %}
-                                            <td><a role="button" class="btn btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id': data.institucioneducativa_curso_id~data.bloque~data.parte,'esactivo':0}) }}" >&nbsp;</a></td>
+                                            <td><a role="button" class="btn rounded btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id': data.institucioneducativa_curso_id~data.bloque~data.parte,'esactivo':0}) }}" >&nbsp;</a></td>
 
                                         {% else %}
                                             <td>No PNP</td>

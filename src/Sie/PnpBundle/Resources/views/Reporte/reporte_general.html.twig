@@ -82,7 +82,7 @@
                               <input type="radio" name="m_option" id="option_1" value="1" {% if m_option==1 %} checked="checked" {% else %}{% endif %}> Todos
                             </label>
                         </div>
-                        <button type="submit" onclick="return ver_fechas(gestion_ini,gestion_fin)" class="btn btn-success">&nbsp;Generar Reporte</button>
+                        <button type="submit" onclick="return ver_fechas(gestion_ini,gestion_fin)" class="btn rounded btn-success">&nbsp;Generar Reporte</button>
                     </form> 
                     </div>
                 </div>
@@ -167,14 +167,14 @@
                                             <td><strong>{{ tab1.total|number_format }}</strong></td>
                                             {% if nivel_fin == 1 %}
                                                 <td>
-                                                    <a type="button" class="btn btn-warning btn-xs btn-block" href="{{path('sie_pnp_reporte_general',{ 'nivel_ini' : nivel_fin, 'lugar' : tab1.id, 'nivel_fin' : 2 }) }}">
+                                                    <a type="button" class="btn rounded btn-warning btn-xs btn-block" href="{{path('sie_pnp_reporte_general',{ 'nivel_ini' : nivel_fin, 'lugar' : tab1.id, 'nivel_fin' : 2 }) }}">
                                                    Provincias
                                                     </a>
                                                 </td>
                                             {% endif %}
                                             {% if nivel_fin == 1 or nivel_fin == 2 %}
                                                 <td>
-                                                    <a type="button" class="btn btn-success btn-xs btn-block" href="{{path('sie_pnp_reporte_general',{ 'nivel_ini' : nivel_fin, 'lugar' : tab1.id, 'nivel_fin' : 3 }) }}">
+                                                    <a type="button" class="btn rounded btn-success btn-xs btn-block" href="{{path('sie_pnp_reporte_general',{ 'nivel_ini' : nivel_fin, 'lugar' : tab1.id, 'nivel_fin' : 3 }) }}">
                                                    Municipios
                                                     </a>
                                                 </td>

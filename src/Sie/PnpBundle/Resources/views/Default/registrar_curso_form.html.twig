@@ -95,8 +95,8 @@
                         {% if plan == 1 and (fila.ciclo_tipo_id == 1 or fila.ciclo_tipo_id == 2) or plan == 2 and (fila.ciclo_tipo_id == 34  or fila.ciclo_tipo_id == 35) %}
                         <tr>
                             <td>{{ fila.id }}</td>
-                            <td><a role="button" class="btn btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id_enc': fila.id_enc~"|"~fila.ciclo_tipo_id~"|"~fila.grado_tipo_id}) }}" title="Imprimir Curso"></a></td>
-                            <!--<td><a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado', { 'id': fila.id }) }}" > Ver participantes</a></td>-->
+                            <td><a role="button" class="btn rounded rounded btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id_enc': fila.id_enc~"|"~fila.ciclo_tipo_id~"|"~fila.grado_tipo_id}) }}" title="Imprimir Curso"></a></td>
+                            <!--<td><a role="button" class="btn rounded btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado', { 'id': fila.id }) }}" > Ver participantes</a></td>-->
                             <td>{{ fila.carnet }}{% if fila.complemento != '' %}-{{fila.complemento}}{% endif %}</td>
                             <td>{{ fila.nombre }}</td>                            
                             <td>{{ fila.paterno }}</td>
@@ -111,7 +111,7 @@
                                 <td>Último Curso</td>
                             {% else %}
                                 {% if fila.esactivo == 1 %}
-                                    <td><a role="button" onclick="vermodal({{ fila.id }},'{{ fila.fecha_fin|date("d/m/Y") }}')" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="#" > Crear Curso Posterior</a></td>
+                                    <td><a role="button" onclick="vermodal({{ fila.id }},'{{ fila.fecha_fin|date("d/m/Y") }}')" class="btn rounded btn-success rounded btn-xs glyphicon glyphicon-arrow-right" href="#" > Crear Curso Posterior</a></td>
                                 {% else %}
                                     <td>Curso Abierto.</td>
                                 {% endif %}
