@@ -124,7 +124,23 @@ class Persona {
         }
         $personas = $query->getResult();
 
-        return($personas);
+        $p = null;
+
+        if ($personas) {
+            if(is_array($personas)) {
+                $p = array(
+                    'personaId'=>$personas[0]->getId(),
+                    'personaCarnet'=>$personas[0]->getCarnet(),
+                    'personaComplemento'=>$personas[0]->getComplemento(),
+                    'personaPaterno'=>$personas[0]->getPaterno(),
+                    'personaMaterno'=>$personas[0]->getMaterno(),
+                    'personaNombre'=>$personas[0]->getNombre(),
+                    'personaFechaNac'=>$personas[0]->getFechaNacimiento(),
+                );
+            }
+        }
+
+        return($p);
 	}
 
 }
