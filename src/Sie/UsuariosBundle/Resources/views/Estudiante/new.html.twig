@@ -411,6 +411,9 @@
                        
                     },
                     success: function (data) {
+                        $("#busquedaDatosForm_InputCarnet").prop("disabled", true );
+                        $("#busquedaDatosForm_InputComplemento").prop("disabled", true );
+
                         $("#busquedaDatosForm_InputNombre").prop("disabled", true );
                         $("#busquedaDatosForm_InputPaterno").prop("disabled", true );
                         $("#busquedaDatosForm_InputMaterno").prop("disabled", true );

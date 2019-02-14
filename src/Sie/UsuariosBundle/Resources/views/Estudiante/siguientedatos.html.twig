@@ -16,13 +16,14 @@
                             <form id="busquedaDatosTotForm" name="busquedaDatosTotForm" method="get" class="navbar-form" onsubmit="return enviaformdatostotal();">
                                 <div class="form-group has-feedback">                                           
                                     <div class="row">
+                                            {% set disabledOption = true %}
                                         <div class="col-lg-4">
                                             <label class="required">C.I :</label>
-                                            <input type="text" class="form-control typeahead rounded" name="busquedaDatosTotForm[InputCi]" value="{{datbas['carnet']}}" id="busquedaDatosTotForm_InputCi" placeholder="Carnet de identidad" onkeypress="return soloNumeros(event);">                                                    
+                                            <input type="text" class="form-control typeahead rounded" name="busquedaDatosTotForm[InputCi]" value="{{datbas['carnet']}}" id="busquedaDatosTotForm_InputCi" placeholder="Carnet de identidad" onkeypress="return soloNumeros(event);" readonly="{{disabledOption}}">                                                    
                                         </div>
                                         <div class="col-lg-4">
                                             <label class="required">Complemento :</label>
-                                            <input type="text" class="form-control typeahead rounded" name="busquedaDatosTotForm[InputComplemento]" value="{{datbas['complemento']}}" id="busquedaDatosTotForm_InputComplemento" placeholder="Complemento" maxlength="2" onkeypress="return soloComplemento(event);">
+                                            <input type="text" class="form-control typeahead rounded" name="busquedaDatosTotForm[InputComplemento]" value="{{datbas['complemento']}}" id="busquedaDatosTotForm_InputComplemento" placeholder="Complemento" maxlength="2" onkeypress="return soloComplemento(event);" readonly="{{disabledOption}}">
                                         </div>
                                         <div class="col-lg-4">
 

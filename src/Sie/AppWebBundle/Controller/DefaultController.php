@@ -791,10 +791,13 @@ class DefaultController extends Controller {
     }
 
     public function sigedrolselectAction(Request $request, $key) {
+        $em =  $this->getDoctrine()->getManager();
         $sesion = $request->getSession();
         $rolselected = $this->get('login')->verificarRolesActivos($sesion->get('personaId'),$key);
         //dump($rolselected);
         //die;
+        //to show the option create rude on alternativa
+        $sesion->set('directorAlternativa', false);
         if (sizeof($rolselected) == 1) {
             if ( ($rolselected[0]['id'] == 2) || ($rolselected[0]['id'] == 9) ){
                 $sesion->set('roluser', $rolselected[0]['id']);
@@ -804,6 +807,19 @@ class DefaultController extends Controller {
                 $sesion->set('ie_nombre', $rolselected[0]['institucioneducativa']);
                 $sesion->set('cuentauser', $rolselected[0]['rol']);
                 $sesion->set('tiposubsistema', $rolselected[0]['idietipo']);
+                
+                //to show the option create rude on alternativa by krlos
+                if($rolselected[0]['id'] == 9){
+                    $objInstitucioneducativaAlt = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array(
+                    'id'=> $rolselected[0]['sie'],
+                    'institucioneducativaTipo'=>2
+                        ));
+                    if($objInstitucioneducativaAlt){
+                        $sesion->set('directorAlternativa', true);
+                    }
+
+                }
+
             }else{
                 $sesion->set('roluser', $rolselected[0]['id']);
                 $sesion->set('roluserlugarid', $rolselected[0]['rollugarid']);
