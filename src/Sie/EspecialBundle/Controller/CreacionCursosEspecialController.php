@@ -193,7 +193,8 @@ class CreacionCursosEspecialController extends Controller {
             $query = $em->createQuery(
             		'SELECT a FROM SieAppWebBundle:EspecialAreaTipo a
                                     WHERE a.id IN (:id) ORDER BY a.id'
-            		)->setParameter('id',array(1,2,3,4,5,6,7,8,9,100));
+                     )->setParameter('id',array(1,2,3,4,5,6,7,11));
+                    // )->setParameter('id',array(1,2,3,4,5,6,7,8,9,100));
             		$areas_result = $query->getResult();
             		$areas = array();
             		foreach ($areas_result as $a){
