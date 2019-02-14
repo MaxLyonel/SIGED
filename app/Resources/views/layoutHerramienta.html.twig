@@ -347,7 +347,7 @@
                         </a>
                         <ul>
                             {#<li><a href="{{ path('herramienta_change_paralelo_sie_index_calidad')}}">Cambio de Paralelo</a></li>#}
-                            <li><a href="{{ path('herramienta_ieducativa_equipamiento_laboratorio_detalle')}}">Laboratorio</a></li>
+                            <li><a href="{{ path('herramienta_ieducativa_equipamiento_laboratorio_index')}}">Laboratorio</a></li>
                         </ul>
                     </li>
 
@@ -419,8 +419,10 @@
                             <span class="arrow"></span>
                         </a>
                         <ul>
-                            {#<li><a href="{{ path('herramienta_change_paralelo_sie_index_calidad')}}">Cambio de Paralelo</a></li>#}
-                            <li><a href="{{ path('herramienta_ieducativa_equipamiento_laboratorio_detalle')}}">Laboratorio</a></li>
+                            <li><a href="{{ path('herramienta_ieducativa_equipamiento_laboratorio_index')}}">Laboratorio</a></li>
+                            {% if app.session.get('roluser') == 8 %}
+                                <li><a href="{{ path('herramienta_reportelabofisquim_index')}}">Reportes</a></li>
+                            {% endif %}
                         </ul>
                     </li>
 
