@@ -26,39 +26,66 @@ class EstudianteController extends Controller
     public function estudiantenewAction() {        
         return $this->render('SieUsuariosBundle:Estudiante:new.html.twig');
     }
+
+    private function  validationSegip($form){
+
+        $answerSegip = 2;
+        if($form['InputCarnet']){
+
+            $arrParametros = array(
+                'complemento'=>$form['InputComplemento'],
+                'primer_apellido'=>$form['InputPaterno'],
+                'segundo_apellido'=>$form['InputMaterno'],
+                'nombre'=>$form['InputNombre'],
+                'fecha_nacimiento'=>$form['fechaNacimiento']['day'].'-'.$form['fechaNacimiento']['mount'].'-'.$form['fechaNacimiento']['year']
+            );
+
+            $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $form['InputCarnet'],$arrParametros,'prod', 'academico');
+
+        }
+
+        return $answerSegip;
+
+    }
     
     public function busquedadatosAction(Request $request) {  
         $form = $request->get('busquedaDatosForm');
-//        str_pad($form['fechaNacimiento']['day'], 2, '0', STR_PAD_LEFT)
-        $fechanac = $form['fechaNacimiento']['year'].'-'.str_pad($form['fechaNacimiento']['mount'], 2, '0', STR_PAD_LEFT).'-'.str_pad($form['fechaNacimiento']['day'], 2, '0', STR_PAD_LEFT);
-//        dump($fechanac);
-//        die;
-        $em = $this->getDoctrine()->getManager();
-        //$em = $this->getDoctrine()->getEntityManager();
-        $db = $em->getConnection();        
-        if (($form['InputPaterno'] != '') && ($form['InputMaterno'] != '')){        
-            $query = "  select * 
-                        from estudiante a
-                        where 
-                        a.nombre like '%".$form['InputNombre']."%' and a.paterno = '".$form['InputPaterno']."' and a.materno = '".$form['InputMaterno']."' and a.fecha_nacimiento = '".$fechanac."'";
-        }
-        if ($form['InputMaterno'] == ''){
-            $query = "  select * 
-                        from estudiante a
-                        where 
-                        a.nombre like '%".$form['InputNombre']."%' and a.paterno = '".$form['InputPaterno']."' and a.fecha_nacimiento = '".$fechanac."'";
-        }
-        if ($form['InputPaterno'] == ''){
-            $query = "  select * 
-                        from estudiante a
-                        where 
-                        a.nombre like '%".$form['InputNombre']."%' and a.materno = '".$form['InputMaterno']."' and a.fecha_nacimiento = '".$fechanac."'";
-        }        
-        
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
+        $swValidationSegip = $this->validationSegip($form);
+        $po = '';
+       if($swValidationSegip){
+            //        str_pad($form['fechaNacimiento']['day'], 2, '0', STR_PAD_LEFT)
+            $fechanac = $form['fechaNacimiento']['year'].'-'.str_pad($form['fechaNacimiento']['mount'], 2, '0', STR_PAD_LEFT).'-'.str_pad($form['fechaNacimiento']['day'], 2, '0', STR_PAD_LEFT);
+    //        dump($fechanac);
+    //        die;
+            $em = $this->getDoctrine()->getManager();
+            //$em = $this->getDoctrine()->getEntityManager();
+            $db = $em->getConnection();        
+            if (($form['InputPaterno'] != '') && ($form['InputMaterno'] != '')){        
+                $query = "  select * 
+                            from estudiante a
+                            where 
+                            a.nombre like '%".$form['InputNombre']."%' and a.paterno = '".$form['InputPaterno']."' and a.materno = '".$form['InputMaterno']."' and a.fecha_nacimiento = '".$fechanac."'";
+            }
+            if ($form['InputMaterno'] == ''){
+                $query = "  select * 
+                            from estudiante a
+                            where 
+                            a.nombre like '%".$form['InputNombre']."%' and a.paterno = '".$form['InputPaterno']."' and a.fecha_nacimiento = '".$fechanac."'";
+            }
+            if ($form['InputPaterno'] == ''){
+                $query = "  select * 
+                            from estudiante a
+                            where 
+                            a.nombre like '%".$form['InputNombre']."%' and a.materno = '".$form['InputMaterno']."' and a.fecha_nacimiento = '".$fechanac."'";
+            }        
+            
+            $stmt = $db->prepare($query);
+            $params = array();
+            $stmt->execute($params);
+            $po = $stmt->fetchAll();
+
+       }
+
 //        dump($po);
 //        die;
 //        if (!$po) {//MAS BUSQUEDAS
@@ -67,10 +94,14 @@ class EstudianteController extends Controller
 //            
 //        }
         return $this->render('SieUsuariosBundle:Estudiante:estudianteslista.html.twig', array(
-                    'po' => $po,));
+                    'po' => $po,
+                    'swValidationSegip' => $swValidationSegip,
+
+                ));
     }
     
     public function siguientedatosAction(Request $request) {
+
         $datbas = $request->query->all();
 //        dump($datbas);
 //        die;
@@ -79,7 +110,8 @@ class EstudianteController extends Controller
         $ex = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findBy([], ['id' => 'ASC']);
         //$pt = $em->getRepository('SieAppWebBundle:PaisTipo')->findAll();
         return $this->render('SieUsuariosBundle:Estudiante:siguientedatos.html.twig', array(
-                    'pt' => $pt, 'datbas' => $datbas,'ex'=>$ex));
+                    'pt' => $pt, 'datbas' => $datbas,'ex'=>$ex
+                ));
     }
        
     public function deptoshowAction(){
@@ -122,11 +154,13 @@ class EstudianteController extends Controller
         exit;
     }
     
-    public function estudianteinsertrudeAction(Request $request) { //dump($request);die;
+    public function estudianteinsertrudeAction(Request $request) { 
+    
         $em = $this->getDoctrine()->getManager();        
         $em->getConnection()->beginTransaction();
         $data = $request->request->all();
         $form = $data['busquedaDatosTotForm'];
+    
         $response = new JsonResponse();
         //dump($form); die;
         $sieentiy = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['Sie']);
@@ -173,7 +207,18 @@ class EstudianteController extends Controller
                     $estudiante->setLocalidadNac('');
                 }
                 //$estudiante->setComplemento('');
-                $estudiante->setSegipId('0');
+                //added validation segip by krlos
+                if($form['swValidationSegip']==1){
+                    $valSegip = 1;
+                    $messageValSegip = 'SI VALIDADO SEGIP';
+                }else{
+                    $valSegip = 0;
+                    $messageValSegip = 'NO VALIDADO SEGIP';
+                }
+
+                $estudiante->setSegipId($valSegip);
+                $estudiante->setObservacion($messageValSegip);
+                
                 $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($form['Expedido']));
                 $em->persist($estudiante);
                 $em->flush();

@@ -57,10 +57,32 @@
                 </div>                                              
             </div>                
         {% else %}       
-            <center> 
+            <center>
+            <div style="color:transparent">krlos {{swValidationSegip}}</div> 
+            {% if swValidationSegip >= 1 %}
                 <span class="label label-danger">¡No se encontro coincidencias!</span>                        
                 <div class="alert alert-danger alert-dismissible" role="alert">
                     <strong>Verifique que cada letra y numero este digitada correctamente y vuelva a intentarlo.</strong>
                 </div>
+
+                <div class="col-lg-6">
+                     <div id="divbutonsig">
+                        <center> <a id="botonsiguienteestu" role="button" class="btn btn-theme fa fa-check form-control-feedback rounded fa fa-arrow-circle-o-right" href="#" onclick="estudiantesiguiente('{{swValidationSegip}}');"> Siguiente</a> </center> 
+
+                     </div>
+                </div>
+
+                
+
+            {% else %}
+
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <strong>
+                        Datos no encontrados, De acuerdo a la validación del SEGIP, el número de carnet (y/o complemento) no corresponde a los datos reportados "paterno, materno, nombre y fecha de nacimiento"
+                    </strong>
+                </div>
+
+            
+            {% endif %}
             </center>     
         {% endif %}              
