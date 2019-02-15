@@ -67,9 +67,9 @@
                                 <tr>
                                     <td>{{ fila.id }}</td>
                                     <td>
-                                        <a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado_editnew', { 'id': fila.id_enc }) }}" title="Ver Curso"></a>
+                                        <a role="button" class="btn rounded btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado_editnew', { 'id': fila.id_enc }) }}" title="Ver Curso"></a>
                                         {% if fila.esactivo ==  false %}
-                                        <a role="button" class="btn btn-danger btn-xs glyphicon glyphicon-floppy-remove" href="{{ path('sie_pnp_eliminar_duplicados',{'id':id, 'id_eliminar': fila.id_enc }) }}" onclick="return eliminar()" title="Eliminar Curso"></a>
+                                        <a role="button" class="btn rounded btn-danger btn-xs glyphicon glyphicon-floppy-remove" href="{{ path('sie_pnp_eliminar_duplicados',{'id':id, 'id_eliminar': fila.id_enc }) }}" onclick="return eliminar()" title="Eliminar Curso"></a>
                                     {% endif %}
                                     </td>
                                     <td>{{ fila.carnet }}{% if fila.complemento != '' %}-{{fila.complemento}}{% endif %}</td>

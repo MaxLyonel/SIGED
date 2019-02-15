@@ -73,7 +73,7 @@
                     {% for fila in totales %}
                         <tr>
                             <td>{{ fila.id }}</td>
-                            <td><a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado', { 'id': fila.id }) }}" title="Ver Cursos"></a></td>
+                            <td><a role="button" class="btn rounded btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado', { 'id': fila.id }) }}" title="Ver Cursos"></a></td>
                             <td>{{ fila.carnet }}{% if fila.complemento != '' %}-{{fila.complemento}}{% endif %}</td>
                             <td>{{ fila.nombre }}</td>                            
                             <td>{{ fila.paterno }}</td>

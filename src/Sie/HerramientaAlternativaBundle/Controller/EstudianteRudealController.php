@@ -446,11 +446,16 @@ class EstudianteRudealController extends Controller {
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['estudianteId']);
         $estudiante->setEstadoCivil($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find($form['estadoCivil']));
 
-        if(isset($form['carnet'])){
-            $estudiante->setCarnetIdentidad($form['carnet']);
-            $estudiante->setComplemento($form['complemento']);
-            $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($form['expedido']));
+        // if(isset($form['carnet'])){
+        //     $estudiante->setCarnetIdentidad($form['carnet']);
+        //     $estudiante->setComplemento($form['complemento']);
+        //     $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($form['expedido']));
+        // }
+
+        if(isset($form['expedido'])){
+            $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($form['expedido']));   
         }
+
         $estudiante->setPasaporte($form['pasaporte']);
 
         $rude = $em->getRepository('SieAppWebBundle:Rude')->find($form['rudeId']);

@@ -25,7 +25,7 @@
 									{% else %}
 										{% set selected = '' %}
 									{% endif %}
-									<option value="{{m.id}}" {{selected}}>{{m.persona.paterno}} {{m.persona.materno}} {{m.persona.nombre}}</option>
+									<option value="{{m.id}}" {{selected}}>{{m.persona.carnet}} - {{m.persona.paterno}} {{m.persona.materno}} {{m.persona.nombre}}</option>
 								{% endfor %}
 							</select>
 						</td>
@@ -41,7 +41,7 @@
 									{% else %}
 										{% set selected = '' %}
 									{% endif %}
-									<option value="{{m.id}}" {{selected}}>{{m.persona.paterno}} {{m.persona.materno}} {{m.persona.nombre}}</option>
+									<option value="{{m.id}}" {{selected}}>{{m.persona.carnet}} - {{m.persona.paterno}} {{m.persona.materno}} {{m.persona.nombre}}</option>
 								{% endfor %}
 							</select>
 						</td>
