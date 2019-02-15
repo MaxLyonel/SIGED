@@ -1,0 +1,62 @@
+{% if estudiantes is not empty %}
+<div class="table-responsive">
+	<table class="table table-bordered table-middle" id="listaTE">
+		<thead>
+			<tr>
+				<th style="width: 7%;">#</th>
+				<th>Nombres</th>
+				<th>Ap. paterno</th>
+				<th>Ap. materno</th>
+				<th>Centro</th>
+				<th>¿Es talento?</th>
+				<th>Informe</th>
+				<th>Fecha registro</th>
+				<th class="text-center" style="width: 11%;">Acciones</th>
+			</tr>
+		</thead>
+		<tbody>
+        {% for estudiante in estudiantes %}
+			<tr class="border-lilac">
+				<td class="text-center" style="width: 7%;">{{loop.index}}</td>
+				<td>{{estudiante.nombres}}</td>
+				<td>{{estudiante.paterno}}</td>
+				<td>{{estudiante.materno}}</td>
+				<td class='text-center' >{{estudiante.centro}}</td>
+				<td class='text-center' >
+                    {% if estudiante.es_talento %}
+						<span class="label label-info">Si</span>
+                    {% else %}
+						<span class="label label-danger">No</span>
+                    {% endif %}
+				</td>
+				<td>
+					<a href="#ruta" target="_blank" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Ver Informe"><i class="fa fa-file"></i> {{estudiante.nro_informe}}</a>
+				</td>
+				<td>{{estudiante.fecha_registro | date('d/m/Y')}}</td>
+				<td class="text-center">
+					<!-- <a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Ver Detalle"><i class="fa fa-eye"></i></a>
+                    <a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Acceder"><i class="fa fa-pencil"></i></a> -->
+					<!-- <a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a> -->
+					<button type="submit" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i></button>
+				</td>
+			</tr>
+        {% endfor %}
+		</tbody>
+		<tfoot>
+		<tr>
+			<th style="width: 5%;">#</th>
+			<th>Nombres</th>
+			<th>Ap. paterno</th>
+			<th>Ap. materno</th>
+			<th>Centro</th>
+			<th>¿Es talento?</th>
+			<th>Informe</th>
+			<th>Fecha registro</th>
+			<th class="text-center" style="width: 11%;">Acciones</th>
+		</tr>
+		</tfoot>
+	</table>
+</div>
+{% else %}
+	No se encontraron registros.
+{% endif %}

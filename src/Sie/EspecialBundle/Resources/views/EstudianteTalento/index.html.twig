@@ -1,0 +1,104 @@
+{% extends 'SieEspecialBundle:Default:sie.html.twig' %}
+{% block contentoption %}
+
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Talento Extraordinario <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li class="active">
+                    <i class="fa fa-home"></i>
+                    <a href="#">
+                        Inicio
+                    </a>
+                    {#<i class="fa fa-angle-right"></i>#}
+                </li>
+                {#<li class="active"><i class="fa fa-home"></i>Index</li>#}
+            </ol>
+        </div>
+    </div>
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3 class="panel-title">Estudiantes registrados</h3>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <a href="{{path('talento_extraordinario_new')}}" class="btn btn-primary"><i class="fa fa-plus"></i> Nuevo</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="talento"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+        $(document).ready(function(){
+            listTE();
+            cargatablas();
+        });
+        var listTE = function () {//gestionid
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('talento_extraordinario_dtlist'),//, {'gestionid': gestionid}
+                beforeSend: function () {
+                    $("#talento").empty();
+                    $("#talento").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $("#listaTE").remove();
+                    $("#talento").empty();
+                    $("#talento").append(data);
+                    cargatablas();
+                }
+            });
+        };
+
+        var cargatablas = function (){
+            $('#listaTE tfoot th').each( function () {
+                var title = $(this).text();
+                if(title.trim() === "" || title === "#" || title === "Acciones"){
+                    $(this).html('');
+                } else {
+                    $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+                }
+            } );
+
+            // DataTable
+            var table = $('#listaTE').DataTable( {
+                    "order": [[ 1, "asc" ]],
+                    "columnDefs": [
+                        { "orderable": false, "targets": [0,8] }
+                    ],
+                }
+            );
+
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        };
+    </script>
+{% endblock %}
