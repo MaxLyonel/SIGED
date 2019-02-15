@@ -64,19 +64,19 @@
                                         {{form_widget(form.nivel,{ 'attr':{'onchange':'listarGrados()'}  }) }}
                                         <div class="help-block with-errors"></div>
                                     </div>
-                                     <div class="form-group col-lg-6 col-md-12">
+                                     <div class="form-group col-lg-6 col-md-12" id="divservicio">
                                         {{form_label(form.servicio)}}
                                         {{form_widget(form.servicio,{ 'attr':{'onchange':'listarProgramas()'}  }) }}
                                         <div class="help-block with-errors"></div>
                                     </div>
                                 </div>
                                 <div class="row"> 
-                                    <div class="form-group col-lg-6 col-md-12">
+                                    <div class="form-group col-lg-6 col-md-12" id= "divgrado">
                                         {{form_label(form.grado)}}
                                         {{form_widget(form.grado,{ 'attr':{'onchange':'listarServicios()'}  }) }}
                                         <div class="help-block with-errors"></div>
                                     </div>
-                                    <div class="form-group col-lg-6 col-md-12">
+                                    <div class="form-group col-lg-6 col-md-12" id= "divprograma">
                                         {{form_label(form.programa)}}
                                         {{form_widget(form.programa) }}
                                         <div class="help-block with-errors"></div>
@@ -87,12 +87,12 @@
                                         <div class="help-block with-errors"></div>
                                     </div>
  
-                                   <div class="form-group col-lg-6 col-md-12">
+                                   <div class="form-group col-lg-6 col-md-12" id="divtecnica">
                                         {{form_label(form.tecnica)}}
                                         {{form_widget(form.tecnica) }}
                                         <div class="help-block with-errors"></div>
                                     </div>                                   
-                                   <div class="form-group col-lg-6 col-md-12">
+                                   <div class="form-group col-lg-6 col-md-12" id="divniveltec">
                                         {{form_label(form.nivelTecnico)}}
                                         {{form_widget(form.nivelTecnico) }}
                                         <div class="help-block with-errors"></div>
@@ -121,7 +121,17 @@
 
         function listarNiveles() {
             var area = $('#form_area').val();
-
+            if(area== 6 || area== 7 || area== 11){
+                $("#divgrado").hide();
+                $("#divtecnica").hide();
+                $("#divniveltec").hide();
+            }else{
+                $("#divgrado").show();
+                $("#divtecnica").show();
+                $("#divniveltec").show();
+            }
+            $("#divservicio").show();
+            $("#divprograma").show();
             $.ajax({
                 type: 'get',
                 url: Routing.generate('listar_niveles_especial', {'area':area}),
@@ -152,7 +162,18 @@
         }
 
         function listarGrados() {
+            var area = $('#form_area').val();
             var nivel = $('#form_nivel').val();
+             if(nivel== 410 && (area == 6 || area == 7 || area == 11)){
+                $("#divprograma").hide();
+            }else{
+                $("#divprograma").show();
+            }
+            if(nivel== 411 && (area == 6 || area == 7 || area == 11)){
+                $("#divservicio").hide();
+            }else{
+                $("#divservicio").show();
+            }
 
             $.ajax({
                 type: 'get',
@@ -169,12 +190,16 @@
                     $("#form_grado").empty();
                     $("#form_programa").empty();
                     $("#form_servicio").empty();
-                    $("#form_grado").append('<option value="">Seleccionar...</option>');
+                    if(nivel != 410 && nivel != 411){
+                        $("#form_grado").append('<option value="">Seleccionar...</option>');
+                    }
                     $("#form_programa").append('<option value="">Seleccionar...</option>');
                     $("#form_servicio").append('<option value="">Seleccionar...</option>');
                     $.each(data.grados, function (i, value) {
                         $("#form_grado").append('<option value="' + i + '">' + value + '</option>');
                     });
+                    listarServicios();
+                    listarProgramas();
                 }
             });
         }
@@ -183,7 +208,6 @@
             var area = $('#form_area').val();
             var nivel = $('#form_nivel').val();
             var grado = $('#form_grado').val();
-
             $.ajax({
                 type: 'get',
                 url: Routing.generate('listar_servicios_especial', {'area':area,'nivel':nivel,'grado':grado}),
@@ -194,10 +218,13 @@
                     $("#form_servicio").append('<option value="">Buscando...</option>');
                 },
                 success: function (data) {
+                    
                     $("#form_programa").empty();
                     $("#form_servicio").empty();
-                    $("#form_programa").append('<option value="">Seleccionar...</option>');
-                    $("#form_servicio").append('<option value="">Seleccionar...</option>');
+                    if(nivel != 411){
+                        $("#form_servicio").append('<option value="">Seleccionar...</option>');
+                    }
+                    $("#form_programa").append('<option value="">Seleccionar...</option>');    
                     $.each(data.servicios, function (i, value) {
                         $("#form_servicio").append('<option value="' + i + '">' + value + '</option>');
                     });
@@ -219,7 +246,9 @@
                 },
                 success: function (data) {
                     $("#form_programa").empty();
-                    $("#form_programa").append('<option value="">Seleccionar...</option>');
+                    if(nivel != 410){
+                        $("#form_programa").append('<option value="">Seleccionar...</option>');
+                    }
                     $.each(data.programas, function (i, value) {
                         $("#form_programa").append('<option value="' + i + '">' + value + '</option>');
                     });

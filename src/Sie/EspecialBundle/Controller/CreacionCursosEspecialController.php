@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCurso;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoEspecial;
+use Sie\AppWebBundle\Entity\ModalidadTipo;
 
 /**
  * EstudianteInscripcion controller.
@@ -403,6 +404,7 @@ class CreacionCursosEspecialController extends Controller {
                 $nuevo_curso->setEspecialServicioTipo($em->getRepository('SieAppWebBundle:EspecialServicioTipo')->find($form['servicio']));
                 $nuevo_curso->setEspecialTecnicaEspecialidadTipo($em->getRepository('SieAppWebBundle:EspecialTecnicaEspecialidadTipo')->find($form['tecnica']));
                 $nuevo_curso->setEspecialNivelTecnicoTipo($em->getRepository('SieAppWebBundle:EspecialNivelTecnicoTipo')->find($form['nivelTecnico']));
+                $nuevo_curso->setModalidadTipo($em->getRepository('SieAppWebBundle:ModalidadTipo')->find(1));
                 $em->persist($nuevo_curso);
                 $em->flush();
 
@@ -693,8 +695,9 @@ class CreacionCursosEspecialController extends Controller {
     	elseif ($area == "6" and $nivel == "411" and  $grado == "99" ) {
     		$query = $em->createQuery(
     				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
-                                    WHERE p.id IN (:id)'
-    				)->setParameter('id',array(1,2,3,4,5,6));
+                                    WHERE p.id IN (:id) order by p.programa'
+                    //)->setParameter('id',array(1,2,3,4,5,6));
+                    )->setParameter('id',array(5,6,17));
     	}
 
     	else {
