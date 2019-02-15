@@ -33,7 +33,19 @@
 {% if mallafin is not empty %}
     {% for malla in mallafin %}
         <div class="panel panel-teal">
-            <div class="panel-heading">{{ malla.especialidad }} - {{ malla.acreditacion }} - Cant. Módulos - {{ malla.cantidad }} - Horas - {{ malla.tothoras }} </div>
+            <div class="panel-heading">{{ malla.especialidad }} - {{ malla.acreditacion }} - Cant. Módulos -
+                {%  if (malla.cantidad) %}
+                    {{ malla.cantidad }}
+                {% else %}
+                    0
+                {% endif %}
+                - Horas -
+                {%  if (malla.tothoras) %}
+                    {{ malla.tothoras }}
+                {% else %}
+                    0
+                {% endif %}
+            </div>
             <div class="panel-body">
 
                 {% if (malla.idacreditacion == '1') %}
