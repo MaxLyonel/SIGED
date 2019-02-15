@@ -71,7 +71,7 @@
                     {% for fila in totales %}
                         <tr>
                             <td>{{ fila.id }}</td>
-                            <td><a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado', { 'id': fila.id }) }}" > Ver participantes</a></td>
+                            <td><a role="button" class="btn rounded btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado', { 'id': fila.id }) }}" > Ver participantes</a></td>
                             <td>{{ fila.carnet }}</td>
                             <td>{{ fila.nombre }}</td>                            
                             <td>{{ fila.paterno }}</td>
@@ -83,7 +83,7 @@
                             <td>{{ fila.dep }}</td>
                             <td>{{ fila.lugar }}</td>
                             {% if (fila.dep|upper == lugar_usuario|upper) or ('8' == app.session.get('roluser')) %}
-                                <td><a role="button" class="btn btn-danger orbtn-xs glyphicon glyphicon-floppy-remove" href="{{ path('sie_pnp_curso_vacio',{'id_eliminar': fila.id }) }}" onclick="return eliminar()" > Eliminar</a></td>
+                                <td><a role="button" class="btn rounded btn-danger orbtn-xs glyphicon glyphicon-floppy-remove" href="{{ path('sie_pnp_curso_vacio',{'id_eliminar': fila.id }) }}" onclick="return eliminar()" > Eliminar</a></td>
                             {% else %}
                                 <td align="center">- - -</td>
                             {% endif %}                            

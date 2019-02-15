@@ -5859,42 +5859,49 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                 } 
                 //ELIMINAR RUDE
                 //buscar el id del rude
-                $rude_eliminar = $em->getRepository('SieAppWebBundle:Rude')->findOneByestudianteInscripcion($estudiante_inscripcion_id);
+                $result = $em->getRepository('SieAppWebBundle:Rude')->findByestudianteInscripcion($estudiante_inscripcion_id);
+                foreach ($result as $results) {
+                $rude_eliminar[]=$results->getId();
+            }   
                 // ELIMINAR RUDE ACTIVIDAD
                 if($rude_eliminar){
-                    $rude_id=$rude_eliminar->getId();
-                    $result=$em->getRepository('SieAppWebBundle:RudeActividad')->findByrude($rude_id);
+                    
+                    $result=$em->getRepository('SieAppWebBundle:RudeActividad')->findByrude($rude_eliminar);
                     foreach ($result as $results) {
                         $em->remove($results);
                         $em->flush();
                     }
                      //ELIMNAR SERVUCIOS BASICOS
-                    $result=$em->getRepository('SieAppWebBundle:RudeServicioBasico')->findByrude($rude_id);
+                    $result=$em->getRepository('SieAppWebBundle:RudeServicioBasico')->findByrude($rude_eliminar);
                     foreach ($result as $results) {
                         $em->remove($results);
                         $em->flush();
                     }
                     //ELIMINAR CENTRO SALUD
-                    $result=$em->getRepository('SieAppWebBundle:RudeCentroSalud')->findByrude($rude_id);
+                    $result=$em->getRepository('SieAppWebBundle:RudeCentroSalud')->findByrude($rude_eliminar);
                     foreach ($result as $results) {
                         $em->remove($results);
                         $em->flush();
                     }
                     //ELIMINAR IDIOMA
-                     $result=$em->getRepository('SieAppWebBundle:RudeIdioma')->findByrude($rude_id);
+                     $result=$em->getRepository('SieAppWebBundle:RudeIdioma')->findByrude($rude_eliminar);
                     foreach ($result as $results) {
                         $em->remove($results);
                         $em->flush();
                     }
                     //ELIMIUNAR DISCAPACIDAD GRADO
-                    $result=$em->getRepository('SieAppWebBundle:RudeDiscapacidadGrado')->findByrude($rude_id);
+                    $result=$em->getRepository('SieAppWebBundle:RudeDiscapacidadGrado')->findByrude($rude_eliminar);
                     foreach ($result as $results) {
                         $em->remove($results);
                         $em->flush();
                     }
                     //ELIMINAR EL RUDE
-                    $em->remove($rude_eliminar);
-                    $em->flush();
+                     $result = $em->getRepository('SieAppWebBundle:Rude')->findByestudianteInscripcion($estudiante_inscripcion_id);
+                        foreach ($result as $results) {
+                         $em->remove($results);
+                        $em->flush();
+                    }       
+                    
                 }
                 //FIN ELIMINAR RUDE
             }

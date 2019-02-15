@@ -1,0 +1,72 @@
+Sie\AppWebBundle\Entity\EstudianteInscripcionEspecialEtapa:
+    type: entity
+    table: estudiante_inscripcion_especial_etapa
+    indexes:
+        IDX_7D828252E25D007E:
+            columns:
+                - estudiante_inscripcion_especial_id
+        IDX_7D828252756DFBFA:
+            columns:
+                - nota_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaInicio:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_inicio
+        fechaFin:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_fin
+        usuarioRegistroId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: usuario_registro_id
+        usuarioModificacionId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_modificacion_id
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        estudianteInscripcionEspecial:
+            targetEntity: EstudianteInscripcionEspecial
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_especial_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        notaTipo:
+            targetEntity: NotaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nota_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

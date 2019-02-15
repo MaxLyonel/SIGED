@@ -25,6 +25,7 @@
             <!-- START @FONT STYLES -->
             <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700" rel="stylesheet">
             <link href="https://fonts.googleapis.com/css?family=Oswald:700,400" rel="stylesheet">
+            
             <!--/ END FONT STYLES -->
             {% block stylesheets %}
             <!-- START @GLOBAL MANDATORY STYLES -->
@@ -37,14 +38,8 @@
             <link href="{{asset('webpnp/assets/global/plugins/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.css')}}" rel="stylesheet">
             <link href="{{asset('webpnp/assets/global/plugins/bower_components/jasny-bootstrap-fileinput/css/jasny-bootstrap-fileinput.min.css')}}" rel="stylesheet">
             <link href="{{asset('webpnp/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.min.css')}}" rel="stylesheet">
-            <link href="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
-            <link href="{{asset('juegos/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
-
-
-
-            <link href="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
-            <link href="{{asset('juegos/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
-
+            <link href="{{asset('webpnp/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
+            <link href="{{asset('webpnp/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
             <link href="{{asset('css/plugins/bootstrap-combined/combined.css') }}" rel="stylesheet">
             <link rel="stylesheet" type="text/css" href="{{asset('webpnp/assets/commercial/plugins/cube-portfolio/cubeportfolio/css/cubeportfolio.css')}}">
             <!--/ END PAGE LEVEL STYLES -->
@@ -1140,6 +1135,7 @@
 
             <!-- START JAVASCRIPT SECTION (Load javascripts at bottom to reduce load time) -->
             <!-- START @CORE PLUGINS -->
+
             <script src="{{asset('webpnp/assets/global/plugins/bower_components/jquery/dist/jquery.min.js')}}"></script>
             <script src="{{asset('webpnp/assets/global/plugins/bower_components/jquery-cookie/jquery.cookie.js')}}"></script>
             <script src="{{asset('webpnp/assets/global/plugins/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
@@ -1163,15 +1159,10 @@
             <script src="{{asset('webpnp/assets/global/plugins/bower_components/jquery-autosize/jquery.autosize.min.js')}}"></script>
             <script src="{{asset('webpnp/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.jquery.min.js')}}"></script>
             <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
-            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.min.js')}}"></script>
-            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script>
-            <script src="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/js/fuelux.min.js')}}"></script>
-
-
-            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
-            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.min.js')}}"></script>
-            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script>
-            <script src="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/js/fuelux.min.js')}}"></script>
+            <script src="{{asset('webpnp/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.min.js')}}"></script>
+            <script src="{{asset('webpnp/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script>
+            <script src="{{asset('webpnp/assets/global/plugins/bower_components/fuelux/dist/js/fuelux.min.js')}}"></script>
+            <script src="{{asset('webpnp/assets/global/plugins/bower_components/fuelux/dist/js/fuelux.min.js')}}"></script>
             <!--/ END PAGE LEVEL PLUGINS -->
 
             <!-- START @PAGE LEVEL SCRIPTS -->
@@ -1199,11 +1190,13 @@
 
             <script src="{{ asset('js/initialize.js')}}"></script>
             <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
             <!-- Moment.js -->
             <script src="{{ asset('bower_components/moment/moment.js') }}"></script>
             <script src="{{ asset('bower_components/moment/locale/es.js') }}"></script>
 
             <!--/ END GOOGLE ANALYTICS -->
+            <script src="//cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.4.0/clipboard.min.js"></script>
 
             <script src="{{ asset('js/highcharts/highcharts.js')}}"></script>
             <script>

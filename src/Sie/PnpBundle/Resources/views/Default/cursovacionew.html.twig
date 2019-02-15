@@ -69,13 +69,13 @@
                                         <table>
                                             <tr>
                                                 <td>
-                                                    <a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado_editnew', { 'id': fila.id_enc }) }}" title="Ver curso"></a>&nbsp;
+                                                    <a role="button" class="btn rounded btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado_editnew', { 'id': fila.id_enc }) }}" title="Ver curso"></a>&nbsp;
                                                 </td>
                                                 {% if (fila.dep|upper == lugar_usuario|upper) or ('8' == app.session.get('roluser')) %}
                                                     <td>
                                                         <form role="form" method="post" action="{{path('sie_pnp_curso_vacionew')}}">
                                                             <input type="hidden" name="id_curso" id="id_curso" value="{{fila.id}}">
-                                                            <button type="submit" class="btn btn-danger btn-xs glyphicon glyphicon-floppy-remove" onclick="return eliminar()" title="Eliminar Curso"></button>
+                                                            <button type="submit" class="btn rounded btn-danger btn-xs glyphicon glyphicon-floppy-remove" onclick="return eliminar()" title="Eliminar Curso"></button>
                                                         </form>
                                                     </td>
                                                 {% endif %}        

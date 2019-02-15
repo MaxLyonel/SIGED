@@ -332,7 +332,7 @@
 		    </div>
 		    <div class="row"></div>
 		    <div class="panel-heading">
-		        DIRECCIÓN ACTUAL DEL PARTICIPANTE <small>(*)</small> Campos Requeridos
+		        ACCESO DE LA O EL PARTICIPANTE A SERVICIOS BÁSICOS <small>(*)</small> Campos Requeridos
 		    </div>
 		    <div class="panel-body">
 		    	<div class="form-group col-xs-12 col-lg-4">
@@ -478,7 +478,7 @@
                     </div>
                 </div>-->
 		    </div>
-		     <div align="center"><button onclick="return validar_fecha()" type="submit" align="center" class="btn btn-success">Guardar</button></div>
+		     <div align="center"><button onclick="return cambio()" id="boton" type="submit" align="center" class="btn rounded btn-success">Guardar</button></div>
 		</div>
 	</div>
 </form>
@@ -537,24 +537,9 @@
 	$(".chosen-select-3").chosen({max_selected_options: 3});
 	$(".chosen-select").chosen();
 	
-	function validar_fecha(){
-        var f1 = document.getElementById("fecha_registro").value;
-        //Contar dias entre fechas fecha inicial y fecha actual
-        var aFecha1a = f1.split('/'); 
-        var fecha_actual = moment().format("DD/MM/YYYY"); //fecha actual
-        var aFecha2a = fecha_actual.split('/'); 
-        var fFecha1a = Date.UTC(aFecha1a[2],aFecha1a[1]-1,aFecha1a[0]);
-        var fFecha2a = Date.UTC(aFecha2a[2],aFecha2a[1]-1,aFecha2a[0]); 
-        var difa = fFecha1a - fFecha2a;
-        var dias_a = Math.floor(difa / (1000 * 60 * 60 * 24));
-        if((dias_a >= -200 && dias_a <= 200 ) || roluser == 8 || roluser == 21){
-        	return true;
-        }
-         else{
-         	alert("Error, Fecha de registro fuera de tiempo");
-        	return false;
-        }
-     }
+	function cambio(){
+        document.getElementById("boton").style.visibility = 'hidden';
+    }
 
 	$("#actividad_laboral").change(function(){                            
         var val = $(this).val();            

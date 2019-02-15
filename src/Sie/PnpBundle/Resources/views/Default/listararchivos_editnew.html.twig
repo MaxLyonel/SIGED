@@ -21,12 +21,12 @@
                         Fecha Fin:
                         <input type="text" id="fecha_fin" class="form-control" name="fecha_fin" placeholder="Digite Fecha Final" required="required" value=""/>
                         <br><br>
-                        <button type="submit" class="btn btn-success btn-large glyphicon glyphicon-pencil" onclick="return validar_fecha()"> Guardar Cambios</button>
+                        <button type="submit" class="btn btn-success rounded btn-large glyphicon glyphicon-pencil" onclick="return validar_fecha()"> Guardar Cambios</button>
                     </form>
                 </div>
             </div>
             <div class="editar-pie">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary rounded" data-dismiss="modal">Cerrar</button>
             </div>                    
         </div>                
     </div>
@@ -93,8 +93,9 @@
                         </div>
                         <div class="panel-body">
                             {% if (totales) %}
+                            <button class="btn btn-xs btn-danger rounded glyphicon glyphicon-copy" id="copy-button" data-clipboard-target="#tablaTotales"> Copiar Lista</button>
                                 <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
-                                    <table id="tablaTotales" class="display" cellspacing="0" width="100%">    
+                                    <table id="tablaTotales" class="display" cellspacing="0" width="100%">
                                         <thead>
                                             <tr>
                                                 <th>Id Curso</th>
@@ -103,8 +104,8 @@
                                                 <th>Nombre</th>
                                                 <th>Paterno</th>
                                                 <th>Materno</th>                            
-                                                <th>Inicio</th>                            
-                                                <th>Fin</th>                            
+                                                <th>Fecha_Inicio</th>                            
+                                                <th>Fecha_Fin</th>                            
                                                 <th>Ciclo</th>                            
                                                 <th>Grado</th>
                                                 <th>Aprobados</th>  
@@ -122,10 +123,10 @@
                                                 <tr>
                                                    <td>{{ fila.id }}</td>
                                                    <td>
-                                                        <a role="button" class="btn btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id_enc': fila.id_enc~"|"~fila.ciclo_tipo_id~"|"~fila.grado_tipo_id}) }}" title="Impimir Consolidado"></a>
-                                                        <a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado_editnew', { 'id': fila.id_enc,'val':0 }) }}" title="Ingresar Curso" ></a>
+                                                        <a role="button" class="btn rounded btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id_enc': fila.id_enc~"|"~fila.ciclo_tipo_id~"|"~fila.grado_tipo_id}) }}" title="Impimir Consolidado"></a>
+                                                        <a role="button" class="btn rounded btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado_editnew', { 'id': fila.id_enc,'val':0 }) }}" title="Ingresar Curso" ></a>
                                                         {% if fila.esactivo != 1 %}
-                                                            <a role="button" class="glyphicon glyphicon-edit btn btn-info btn-xs" href="#" onclick="ver_fecha_fin({{ fila.id }},'{{ fila.fecha_fin|date("d/m/Y") }}','{{ fila.fecha_inicio|date("d/m/Y") }}','{{ fila.plan }}','{{ fila.ciclo_tipo_id}}','{{ fila.grado_tipo_id }}');" title="Editar Fechas"></a>
+                                                            <a role="button" class="glyphicon glyphicon-edit btn btn-info btn-xs rounded" href="#" onclick="ver_fecha_fin({{ fila.id }},'{{ fila.fecha_fin|date("d/m/Y") }}','{{ fila.fecha_inicio|date("d/m/Y") }}','{{ fila.plan }}','{{ fila.ciclo_tipo_id}}','{{ fila.grado_tipo_id }}');" title="Editar Fechas"></a>
                                                         {% endif %}
                                                     </td>
                                                     <td>{{ fila.carnet }}{% if fila.complemento != '' %}-{{fila.complemento}}{% endif %}</td>
@@ -143,7 +144,7 @@
                                                     <td>{{ fila.localidad }}</td>
                                                     <td>{{ fila.usu_a }}</td>
                                                     {% if fila.esactivo != 1 %}
-                                                    <td><a role="button" class="btn btn-warning btn-xs" href="{{ path('sie_pnp_listar_archivos_editnew', { 'id': fila.id_enc }) }}" onclick="return confirm('Está seguro de CERRAR EL CURSO?, si cierra el curso POR TEMAS DE SEGURIDAD SE GUARDARÁ SU NOMBRE, ya no tendrá las opciones de editar; Pero podrá imprimir el PDF original para sus firmas respectivas. No olvide que 10 estudiantes mínimo para áreas concentradas y 8 para desconcentradas.');" > Cerrar Curso</a></td>
+                                                    <td><a role="button" class="btn rounded btn-warning btn-xs" href="{{ path('sie_pnp_listar_archivos_editnew', { 'id': fila.id_enc }) }}" onclick="return confirm('Está seguro de CERRAR EL CURSO?, si cierra el curso POR TEMAS DE SEGURIDAD SE GUARDARÁ SU NOMBRE, ya no tendrá las opciones de editar; Pero podrá imprimir el PDF original para sus firmas respectivas. No olvide que 10 estudiantes mínimo para áreas concentradas y 8 para desconcentradas.');" > Cerrar Curso</a></td>
                                                     {% else %}
                                                         <td>{{ fila.usu_c }}</td>
                                                     {% endif %}
@@ -286,6 +287,12 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script>
+
+ (function(){
+    new Clipboard('#copy-button');
+})();
+</script>
     <script type="text/javascript">
     var espanol = {"sProcessing": "Procesando...",
                      "sLengthMenu": "Mostrar _MENU_ registros",
@@ -323,7 +330,8 @@
             format: 'dd/mm/yyyy',
             language: "es",
         });
-        var dtable = $('#tablaTotales').dataTable( {"oLanguage": espanol} );
+      
+        var dtable = $('#tablaTotales').dataTable( {"oLanguage": espanol,"lengthMenu": [ [10, 50, 100, 1000, -1], [10, 50, 100, 1000, "Todos"] ]} );
         
         $('#tablaTotales tbody').on( 'click', 'tr', function () {
             if ( $(this).hasClass('selected') ) {
@@ -419,11 +427,11 @@
             }    
         }
         else{//PLAN NUEVO
-            if(dias>=140 && dias<=180){
+            if(dias>=140 && dias<=200){
                 return true;
             }
             else{
-                alert("La fecha final debe ser mínimo 140 días mayor que la fecha inicial pero no mayor a 180 días (5 meses a 6 meses)");
+                alert("La fecha final debe ser mínimo 140 días mayor que la fecha inicial pero no mayor a 200 días (5 meses a 6 meses)");
                 return false;
             }
         }
