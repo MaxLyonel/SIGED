@@ -1048,7 +1048,7 @@ class RegularizationMaestroController extends Controller {
                     ->setParameter('idCursoOferta',$ieco)
                     ->getQuery()
                     ->getResult();
-
+                    
         $sie = $curso[0]['sie'];
         $gestion = $curso[0]['gestion'];
 
@@ -1105,14 +1105,16 @@ class RegularizationMaestroController extends Controller {
                         ->where('ie.id = :sie')
                         ->andWhere('gt.id = :gestion')
                         ->andWhere('rt.id = 2')
+                        ->andWhere('mi.esVigenteAdministrativo = :vigente')
                         ->orderBy('p.paterno','ASC')
                         ->addOrderBy('p.materno','ASC')
                         ->addOrderBy('p.nombre','ASC')
                         ->setParameter('sie',$sie)
                         ->setParameter('gestion',$gestion)
+                        ->setParameter('vigente','t')
                         ->getQuery()
                         ->getResult();
-
+                        
         $operativo = $this->operativo($sie,$gestion);
 
         //dump($arrayMaestros);die;

@@ -1072,4 +1072,30 @@ class DownloadController extends Controller {
 
     }
 
+    /**
+     * Descarga de CUt para bachilleres con tecnica tecnologica
+     * @param Request $request
+     * @return object CUT
+     */
+    // public function downloadCutAction(Request $request) {
+
+    //     $idInscripcion = $request->get('idInscripcion');
+
+    //     /**
+    //      * completar con la consulta si es que hubiera
+    //      * por el momento solo mandamos el id de inscripcion
+    //      * cambiar el nombre del reporte
+    //      */
+
+    //     $response = new Response();
+    //     $response->headers->set('Content-type', 'application/pdf');
+    //     $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'CUT_' . $rude . '_' . $gestion . '.pdf'));
+    //     $response->setContent(file_get_contents($this->container->getParameter('urlreportweb').'reporte_cut.rptdesign&inscripid=' . $idInscripcion . '&&__format=pdf&'));
+    //     $response->setStatusCode(200);
+    //     $response->headers->set('Content-Transfer-Encoding', 'binary');
+    //     $response->headers->set('Pragma', 'no-cache');
+    //     $response->headers->set('Expires', '0');
+    //     return $response;
+    // }
+
 }

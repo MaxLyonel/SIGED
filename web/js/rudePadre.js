@@ -34,6 +34,7 @@ var p_validarTienePadre = function(){
     if(tiene == 1){
         $('#p_divPadre').css('display','block');
         $('#p_carnet').attr('required','required');
+        $('#p_expedido').attr('required','required');
         $('#p_nombre').attr('required','required');
         $('#p_fechaNacimiento').attr('required','required');
         $('#p_genero').attr('required','required');
@@ -45,6 +46,7 @@ var p_validarTienePadre = function(){
     }else{
         $('#p_divPadre').css('display','none');
         $('#p_carnet').removeAttr('required');
+        $('#p_expedido').removeAttr('required');
         $('#p_nombre').removeAttr('required');
         $('#p_fechaNacimiento').removeAttr('required');
         $('#p_genero').removeAttr('required');

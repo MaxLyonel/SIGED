@@ -35,7 +35,7 @@
                                 {% else %}
                                     <td>{{reg.periodoTipoId}}</td>
                                 {% endif %}
-                                {% if (reg.gestionTipo <= '2017') %}
+                                {% if (reg.gestionTipo <= '2017' and app.session.get('roluser') != 8 and app.session.get('roluser') != 7) %}
                                     <td>
                                     <form action="{{path('sie_alt_ges_sub_sem_open', {'teid':'99', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">                            
                                         <button type="submit" class="btn btn-circle btn-lilac btn-stroke tooltips" data-toggle="tooltip" data-placement="top" title="¡Ver!">                                    

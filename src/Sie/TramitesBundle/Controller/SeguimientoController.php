@@ -388,7 +388,7 @@ class SeguimientoController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        //$activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
@@ -513,6 +513,23 @@ class SeguimientoController extends Controller {
                 $documentoController->setContainer($this->container);
 
                 $entityDocumentoDetalle = $documentoController->getDocumentoDetalle($entityTramite['tramite']);
+
+                $aRoles = $this->session->get('roluser');
+                $permisoTramiteDetalle = false;
+                foreach ($aRoles as $rol){
+                    if($rol['id'] != 20){
+                        $permisoTramiteDetalle = true;
+                    } 
+                }
+
+                if (!$permisoTramiteDetalle){
+                    return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
+                        'titulo' => 'Seguimiento',
+                        'subtitulo' => 'Trámite',
+                        'listaDocumento' => $entityTramite,
+                        'listaDocumentoDetalle' => $entityDocumentoDetalle,
+                    ));
+                }
 
                 return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
                     'titulo' => 'Seguimiento',

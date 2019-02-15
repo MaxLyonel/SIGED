@@ -1,24 +1,26 @@
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
         {{form_start(form,{'attr':{'id':'formModulo','class':'form-horizontal form-group'} })}}
+        <input type="hidden" id = "totalhoras" name="totalhoras" value="{{totalhoras}}"/>
+        <input type="hidden" id = "idacreditacion" name="idacreditacion" value="{{idacreditacion}}"/>
         <div class="panel panel-danger">
             <div class="panel-heading ">
                 <div class="pull-left">
-                    <h3 class="panel-title">Creación de Modulo</h3>
+                    <h3 class="panel-title">Creación de Modulo - Cant. Horas - {{ totalhoras }}</h3>
                 </div>
 
                 <div class="clearfix"></div>
             </div>
             <div class="panel-body">
         <div class="row">
-            <div class="form-body col-lg-12 col-md-12">
+            <div class="form-body col-lg-10 col-md-10">
                 <label> Nombre del Modulo</label>
                 <strong>{{form_widget(form.modulo)}}</strong>
              </div>
-            {#<div class="form-body col-lg-12 col-md-12">#}
-                {#<label> Horas</label>#}
-                {#<strong>{{form_widget(form.horas)}}</strong>#}
-            {#</div>#}
+            <div class="form-body col-lg-2 col-md-2">
+                <label> Horas</label>
+                <strong>{{form_widget(form.horas)}}</strong>
+            </div>
 
 
         </div>
@@ -38,41 +40,83 @@
 <script>
 
     var guardarModulo= function () {
-
        var formData = $('#formModulo').serialize();
-      $('#modal').modal('hide');
 
-        $.ajax({
-            type: 'post',
-            url: "{{ path('herramienta_create_modulo_nuevo') }}",
-            data:formData,
-            beforeSend: function () {
+        var totalhoras= $('#totalhoras').val();
+        var idacreditacion= $('#idacreditacion').val();
+       // var horasmodulo= $('#horasmodulo').val();
+        var horas = $("#form_horas option:selected").html();
+        var horavalida=  parseFloat(totalhoras) +parseFloat(horas) ;
+        var formData = $('#formModulo').serialize();
+        // alert(horavalida);
+        if((idacreditacion==1)||(idacreditacion==20))
+        {
+            if(horavalida<=500){
+                $('#modal').modal('hide');
+                $.ajax({
+                    type: 'post',
+                    url: "{{ path('herramienta_create_modulo_nuevo') }}",
+                    data:formData,
+                    beforeSend: function () {
 
+                        $("#listamodulos").empty();
+                        $("#listamodulos").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                    },
+                    success: function (data) {
+                        $('#listamodulos').empty();
+                        $('#listamodulos').html(data);
 
-//                swal({
-//                    title: "Guardando...",
-//                    text: "Espere un momento por favor",
-//                    icon: imagen,
-//                    buttons: false
-//                });
-                $("#listamodulos").empty();
-                $("#listamodulos").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
-            },
-            success: function (data) {
-                $('#listamodulos').empty();
-                $('#listamodulos').html(data);
-
-            },
-            complete: function () {
+                    },
+                    complete: function () {
 //                swal.stopLoading();
 //                swal.close();
 //                $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
 //                    $(".alert").slideUp(1000);
 //                });
+                    }
+
+
+                });
+
+            }else{
+                alert('Las horas de los Modulos Ingresados no deben Exceder las 500 hrs, por lo que antes de proceder y guardar un modulo, debera cambiar las horas ingresadas...');
             }
+        }else {
+            if(horavalida<=1000){
+                $('#modal').modal('hide');
+                $.ajax({
+                    type: 'post',
+                    url: "{{ path('herramienta_create_modulo_nuevo') }}",
+                    data:formData,
+                    beforeSend: function () {
+
+                        $("#listamodulos").empty();
+                        $("#listamodulos").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                    },
+                    success: function (data) {
+                        $('#listamodulos').empty();
+                        $('#listamodulos').html(data);
+
+                    },
+                    complete: function () {
+//                swal.stopLoading();
+//                swal.close();
+//                $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+//                    $(".alert").slideUp(1000);
+//                });
+                    }
 
 
-        });
+                });
+
+            }else{
+                alert('Las horas de los Modulos Ingresados no deben Exceder las 1000 hrs, por lo que antes de proceder y guardar un modulo, debera cambiar las horas ingresadas...');
+            }
+        }
+
+
+
+
     };
 
     var rangoHoras = function(control){

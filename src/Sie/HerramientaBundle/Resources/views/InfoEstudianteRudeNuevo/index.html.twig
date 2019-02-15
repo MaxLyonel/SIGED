@@ -103,8 +103,8 @@
                                         </div>
                                     </a>
                                 </li>
-                                <li>
-                                    <a id="paso3" href="#tab2" data-toggle="tab" aria-expanded="false">
+                                <li {% if rude.registroFinalizado < 1 %} class="disabled" {% endif %}>
+                                    <a id="paso2" href="#tab2" {% if rude.registroFinalizado >= 1 %} data-toggle="tab" {% endif %} aria-expanded="false">
                                         <i class="fa fa-file"></i>
                                         <div>
                                             <span class="text-strong">III</span>
@@ -112,8 +112,8 @@
                                         </div>
                                     </a>
                                 </li>
-                                <li>
-                                    <a id="paso4" href="#tab3" data-toggle="tab" aria-expanded="false">
+                                <li {% if rude.registroFinalizado < 2 %} class="disabled" {% endif %}>
+                                    <a id="paso3" href="#tab3" {% if rude.registroFinalizado >= 2 %} data-toggle="tab" {% endif %} aria-expanded="false">
                                         <i class="fa fa-check-circle"></i>
                                         <div>
                                             <span class="text-strong">IV</span>
@@ -121,17 +121,17 @@
                                         </div>
                                     </a>
                                 </li>
-                                <li>
-                                    <a id="paso5" href="#tab4" data-toggle="tab" aria-expanded="false">
-                                        <i class="fa fa-users"></i>
+                                <li {% if rude.registroFinalizado < 3 %} class="disabled" {% endif %}>
+                                    <a id="paso4" href="#tab4" {% if rude.registroFinalizado >= 3 %} data-toggle="tab" {% endif %} aria-expanded="false">
+                                        <i class="fa fa-check-circle"></i>
                                         <div>
                                             <span class="text-strong">V</span>
                                             <span><small>DATOS DEL PADRE,MADRE O TUTOR</small></span>
                                         </div>
                                     </a>
                                 </li>
-                                <li>
-                                    <a id="paso6" href="#tab5" data-toggle="tab" aria-expanded="false">
+                                <li {% if rude.registroFinalizado < 4 %} class="disabled" {% endif %}>
+                                    <a id="paso5" href="#tab5" {% if rude.registroFinalizado >= 4 %} data-toggle="tab" {% endif %} aria-expanded="false">
                                         <i class="fa fa-print"></i>
                                         <div>
                                             <span class="text-strong">VI</span>
@@ -492,11 +492,17 @@
                                     </div>
                                     <div class="row form-group">
                                         <label class="col-md-6">4.1.2. ¿Qué idiomas habla frecuentemente?</label>
-                                        <div class="col-md-6 col-sm-6">
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-md-4 col-sm-4">
                                             <small>a) Más frecuente (*)</small>
                                             {{ form_widget(formSocioeconomico.idioma1, {'attr':{'class':'form-control jupper'} }) }}
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
                                             <small>b) Medianamente frecuente</small>
                                             {{ form_widget(formSocioeconomico.idioma2, {'attr':{'class':'form-control jupper'} }) }}
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
                                             <small>c) Menos frecuente</small>
                                             {{ form_widget(formSocioeconomico.idioma3, {'attr':{'class':'form-control jupper'} }) }}
                                         </div>
@@ -1321,6 +1327,7 @@
         validarAbandono();
         validarOtroAbandono();
         $("#form_fecha").inputmask({ "alias": "dd-mm-yyyy" });
+        $("#form_fechaRegistroRude").inputmask({ "alias": "dd-mm-yyyy", "placeholder": "dd-mm-aaaa" });
     });
 
     $(".js-example-basic-multiple").select2({
@@ -1357,8 +1364,6 @@
     $('#form_discapacidad').on('change', function(){
         cargarGradoDiscapacidad();
     });
-
-
 
     // APLICANDO BUSCADOR A LOS SELECTS
     $('#form_idiomaNines').chosen({width: "100%"});
@@ -1533,7 +1538,7 @@
     // VALIDAR OTRO TIPO DE ABANDONO
     function validarOtroAbandono(){
         var accesos = $('#form_abandono').val();
-        if($.inArray('99', accesos) !== -1){
+        if($.inArray('12', accesos) !== -1){
             $('#form_abandonoOtro').css('display','block');
             $('#form_abandonoOtro').attr('required','required');
         }else{
@@ -1670,7 +1675,9 @@
                     console.log('enviando')
                 },
                 success: function(data){
-                    $('#paso3').click();
+                    $('#paso2').parent('li').removeClass('disabled');
+                    $('#paso2').attr('data-toggle','tab');
+                    $('#paso2').click();
                 },
                 error: function(){
                     console.log('error');
@@ -1747,8 +1754,9 @@
                 console.log('enviando')
             },
             success: function(data){
-                // $('#paso3').attr('data-toggle','tab');
-                $('#paso4').click();
+                $('#paso3').parent('li').removeClass('disabled');
+                $('#paso3').attr('data-toggle','tab');
+                $('#paso3').click();
             },
             error: function(){
 
@@ -1892,12 +1900,10 @@
                 console.log('enviando');
             },
             success: function(data){
-                // $('#paso4').parent('li').removeClass('disabled');
-                // $('#paso4').attr('data-toggle','tab');
-                $('#paso5').click();
+                $('#paso4').parent('li').removeClass('disabled');
+                $('#paso4').attr('data-toggle','tab');
+                $('#paso4').click();
                 $('#tabPadre').click();
-
-                // $('#tabPadre').click();
             },
             error: function(){
 
@@ -1934,11 +1940,7 @@
                 console.log('enviando')
             },
             success: function(data){
-                // $('#modal').modal('hide');
-                // paso = 6;
-                // if(paso >= 6){
-                // $('#btnImprimir').css('display','block');
-                // }
+                
             },
             error: function(){
 
