@@ -725,6 +725,7 @@ class DefaultController extends Controller {
                     //*******************
                     //CUANDO EL USUARIO SOLO TIENE UN ROL ACTIVO
                     //SE ENVIA AL CONTROLADOR LOGIN PARA ULTIMAS VERIFICACIONES
+                    $sesion->set('directorAlternativa', false);
                     if (count($rolselected) == 1) {
                         if ( ($rolselected[0]['id'] == 2) || ($rolselected[0]['id'] == 9) ){
                             $this->session->set('roluser', $rolselected[0]['id']);
@@ -734,6 +735,17 @@ class DefaultController extends Controller {
                             $this->session->set('ie_nombre', $rolselected[0]['institucioneducativa']);
                             $this->session->set('cuentauser', $rolselected[0]['rol']);
                             $this->session->set('tiposubsistema', $rolselected[0]['idietipo']);
+                             //to show the option create rude on alternativa by krlos
+                                if($rolselected[0]['id'] == 9){
+                                    $objInstitucioneducativaAlt = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array(
+                                    'id'=> $rolselected[0]['sie'],
+                                    'institucioneducativaTipo'=>2
+                                        ));
+                                    if($objInstitucioneducativaAlt && $rolselected[0]['sie']!='80730796'){
+                                        $sesion->set('directorAlternativa', true);
+                                    }
+
+                                }
                         }else{
                             $this->session->set('roluser', $rolselected[0]['id']);
                             $this->session->set('roluserlugarid', $rolselected[0]['rollugarid']);
