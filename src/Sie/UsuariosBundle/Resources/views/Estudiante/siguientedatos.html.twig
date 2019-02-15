@@ -25,24 +25,35 @@
                                             <input type="text" class="form-control typeahead rounded" name="busquedaDatosTotForm[InputComplemento]" id="busquedaDatosTotForm_InputComplemento" placeholder="Complemento" maxlength="2" onkeypress="return soloComplemento(event);">
                                         </div>
                                         <div class="col-lg-4">
+
                                             <label class="required">Genero :</label><br/>
-                                            <select class="form-control" id="busquedaDatosTotForm_Genero" name="busquedaDatosTotForm[Genero]">                                                            
-                                                <option value="-999">...</option> 
-                                                <option value="1">MASCULINO</option> 
-                                                <option value="2">FEMENINO</option> 
+                                            <select class="form-control" id="busquedaDatosTotForm_Genero" name="busquedaDatosTotForm[Genero]">
+                                                <option value="-999">...</option>
+                                                <option value="1">MASCULINO</option>
+                                                <option value="2">FEMENINO</option>
                                             </select>
+
                                         </div>
                                     </div>
                                     <div class="row">    
-                                        <div class="col-lg-12">
+                                        <div class="col-lg-3">
+                                            <label class="required">Expedido:</label><br/>
+                                            <select class="form-control" class="form-control" id="busquedaDatosTotForm_Expedido" name="busquedaDatosTotForm[Expedido]">
+                                                <!--<option value="-999">...</option>-->
+                                                {% for expedido in ex %}
+                                                    <option value="{{expedido.id}}">{{expedido.sigla}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-9">
                                             <label class="required">País :</label><br/>
                                             <select class="form-control" class="form-control" id="busquedaDatosTotForm_Pais" name="busquedaDatosTotForm[Pais]">
                                                 <!--<option value="-999">...</option>-->
                                                 {% for pais in pt %}
-                                                   <option value="{{pais.id}}">{{pais.pais}}</option>
-                                                {% endfor %}                                               
+                                                    <option value="{{pais.id}}">{{pais.pais}}</option>
+                                                {% endfor %}
                                             </select>
-                                        </div>     
+                                        </div>
                                     </div>
                                     <div class="row">    
                                         <div class="col-lg-6">    
@@ -177,7 +188,7 @@
             var provincia = $('#busquedaDatosTotForm_Provincia').val();
             var localidad = $('#busquedaDatosTotForm_Localidad').val();
             var sie = $('#busquedaDatosTotForm_Sie').val();
-            
+
             var stop = true;
             
             /*if ((carnet === '') && (stop == true)){
@@ -265,6 +276,7 @@
                         $("#busquedaDatosTotForm_Provincia").prop("disabled", true );
                         $("#busquedaDatosTotForm_Localidad").prop("disabled", true );
                         $("#busquedaDatosTotForm_Sie").prop("disabled", true );
+                        $("#busquedaDatosTotForm_Expedido").prop("disabled", true );
                         
                         $("#butguardar").empty();
                         $("#butguardar").html('<div class="alert alert-success alert-dismissible" role="alert"><strong>'+data.mensaje+'</strong></div>');
@@ -277,6 +289,7 @@
                         $("#busquedaDatosTotForm_Provincia").prop("disabled", true );
                         $("#busquedaDatosTotForm_Localidad").prop("disabled", true );
                         $("#busquedaDatosTotForm_Sie").prop("disabled", true );
+                        $("#busquedaDatosTotForm_Expedido").prop("disabled", true );
                         
                         $("#butguardar").empty();
                         $("#butguardar").html('<div class="alert alert-success alert-dismissible" role="alert"><strong>'+data.mensaje+'</strong></div>');

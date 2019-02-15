@@ -74,7 +74,7 @@
                     {% for fila in totales %}
                         <tr>
                             <td>{{ fila.id }}</td>
-                           <td><a role="button" class="btn btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id': fila.id~fila.ciclo_tipo_id~fila.grado_tipo_id}) }}" > Imprimir Consolidado</a></td>
+                           <td><a role="button" class="btn btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id_enc': fila.id_enc~"|"~fila.ciclo_tipo_id~"|"~fila.grado_tipo_id}) }}"  > Imprimir Consolidado</a></td>
                             <td><a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado_edit', { 'id': fila.id }) }}" > Ver participantes</a></td>
                             <td>{{ fila.carnet }}</td>
                             <td>{{ fila.nombre }}</td>                            
