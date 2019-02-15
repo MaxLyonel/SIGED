@@ -301,7 +301,6 @@ class CreacionCursosEspecialController extends Controller {
                     ->add('servicio','choice',array('label'=>'Servicio','empty_value'=>'Seleccionar','attr'=>array('class'=>'form-control')))
                     ->add('tecnica','choice',array('label'=>'Técnica','choices'=>$tecnicas,'data'=> $tecnica,'attr'=>array('class'=>'form-control')))
                     ->add('nivelTecnico','choice',array('label'=>'Nivel de Formación Técnica','choices'=>$nivelesTecnicoArray,'data'=> $nivelTecnico,'attr'=>array('class'=>'form-control')))
-
                     ->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'attr'=>array('class'=>'form-control')))
                     ->add('guardar','submit',array('label'=>'Crear Curso','attr'=>array('class'=>'btn btn-primary')))
                     ->getForm();
@@ -527,14 +526,14 @@ class CreacionCursosEspecialController extends Controller {
                                     WHERE n.id IN (:id)'
     		)->setParameter('id',array(401,402,405,410,411));
     	}
-    	elseif ($area == "6" ) {
+    	/*elseif ($area == "6" ) {    //DIFICULTADES EN EL APRENDIZAJE
     		$query = $em->createQuery(
     				'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
                                     WHERE n.id IN (:id)'
-    				)->setParameter('id',array(411));
+    				)->setParameter('id',array(410,411));
 
     	}
-
+        
     	elseif ($area == "8" ) {
     			$query = $em->createQuery(
     					'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
@@ -555,7 +554,14 @@ class CreacionCursosEspecialController extends Controller {
                                     WHERE n.id IN (:id)'
                     )->setParameter('id',array(999));
 
-        }
+        }*/
+        elseif ($area == "11" ) {     //EDUCACION EN CASA
+    		$query = $em->createQuery(
+    				'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
+                                    WHERE n.id IN (:id)'
+    				)->setParameter('id',array(411));
+
+    	}
 
     	else  {
     	$query = $em->createQuery(
