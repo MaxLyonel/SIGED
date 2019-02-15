@@ -202,7 +202,7 @@ group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,id
      //  dump($po);die();
 
         $db = $em->getConnection();
-        $query = "  select * from (
+        $query = " select nivel.*, v.idsae, v.idacr, v.modulo, v.idmodulo, v.horas, coalesce(v.tothoras,0) as tothoras, v.idspm, v.cantidad from (
 						select distinct on (sae.id, sest.id ,sat.id ) sae.id, sest.id as idespecialidad,sat.id as idacreditacion, sest.especialidad, sat.acreditacion
 						, sia.id as idsia, sip.id as idsip
 from superior_acreditacion_especialidad sae
@@ -250,7 +250,7 @@ select idsae,idacr
         $params = array();
         $final->execute($params);
         $mallafinal = $final->fetchAll();
-         // dump($mallafinal);die();
+        //  dump($mallafinal);die();
 
         if ($po){
             $exist = true;
@@ -1359,7 +1359,7 @@ group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,id
             $po = $especialidadnivel->fetchAll();
 
             $db = $em->getConnection();
-            $query = "  select * from (
+            $query = "  select nivel.*, v.idsae, v.idacr, v.modulo, v.idmodulo, v.horas, coalesce(v.tothoras,0) as tothoras, v.idspm, v.cantidad from (
 						select distinct on (sae.id, sest.id ,sat.id ) sae.id, sest.id as idespecialidad,sat.id as idacreditacion, sest.especialidad, sat.acreditacion
 						, sia.id as idsia, sip.id as idsip
 from superior_acreditacion_especialidad sae
@@ -1534,7 +1534,7 @@ group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,id
                 $exist = false;
             }
             $db = $em->getConnection();
-            $query = "  select * from (
+            $query = "  select nivel.*, v.idsae, v.idacr, v.modulo, v.idmodulo, v.horas, coalesce(v.tothoras,0) as tothoras, v.idspm, v.cantidad from (
 						select distinct on (sae.id, sest.id ,sat.id ) sae.id, sest.id as idespecialidad,sat.id as idacreditacion, sest.especialidad, sat.acreditacion
 						, sia.id as idsia, sip.id as idsip
 from superior_acreditacion_especialidad sae
@@ -1712,7 +1712,7 @@ group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,id
                 $exist = false;
             }
             $db = $em->getConnection();
-            $query = "  select * from (
+            $query = " select nivel.*, v.idsae, v.idacr, v.modulo, v.idmodulo, v.horas, coalesce(v.tothoras,0) as tothoras, v.idspm, v.cantidad from (
 						select distinct on (sae.id, sest.id ,sat.id ) sae.id, sest.id as idespecialidad,sat.id as idacreditacion, sest.especialidad, sat.acreditacion
 						, sia.id as idsia, sip.id as idsip
 from superior_acreditacion_especialidad sae
