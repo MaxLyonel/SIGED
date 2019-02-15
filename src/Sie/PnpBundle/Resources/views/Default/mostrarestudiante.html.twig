@@ -34,7 +34,7 @@
 {% if edad >= 15 or (app.session.get('roluser') == '8') %}
     <div class="row"
         <div class="col-xs-12">
-            <a role="button" onclick="cambio()" id="boton" class="btn btn-success btn-large glyphicon glyphicon-ok" href="{{ path('sie_pnp_registrar_estudiante_curso', { 'rude': filas.rude,'curso_id':curso_id,'tipo':0}) }}"> Registrar estudiante</a>
+            <a role="button" onclick="cambio()" id="boton" class="btn rounded btn-success btn-large glyphicon glyphicon-ok" href="{{ path('sie_pnp_registrar_estudiante_curso', { 'rude': filas.rude,'curso_id':curso_id,'tipo':0}) }}"> Registrar estudiante</a>
         </div>
     </div>
 {% else %}

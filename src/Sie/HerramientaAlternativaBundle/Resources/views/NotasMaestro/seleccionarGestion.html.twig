@@ -1,0 +1,44 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Registro de notas <span>Seleccionar gestión</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="glyphicon glyphicon-leaf"></i>
+                        Seleccionar gestión
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <div class="body-content animated fadeIn">
+        <div class="col-md-12">
+            <!-- Start repeater -->
+            <div class="panel rounded shadow no-overflow">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Ingresar a:</h3>
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn btn-sm" data-action="refresh" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Refresh" data-original-title="" title=""><i class="fa fa-refresh"></i></button>
+                        <button class="btn btn-sm" data-action="collapse" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                        <button class="btn btn-sm" data-action="remove" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Remove" data-original-title="" title=""><i class="fa fa-times"></i></button>
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+                    {% for gestion in gestiones %}
+                        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                            <a href="{{path('herramienta_alter_notas_maestro_index', {'gestion': gestion} )}}" class="btn btn-primary btn-block">{{gestion}}</a>
+                        </div>
+                    {% endfor %}
+                </div><!-- /.panel-body -->
+            </div><!-- /.panel -->
+            <!--/ End repeater -->
+        </div>
+    </div>
+{% endblock %}

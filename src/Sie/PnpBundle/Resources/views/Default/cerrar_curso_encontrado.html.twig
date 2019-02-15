@@ -75,13 +75,13 @@
                     <input type="hidden" value="{{ curso_id }}" id="curso_id" name="curso_id" required="required">
                     <input type="hidden" value="{{ userId }}" id="userId" name="userId" required="required">
                     <input type="hidden" value="{{ id_dep }}" id="id_dep" name="id_dep" required="required">
-                     <input type ="submit" id="boton" value="Cerrar Cursos" class="btn btn-success btn-large " onclick="return confirm('¿Está seguro de cerrar los cursos?');" >
+                     <input type ="submit" id="boton" value="Cerrar Cursos" class="btn rounded btn-success btn-large " onclick="return confirm('¿Está seguro de cerrar los cursos?');" >
                 </form>
             </div>
         {% else %}
             <div class="row" align="center">
                 <br>
-                <input type="submit" disabled="disabled" id="boton" value="Cerrar Cursos" class="btn btn-success btn-large">
+                <input type="submit" disabled="disabled" id="boton" value="Cerrar Cursos" class="btn rounded btn-success btn-large">
             </div>
         {% endif %}
     </div>

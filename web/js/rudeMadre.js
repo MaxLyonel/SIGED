@@ -29,6 +29,7 @@ var m_validarTieneMadre = function(){
     if(tiene == 1){
         $('#m_divMadre').css('display','block');
         $('#m_carnet').attr('required','required');
+        $('#m_expedido').attr('required','required');
         $('#m_nombre').attr('required','required');
         $('#m_fechaNacimiento').attr('required','required');
         $('#m_genero').attr('required','required');
@@ -40,6 +41,7 @@ var m_validarTieneMadre = function(){
     }else{
         $('#m_divMadre').css('display','none');
         $('#m_carnet').removeAttr('required');
+        $('#m_expedido').removeAttr('required');
         $('#m_nombre').removeAttr('required');
         $('#m_fechaNacimiento').removeAttr('required');
         $('#m_genero').removeAttr('required');

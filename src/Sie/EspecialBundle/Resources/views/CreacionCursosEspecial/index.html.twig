@@ -141,6 +141,7 @@
                                             <th>Servicio</th>
                                             <th>Técnica</th>
                                             <th>Turno</th>
+                                            <th>Modalidad</th>
                                             <th>Acciones</th>
                                         </tr>
                                     </thead>
@@ -176,7 +177,8 @@
                                                     <th>Programa</th>
                                                     <th>Servicio</th>
                                                     <th>Técnica</th>
-                                                    <th>Turno</th>                                                    
+                                                    <th>Turno</th>
+                                                    <th>Modalidad</th>
                                                     <th>Acciones</th>
                                                 </tr>
                                             </thead>
@@ -199,6 +201,11 @@
                                                 <td data-title="Servicio">{{c.especialServicioTipo.servicio}}</td>
                                                 <td data-title="Tecnica">{{c.especialNivelTecnicoTipo.nivelTecnico}}-{{c.especialTecnicaEspecialidadTipo.especialidad}}</td>
                                                 <td data-title="Turno">{{c.institucioneducativaCurso.turnoTipo.turno}}</td>
+                                                {% if  c.especialModalidadTipo %}
+                                                    <td data-title="Modalidad">{{c.especialModalidadTipo.modalidad}}</td>
+                                                {% else %}
+                                                    <td data-title="Modalidad"></td>
+                                                {% endif %}
                                                 <td data-title="Acciones">
                                                     {% if onlyview %}
                                                         -
@@ -220,7 +227,6 @@
                                                     class="info"
                                                 {% endif %}
                                                 {% endif %}>
-
                                                     <td data-title="Area">{{c.especialAreaTipo.areaEspecial}}</td>
                                                     <td data-title="Nivel">{{c.institucioneducativaCurso.nivelTipo.nivel}}</td>
                                                     <td data-title="Grado">{{c.institucioneducativaCurso.gradoTipo.grado|upper}}</td>
@@ -229,6 +235,11 @@
                                                     <td data-title="Servicio">{{c.especialServicioTipo.servicio}}</td>
                                                     <td data-title="Tecnica">{{c.especialNivelTecnicoTipo.nivelTecnico}}-{{c.especialTecnicaEspecialidadTipo.especialidad}}</td>
                                                     <td data-title="Turno">{{c.institucioneducativaCurso.turnoTipo.turno}}</td>
+                                                    {% if  c.especialModalidadTipo %}
+                                                        <td data-title="Modalidad">{{c.especialModalidadTipo.modalidad}}</td>
+                                                    {% else %}
+                                                        <td data-title="Modalidad"></td>
+                                                    {% endif %}
                                                     <td data-title="Acciones">
                                                         {% if onlyview %}
                                                             -

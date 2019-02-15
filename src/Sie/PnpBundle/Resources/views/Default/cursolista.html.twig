@@ -17,7 +17,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn rounded btn-default" data-dismiss="modal">Cerrar</button>
                   </div>                
             </div>                
         </div>
@@ -132,7 +132,7 @@
                         <tr>
                             <td>{{ estudiante.codigo_rude }}</td>
                             <td data-title="VerNota" class="text-center">
-                                 <a href="#" role="button" onclick="SeeNotas('{{estudiante.inscripcion_id}}',{{ datos.id }})" class="btn btn-xs btn-primary glyphicon glyphicon glyphicon-list-alt" title="Ver Calificaciones"></a>
+                                 <a href="#" role="button" onclick="SeeNotas('{{estudiante.inscripcion_id}}',{{ datos.id }})" class="btn rounded btn-xs btn-primary glyphicon glyphicon glyphicon-list-alt" title="Ver Calificaciones"></a>
                             </td>
                             <td>{{ estudiante.carnet_identidad }}{% if estudiante.complemento != '' %}-{{estudiante.complemento}}{% endif %}</td>
                             <td>{{ estudiante.paterno }}</td>
