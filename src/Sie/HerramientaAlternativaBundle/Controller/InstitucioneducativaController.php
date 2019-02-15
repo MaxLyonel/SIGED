@@ -488,7 +488,7 @@ class InstitucioneducativaController extends Controller {
                     foreach($operativoControl as $o){
                         $datos = json_decode($o->getObs(),true);
                         foreach ($datos as $d){
-                            if($ies->getId() == json_decode($d,true)['ies']){
+                            if($ies->getInstitucioneducativa()->getId() == json_decode($d,true)['ie'] and $ies->getSucursalTipo()->getId() == json_decode($d,true)['suc']){
                                 if(date('d-m-Y') > $o->getFechaFin()->format('d-m-Y')){
                                     $sesion->set('ie_per_estado', '0');
                                     $sesion->set('ie_operativo', '!Operativo fuera de plazo. Venció el '. $o->getFechaFin()->format('d-m-Y') . ', contactese con su tecnico SIE.!');
