@@ -222,7 +222,7 @@ from superior_acreditacion_especialidad sae
 left join (
 select idsae,idacr
 --,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip 
-, string_agg(modulo, ',') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
+, string_agg(modulo, ',') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, sum(horas) as tothoras, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
 	from(select sae.id as idsae, sest.id as idespecialidad,sest.especialidad,sat.id as idacr, sat.acreditacion, sia.id as idsia, sip.id as idsip, smp.id as idsmp, smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo 
 	from superior_acreditacion_especialidad sae
 			inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
@@ -1230,18 +1230,27 @@ select idsae,idacr
         // dump($request);die;
         $idsip = $request->get('idsip');
         $idesp = $request->get('idesp');
+        $totalhoras = $request->get('totalhoras');
+        $horas= [80,90,100,110,120];
+       // $horasmodulo = $request->get('horas');
+        $idacreditacion =$request->get('idacred');
         //  dump($request);die;
         $form = $this->createFormBuilder()
             // ->setAction($this->generateUrl('herramienta_per_add_areatem'))
 
             ->add('modulo', 'text', array('required' => true, 'attr' => array('class' => 'form-control', 'enabled' => true,'style' => 'text-transform:uppercase')))
-         //   ->add('horas', 'text', array( 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true,'onblur'=>'rangoHoras(this)')))
+            ->add('horas', 'choice', array('choices'=> $horas, 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
+           // ->add('seccioniiProvincia', 'choice', array('choices' => $provNac ? $provNac->getId() : 0, 'label' => 'Provincia', 'required' => false, 'choices' => $provNacArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
             ->add('guardar', 'button', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary', 'enabled' => true, 'onclick'=>'guardarModulo();')))
             ->add('idsip', 'hidden', array('data' => $idsip))
             ->add('idesp', 'hidden', array('data' => $idesp))
+            ->add('totalhoras', 'hidden', array('data' => $totalhoras))
             ->getForm();
         return $this->render('SieHerramientaAlternativaBundle:MallaTecnica:nuevomodulo.html.twig', array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'totalhoras'=>$totalhoras,
+            'idacreditacion'=>$idacreditacion
+           // 'horasmodulo'=>$horasmodulo
             // 'idsip'=>$idsip
         ));
     }
@@ -1249,37 +1258,56 @@ select idsae,idacr
     public function showModuloEditAction(Request $request)
     {  $em = $this->getDoctrine()->getManager();
         // dump($request);die;
+        $horas= [80,90,100,110,120];
         $idmodulo = $request->get('idmodulo');
         $idspm = $request->get('idspm');
         $modulo = $request->get('modulo');
-        $horas = $request->get('horas');
+        $horasmodulo = $request->get('horas');
         $idesp = $request->get('idesp');
-
+        $totalhoras = $request->get('totalhoras');
+        $idacreditacion =$request->get('idacred');
+       for($i=0;$i<=4;$i++)
+       {
+           if($horas[$i]==$horasmodulo){
+               $horasid = $i;
+           }
+       }
 
         $form = $this->createFormBuilder()
             // ->setAction($this->generateUrl('herramienta_per_add_areatem'))
             ->add('modulo', 'text', array('required' => true,'data' => $modulo, 'attr' => array('class' => 'form-control', 'enabled' => true,'style' => 'text-transform:uppercase')))
-            //->add('horas', 'text', array( 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
-           // ->add('horas', 'text', array( 'required' => true,'data' => $horas, 'attr' => array('class' => 'form-control','enabled' => true)))
+            ->add('horas', 'choice', array('choices'=> $horas,'data' => $horasid, 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
             ->add('guardar', 'button', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary', 'enabled' => true, 'onclick'=>'updateModulo();')))
             ->add('idmodulo', 'hidden', array('data' => $idmodulo))
             ->add('idspm', 'hidden', array('data' => $idspm))
             ->add('idesp', 'hidden', array('data' => $idesp))
+            ->add('totalhoras', 'hidden', array('data' => $totalhoras))
             ->getForm();
         return $this->render('SieHerramientaAlternativaBundle:MallaTecnica:editarmodulo.html.twig', array(
 
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'totalhoras'=>$totalhoras,
+            'idacreditacion'=>$idacreditacion,
+            'horasmodulo'=>$horasmodulo
 
         ));
     }
 
     public function updateModuloNuevoAction(Request $request)
     {
+
         $form = $request->get('form');
-        // dump($form);die;
+       // dump($form);die;
         $modulo = strtoupper($form['modulo']);
         $idspm = $form['idspm'];
         $idesp = $form['idesp'];
+
+        $horas= [80,90,100,110,120];
+        $horasid = ($form['horas']);
+        $horasmodulo = $horas[$horasid];
+
+
+
         try{
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
@@ -1291,7 +1319,7 @@ select idsae,idacr
 
             //  dump($smtipo);die;
             $supmodper = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->findOneBy(array('id' => $form['idspm']));
-            //$supmodper->setHorasModulo($form['horas']);
+            $supmodper->setHorasModulo($horasmodulo);
             $em->persist($supmodper);
             $em->flush($supmodper);
 
@@ -1351,7 +1379,7 @@ from superior_acreditacion_especialidad sae
 left join (
 select idsae,idacr
 --,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip 
-, string_agg(modulo, ',') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
+, string_agg(modulo, ',') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, sum(horas) as tothoras, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
 	from(select sae.id as idsae, sest.id as idespecialidad,sest.especialidad,sat.id as idacr, sat.acreditacion, sia.id as idsia, sip.id as idsip, smp.id as idsmp, smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo 
 	from superior_acreditacion_especialidad sae
 			inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
@@ -1415,6 +1443,9 @@ select idsae,idacr
         $modulo = $request->get('modulo');
         $horas = $request->get('horas');
         $idesp = $request->get('idesp');
+
+
+
 //        dump($idspm);die;
         try{
 
@@ -1523,7 +1554,7 @@ from superior_acreditacion_especialidad sae
 left join (
 select idsae,idacr
 --,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip 
-, string_agg(modulo, ',') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
+, string_agg(modulo, ',') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, sum(horas) as tothoras, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
 	from(select sae.id as idsae, sest.id as idespecialidad,sest.especialidad,sat.id as idacr, sat.acreditacion, sia.id as idsia, sip.id as idsip, smp.id as idsmp, smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo 
 	from superior_acreditacion_especialidad sae
 			inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
@@ -1576,13 +1607,15 @@ select idsae,idacr
     public function createModuloNuevoAction(Request $request)
     {
         $form = $request->get('form');
-
-      //   dump($form);die;
+        $horas= [80,90,100,110,120];
+        //dump($form);die;
         //  $form = $request->get('form');
         // dump($form);die;
         //  $modulo = strtoupper($form['modulo']);     // dump($tecbas); dump($tecaux); dump($tecmed);die;
-        //  $horas = ($form['horas']);
-        //  dump($modulo);dump($horas);die;
+          $horasid = ($form['horas']);
+
+         $horasmodulo = $horas[$horasid];
+       // dump($horasmodulo);die;
         $modulo = strtoupper($form['modulo']);
         $idsip = $form['idsip'];
         $idesp = $form['idesp'];
@@ -1606,7 +1639,7 @@ select idsae,idacr
             $smperiodo = new SuperiorModuloPeriodo();
             $smperiodo ->setSuperiorModuloTipo($smtipo);
             $smperiodo ->setInstitucioneducativaPeriodo($em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo')->find($form['idsip']));
-            $smperiodo ->setHorasModulo(100);
+            $smperiodo ->setHorasModulo($horasmodulo);
             $em->persist($smperiodo);
             $em->flush($smperiodo);
 
@@ -1699,7 +1732,7 @@ from superior_acreditacion_especialidad sae
 left join (
 select idsae,idacr
 --,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip 
-, string_agg(modulo, ',') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
+, string_agg(modulo, ',') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, sum(horas) as tothoras, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
 	from(select sae.id as idsae, sest.id as idespecialidad,sest.especialidad,sat.id as idacr, sat.acreditacion, sia.id as idsia, sip.id as idsip, smp.id as idsmp, smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo 
 	from superior_acreditacion_especialidad sae
 			inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
