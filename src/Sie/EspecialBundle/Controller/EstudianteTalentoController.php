@@ -86,8 +86,7 @@ class EstudianteTalentoController extends Controller {
         $estudiante = array();
         if (!empty($estudiante_result)){
             $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $estudiante_result));
-            if (!empty($einscripcion_result)){
-                $institucioneducativa_curso_id = $einscripcion_result->getInstitucioneducativaCurso();
+            if (!empty($einscripcion_result)){g
                 $iecurso_result = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('id' => $institucioneducativa_curso_id));
                 dump($iecurso_result);die;
                 $estudiante = array(
