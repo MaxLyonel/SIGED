@@ -327,7 +327,7 @@ class CreacionCursosEspecialController extends Controller {
 
     public function createAction(Request $request){
         try{
-            dump($request->get('form'));die;
+            //dump($request->get('form'));die;
             $form = $request->get('form');
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_especial');")->execute();
@@ -384,6 +384,11 @@ class CreacionCursosEspecialController extends Controller {
                 $this->get('session')->getFlashBag()->add('newCursoError', 'No se pudo crear el curso, ya existe un curso con las mismas características.');
                 return $this->redirect($this->generateUrl('creacioncursos_especial',array('op'=>'result')));
             }else{
+                if (isset($form['educacionCasa']) && $form['educacionCasa'] == 1){
+                    $modalidad = 3;
+                }else{
+                    $modalidad = 1;
+                }
                 // Si no existe el curso
             	// curso generico SIE
             	$nuevo_curso_sie = new InstitucioneducativaCurso();
@@ -407,7 +412,7 @@ class CreacionCursosEspecialController extends Controller {
                 $nuevo_curso->setEspecialServicioTipo($em->getRepository('SieAppWebBundle:EspecialServicioTipo')->find($form['servicio']));
                 $nuevo_curso->setEspecialTecnicaEspecialidadTipo($em->getRepository('SieAppWebBundle:EspecialTecnicaEspecialidadTipo')->find($form['tecnica']));
                 $nuevo_curso->setEspecialNivelTecnicoTipo($em->getRepository('SieAppWebBundle:EspecialNivelTecnicoTipo')->find($form['nivelTecnico']));
-                $nuevo_curso->setEspecialModalidadTipo($em->getRepository('SieAppWebBundle:EspecialModalidadTipo')->find(1));
+                $nuevo_curso->setEspecialModalidadTipo($em->getRepository('SieAppWebBundle:EspecialModalidadTipo')->find($modalidad));
                 $em->persist($nuevo_curso);
                 $em->flush();
 

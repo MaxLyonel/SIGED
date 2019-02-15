@@ -98,10 +98,10 @@
                                         <div class="help-block with-errors"></div>
                                     </div>                                   
                                     <div class="form-group col-lg-6 col-md-12" id="divEc" style="display:none">
-                                        <div class="ckbox ckbox-primary">
-                                            {{form_widget(form.educacionCasa) }}
-                                            {{form_label(form.educacionCasa)}}
-                                        </div>      
+                                            <div class="ckbox ckbox-primary">
+                                                {{form_widget(form.educacionCasa) }}
+                                                {{form_label(form.educacionCasa)}}
+                                            </div>
                                         <div class="help-block with-errors"></div>
                                     </div>  
                                 </div>
@@ -138,6 +138,7 @@
             }
             $("#divservicio").show();
             $("#divprograma").show();
+            $("#form_educacionCasa").attr('checked', false);
             if(area == 3 || area== 5){
                 $("#divEc").show();
             }else{
