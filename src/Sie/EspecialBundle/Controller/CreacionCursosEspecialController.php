@@ -6,11 +6,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCurso;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoEspecial;
-use Sie\AppWebBundle\Entity\ModalidadTipo;
+use Sie\AppWebBundle\Entity\EspecialModalidadTipo;
 
 /**
  * EstudianteInscripcion controller.
@@ -303,6 +304,7 @@ class CreacionCursosEspecialController extends Controller {
                     ->add('tecnica','choice',array('label'=>'Técnica','choices'=>$tecnicas,'data'=> $tecnica,'attr'=>array('class'=>'form-control')))
                     ->add('nivelTecnico','choice',array('label'=>'Nivel de Formación Técnica','choices'=>$nivelesTecnicoArray,'data'=> $nivelTecnico,'attr'=>array('class'=>'form-control')))
                     ->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'attr'=>array('class'=>'form-control')))
+                    ->add('educacionCasa', CheckboxType::class, array('label'=>'Educación en Casa','required' => false))
                     ->add('guardar','submit',array('label'=>'Crear Curso','attr'=>array('class'=>'btn btn-primary')))
                     ->getForm();
             $em->getConnection()->commit();
@@ -325,6 +327,7 @@ class CreacionCursosEspecialController extends Controller {
 
     public function createAction(Request $request){
         try{
+            dump($request->get('form'));die;
             $form = $request->get('form');
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_especial');")->execute();
@@ -404,7 +407,7 @@ class CreacionCursosEspecialController extends Controller {
                 $nuevo_curso->setEspecialServicioTipo($em->getRepository('SieAppWebBundle:EspecialServicioTipo')->find($form['servicio']));
                 $nuevo_curso->setEspecialTecnicaEspecialidadTipo($em->getRepository('SieAppWebBundle:EspecialTecnicaEspecialidadTipo')->find($form['tecnica']));
                 $nuevo_curso->setEspecialNivelTecnicoTipo($em->getRepository('SieAppWebBundle:EspecialNivelTecnicoTipo')->find($form['nivelTecnico']));
-                $nuevo_curso->setModalidadTipo($em->getRepository('SieAppWebBundle:ModalidadTipo')->find(1));
+                $nuevo_curso->setEspecialModalidadTipo($em->getRepository('SieAppWebBundle:EspecialModalidadTipo')->find(1));
                 $em->persist($nuevo_curso);
                 $em->flush();
 
