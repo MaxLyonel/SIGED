@@ -80,12 +80,12 @@
                                             <td>{{ fila.usuario_id }}</td>
                                             {% if fila.homologado == true %}    
                                                 <td>
-                                                    <a role="button" class="btn btn-xs btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_reconocimiento_saberes_imprimir', { 'id_enc': fila.reconocimiento_saberes_id_enc}) }}" title="Certificación"></a>
+                                                    <a role="button" class="btn rounded btn-xs btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_reconocimiento_saberes_imprimir', { 'id_enc': fila.reconocimiento_saberes_id_enc}) }}" title="Certificación"></a>
                                                 </td>
                                             {% else %}
                                                 <td>
-                                                    <a role="button" class="btn btn-success btn-xs glyphicon glyphicon-ok" href="{{ path('sie_pnp_reconocimiento_saberes_validar',{'opcion' : 1,'reconocimiento_saberes_id':fila.reconocimiento_saberes_id}) }}"  title="Validar Reconocimiento de Saber" onclick="return confirm('¿Est\u00E1 seguro de validar este Reconocimiento de Saber?')"></a>
-                                                    <a role="button" class="btn btn-danger btn-xs glyphicon glyphicon glyphicon-remove" href="{{ path('sie_pnp_reconocimiento_saberes_validar',{'opcion' : 2,'reconocimiento_saberes_id':fila.reconocimiento_saberes_id}) }}" title="Eliminar Reconocimiento de Saber" onclick="return confirm('¿Est\u00E1 seguro de Eliminar este Reconocimiento de Saber?, si acepta no podr\u00E1 recuperar')" ></a>
+                                                    <a role="button" class="btn rounded btn-success btn-xs glyphicon glyphicon-ok" href="{{ path('sie_pnp_reconocimiento_saberes_validar',{'opcion' : 1,'reconocimiento_saberes_id':fila.reconocimiento_saberes_id}) }}"  title="Validar Reconocimiento de Saber" onclick="return confirm('¿Est\u00E1 seguro de validar este Reconocimiento de Saber?')"></a>
+                                                    <a role="button" class="btn rounded btn-danger btn-xs glyphicon glyphicon glyphicon-remove" href="{{ path('sie_pnp_reconocimiento_saberes_validar',{'opcion' : 2,'reconocimiento_saberes_id':fila.reconocimiento_saberes_id}) }}" title="Eliminar Reconocimiento de Saber" onclick="return confirm('¿Est\u00E1 seguro de Eliminar este Reconocimiento de Saber?, si acepta no podr\u00E1 recuperar')" ></a>
                                                 </td>
                                             {% endif %}
                                         </tr>
