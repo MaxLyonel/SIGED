@@ -70,10 +70,19 @@ class PersonaController extends Controller
                     if($personaSie){
                         $p = $em->getRepository('SieAppWebBundle:Persona')->findOneById($personaSie['personaId']);
                         if($personaSie['personaSegipId'] == '0') { //Registrar nueva persona actualizar dato de ci anterior (±)
-                            $p->setCarnet($personaSie['personaCarnet'].'±');
-                            $em->persist($p);
-                            $em->flush();
-                            
+                            if($p){
+                                $p->setCarnet($personaSie['personaCarnet'].'±');
+                                $em->persist($p);
+                                $em->flush();
+
+                                $u = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('persona' => $p->getId()));
+                                if($u){
+                                    $u->setUsername($u->getUsername().'±');
+                                    $em->persist($u);
+                                    $em->flush();
+                                }
+                            }
+
                             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('persona');");
                             $query->execute();
 
@@ -333,6 +342,20 @@ class PersonaController extends Controller
                         $persona->setSegipId('0');
                         $em->persist($persona);
                         $em->flush();
+
+                        if($persona){
+                            $persona->setCarnet($persona->getCarnet().'±');
+                            $persona->setSegipId('0');
+                            $em->persist($persona);
+                            $em->flush();
+
+                            $u = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('persona' => $persona->getId()));
+                            if($u){
+                                $u->setUsername($u->getUsername().'±');
+                                $em->persist($u);
+                                $em->flush();
+                            }
+                        }
                         
                         //*** ENVIO DE REGISTRO A CALIDAD */                
                         $validacionproceso = new ValidacionProceso(); 
