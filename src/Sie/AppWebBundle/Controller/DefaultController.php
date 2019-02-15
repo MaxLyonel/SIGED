@@ -807,14 +807,14 @@ class DefaultController extends Controller {
                 $sesion->set('ie_nombre', $rolselected[0]['institucioneducativa']);
                 $sesion->set('cuentauser', $rolselected[0]['rol']);
                 $sesion->set('tiposubsistema', $rolselected[0]['idietipo']);
-                
+                // dump($rolselected);die;
                 //to show the option create rude on alternativa by krlos
                 if($rolselected[0]['id'] == 9){
                     $objInstitucioneducativaAlt = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array(
                     'id'=> $rolselected[0]['sie'],
                     'institucioneducativaTipo'=>2
                         ));
-                    if($objInstitucioneducativaAlt){
+                    if($objInstitucioneducativaAlt && $rolselected[0]['sie']!='80730796'){
                         $sesion->set('directorAlternativa', true);
                     }
 

@@ -1,88 +1,105 @@
-        {% if po|length > 0 %}
-            <span class="label label-danger">Verifique que los datos del nuevo rude no esten en el presente listado.</span>
-            <div class="portlet portlet-orange">
-                <div class="portlet-heading">
-                    <div class="portlet-title">
-                        <h4><i class="fa fa-list-ul"></i> Coincidencias detectadas</h4>
+{% if swObservation %}
+
+        <div class="row">
+            <div class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('warningRUDE') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ flashMessage }}
                     </div>
-                    <div class="portlet-widgets">
-                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#listacoincidenciasestudiantes"><i class="fa fa-chevron-down"></i></a>
+                {% endfor %}
+            </div>
+        </div>
+
+{% else %}
+
+
+            {% if po|length > 0 %}
+                <span class="label label-danger">Verifique que los datos del nuevo rude no esten en el presente listado.</span>
+                <div class="portlet portlet-orange">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4><i class="fa fa-list-ul"></i> Coincidencias detectadas</h4>
+                        </div>
+                        <div class="portlet-widgets">
+                            <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#listacoincidenciasestudiantes"><i class="fa fa-chevron-down"></i></a>
+                        </div>
+                        <div class="clearfix"></div>
                     </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div id="listacoincidenciasestudiantes" class="panel-collapse collapse in">
-                    <div class="portlet-body">
-                        <div class="panel-body">                            
-                            <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
-                                <thead>
-                                    <tr>
-                                        <th>Rude</th>
-                                        <th>Nombres</th>
-                                        <th>Paterno</th>
-                                        <th>Materno</th>
-                                        <th>F. de Nac.</th>                                                
-                                        <th>Gen.</th>                                                
-                                        <th>H</th>                                                
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                
-                                    {% for persona in po %}
-                                        <tr>                        
-                                            <td>{{ persona.codigo_rude }}</td>
-                                            <td>{{ persona.nombre }}</td>
-                                            <td>{{ persona.paterno }}</td>
-                                            <td>{{ persona.materno }}</td>                                                
-                                            <td>{% if persona.fecha_nacimiento %}{{ persona.fecha_nacimiento|date('d/m/Y') }}{% endif %}</td>
-                                            <td>{% if (persona.genero_tipo_id == 1) %}
-                                                    M
-                                                {% else %}
-                                                    F
-                                                {% endif %}    
-                                            </td>
-                                            <td>
-                                                <button type = "button" class = "btn btn-warning btn-sm" title = "bbb"
-                                                        data-container = "body" data-toggle = "popover" data-placement = "left"
-                                                        data-content = "aaa">
-                                                    H
-                                                </button>
-                                            </td>
+                    <div id="listacoincidenciasestudiantes" class="panel-collapse collapse in">
+                        <div class="portlet-body">
+                            <div class="panel-body">                            
+                                <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
+                                    <thead>
+                                        <tr>
+                                            <th>Rude</th>
+                                            <th>Nombres</th>
+                                            <th>Paterno</th>
+                                            <th>Materno</th>
+                                            <th>F. de Nac.</th>                                                
+                                            <th>Gen.</th>                                                
+                                            <th>H</th>                                                
                                         </tr>
-                                    {% endfor %}
-                                
-                                </tbody>
-                            </table>
-                        </div>                        
+                                    </thead>
+                                    <tbody>
+                                    
+                                        {% for persona in po %}
+                                            <tr>                        
+                                                <td>{{ persona.codigo_rude }}</td>
+                                                <td>{{ persona.nombre }}</td>
+                                                <td>{{ persona.paterno }}</td>
+                                                <td>{{ persona.materno }}</td>                                                
+                                                <td>{% if persona.fecha_nacimiento %}{{ persona.fecha_nacimiento|date('d/m/Y') }}{% endif %}</td>
+                                                <td>{% if (persona.genero_tipo_id == 1) %}
+                                                        M
+                                                    {% else %}
+                                                        F
+                                                    {% endif %}    
+                                                </td>
+                                                <td>
+                                                    <button type = "button" class = "btn btn-warning btn-sm" title = "bbb"
+                                                            data-container = "body" data-toggle = "popover" data-placement = "left"
+                                                            data-content = "aaa">
+                                                        H
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    
+                                    </tbody>
+                                </table>
+                            </div>                        
+                        </div>
+                    </div>                                              
+                </div>                
+            {% else %}       
+                <center>
+                <div style="color:transparent">krlos {{swValidationSegip}}</div> 
+                {% if swValidationSegip >= 1 %}
+                    <span class="label label-danger">¡No se encontro coincidencias!</span>                        
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <strong>Verifique que cada letra y numero este digitada correctamente y vuelva a intentarlo.</strong>
                     </div>
-                </div>                                              
-            </div>                
-        {% else %}       
-            <center>
-            <div style="color:transparent">krlos {{swValidationSegip}}</div> 
-            {% if swValidationSegip >= 1 %}
-                <span class="label label-danger">¡No se encontro coincidencias!</span>                        
-                <div class="alert alert-danger alert-dismissible" role="alert">
-                    <strong>Verifique que cada letra y numero este digitada correctamente y vuelva a intentarlo.</strong>
-                </div>
 
-                <div class="col-lg-6">
-                     <div id="divbutonsig">
-                        <center> <a id="botonsiguienteestu" role="button" class="btn btn-theme fa fa-check form-control-feedback rounded fa fa-arrow-circle-o-right" href="#" onclick="estudiantesiguiente('{{swValidationSegip}}');"> Siguiente</a> </center> 
+                    <div class="col-lg-6">
+                         <div id="divbutonsig">
+                            <center> <a id="botonsiguienteestu" role="button" class="btn btn-theme fa fa-check form-control-feedback rounded fa fa-arrow-circle-o-right" href="#" onclick="estudiantesiguiente('{{swValidationSegip}}');"> Siguiente</a> </center> 
 
-                     </div>
-                </div>
+                         </div>
+                    </div>
+
+                    
+
+                {% else %}
+
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <strong>
+                            Datos no encontrados, De acuerdo a la validación del SEGIP, el número de carnet (y/o complemento) no corresponde a los datos reportados "paterno, materno, nombre y fecha de nacimiento"
+                        </strong>
+                    </div>
 
                 
-
-            {% else %}
-
-                <div class="alert alert-danger alert-dismissible" role="alert">
-                    <strong>
-                        Datos no encontrados, De acuerdo a la validación del SEGIP, el número de carnet (y/o complemento) no corresponde a los datos reportados "paterno, materno, nombre y fecha de nacimiento"
-                    </strong>
-                </div>
-
-            
-            {% endif %}
-            </center>     
-        {% endif %}              
+                {% endif %}
+                </center>     
+            {% endif %}              
+{% endif %}

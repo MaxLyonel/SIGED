@@ -31,7 +31,7 @@
                             <form id="busquedaDatosForm" data-toggle="validator" role="form" name="busquedaDatosForm" method="post" class="navbar-form" onsubmit="return enviaformdatosbasicos();">
                                 <div class="form-group has-feedback">                                           
                                     <div class="row">
-
+                                        <input type="hidden" name="busquedaDatosForm[directorAlternativa]" id="busquedaDatosForm_directorAlternativa" value="{{app.session.get('directorAlternativa')}}">                                                    
                                         <div class="col-lg-6">
                                             <label class="required">Carnet Identidad :</label>                                            
                                             <input type="text" class="form-control typeahead rounded" name="busquedaDatosForm[InputCarnet]" id="busquedaDatosForm_InputCarnet" placeholder="Carnet Identidad" onkeypress="return soloNumeros(event);" maxlength="15">                                                    
@@ -400,6 +400,15 @@
         }
 
         function enviaformdatosbasicos() {
+            //add to validate ci on alternativa-master
+            if($("#busquedaDatosForm_directorAlternativa").val()){
+                if($("#busquedaDatosForm_InputCarnet").val()==''){
+                    alert('Los campos Carnet de Identidad y/o Complemento son requeridos');
+                    return false;        
+                }
+                
+            }
+            
             {#var msj = '\n\n ¿Esta seguro de continuar?';#}
             if (valcampos()) {
                 var formData = $('#busquedaDatosForm').serialize();

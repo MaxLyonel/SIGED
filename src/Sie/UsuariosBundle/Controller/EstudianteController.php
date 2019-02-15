@@ -23,7 +23,7 @@ class EstudianteController extends Controller
         $this->session = new Session();
     }
     
-    public function estudiantenewAction() {        
+    public function estudiantenewAction() {
         return $this->render('SieUsuariosBundle:Estudiante:new.html.twig');
     }
 
@@ -50,8 +50,32 @@ class EstudianteController extends Controller
     
     public function busquedadatosAction(Request $request) {  
         $form = $request->get('busquedaDatosForm');
+        
         $swValidationSegip = $this->validationSegip($form);
         $po = '';
+        $swObservation = false;
+        //required CI to alterntiva no CEPEAD
+        if($this->session->get('directorAlternativa')){
+            if(!$form['InputCarnet']){
+                $message = 'Los campos Carnete de Identidad y/o Complemento son requeridos';
+                $this->addFlash('warningRUDE', $message);
+                // dump('no tiene CI');die;
+                $swObservation = true;
+              return $this->render('SieUsuariosBundle:Estudiante:estudianteslista.html.twig', array(
+                    'po' => $po,
+                    'swValidationSegip' => $swValidationSegip,
+                    'swObservation' => $swObservation,
+
+                ));
+            }
+        }
+
+        // dump($this->session->get('directorAlternativa'));
+        // dump($form);
+        // die;
+
+
+
        if($swValidationSegip){
             //        str_pad($form['fechaNacimiento']['day'], 2, '0', STR_PAD_LEFT)
             $fechanac = $form['fechaNacimiento']['year'].'-'.str_pad($form['fechaNacimiento']['mount'], 2, '0', STR_PAD_LEFT).'-'.str_pad($form['fechaNacimiento']['day'], 2, '0', STR_PAD_LEFT);
@@ -96,6 +120,7 @@ class EstudianteController extends Controller
         return $this->render('SieUsuariosBundle:Estudiante:estudianteslista.html.twig', array(
                     'po' => $po,
                     'swValidationSegip' => $swValidationSegip,
+                    'swObservation' => $swObservation,
 
                 ));
     }
@@ -153,6 +178,21 @@ class EstudianteController extends Controller
         echo $jsonContent;
         exit;
     }
+
+    private function validateOnAlternativa($form){
+        //create db conexion 
+        $em = $this->getDoctrine()->getManager();
+        $validationAlternativa = false;
+        $objInstitucioneducativaAlt = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array(
+        'id'=> $form['Sie'],
+        'institucioneducativaTipo'=>2
+            ));
+        if($objInstitucioneducativaAlt && $form['Sie']!='80730796'){
+            $validationAlternativa = true;
+        }
+
+        return $validationAlternativa;
+    }
     
     public function estudianteinsertrudeAction(Request $request) { 
     
@@ -160,8 +200,14 @@ class EstudianteController extends Controller
         $em->getConnection()->beginTransaction();
         $data = $request->request->all();
         $form = $data['busquedaDatosTotForm'];
-    
+        
         $response = new JsonResponse();
+        //check if the SIE is on ALTERNATIVA
+        $swOnAlternativa = $this->validateOnAlternativa($form);
+        if($swOnAlternativa){
+          return $response->setData(array('error'=>true,'mensaje' => '¡Proceso detenido! Los campos Carnet de Identidad y/o complemento son requeridos!')); 
+        }
+
         //dump($form); die;
         $sieentiy = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['Sie']);
         if ($sieentiy){
@@ -232,7 +278,7 @@ class EstudianteController extends Controller
                 $em->flush();
 
                 $em->getConnection()->commit();
-                return $response->setData(array('mensaje' => '¡Proceso realizado exitosamente! Código rude generado: '.$codigoRude));
+                return $response->setData(array('error'=>false,'mensaje' => '¡Proceso realizado exitosamente! Código rude generado: '.$codigoRude));
             } catch (Exception $ex) {
                 $em->getConnection()->rollback();
                 return $response->setData(array('mensaje' => '¡Proceso detenido! Se ha detectado inconsistencia de datos!'.$ex)); 

@@ -281,7 +281,12 @@
                         $("#busquedaDatosTotForm_Expedido").prop("disabled", true );
                         
                         $("#butguardar").empty();
-                        $("#butguardar").html('<div class="alert alert-success alert-dismissible" role="alert"><strong>'+data.mensaje+'</strong></div>');
+                        if(data.error){
+                            $("#butguardar").html('<div class="alert alert-warning alert-dismissible" role="alert"><strong>'+data.mensaje+'</strong></div>');
+                        }else{
+                            $("#butguardar").html('<div class="alert alert-success alert-dismissible" role="alert"><strong>'+data.mensaje+'</strong></div>');    
+                        }
+                        
                     },
                     error: function () {
                         $("#busquedaDatosTotForm_InputCi").prop("disabled", true );
