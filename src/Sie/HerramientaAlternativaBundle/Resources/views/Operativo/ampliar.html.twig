@@ -54,6 +54,7 @@
                                         <th>Departamento</th>
                                         <th>Distrito</th>
                                         <th>Gestión</th>
+                                        <th>Fecha Actual</th>
                                         <th>Fecha inicio</th>
                                         <th>Fecha fin</th>                                                
                                         <th>Usuario Registro</th>     
@@ -69,6 +70,7 @@
                                         <th>Departamento</th>
                                         <th>Distrito</th>
                                         <th>Gestión</th>
+                                        <th>Fecha Actual</th>
                                         <th>Fecha inicio</th>
                                         <th>Fecha fin</th>                                                
                                         <th>Usuario Registro</th>
@@ -85,6 +87,7 @@
                                             <td>{{ entity.distritoTipo.departamentoTipo.departamento }}</td>
                                             <td>{{ entity.distritoTipo.distrito }}</td>
                                             <td>{{ entity.gestionTipo.id }}</td>
+                                            <td>{{ "now"|date('d-m-Y') }}</td>
                                             <td>{{ entity.fechaInicio.date|date('d-m-Y') }}</td>
                                             <td>{{ entity.fechaFin.date|date('d-m-Y') }}</td>
                                             <td>{{ entity.usuarioRegistro.persona.nombre }}</td>
