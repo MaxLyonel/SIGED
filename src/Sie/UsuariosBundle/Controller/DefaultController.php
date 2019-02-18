@@ -609,7 +609,7 @@ class DefaultController extends Controller
 //        print_r($data['maestroinsid']);
 //        die('g');
         try {
-            if ($data['accion'] === 'new'){    
+            if ($data['accion'] === 'userinsert'){    
                 $persona = $this->getDoctrine()->getRepository('SieAppWebBundle:Persona')->find($data['idpersona']);
                 $usuario = new Usuario();
                 $usuario->setPersona($persona);
@@ -627,7 +627,7 @@ class DefaultController extends Controller
                 $em->persist($persona);
                 $em->flush();
             }
-            if ($data['accion'] === 'userinsert'){
+            if ($data['accion'] === 'new'){
                 $persona = $this->getDoctrine()->getRepository('SieAppWebBundle:Persona')->find($data['idpersona']);
                 $usuario = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('persona'=>$data['idpersona']));
             }
