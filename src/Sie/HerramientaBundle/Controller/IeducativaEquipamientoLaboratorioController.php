@@ -219,7 +219,7 @@ class IeducativaEquipamientoLaboratorioController extends Controller {
             // $file = $entityEstudianteDatopersonal->getFoto();
             $filename2 = $sie . '_Conexion.' . $file->guessExtension();
             $filesize = $file->getClientSize();
-            if ($filesize/1024 < 501) {                
+            if ($filesize/1024 < 5120) {                
                 $adjuntoDir = $this->container->getParameter('kernel.root_dir') . '/../web/uploads/equipamiento_laboratorio';
                 $file->move($adjuntoDir, $filename2);
                 if (!file_exists($adjuntoDir.'/'.$filename2)){
@@ -227,7 +227,7 @@ class IeducativaEquipamientoLaboratorioController extends Controller {
                     return $this->redirectToRoute('herramienta_ieducativa_equipamiento_laboratorio_detalle', ['form' => $formBusqueda], 307);
                 }                
             } else {                
-                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'La fotografía adjunta '.$file->getClientOriginalName().' excede el tamaño permitido, Fotografia muy grande, favor ingresar una fotografía que no exceda los 500KiB.'));
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'La fotografía adjunta '.$file->getClientOriginalName().' excede el tamaño permitido, Fotografia muy grande, favor ingresar una fotografía que no exceda los 5MB.'));
                 return $this->redirectToRoute('herramienta_ieducativa_equipamiento_laboratorio_detalle', ['form' => $formBusqueda], 307);
             } 
         } 
