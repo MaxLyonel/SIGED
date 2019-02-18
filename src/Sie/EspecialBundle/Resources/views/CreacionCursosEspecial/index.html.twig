@@ -7,25 +7,13 @@
     <div class="breadcrumb-wrapper hidden-xs">
         <span class="label">Usted esta aquí:</span>
         <ol class="breadcrumb">
-            {#<li>
+            <li>
                 <i class="fa fa-home"></i>
                 <a href="#">Creación de Cursos</a>
                 <i class="fa fa-angle-right"></i>
             </li>
 
-            <li class="active">Buscar</li>+#}
-            <li>
-                <i class="fa fa-home"></i>
-                <a href="#">Inicio</a>
-                <i class="fa fa-angle-right"></i>
-            </li>
-            <li>
-                <i class="fa fa-home"></i>
-                <a href="{{path('info_especial_open', {'form':{'idInstitucion': institucion.id,'gestion':gestion,'institucioneducativa':institucion.institucioneducativa,'institucioneducativaTipoId':4,'data':''}})}}">Menu Principal</a>
-                <i class="fa fa-angle-right">
-                </i>
-            </li>
-            <li class="active"><a href="#">Creación de Cursos</a></li>
+            <li class="active">Buscar</li>
         </ol>
     </div><!-- /.breadcrumb-wrapper -->
 </div><!-- /.header-content -->
@@ -141,7 +129,6 @@
                                             <th>Servicio</th>
                                             <th>Técnica</th>
                                             <th>Turno</th>
-                                            <th>Modalidad</th>
                                             <th>Acciones</th>
                                         </tr>
                                     </thead>
@@ -177,8 +164,7 @@
                                                     <th>Programa</th>
                                                     <th>Servicio</th>
                                                     <th>Técnica</th>
-                                                    <th>Turno</th>
-                                                    <th>Modalidad</th>
+                                                    <th>Turno</th>                                                    
                                                     <th>Acciones</th>
                                                 </tr>
                                             </thead>
@@ -201,11 +187,6 @@
                                                 <td data-title="Servicio">{{c.especialServicioTipo.servicio}}</td>
                                                 <td data-title="Tecnica">{{c.especialNivelTecnicoTipo.nivelTecnico}}-{{c.especialTecnicaEspecialidadTipo.especialidad}}</td>
                                                 <td data-title="Turno">{{c.institucioneducativaCurso.turnoTipo.turno}}</td>
-                                                {% if  c.especialModalidadTipo %}
-                                                    <td data-title="Modalidad">{{c.especialModalidadTipo.modalidad}}</td>
-                                                {% else %}
-                                                    <td data-title="Modalidad"></td>
-                                                {% endif %}
                                                 <td data-title="Acciones">
                                                     {% if onlyview %}
                                                         -
@@ -221,12 +202,13 @@
                                             <tr {% if c.institucioneducativaCurso.nivelTipo.id == 11 %} 
                                                 class="success" 
                                             {% else %}
-                                                {% if c.institucioneducativaCurso.nivelTipo.id == 12 %}
+                                                {% if c .institucioneducativaCurso.nivelTipo.id == 12 %}
                                                     class="warning"
                                                 {% else %}
                                                     class="info"
                                                 {% endif %}
                                                 {% endif %}>
+
                                                     <td data-title="Area">{{c.especialAreaTipo.areaEspecial}}</td>
                                                     <td data-title="Nivel">{{c.institucioneducativaCurso.nivelTipo.nivel}}</td>
                                                     <td data-title="Grado">{{c.institucioneducativaCurso.gradoTipo.grado|upper}}</td>
@@ -235,11 +217,6 @@
                                                     <td data-title="Servicio">{{c.especialServicioTipo.servicio}}</td>
                                                     <td data-title="Tecnica">{{c.especialNivelTecnicoTipo.nivelTecnico}}-{{c.especialTecnicaEspecialidadTipo.especialidad}}</td>
                                                     <td data-title="Turno">{{c.institucioneducativaCurso.turnoTipo.turno}}</td>
-                                                    {% if  c.especialModalidadTipo %}
-                                                        <td data-title="Modalidad">{{c.especialModalidadTipo.modalidad}}</td>
-                                                    {% else %}
-                                                        <td data-title="Modalidad"></td>
-                                                    {% endif %}
                                                     <td data-title="Acciones">
                                                         {% if onlyview %}
                                                             -

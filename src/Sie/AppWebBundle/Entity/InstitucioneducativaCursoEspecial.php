@@ -232,32 +232,4 @@ class InstitucioneducativaCursoEspecial
     {
         return $this->especialServicioTipo;
     }
-    /**
-     * @var \Sie\AppWebBundle\Entity\EspecialModalidadTipo
-     */
-    private $especialModalidadTipo;
-
-
-    /**
-     * Set especialModalidadTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\EspecialModalidadTipo $especialModalidadTipo
-     * @return InstitucioneducativaCursoEspecial
-     */
-    public function setEspecialModalidadTipo(\Sie\AppWebBundle\Entity\EspecialModalidadTipo $especialModalidadTipo = null)
-    {
-        $this->especialModalidadTipo = $especialModalidadTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get especialModalidadTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\EspecialModalidadTipo 
-     */
-    public function getEspecialModalidadTipo()
-    {
-        return $this->especialModalidadTipo;
-    }
 }

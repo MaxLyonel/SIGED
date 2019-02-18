@@ -6,12 +6,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCurso;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoEspecial;
-use Sie\AppWebBundle\Entity\EspecialModalidadTipo;
 
 /**
  * EstudianteInscripcion controller.
@@ -171,11 +169,10 @@ class CreacionCursosEspecialController extends Controller {
      */
     public function newAction(Request $request){
         try{
-            //dump($request);die;
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idInstitucion'));
-            $gestion = $request->get('idGestion');
+            $gestion = $request->get('gestion');
             /*
              * Listamos los turnos validos
              */
@@ -195,8 +192,7 @@ class CreacionCursosEspecialController extends Controller {
             $query = $em->createQuery(
             		'SELECT a FROM SieAppWebBundle:EspecialAreaTipo a
                                     WHERE a.id IN (:id) ORDER BY a.id'
-                     )->setParameter('id',array(1,2,3,4,5,6,7,11));
-                    // )->setParameter('id',array(1,2,3,4,5,6,7,8,9,100));
+            		)->setParameter('id',array(1,2,3,4,5,6,7,8,9,100));
             		$areas_result = $query->getResult();
             		$areas = array();
             		foreach ($areas_result as $a){
@@ -303,8 +299,8 @@ class CreacionCursosEspecialController extends Controller {
                     ->add('servicio','choice',array('label'=>'Servicio','empty_value'=>'Seleccionar','attr'=>array('class'=>'form-control')))
                     ->add('tecnica','choice',array('label'=>'Técnica','choices'=>$tecnicas,'data'=> $tecnica,'attr'=>array('class'=>'form-control')))
                     ->add('nivelTecnico','choice',array('label'=>'Nivel de Formación Técnica','choices'=>$nivelesTecnicoArray,'data'=> $nivelTecnico,'attr'=>array('class'=>'form-control')))
+
                     ->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'attr'=>array('class'=>'form-control')))
-                    ->add('educacionCasa', CheckboxType::class, array('label'=>'Educación en Casa','required' => false))
                     ->add('guardar','submit',array('label'=>'Crear Curso','attr'=>array('class'=>'btn btn-primary')))
                     ->getForm();
             $em->getConnection()->commit();
@@ -327,7 +323,6 @@ class CreacionCursosEspecialController extends Controller {
 
     public function createAction(Request $request){
         try{
-            //dump($request->get('form'));die;
             $form = $request->get('form');
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_especial');")->execute();
@@ -384,11 +379,6 @@ class CreacionCursosEspecialController extends Controller {
                 $this->get('session')->getFlashBag()->add('newCursoError', 'No se pudo crear el curso, ya existe un curso con las mismas características.');
                 return $this->redirect($this->generateUrl('creacioncursos_especial',array('op'=>'result')));
             }else{
-                if (isset($form['educacionCasa']) && $form['educacionCasa'] == 1){
-                    $modalidad = 3;
-                }else{
-                    $modalidad = 1;
-                }
                 // Si no existe el curso
             	// curso generico SIE
             	$nuevo_curso_sie = new InstitucioneducativaCurso();
@@ -412,7 +402,6 @@ class CreacionCursosEspecialController extends Controller {
                 $nuevo_curso->setEspecialServicioTipo($em->getRepository('SieAppWebBundle:EspecialServicioTipo')->find($form['servicio']));
                 $nuevo_curso->setEspecialTecnicaEspecialidadTipo($em->getRepository('SieAppWebBundle:EspecialTecnicaEspecialidadTipo')->find($form['tecnica']));
                 $nuevo_curso->setEspecialNivelTecnicoTipo($em->getRepository('SieAppWebBundle:EspecialNivelTecnicoTipo')->find($form['nivelTecnico']));
-                $nuevo_curso->setEspecialModalidadTipo($em->getRepository('SieAppWebBundle:EspecialModalidadTipo')->find($modalidad));
                 $em->persist($nuevo_curso);
                 $em->flush();
 
@@ -536,14 +525,14 @@ class CreacionCursosEspecialController extends Controller {
                                     WHERE n.id IN (:id)'
     		)->setParameter('id',array(401,402,405,410,411));
     	}
-    	/*elseif ($area == "6" ) {    //DIFICULTADES EN EL APRENDIZAJE
+    	elseif ($area == "6" ) {
     		$query = $em->createQuery(
     				'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
                                     WHERE n.id IN (:id)'
-    				)->setParameter('id',array(410,411));
+    				)->setParameter('id',array(411));
 
     	}
-        
+
     	elseif ($area == "8" ) {
     			$query = $em->createQuery(
     					'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
@@ -564,14 +553,7 @@ class CreacionCursosEspecialController extends Controller {
                                     WHERE n.id IN (:id)'
                     )->setParameter('id',array(999));
 
-        }*/
-        elseif ($area == "11" ) {     //EDUCACION EN CASA
-    		$query = $em->createQuery(
-    				'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
-                                    WHERE n.id IN (:id)'
-    				)->setParameter('id',array(411));
-
-    	}
+        }
 
     	else  {
     	$query = $em->createQuery(
@@ -703,9 +685,8 @@ class CreacionCursosEspecialController extends Controller {
     	elseif ($area == "6" and $nivel == "411" and  $grado == "99" ) {
     		$query = $em->createQuery(
     				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
-                                    WHERE p.id IN (:id) order by p.programa'
-                    //)->setParameter('id',array(1,2,3,4,5,6));
-                    )->setParameter('id',array(5,6,17));
+                                    WHERE p.id IN (:id)'
+    				)->setParameter('id',array(1,2,3,4,5,6));
     	}
 
     	else {
