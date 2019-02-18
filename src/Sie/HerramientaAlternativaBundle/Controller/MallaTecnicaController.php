@@ -304,6 +304,7 @@ select idsae,idacr
                       and b.codigo = ".$aInfoUeducativa['ueducativaInfoId']['especialidad_cod']."
                       and ((d.codigo = 1) or (d.codigo = 2) or (d.codigo = 3))
                       and w.turno_tipo_id = ".$aInfoUeducativa['ueducativaInfoId']['superior_turno_tipo_id']."
+                       and l.esvigente =false
                     order by d.codigo, l.modulo";
 //        print_r($query);
 //        die;
@@ -463,6 +464,7 @@ select idsae,idacr
                       and b.codigo = ".$aInfoUeducativa['ueducativaInfoId']['especialidad_cod']."
                       and ((d.codigo = 1) or (d.codigo = 2) or (d.codigo = 3))
                       and w.turno_tipo_id = ".$aInfoUeducativa['ueducativaInfoId']['superior_turno_tipo_id']."
+                      and l.esvigente =false
                     order by d.codigo, l.modulo";
 //        print_r($query);
 //        die;
