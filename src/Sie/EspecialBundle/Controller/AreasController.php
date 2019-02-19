@@ -239,7 +239,8 @@ class AreasController extends Controller {
             ->andWhere('eat.id IN (:areas)')
             ->setParameter('idInstitucion', $sie)
             ->setParameter('gestion', $gestion)
-            ->setParameter('areas', array(1,2,3,5))
+            // ->setParameter('areas', array(1,2,3,5))
+            ->setParameter('areas', array(1,2,3,5,6,7,11))
             ->addOrderBy('eat.id')
             ->distinct()
             ->getQuery();

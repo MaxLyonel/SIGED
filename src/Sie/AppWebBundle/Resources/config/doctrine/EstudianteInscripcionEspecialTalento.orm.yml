@@ -11,6 +11,9 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionEspecialTalento:
         IDX_5A0552EFDADD026:
             columns:
                 - usuario_modificacion_id
+        IDX_5A0552EF3AB163FE:
+            columns:
+                - institucioneducativa_id
     id:
         id:
             type: integer
@@ -92,6 +95,15 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionEspecialTalento:
             inversedBy: null
             joinColumns:
                 usuario_modificacion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
