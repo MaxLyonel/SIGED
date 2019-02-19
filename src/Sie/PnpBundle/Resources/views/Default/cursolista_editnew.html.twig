@@ -316,6 +316,7 @@
                         Lista de Participantes del Curso
                     </div>
                     <div class="panel-body">
+                    <button class="btn btn-xs btn-danger rounded glyphicon glyphicon-copy" id="copy-button" data-clipboard-target="#tablaListadoPersonas"> Copiar Lista</button>
                         <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
                             <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
                                 <thead>
@@ -428,6 +429,12 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script>
+
+ (function(){
+    new Clipboard('#copy-button');
+})();
+</script>
     <script type="text/javascript">
     $(document).ready(function() {
         $("#fecha_nac").datepicker({

@@ -4569,15 +4569,15 @@ ciclo_tipo_id, grado_tipo_id
                     return $this->render('SiePnpBundle:Default:mostrarestudiante.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'gestion_ini'=>$gestion_ini)); die;
                 }
                 else{*/
-                     if($gestion_ini-substr($filas['fecha_nac'], 0, 4)<15){
-                            echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI O CODIGO RUDE '.$ci.' no es mayor de 15 años, por tanto no puede ser registrado al PNP.</div>';
+                     if($gestion_ini-substr($filas['fecha_nac'], 0, 4)<15 and $rol != 8){
+                            echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' no es mayor de 15 años, por tanto no puede ser registrado al PNP.</div>';
                             die;
                         }
                      $valido=$this->validar_nivel_participanteAction($filas['rude']);
                     if($valido == 1)
                         return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>2,'gestion_ini'=>$gestion_ini,'plan'=>$plan,'sie'=>$sie,'id_departamentos'=>$id_departamentos,'id_provincias'=>$id_provincias)); 
                     else
-                         echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI O CODIGO RUDE '.$ci.' pasó secundaria, por lo tanto no puede ingresar al PNP.</div>'; die; 
+                         echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' pasó secundaria, por lo tanto no puede ingresar al PNP.</div>'; die; 
                         die;         
                 /*}*/
             }
@@ -4627,7 +4627,13 @@ ciclo_tipo_id, grado_tipo_id
                         // $opcional = array();
                         $personaSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($filas['ci'], $opcional, 'prod', 'academico');
                         if($personaSegip){
+                            if($gestion_ini-substr($filas['fecha_nac'], 0, 4)<15 and $rol != 8){
+                                echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' no es mayor de 15 años, por tanto no puede ser registrado al PNP.</div>';
+                            die;
+                            }
+                            else{
                             return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>1,'gestion_ini'=>$gestion_ini,'plan'=>$plan,'sie'=>$sie,'id_departamentos'=>$id_departamentos,'id_provincias'=>$id_provincias));  die;
+                            }
                         }
                         else{
                             if($rude==1){
@@ -4777,7 +4783,7 @@ ciclo_tipo_id, grado_tipo_id
                     $curso_abierto=1;
                 }
                 if($curso_abierto==1){
-                     echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI o CODIGO RUDE '.$ci.' No puede ser inscrito porque tiene cursos anteriores abiertos, primero debe cerrarlos!!!!.</div>'; die;
+                     echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' No puede ser inscrito porque tiene cursos anteriores abiertos, primero debe cerrarlos!!!!.</div>'; die;
                 }
                 //funcion estudiante en PNP
                 $em = $this->getDoctrine()->getManager();
@@ -4829,7 +4835,7 @@ ciclo_tipo_id, grado_tipo_id
                 }
 
                 if($bloque_c>2){
-                    echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI o CODIGO RUDE '.$ci.' Finalizo los 4 módulos, por tanto no puede ser registrado en el curso.</div>'; die; 
+                    echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' Finalizo los 4 módulos, por tanto no puede ser registrado en el curso.</div>'; die; 
                 }
                 else{
                     //Buscqueda si en el curso existe el mismo estudiante
@@ -4873,7 +4879,7 @@ ciclo_tipo_id, grado_tipo_id
                         
                     if($existe_estudiante==1){
                     //si no existe en el curso saber si el curso es aquel que le corresponde
-                    echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI o CODIGO RUDE '.$ci.' ya esta inscrito en este curso.</div>'; die; 
+                    echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' ya esta inscrito en este curso.</div>'; die; 
                     }
                     else{
                         $opcion_est="$bloque_c$parte_c";
@@ -4917,14 +4923,14 @@ ciclo_tipo_id, grado_tipo_id
                             $id_provincias = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarTipo' => $filas['lugar_nac_tipo_id']));
                             $valido=$this->validar_nivel_participanteAction($filas['rude']);
                             if($gestion_ini-substr($filas['fecha_nac'], 0, 4)<15){
-                                echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI O CODIGO RUDE '.$ci.' no es mayor de 15 años, por tanto no puede ser registrado al PNP.</div>';
+                                echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' no es mayor de 15 años, por tanto no puede ser registrado al PNP.</div>';
                                 die;
                             }
 
                             if($valido == 1)               
                                 return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>2,'gestion_ini'=>$gestion_ini,'plan'=>$plan,'sie'=>$sie,'id_departamentos'=>$id_departamentos,'id_provincias'=>$id_provincias)); 
                             else
-                                 echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI O CODIGO RUDE '.$ci.' pasó secundaria, por lo tanto no puede ingresar al PNP.</div>'; die; 
+                                 echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' pasó secundaria, por lo tanto no puede ingresar al PNP.</div>'; die; 
                                 die;
                         /*}*/
 
@@ -4936,7 +4942,7 @@ ciclo_tipo_id, grado_tipo_id
                             if ($bloque_c==1 and $parte_c==2)$curso_toca="Tercer";
                             if ($bloque_c==2 and $parte_c==1)$curso_toca="Cuarto";
                             if ($bloque_c==2 and $parte_c==2)$curso_toca="Sexto";
-                            echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI O CODIGO RUDE '.$ci.' le corresponde el: '.$curso_toca.' curso, y no este curso.</div>'; die; 
+                            echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' le corresponde el: '.$curso_toca.' curso, y no este curso.</div>'; die; 
                         }
                     }
                 }
@@ -4962,7 +4968,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                         $cant=1;
                     }   
                     if($cant>0){
-                        echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI o CODIGO RUDE '.$ci.' está registrado en el Sistema Regular o Alternativa.</div>'; die;                       }
+                        echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' está registrado en el Sistema Regular o Alternativa.</div>'; die;                       }
                     else{                        
 
                         $query = "SELECT
@@ -5017,14 +5023,14 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                             if($filas['lugar_nac_tipo_id']!= "")
                             $id_provincias = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarTipo' => $filas['lugar_nac_tipo_id']));
                              if($gestion_ini-substr($filas['fecha_nac'], 0, 4)<15){
-                                echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI O CODIGO RUDE '.$ci.' no es mayor de 15 años, por tanto no puede ser registrado al PNP.</div>';
+                                echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' no es mayor de 15 años, por tanto no puede ser registrado al PNP.</div>';
                                 die;
                             }
                              $valido=$this->validar_nivel_participanteAction($filas['rude']);
                             if($valido == 1)               
                                 return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>2,'gestion_ini'=>$gestion_ini,'plan'=>$plan,'sie'=>$sie,'id_departamentos'=>$id_departamentos,'id_provincias'=>$id_provincias)); 
                             else
-                                 echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI O CODIGO RUDE '.$ci.' pasó secundaria, por lo tanto no puede ingresar al PNP.</div>'; die; 
+                                 echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' pasó secundaria, por lo tanto no puede ingresar al PNP.</div>'; die; 
                                 die;            
                         /*}*/
           
@@ -5070,6 +5076,10 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                         // $opcional = array();
                         $personaSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($filas['ci'], $opcional, 'prod', 'academico');
                         if($personaSegip){
+                            if($gestion_ini-substr($filas['fecha_nac'], 0, 4)<15 and $rol != 8){
+                                echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' no es mayor de 15 años, por tanto no puede ser registrado al PNP.</div>';
+                            die;
+                            }
                             if($opcion==11)
                                 return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>1,'gestion_ini'=>$gestion_ini,'plan'=>$plan,'sie'=>$sie,'id_departamentos'=>$id_departamentos,'id_provincias'=>$id_provincias));
                             else
