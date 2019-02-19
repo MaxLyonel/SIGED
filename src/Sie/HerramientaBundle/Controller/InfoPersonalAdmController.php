@@ -359,6 +359,12 @@ class InfoPersonalAdmController extends Controller {
         $em->getConnection()->beginTransaction();
         try {
             $form = $request->get('form');
+            // Registrar sucursal
+            $sucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa' => $form['institucionEducativa'], 'gestionTipo' => $form['gestion']));
+
+            if(!$sucursal) {
+                $query = $em->getConnection()->prepare("select * from sp_genera_institucioneducativa_sucursal('".$form['institucionEducativa']."','0','".$form['gestion']."','1');")->execute();
+            }
             // Verificar si la persona ya esta registrada
 
             $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($form['persona']);
