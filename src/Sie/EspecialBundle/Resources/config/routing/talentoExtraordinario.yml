@@ -17,3 +17,9 @@ talento_extraordinario_dtlist:
     defaults: { _controller: SieEspecialBundle:EstudianteTalento:dtlist }
     options:
         expose: true
+
+talento_extraordinario_save:
+    path:     /guardar
+    defaults: { _controller: SieEspecialBundle:EstudianteTalento:save }
+    options:
+        expose: true

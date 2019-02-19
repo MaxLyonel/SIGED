@@ -43,14 +43,14 @@
                                       <div class="input-group-addon"><i class="fa fa-search"></i></div>
                                     </div>
                                   </div>
-                                  <button type="button" class="btn btn-primary" onclick="searchClick()">Buscar</button>
+                                  <button type="button" class="btn btn-primary" id="buscar" onclick="searchClick()">Buscar</button>
                                 </form>
                             </div>
                         </div>
                         <div id="carga"></div>
                         <hr>
                         <div class="row">
-                            <form action="">
+                            <form id="registro">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="nombre">Nombre</label>
@@ -68,7 +68,7 @@
                                         <div class="col-md-8">
                                             <div class="form-group">
                                                 <label for="cedula">Cédula Identidad</label>
-                                                <input type="text" class="form-control" id="cedula" name="cedula">
+                                                <input type="text" class="form-control" id="cedula" name="cedula" required>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -80,24 +80,32 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="fecha_nacimiento">Fecha Nacimiento</label>
-                                        <input type="text" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento">
+                                        <input type="text" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="centro">Centro</label>
-                                        <input type="text" class="form-control" id="centro" placeholder="Email">
+                                        <label for="institucion_educativa">Centro Procedente</label>
+                                        <input type="text" class="form-control" id="institucion_educativa" name="institucion_educativa">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
+                                    <input type="hidden" id="estudiante_ins_id" name="estudiante_ins_id">
                                     <div class="form-group">
-                                        <label for="rude">Rude</label>
-                                        <input type="text" class="form-control" id="rude" placeholder="Email">
+                                        <label for="centro_inscripcion">Centro Inscripción</label>
+                                        <select type="text" class="form-control" id="centro_inscripcion" name="centro_inscripcion" required>
+                                            <option value="" disabled selected>Seleccione</option>
+                                            <option value="1">aaa</option>
+                                        </select>
                                     </div>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Username">
-                                        <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-search"></span>
-                                        </span>
+                                    <div class="form-group">
+                                        <label for="fecha_solicitud">Fecha Solicitud</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="fecha_solicitud" name="fecha_solicitud" data-date-format="dd/mm/yyyy" readonly required>
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                        </div>
                                     </div>
+                                </div>
+                                <div class="col-md-12 text-center">
+                                    <button type="submit" class="btn btn-primary" id="guardar">Guardar</button>
                                 </div>
                             </form>
                         </div>
@@ -111,6 +119,7 @@
     {{parent()}}
     {#<script src="{{asset('js/jquery-ui.min.js')}}"></script>#}
     <script>
+        $("#fecha_solicitud").datepicker({ autoclose: true, todayHighlight: true });
         $('#rude').keypress(function (event) {
             if (event.keyCode === 10 || event.keyCode === 13) {
                 event.preventDefault();
@@ -123,6 +132,7 @@
         function searchEstudiante() {
             var rude = $('#rude').val();
             if (rude != "") {
+                $("#buscar").attr('disabled', true);
                 $.ajax({
                     type: 'post',
                     url: Routing.generate('talento_extraordinario_search'),
@@ -130,31 +140,90 @@
                     beforeSend: function () {
                         $("#carga").empty();
                         $("#carga").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
-                        $("#nombre").val('');
-                        $("#paterno").val('');
-                        $("#materno").val('');
-                        $("#cedula").val('');
-                        $("#complemento").val('');
-                        $("#fecha_nacimiento").val('');
-                        $("#complemento").val('');
+                        clearInput();
                     },
                     success: function (data) {
                         $("#carga").empty();
-                        $("#nombre").val(data.estudiante.nombre);
-                        $("#paterno").val(data.estudiante.paterno);
-                        $("#materno").val(data.estudiante.materno);
-                        $("#cedula").val(data.estudiante.cedula);
-                        $("#complemento").val(data.estudiante.complemento);
-                        $("#fecha_nacimiento").val(data.estudiante.fecha_nacimiento);
+                        if (data.msg == 'exito') {
+                            $("#nombre").val(data.estudiante.nombre);
+                            $("#paterno").val(data.estudiante.paterno);
+                            $("#materno").val(data.estudiante.materno);
+                            $("#cedula").val(data.estudiante.cedula);
+                            $("#complemento").val(data.estudiante.complemento);
+                            $("#fecha_nacimiento").val(data.estudiante.fecha_nacimiento.date.length>0?data.estudiante.fecha_nacimiento.date.substring(0, 10):'');
+                            $("#institucion_educativa").val(data.estudiante.institucion_educativa);
+                            $("#estudiante_ins_id").val(data.estudiante.estudiante_ins_id);
+                        } else if (data.msg == 'nocurso') {
+                            mesage('warning', 'Notificación', 'Estudiante no está inscrito en la gestión actual.');
+                        } else if (data.msg == 'noins') {
+                            mesage('warning', 'Notificación', 'Estudiante no está inscrito.');
+                        } else if (data.msg == 'noest') {
+                            mesage('warning', 'Notificación', 'El estudiante no existe.');
+                        } else if (data.msg == 'existe') {
+                            mesage('warning', 'Notificación', 'El estudiante ya postuló con anterioridad.');
+                        }
                         /*$("#form_c_rude").autocomplete({
                             source: data
                         });*/
+                        $("#buscar").attr('disabled', false);
+                    },
+                    error: function (error) {
+                        $("#buscar").attr('disabled', false);
                     }
                 });
             } else {
-                alert('Ingrese código RUDE del estudiante');
+                // alert('');
+                mesage('info', 'Alerta', 'Ingrese código RUDE del estudiante');
             }
         }
+
+        function mesage(tipo, titulo, msg) {
+            $("#carga").append('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
+                '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                '<strong>'+ titulo +'</strong> '+ msg +' </div>');
+            setTimeout(function () { $("#carga").empty(); }, 3000);
+        }
+
+        function clearInput() {
+            $("#nombre").val('');
+            $("#paterno").val('');
+            $("#materno").val('');
+            $("#cedula").val('');
+            $("#complemento").val('');
+            $("#fecha_nacimiento").val('');
+            $("#institucion_educativa").val('');
+            $("#estudiante_ins_id").val('');
+            $("#centro_inscripcion").val('');
+            $("#fecha_solicitud").val('');
+        }
+
+        $("#registro").submit( function (event) {
+            event.preventDefault();
+            var formData = $(this).serialize();
+            console.log(formData);
+            $("#guardar").attr('disabled', true);
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('talento_extraordinario_save'),
+                data: $(this).serialize(),
+                beforeSend: function () {
+                    $("#carga").empty();
+                    $("#carga").append('<div class="text-center">Guardando datos</div>');
+                },
+                success: function (data) {
+                    $("#guardar").attr('disabled', false);
+                    $("#carga").empty();
+                    if (data.msg == 'exito') {
+                        clearInput();
+                    } else {
+                        mesage('error', 'Error', 'Error al guardar datos.');
+                    }
+                },
+                error: function (error) {
+                    $("#guardar").attr('disabled', false);
+                }
+            });
+        });
         /*$(function () {
             $.ajax({
                 type: 'get',
