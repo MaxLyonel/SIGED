@@ -540,4 +540,3 @@ class BusquedasController extends Controller
     }   
     
 }
-

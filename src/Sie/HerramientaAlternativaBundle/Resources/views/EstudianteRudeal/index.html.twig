@@ -78,6 +78,15 @@
         border-color: red !important;
     }
 
+    .tituloNombre{
+        background:#70AC16;
+        color:#FFFFFF;
+        padding: 5px;
+        font-weight: bold;
+        text-align: center;
+        font-size: 1.1em;
+    }
+
     
 </style>
 <div class="modal-dialog" style="width: 1000px">
@@ -94,7 +103,9 @@
                 </div>
             </div>
             <div class="panel-body no-padding" id="modal-body">
-
+                <div class="tituloNombre">
+                    <label> Rudeal___</label> {{ estudiante.codigoRude}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label>Estudiante___</label> {{ estudiante.nombre }} {{estudiante.paterno}} {{estudiante.materno}}
+                </div>
                 <div id="basic-wizard-vertical">
                     <div class="panel panel-tab panel-tab-double panel-tab-vertical row no-margin rounded shadow">
                         <!-- Start tabs heading -->
@@ -129,7 +140,7 @@
                                 </li>
                                 <li {% if rude.registroFinalizado < 3 %} class="disabled" {% endif %}>
                                     <a id="paso4" href="#tab4" {% if rude.registroFinalizado >= 3 %} data-toggle="tab" {% endif %} aria-expanded="false">
-                                        <i class="fa fa-check-circle"></i>
+                                        <i class="fa fa-pencil"></i>
                                         <div>
                                             <span class="text-strong">ASPECTOS</span>
                                             <span><small>SOCIALES</small></span>

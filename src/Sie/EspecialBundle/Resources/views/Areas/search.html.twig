@@ -9,11 +9,15 @@
         <ol class="breadcrumb">
             <li>
                 <i class="fa fa-home"></i>
-                <a href="#">Asignación Área/Maestro</a>
+                <a href="#">Inicio</a>
                 <i class="fa fa-angle-right"></i>
             </li>
-
-            <li class="active">Buscar</li>
+            <li>
+                <a href="{{path('info_especial_open', {'form':{'idInstitucion': institucion.id,'gestion': gestion,'institucioneducativa':institucion.institucioneducativa,'institucioneducativaTipoId':4,'data':''}})}}">Menu Principal</a>
+                <i class="fa fa-angle-right">
+                </i>
+            </li>
+            <li class="active">Área/Maestro</li>
         </ol>
     </div><!-- /.breadcrumb-wrapper -->
 </div><!-- /.header-content -->

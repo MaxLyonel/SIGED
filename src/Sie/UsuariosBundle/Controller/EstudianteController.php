@@ -200,11 +200,11 @@ class EstudianteController extends Controller
         $em->getConnection()->beginTransaction();
         $data = $request->request->all();
         $form = $data['busquedaDatosTotForm'];
-        
+        // dump($form);die;
         $response = new JsonResponse();
         //check if the SIE is on ALTERNATIVA
         $swOnAlternativa = $this->validateOnAlternativa($form);
-        if($swOnAlternativa){
+        if($swOnAlternativa && $form['InputCi']==''){
           return $response->setData(array('error'=>true,'mensaje' => '¡Proceso detenido! Los campos Carnet de Identidad y/o complemento son requeridos!')); 
         }
 
