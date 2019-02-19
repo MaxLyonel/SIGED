@@ -29,6 +29,7 @@ var t_validarTieneTutor = function(){
     if(tiene == 1){
         $('#t_divTutor').css('display','block');
         $('#t_carnet').attr('required','required');
+        $('#t_expedido').attr('required','required');
         $('#t_nombre').attr('required','required');
         $('#t_fechaNacimiento').attr('required','required');
         $('#t_genero').attr('required','required');
@@ -40,6 +41,7 @@ var t_validarTieneTutor = function(){
     }else{
         $('#t_divTutor').css('display','none');
         $('#t_carnet').removeAttr('required');
+        $('#t_expedido').removeAttr('required');
         $('#t_nombre').removeAttr('required');
         $('#t_fechaNacimiento').removeAttr('required');
         $('#t_genero').removeAttr('required');
@@ -306,16 +308,17 @@ function saveFormTutor(){
         },
         success: function(data){
 
-            $('#t_id').val(data.id);
-            $('#t_idPersona').val(data.idPersona);
+            if(data.status == 200){
+                $('#t_id').val(data.id);
+                $('#t_idPersona').val(data.idPersona);
 
-            // Pasar a la siguiente pagina
-            // if(recargar){
-            //     $('#paso5').parent('li').removeClass('disabled');
-            //     $('#paso5').attr('data-toggle','tab');
-            //     $('#paso5').click();
-            // }
-            $('#paso6').click();
+                $('#paso5').parent('li').removeClass('disabled');
+                $('#paso5').attr('data-toggle','tab');
+                $('#paso5').click();
+            }else{
+                alert(data.msg);
+            }
+            
         },
         error: function(){
 

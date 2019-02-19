@@ -78,6 +78,15 @@
         border-color: red !important;
     }
 
+    .tituloNombre{
+        background:#70AC16;
+        color:#FFFFFF;
+        padding: 5px;
+        font-weight: bold;
+        text-align: center;
+        font-size: 1.1em;
+    }
+
     
 </style>
 <div class="modal-dialog" style="width: 1000px">
@@ -94,7 +103,9 @@
                 </div>
             </div>
             <div class="panel-body no-padding" id="modal-body">
-
+                <div class="tituloNombre">
+                    <label> Rudeal___</label> {{ estudiante.codigoRude}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label>Estudiante___</label> {{ estudiante.nombre }} {{estudiante.paterno}} {{estudiante.materno}}
+                </div>
                 <div id="basic-wizard-vertical">
                     <div class="panel panel-tab panel-tab-double panel-tab-vertical row no-margin rounded shadow">
                         <!-- Start tabs heading -->
@@ -129,7 +140,7 @@
                                 </li>
                                 <li {% if rude.registroFinalizado < 3 %} class="disabled" {% endif %}>
                                     <a id="paso4" href="#tab4" {% if rude.registroFinalizado >= 3 %} data-toggle="tab" {% endif %} aria-expanded="false">
-                                        <i class="fa fa-check-circle"></i>
+                                        <i class="fa fa-pencil"></i>
                                         <div>
                                             <span class="text-strong">ASPECTOS</span>
                                             <span><small>SOCIALES</small></span>
@@ -168,7 +179,7 @@
                                         <div class="col-md-7 col-sm-7">
                                             <p>Carnet:</p>
                                             <fieldset style="border:1px solid #CCCCCC; padding:7px;">
-                                                {% if estudiante.carnetIdentidad == "" %}
+                                                {# {% if estudiante.carnetIdentidad == "" %}
                                                     <div class="row">
                                                         <div class="col-md-5">
                                                             <p>Número</p>
@@ -183,7 +194,8 @@
                                                             {{ form_widget(formEstudiante.expedido, {'attr':{'class':'form-control'} }) }}
                                                         </div>
                                                     </div>
-                                                {% else %}
+                                                {% else %} #}
+                                                {% if estudiante.carnetIdentidad != "" %}
                                                     <div class="row">
                                                         <div class="col-md-5">
                                                             <p>Número</p>
@@ -195,10 +207,23 @@
                                                         </div>
                                                         <div class="col-md-4">
                                                             <p>Expedido</p>
-                                                            {{ estudiante.expedido.departamento }}
+                                                            {% if estudiante.carnetIdentidad != "" and ((estudiante.expedido is not null and estudiante.expedido.id == 0) or estudiante.expedido == '' or estudiante.expedido == null) %}
+                                                                {{ form_widget(formEstudiante.expedido, {'attr':{'class':'form-control'} }) }}
+                                                            {% else %}
+                                                                {% if estudiante.carnetIdentidad != "" %}
+                                                                    {{ estudiante.expedido.sigla }}                                                                    
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            No registrado
                                                         </div>
                                                     </div>
                                                 {% endif %}
+                                                {# {% endif %} #}
                                             </fieldset>
                                         </div>
                                         <div class="col-md-5 col-sm-5">

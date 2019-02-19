@@ -47,7 +47,7 @@ class HomologacionController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        //$activeMenu = $defaultTramiteController->setActiveMenu($route);
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         return $this->render('SieTramitesBundle:Homologacion:cerAltIndex.html.twig', array(
                     'form' => $this->creaFormularioCertTecHomologacion('tramite_homologacion_certificacion_guarda', '', $gestionActual)->createView()
