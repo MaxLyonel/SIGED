@@ -346,13 +346,15 @@
                                         {% if plan == 2 %}
                                             <td>
                                                 {% if esactivo == 1 %}
+                                                    {#}Rudeal
                                                     {% if estudiante.rude_id != "" %}
                                                         <a role="button" class="btn btn-xs btn-primary rounded glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_rudeal', { 'id_enc': estudiante.rude_id_enc }) }}" title="Imprimir Rudeal"></a>
-                                                    {% endif %}
+                                                    {% endif %}{#}
                                                 {% else %}  
+                                                    {#}Rudeal
                                                     {% if estudiante.rude_id != "" %}
                                                         <a role="button" class="btn btn-xs btn-primary rounded glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_rudeal', { 'id_enc': estudiante.rude_id_enc }) }}" title="Imprimir Rudeal"></a>
-                                                    {% endif %}
+                                                    {% endif %}{#}
                                                     <a href="#" role="button" onclick="SeeRudeal('{{estudiante.inscripcion_id}}',{{ datos.id }})" class="btn btn-xs rounded btn-success glyphicon glyphicon-edit" title="Editar Rudeal"></a>
                                                 {% endif %}    
                                             </td>
