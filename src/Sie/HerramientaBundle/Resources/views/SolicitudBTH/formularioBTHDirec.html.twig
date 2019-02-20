@@ -1,7 +1,7 @@
 {% extends 'layoutHerramienta.html.twig' %}
 {% block contentoption %}
     <div class="header-content">
-        <h2><i class="fa fa-table animated fadeIn"></i> Formulario de Solicitud BTH.
+        <h2><i class="fa fa-table animated fadeIn"></i> Formulario de Solicitud BTH.</h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -10,18 +10,15 @@
                     <a href="#">Solicitud BTH </a>
                     <i class="fa fa-angle-right"></i>
                 </li>
-
                 <li class="active">Index</li>
             </ol>
         </div><!-- /.breadcrumb-wrapper -->
     </div><!-- /.header-content -->
     <div class="body-content animated fadeIn">
-
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="panel">
                     <div class="panel-body">
-
                         <div class="panel panel-primary">
                             <div class="panel-heading">
                                 <h3 class="panel-title">Nro. Trámite: <strong>{{ id_tramite}}</strong> Formulario de Solicitud BTH </h3>
@@ -51,14 +48,12 @@
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <span>{{ director.paterno ~' '~ director.materno ~' '~ director.nombre }}</span>
-
                                                         </div>
                                                     </div>
                                                     <br>
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             {{ director.carnet }}
-
                                                         </div>
                                                     </div>
                                                 </div>
@@ -86,7 +81,6 @@
                                                         </div>
                                                     </div>
                                                     <br>
-
                                                 </div>
                                                 <div class="col-md-9">
                                                     <div class="row">
@@ -101,11 +95,8 @@
                                                         </div>
                                                     </div>
                                                     <br>
-
                                                 </div>
                                             </div>
-
-
                                         </div><!-- /.panel-body -->
                                     </div>
                                     <div class="panel panel-primary">
@@ -191,8 +182,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-
                                         </div><!-- /.panel-body -->
                                     </div>
                                     <div class="panel panel-primary">
@@ -212,7 +201,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-
                                         </div><!-- /.panel-body -->
                                     </div>
                                     <div class="panel panel-primary">
@@ -220,25 +208,23 @@
                                             <h3 class="panel-title">5.- Especialidad</h3>
                                         </div><!-- /.panel-heading -->
                                         <div class="panel-body">
-
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <strong>Seleccionar las especialidades</strong>
                                                 </div>
                                                 <div class="col-md-3">
-
                                                 </div>
                                                 <div class="col-md-5">
-
-                                                    {% if (tipoTramite == 45)  %}
+                                                    {% if (tipoTramite == 45)  %} {#tramite Nuevo#}
                                                         <select  id="select_especialidade" name="select_especialidade[]" class="chosen-select" multiple="" tabindex="-1" style="display: none;">
                                                             {% for especialidad in especialidadlista %}
                                                                 <option value="{{ especialidad.id }}">{{ especialidad.especialidad }}</option>
                                                             {% endfor %}
                                                         </select>
-                                                    {% else %}
+                                                    {% else %}{#tramite Ratificacion#}
                                                     <select data-placeholder="Seleccionar especialidad" id="lista_select_especialidad" name="lista_select_especialidad[]"  class="form-control" multiple=""  >
                                                         {% for especialidadarray in especialidadarray %}
+                                                            {#{% if especialidadarray.id ==   %}#}
                                                             <option value="{{ especialidadarray.id }}">{{ especialidadarray.especialidad }}</option>
                                                         {% endfor %}
                                                     </select>
@@ -250,7 +236,6 @@
                                                     <strong>Seleccionar Curso al que se Aplica</strong>
                                                 </div>
                                                 <div class="col-md-3">
-
                                                 </div>
                                                 <div class="col-md-5">
                                                     <strong><span class="label label-warning">Nivel: Secundaria</span></strong>
@@ -275,12 +260,9 @@
                                 </div>
                             </div><!-- /.panel-body -->
                         </div>
-
                     </div>
                 </div>
-
             </div>
-
         </div>
         <ul id="select_esp" style="display: none">
         {% for especialidadarray in especialidadinfo %}

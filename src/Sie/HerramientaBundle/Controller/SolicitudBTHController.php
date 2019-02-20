@@ -301,10 +301,17 @@ class SolicitudBTHController extends Controller {
         $query->execute();
         $grado = $query->fetch();
         /*lista del catalogo de especialidades */
-        $query = $em->getConnection()->prepare("SELECT eth.id,eth.especialidad FROM especialidad_tecnico_humanistico_tipo eth ORDER BY 1 ");
+        /*$query = $em->getConnection()->prepare("SELECT eth.id,eth.especialidad FROM especialidad_tecnico_humanistico_tipo eth ORDER BY 1 ");
         $query->execute();
         $especialidad = $query->fetchAll();
-        //dump($especialidad);die;
+        */
+        /** Adecuacion a las equivalencias de especialidades */
+        $query = $em->getConnection()->prepare("SELECT eth2.id,eth2.especialidad,eth.especialidad as NuevaEspecialidad
+                                                FROM especialidad_tecnico_humanistico_tipo eth INNER JOIN especialidad_tecnico_humanistico_tipo eth2 on eth.id= eth2. id_equivalente_especialidades
+                                                WHERE eth2.es_vigente is TRUE
+                                                ORDER BY 2");
+        $query->execute();
+        $especialidad = $query->fetchAll();
 
         $form= $this->createFormBuilder()
             ->add('solicitud', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $tramite_tipoArray, 'attr' => array('class' => 'form-control chosen-select','onchange' => 'cargarFormularioSolicitud()')))
@@ -679,8 +686,8 @@ class SolicitudBTHController extends Controller {
         $query->execute();
         $ultima_gestion_registrada = $query->fetchAll();
         $gestion=$ultima_gestion_registrada[0]['max']; // ultima gestion en kla que fue registrada la UE como BTH
-        if($gestion != null){//Si la UE nunca fue declarada como BTH
-            $query = $em->getConnection()->prepare("SELECT espt.id, espt.especialidad,ieth.gestion_tipo_id
+        /*if($gestion != null){//Si la UE nunca fue declarada como BTH
+            $query = $em->getConnection()->prepare("SELECT espt.id, espt.especialidad, ieth.gestion_tipo_id
                                                 FROM institucioneducativa_especialidad_tecnico_humanistico ieth
                                                 INNER JOIN especialidad_tecnico_humanistico_tipo espt ON   ieth.especialidad_tecnico_humanistico_tipo_id =  espt.id
                                                 WHERE ieth.institucioneducativa_id = $id_institucion AND ieth.gestion_tipo_id = $gestion
@@ -688,43 +695,146 @@ class SolicitudBTHController extends Controller {
             $query->execute();
             $lista_especialidad = $query->fetchAll();
             $lista_especialidadarray = array();
-            for($i=0;$i<count($lista_especialidad);$i++){
-                $lista_especialidadarray[]=array('id'=>$lista_especialidad[$i]['id'],'especialidad'=>$lista_especialidad[$i]['especialidad'] );
+            for($i=0;$i<count($lista_especialidad);$i++) {
+                $especialidad_id = $lista_especialidad[$i]['id'];
+                $query = $em->getConnection()->prepare("SELECT count(*) AS ant FROM especialidad_tecnico_humanistico_tipo WHERE es_vigente=true AND id_equivalente_especialidades=$especialidad_id");
+                $query->execute();
+                $resultado_old = $query->fetch();
+                /*$query = $em->getConnection()->prepare("SELECT count(*) as act from especialidad_tecnico_humanistico_tipo where es_vigente=true AND id=$especialidad_id")->execute();
+                $resultado_new = $query->fetch();*/
+               /* if ($resultado_old['ant'] > 1) {
+                    //Cuando se expande, ejecuta query
+                    $query = $em->getConnection()->prepare("SELECT id, especialidad FROM especialidad_tecnico_humanistico_tipo WHERE es_vigente=true AND id_equivalente_especialidades=$especialidad_id ORDER BY 1");
+                    $query->execute();
+                    $lista_expande = $query->fetchAll();
+                    for($j=0;$j<count($lista_expande);$j++) {
+                        $lista_especialidadarray[]=array('id'=>$lista_expande[$j]['id'],'especialidad'=>$lista_expande[$j]['especialidad'] );
+                    }
+                } elseif ($resultado_old['ant'] == 1 ) {
+                    //Cuando se reduce, ejecuta query
+                    $lista_especialidadarray[]=array('id'=>$lista_especialidad[$i]['id'],'especialidad'=>$lista_especialidad[$i]['especialidad'] );
+                } elseif ($resultado_old['ant'] == 0 ) {
+                    //Se recupera su equivalente
+                    $query = $em->getConnection()->prepare("SELECT id_equivalente_especialidades FROM especialidad_tecnico_humanistico_tipo WHERE id=$especialidad_id");
+                    $query->execute();
+                    $resultado_equivalente = $query->fetch();
+                    $resultado_equivalente_id = $resultado_equivalente['id_equivalente_especialidades'];
+
+                    $query = $em->getConnection()->prepare("SELECT id, especialidad FROM especialidad_tecnico_humanistico_tipo WHERE id=$resultado_equivalente_id ORDER BY 1");
+                    $query->execute();
+                    $resultado_new = $query->fetch();
+                    if (!empty($resultado_new))
+                        $lista_especialidadarray[]=array('id'=>$resultado_new['id'],'especialidad'=>$resultado_new['especialidad'] );
+                }
             }
+            $lista_especialidadarray = array_unique($lista_especialidadarray, SORT_REGULAR);
             return new JsonResponse($lista_especialidadarray);
         }else{
-            $lista_especialidadarray="";
+            $lista_especialidadarray=array();
             return new JsonResponse($lista_especialidadarray);
         }
-    }
-//Distrital
-    public function SolicitidBTHDisAction(Request $request){
-        $id_rol= $this->session->get('roluser');
-        $id_usuario= $this->session->get('userId');
-        $TramiteController = new TramiteRueController();
-        $TramiteController->setContainer($this->container);
-        $lista = $TramiteController->tramiteTarea(34,35,7,$id_usuario,$id_rol,'');
-        return $this->render('SieHerramientaBundle:SolicitudBTH:inicioDistrital.html.twig',array('lista_tramites'=>$lista['tramites']));
-    }
-    public function  VerSolicitudBTHDisAction(Request $request){
+         //***///*/
 
-        //validation if the user is logged
-
-        $id_tramite = $request->get('id');//ID de Tramite
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->getConnection()->prepare("select td.*
-                                                from tramite t
-                                                join tramite_detalle td on cast(t.tramite as int)=td.id where t.id=".$request->get('id'));
-        $query->execute();
-        $td = $query->fetchAll();
-        $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find($td[0]['tramite_detalle_id']);
-            if($tramiteDetalle->getTramiteEstado()->getId()==4){
-
-                return $this->redirectToRoute('solicitud_bth_formularioDis',array('lista_tramites_id'=>$request->get('id')));
+        if($gestion != null){//Si la UE nunca fue declarada como BTH
+            $query = $em->getConnection()->prepare("SELECT espt.id, espt.especialidad, ieth.gestion_tipo_id
+                                                FROM institucioneducativa_especialidad_tecnico_humanistico ieth
+                                                INNER JOIN especialidad_tecnico_humanistico_tipo espt ON   ieth.especialidad_tecnico_humanistico_tipo_id =  espt.id
+                                                WHERE ieth.institucioneducativa_id = $id_institucion AND ieth.gestion_tipo_id = $gestion
+                                                ORDER BY 1");
+            $query->execute();
+            $lista_especialidad = $query->fetchAll();
+            $lista_especialidadarray = array();
+            //dump($lista_especialidad);die;
+            for($i=0;$i<count($lista_especialidad);$i++) {
+                if ($lista_especialidad[$i]['id'] == 31){
+                    $query = $em->getConnection()->prepare("SELECT id, especialidad FROM especialidad_tecnico_humanistico_tipo WHERE es_vigente=true AND id in (64, 65) ORDER BY 1");
+                    $query->execute();
+                    $lista_expande = $query->fetchAll();
+                    for($j=0;$j<count($lista_expande);$j++) {
+                        $lista_especialidadarray[]=array('id'=>$lista_expande[$j]['id'],'especialidad'=>$lista_expande[$j]['especialidad'], 'activo'=>true);
+                    }
+                } elseif ($lista_especialidad[$i]['id'] == 43 ) {
+                    $query = $em->getConnection()->prepare("SELECT id, especialidad FROM especialidad_tecnico_humanistico_tipo WHERE es_vigente=true AND id in (41, 42) ORDER BY 1");
+                    $query->execute();
+                    $lista_expande = $query->fetchAll();
+                    for($j=0;$j<count($lista_expande);$j++) {
+                        $lista_especialidadarray[]=array('id'=>$lista_expande[$j]['id'],'especialidad'=>$lista_expande[$j]['especialidad'], 'activo'=>true);
+                    }
+                } elseif ($lista_especialidad[$i]['id'] == 55 ) {
+                    $query = $em->getConnection()->prepare("SELECT id, especialidad FROM especialidad_tecnico_humanistico_tipo WHERE id=3 ORDER BY 1");
+                    $query->execute();
+                    $resultado_new = $query->fetch();
+                    if (!empty($resultado_new))
+                        $lista_especialidadarray[]=array('id'=>$resultado_new['id'],'especialidad'=>$resultado_new['especialidad'], 'activo'=>false);
+                } elseif ($lista_especialidad[$i]['id'] == 45 ) {
+                    $query = $em->getConnection()->prepare("SELECT id, especialidad FROM especialidad_tecnico_humanistico_tipo WHERE id=62 ORDER BY 1");
+                    $query->execute();
+                    $resultado_new = $query->fetch();
+                    if (!empty($resultado_new))
+                        $lista_especialidadarray[]=array('id'=>$resultado_new['id'],'especialidad'=>$resultado_new['especialidad'], 'activo'=>false);
+                } elseif ($lista_especialidad[$i]['id'] == 44 ) {
+                    $query = $em->getConnection()->prepare("SELECT id, especialidad FROM especialidad_tecnico_humanistico_tipo WHERE id=63 ORDER BY 1");
+                    $query->execute();
+                    $resultado_new = $query->fetch();
+                    if (!empty($resultado_new))
+                        $lista_especialidadarray[]=array('id'=>$resultado_new['id'],'especialidad'=>$resultado_new['especialidad'], 'activo'=>false);
+                } elseif ($lista_especialidad[$i]['id'] == 2 ) {
+                    $query = $em->getConnection()->prepare("SELECT id, especialidad FROM especialidad_tecnico_humanistico_tipo WHERE id=61 ORDER BY 1");
+                    $query->execute();
+                    $resultado_new = $query->fetch();
+                    if (!empty($resultado_new))
+                        $lista_especialidadarray[]=array('id'=>$resultado_new['id'],'especialidad'=>$resultado_new['especialidad'], 'activo'=>false);
+                } elseif ($lista_especialidad[$i]['id'] == 9 ) {
+                    $query = $em->getConnection()->prepare("SELECT id, especialidad FROM especialidad_tecnico_humanistico_tipo WHERE id=66 ORDER BY 1");
+                    $query->execute();
+                    $resultado_new = $query->fetch();
+                    if (!empty($resultado_new))
+                        $lista_especialidadarray[]=array('id'=>$resultado_new['id'],'especialidad'=>$resultado_new['especialidad'], 'activo'=>false);
+                } elseif ($lista_especialidad[$i]['id'] == 6 ) {
+                    $query = $em->getConnection()->prepare("SELECT id, especialidad FROM especialidad_tecnico_humanistico_tipo WHERE id=4 ORDER BY 1");
+                    $query->execute();
+                    $resultado_new = $query->fetch();
+                    if (!empty($resultado_new))
+                        $lista_especialidadarray[]=array('id'=>$resultado_new['id'],'especialidad'=>$resultado_new['especialidad'], 'activo'=>false);
+                } else {
+                    $lista_especialidadarray[]=array('id'=>$lista_especialidad[$i]['id'],'especialidad'=>$lista_especialidad[$i]['especialidad'], 'activo'=>false );
+                }
             }
-       /*
-        *Obtenemios la informacion de la UE
-        * */
+            $lista_especialidadarray = array_unique($lista_especialidadarray, SORT_REGULAR);
+            return new JsonResponse($lista_especialidadarray);
+        }else{
+             $lista_especialidadarray=array();
+             return new JsonResponse($lista_especialidadarray);
+        }
+     }
+ //Distrital
+     public function SolicitidBTHDisAction(Request $request){
+         $id_rol= $this->session->get('roluser');
+         $id_usuario= $this->session->get('userId');
+         $TramiteController = new TramiteRueController();
+         $TramiteController->setContainer($this->container);
+         $lista = $TramiteController->tramiteTarea(34,35,7,$id_usuario,$id_rol,'');
+         return $this->render('SieHerramientaBundle:SolicitudBTH:inicioDistrital.html.twig',array('lista_tramites'=>$lista['tramites']));
+     }
+     public function  VerSolicitudBTHDisAction(Request $request){
+
+         //validation if the user is logged
+
+         $id_tramite = $request->get('id');//ID de Tramite
+         $em = $this->getDoctrine()->getManager();
+         $query = $em->getConnection()->prepare("select td.*
+                                                 from tramite t
+                                                 join tramite_detalle td on cast(t.tramite as int)=td.id where t.id=".$request->get('id'));
+         $query->execute();
+         $td = $query->fetchAll();
+         $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find($td[0]['tramite_detalle_id']);
+             if($tramiteDetalle->getTramiteEstado()->getId()==4){
+
+                 return $this->redirectToRoute('solicitud_bth_formularioDis',array('lista_tramites_id'=>$request->get('id')));
+             }
+        /*
+         *Obtenemios la informacion de la UE
+         * */
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT trm.institucioneducativa_id, trm.fecha_tramite,trm.gestion_id,wfsol.datos
                                                 FROM tramite trm 

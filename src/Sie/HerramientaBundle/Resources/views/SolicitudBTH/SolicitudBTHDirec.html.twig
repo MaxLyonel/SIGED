@@ -1,5 +1,10 @@
 {% extends 'layoutHerramienta.html.twig' %}
 {% block contentoption %}
+    <style type="text/css">
+        .swal-overlay {
+            background-color: rgba(43, 165, 137, 0.45);
+        }
+    </style>
     <div class="header-content">
         <h2><i class="fa fa-table animated fadeIn"></i> Nueva Solicitud BTH <span>Nueva Solicitud BTH </span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
@@ -395,15 +400,23 @@
                                         <h3 class="panel-title">4.- Especialidad</h3>
                                     </div><!-- /.panel-heading -->
                                     <div class="panel-body">
+                                        <div class="row" id="mensaje">
+                                            <div class="panel-body">
+                                                <div class="alert alert-success">
+                                                    <strong>Alerta!</strong> Su Unidad Educativa tiene especialidades que sufrieron cambios según las nuevas especialidades de la gestión 2019. Usted debe elegir una o ambas especialidades
+                                                    <br>
+
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <strong>Lista de Especialidades</strong>
                                             </div>
                                             <div class="col-md-3">
                                             </div>
-                                            <div class="col-md-5">
-                                                <select  id="lista_especialidades_ratificacion" name="lista_especialidades_ratificacion[]"  class="form-control" multiple  >
-
+                                            <div class="col-md-5" id="second-chose">
+                                                <select data-placeholder="Seleccionar especialidad" id="lista_especialidades_ratificacion" name="lista_especialidades_ratificacion[]"  class="" multiple="" style="display: none;" >
                                                 </select>
                                             </div>
                                         </div>
@@ -470,7 +483,7 @@
                                 <a href="#" class="remover_campo"><span class=".text-danger"><strong>(-)</strong></span></a>\
                                 <br>\
                                 </div>');
-            x++;lista_especialidades
+            x++;
         }
     });
     // Remover o div anterior
@@ -485,13 +498,11 @@
             case (idsolicitud == 45):
                 document.getElementById("titulo").innerHTML = "Formulario de <strong><em>Registro Nuevo</em></strong>";
                 $('#form_regularizacion').hide();
-                $('#form_especialidad').hide();
                 $('#form_nuevo').show(2000);
                 break;
             case (idsolicitud == 46)://ratificacion
                 document.getElementById("titulo").innerHTML= "Formulario de Ratificación";
                 $('#form_nuevo').hide();
-                $('#form_especialidad').hide();
                 $('#form_regularizacion').show(2000);
                 $.ajax({
                     type: 'post',
@@ -500,10 +511,35 @@
                     before: function () {
                     },
                     success: function (data) {
-                        console.log(data);
+                       // console.log(data);
+                        var select_array = [];
+                        $('#lista_especialidades_ratificacion').empty();
                         $(data).each(function(i, v){ // indice, valor
+                            if (v.activo == false ) {
+                            $('#lista_especialidades_ratificacion').append('<option disabled="disabled" value="' + v.id + '">' + v.especialidad + '</option>');
+                            } else {
                             $('#lista_especialidades_ratificacion').append('<option value="' + v.id + '">' + v.especialidad + '</option>');
+                            $('#mensaje').show();
+                            /*alert('Su unidada tiene especialidades que sufrieron cambio, tomar en cuenta.....');*/
+                               /* swal ( "Oops" ,  "Something went wrong!" ,  "alert" );*/
+                                swal({
+                                    icon: "warning",
+                                    text: "Una o todas de sus especialidades con las que cuenta su Unidad Educativa se vio afectada con la Homologación de especialidades - 2019," +'\n'+
+                                            "Por favor se pide una verificación de las mismas.",
+                                    value: true,
+                                    visible: true,
+                                    className: "",
+                                    closeModal: true,
+                                    button: "Entendido!",
+                                });
+
+                            }
+                            select_array.push(v.id);
                         });
+                        $("#lista_especialidades_ratificacion").chosen({ width: "95%" });
+                        setTimeout(function () {
+                            $("#lista_especialidades_ratificacion").val(select_array).trigger('chosen:updated');
+                        },500);
                     }
                 });
                 break;
@@ -537,10 +573,12 @@
                                 ip.push({ informe : 0 })
                             };
                             ip.push({institucionid : institucionid});
-                            if($('#select_especialidad').val())
+                            if($('#select_especialidad').val()) {
                                 ip.push({select_especialidad : $('#select_especialidad').val()});
-                            else
-                            {swal("Debe seleccionar al menos una especialidad."); return false;}
+                            } else {
+                                swal("Debe seleccionar al menos una especialidad.");
+                                return false;
+                            }
                             var ipt=JSON.stringify(ip);
                             var imagen = '{{ asset("img/loading96.gif") }}';
 
@@ -588,8 +626,9 @@
 
                 swal({
                     title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
-                    text:  "La información llenada será enviada a la Dirección Distrital." +
-                    "Puede Descargar su formulario como comprobante en Trámites Enviados",
+                    text:  "La información llenada será enviada a la Dirección Distrital." + '\n'+
+                    "Puede descargar su formulario como comprobante " +
+                    "en : Trámites Enviados" +'\n'+"",
                     icon:  "warning",
                     buttons: true,
                     dangerMode: true,
@@ -607,11 +646,55 @@
                             };
                             ip.push({institucionid : institucionid});
                             var especialidades_id = [];
-                            $("#lista_especialidades_ratificacion").find("option").each(function(index, opc){
+                            /*$("#lista_especialidades_ratificacion").find("option").each(function(index, opc){
                                 especialidades_id.push(opc.value);
-                            });
-                            ip.push({"select_especialidad" : especialidades_id});
-
+                            });*/
+                            if($('#lista_especialidades_ratificacion').val()) {
+                                var verificar1 = false, verificar2 = false;
+                                var caso1 = false, caso2 = false;
+                                $("#lista_especialidades_ratificacion").find('option').each(function () {
+                                    if ($(this).is('[disabled=disabled]')) {
+                                        especialidades_id.push(this.value);
+                                    }
+                                    if (this.value == 41 || this.value == 42) {
+                                        verificar1 = true;
+                                    }
+                                    if (this.value == 64 | this.value == 65) {
+                                        verificar2 = true;
+                                    }
+                                });
+                                var seleccionado = $('#lista_especialidades_ratificacion').val();
+                                if (verificar1) {
+                                    for (var i in seleccionado) {
+                                        if (seleccionado[i] == 41 || seleccionado[i] == 42) {
+                                            especialidades_id.push(seleccionado[i]);
+                                            caso1 = true;
+                                        }
+                                    }
+                                    if (!caso1) {
+                                        swal("Debe seleccionar al menos una especialidad entre TEXTILES Y CONFECCIONES Y TEJIDOS Y TELARES.");
+                                        return false;
+                                    }
+                                }
+                                if (verificar2) {
+                                    for (var i in seleccionado) {
+                                        if (seleccionado[i] == 64 || seleccionado[i] == 65) {
+                                            especialidades_id.push(seleccionado[i]);
+                                            caso2 = true;
+                                        }
+                                    }
+                                    if (!caso2) {
+                                        swal("Debe seleccionar al menos una especialidad entre CARPINTERIA EN MADERA  o CARPINTERIA METALICA ");
+                                        return false;
+                                    }
+                                }
+                                ip.push({select_especialidad : especialidades_id});
+                                //console.log(especialidades_id);
+                            } else {
+                                swal("Debe seleccionar al menos una especialidad.");
+                                return false;
+                            } //alert(especialidades_id);
+                            console.log('res',especialidades_id);
                             var ipt=JSON.stringify(ip);
                             var imagen = '{{ asset("img/loading96.gif") }}';
                             $.ajax({
@@ -630,7 +713,7 @@
                                 success: function (data) {
                                     if (data==1){
                                         swal.stopLoading();
-                                        swal.close();
+                                        swal.close();+
                                         $(".modal-backdrop ").css("display", "none");
                                         $('#recargar').modal('show');
                                         $(".modal-backdrop ").css("display", "none");
@@ -661,8 +744,10 @@
     $(document).ready(function(){
             $('#form_nuevo').hide();
             $('#form_regularizacion').hide();
-            $('#form_especialidad').hide();
+            $('#mensaje').hide();
     });
+
+
 
 </script>
 {% endblock %}
