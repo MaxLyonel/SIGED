@@ -462,14 +462,12 @@ class DefaultController extends Controller {
 
             $user = $this->container->get('security.context')->getToken()->getUser();
             //dump($user);die();
-            if ( $user ) {//USUARIO Y CONTRASEÑA CORRECTAS
+            if ( $user and is_object($user) ) {//USUARIO Y CONTRASEÑA CORRECTAS
                 //*******SE VERIFICA SI SE TRATA DE RESETEO DE CONTRASEÑA
                 $this->session->set('userId', $user->getId());
                 if (md5($user->getUsername()) == $user->getPassword()) {
                     return $this->redirect($this->generateUrl('sie_usuarios_reset_login', array('usuarioid' => $user->getId())));
                 }
-
-
 
                 //*******************
                 //BUSCANDO ROLES ACTIVOS Y UNIDADES O CENTROS DONDE ESTES COMO VIGENTES
