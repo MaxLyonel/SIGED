@@ -42,8 +42,10 @@
                                             <th style="min-width:15px">#</th>
                                             <th>Departamento</th>
                                             <th>Distrito</th>
-                                            <th>SIE</th>
+                                            <th>Código SIE</th>
+                                            <th>Código LE</th>
                                             <th>Institución Educativa</th>
+                                            <th>Dependencia</th>
                                             <th>Registro</th>
                                             <th>Fotos</th>
                                         </tr>
@@ -53,8 +55,10 @@
                                             <th style="min-width:15px">#</th>
                                             <th>Departamento</th>
                                             <th>Distrito</th>
-                                            <th>SIE</th>
+                                            <th>Código SIE</th>
+                                            <th>Código LE</th>
                                             <th>Institución Educativa</th>
+                                            <th>Dependencia</th>
                                             <th>Registro</th>
                                             <th>Fotos</th>
                                         </tr>
@@ -66,7 +70,9 @@
                                                 <td>{{registro.departamento}}</td>
                                                 <td>{{registro.distrito}}</td>
                                                 <td>{{registro.rue}}</td>
+                                                <td>{{registro.cod_le_id}}</td>
                                                 <td>{{registro.ue}}</td>
+                                                <td>{{registro.dependencia}}</td>
                                                 <td><span class="label label-{% if registro.registro_labo == 'NO' %}danger{% else %}success{% endif %}">{{registro.registro_labo}}</span></td>
                                                 <td>
                                                     {% if registro.id is not null %}
