@@ -183,7 +183,8 @@
                                                             <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
                                                             <input type="hidden" name="gestion" value="{{gestion}}">
                                                             <input type="hidden" name="idMaestroInscripcion" value="{{maestro.miId}}">
-                                                            <input type="hidden" name="idCargo" value="0">
+                                                            {# <input type="hidden" name="idCargo" value="0"> #}
+                                                            <input type="hidden" name="idCargo" value="{{maestro.ctId}}">
                                                             {% if maestro.esVigenteAdministrativo %}
                                                                 <button type="submit" class="btn btn-success" onclick="return confirm('¿Está segura/o de continuar?');">Vigente</button>
                                                             {% else %}

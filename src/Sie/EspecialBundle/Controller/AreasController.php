@@ -476,6 +476,7 @@ class AreasController extends Controller {
              */
             $institucionCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($idCurso);
             $institucionCursoEspecial = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->findOneBy(array('institucioneducativaCurso' => $institucionCurso));
+            //dump($institucionCursoEspecial);die;
             $grado = $institucionCurso->getGradoTipo()->getId();
             $asignaturas = null;
             
@@ -513,7 +514,6 @@ class AreasController extends Controller {
                             ->getResult();
                             break;
             	case 411:   $programa = $institucionCursoEspecial->getEspecialProgramaTipo()->getId();
-                            
                             switch($programa){
                                 case 7:
                                     $asignaturas = $em->createQuery(
@@ -830,6 +830,8 @@ class AreasController extends Controller {
      */
     public function lista_areas_curso_adicionar_eliminarAction(Request $request) {
         try {
+            //
+            dump($request);die;
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             $this->session = new Session;
@@ -838,7 +840,7 @@ class AreasController extends Controller {
             /*
              * Areas a registrar nuevos
              */
-            $areas = $request->get('areas');
+            $areas = $request->get('areas');//
             /*
              * Areas registradas anteriormente
              */

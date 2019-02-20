@@ -384,8 +384,20 @@ class CreacionCursosEspecialController extends Controller {
                 $this->get('session')->getFlashBag()->add('newCursoError', 'No se pudo crear el curso, ya existe un curso con las mismas características.');
                 return $this->redirect($this->generateUrl('creacioncursos_especial',array('op'=>'result')));
             }else{
+                /* Asignacion de Modalidad de Atencion
+                DIRECTA = 1
+                INDIRECTA = 2
+                EDUCACION EN CASA = 3 */
                 if (isset($form['educacionCasa']) && $form['educacionCasa'] == 1){
                     $modalidad = 3;
+                }elseif($form['area'] == 1 && $form['programa'] == 13){
+                    $modalidad = 2;
+                }elseif($form['area'] == 2 && $form['programa'] == 10){
+                    $modalidad = 2;
+                }elseif($form['area'] == 11){
+                    $modalidad = 3;
+                }elseif($form['area'] == 6 && $form['programa'] == 17){
+                    $modalidad = 2;
                 }else{
                     $modalidad = 1;
                 }
@@ -706,9 +718,12 @@ class CreacionCursosEspecialController extends Controller {
                                     WHERE p.id IN (:id) order by p.programa'
                     //)->setParameter('id',array(1,2,3,4,5,6));
                     )->setParameter('id',array(5,6,17));
-    	}
-
-    	else {
+    	}elseif ($area == "11" and $nivel == "411" and  $grado == "99" ) {
+            $query = $em->createQuery(
+                'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
+                                WHERE p.id IN (:id) order by p.programa'
+                )->setParameter('id',array(17));
+        }else {
     		$query = $em->createQuery(
     				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
                                     WHERE p.id = (:id)'

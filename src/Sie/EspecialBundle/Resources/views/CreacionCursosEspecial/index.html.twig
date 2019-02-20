@@ -141,7 +141,7 @@
                                             <th>Servicio</th>
                                             <th>Técnica</th>
                                             <th>Turno</th>
-                                            <th>Modalidad</th>
+                                            <th>Modalidad de Atención</th>
                                             <th>Acciones</th>
                                         </tr>
                                     </thead>
@@ -178,7 +178,7 @@
                                                     <th>Servicio</th>
                                                     <th>Técnica</th>
                                                     <th>Turno</th>
-                                                    <th>Modalidad</th>
+                                                    <th>Modalidad de Atención</th>
                                                     <th>Acciones</th>
                                                 </tr>
                                             </thead>
@@ -202,9 +202,9 @@
                                                 <td data-title="Tecnica">{{c.especialNivelTecnicoTipo.nivelTecnico}}-{{c.especialTecnicaEspecialidadTipo.especialidad}}</td>
                                                 <td data-title="Turno">{{c.institucioneducativaCurso.turnoTipo.turno}}</td>
                                                 {% if  c.especialModalidadTipo %}
-                                                    <td data-title="Modalidad">{{c.especialModalidadTipo.modalidad}}</td>
+                                                    <td data-title="Modalidad de Atención">{{c.especialModalidadTipo.modalidad}}</td>
                                                 {% else %}
-                                                    <td data-title="Modalidad"></td>
+                                                    <td data-title="Modalidad de Atención"></td>
                                                 {% endif %}
                                                 <td data-title="Acciones">
                                                     {% if onlyview %}
@@ -236,9 +236,9 @@
                                                     <td data-title="Tecnica">{{c.especialNivelTecnicoTipo.nivelTecnico}}-{{c.especialTecnicaEspecialidadTipo.especialidad}}</td>
                                                     <td data-title="Turno">{{c.institucioneducativaCurso.turnoTipo.turno}}</td>
                                                     {% if  c.especialModalidadTipo %}
-                                                        <td data-title="Modalidad">{{c.especialModalidadTipo.modalidad}}</td>
+                                                        <td data-title="Modalidad de Atención">{{c.especialModalidadTipo.modalidad}}</td>
                                                     {% else %}
-                                                        <td data-title="Modalidad"></td>
+                                                        <td data-title="Modalidad de Atención"></td>
                                                     {% endif %}
                                                     <td data-title="Acciones">
                                                         {% if onlyview %}
