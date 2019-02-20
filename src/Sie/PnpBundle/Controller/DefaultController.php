@@ -3244,6 +3244,9 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
         $usuario_id = $this->session->get('userId');
+        if(!$usuario_id){
+            return $this->redirectToRoute('logout');
+        }
         $rol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findOneByUsuario($usuario_id);    
         $rol=$rol->getRolTipo()->getId();
         /////SACAMOS LA GESTION INICIAL Y FINAL
@@ -3981,6 +3984,9 @@ ciclo_tipo_id, grado_tipo_id
         ////////cerrar curso
         if ($val==6){
             $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id);
+            if(!$result){
+                return $this->redirectToRoute('logout');
+            }
         $plan=$result->getPlancurricularTipoId();
              //VER SU CUMPLE LOS REQUESITIVOS PARA CERRAR EL CURSO
             $curso_ok=0;
@@ -4229,6 +4235,9 @@ ciclo_tipo_id, grado_tipo_id
         $db = $em->getConnection();
 
         $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id);
+        if(!$result){
+            return $this->redirectToRoute('logout');
+        }
             $esactivo=$result->getEsactivo();
 
         if($esactivo==1)$esactivo=1;else $esactivo=0;
@@ -4523,6 +4532,9 @@ ciclo_tipo_id, grado_tipo_id
         $sie=$institucioneducativa_curso->getInstitucioneducativa()->getId();
         $gestion_ini= date_format($gestion_ini,"Y");
         $usuario_id = $this->session->get('userId');
+        if(!$usuario_id){
+            return $this->redirectToRoute('logout');
+        }
         $rol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findOneByUsuario($usuario_id);    
         $rol=$rol->getRolTipo()->getId();
         if($gestion_ini<=2015 or $rol==8){////////como es 2009-2015 no debe entrar por los controles o si mi usuario ingrsa
@@ -5989,6 +6001,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
         $filas = array();
         $datos_filas = array();
         $cant_notas=0;
+        $carnet=$complemento=$nombre="";
         foreach ($po as $p) {
             $cant_notas++;
             $datos_filas["id"] = $p["id"];
@@ -7235,29 +7248,33 @@ public function crear_curso_automaticoAction(Request $request){
                             $em->persist($newrudeidioma);
                             $em->flush();
                             //IDIOMA FRECUENCIA 
-                            foreach ($idioma_frecuencia as $p) {
-                                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_idioma');");
-                                $query->execute();
-                                $newrudeidioma = new RudeIdioma();
-                                $newrudeidioma->setRude($newrude);
-                                $newrudeidioma->setHablaTipo($em->getRepository('SieAppWebBundle:HablaTipo')->findOneById(2));//2 FRECUENCIA
-                                $newrudeidioma->setIdiomaTipo($em->getRepository('SieAppWebBundle:IdiomaTipo')->findOneById($p["id"]));
-                                $newrudeidioma->setFechaRegistro(new \DateTime('now'));
-                                $newrudeidioma->setFechaModificacion(new \DateTime('now'));
-                                $em->persist($newrudeidioma);
-                                $em->flush();
+                            if($idioma_frecuencia){
+                                foreach ($idioma_frecuencia as $p) {
+                                    $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_idioma');");
+                                    $query->execute();
+                                    $newrudeidioma = new RudeIdioma();
+                                    $newrudeidioma->setRude($newrude);
+                                    $newrudeidioma->setHablaTipo($em->getRepository('SieAppWebBundle:HablaTipo')->findOneById(2));//2 FRECUENCIA
+                                    $newrudeidioma->setIdiomaTipo($em->getRepository('SieAppWebBundle:IdiomaTipo')->findOneById($p["id"]));
+                                    $newrudeidioma->setFechaRegistro(new \DateTime('now'));
+                                    $newrudeidioma->setFechaModificacion(new \DateTime('now'));
+                                    $em->persist($newrudeidioma);
+                                    $em->flush();
+                                }
                             }
                             //SALUD 
-                            foreach ($centrosalud as $p) {
-                                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_centro_salud');");
-                                $query->execute();
-                                $newrudecentrosalud = new RudeCentroSalud();
-                                $newrudecentrosalud->setRude($newrude);
-                                $newrudecentrosalud->setCentroSaludTipo($em->getRepository('SieAppWebBundle:CentroSaludTipo')->findOneById($p["id"]));
-                                $newrudecentrosalud->setFechaRegistro(new \DateTime('now'));
-                                $newrudecentrosalud->setFechaModificacion(new \DateTime('now'));
-                                $em->persist($newrudecentrosalud);
-                                $em->flush();
+                            if($centrosalud){
+                                foreach ($centrosalud as $p) {
+                                    $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_centro_salud');");
+                                    $query->execute();
+                                    $newrudecentrosalud = new RudeCentroSalud();
+                                    $newrudecentrosalud->setRude($newrude);
+                                    $newrudecentrosalud->setCentroSaludTipo($em->getRepository('SieAppWebBundle:CentroSaludTipo')->findOneById($p["id"]));
+                                    $newrudecentrosalud->setFechaRegistro(new \DateTime('now'));
+                                    $newrudecentrosalud->setFechaModificacion(new \DateTime('now'));
+                                    $em->persist($newrudecentrosalud);
+                                    $em->flush();
+                                }
                             }
                             //SERVICIOS BASICOS 
                             if($agua==1){
