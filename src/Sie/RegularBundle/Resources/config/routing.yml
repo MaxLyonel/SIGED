@@ -237,7 +237,7 @@ sie_regular_upfileftp_sie_zero:
 
 sie_regular_ue_informacion:
     resource: "@SieRegularBundle/Resources/config/routing/institucionEducativaInformacion.yml"
-    prefix:   /sie/ue/informacion
+    prefix:   /reg/ue/informacion
 
 sie_alternativa_up_file_emp:
     resource: "@SieRegularBundle/Resources/config/routing/upFileEmp.yml"
