@@ -43,7 +43,8 @@ class ReporteLaboFisQuimController extends Controller {
             ,a.distrito as distrito
             ,a.cod_ue_id as rue
             ,a.desc_ue as ue
-            ,upper(a.dependencia)
+            ,cod_le_id
+            ,upper(a.dependencia) as dependencia
             ,case when a.tipo_area = 'R' then 'RURAL' when a.tipo_area = 'U' then 'URBANA' else '' end as area
             ,case when w.institucioneducativa_id is null then 'NO' else 'SI' end as registro_labo
             ,w.id
@@ -76,7 +77,7 @@ class ReporteLaboFisQuimController extends Controller {
             INNER JOIN orgcurricular_tipo f ON a.orgcurricular_tipo_id = f.id
             INNER JOIN convenio_tipo g ON a.convenio_tipo_id = g.id
             INNER JOIN estadoinstitucion_tipo h ON a.estadoinstitucion_tipo_id = h.id
-            where a.institucioneducativa_acreditacion_tipo_id = 1 and a.estadoinstitucion_tipo_id = 10 and a.dependencia_tipo_id in (1,2,3)) as a
+            where a.institucioneducativa_acreditacion_tipo_id = 1 and a.estadoinstitucion_tipo_id = 10 and a.dependencia_tipo_id in (1,2)) as a
             INNER JOIN (
             select institucioneducativa_id
             ,sum(case when nivel_tipo_id=13 then 1 else 0 end) as sec
