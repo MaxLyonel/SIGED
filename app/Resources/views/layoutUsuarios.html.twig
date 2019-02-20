@@ -57,7 +57,7 @@
             <link href="{{asset('bower_components/summernote/dist/summernote-bs3.css') }}" rel="stylesheet">
             <link href="{{asset('bower_components/summernote/dist/summernote.css') }}" rel="stylesheet">
             {#BOOSTRAP ARBOL#}
-            <link href="{{asset('css/plugins/bootstrap-combined/combined.css') }}" rel="stylesheet">
+            {# <link href="{{asset('css/plugins/bootstrap-combined/combined.css') }}" rel="stylesheet"> #}
         </head>
     {% endblock %}
     <body>
@@ -112,7 +112,7 @@
                     <ul id="side" class="nav navbar-nav side-nav">
                         <li class="side-user hidden-xs">
                             {% if app.session.get('userfoto') is empty %}
-                                <img class="img-circle" src ="/uploads/krlos.jpg " height="150" width="150" >
+                                <img class="img-circle" src ="/img/photo.png" height="150" width="150" >
                             {% else %}
                                 <img class="img-circle" src ="/uploads/personasfotos/{{app.session.get('userfoto')}} " height="150" width="150" >
                             {% endif %}
@@ -505,7 +505,7 @@
             <div id="logout">
                 <div class="logout-message">
                     {% if app.session.get('userfoto') is empty %}
-                        <img class="img-circle" src ="/uploads/krlos.jpg " height="150" width="150" >
+                        <img class="img-circle" src ="/img/photo.png" height="150" width="150" >
                     {% else %}
                         <img class="img-circle" src ="/uploads/{{app.session.get('userfoto')}} " height="150" width="150" >
                     {% endif %}
