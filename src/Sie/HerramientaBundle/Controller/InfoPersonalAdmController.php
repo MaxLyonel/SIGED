@@ -126,7 +126,6 @@ class InfoPersonalAdmController extends Controller {
         $query = $em->createQuery(
                         'SELECT count(mi.id) FROM SieAppWebBundle:MaestroInscripcion mi
                     WHERE mi.institucioneducativa = :idInstitucion
-                    AND mi.esVigenteAdministrativo = true
                     AND mi.gestionTipo = :gestion
                     AND mi.cargoTipo IN (:cargos)')
                 ->setParameter('idInstitucion', $institucion)
