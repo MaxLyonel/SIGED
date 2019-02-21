@@ -150,6 +150,6 @@ sie_herramienta_regularization_docente:
     resource: "@SieHerramientaBundle/Resources/config/routing/regularizationlistdocente.yml"
     prefix:   /sie/regularizationlistdocente
 
-sie_herramienta_regularization_docente_to_distrito:
-    resource: "@SieHerramientaBundle/Resources/config/routing/regularizationlistdocentetodistrito.yml"
-    prefix:   /sie/regularizationlistdocente
+# sie_herramienta_regularization_docente_to_distrito:
+#     resource: "@SieHerramientaBundle/Resources/config/routing/regularizationlistdocentetodistrito.yml"
+#     prefix:   /sie/regularizationlistdocente
