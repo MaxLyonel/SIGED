@@ -4460,6 +4460,7 @@ ciclo_tipo_id, grado_tipo_id
 
     public function buscarestudianteAction($ci,$curso_id,$complemento,$rude)
     {
+       
         $opcion = substr($ci, -2);    // devuelve "ef" //
         $ci = substr($ci, 0, -2);
         $reconocimiento_saberes=0;//si tiene reconocimiento de saberes 0 no 1 si
@@ -4713,13 +4714,18 @@ ciclo_tipo_id, grado_tipo_id
         $rs_existe=0;
         $bloque_rs_toca=1;
         $parte_rs_toca=1;
+          
         if($rec_sab){
-            $curso_rs=$rec_sab->getCurso();
-            if($curso_rs==2){$bloque_rs_toca=1;$parte_rs_toca=2;}
-            elseif($curso_rs==3){$bloque_rs_toca=2;$parte_rs_toca=1;}
-            elseif($curso_rs==5){$bloque_rs_toca=2;$parte_rs_toca=2;}
-            elseif($curso_rs==6){$bloque_rs_toca=3;$parte_rs_toca=1;}
-            $rs_existe=1;
+            $fecha_homologacion=$rec_sab->getFechaHomologacion();    
+            $fecha_homologacion= date_format($fecha_homologacion,"Y");    
+            if($fecha_homologacion<=$gestion_ini){
+                $curso_rs=$rec_sab->getCurso();
+                if($curso_rs==2){$bloque_rs_toca=1;$parte_rs_toca=2;}
+                elseif($curso_rs==3){$bloque_rs_toca=2;$parte_rs_toca=1;}
+                elseif($curso_rs==5){$bloque_rs_toca=2;$parte_rs_toca=2;}
+                elseif($curso_rs==6){$bloque_rs_toca=3;$parte_rs_toca=1;}
+                $rs_existe=1;
+            }
         }
             $institucioneducativa_curso_id_e=0;       
             $query = "SELECT
