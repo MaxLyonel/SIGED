@@ -166,6 +166,7 @@ class PersonaController extends Controller
         $form->get('fechaNacimiento')->setData($persona->getFechaNacimiento());
         $form->get('generoTipo')->setData($persona->getGeneroTipo());
         $form->get('correo')->setData($persona->getCorreo());
+        $form->get('departamentoTipo')->setData($persona->getExpedido());
                 
         return $this->render('SieUsuariosBundle:Persona:edit.html.twig', array(
                     'form' => $form->createView(),
@@ -254,6 +255,7 @@ class PersonaController extends Controller
                     if ($obs != ''){
                         //*** CAMBIO DE DATO DEL CARNET ANTERIOR*/
                         $persona->setCarnet($persona->getCarnet().'±');
+                        $persona->setSegipId('0');
                         $em->persist($persona);
                         $em->flush();
                         
