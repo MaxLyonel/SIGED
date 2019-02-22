@@ -240,7 +240,7 @@ class AreasController extends Controller {
             ->setParameter('idInstitucion', $sie)
             ->setParameter('gestion', $gestion)
             // ->setParameter('areas', array(1,2,3,5))
-            ->setParameter('areas', array(1,2,3,5,6,7,11))
+            ->setParameter('areas', array(1,2,3,4,5,6,7))
             ->addOrderBy('eat.id')
             ->distinct()
             ->getQuery();
@@ -596,6 +596,15 @@ class AreasController extends Controller {
                                     )->setParameter('ids',array())
                                     ->getResult();
                                     break;
+                                case 17:
+                                    $asignaturas = $em->createQuery(
+                                            'SELECT at
+                                            FROM SieAppWebBundle:AsignaturaTipo at
+                                            WHERE at.id IN (:ids)
+                                            ORDER BY at.id ASC'
+                                    )->setParameter('ids',array(496))
+                                    ->getResult();
+                                    break;
                             }
                             break;
             	case 11:    $asignaturas = $em->createQuery(
@@ -830,8 +839,7 @@ class AreasController extends Controller {
      */
     public function lista_areas_curso_adicionar_eliminarAction(Request $request) {
         try {
-            //
-            dump($request);die;
+            //dump($request);die;
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             $this->session = new Session;

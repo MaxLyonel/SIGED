@@ -236,7 +236,7 @@
                                                     <td data-title="Tecnica">{{c.especialNivelTecnicoTipo.nivelTecnico}}-{{c.especialTecnicaEspecialidadTipo.especialidad}}</td>
                                                     <td data-title="Turno">{{c.institucioneducativaCurso.turnoTipo.turno}}</td>
                                                     {% if  c.especialModalidadTipo %}
-                                                        <td data-title="Modalidad de Atención">{{c.especialModalidadTipo.modalidad}}</td>
+                                                        <td data-title="Modalidad de Atención">{{c.especialModalidadTipo.modalidad}}{% if  c.institucioneducativaCurso.lugar %}-{{c.institucioneducativaCurso.lugar}}{% endif %}</td>
                                                     {% else %}
                                                         <td data-title="Modalidad de Atención"></td>
                                                     {% endif %}
