@@ -5,12 +5,12 @@
 			<tr>
 				<th style="width: 7%;">#</th>
 				<th>Nombres</th>
-				<th>Ap. paterno</th>
-				<th>Ap. materno</th>
+				<th>Ap. Paterno</th>
+				<th>Ap. Materno</th>
 				<th>Centro</th>
-				<th>¿Es talento?</th>
+				<th>¿Es Talento?</th>
 				<th>Informe</th>
-				<th>Fecha registro</th>
+				<th>Fecha Solicitud</th>
 				<th class="text-center" style="width: 11%;">Acciones</th>
 			</tr>
 		</thead>
@@ -37,7 +37,7 @@
 					<!-- <a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Ver Detalle"><i class="fa fa-eye"></i></a>
                     <a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Acceder"><i class="fa fa-pencil"></i></a> -->
 					<!-- <a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a> -->
-					<button type="submit" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i></button>
+					<button type="submit" class="btn btn-xs btn-primary" onclick="showModalEdit({{estudiante.id}}, '{{estudiante.nombres}}','{{estudiante.paterno}}','{{estudiante.materno}}')"><i class="fa fa-edit"></i></button>
 				</td>
 			</tr>
         {% endfor %}
@@ -46,12 +46,12 @@
 		<tr>
 			<th style="width: 5%;">#</th>
 			<th>Nombres</th>
-			<th>Ap. paterno</th>
-			<th>Ap. materno</th>
+			<th>Ap. Paterno</th>
+			<th>Ap. Materno</th>
 			<th>Centro</th>
-			<th>¿Es talento?</th>
+			<th>¿Es Talento?</th>
 			<th>Informe</th>
-			<th>Fecha registro</th>
+			<th>Fecha Solicitud</th>
 			<th class="text-center" style="width: 11%;">Acciones</th>
 		</tr>
 		</tfoot>

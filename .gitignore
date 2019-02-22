@@ -5,3 +5,4 @@ web/empfiles/*
 web/uploads/*                                                                                                                          
 web/downloadempfiles/*
 app/config/parameters.yml
+.idea/

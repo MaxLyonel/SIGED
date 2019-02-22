@@ -26,11 +26,11 @@
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-md-6">
-                                <h3 class="panel-title">Nuevo estudiante</h3>
+                                <h3 class="panel-title">Nuevo Estudiante</h3>
                             </div>
-                            <div class="col-md-6 text-right">
+                            {#<div class="col-md-6 text-right">
                                 <a href="{{path('talento_extraordinario_index')}}" class="btn btn-default"><i class="fa fa-angle-left"></i> Volver</a>
-                            </div>
+                            </div>#}
                         </div>
                     </div>
                     <div class="panel-body">
@@ -39,7 +39,7 @@
                                 <form class="form-inline text-center">
                                   <div class="form-group">
                                     <div class="input-group">
-                                      <input value="5198000720074807" type="text" class="form-control" id="rude" placeholder="Buscar por RUDE">
+                                      <input value="5198000720074678" type="text" class="form-control" id="rude" placeholder="Buscar por RUDE">
                                       <div class="input-group-addon"><i class="fa fa-search"></i></div>
                                     </div>
                                   </div>
@@ -50,56 +50,58 @@
                         <div id="carga"></div>
                         <hr>
                         <div class="row">
-                            <form id="registro">
+                            <form id="registro" autocomplete="off">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="nombre">Nombre</label>
-                                        <input type="text" class="form-control" id="nombre" name="nombre" readonly required>
+                                        <input type="text" class="form-control noedit" id="nombre" name="nombre" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="paterno">Paterno</label>
-                                        <input type="text" class="form-control" id="paterno" name="paterno">
+                                        <input type="text" class="form-control noedit" id="paterno" name="paterno">
                                     </div>
                                     <div class="form-group">
                                         <label for="materno">Materno</label>
-                                        <input type="text" class="form-control" id="materno" name="materno">
+                                        <input type="text" class="form-control noedit" id="materno" name="materno">
                                     </div>
                                     <div class="row">
                                         <div class="col-md-8">
                                             <div class="form-group">
                                                 <label for="cedula">Cédula Identidad</label>
-                                                <input type="text" class="form-control" id="cedula" name="cedula" required>
+                                                <input type="text" class="form-control noedit" id="cedula" name="cedula" required>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="complemento">Complemento</label>
-                                                <input type="text" class="form-control" id="complemento" name="complemento">
+                                                <input type="text" class="form-control noedit" id="complemento" name="complemento">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="fecha_nacimiento">Fecha Nacimiento</label>
-                                        <input type="text" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="institucion_educativa">Centro Procedente</label>
-                                        <input type="text" class="form-control" id="institucion_educativa" name="institucion_educativa">
+                                        <input type="text" class="form-control noedit" id="fecha_nacimiento" name="fecha_nacimiento" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <input type="hidden" id="estudiante_ins_id" name="estudiante_ins_id">
                                     <div class="form-group">
+                                        <label for="institucion_educativa">Unidad Educativa</label>
+                                        <input type="text" class="form-control noedit" id="institucion_educativa" name="institucion_educativa">
+                                    </div>
+                                    <div class="form-group">
                                         <label for="centro_inscripcion">Centro Inscripción</label>
                                         <select type="text" class="form-control" id="centro_inscripcion" name="centro_inscripcion" required>
                                             <option value="" disabled selected>Seleccione</option>
-                                            <option value="1">aaa</option>
+                                            {% for item in centros %}
+                                            <option value="{{ item.id }}">{{ item.institucioneducativa }}</option>
+                                            {% endfor %}
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="fecha_solicitud">Fecha Solicitud</label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" id="fecha_solicitud" name="fecha_solicitud" data-date-format="dd/mm/yyyy" readonly required>
+                                            <input type="text" class="form-control noedit" id="fecha_solicitud" name="fecha_solicitud" data-date-format="dd/mm/yyyy" required>
                                             <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                         </div>
                                     </div>
@@ -119,6 +121,13 @@
     {{parent()}}
     {#<script src="{{asset('js/jquery-ui.min.js')}}"></script>#}
     <script>
+        $(document).ready(function() {
+            $("#centro_inscripcion").select2();
+        });
+        $('.noedit').keydown(function() {
+            //code to not allow any changes to be made to input field
+            return false;
+        });
         $("#fecha_solicitud").datepicker({ autoclose: true, todayHighlight: true });
         $('#rude').keypress(function (event) {
             if (event.keyCode === 10 || event.keyCode === 13) {
@@ -150,7 +159,11 @@
                             $("#materno").val(data.estudiante.materno);
                             $("#cedula").val(data.estudiante.cedula);
                             $("#complemento").val(data.estudiante.complemento);
-                            $("#fecha_nacimiento").val(data.estudiante.fecha_nacimiento.date.length>0?data.estudiante.fecha_nacimiento.date.substring(0, 10):'');
+                            var fechanacimiento = data.estudiante.fecha_nacimiento.date.length>0?data.estudiante.fecha_nacimiento.date.substring(0, 10):'';
+                            if (fechanacimiento != '') {
+                                fechanacimiento = fechanacimiento.split('-').reverse().join('/');
+                            }
+                            $("#fecha_nacimiento").val(fechanacimiento);
                             $("#institucion_educativa").val(data.estudiante.institucion_educativa);
                             $("#estudiante_ins_id").val(data.estudiante.estudiante_ins_id);
                         } else if (data.msg == 'nocurso') {
@@ -162,9 +175,6 @@
                         } else if (data.msg == 'existe') {
                             mesage('warning', 'Notificación', 'El estudiante ya postuló con anterioridad.');
                         }
-                        /*$("#form_c_rude").autocomplete({
-                            source: data
-                        });*/
                         $("#buscar").attr('disabled', false);
                     },
                     error: function (error) {
@@ -172,7 +182,6 @@
                     }
                 });
             } else {
-                // alert('');
                 mesage('info', 'Alerta', 'Ingrese código RUDE del estudiante');
             }
         }
@@ -181,7 +190,7 @@
             $("#carga").append('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
                 '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
                 '<strong>'+ titulo +'</strong> '+ msg +' </div>');
-            setTimeout(function () { $("#carga").empty(); }, 3000);
+            setTimeout(function () { $("#carga").empty(); }, 3500);
         }
 
         function clearInput() {
@@ -193,14 +202,13 @@
             $("#fecha_nacimiento").val('');
             $("#institucion_educativa").val('');
             $("#estudiante_ins_id").val('');
-            $("#centro_inscripcion").val('');
+            // $("#centro_inscripcion").val('');
             $("#fecha_solicitud").val('');
+            $('#centro_inscripcion').val('').trigger('change')
         }
 
         $("#registro").submit( function (event) {
             event.preventDefault();
-            var formData = $(this).serialize();
-            console.log(formData);
             $("#guardar").attr('disabled', true);
             $.ajax({
                 type: 'post',
@@ -238,511 +246,7 @@
                 }
             });
         })*/
-
-        var xhr;
-        function buscarEstudiante(id) {
-            var gestion = $('#form_c_gestion').val();
-
-        	if (id.length > 13) {
-                if(xhr && xhr.readyState != 4){
-                    xhr.abort();
-                }
-                xhr = $.ajax({
-                    type: 'get',
-                    url: Routing.generate('buscarestudianteinscripcion_especial', {'id': id, 'gestion':gestion}),
-                    beforeSend: function () {
-                        $("#form_c_paterno").val("");
-                        $("#form_c_materno").val("");
-                        $("#form_c_nombre").val("");
-                        $("#form_c_fechaNacimiento").val("");
-
-                        $("#form_c_carnetIdentidad").val("");
-                        $("#form_c_oficialia").val("");
-                        $("#form_c_libro").val("");
-                        $("#form_c_partida").val("");
-                        $("#form_c_folio").val("");
-                        $("#form_c_pais").val("");
-                        $("#form_c_departamento").val("");
-                        $("#form_c_provincia").val("");
-                        $("#form_c_localidad").val("");
-                        $("#form_c_carnetCodepedis").val("");
-                        $("#form_c_carnetIbc").val("");
-                        $("#form_c_generoTipo").val("");
-
-                        
-                        $("#form_c_domicilioDepartamento").val("");
-                        $("#form_c_domicilioProvincia").val("");
-                        $("#form_c_domicilioMunicipio").val("");
-                        $("#form_c_domicilioLocalidad").val("");
-                        $("#form_c_direccionZona").val("");
-                        $("#form_c_direccionCalle").val("");
-                        $("#form_c_direccionNro").val("");
-                        $("#form_c_direccionTelefono").val("");
-                        $("#form_c_direccionCelular").val("");
-                        $("#form_c_idiomaTipo1Id").val("");
-                        $("#form_c_idiomaTipo2Id").val("");
-                        $("#form_c_idiomaTipo3Id").val("");
-                        $("#form_c_etniaTipoId").val("");
-                        $("#form_c_viveCon").val("");
-                        $("#form_c_parienteDiscapacidad").val("");
-                        $("#form_c_gradoParentesco").val("");
-                        $("#form_c_seguro").val("");
-                        $("#form_c_medicacion").val("");
-                        $("#form_c_sangreTipoId").val("");
-                    },
-                    success: function (data) {
-
-                    	$("#form_c_paterno").val(data.paterno);
-                        $("#form_c_materno").val(data.materno);
-                        $("#form_c_nombre").val(data.nombre);
-                        $("#form_c_fechaNacimiento").val(data.fechaNacimiento);
-
-                        $("#form_c_carnetIdentidad").val(data.carnet);
-                        $("#form_c_oficialia").val(data.oficialia);
-                        $("#form_c_libro").val(data.libro);
-                        $("#form_c_partida").val(data.partida);
-                        $("#form_c_folio").val(data.folio);
-                        $("#form_c_pais").val(data.pais);
-                        $("#form_c_departamento").val(data.departamento);
-                        $("#form_c_provincia").val(data.provincia);
-                        $("#form_c_localidad").val(data.localidad);
-                        $("#form_c_carnetCodepedis").val(data.carnetCodepedis);
-                        $("#form_c_carnetIbc").val(data.carnetIbc);
-                        $("#form_c_generoTipo").val(data.genero);
-
-                        $("#form_c_domicilioDepartamento").val(data.domicilioDepartamento);
-                        $("#form_c_domicilioProvincia").val(data.domicilioProvincia);
-                        $("#form_c_domicilioMunicipio").val(data.domicilioMunicipio);
-                        $("#form_c_domicilioLocalidad").val(data.domicilioLocalidad);
-                        $("#form_c_direccionZona").val(data.direccionZona);
-                        $("#form_c_direccionCalle").val(data.direccionCalle);
-                        $("#form_c_direccionNro").val(data.direccionNro);
-                        $("#form_c_direccionTelefono").val(data.direccionTelefono);
-                        $("#form_c_direccionCelular").val(data.direccionCelular);
-                        $("#form_c_idiomaTipo1Id").val(data.direccionIdioma1);
-                        $("#form_c_idiomaTipo2Id").val(data.direccionIdioma2);
-                        $("#form_c_idiomaTipo3Id").val(data.direccionIdioma3);
-                        $("#form_c_etniaTipoId").val(data.etniaTipo);
-                        $("#form_c_viveCon").val(data.viveCon);
-                        $("#form_c_parienteDiscapacidad").val(data.parienteDiscapacidad);
-                        $("#form_c_gradoParentesco").val(data.gradoParentesco);
-                        $("#form_c_seguro").val(data.seguro);
-                        $("#form_c_medicacion").val(data.medicacion);
-                        $("#form_c_sangreTipoId").val(data.sangreTipo);
-
-                    }
-                });
-
-                
-            } else {
-                $("#form_c_paterno").val("");
-                $("#form_c_materno").val("");
-                $("#form_c_nombre").val("");
-                $("#form_c_fechaNacimiento").val("");
-
-                $("#form_c_carnetIdentidad").val("");
-                $("#form_c_oficialia").val("");
-                $("#form_c_libro").val("");
-                $("#form_c_partida").val("");
-                $("#form_c_folio").val("");
-                $("#form_c_pais").val("");
-                $("#form_c_departamento").val("");
-                $("#form_c_provincia").val("");
-                $("#form_c_localidad").val("");
-                $("#form_c_carnetCodepedis").val("");
-                $("#form_c_carnetIbc").val("");
-                $("#form_c_generoTipo").val("");
-
-                
-                $("#form_c_domicilioDepartamento").val("");
-                $("#form_c_domicilioProvincia").val("");
-                $("#form_c_domicilioMunicipio").val("");
-                $("#form_c_domicilioLocalidad").val("");
-                $("#form_c_direccionZona").val("");
-                $("#form_c_direccionCalle").val("");
-                $("#form_c_direccionNro").val("");
-                $("#form_c_direccionTelefono").val("");
-                $("#form_c_direccionCelular").val("");
-                $("#form_c_idiomaTipo1Id").val("");
-                $("#form_c_idiomaTipo2Id").val("");
-                $("#form_c_idiomaTipo3Id").val("");
-                $("#form_c_etniaTipoId").val("");
-                $("#form_c_viveCon").val("");
-                $("#form_c_parienteDiscapacidad").val("");
-                $("#form_c_gradoParentesco").val("");
-                $("#form_c_seguro").val("");
-                $("#form_c_medicacion").val("");
-                $("#form_c_sangreTipoId").val("");
-
-                
-            }
-
-
-
-
-        	
-            //peticion.abort();
-        }
-
-        function departamento(p) {
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('search_departamentos', {'pais': p}),
-                beforeSend: function () {
-                    $("#form_departamento").empty();
-                    $("#form_provincia").empty();
-                    $("#form_departamento").append('<option value="">Buscando...</option>');
-                    $("#form_provincia").append('<option value="">Buscando...</option>');
-                },
-                success: function (data) {
-                    $("#form_departamento").empty();
-                    $("#form_provincia").empty();
-                    $("#form_departamento").append('<option value="">Seleccionar...</option>');
-                    $("#form_provincia").append('<option value="">Seleccionar...</option>');
-                    $.each(data.departamento, function (i, value) {
-                        $("#form_departamento").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                }
-            });
-        }
-        function provincia(d) {
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('search_provincias', {'departamento': d}),
-                beforeSend: function () {
-                    $("#form_provincia").empty();
-                    $("#form_provincia").append('<option value="">Buscando...</option>');
-                },
-                success: function (data) {
-                    $("#form_provincia").empty();
-                    $("#form_provincia").append('<option value="">Seleccionar...</option>');
-                    $.each(data.provincia, function (i, value) {
-                        $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                }
-            });
-        }
-
-        function provincia1(d) {
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('search_provincias', {'departamento': d}),
-                beforeSend: function () {
-                    $("#form_c_domicilioProvincia").empty();
-                    $("#form_c_domicilioProvincia").append('<option value="">Buscando...</option>');
-                },
-                success: function (data) {
-                    $("#form_c_domicilioProvincia").empty();
-                    $("#form_c_domicilioProvincia").append('<option value="">Seleccionar...</option>');
-                    $.each(data.provincia, function (i, value) {
-                        $("#form_c_domicilioProvincia").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                }
-            });
-        }
-        
-        function provincia2(d) {
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('search_provincias', {'departamento': d}),
-                beforeSend: function () {
-                    $("#form_domicilioProvincia").empty();
-                    $("#form_domicilioProvincia").append('<option value="">Buscando...</option>');
-                },
-                success: function (data) {
-                    $("#form_domicilioProvincia").empty();
-                    $("#form_domicilioProvincia").append('<option value="">Seleccionar...</option>');
-                    $.each(data.provincia, function (i, value) {
-                        $("#form_domicilioProvincia").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                }
-            });
-        }
-
-        
-        /*  functiones para seleccionar nivles grados y paralelos */
-        function cargarAreas() {
-            var institucion = $('#form_c_idInstitucion').val();
-            var gestion = $('#form_c_gestion').val();
-            var turno = $('#form_c_turno').val();
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('cargar_areas_especial', {'idInstitucion': institucion,'gestion':gestion,'turno':turno}),
-                beforeSend: function () {
-                	$("#form_c_area").empty();
-                    $("#form_c_nivel").empty();
-                    $("#form_c_grado").empty();
-                    $("#form_c_paralelo").empty();
-                    $("#form_c_area").append('<option value="">Buscando...</option>');
-                    $("#form_c_nivel").append('<option value="">Buscando...</option>');
-                    $("#form_c_grado").append('<option value="">Buscando...</option>');
-                    $("#form_c_paralelo").append('<option value="">Buscando...</option>');
-                },
-                success: function (data) {
-                    $("#form_c_area").empty();
-                	$("#form_c_nivel").empty();
-                    $("#form_c_grado").empty();
-                    $("#form_c_paralelo").empty();
-                    $("#form_c_area").append('<option value="">Seleccionar...</option>');
-                    $("#form_c_nivel").append('<option value="">Seleccionar...</option>');
-                    $("#form_c_grado").append('<option value="">Seleccionar...</option>');
-                    $("#form_c_paralelo").append('<option value="">Seleccionar...</option>');
-                    $.each(data.areas, function (i, value) {
-                        $("#form_c_area").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                }
-            });
-        }
-
-        function cargarNiveles() {
-            var institucion = $('#form_c_idInstitucion').val();
-            var gestion = $('#form_c_gestion').val();
-            var turno = $('#form_c_turno').val();
-            var area = $('#form_c_idArea').val();
-
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('cargar_niveles_especial', {'idInstitucion': institucion,'gestion':gestion,'turno':turno,'area':area}),
-                beforeSend: function () {
-                    $("#form_c_nivel").empty();
-                    $("#form_c_grado").empty();
-                    $("#form_c_paralelo").empty();
-                    $("#form_c_nivel").append('<option value="">Buscando...</option>');
-                    $("#form_c_grado").append('<option value="">Buscando...</option>');
-                    $("#form_c_paralelo").append('<option value="">Buscando...</option>');
-                },
-                success: function (data) {
-                    $("#form_c_nivel").empty();
-                    $("#form_c_grado").empty();
-                    $("#form_c_paralelo").empty();
-                    $("#form_c_nivel").append('<option value="">Seleccionar...</option>');
-                    $("#form_c_grado").append('<option value="">Seleccionar...</option>');
-                    $("#form_c_paralelo").append('<option value="">Seleccionar...</option>');
-                    $.each(data.niveles, function (i, value) {
-                        $("#form_c_nivel").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                }
-            });
-        }
-        function cargarGrados() {
-            var institucion = $('#form_c_idInstitucion').val();
-            var gestion = $('#form_c_gestion').val();
-            var turno = $('#form_c_turno').val();
-            var area = $('#form_c_idArea').val();
-            var nivel = $('#form_c_nivel').val();
-
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('cargar_grados_especial', {'idInstitucion': institucion,'gestion':gestion,'turno':turno,'area':area,'nivel':nivel}),
-                beforeSend: function () {
-                    $("#form_c_grado").empty();
-                    $("#form_c_paralelo").empty();
-                    $("#form_c_grado").append('<option value="">Buscando...</option>');
-                    $("#form_c_paralelo").append('<option value="">Buscando...</option>');
-                },
-                success: function (data) {
-                    $("#form_c_grado").empty();
-                    $("#form_c_paralelo").empty();
-                    $("#form_c_grado").append('<option value="">Seleccionar...</option>');
-                    $("#form_c_paralelo").append('<option value="">Seleccionar...</option>');
-                    $.each(data.grados, function (i, value) {
-                        $("#form_c_grado").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                }
-            });
-        }
-        function cargarParalelos() {
-            var institucion = $('#form_c_idInstitucion').val();
-            var gestion = $('#form_c_gestion').val();
-            var turno = $('#form_c_turno').val();
-            var area = $('#form_c_idArea').val();
-            var nivel = $('#form_c_nivel').val();
-            var grado = $('#form_c_grado').val();
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('cargar_paralelos_especial', {'idInstitucion': institucion,'gestion':gestion,'turno':turno,'area':area,'nivel':nivel,'grado':grado}),
-                beforeSend: function () {
-                    $("#form_c_paralelo").empty();
-                    $("#form_c_paralelo").append('<option value="">Buscando...</option>');
-                },
-                success: function (data) {
-                    $("#form_c_paralelo").empty();
-                    $("#form_c_paralelo").append('<option value="">Seleccionar...</option>');
-                    $.each(data.paralelos, function (i, value) {
-                        $("#form_c_paralelo").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                }
-            });
-        }
-
-        /**
-         * Funciones para el estudiante nuevo, sin rude
-         */
-        /*  functiones para seleccionar nivles grados y paralelos */
-        function cargarAreas1() {
-            var institucion = $('#form_idInstitucion').val();
-            var gestion = $('#form_gestion').val();
-            var turno = $('#form_turno').val();
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('cargar_areas_especial', {'idInstitucion': institucion,'gestion':gestion,'turno':turno}),
-                beforeSend: function () {
-                    $("#form_area").empty();
-                	$("#form_nivel").empty();
-                    $("#form_grado").empty();
-                    $("#form_paralelo").empty();
-                    $("#form_area").append('<option value="">Buscando...</option>');
-                    $("#form_nivel").append('<option value="">Buscando...</option>');
-                    $("#form_grado").append('<option value="">Buscando...</option>');
-                    $("#form_paralelo").append('<option value="">Buscando...</option>');
-                },
-                success: function (data) {
-                    $("#form_area").empty();
-                	$("#form_nivel").empty();
-                    $("#form_grado").empty();
-                    $("#form_paralelo").empty();
-                    $("#form_area").append('<option value="">Seleccionar...</option>');
-                    $("#form_nivel").append('<option value="">Seleccionar...</option>');
-                    $("#form_grado").append('<option value="">Seleccionar...</option>');
-                    $("#form_paralelo").append('<option value="">Seleccionar...</option>');
-                    $.each(data.areas, function (i, value) {
-                        $("#form_area").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                }
-            });
-        }
-
-        function cargarNiveles1() {
-            var institucion = $('#form_idInstitucion').val();
-            var gestion = $('#form_gestion').val();
-            var turno = $('#form_turno').val();
-            var area = $('#form_idArea').val();
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('cargar_niveles_especial', {'idInstitucion': institucion,'gestion':gestion,'turno':turno,'area':area}),
-                beforeSend: function () {
-                    $("#form_nivel").empty();
-                    $("#form_grado").empty();
-                    $("#form_paralelo").empty();
-                    $("#form_nivel").append('<option value="">Buscando...</option>');
-                    $("#form_grado").append('<option value="">Buscando...</option>');
-                    $("#form_paralelo").append('<option value="">Buscando...</option>');
-                },
-                success: function (data) {
-                    $("#form_nivel").empty();
-                    $("#form_grado").empty();
-                    $("#form_paralelo").empty();
-                    $("#form_nivel").append('<option value="">Seleccionar...</option>');
-                    $("#form_grado").append('<option value="">Seleccionar...</option>');
-                    $("#form_paralelo").append('<option value="">Seleccionar...</option>');
-                    $.each(data.niveles, function (i, value) {
-                        $("#form_nivel").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                }
-            });
-        }
-        function cargarGrados1() {
-            var institucion = $('#form_idInstitucion').val();
-            var gestion = $('#form_gestion').val();
-            var turno = $('#form_turno').val();
-            var area = $('#form_idArea').val();
-            var nivel = $('#form_nivel').val();
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('cargar_grados_especial', {'idInstitucion': institucion,'gestion':gestion,'turno':turno,'area':area,'nivel':nivel}),
-                beforeSend: function () {
-                    $("#form_grado").empty();
-                    $("#form_paralelo").empty();
-                    $("#form_grado").append('<option value="">Buscando...</option>');
-                    $("#form_paralelo").append('<option value="">Buscando...</option>');
-                },
-                success: function (data) {
-                    $("#form_grado").empty();
-                    $("#form_paralelo").empty();
-                    $("#form_grado").append('<option value="">Seleccionar...</option>');
-                    $("#form_paralelo").append('<option value="">Seleccionar...</option>');
-                    $.each(data.grados, function (i, value) {
-                        $("#form_grado").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                }
-            });
-        }
-        function cargarParalelos1() {
-            var institucion = $('#form_idInstitucion').val();
-            var gestion = $('#form_gestion').val();
-            var turno = $('#form_turno').val();
-            var area = $('#form_idArea').val();
-            var nivel = $('#form_nivel').val();
-            var grado = $('#form_grado').val();
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('cargar_paralelos_especial', {'idInstitucion': institucion,'gestion':gestion,'turno':turno,'area':area,'nivel':nivel,'grado':grado}),
-                beforeSend: function () {
-                    $("#form_paralelo").empty();
-                    $("#form_paralelo").append('<option value="">Buscando...</option>');
-                },
-                success: function (data) {
-                    $("#form_paralelo").empty();
-                    $("#form_paralelo").append('<option value="">Seleccionar...</option>');
-                    $.each(data.paralelos, function (i, value) {
-                        $("#form_paralelo").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                }
-            });
-        }
-        
-        /*function cargarServicios() {
-            var area = $('#form_c_area').val();
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('cargar_servicios_especial', {'area':area}),
-                beforeSend: function () {
-                    $("#form_c_servicio").empty();
-                },
-                success: function (data) {
-                    $("#form_c_servicio").empty();
-                    $("#form_c_servicio") = data.servicios; 
-                }
-            });
-        }*/
-
-        /*function cargarGradosDiscapacidad(d) {
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('cargar_grados_discapacidad_especial', {'discapacidad': d}),
-                beforeSend: function () {
-                    $("#form_c_gradoDiscapacidad").empty();
-                    $("#form_c_gradoDiscapacidad").append('<option value="">Buscando...</option>');
-                },
-                success: function (data) {
-                    $("#form_c_gradoDiscapacidad").empty();
-                    $("#form_c_gradoDiscapacidad").append('<option value="">Seleccionar...</option>');
-                    $.each(data.grados, function (i, value) {
-                        $("#form_c_gradoDiscapacidad").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                }
-            });
-        }*/
-
-        /*function cargarGradosDiscapacidad1(d) {
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('cargar_grados_discapacidad_especial', {'discapacidad': d}),
-                beforeSend: function () {
-                    $("#form_gradoDiscapacidad").empty();
-                    $("#form_gradoDiscapacidad").append('<option value="">Buscando...</option>');
-                },
-                success: function (data) {
-                    $("#form_gradoDiscapacidad").empty();
-                    $("#form_gradoDiscapacidad").append('<option value="">Seleccionar...</option>');
-                    $.each(data.grados, function (i, value) {
-                        $("#form_gradoDiscapacidad").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                }
-            });
-        }*/
-
-        </script>
+    </script>
 {% endblock %}
 
 

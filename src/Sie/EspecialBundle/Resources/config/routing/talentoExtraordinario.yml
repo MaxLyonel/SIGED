@@ -23,3 +23,9 @@ talento_extraordinario_save:
     defaults: { _controller: SieEspecialBundle:EstudianteTalento:save }
     options:
         expose: true
+
+talento_extraordinario_update:
+    path:     /actualiza
+    defaults: { _controller: SieEspecialBundle:EstudianteTalento:update }
+    options:
+        expose: true
