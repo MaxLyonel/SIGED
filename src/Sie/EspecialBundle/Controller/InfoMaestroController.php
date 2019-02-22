@@ -125,9 +125,10 @@ class InfoMaestroController extends Controller {
 //                ->getQuery();
 
         $query = $repository->createQueryBuilder('mi')
-                ->select('p.id perId, p.carnet, p.paterno, p.materno, p.nombre, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, mi.esVigenteAdministrativo, ft.formacion')
+                ->select('p.id perId, p.carnet, p.paterno, p.materno, p.nombre, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, mi.esVigenteAdministrativo, ft.formacion, ct.id ctId,ct.cargo')
                 ->innerJoin('SieAppWebBundle:Persona', 'p', 'WITH', 'mi.persona = p.id')
                 ->innerJoin('SieAppWebBundle:FormacionTipo', 'ft', 'WITH', 'mi.formacionTipo = ft.id')
+                ->innerJoin('SieAppWebBundle:CargoTipo', 'ct', 'WITH', 'mi.cargoTipo = ct.id')
                 ->where('mi.institucioneducativa = :idInstitucion')
                 ->andWhere('mi.gestionTipo = :gestion')
                 ->andWhere('mi.cargoTipo IN (:cargos)')
@@ -267,7 +268,8 @@ class InfoMaestroController extends Controller {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $form = $request->get('form');        
+        $form = $request->get('form');
+        //dump($form);die;       
 
         $persona = $this->get('sie_app_web.persona')->buscarPersonaPorCarnetComplemento($form);
         
@@ -356,7 +358,7 @@ class InfoMaestroController extends Controller {
 
         $query = $em->createQuery(
                         'SELECT ct FROM SieAppWebBundle:CargoTipo ct
-                     WHERE ct.id = 0');
+                     WHERE ct.id in (0,15)');
 
         $cargos = $query->getResult();
         $cargosArray = array();
@@ -416,9 +418,12 @@ class InfoMaestroController extends Controller {
     private function editForm($idInstitucion, $gestion, $persona, $maestroInscripcion, $idiomas) {
         $em = $this->getDoctrine()->getManager();
 
-        $query = $em->createQuery(
+        /* $query = $em->createQuery(
                         'SELECT ct FROM SieAppWebBundle:CargoTipo ct
-                        WHERE ct.id = 0');
+                        WHERE ct.id  0'); */
+        $query = $em->createQuery(
+                'SELECT ct FROM SieAppWebBundle:CargoTipo ct
+                WHERE ct.id  in (0,15)');
 
         $cargos = $query->getResult();
         $cargosArray = array();

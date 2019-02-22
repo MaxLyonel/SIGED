@@ -127,7 +127,7 @@
 
         function listarNiveles() {
             var area = $('#form_area').val();
-            if(area== 6 || area== 7 || area== 11){
+            if(area== 6 || area== 7){
                 $("#divgrado").hide();
                 $("#divtecnica").hide();
                 $("#divniveltec").hide();
@@ -139,7 +139,7 @@
             $("#divservicio").show();
             $("#divprograma").show();
             $("#form_educacionCasa").attr('checked', false);
-            if(area == 3 || area== 5){
+            if(area == 1 || area== 2 || area== 3 || area == 4 || area== 5){
                 $("#divEc").show();
             }else{
                 $("#divEc").hide();
@@ -176,12 +176,12 @@
         function listarGrados() {
             var area = $('#form_area').val();
             var nivel = $('#form_nivel').val();
-             if(nivel== 410 && (area == 6 || area == 7 || area == 11)){
+             if(nivel== 410 && (area == 6 || area == 7)){
                 $("#divprograma").hide();
             }else{
                 $("#divprograma").show();
             }
-            if(nivel== 411 && (area == 6 || area == 7 || area == 11)){
+            if(nivel== 411 && (area == 6 || area == 7)){
                 $("#divservicio").hide();
             }else{
                 $("#divservicio").show();
@@ -210,8 +210,8 @@
                     $.each(data.grados, function (i, value) {
                         $("#form_grado").append('<option value="' + i + '">' + value + '</option>');
                     });
-                    listarServicios();
-                    listarProgramas();
+                        listarServicios();
+                        listarProgramas();
                 }
             });
         }

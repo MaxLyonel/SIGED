@@ -135,6 +135,7 @@
                                                 <th>Materno</th>
                                                 <th>Nombre(s)</th>
                                                 <th>Formación</th>
+                                                <th>Cargo</th>
                                                 <th>Fecha Registro</th>
                                                 <th>Fecha Modificación</th>
                                                 <th>Observación</th>
@@ -151,6 +152,7 @@
                                                     <td data-title="Materno">{{ maestro.materno }}</td>
                                                     <td data-title="Nombre(s)">{{ maestro.nombre }}</td>
                                                     <td data-title="Formación">{{ maestro.formacion }}</td>
+                                                    <td data-title="Cargo">{{ maestro.cargo }}</td>
                                                     <td data-title="FechReg">{% if maestro.fechaRegistro %}{{ maestro.fechaRegistro|date('d-m-Y') }}{% else %}-{% endif %}</td>
                                                     <td data-title="FechMod">{% if maestro.fechaModificacion %}{{ maestro.fechaModificacion|date('d-m-Y') }}{% else %}-{% endif %}</td>
                                                     <td data-title="Observacion" {% if maestro.perId in maestro_no_idioma|keys or maestro.perId in maestro_no_genero|keys %}class="text-danger"{% else %}class="text-success"{% endif %}>
@@ -183,7 +185,8 @@
                                                             <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
                                                             <input type="hidden" name="gestion" value="{{gestion}}">
                                                             <input type="hidden" name="idMaestroInscripcion" value="{{maestro.miId}}">
-                                                            <input type="hidden" name="idCargo" value="0">
+                                                            {# <input type="hidden" name="idCargo" value="0"> #}
+                                                            <input type="hidden" name="idCargo" value="{{maestro.ctId}}">
                                                             {% if maestro.esVigenteAdministrativo %}
                                                                 <button type="submit" class="btn btn-success" onclick="return confirm('¿Está segura/o de continuar?');">Vigente</button>
                                                             {% else %}

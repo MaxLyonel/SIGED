@@ -32,7 +32,7 @@ class InfoNotasController extends Controller {
      */
     public function indexAction(Request $request) {
         try {
-
+            //dump($request);die;
             $idInscripcionEspecial = $request->get('idInscripcionEspecial');
             $em = $this->getDoctrine()->getManager();
             $inscripcionEspecial = $em->getRepository('SieAppWebBundle:EstudianteInscripcionEspecial')->find($idInscripcionEspecial);
@@ -126,7 +126,17 @@ class InfoNotasController extends Controller {
                 case 5: //Multiple
                         break;
                 case 6: //Dificultades en el aprendizaje
-                        break;
+                    $notas = $this->get('notas')->especial_cualitativo($idInscripcion,$operativo);
+                    if($notas['tipoNota'] == 'Trimestre'){
+                        $template = 'especialCualitativoTrimestral';
+                    }else{
+                        $template = 'especialCualitativo';
+                    }
+                    $actualizarMatricula = false;
+                    if($operativo >= 4 or $gestion < $gestionActual){
+                        $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(5,11)));
+                    }
+                    break;
                 case 7: // Talento extraordinario
                         break;
                 case 8: // Sordeceguera

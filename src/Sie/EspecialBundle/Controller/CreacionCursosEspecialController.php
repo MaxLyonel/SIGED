@@ -195,7 +195,7 @@ class CreacionCursosEspecialController extends Controller {
             $query = $em->createQuery(
             		'SELECT a FROM SieAppWebBundle:EspecialAreaTipo a
                                     WHERE a.id IN (:id) ORDER BY a.id'
-                     )->setParameter('id',array(1,2,3,4,5,6,7,11));
+                     )->setParameter('id',array(1,2,3,4,5,6,7));
                     // )->setParameter('id',array(1,2,3,4,5,6,7,8,9,100));
             		$areas_result = $query->getResult();
             		$areas = array();
@@ -384,8 +384,21 @@ class CreacionCursosEspecialController extends Controller {
                 $this->get('session')->getFlashBag()->add('newCursoError', 'No se pudo crear el curso, ya existe un curso con las mismas características.');
                 return $this->redirect($this->generateUrl('creacioncursos_especial',array('op'=>'result')));
             }else{
+                /* Asignacion de Modalidad de Atencion
+                DIRECTA = 1
+                INDIRECTA = 2
+                LUGAR = 1 EDUCACION EN CASA
+                */
+                $lugar = "";
                 if (isset($form['educacionCasa']) && $form['educacionCasa'] == 1){
-                    $modalidad = 3;
+                    $modalidad = 2;
+                    $lugar="EDUCACION EN CASA";
+                }elseif($form['area'] == 1 && $form['programa'] == 13){
+                    $modalidad = 2;
+                }elseif($form['area'] == 2 && $form['programa'] == 10){
+                    $modalidad = 2;
+                }elseif($form['area'] == 6 && $form['programa'] == 17){
+                    $modalidad = 2;
                 }else{
                     $modalidad = 1;
                 }
@@ -400,7 +413,8 @@ class CreacionCursosEspecialController extends Controller {
             	$nuevo_curso_sie->setParaleloTipo($em->getRepository('SieAppWebBundle:ParaleloTipo')->find($form['paralelo']));
             	$nuevo_curso_sie->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->find($form['turno']));
             	$nuevo_curso_sie->setCicloTipo($em->getRepository('SieAppWebBundle:CicloTipo')->find(0));
-            	$nuevo_curso_sie->setSucursalTipo($em->getRepository('SieAppWebBundle:SucursalTipo')->find(0));
+                $nuevo_curso_sie->setSucursalTipo($em->getRepository('SieAppWebBundle:SucursalTipo')->find(0));
+                $nuevo_curso_sie->setLugar($lugar);
             	$em->persist($nuevo_curso_sie);
 
             	$em->flush();
@@ -565,14 +579,6 @@ class CreacionCursosEspecialController extends Controller {
                     )->setParameter('id',array(999));
 
         }*/
-        elseif ($area == "11" ) {     //EDUCACION EN CASA
-    		$query = $em->createQuery(
-    				'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
-                                    WHERE n.id IN (:id)'
-    				)->setParameter('id',array(411));
-
-    	}
-
     	else  {
     	$query = $em->createQuery(
     			'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
@@ -706,9 +712,12 @@ class CreacionCursosEspecialController extends Controller {
                                     WHERE p.id IN (:id) order by p.programa'
                     //)->setParameter('id',array(1,2,3,4,5,6));
                     )->setParameter('id',array(5,6,17));
-    	}
-
-    	else {
+    	}elseif ($area == "11" and $nivel == "411" and  $grado == "99" ) {
+            $query = $em->createQuery(
+                'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
+                                WHERE p.id IN (:id) order by p.programa'
+                )->setParameter('id',array(17));
+        }else {
     		$query = $em->createQuery(
     				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
                                     WHERE p.id = (:id)'

@@ -1,19 +1,19 @@
-Sie\AppWebBundle\Entity\EstudianteInscripcionEspecialTalento:
+Sie\AppWebBundle\Entity\EstudianteTalento:
     type: entity
-    table: estudiante_inscripcion_especial_talento
+    table: estudiante_talento
     indexes:
-        IDX_5A0552EFA1104027:
-            columns:
-                - estudiante_inscripcion_id
-        IDX_5A0552EF1EEFD20:
+        IDX_FA38B6A11EEFD20:
             columns:
                 - usuario_registro_id
-        IDX_5A0552EFDADD026:
+        IDX_FA38B6A1DADD026:
             columns:
                 - usuario_modificacion_id
-        IDX_5A0552EF3AB163FE:
+        IDX_FA38B6A13AB163FE:
             columns:
                 - institucioneducativa_id
+        IDX_FA38B6A159590C39:
+            columns:
+                - estudiante_id
     id:
         id:
             type: integer
@@ -24,28 +24,10 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionEspecialTalento:
             generator:
                 strategy: SEQUENCE
     fields:
-        fechaSolicitud:
-            type: date
-            nullable: false
-            comment: ''
-            column: fecha_solicitud
-        nroInforme:
-            type: string
-            nullable: true
-            length: 50
-            fixed: false
-            comment: ''
-            column: nro_informe
-        fechaInforme:
-            type: date
-            nullable: true
-            comment: ''
-            column: fecha_informe
-        esTalento:
+        acelera:
             type: boolean
             nullable: true
             comment: ''
-            column: es_talento
         talentoTipo:
             type: string
             nullable: true
@@ -63,22 +45,7 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionEspecialTalento:
             nullable: true
             comment: ''
             column: fecha_modificacion
-        informe:
-            type: string
-            nullable: true
-            length: 100
-            fixed: false
-            comment: ''
     manyToOne:
-        estudianteInscripcion:
-            targetEntity: EstudianteInscripcion
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                estudiante_inscripcion_id:
-                    referencedColumnName: id
-            orphanRemoval: false
         usuarioRegistro:
             targetEntity: Usuario
             cascade: {  }
@@ -104,6 +71,15 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionEspecialTalento:
             inversedBy: null
             joinColumns:
                 institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudiante:
+            targetEntity: Estudiante
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
