@@ -252,7 +252,7 @@ select idsae,idacr
         $mallafinal = $final->fetchAll();
         //  dump($mallafinal);die();
 
-        if ($po){
+        if ($po||$mallafinal){
             $exist = true;
         }
         else{
@@ -358,13 +358,13 @@ select idsae,idacr
 
 //        dump($query);
 //        die;
-        
-        
+
+
         if ($po){
             $exist = true;
         }
         else{
-            $exist = false;        
+            $exist = false;
         }
         
         if ($periodos){
@@ -1104,7 +1104,7 @@ select idsae,idacr
             $params = array();
             $sieav->execute($params);
             $saerow = $sieav->fetchAll();
-                // dump($saerow);die;
+         //   dump($saerow);die;
 //            die;
 
 

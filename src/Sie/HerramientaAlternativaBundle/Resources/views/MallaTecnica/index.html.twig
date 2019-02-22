@@ -11,26 +11,26 @@
                     <i class="glyphicon glyphicon-leaf"></i>
                     <a href="{{path('principal_web')}}">Bienvenida/o</a>
                     <i class="fa fa-angle-right"></i>
-                </li> 
+                </li>
                 <li>
                     <i class="fa fa-th-large"></i>
                     <a href="{{path('herramienta_ceducativa_menu_principal')}}">Menú Principal</a>
                     <i class="fa fa-angle-right"></i>
-                </li> 
+                </li>
                 <li>
                     <i class="fa fa-language"></i>
                     Malla Técnica
                     <i class="fa fa-angle-right"></i>
-                </li>                
+                </li>
             </ol>
         </div><!-- /.breadcrumb-wrapper -->
     </div>
-    {% if exist == 1 %}  
+    {% if((exist == 1) or (newexist == 1))  %}
         <div class="body-content animated fadeIn">
             <div class="row">
-                <div id= "mengestioncurso" class="col-md-12">                    
-                      
-                </div>                
+                <div id= "mengestioncurso" class="col-md-12">
+
+                </div>
             </div>
             <div class="row">
 
@@ -180,7 +180,7 @@
                             </small>
                         </div>
                     {% endif%}
-                                  
+
 
 
 
@@ -193,20 +193,20 @@
             </div>
         </div>
     {% else %}
-        {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%} 
+        {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
             <div class="body-content animated fadeIn">
                 <div class="row">
                     <div  class="col-md-12">
-                        <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevaMallaAcreditacion();">
+                        <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevaMallaAcreditacionv();">
                             <i class="fa fa-outdent"></i> Nueva Acreditación
                         </button>
-                    </div>                
+                    </div>
                 </div>
-            </div> 
-        {% endif%}    
-    {% endif%}      
-    
-    
+            </div>
+        {% endif%}
+    {% endif%}
+
+
     <!-- Start body content -->
     <!--/ End body content -->
     <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
@@ -307,7 +307,7 @@
                 }
             });
         };
-        
+
         // New curso show
         var nuevaAcreditacion = function () {
             $.ajax({
@@ -352,6 +352,28 @@
                 }
             });
         };
+
+        function nuevaMallaAcreditacionv() {
+             $.ajax({
+                type: 'get',
+                url: "{{ path('herramienta_malla_nueva_acreditacion') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
     </script>
 {%endblock%}
 
