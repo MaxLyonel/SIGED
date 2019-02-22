@@ -178,7 +178,7 @@ class PersonaController extends Controller
     
     public function personaupdateAction(Request $request) {        
         $form = $request->get('sie_usuarios_persona_edit');
-        dump($form);die;
+
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         $persona = $em->getRepository('SieAppWebBundle:Persona')->find($form['idpersona']);
