@@ -81,13 +81,14 @@ class InfoMaestroMigrarController extends Controller {
 
         $consol_gest_pasada = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $request->getSession()->get('currentyear') - 1 , 'unidadEducativa' => $institucion, 'bim4' => '1'));
         $consol_gest_pasada2 = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $request->getSession()->get('currentyear') - 1 , 'unidadEducativa' => $institucion, 'bim4' => '2'));
+        $consol_gest_pasada3 = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $request->getSession()->get('currentyear') - 1 , 'unidadEducativa' => $institucion, 'bim4' => '3'));
         
         $registro_gest_pasada = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $request->getSession()->get('currentyear') - 1 , 'unidadEducativa' => $institucion));
         
         if(!$registro_gest_pasada){
             $gestion = $request->getSession()->get('currentyear');
         }
-        else if(!($consol_gest_pasada or $consol_gest_pasada2)){
+        else if(!($consol_gest_pasada or $consol_gest_pasada2 or $consol_gest_pasada3)){
             $gestion = $request->getSession()->get('currentyear') - 1;
             $request->getSession()->set('idGestion', $gestion);
             $activar_acciones = true;
