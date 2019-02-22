@@ -178,15 +178,20 @@ class PersonaController extends Controller
     
     public function personaupdateAction(Request $request) {        
         $form = $request->get('sie_usuarios_persona_edit');
+        dump($form);die;
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         $persona = $em->getRepository('SieAppWebBundle:Persona')->find($form['idpersona']);
         $response = new JsonResponse();
         try {
-            //**** SOLO MODIFICA GENERO Y CORREO ELECTRONICO */
-            if ($persona->getSegipId() == 1){                
-                $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['generoTipo']));                
-                $persona->setCorreo($form['correo']);                                              
+            //SÓLO MODIFICA GÉNERO, FECHA DE NACIMIENTO, EXPEDIDO Y CORREO ELECTRÓNICO
+            if ($persona->getSegipId() == 1){
+                $fechaNac = str_pad($form['fechaNacimiento']['day'], 2, '0', STR_PAD_LEFT).'/'.str_pad($form['fechaNacimiento']['month'], 2, '0', STR_PAD_LEFT).'/'.$form['fechaNacimiento']['year'];
+                $fechaNac = \DateTime::createFromFormat('d/m/Y', $fechaNac);
+                $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['generoTipo']));
+                $persona->setCorreo($form['correo']);
+                $persona->setFechaNacimiento($fechaNac);
+                $persona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneById($form['departamentoTipo']));
                 $em->persist($persona);
                 $em->flush();
                 $em->getConnection()->commit();
@@ -248,7 +253,7 @@ class PersonaController extends Controller
 
                     if ($obs != ''){
                         //*** CAMBIO DE DATO DEL CARNET ANTERIOR*/
-                        $persona->setCarnet('9-'.$persona->getCarnet());
+                        $persona->setCarnet($persona->getCarnet().'±');
                         $em->persist($persona);
                         $em->flush();
                         
