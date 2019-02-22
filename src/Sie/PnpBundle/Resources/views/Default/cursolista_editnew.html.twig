@@ -316,6 +316,7 @@
                         Lista de Participantes del Curso
                     </div>
                     <div class="panel-body">
+                    <button class="btn btn-xs btn-danger rounded glyphicon glyphicon-copy" id="copy-button" data-clipboard-target="#tablaListadoPersonas"> Copiar Lista</button>
                         <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
                             <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
                                 <thead>
@@ -345,13 +346,15 @@
                                         {% if plan == 2 %}
                                             <td>
                                                 {% if esactivo == 1 %}
+                                                    {#}Rudeal
                                                     {% if estudiante.rude_id != "" %}
                                                         <a role="button" class="btn btn-xs btn-primary rounded glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_rudeal', { 'id_enc': estudiante.rude_id_enc }) }}" title="Imprimir Rudeal"></a>
-                                                    {% endif %}
+                                                    {% endif %}{#}
                                                 {% else %}  
+                                                    {#}Rudeal
                                                     {% if estudiante.rude_id != "" %}
                                                         <a role="button" class="btn btn-xs btn-primary rounded glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_rudeal', { 'id_enc': estudiante.rude_id_enc }) }}" title="Imprimir Rudeal"></a>
-                                                    {% endif %}
+                                                    {% endif %}{#}
                                                     <a href="#" role="button" onclick="SeeRudeal('{{estudiante.inscripcion_id}}',{{ datos.id }})" class="btn btn-xs rounded btn-success glyphicon glyphicon-edit" title="Editar Rudeal"></a>
                                                 {% endif %}    
                                             </td>
@@ -428,6 +431,12 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script>
+
+ (function(){
+    new Clipboard('#copy-button');
+})();
+</script>
     <script type="text/javascript">
     $(document).ready(function() {
         $("#fecha_nac").datepicker({

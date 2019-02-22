@@ -70,13 +70,28 @@
     <div class="breadcrumb-wrapper hidden-xs">
         <span class="label">Usted esta aquí:</span>
         <ol class="breadcrumb">
-            <li>
+            {# <li>
                 <i class="fa fa-home"></i>
                 <a href="#">Asignación Área/Maestro</a>
                 <i class="fa fa-angle-right"></i>
             </li>
 
-            <li class="active">Lista</li>
+            <li class="active">Lista</li> #}
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="#">Inicio</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="{{path('info_especial_open', {'form':{'idInstitucion': institucion.id,'gestion': gestion,'institucioneducativa':institucion.institucioneducativa,'institucioneducativaTipoId':4,'data':''}})}}">Menu Principal</a>
+                <i class="fa fa-angle-right">
+                </i>
+            </li>
+            <li class="active">Área/Maestro
+                <i class="fa fa-angle-right">
+                </i>
+            </li>
+            <li class="active">Asignación</li>
         </ol>
     </div><!-- /.breadcrumb-wrapper -->
 </div><!-- /.header-content -->

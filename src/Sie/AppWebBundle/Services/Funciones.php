@@ -823,7 +823,7 @@ class Funciones {
           ){
             $swValidationPrimaria=true;
         }else{
-            if( $centroAllowed &&
+            if( 
                 $gestion >= 2019 &&
                 $arrInfoUe['ueducativaInfoId']['sfatCodigo'] == 15 &&
                 $arrInfoUe['ueducativaInfoId']['setId'] == 13 &&

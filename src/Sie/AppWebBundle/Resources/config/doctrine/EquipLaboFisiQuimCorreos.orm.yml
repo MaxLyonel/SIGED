@@ -1,0 +1,35 @@
+Sie\AppWebBundle\Entity\EquipLaboFisiQuimCorreos:
+    type: entity
+    table: equip_labo_fisi_quim_correos
+    indexes:
+        IDX_EF2DBF64D68CAD7:
+            columns:
+                - equip_labo_fisi_quim_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        correoElectronico:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+            column: correo_electronico
+    manyToOne:
+        equipLaboFisiQuim:
+            targetEntity: EquipLaboFisiQuim
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                equip_labo_fisi_quim_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

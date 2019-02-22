@@ -62,6 +62,10 @@ sie_herramienta_ieducativa:
     resource: "@SieHerramientaBundle/Resources/config/routing/ieducativa.yml"
     prefix:   /sie/infoIeducativa
 
+sie_herramienta_ieducativa_equipamiento_laboratorio:
+    resource: "@SieHerramientaBundle/Resources/config/routing/ieducativaEquipamientoLaboratorio.yml"
+    prefix:   /sie/infoIeducativa/equipamiento/laboratorio
+
 sie_herramienta_mallacurricular:
     resource: "@SieHerramientaBundle/Resources/config/routing/mallacurricular.yml"
     prefix:   /sie/malla

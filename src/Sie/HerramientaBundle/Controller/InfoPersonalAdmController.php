@@ -126,7 +126,6 @@ class InfoPersonalAdmController extends Controller {
         $query = $em->createQuery(
                         'SELECT count(mi.id) FROM SieAppWebBundle:MaestroInscripcion mi
                     WHERE mi.institucioneducativa = :idInstitucion
-                    AND mi.esVigenteAdministrativo = true
                     AND mi.gestionTipo = :gestion
                     AND mi.cargoTipo IN (:cargos)')
                 ->setParameter('idInstitucion', $institucion)
@@ -197,8 +196,9 @@ class InfoPersonalAdmController extends Controller {
 
         $consol_gest_pasada = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim4' => '1'));
         $consol_gest_pasada2 = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim4' => '2'));
+        $consol_gest_pasada3 = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim4' => '3'));
         
-        if(!($consol_gest_pasada or $consol_gest_pasada2)){
+        if(!($consol_gest_pasada or $consol_gest_pasada2 or $consol_gest_pasada3)){
             $activar_acciones = true;
         }
 
@@ -359,6 +359,12 @@ class InfoPersonalAdmController extends Controller {
         $em->getConnection()->beginTransaction();
         try {
             $form = $request->get('form');
+            // Registrar sucursal
+            $sucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa' => $form['institucionEducativa'], 'gestionTipo' => $form['gestion']));
+
+            if(!$sucursal) {
+                $query = $em->getConnection()->prepare("select * from sp_genera_institucioneducativa_sucursal('".$form['institucionEducativa']."','0','".$form['gestion']."','1');")->execute();
+            }
             // Verificar si la persona ya esta registrada
 
             $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($form['persona']);

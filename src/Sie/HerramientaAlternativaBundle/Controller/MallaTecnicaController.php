@@ -252,7 +252,7 @@ select idsae,idacr
         $mallafinal = $final->fetchAll();
         //  dump($mallafinal);die();
 
-        if ($po){
+        if ($po||$mallafinal){
             $exist = true;
         }
         else{
@@ -304,6 +304,7 @@ select idsae,idacr
                       and b.codigo = ".$aInfoUeducativa['ueducativaInfoId']['especialidad_cod']."
                       and ((d.codigo = 1) or (d.codigo = 2) or (d.codigo = 3))
                       and w.turno_tipo_id = ".$aInfoUeducativa['ueducativaInfoId']['superior_turno_tipo_id']."
+                       and l.esvigente =false
                     order by d.codigo, l.modulo";
 //        print_r($query);
 //        die;
@@ -357,13 +358,13 @@ select idsae,idacr
 
 //        dump($query);
 //        die;
-        
-        
+
+
         if ($po){
             $exist = true;
         }
         else{
-            $exist = false;        
+            $exist = false;
         }
         
         if ($periodos){
@@ -463,6 +464,7 @@ select idsae,idacr
                       and b.codigo = ".$aInfoUeducativa['ueducativaInfoId']['especialidad_cod']."
                       and ((d.codigo = 1) or (d.codigo = 2) or (d.codigo = 3))
                       and w.turno_tipo_id = ".$aInfoUeducativa['ueducativaInfoId']['superior_turno_tipo_id']."
+                      and l.esvigente =false
                     order by d.codigo, l.modulo";
 //        print_r($query);
 //        die;
@@ -1102,7 +1104,7 @@ select idsae,idacr
             $params = array();
             $sieav->execute($params);
             $saerow = $sieav->fetchAll();
-                // dump($saerow);die;
+         //   dump($saerow);die;
 //            die;
 
 
@@ -1231,7 +1233,7 @@ select idsae,idacr
         $idsip = $request->get('idsip');
         $idesp = $request->get('idesp');
         $totalhoras = $request->get('totalhoras');
-        $horas= [80,90,100,110,120];
+        $horas= [80,100,120];
        // $horasmodulo = $request->get('horas');
         $idacreditacion =$request->get('idacred');
         //  dump($request);die;
@@ -1258,7 +1260,7 @@ select idsae,idacr
     public function showModuloEditAction(Request $request)
     {  $em = $this->getDoctrine()->getManager();
         // dump($request);die;
-        $horas= [80,90,100,110,120];
+        $horas= [80,100,120];
         $idmodulo = $request->get('idmodulo');
         $idspm = $request->get('idspm');
         $modulo = $request->get('modulo');
@@ -1266,7 +1268,7 @@ select idsae,idacr
         $idesp = $request->get('idesp');
         $totalhoras = $request->get('totalhoras');
         $idacreditacion =$request->get('idacred');
-       for($i=0;$i<=4;$i++)
+       for($i=0;$i<=2;$i++)
        {
            if($horas[$i]==$horasmodulo){
                $horasid = $i;
@@ -1302,7 +1304,7 @@ select idsae,idacr
         $idspm = $form['idspm'];
         $idesp = $form['idesp'];
 
-        $horas= [80,90,100,110,120];
+        $horas= [80,100,120];
         $horasid = ($form['horas']);
         $horasmodulo = $horas[$horasid];
 
@@ -1607,7 +1609,7 @@ select idsae,idacr
     public function createModuloNuevoAction(Request $request)
     {
         $form = $request->get('form');
-        $horas= [80,90,100,110,120];
+        $horas= [80,100,120];
         //dump($form);die;
         //  $form = $request->get('form');
         // dump($form);die;

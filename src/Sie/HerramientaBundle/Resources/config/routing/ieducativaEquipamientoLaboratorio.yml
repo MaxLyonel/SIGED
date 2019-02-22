@@ -1,0 +1,19 @@
+herramienta_ieducativa_equipamiento_laboratorio_index:
+    path:     /index
+    defaults: { _controller: SieHerramientaBundle:IeducativaEquipamientoLaboratorio:index}
+    
+herramienta_ieducativa_equipamiento_laboratorio_detalle:
+    path:     /detalle
+    defaults: { _controller: SieHerramientaBundle:IeducativaEquipamientoLaboratorio:detalle}
+    
+herramienta_ieducativa_equipamiento_laboratorio_registro:
+    path:     /registro
+    defaults: { _controller: SieHerramientaBundle:IeducativaEquipamientoLaboratorio:registro}
+    
+herramienta_ieducativa_equipamiento_laboratorio_vista:
+    path:     /vista
+    defaults: { _controller: SieHerramientaBundle:IeducativaEquipamientoLaboratorio:vista}
+    
+herramienta_ieducativa_equipamiento_laboratorio_vista_pdf:
+    path:     /vista/pdf
+    defaults: { _controller: SieHerramientaBundle:IeducativaEquipamientoLaboratorio:vistaPdf}
