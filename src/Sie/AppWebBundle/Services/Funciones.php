@@ -1206,6 +1206,7 @@ class Funciones {
         return $tiempo;
     }
 
+
   /**
      * save the log information about sie file donwload
      * @param  [type] $form [description]
@@ -1241,6 +1242,123 @@ class Funciones {
           echo 'Excepción capturada: ', $ex->getMessage(), "\n";
         }
     }    
+
+
+    /**
+     * get the turnos
+     * @param type $turno
+     * @param type $sie
+     * @param type $nivel
+     * @param type $grado
+     * @return type
+     */
+    public function findturno($form) {
+
+        $arrInstitucioneducativa = json_decode($form['jsonInstitucioneducativa'], true);
+        
+        $aturnos = array();
+
+        $entity = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+        $query = $entity->createQueryBuilder('iec')
+                ->select('(iec.turnoTipo)')
+                ->where('iec.institucioneducativa = :sie')
+                // ->andWhere('iec.nivelTipo = :nivel')
+                // ->andwhere('iec.gradoTipo = :grado')
+                // ->andwhere('iec.paraleloTipo = :paralelo')
+                ->andWhere('iec.gestionTipo = :gestion')
+                ->setParameter('sie', $arrInstitucioneducativa['id'])
+                // ->setParameter('nivel', $nivel)
+                // ->setParameter('grado', $grado)
+                // ->setParameter('paralelo', $paralelo)
+                ->setParameter('gestion', $form['gestion'])
+                ->distinct()
+                ->orderBy('iec.turnoTipo', 'ASC')
+                ->getQuery();
+        $aTurnos = $query->getResult();
+        foreach ($aTurnos as $turno) {
+            $aturnos[$turno[1]] = $this->em->getRepository('SieAppWebBundle:TurnoTipo')->find($turno[1])->getTurno();
+        }
+        return $aturnos;
+        // $response = new JsonResponse();
+        // return $response->setData(array('aturnos' => $aturnos));
+    }
+
+
+    public function getlevel($data){
+
+        $entity = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+        $query = $entity->createQueryBuilder('iec')
+                ->select('(iec.nivelTipo)')
+                ->where('iec.institucioneducativa = :sie')
+                ->andwhere('iec.gestionTipo = :gestion')
+                ->andwhere('iec.turnoTipo = :idturno')
+                // ->andwhere('iec.nivelTipo != :nivel')
+                ->setParameter('sie', $data['sie'])
+                ->setParameter('gestion', $data['gestion'])
+                ->setParameter('idturno', $data['idturno'])
+                // ->setParameter('nivel', '13')
+                ->distinct()
+                ->orderBy('iec.nivelTipo', 'ASC')
+                ->getQuery();
+        $aNiveles = $query->getResult();
+        $arrNiveles = array();
+        foreach ($aNiveles as $nivel) {
+            $arrNiveles[$nivel[1]] = $this->em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel[1])->getNivel();
+        }
+        return $arrNiveles;
+    }
+
+    public function getgrado($data) {
+        //get grado
+        $agrados = array();
+        $entity = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+        $query = $entity->createQueryBuilder('iec')
+                ->select('(iec.gradoTipo)')
+                ->where('iec.institucioneducativa = :sie')
+                ->andWhere('iec.nivelTipo = :idnivel')
+                ->andwhere('iec.gestionTipo = :gestion')
+                ->andwhere('iec.turnoTipo = :idturno')
+                ->setParameter('sie', $data['sie'])
+                ->setParameter('idnivel', $data['idnivel'])
+                ->setParameter('gestion', $data['gestion'])
+                ->setParameter('idturno', $data['idturno'])
+                ->distinct()
+                ->orderBy('iec.gradoTipo', 'ASC')
+                ->getQuery();
+        $aGrados = $query->getResult();
+        foreach ($aGrados as $grado) {
+            $agrados[$grado[1]] = $this->em->getRepository('SieAppWebBundle:GradoTipo')->find($grado[1])->getGrado();
+        }
+
+      return $agrados;
+    }
+
+
+    public function getparalelo($data){
+        $aparalelos = array();
+        $entity = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+        $query = $entity->createQueryBuilder('iec')
+                ->select('(iec.paraleloTipo)')
+                ->where('iec.institucioneducativa = :sie')
+                ->andWhere('iec.nivelTipo = :nivel')
+                ->andwhere('iec.gradoTipo = :grado')
+                ->andwhere('iec.turnoTipo = :turno')
+                ->andwhere('iec.gestionTipo = :gestion')
+                ->setParameter('sie', $data['sie'])
+                ->setParameter('nivel', $data['idnivel'])
+                ->setParameter('grado', $data['idgrado'])
+                ->setParameter('turno', $data['idturno'])
+                ->setParameter('gestion', $data['gestion'])
+                ->distinct()
+                ->orderBy('iec.paraleloTipo', 'ASC')
+                ->getQuery();
+        $aParalelos = $query->getResult();
+        foreach ($aParalelos as $paralelo) {
+            $aparalelos[$paralelo[1]] = $this->em->getRepository('SieAppWebBundle:ParaleloTipo')->find($paralelo[1])->getParalelo();
+        }
+
+        return $aparalelos;
+    }
 
 
 }

@@ -1,0 +1,515 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+ <style>
+input[type=text], select {
+    width: 100%;
+    padding: 7px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+</style>
+
+    <div id="mensajes">
+        {% if app.session.flashBag.has('exito') %}
+            <div class="alert alert-success">
+                {% for msg in app.session.flashBag.get('exito') %}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ msg }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if app.session.flashBag.has('error') %}
+            <div class="alert alert-danger">
+                {% for msg in app.session.flashBag.get('error') %}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ msg }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="header-content">
+        <h2><i class="fa fa-table animated fadeIn"></i> Consultas de Maestros <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href={{ path('consultas_maestros_index') }}>Consultas</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><strong>Búsqueda por: </strong></h3>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body" >
+                                 <div class="row" >
+                                      <div class="col-md-12 col-sm-12 col-xs-12">
+                                            <!-- Start color horizontal tabs -->
+                                            <div class="panel panel-tab panel-tab-double shadow">
+                                                <!-- Start tabs heading -->
+                                                <div class="panel-heading no-padding">
+                                                    <ul class="nav nav-tabs">
+                                                        <li class="nav-border nav-border-top-primary">
+                                                            <a href="#institucion" data-toggle="tab" class="text-center" aria-expanded="false">
+                                                                <i class="fa fa-bank" style="color: #2ba9e1"></i> Institución Educativa
+                                                            </a>
+                                                        </li>
+                                                        <li class="nav-border nav-border-top-success" id="tab_ci">
+                                                            <a href="#ci" data-toggle="tab" class="text-center" aria-expanded="false">
+                                                                <i class="fa fa-credit-card" style="color: green "></i> C.I.
+                                                            </a>
+                                                        </li>
+
+                                                        <li class="nav-border nav-border-top-warning" id="tab_dp">
+                                                            <a href="#datospersonales" data-toggle="tab" class="text-center" aria-expanded="false">
+                                                                <i class="fa fa-user" style="color: orange "></i> Datos Personales
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div><!-- /.panel-heading -->
+                                                <!--/ End tabs heading -->
+
+                                                <!-- Start tabs content -->
+                                                <div class="panel-body">
+                                                    <div class="tab-content">
+                                                        <div class="tab-pane fade active in" id="institucion">
+                                                           <div class="row">
+                                                               <div class="col-md-2">
+                                                                   <h4> <label for="instiEducativa">Código SIE</label></h4>
+                                                               </div>
+                                                               <div class="col-md-3">
+                                                                 <input id="sie" class="col-md-12" type="text" value=""  placeholder="SIE Institución Educativa" onkeypress='return validaNumericos(event)'>
+                                                               </div>
+                                                               <div class="col-md-2">
+                                                                   <h4><label for="gestion">Gestión </label></h4>
+                                                               </div>
+                                                               <div class="col-md-3">
+                                                                   <select data-placeholder="Seleccionar Gestión" id="gestion" name="select_gestion"  class="form-control" style=" display: inline-block; border: 1px solid #ccc; border-radius: 4px;"  >
+                                                                       {% for gestionarray in gestionarray %}
+                                                                           <option value="{{ gestionarray.id }}">{{ gestionarray.gestion }}</option>
+                                                                       {% endfor %}
+                                                                   </select>
+                                                                  {# <input id="gestion" class="col-md-12"  placeholder="2018" value="2018" type="text">#}
+                                                               </div>
+
+
+                                                           </div>
+                                                            <div class="row">
+                                                                <div class="row" align="right">
+                                                                    <button id="buscar_instedu" onclick="realizar_Busqueda()" type="submit" class="btn btn-theme fa fa-search  rounded"> Buscar</button>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="tab-pane fade" id="ci">
+                                                            <div class="row">
+                                                                <div class="col-md-2">
+                                                                    <h4> <label for="c_i">Carnet de Identidad</label></h4>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <input id="ci_maestro" type="text" class="col-md-12" placeholder="Carnet de Identidad" >
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <h4><label for="gestion">Gestión </label></h4>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <select data-placeholder="Seleccionar Gestión" id="select_gestion" name="select_gestion"  class="form-control" style=" display: inline-block; border: 1px solid #ccc; border-radius: 4px;" >
+                                                                        {% for gestionarray in gestionarray %}
+                                                                            <option value="{{ gestionarray.id }}">{{ gestionarray.gestion }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                   {# <input type="text" placeholder="2018">#}
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="row" align="right">
+                                                                    <button id="buscar_ci" onclick="realizar_Busqueda_ci()" type="submit" class="btn btn-theme fa fa-search  rounded"> Buscar por CI</button>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="tab-pane fade" id="datospersonales"  onkeypress="return validar(event)">
+                                                            <div class="row">
+                                                                <div class="col-md-1">
+                                                                    <h4><label for="nombre">Nombres</label></h4>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <input id="nombre_maestro" type="text">
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <h4> <label for="paterno">Paterno</label></h4>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <input id="paterno_maestro" type="text">
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <h4><label for="materno">Materno </label></h4>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <input id="materno_maestro" type="text">
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="row" align="right">
+                                                                    <button id="buscar_ci" onclick="realizar_Busqueda_dp()" type="submit" class="btn btn-theme fa fa-search  rounded"> Buscar por CI</button>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div><!-- /.panel-body -->
+                                                <!--/ End tabs content -->
+                                            </div><!-- /.panel -->
+                                            <!--/ End color horizontal tabs -->
+                                        </div>
+                                  </div>
+                            </div><!-- /.panel-body -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+       <div class="row" id="resultado" hidden>
+        </div>
+
+    </div>
+
+{% endblock %}
+{% block javascripts%}
+    {{ parent() }}
+    <script>
+        $( document ).ready(function() {
+            var sw = {{ sw }};
+            if(sw==1)
+            {
+               $('#tab_ci').hide();
+               $('#tab_dp').hide();
+            }
+
+            cargatablas();
+        });
+        var cargatablas = function (identif){
+            // Setup - add a text input to each footer cell
+            $('#maestros_institucion tfoot th').each( function () {
+                var title = $(this).text();
+                if(title.trim() === "" || title === "Ver"){
+                    $(this).html('');
+                } else {
+                    $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+                }
+            } );
+
+            // DataTable
+            var table = $('#maestros_institucion').DataTable( {
+                    "order": [[ 0, "asc" ]],
+                    "columnDefs": [
+                        { "orderable": false, "targets": [0] }
+                    ],
+                }
+            );
+
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        };
+
+        function validaNumericos(event) {
+            if(event.charCode >= 48 && event.charCode <= 57){
+                return true;
+            }
+            return false;
+        }
+        function validar(e) {
+             tecla = (document.all) ? e.keyCode : e.which;
+              if (tecla==8) return true;
+             patron =/[A-Za-z\s]/;
+              te = String.fromCharCode(tecla);
+              return patron.test(te);
+        }
+
+
+        $('#sie').keypress(function(e) {
+            if(e.which == 13) {
+                realizar_Busqueda();
+            }
+        });
+
+        function realizar_Busqueda() {
+            var inst_edu = $('#sie').val();
+            var gestion = $('#gestion').val();
+            var imagen = '{{asset("img/loading96.gif") }}';
+
+            if(inst_edu !=''  ){
+                $.ajax({
+                    type: 'post',
+                    data:({inst_edu: inst_edu,gestion:gestion}),
+                    url: "{{ path('consulta_Maestro_institucioneducativa') }}",
+                    beforeSend: function () {
+                        swal({
+                            title: "Buscando...",
+                            text: "Espere un momento por favor",
+                            icon: imagen,
+                            buttons: false
+                        });
+
+                    },
+                    success: function (data) {
+                        $('#resultado').show();
+                        $('#resultado').empty();
+                        if(data==1){
+                            var alerta = '<div class="alert alert-danger alert-dismissible" role="alert">\n' +
+                                '  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                                '  <strong>Alerta!</strong> Unidad Educativa no econtrada.\n' +
+                                '</div>';
+                            $('#resultado').append(alerta);
+                        }
+                        else if(data==2){
+                            var alerta = '<div class="alert alert-danger alert-dismissible" role="alert">\n' +
+                                '  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                                '  <strong>Alerta!</strong> No tiene tuición sobre la unidad educativa .\n' +
+                                '</div>';
+                            $('#resultado').append(alerta);
+                        }
+                        else{
+                            $('#resultado').append(data);
+                        }
+
+                    },
+                    complete: function () {
+                        swal.stopLoading();
+                        swal.close();
+                        $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+                            $(".alert").slideUp(3000);
+                        });
+                    }
+                });
+            } else  {
+                swal('Debe Ingresar parámetros para la búsqueda');
+                return false;
+            }
+        }
+
+        $('#ci_maestro').keypress(function(e) {
+            if(e.which == 13) {
+                realizar_Busqueda_ci();
+            }
+        });
+
+
+        function realizar_Busqueda_ci() {
+
+            $('#resultado').hide();
+            var inst_edu = $('#sie').val();
+            var gestion = $('#select_gestion').val();
+            var ci = $('#ci_maestro').val();
+            var imagen = '{{ asset("img/loading96.gif") }}';
+            if(ci !=''){
+                $.ajax({
+                    type: 'post',
+                    data:({inst_edu:inst_edu,gestion:gestion,ci:ci}),
+                    url: "{{ path('consulta_Maestro_ci') }}",
+                    beforeSend: function () {
+                        swal({
+                            title: "Buscando...",
+                            text: "Espere un momento por favor",
+                            icon: imagen,
+                            buttons: false
+                        });
+                    },
+                    success: function (data) {
+                       // if(data !=1){
+                            $('#resultado').show();
+                            $('#resultado').empty();
+                            $('#resultado').append(data);
+                       /* }else{
+                            var alerta = '<div class="alert alert-danger alert-dismissible" role="alert">\n' +
+                                '  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                                '  <strong>Alerta!</strong> No tiene tuición sobre la unidad educativa .\n' +
+                                '</div>';
+                            $('#resultado').append(alerta);
+                        }*/
+
+                    },
+                    complete: function () {
+                        swal.stopLoading();
+                        swal.close();
+                        $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+                            $(".alert").slideUp(1000);
+                        });
+                    }
+                });
+            }
+            else {
+                swal('Debe Ingresar un Carnet para la búsqueda');
+                return false;
+            }
+
+        }
+
+
+        $('#nombre_maestro').keypress(function(e) {
+            if(e.which == 13) {
+                realizar_Busqueda_dp();
+            }
+        });
+        $('#paterno_maestro').keypress(function(e) {
+            if(e.which == 13) {
+                realizar_Busqueda_dp();
+            }
+        });
+        $('#materno_maestro').keypress(function(e) {
+            if(e.which == 13) {
+                realizar_Busqueda_dp();
+            }
+        });
+
+        function realizar_Busqueda_dp() {
+            $('#resultado').hide();
+            var inst_edu = $('#sie').val();
+            var nombre = $('#nombre_maestro').val();
+            var paterno = $('#paterno_maestro').val();
+            var materno = $('#materno_maestro').val();
+            var imagen = '{{ asset("img/loading96.gif") }}';
+            if(nombre !='' ||  paterno!= '' || materno!= ''  ){
+                $.ajax({
+                    type: 'post',
+                    data:({inst_edu: inst_edu,nombre:nombre,paterno:paterno,materno:materno}),
+                    url: "{{ path('consulta_Maestro_dp') }}",
+                    beforeSend: function () {
+                        swal({
+                            title: "Buscando...",
+                            text: "Espere un momento por favor",
+                            icon: imagen,
+                            buttons: false
+                        });
+                    },
+                    success: function (data) {
+                        if(data !=1){
+                            $('#resultado').show();
+                            $('#resultado').empty();
+                            $('#resultado').append(data);
+                        }else{
+                            var alerta = '<div class="alert alert-danger alert-dismissible" role="alert">\n' +
+                                '  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                                '  <strong>Alerta!</strong> No tiene tuición sobre la unidad educativa .\n' +
+                                '</div>';
+                            $('#resultado').append(alerta);
+                        }
+                    },
+                    complete: function () {
+                        swal.stopLoading();
+                        swal.close();
+                        $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+                            $(".alert").slideUp(1000);
+                        });
+                    }
+                });
+
+            }
+            else  {
+                swal('Debe Ingresar parámetros para la búsqueda');
+                return false;
+            }
+
+        }
+
+        function llenar(response)
+        {
+            var t = $('#maestros_institucion').DataTable({
+                "destroy": true,
+                "data": response,
+                "columns":[
+                    {"data":"nombre"},
+                    {"data":"nombre"},
+                    {"data":"paterno"},
+                    {"data":"materno"},
+                    {"data":"cargo"},
+                    {"data":"formacion"},
+                    {"data":"carnet"},
+                    {"data":"complemento"},
+                    {"data":"nombre"}
+
+                ],
+                "aoColumnDefs": [
+
+
+                    { "mRender": function (data, type, row) {
+
+                        return '<button type="button" class="btn btn-primary fa fa-eye rounded vermaestro"  data-id="'+row['carnet']+'" data-idg ="'+row['gestion_tipo_id']+'"  title="Detalles"></button>';
+                    },
+                        "aTargets": [8],
+                    },
+                ]
+            });
+            t.on( 'order.dt search.dt', function () {
+                t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                    cell.innerHTML = i+1;
+                } );
+            } ).draw();
+
+            $(document).on('click', '.vermaestro' , function () {
+                var ci_maestro = $(this).data('id');
+                var gestion_tipo_id = $(this).data('idg');
+               /* document.fm.ci = ci_maestro;
+                document.fm.gestion = gestion_tipo_id;
+                document.fm.submit();*/
+                $.ajax({
+                    type: 'post',
+                    data:({ci: ci_maestro,gestion:gestion_tipo_id,sw:1}),
+                    url: "{{ path('consulta_Maestro_institucioneducativa') }}",
+                    before: function (data) {
+                        swal({
+                            title: "Buscando...",
+                            text: "Espere un momento por favor",
+                            icon: imagen,
+                            buttons: false
+                        });
+                    },
+                    success: function (data) {
+                       /* console.log(data);
+
+                        location.href = "{{ path('consulta_Maestro_fichamaestro',{ 'data': "hfghf" }) }}";*/
+
+
+                    },
+                    complete: function () {
+
+                    }
+                });
+
+            });
+        }
+
+
+
+
+
+    </script>
+
+
+{% endblock %}

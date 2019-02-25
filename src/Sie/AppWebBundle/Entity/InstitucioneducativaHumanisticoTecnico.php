@@ -192,4 +192,60 @@ class InstitucioneducativaHumanisticoTecnico
     {
         return $this->institucioneducativaHumanisticoTecnicoTipo;
     }
+    /**
+     * @var \DateTime
+     */
+    private $fechaCreacion;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaModificacion;
+
+
+    /**
+     * Set fechaCreacion
+     *
+     * @param \DateTime $fechaCreacion
+     * @return InstitucioneducativaHumanisticoTecnico
+     */
+    public function setFechaCreacion($fechaCreacion)
+    {
+        $this->fechaCreacion = $fechaCreacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaCreacion
+     *
+     * @return \DateTime 
+     */
+    public function getFechaCreacion()
+    {
+        return $this->fechaCreacion;
+    }
+
+    /**
+     * Set fechaModificacion
+     *
+     * @param \DateTime $fechaModificacion
+     * @return InstitucioneducativaHumanisticoTecnico
+     */
+    public function setFechaModificacion($fechaModificacion)
+    {
+        $this->fechaModificacion = $fechaModificacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaModificacion
+     *
+     * @return \DateTime 
+     */
+    public function getFechaModificacion()
+    {
+        return $this->fechaModificacion;
+    }
 }

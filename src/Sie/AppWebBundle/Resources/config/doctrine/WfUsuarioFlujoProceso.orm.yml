@@ -1,0 +1,50 @@
+Sie\AppWebBundle\Entity\WfUsuarioFlujoProceso:
+    type: entity
+    table: wf_usuario_flujo_proceso
+    indexes:
+        IDX_12EF77DCDB38439E:
+            columns:
+                - usuario_id
+        IDX_12EF77DCEDC78DDF:
+            columns:
+                - flujo_proceso_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        esactivo:
+            type: boolean
+            nullable: false
+            comment: ''
+        lugarTipoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: lugar_tipo_id
+    manyToOne:
+        usuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        flujoProceso:
+            targetEntity: FlujoProceso
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                flujo_proceso_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

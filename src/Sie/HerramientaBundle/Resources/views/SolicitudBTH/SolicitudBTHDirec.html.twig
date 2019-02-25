@@ -1,0 +1,753 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+    <style type="text/css">
+        .swal-overlay {
+            background-color: rgba(43, 165, 137, 0.45);
+        }
+    </style>
+    <div class="header-content">
+        <h2><i class="fa fa-table animated fadeIn"></i> Nueva Solicitud BTH <span>Nueva Solicitud BTH </span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí12312:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href={{ path('solicitud_bth_index') }}>Nueva Solicitud BTH</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Formularios de Solicitudes</h3>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <div class="row">
+                                    {{form_start(form,{'attr':{'id':'formSolicitud'} })}}
+                                    <div class="col-md-4 col-md-offset-4">
+                                        <h3><strong>Seleccionar Tipo de Solicitud</strong></h3>
+                                        {{form_widget(form.solicitud)}}
+                                    </div>
+                                    {{form_end(form)}}
+                                </div>
+                            </div><!-- /.panel-body -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div class="row" >
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title" id="titulo">Formularios </h3>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="row" id="form_nuevo" >
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">1.- Información General</h3>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            {% set iedu = ieducativa[0] %}
+                                            {% set iedusu = ieducativa[1] %}
+                                            <div class="col-md-3">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <strong>Código RUE</strong>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <strong>Unidad Educativa</strong>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        {{ institucion.id }}
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        {{ iedu.institucioneducativa }}
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div><!-- /.panel-body -->
+                                </div>
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">2.- Localización</h3>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <strong>Departamento</strong>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <strong>Cantón</strong>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <strong>Distrito</strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        {{ ubicacion['departamento'] }}
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        {{ ubicacion['canton'] }}
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        {{ ubicacion['distrito'] }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <strong>Localidad</strong>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <strong>Zona</strong>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <strong>Dirección</strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        {{ ubicacion['localidad'] }}
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        {{ ubicacion['zona'] }}
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        {{ ubicacion['direccion'] }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><!-- /.panel-body -->
+                                </div>
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">3.- Cumplimiento de Requisitos</h3>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <strong>2.1 Informe</strong>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="ckbox ckbox-theme">
+                                                    <input id="informe"  type="checkbox">
+                                                    <label for="informe"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><!-- /.panel-body -->
+                                </div>
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">4.- Especialidad</h3>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <strong>Seleccionar las especialidades</strong>
+                                            </div>
+                                            <div class="col-md-3">
+                                            </div>
+                                            <div class="col-md-5">
+                                                <select data-placeholder="Seleccionar especialidad"  id="select_especialidad" name="select_especialidad[]"  class="chosen-select" multiple="" tabindex="-1" style="display: none;">
+                                                    {% for especialidad in especialidad %}
+                                                        <option value="{{ especialidad.id }}">{{ especialidad.especialidad }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <strong>Nivel al que se Aplica</strong>
+                                            </div>
+                                            <div class="col-md-3">
+                                            </div>
+                                            <div class="col-md-5">
+                                                <strong><span class="label label-primary">Nivel: Secundaria</span></strong>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="pull-right">
+                                                    <button class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicitudbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><!-- /.panel-body -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="form_regularizacion" >
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">1.- Información General</h3>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            {% set iedu = ieducativa[0] %}
+                                            {% set iedusu = ieducativa[1] %}
+                                            <div class="col-md-3">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <strong>Código RUE</strong>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <strong>Unidad Educativa</strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        {{ institucion.id }}
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        {{ iedu.institucioneducativa }}
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><!-- /.panel-body -->
+                                </div>
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">2.- Localización</h3>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <strong>Departamento</strong>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <strong>Cantón</strong>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <strong>Distrito</strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        {{ ubicacion['departamento'] }}
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        {{ ubicacion['canton'] }}
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        {{ ubicacion['distrito'] }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <strong>Localidad</strong>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <strong>Zona</strong>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <strong>Dirección</strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        {{ ubicacion['localidad'] }}
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        {{ ubicacion['zona'] }}
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        {{ ubicacion['direccion'] }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><!-- /.panel-body -->
+                                </div>
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">3.- Cumplimiento de Requisitos</h3>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <strong> Informe</strong>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="ckbox ckbox-theme">
+                                                    <input id="informeregularizacion" value="1" type="checkbox">
+                                                    <label for="informeregularizacion"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div><!-- /.panel-body -->
+                                </div>
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">4.- Especialidad</h3>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row" id="mensaje">
+                                            <div class="panel-body">
+                                                <div class="alert alert-success">
+                                                    <strong>Alerta!</strong> Su Unidad Educativa tiene especialidades que sufrieron cambios según las nuevas especialidades de la gestión 2019. Usted debe elegir una o ambas especialidades
+                                                    <br>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <strong>Lista de Especialidades</strong>
+                                            </div>
+                                            <div class="col-md-3">
+                                            </div>
+                                            <div class="col-md-5" id="second-chose">
+                                                <select data-placeholder="Seleccionar especialidad" id="lista_especialidades_ratificacion" name="lista_especialidades_ratificacion[]"  class="" multiple="" style="display: none;" >
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <strong>Curso al que se Aplica</strong>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <strong><span class="label label-primary">Nivel: Secundaria</span> <span >Grado: {{ grado }}</span> </strong>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="pull-right">
+                                                    <button id="btnenviar" class="btn btn-sm btn-facebook"  title="Enviar Solicitud" onclick="enviarSolicitudbth()"><i class="fa fa-pencil"></i> Enviar Solicitud</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {#<div class="row">
+                                            <a href="{{ path('solicitud_bth_imprimeDirector',{'idUE':institucion.id,'tramite_id':listatareas.id}) }}" class="btn btn-danger btn-xs"   title="Imprimir Formulario"><i class="glyphicon glyphicon-print"></i></a>
+                                        </div>#}
+                                    </div><!-- /.panel-body -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.panel-body -->
+        </div>
+    </div>
+
+        <div class="modal fade" id="recargar" tabindex="-1" role="dialog" style=" border-radius: 80px;" >
+            <div class="modal-dialog " role="document">
+                <div class="modal-content">
+                    {#<div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                    </div>#}
+                    <div class="modal-body">
+                        <h2 align="center">¡Su formulario fue enviado con éxito!.</h2>
+
+                        <div class="alert alert-danger">
+                            <strong>Nota.- !</strong> Descargue su comporbante en "Trámites Enviados".
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-facebook" onclick="recargar()">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts%}
+{{ parent() }}
+<script>
+    var campos_max  = 10;   //max de 10 campos
+    var x = 0;
+    $('#nueva_especialidad').click (function(e) {
+        e.preventDefault();
+        if (x < campos_max) {
+            $('#listas_especialidad').append('<div>\
+                                <input type="text" name="campo[]">\
+                                <a href="#" class="remover_campo"><span class=".text-danger"><strong>(-)</strong></span></a>\
+                                <br>\
+                                </div>');
+            x++;
+        }
+    });
+    // Remover o div anterior
+    $('#listas_especialidad').on("click",".remover_campo",function(e) {
+        e.preventDefault();
+        $(this).parent('div').remove();
+        x--;
+    });
+    function cargarFormularioSolicitud() {
+        var idsolicitud=$('#form_solicitud').val();
+        switch (true){
+            case (idsolicitud == 45):
+                document.getElementById("titulo").innerHTML = "Formulario de <strong><em>Registro Nuevo</em></strong>";
+                $('#form_regularizacion').hide();
+                $('#form_nuevo').show(2000);
+                break;
+            case (idsolicitud == 46)://ratificacion
+                document.getElementById("titulo").innerHTML= "Formulario de Ratificación";
+                $('#form_nuevo').hide();
+                $('#form_regularizacion').show(2000);
+                $.ajax({
+                    type: 'post',
+                    url: "{{ path('solicitud_bth_lista_especialidades') }}",
+                    data:{institucionid:{{ institucion.id }}},
+                    before: function () {
+                    },
+                    success: function (data) {
+                       // console.log(data);
+                        var select_array = [];
+                        $('#lista_especialidades_ratificacion').empty();
+                        $(data).each(function(i, v){ // indice, valor
+                            if (v.activo == false ) {
+                            $('#lista_especialidades_ratificacion').append('<option disabled="disabled" value="' + v.id + '">' + v.especialidad + '</option>');
+                            } else {
+                            $('#lista_especialidades_ratificacion').append('<option value="' + v.id + '">' + v.especialidad + '</option>');
+                            $('#mensaje').show();
+                            /*alert('Su unidada tiene especialidades que sufrieron cambio, tomar en cuenta.....');*/
+                               /* swal ( "Oops" ,  "Something went wrong!" ,  "alert" );*/
+                                swal({
+                                    icon: "warning",
+                                    text: "Una o todas de sus especialidades con las que cuenta su Unidad Educativa se vio afectada con la Homologación de especialidades - 2019," +'\n'+
+                                            "Por favor se pide una verificación de las mismas.",
+                                    value: true,
+                                    visible: true,
+                                    className: "",
+                                    closeModal: true,
+                                    button: "Entendido!",
+                                });
+
+                            }
+                            select_array.push(v.id);
+                        });
+                        $("#lista_especialidades_ratificacion").chosen({ width: "95%" });
+                        setTimeout(function () {
+                            $("#lista_especialidades_ratificacion").val(select_array).trigger('chosen:updated');
+                        },500);
+                    }
+                });
+                break;
+        }
+
+    }
+    function enviarSolicitudbth() {
+        /*
+        * Funcion que envia la solicitud BTH capturando los valor introducidos
+        * en el formulario.*/
+        var idsolicitud=$('#form_solicitud').val();
+        switch (true){
+            case (idsolicitud == 45): //Registro Nuevo
+                swal({
+                    title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
+                    text:  "La información llenada será enviada a la Dirección Distrital." +
+                    "Puede Descargar su formulario como comprobante en Trámites Enviados",
+                    icon:  "warning",
+                    buttons: true,
+                    dangerMode: true,
+                    buttons: ["Cancelar", "Continuar"],
+                })
+                    .then(function(willDelete)  {
+                        if (willDelete) {
+                            var institucionid={{ institucion.id }}
+                            var ip = [];
+                            if($('#informe:checked').val())
+                                ip.push({ informe : 1});
+                            else
+                            { swal("Debe seleccionar la casilla de informe."); return false;
+                                ip.push({ informe : 0 })
+                            };
+                            ip.push({institucionid : institucionid});
+                            if($('#select_especialidad').val()) {
+                                ip.push({select_especialidad : $('#select_especialidad').val()});
+                            } else {
+                                swal("Debe seleccionar al menos una especialidad.");
+                                return false;
+                            }
+                            var ipt=JSON.stringify(ip);
+                            var imagen = '{{ asset("img/loading96.gif") }}';
+
+                            $.ajax({
+                                type: 'post',
+                                url: "{{ path('solicitud_bth_enviosolicitud') }}",
+                                data:{ipt: ipt,id_distrito: {{ ubicacion['lugarTipoIdDistrito'] }},institucionid:{{ institucion.id }},idsolicitud:idsolicitud,sw:0},
+                                dataType : 'json',
+                                beforeSend: function () {
+                                    swal({
+                                        title: "Enviando...",
+                                        text: "Espere un momento por favor",
+                                        icon: imagen,
+                                        buttons: false
+                                    });
+                                },
+                                success: function (data) {
+
+                                    if (data==1 ){
+                                        swal.stopLoading();
+                                        swal.close();
+                                        $(".modal-backdrop ").css("display", "none");
+                                        $('#recargar').modal('show');
+                                        $(".modal-backdrop ").css("display", "none");
+
+                                    }
+                                    else if(data==2 ){
+                                        swal(" Su Unidad Educativa ya se declaro como BTH - Debe iniciar su trámite como 'Ratificacion'");
+                                    }else {
+                                        swal('Su formulario no se envío correctamente debido a que: \n' +
+                                            '- Su Unidad Educativa ya inicio su trámite como "REGISTRO NUEVO". \n' +
+                                            '- Su Unidad Educativa ya se encuentra registrado como BTH, ' +
+                                            '   Si fuera así le corresponderia iniciar su trámite como "RATIFICACÍON"');
+                                    }
+                                },
+                                complete: function () {
+                                    swal.stopLoading();
+                                    swal.close();
+                                }
+                            });
+                        }
+                    });
+                break;
+            case (idsolicitud == 46): //Ratificacion
+
+                swal({
+                    title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
+                    text:  "La información llenada será enviada a la Dirección Distrital." + '\n'+
+                    "Puede descargar su formulario como comprobante " +
+                    "en : Trámites Enviados" +'\n'+"",
+                    icon:  "warning",
+                    buttons: true,
+                    dangerMode: true,
+                    buttons: ["Cancelar", "Continuar"],
+                })
+                    .then(function(willDelete)  {
+                        if (willDelete) {
+                            var institucionid={{ institucion.id }}
+                            var ip = [];
+                            if($('#informeregularizacion:checked').val())
+                                ip.push({ informe : 1});
+                            else
+                            { swal("Debe seleccionar la casilla de informe."); return false;
+                                ip.push({ informe : 0 })
+                            };
+                            ip.push({institucionid : institucionid});
+                            var especialidades_id = [];
+                            /*$("#lista_especialidades_ratificacion").find("option").each(function(index, opc){
+                                especialidades_id.push(opc.value);
+                            });*/
+                            if($('#lista_especialidades_ratificacion').val()) {
+                                var verificar1 = false, verificar2 = false;
+                                var caso1 = false, caso2 = false;
+                                $("#lista_especialidades_ratificacion").find('option').each(function () {
+                                    if ($(this).is('[disabled=disabled]')) {
+                                        especialidades_id.push(this.value);
+                                    }
+                                    if (this.value == 41 || this.value == 42) {
+                                        verificar1 = true;
+                                    }
+                                    if (this.value == 64 | this.value == 65) {
+                                        verificar2 = true;
+                                    }
+                                });
+                                var seleccionado = $('#lista_especialidades_ratificacion').val();
+                                if (verificar1) {
+                                    for (var i in seleccionado) {
+                                        if (seleccionado[i] == 41 || seleccionado[i] == 42) {
+                                            especialidades_id.push(seleccionado[i]);
+                                            caso1 = true;
+                                        }
+                                    }
+                                    if (!caso1) {
+                                        swal("Debe seleccionar al menos una especialidad entre TEXTILES Y CONFECCIONES Y TEJIDOS Y TELARES.");
+                                        return false;
+                                    }
+                                }
+                                if (verificar2) {
+                                    for (var i in seleccionado) {
+                                        if (seleccionado[i] == 64 || seleccionado[i] == 65) {
+                                            especialidades_id.push(seleccionado[i]);
+                                            caso2 = true;
+                                        }
+                                    }
+                                    if (!caso2) {
+                                        swal("Debe seleccionar al menos una especialidad entre CARPINTERIA EN MADERA  o CARPINTERIA METALICA ");
+                                        return false;
+                                    }
+                                }
+                                ip.push({select_especialidad : especialidades_id});
+                                //console.log(especialidades_id);
+                            } else {
+                                swal("Debe seleccionar al menos una especialidad.");
+                                return false;
+                            } //alert(especialidades_id);
+                            console.log('res',especialidades_id);
+                            var ipt=JSON.stringify(ip);
+                            var imagen = '{{ asset("img/loading96.gif") }}';
+                            $.ajax({
+                                type: 'post',
+                                url: "{{ path('solicitud_bth_enviosolicitud') }}",
+                                data:{ipt: ipt,id_distrito: {{ ubicacion['lugarTipoIdDistrito'] }},institucionid:{{ institucion.id }},idsolicitud:idsolicitud,sw:0},
+                                dataType : 'json',
+                                beforeSend: function () {
+                                    swal({
+                                        title: "Enviando...",
+                                        text: "Espere un momento por favor",
+                                        icon: imagen,
+                                        buttons: false
+                                    });
+                                },
+                                success: function (data) {
+                                    if (data==1){
+                                        swal.stopLoading();
+                                        swal.close();+
+                                        $(".modal-backdrop ").css("display", "none");
+                                        $('#recargar').modal('show');
+                                        $(".modal-backdrop ").css("display", "none");
+
+                                    }
+                                    else if(data==2 ){
+                                        swal("Debe iniciar su trámite como 'Registro Nuevo'");
+                                    }else {
+                                        swal('Su formulario no se envío correctamente debido a que: \n '   +
+                                            '- Su Unidad Educativa ya inicio su trámite como "REGISTRO NUEVO o RATIFICACION.  \n' +
+                                            '- Su Unidad Educativa ya se encuentra registrado como BTH.');
+                                    }
+                                },
+                                complete: function () {
+                                    swal.stopLoading();
+                                    swal.close();
+                                }
+                            });
+                        }
+                    });
+                break;
+        }
+    }
+    function recargar() {
+        $('#recargar').modal('hide');
+        location.href = "{{ path('wf_tramite_index') }}";
+    }
+    $(document).ready(function(){
+            $('#form_nuevo').hide();
+            $('#form_regularizacion').hide();
+            $('#mensaje').hide();
+    });
+
+
+
+</script>
+{% endblock %}

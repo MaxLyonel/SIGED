@@ -115,22 +115,26 @@ e=>end: Fin|past
 {% for f in flujo %}
     {% if f.es_evaluacion =="1" %}
         {#{% if sw == 0 %}#}
-        {% if f.id == 33 %}
+        {% if f.id == 48 %}
             {{f.id}}(right)->c{{f.id}}
             {% set sw = 1 %}
         {% else %}
-            {{f.id}}->c{{f.id}}
+            {{f.id}}()->c{{f.id}}
             {% set sw = 1 %}
         {% endif %}
         {#{% endif %}#}
         {% if f.condicion == "SI" %}
-            {% if f.id == 33 %}
+            {% if f.id == 48 %}
                 c{{f.id}}(yes,top)->{{f.condicion_tarea_siguiente}}
             {% else %}
                 c{{f.id}}(yes)->{{f.condicion_tarea_siguiente}}
             {% endif %}
         {% else %}
-            c{{f.id}}(no)->{{f.condicion_tarea_siguiente}}
+            {% if f.condicion_tarea_siguiente == null %}
+               c{{f.id}}(no)->e    
+            {% else %}
+                c{{f.id}}(no)->{{f.condicion_tarea_siguiente}}
+            {% endif %}
         {% endif %}
     {% else %}
         {% set sw = 0 %}
@@ -141,6 +145,7 @@ e=>end: Fin|past
             {% if f.tarea_sig_id == null %}
                 {{f.id}}->e
             {% else %}
+                
                 {{f.id}}->{{f.tarea_sig_id}}
             {% endif %}
         {% endif %}

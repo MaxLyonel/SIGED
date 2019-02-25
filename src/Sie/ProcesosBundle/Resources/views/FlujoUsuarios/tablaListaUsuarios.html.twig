@@ -1,0 +1,75 @@
+<div class="panel">
+    {% if app.session.flashBag.has('exito') %}
+            <div class="alert alert-success">
+                {% for msg in app.session.flashBag.get('exito') %}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ msg }}</br>
+                {% endfor %}
+            </div>
+    {% endif %}
+    {% if app.session.flashBag.has('error') %}
+        <div class="alert alert-danger">
+            {% for msg in app.session.flashBag.get('error') %}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                {{ msg }}</br>
+            {% endfor %}
+        </div>
+    {% endif %}    
+    <div class="panel-heading">
+        <div class="pull-right">
+            <button type="button" class="btn btn-lilac" data-toggle="modal" data-target="#modal" data-placement="top" onclick="nuevoUsuario()"><i class="fa fa-plus"></i>Asignar nuevo usuario</button>
+        </div>
+        <div class="clearfix"></div>
+    </div><!-- /.panel-heading -->
+    <div class="panel-body">
+        <div class="table-responsive col-md-12">
+            <table class="table table-bordered table-striped table-primary" id="data_tabla">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Nombre</th>
+                        <th>Paterno</th>
+                        <th>Materno</th>
+                        <th>Rol</th>
+                        <th>Tarea</th>
+                        <th>Lugar</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Nombre</th>
+                        <th>Paterno</th>
+                        <th>Materno</th>
+                        <th>Rol</th>
+                        <th>Tarea</th>
+                        <th>Lugar</th>
+                        <th>Acciones</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                {% for u in usuarios %}
+                    <tr>
+                        <td>{{ u.username }}</a></td>
+                        <td>{{ u.nombre }}</td>
+                        <td>{{ u.paterno }}</td>
+                        <td>{{ u.materno }}</td>
+                        <td>{{ u.rol }}</td>
+                        <td>{{ u.procesoTipo }}</td>
+                        <td>{{ u.lugar }}</td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar Usuario" onclick="eliminar({{u.id}})">
+                                Eliminar<i class="glyphicon glyphicon-trash"></i>
+                            </button>
+                            <button type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#modal" data-placement="top" title="Derivar Trámites" onclick="derivar({{u.id}})">
+                                Derivar Trámites<i class="glyphicon glyphicon-pencil"></i>
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,115 @@
+tramite_rue:
+    path:     /
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:index" }
+
+tramite_rue_inbox:
+    path:     /inbox
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:inbox" }
+
+tramite_rue_recepcion_distrito:
+    path:     /recepciondistrito
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:recepcionDistrito" }
+
+tramite_rue_buscar_rue:
+    path:     /buscarrue
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:buscarRue" }
+
+tramite_rue_recepcion_distrito_guardar:
+    path:     /recepciondistritoguardar1
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:recepcionDistritoGuardar" }
+
+tramite_rue_recepcion_distrito_nuevo:
+    path:     /{id}/recepciondistritonuevo
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:recepcionDistritoNuevo" }
+
+tramite_rue_informe_distrito_nuevo:
+    path:     /informedistritonuevo
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:informeDistritoNuevo" }
+
+tramite_rue_informe_distrito_guardar:
+    path:     /informedistritoguardar
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:informeDistritoGuardar" }
+
+tramite_rue_recepcion_departamental_nuevo:
+    path:     /{id}/recepciondepartamentalnuevo
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:recepcionDepartamentalNuevo" }
+
+tramite_rue_recepcion_departamental_guardar:
+    path:     /recepciondepartamentalguardar
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:recepcionDepartamentalGuardar" }
+
+tramite_rue_verifica_subdireccion_departamental_nuevo:
+    path:     /{id}/verificasubdirecciondepartamentalnuevo
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:verificaSubdireccionDepartamentalNuevo" }
+
+tramite_rue_verifica_subdireccion_departamental_guardar:
+    path:     /verificasubdirecciondepartamentalguardar
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:verificaSubdireccionDepartamentalGuardar" }
+
+tramite_rue_verifica_juridica_departamental_nuevo:
+    path:     /{id}/verificajuridicadepartamentalnuevo
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:verificaJuridicaDepartamentalNuevo" }
+
+tramite_rue_verifica_juridica_departamental_guardar:
+    path:     /verificajuridicadepartamentalguardar
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:verificaJuridicaDepartamentalGuardar" }
+
+tramite_rue_envia_formularios_departamental_nuevo:
+    path:     /{id}/enviaformulariosdepartamentalnuevo
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:enviaFormulariosDepartamentalNuevo" }
+
+tramite_rue_envia_formularios_departamental_guardar:
+    path:     /enviaformulariosdepartamentalguardar
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:enviaFormulariosDepartamentalGuardar" }
+    
+tramite_rue_analisis_tecnico_minedu_nuevo:
+    path:     /{id}/analisistecnicominedunuevo
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:analisisTecnicoMineduNuevo" }
+
+tramite_rue_analisis_tecnico_minedu_guardar:
+    path:     /analisistecnicomineduguardar
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:analisisTecnicoMineduGuardar" }
+
+tramite_rue_flujoseguimiento_verflujo:
+    path:     /verflujo
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:verFlujoRue" }
+
+tramite_rue_le_buscar_provincias:
+     path:    /provincias/{idDepartamento}/
+     defaults: { _controller: "SieHerramientaBundle:TramiteRue:provincias" }
+     options:
+         expose: true
+
+tramite_rue_le_buscar_municipios:
+     path:    /municipios/{idProvincia}/
+     defaults: { _controller: "SieHerramientaBundle:TramiteRue:municipios" }
+     options:
+         expose: true
+tramite_rue_le_buscar_cantones:
+     path:    /cantones/{idMunicipio}/
+     defaults: { _controller: "SieHerramientaBundle:TramiteRue:cantones" }
+     options:
+         expose: true
+tramite_rue_le_buscar_localidades:
+     path:    /localidades/{idCanton}/
+     defaults: { _controller: "SieHerramientaBundle:TramiteRue:localidades" }
+     options:
+         expose: true
+
+tramite_rue_le_buscar_distritos:
+     path:    /distritos/{idDepartamento}/
+     defaults: { _controller: "SieHerramientaBundle:TramiteRue:distritos" }
+     options:
+         expose: true 
+
+tramite_rue_buscar_edificio:
+    path:     /buscaredificio
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:buscaredificio" }
+
+tramite_rue_reporte_recepcion_distrito:
+    path:     /{idtramite}/{id_td}/ruereporterecepciondistrito
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:rueReporteRecepcionDistrito" }
+
+tramite_rue_reporte_informe_distrito:
+    path:     /{idtramite}/{id_td}/ruereporteinformedistrito
+    defaults: { _controller: "SieHerramientaBundle:TramiteRue:rueReporteInformeDistrito" }
