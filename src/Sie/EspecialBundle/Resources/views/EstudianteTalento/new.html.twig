@@ -1,0 +1,252 @@
+{% extends 'layoutEspecialSie.html.twig' %}
+{#{% block stylesheets %}
+    {{parent()}}
+    <!-- <link href="{{asset('css/jquery-ui.min.css')}}" rel="stylesheet"> -->
+{% endblock %}#}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Talento Extraordinario <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('talento_extraordinario_index')}}">Inicio</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Nuevo</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3 class="panel-title">Nuevo Estudiante</h3>
+                            </div>
+                            {#<div class="col-md-6 text-right">
+                                <a href="{{path('talento_extraordinario_index')}}" class="btn btn-default"><i class="fa fa-angle-left"></i> Volver</a>
+                            </div>#}
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form class="form-inline text-center">
+                                  <div class="form-group">
+                                    <div class="input-group">
+                                      <input value="5198000720074678" type="text" class="form-control" id="rude" placeholder="Buscar por RUDE">
+                                      <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                                    </div>
+                                  </div>
+                                  <button type="button" class="btn btn-primary" id="buscar" onclick="searchClick()">Buscar</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div id="carga"></div>
+                        <hr>
+                        <div class="row">
+                            <form id="registro" autocomplete="off">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="nombre">Nombre</label>
+                                        <input type="text" class="form-control noedit" id="nombre" name="nombre" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="paterno">Paterno</label>
+                                        <input type="text" class="form-control noedit" id="paterno" name="paterno">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="materno">Materno</label>
+                                        <input type="text" class="form-control noedit" id="materno" name="materno">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label for="cedula">Cédula Identidad</label>
+                                                <input type="text" class="form-control noedit" id="cedula" name="cedula" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="complemento">Complemento</label>
+                                                <input type="text" class="form-control noedit" id="complemento" name="complemento">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="fecha_nacimiento">Fecha Nacimiento</label>
+                                        <input type="text" class="form-control noedit" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="hidden" id="estudiante_ins_id" name="estudiante_ins_id">
+                                    <div class="form-group">
+                                        <label for="institucion_educativa">Unidad Educativa</label>
+                                        <input type="text" class="form-control noedit" id="institucion_educativa" name="institucion_educativa">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="centro_inscripcion">Centro Inscripción</label>
+                                        <select type="text" class="form-control" id="centro_inscripcion" name="centro_inscripcion" required>
+                                            <option value="" disabled selected>Seleccione</option>
+                                            {% for item in centros %}
+                                            <option value="{{ item.id }}">{{ item.institucioneducativa }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="fecha_solicitud">Fecha Solicitud</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control noedit" id="fecha_solicitud" name="fecha_solicitud" data-date-format="dd/mm/yyyy" required>
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-center">
+                                    <button type="submit" class="btn btn-primary" id="guardar">Guardar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    {#<script src="{{asset('js/jquery-ui.min.js')}}"></script>#}
+    <script>
+        $(document).ready(function() {
+            $("#centro_inscripcion").select2();
+        });
+        $('.noedit').keydown(function() {
+            //code to not allow any changes to be made to input field
+            return false;
+        });
+        $("#fecha_solicitud").datepicker({ autoclose: true, todayHighlight: true });
+        $('#rude').keypress(function (event) {
+            if (event.keyCode === 10 || event.keyCode === 13) {
+                event.preventDefault();
+                searchEstudiante();
+            }
+        });
+        function searchClick() {
+            searchEstudiante();
+        }
+        function searchEstudiante() {
+            var rude = $('#rude').val();
+            if (rude != "") {
+                $("#buscar").attr('disabled', true);
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('talento_extraordinario_search'),
+                    data: {'rude': rude},
+                    beforeSend: function () {
+                        $("#carga").empty();
+                        $("#carga").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                        clearInput();
+                    },
+                    success: function (data) {
+                        $("#carga").empty();
+                        if (data.msg == 'exito') {
+                            $("#nombre").val(data.estudiante.nombre);
+                            $("#paterno").val(data.estudiante.paterno);
+                            $("#materno").val(data.estudiante.materno);
+                            $("#cedula").val(data.estudiante.cedula);
+                            $("#complemento").val(data.estudiante.complemento);
+                            var fechanacimiento = data.estudiante.fecha_nacimiento.date.length>0?data.estudiante.fecha_nacimiento.date.substring(0, 10):'';
+                            if (fechanacimiento != '') {
+                                fechanacimiento = fechanacimiento.split('-').reverse().join('/');
+                            }
+                            $("#fecha_nacimiento").val(fechanacimiento);
+                            $("#institucion_educativa").val(data.estudiante.institucion_educativa);
+                            $("#estudiante_ins_id").val(data.estudiante.estudiante_ins_id);
+                        } else if (data.msg == 'nocurso') {
+                            mesage('warning', 'Notificación', 'Estudiante no está inscrito en la gestión actual.');
+                        } else if (data.msg == 'noins') {
+                            mesage('warning', 'Notificación', 'Estudiante no está inscrito.');
+                        } else if (data.msg == 'noest') {
+                            mesage('warning', 'Notificación', 'El estudiante no existe.');
+                        } else if (data.msg == 'existe') {
+                            mesage('warning', 'Notificación', 'El estudiante ya postuló con anterioridad.');
+                        }
+                        $("#buscar").attr('disabled', false);
+                    },
+                    error: function (error) {
+                        $("#buscar").attr('disabled', false);
+                    }
+                });
+            } else {
+                mesage('info', 'Alerta', 'Ingrese código RUDE del estudiante');
+            }
+        }
+
+        function mesage(tipo, titulo, msg) {
+            $("#carga").append('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
+                '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                '<strong>'+ titulo +'</strong> '+ msg +' </div>');
+            setTimeout(function () { $("#carga").empty(); }, 3500);
+        }
+
+        function clearInput() {
+            $("#nombre").val('');
+            $("#paterno").val('');
+            $("#materno").val('');
+            $("#cedula").val('');
+            $("#complemento").val('');
+            $("#fecha_nacimiento").val('');
+            $("#institucion_educativa").val('');
+            $("#estudiante_ins_id").val('');
+            // $("#centro_inscripcion").val('');
+            $("#fecha_solicitud").val('');
+            $('#centro_inscripcion').val('').trigger('change')
+        }
+
+        $("#registro").submit( function (event) {
+            event.preventDefault();
+            $("#guardar").attr('disabled', true);
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('talento_extraordinario_save'),
+                data: $(this).serialize(),
+                beforeSend: function () {
+                    $("#carga").empty();
+                    $("#carga").append('<div class="text-center">Guardando datos</div>');
+                },
+                success: function (data) {
+                    $("#guardar").attr('disabled', false);
+                    $("#carga").empty();
+                    if (data.msg == 'exito') {
+                        clearInput();
+                    } else {
+                        mesage('error', 'Error', 'Error al guardar datos.');
+                    }
+                },
+                error: function (error) {
+                    $("#guardar").attr('disabled', false);
+                }
+            });
+        });
+        /*$(function () {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('buscarestudiantes_institucion_especial'),
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    $("#form_c_rude").autocomplete({
+                        source: data
+                    });
+                }
+            });
+        })*/
+    </script>
+{% endblock %}
+
+

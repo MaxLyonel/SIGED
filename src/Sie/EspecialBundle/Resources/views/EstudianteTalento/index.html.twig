@@ -1,0 +1,173 @@
+{% extends 'SieEspecialBundle:Default:sie.html.twig' %}
+{% block contentoption %}
+
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Talento Extraordinario <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li class="active">
+                    <i class="fa fa-home"></i>
+                    <a href="#">
+                        Inicio
+                    </a>
+                    {#<i class="fa fa-angle-right"></i>#}
+                </li>
+                {#<li class="active"><i class="fa fa-home"></i>Index</li>#}
+            </ol>
+        </div>
+    </div>
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3 class="panel-title">Estudiantes registrados</h3>
+                            </div>
+                            {#<div class="col-md-6 text-right">
+                                <a href="{{path('talento_extraordinario_new')}}" class="btn btn-primary"><i class="fa fa-plus"></i> Nuevo</a>
+                            </div>#}
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="talento"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modalEdit" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Agregar Informe</h4>
+                </div>
+                <form id="modifica" action="">
+                    <div class="modal-body">
+                        <p class="text-primary" id="estudiante"></p>
+                        <input type="hidden" id="talento_id" name="talento_id" required>
+                        <div class="form-group">
+                            <label for="es_talento">Es Talento?</label>
+                            <select type="text" class="form-control" id="es_talento" name="es_talento" required>
+                                <option value="" disabled selected>Seleccione...</option>
+                                <option value="true">Si</option>
+                                <option value="false">No</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="nro_informe">Número de Informe</label>
+                            <input type="text" class="form-control" id="nro_informe" name="nro_informe" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="informe">Documento Informe</label>
+                            <input type="file" class="form-control" id="informe" name="informe" accept=".pdf" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+        $(document).ready(function(){
+            listTE();
+            cargatablas();
+        });
+        var listTE = function () {//gestionid
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('talento_extraordinario_dtlist'),//, {'gestionid': gestionid}
+                beforeSend: function () {
+                    $("#talento").empty();
+                    $("#talento").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $("#listaTE").remove();
+                    $("#talento").empty();
+                    $("#talento").append(data);
+                    cargatablas();
+                }
+            });
+        };
+
+        var cargatablas = function (){
+            $('#listaTE tfoot th').each( function () {
+                var title = $(this).text();
+                if(title.trim() === "" || title === "#" || title === "Acciones"){
+                    $(this).html('');
+                } else {
+                    $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+                }
+            } );
+
+            // DataTable
+            var table = $('#listaTE').DataTable( {
+                    "order": [[ 1, "asc" ]],
+                    "columnDefs": [
+                        { "orderable": false, "targets": [0,8] }
+                    ],
+                }
+            );
+
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        };
+
+        function showModalEdit(id, nombre, paterno, materno) {
+            $("#talento_id").val(id);
+            $("#estudiante").empty();
+            $("#estudiante").append('<b>Estudiante: </b>'+ nombre +' '+ paterno +' '+ materno);
+            $("#modalEdit").modal('show');
+        }
+
+        $("#modifica").submit(function (event) {
+            event.preventDefault();
+            $("#actualiza").attr('disabled', true);
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('talento_extraordinario_update'),
+                data: $(this).serialize(),
+                /*beforeSend: function () {
+                    $("#carga").empty();
+                    $("#carga").append('<div class="text-center">Guardando datos</div>');
+                },*/
+                success: function (data) {
+                    $("#actualiza").attr('disabled', false);
+                    // $("#carga").empty();
+                    if (data.msg == 'exito') {
+                        $("#modalEdit").modal('hide');
+                    } else {
+                        // mesage('error', 'Error', 'Error al guardar datos.');
+                    }
+                },
+                error: function (error) {
+                    $("#actualiza").attr('disabled', false);
+                }
+            });
+        });
+    </script>
+{% endblock %}

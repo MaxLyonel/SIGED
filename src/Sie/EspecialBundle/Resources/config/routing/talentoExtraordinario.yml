@@ -1,0 +1,31 @@
+talento_extraordinario_index:
+    path:     /
+    defaults: { _controller: SieEspecialBundle:EstudianteTalento:index }
+
+talento_extraordinario_new:
+    path:     /nuevo
+    defaults: { _controller: SieEspecialBundle:EstudianteTalento:new }
+
+talento_extraordinario_search:
+    path:     /buscar
+    defaults: { _controller: SieEspecialBundle:EstudianteTalento:searchStudent }
+    options:
+        expose: true
+
+talento_extraordinario_dtlist:
+    path:     /dtlist
+    defaults: { _controller: SieEspecialBundle:EstudianteTalento:dtlist }
+    options:
+        expose: true
+
+talento_extraordinario_save:
+    path:     /guardar
+    defaults: { _controller: SieEspecialBundle:EstudianteTalento:save }
+    options:
+        expose: true
+
+talento_extraordinario_update:
+    path:     /actualiza
+    defaults: { _controller: SieEspecialBundle:EstudianteTalento:update }
+    options:
+        expose: true
