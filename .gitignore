@@ -5,4 +5,5 @@ web/empfiles/*
 web/uploads/*                                                                                                                          
 web/downloadempfiles/*
 app/config/parameters.yml
-.idea/
+.idea/*
+src\Sie\AppWebBundle\Controller\DefaultController.php

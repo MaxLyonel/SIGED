@@ -1,8 +1,4 @@
 {% extends 'layoutEspecialSie.html.twig' %}
-{#{% block stylesheets %}
-    {{parent()}}
-    <!-- <link href="{{asset('css/jquery-ui.min.css')}}" rel="stylesheet"> -->
-{% endblock %}#}
 {% block contentoption %}
     <div class="header-content">
         <h2><i class="fa fa-table"></i> Talento Extraordinario <span></span></h2>
@@ -232,20 +228,6 @@
                 }
             });
         });
-        /*$(function () {
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('buscarestudiantes_institucion_especial'),
-                beforeSend: function () {
-
-                },
-                success: function (data) {
-                    $("#form_c_rude").autocomplete({
-                        source: data
-                    });
-                }
-            });
-        })*/
     </script>
 {% endblock %}
 
