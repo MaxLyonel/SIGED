@@ -29,6 +29,7 @@ class NotasMaestroController extends Controller {
                 ->innerJoin('SieAppWebBundle:Institucioneducativa','ie','with','mi.institucioneducativa = ie.id')
                 ->innerJoin('SieAppWebBundle:GestionTipo','gt','with','mi.gestionTipo = gt.id')
                 ->where('mi.persona = :idPersona')
+                ->andWhere('gt.id >= 2016')
                 ->orderBy('gt.id', 'desc')
                 ->setParameter('idPersona',$this->session->get('personaId'))
                 ->getQuery()

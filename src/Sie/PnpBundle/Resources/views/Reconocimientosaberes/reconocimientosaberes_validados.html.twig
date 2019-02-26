@@ -79,7 +79,7 @@
                                 </div>
                             </div>
                             <div class="form-group col-xs-12 col-lg-2">
-                                <button type="submit" class="btn btn-success" onclick="return ver_fechas(inicio,fin)">Ver</button>
+                                <button type="submit" class="btn rounded btn-success" onclick="return ver_fechas(inicio,fin)">Ver</button>
                             </div>
                         </form>
                     </div>
@@ -122,7 +122,7 @@
                                                 <td>En Revisi&oacute;n...</td>
                                             {% else %}
                                                 <td>
-                                                    <a role="button" class="btn btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_reconocimiento_saberes_imprimir', { 'id_enc': fila.reconocimiento_saberes_id_enc}) }}" > Certificaci&oacute;n</a>
+                                                    <a role="button" class="btn rounded btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_reconocimiento_saberes_imprimir', { 'id_enc': fila.reconocimiento_saberes_id_enc}) }}" > Certificaci&oacute;n</a>
                                                 </td>
                                             {% endif %}
                                         </tr>

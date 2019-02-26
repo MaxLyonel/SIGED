@@ -9,11 +9,16 @@
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
-                    <a href="#">Recibidos</a>
+                    <a href="#">Inicio</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
-
-                <li class="active">Index</li>
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('info_especial_open', {'form':{'idInstitucion': institucion.id,'gestion':gestion,'institucioneducativa':institucion.institucioneducativa,'institucioneducativaTipoId':4,'data':''}})}}">Menu Principal</a>
+                    <i class="fa fa-angle-right">
+                    </i>
+                </li>
+                <li class="active"><a href="#">Centro Educativo</a></li>
             </ol>
         </div><!-- /.breadcrumb-wrapper -->
     </div><!-- /.header-content -->

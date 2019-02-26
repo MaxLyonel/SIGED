@@ -45,12 +45,12 @@
                             <input type="number" min="0" max="999" maxlength="3" id="modulo_emergente_horas" name="modulo_emergente_horas" class="form-control" required="required" {% if plan == 2%}value="{{duracionhoras}}" {% endif %}/>
                             </div>
                             <hr>
-                            <div align="center"><button type="submit" class="btn btn-success btn-large glyphicon glyphicon-pencil"> Guardar Cambios</button></div>
+                            <div align="center"><button type="submit" class="btn btn-success btn-large rounded glyphicon glyphicon-pencil"> Guardar Cambios</button></div>
                         </form>     
                     </div>
                 </div>
                 <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary rounded" data-dismiss="modal">Cerrar</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -68,7 +68,7 @@
                     </div>
                 </div>
                  <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary rounded" data-dismiss="modal">Cerrar</button>
           </div>                 
             </div>                
         </div>
@@ -86,7 +86,7 @@
                     </div>
                 </div>
                  <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary rounded" data-dismiss="modal">Cerrar</button>
           </div>                 
             </div>                
         </div>
@@ -120,7 +120,7 @@
                         </div>
                         <div class="col-lg-4">
                             </br>
-                            <button type="button" class="btn btn-success" href= "#" onclick="BuscarEstudiante()">Buscar</button>
+                            <button type="button" class="btn btn-success rounded" href= "#" onclick="BuscarEstudiante()">Buscar</button>
                         </div>
                     </div>     
                 </form>
@@ -130,7 +130,7 @@
                 </div>             
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary rounded" data-dismiss="modal">Cerrar</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -228,12 +228,12 @@
                             </div></br>
                             {% endif %}
                             <div class="col-lg-12 col-md-12" align="center">&nbsp;</div>
-                            <div><button type="submit" class="btn btn-success btn-large glyphicon glyphicon-pencil"> Guardar Cambios</button></div>
+                            <div><button type="submit" class="btn btn-success btn-large glyphicon glyphicon-pencil rounded"> Guardar Cambios</button></div>
                         </form>
                     </div>
                 </div>
                  <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary rounded" data-dismiss="modal">Cerrar</button>
                   </div>
             </div>                
         </div>
@@ -316,6 +316,7 @@
                         Lista de Participantes del Curso
                     </div>
                     <div class="panel-body">
+                    <button class="btn btn-xs btn-danger rounded glyphicon glyphicon-copy" id="copy-button" data-clipboard-target="#tablaListadoPersonas"> Copiar Lista</button>
                         <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
                             <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
                                 <thead>
@@ -345,29 +346,31 @@
                                         {% if plan == 2 %}
                                             <td>
                                                 {% if esactivo == 1 %}
+                                                    {#}Rudeal
                                                     {% if estudiante.rude_id != "" %}
-                                                        <a role="button" class="btn btn-xs btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_rudeal', { 'id_enc': estudiante.rude_id_enc }) }}" title="Imprimir Rudeal"></a>
-                                                    {% endif %}
+                                                        <a role="button" class="btn btn-xs btn-primary rounded glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_rudeal', { 'id_enc': estudiante.rude_id_enc }) }}" title="Imprimir Rudeal"></a>
+                                                    {% endif %}{#}
                                                 {% else %}  
+                                                    {#}Rudeal
                                                     {% if estudiante.rude_id != "" %}
-                                                        <a role="button" class="btn btn-xs btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_rudeal', { 'id_enc': estudiante.rude_id_enc }) }}" title="Imprimir Rudeal"></a>
-                                                    {% endif %}
-                                                    <a href="#" role="button" onclick="SeeRudeal('{{estudiante.inscripcion_id}}',{{ datos.id }})" class="btn btn-xs btn-success glyphicon glyphicon-edit" title="Editar Rudeal"></a>
+                                                        <a role="button" class="btn btn-xs btn-primary rounded glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_rudeal', { 'id_enc': estudiante.rude_id_enc }) }}" title="Imprimir Rudeal"></a>
+                                                    {% endif %}{#}
+                                                    <a href="#" role="button" onclick="SeeRudeal('{{estudiante.inscripcion_id}}',{{ datos.id }})" class="btn btn-xs rounded btn-success glyphicon glyphicon-edit" title="Editar Rudeal"></a>
                                                 {% endif %}    
                                             </td>
                                         {% endif %}
                                         <td>
                                         {% if esactivo == 1 %}
-                                            <a role="button" class="btn btn-xs btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_boletaelectronica', { 'id_enc': estudiante.inscripcion_id_enc~"|"~datos.ciclo_tipo_id~"|"~datos.grado_tipo_id}) }}" title="Libreta Electronica"></a>
+                                            <a role="button" class="btn btn-xs btn-primary rounded glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_boletaelectronica', { 'id_enc': estudiante.inscripcion_id_enc~"|"~datos.ciclo_tipo_id~"|"~datos.grado_tipo_id}) }}" title="Libreta Electronica"></a>
                                             <a href="#" role="button" title="Ver Calificaciones" onclick="SeeNotasNoEdit('{{estudiante.inscripcion_id}}',{{ datos.id }})" class="glyphicon glyphicon-list btn-xs btn-info"></a>
                                         {% else %}
                                             {% if estudiante.rude_id == "" and plan == 2 %}
-                                                <a role="button" class="btn btn-xs btn-default glyphicon glyphicon-list" title="Debe llenar primero el RUDEAL para editar CALIFICACIONES" disabled="disabled" onclick="alert('Debe llenar primero el RUDEAL para editar CALIFICACIONES')"></a>
+                                                <a role="button" class="btn btn-xs btn-default rounded glyphicon glyphicon-list" title="Debe llenar primero el RUDEAL para editar CALIFICACIONES" disabled="disabled" onclick="alert('Debe llenar primero el RUDEAL para editar CALIFICACIONES')"></a>
                                             {% else %}
-                                                <a href="#" role="button" onclick="SeeNotas('{{estudiante.inscripcion_id}}',{{ datos.id }})" class="btn btn-xs btn-primary glyphicon glyphicon-list" title="Editar Calificaciones"></a>
+                                                <a href="#" role="button" onclick="SeeNotas('{{estudiante.inscripcion_id}}',{{ datos.id }})" class="btn btn-xs rounded btn-primary glyphicon glyphicon-list" title="Editar Calificaciones"></a>
                                             {% endif %}
-                                            <a href="#" role="button" onclick="FechaNacEdit('{{estudiante.estudiante_id}}','{{estudiante.fecha_nacimiento|date("d/m/Y")}}','{{ estudiante.id_genero }}','{{estudiante.observacionadicional}}',{{estudiante.segip_id}},'{{estudiante.discapacidad_id}}')" class="btn btn-xs btn-success btn-large glyphicon glyphicon-edit" title="Editar Datos"></a>
-                                            <a role="button" class="btn btn-danger btn-xs glyphicon glyphicon-remove" onclick="return confirm('¿Está seguro de elminar este registro?, Si ELIMINA el registro, se perderá todos los datos, como la INSCRIPCIÓN y las NOTAS del estudiante y no podrá recuperar!!!')" href="{{ path('sie_pnp_eliminarregistro_estudiante_curso', { 'estudiante_inscripcion_id': estudiante.inscripcion_id,'curso_id':datos.id }) }}" title="Eliminar Inscipción"></a>
+                                            <a href="#" role="button" onclick="FechaNacEdit('{{estudiante.estudiante_id}}','{{estudiante.fecha_nacimiento|date("d/m/Y")}}','{{ estudiante.id_genero }}','{{estudiante.observacionadicional}}',{{estudiante.segip_id}},'{{estudiante.discapacidad_id}}')" class="btn btn-xs btn-success rounded btn-large glyphicon glyphicon-edit" title="Editar Datos"></a>
+                                            <a role="button" class="btn btn-danger rounded btn-xs glyphicon glyphicon-remove" onclick="return confirm('¿Está seguro de elminar este registro?, Si ELIMINA el registro, se perderá todos los datos, como la INSCRIPCIÓN y las NOTAS del estudiante y no podrá recuperar!!!')" href="{{ path('sie_pnp_eliminarregistro_estudiante_curso', { 'estudiante_inscripcion_id': estudiante.inscripcion_id,'curso_id':datos.id }) }}" title="Eliminar Inscipción"></a>
                                         {% endif %}
                                         </td>
                                         <td>{{ estudiante.carnet_identidad }}{% if estudiante.complemento != '' %}-{{estudiante.complemento}}{% endif %}</td>
@@ -399,14 +402,14 @@
                                 {% if esactivo == 0 %}
                                     <table> 
                                         <tr>
-                                            <td><a role="button" onclick="SeeBuscarEstudiante()" class="btn btn-primary" href="#" >Agregar Estudiante</a><br/><br/></td>
+                                            <td><a role="button" onclick="SeeBuscarEstudiante()" class="btn btn-primary rounded" href="#" >Agregar Estudiante</a><br/><br/></td>
                                             {% if plan == 2 %}
                                                 <td>
-                                                    <a role="button" onclick="SeeModuloEmergente()" class="btn btn-warning" href="#" >Formación Para La Vida</a><br/><br/>
+                                                    <a role="button" onclick="SeeModuloEmergente()" class="btn btn-warning rounded" href="#" >Formación Para La Vida</a><br/><br/>
                                                 </td>
                                                 {% endif %}
                                             <td VALIGN="TOP">
-                                                <a role="button" class="btn btn-success" href="{{ path('sie_pnp_curso_listado_editnew', { 'id': id_curso_enc , 'val':6 }) }}" onclick="return confirm('Está seguro de CERRAR EL CURSO?, si cierra el curso POR TEMAS DE SEGURIDAD SE GUARDARÁ SU NOMBRE, ya no tendrá las opciones de editar; Pero podrá imprimir el PDF original para sus firmas respectivas. No olvide que 10 estudiantes mínimo para áreas concentradas y 8 para desconcentradas.');" >Cerrar Curso</a>
+                                                <a role="button" class="btn btn-success rounded" href="{{ path('sie_pnp_curso_listado_editnew', { 'id': id_curso_enc , 'val':6 }) }}" onclick="return confirm('Está seguro de CERRAR EL CURSO?, si cierra el curso POR TEMAS DE SEGURIDAD SE GUARDARÁ SU NOMBRE, ya no tendrá las opciones de editar; Pero podrá imprimir el PDF original para sus firmas respectivas. No olvide que 10 estudiantes mínimo para áreas concentradas y 8 para desconcentradas.');" >Cerrar Curso</a>
                                             </td>
                                         </tr>
                                     </table>
@@ -428,6 +431,12 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script>
+
+ (function(){
+    new Clipboard('#copy-button');
+})();
+</script>
     <script type="text/javascript">
     $(document).ready(function() {
         $("#fecha_nac").datepicker({

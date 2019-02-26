@@ -28,9 +28,20 @@
                 <div id="busquedadatos" class="panel-collapse collapse in">
                     <div class="portlet-body">
                         <div class="panel-body">                            
-                            <form id="busquedaDatosForm" data-toggle="validator" role="form" name="busquedaDatosForm" method="get" class="navbar-form" onsubmit="return enviaformdatosbasicos();">
+                            <form id="busquedaDatosForm" data-toggle="validator" role="form" name="busquedaDatosForm" method="post" class="navbar-form" onsubmit="return enviaformdatosbasicos();">
                                 <div class="form-group has-feedback">                                           
                                     <div class="row">
+                                        <input type="hidden" name="busquedaDatosForm[directorAlternativa]" id="busquedaDatosForm_directorAlternativa" value="{{app.session.get('directorAlternativa')}}">                                                    
+                                        <div class="col-lg-6">
+                                            <label class="required">Carnet Identidad :</label>                                            
+                                            <input type="text" class="form-control typeahead rounded" name="busquedaDatosForm[InputCarnet]" id="busquedaDatosForm_InputCarnet" placeholder="Carnet Identidad" onkeypress="return soloNumeros(event);" maxlength="15">                                                    
+                                        </div>                                                                                              
+                                        <div class="col-lg-6">
+                                            <label class="required">Complemento :</label>
+                                            <input type="text" class="form-control typeahead rounded" name="busquedaDatosForm[InputComplemento]" id="busquedaDatosForm_InputComplemento" placeholder="Complemento" maxlength="2">
+                                        </div>
+
+
                                         <div class="col-lg-6">
                                             <label class="required">Nombre :</label>                                            
                                             <input type="text" class="form-control typeahead rounded" name="busquedaDatosForm[InputNombre]" id="busquedaDatosForm_InputNombre" placeholder="Nombres" required onkeypress="return soloLetras(event);" maxlength="40">                                                    
@@ -215,11 +226,11 @@
                                                     </div>
                                                 </center> 
                                             </div>                                    
-                                            <div class="col-lg-6">
+                                            <!-- <div class="col-lg-6">
                                                  <div id="divbutonsig">
 
                                                  </div>
-                                            </div>
+                                            </div> -->
                                         </div>    
                                     </div>
                                 </div>
@@ -389,6 +400,15 @@
         }
 
         function enviaformdatosbasicos() {
+            //add to validate ci on alternativa-master
+            if($("#busquedaDatosForm_directorAlternativa").val()){
+                if($("#busquedaDatosForm_InputCarnet").val()==''){
+                    alert('Los campos Carnet de Identidad y/o Complemento son requeridos');
+                    return false;        
+                }
+                
+            }
+            
             {#var msj = '\n\n ¿Esta seguro de continuar?';#}
             if (valcampos()) {
                 var formData = $('#busquedaDatosForm').serialize();
@@ -400,6 +420,9 @@
                        
                     },
                     success: function (data) {
+                        $("#busquedaDatosForm_InputCarnet").prop("readonly", true );
+                        $("#busquedaDatosForm_InputComplemento").prop("readonly", true );
+
                         $("#busquedaDatosForm_InputNombre").prop("disabled", true );
                         $("#busquedaDatosForm_InputPaterno").prop("disabled", true );
                         $("#busquedaDatosForm_InputMaterno").prop("disabled", true );
@@ -410,8 +433,8 @@
                         $("#listaestudiantes").empty();
                         $("#listaestudiantes").append(data);
                         $("#divbutonveri").empty();
-                        $("#divbutonsig").empty();
-                        $("#divbutonsig").html('<center> <a id="botonsiguienteestu" role="button" class="btn btn-theme fa fa-check form-control-feedback rounded fa fa-arrow-circle-o-right" href="#" onclick="estudiantesiguiente();"> Siguiente</a> </center> ');                        
+                        // $("#divbutonsig").empty();
+                        // $("#divbutonsig").html('<center> <a id="botonsiguienteestu" role="button" class="btn btn-theme fa fa-check form-control-feedback rounded fa fa-arrow-circle-o-right" href="#" onclick="estudiantesiguiente();"> Siguiente</a> </center> ');                        
                     },
                     error: function () {
                         
@@ -421,7 +444,8 @@
             return false;  
         }
         
-        function estudiantesiguiente() {
+        function estudiantesiguiente(swValidationSegip) {
+
             var msj = '¡ADVERTENCIA! ¡Lea atentamente!';    
                 msj += '\nPasar al siguiente paso indica que :';
                 msj += '\n1.- Usted garantiza la veracidad de los datos introducidos';
@@ -434,6 +458,10 @@
                 var day = $('#busquedaDatosForm_fechaNacimiento_day').val();
                 var mount = $('#busquedaDatosForm_fechaNacimiento_mount').val();
                 var year = $('#busquedaDatosForm_fechaNacimiento_year').val();
+                
+                var carnet = $('#busquedaDatosForm_InputCarnet').val();
+                var complemento = $('#busquedaDatosForm_InputComplemento').val();
+
                 $.ajax({
                     type: 'get',
                     url: Routing.generate('sie_usuario_estudiante_siguiente'),
@@ -443,7 +471,11 @@
                         "materno": materno,
                         "day": day,
                         "mount": mount,
-                        "year": year
+                        "year": year,
+                        "carnet": carnet,
+                        "complemento": complemento,
+                        "swValidationSegip": swValidationSegip
+
                     },
                     beforeSend: function () {                        
 

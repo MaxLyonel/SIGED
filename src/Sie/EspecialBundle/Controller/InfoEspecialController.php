@@ -99,11 +99,13 @@ class InfoEspecialController extends Controller{
 
   public function openAction(Request $request){
       
+    //dump($request);die;
     //create the db conexion
     $em = $this->getDoctrine()->getManager();
     $em->getConnection()->beginTransaction();
     //get the values send
     $data = $request->get('form');
+    //dump($data);die;
     //set the new row on RegistroConsolidacion
     $objInfoCentro = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findBy(array(
       'unidadEducativa'=>$data['idInstitucion'],

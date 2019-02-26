@@ -3244,6 +3244,9 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
         $usuario_id = $this->session->get('userId');
+        if(!$usuario_id){
+            return $this->redirectToRoute('logout');
+        }
         $rol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findOneByUsuario($usuario_id);    
         $rol=$rol->getRolTipo()->getId();
         /////SACAMOS LA GESTION INICIAL Y FINAL
@@ -3981,6 +3984,9 @@ ciclo_tipo_id, grado_tipo_id
         ////////cerrar curso
         if ($val==6){
             $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id);
+            if(!$result){
+                return $this->redirectToRoute('logout');
+            }
         $plan=$result->getPlancurricularTipoId();
              //VER SU CUMPLE LOS REQUESITIVOS PARA CERRAR EL CURSO
             $curso_ok=0;
@@ -4229,6 +4235,9 @@ ciclo_tipo_id, grado_tipo_id
         $db = $em->getConnection();
 
         $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id);
+        if(!$result){
+            return $this->redirectToRoute('logout');
+        }
             $esactivo=$result->getEsactivo();
 
         if($esactivo==1)$esactivo=1;else $esactivo=0;
@@ -4523,6 +4532,9 @@ ciclo_tipo_id, grado_tipo_id
         $sie=$institucioneducativa_curso->getInstitucioneducativa()->getId();
         $gestion_ini= date_format($gestion_ini,"Y");
         $usuario_id = $this->session->get('userId');
+        if(!$usuario_id){
+            return $this->redirectToRoute('logout');
+        }
         $rol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findOneByUsuario($usuario_id);    
         $rol=$rol->getRolTipo()->getId();
         if($gestion_ini<=2015 or $rol==8){////////como es 2009-2015 no debe entrar por los controles o si mi usuario ingrsa
@@ -4569,15 +4581,15 @@ ciclo_tipo_id, grado_tipo_id
                     return $this->render('SiePnpBundle:Default:mostrarestudiante.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'gestion_ini'=>$gestion_ini)); die;
                 }
                 else{*/
-                     if($gestion_ini-substr($filas['fecha_nac'], 0, 4)<15){
-                            echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI O CODIGO RUDE '.$ci.' no es mayor de 15 años, por tanto no puede ser registrado al PNP.</div>';
+                     if($gestion_ini-substr($filas['fecha_nac'], 0, 4)<15 and $rol != 8){
+                            echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' no es mayor de 15 años, por tanto no puede ser registrado al PNP.</div>';
                             die;
                         }
                      $valido=$this->validar_nivel_participanteAction($filas['rude']);
                     if($valido == 1)
                         return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>2,'gestion_ini'=>$gestion_ini,'plan'=>$plan,'sie'=>$sie,'id_departamentos'=>$id_departamentos,'id_provincias'=>$id_provincias)); 
                     else
-                         echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI O CODIGO RUDE '.$ci.' pasó secundaria, por lo tanto no puede ingresar al PNP.</div>'; die; 
+                         echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' pasó secundaria, por lo tanto no puede ingresar al PNP.</div>'; die; 
                         die;         
                 /*}*/
             }
@@ -4627,7 +4639,13 @@ ciclo_tipo_id, grado_tipo_id
                         // $opcional = array();
                         $personaSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($filas['ci'], $opcional, 'prod', 'academico');
                         if($personaSegip){
+                            if($gestion_ini-substr($filas['fecha_nac'], 0, 4)<15 and $rol != 8){
+                                echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' no es mayor de 15 años, por tanto no puede ser registrado al PNP.</div>';
+                            die;
+                            }
+                            else{
                             return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>1,'gestion_ini'=>$gestion_ini,'plan'=>$plan,'sie'=>$sie,'id_departamentos'=>$id_departamentos,'id_provincias'=>$id_provincias));  die;
+                            }
                         }
                         else{
                             if($rude==1){
@@ -4777,7 +4795,7 @@ ciclo_tipo_id, grado_tipo_id
                     $curso_abierto=1;
                 }
                 if($curso_abierto==1){
-                     echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI o CODIGO RUDE '.$ci.' No puede ser inscrito porque tiene cursos anteriores abiertos, primero debe cerrarlos!!!!.</div>'; die;
+                     echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' No puede ser inscrito porque tiene cursos anteriores abiertos, primero debe cerrarlos!!!!.</div>'; die;
                 }
                 //funcion estudiante en PNP
                 $em = $this->getDoctrine()->getManager();
@@ -4829,7 +4847,7 @@ ciclo_tipo_id, grado_tipo_id
                 }
 
                 if($bloque_c>2){
-                    echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI o CODIGO RUDE '.$ci.' Finalizo los 4 módulos, por tanto no puede ser registrado en el curso.</div>'; die; 
+                    echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' Finalizo los 4 módulos, por tanto no puede ser registrado en el curso.</div>'; die; 
                 }
                 else{
                     //Buscqueda si en el curso existe el mismo estudiante
@@ -4873,7 +4891,7 @@ ciclo_tipo_id, grado_tipo_id
                         
                     if($existe_estudiante==1){
                     //si no existe en el curso saber si el curso es aquel que le corresponde
-                    echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI o CODIGO RUDE '.$ci.' ya esta inscrito en este curso.</div>'; die; 
+                    echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' ya esta inscrito en este curso.</div>'; die; 
                     }
                     else{
                         $opcion_est="$bloque_c$parte_c";
@@ -4917,14 +4935,14 @@ ciclo_tipo_id, grado_tipo_id
                             $id_provincias = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarTipo' => $filas['lugar_nac_tipo_id']));
                             $valido=$this->validar_nivel_participanteAction($filas['rude']);
                             if($gestion_ini-substr($filas['fecha_nac'], 0, 4)<15){
-                                echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI O CODIGO RUDE '.$ci.' no es mayor de 15 años, por tanto no puede ser registrado al PNP.</div>';
+                                echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' no es mayor de 15 años, por tanto no puede ser registrado al PNP.</div>';
                                 die;
                             }
 
                             if($valido == 1)               
                                 return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>2,'gestion_ini'=>$gestion_ini,'plan'=>$plan,'sie'=>$sie,'id_departamentos'=>$id_departamentos,'id_provincias'=>$id_provincias)); 
                             else
-                                 echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI O CODIGO RUDE '.$ci.' pasó secundaria, por lo tanto no puede ingresar al PNP.</div>'; die; 
+                                 echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' pasó secundaria, por lo tanto no puede ingresar al PNP.</div>'; die; 
                                 die;
                         /*}*/
 
@@ -4936,7 +4954,7 @@ ciclo_tipo_id, grado_tipo_id
                             if ($bloque_c==1 and $parte_c==2)$curso_toca="Tercer";
                             if ($bloque_c==2 and $parte_c==1)$curso_toca="Cuarto";
                             if ($bloque_c==2 and $parte_c==2)$curso_toca="Sexto";
-                            echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI O CODIGO RUDE '.$ci.' le corresponde el: '.$curso_toca.' curso, y no este curso.</div>'; die; 
+                            echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' le corresponde el: '.$curso_toca.' curso, y no este curso.</div>'; die; 
                         }
                     }
                 }
@@ -4962,7 +4980,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                         $cant=1;
                     }   
                     if($cant>0){
-                        echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI o CODIGO RUDE '.$ci.' está registrado en el Sistema Regular o Alternativa.</div>'; die;                       }
+                        echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' está registrado en el Sistema Regular o Alternativa.</div>'; die;                       }
                     else{                        
 
                         $query = "SELECT
@@ -5017,14 +5035,14 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                             if($filas['lugar_nac_tipo_id']!= "")
                             $id_provincias = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarTipo' => $filas['lugar_nac_tipo_id']));
                              if($gestion_ini-substr($filas['fecha_nac'], 0, 4)<15){
-                                echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI O CODIGO RUDE '.$ci.' no es mayor de 15 años, por tanto no puede ser registrado al PNP.</div>';
+                                echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' no es mayor de 15 años, por tanto no puede ser registrado al PNP.</div>';
                                 die;
                             }
                              $valido=$this->validar_nivel_participanteAction($filas['rude']);
                             if($valido == 1)               
                                 return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>2,'gestion_ini'=>$gestion_ini,'plan'=>$plan,'sie'=>$sie,'id_departamentos'=>$id_departamentos,'id_provincias'=>$id_provincias)); 
                             else
-                                 echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI O CODIGO RUDE '.$ci.' pasó secundaria, por lo tanto no puede ingresar al PNP.</div>'; die; 
+                                 echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' pasó secundaria, por lo tanto no puede ingresar al PNP.</div>'; die; 
                                 die;            
                         /*}*/
           
@@ -5070,6 +5088,10 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                         // $opcional = array();
                         $personaSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($filas['ci'], $opcional, 'prod', 'academico');
                         if($personaSegip){
+                            if($gestion_ini-substr($filas['fecha_nac'], 0, 4)<15 and $rol != 8){
+                                echo '<div class="alert alert-danger"><strong>Error, </strong>El Participante con CI O CODIGO RUDE '.$ci.' no es mayor de 15 años, por tanto no puede ser registrado al PNP.</div>';
+                            die;
+                            }
                             if($opcion==11)
                                 return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>1,'gestion_ini'=>$gestion_ini,'plan'=>$plan,'sie'=>$sie,'id_departamentos'=>$id_departamentos,'id_provincias'=>$id_provincias));
                             else
@@ -5979,6 +6001,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
         $filas = array();
         $datos_filas = array();
         $cant_notas=0;
+        $carnet=$complemento=$nombre="";
         foreach ($po as $p) {
             $cant_notas++;
             $datos_filas["id"] = $p["id"];
@@ -7225,29 +7248,33 @@ public function crear_curso_automaticoAction(Request $request){
                             $em->persist($newrudeidioma);
                             $em->flush();
                             //IDIOMA FRECUENCIA 
-                            foreach ($idioma_frecuencia as $p) {
-                                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_idioma');");
-                                $query->execute();
-                                $newrudeidioma = new RudeIdioma();
-                                $newrudeidioma->setRude($newrude);
-                                $newrudeidioma->setHablaTipo($em->getRepository('SieAppWebBundle:HablaTipo')->findOneById(2));//2 FRECUENCIA
-                                $newrudeidioma->setIdiomaTipo($em->getRepository('SieAppWebBundle:IdiomaTipo')->findOneById($p["id"]));
-                                $newrudeidioma->setFechaRegistro(new \DateTime('now'));
-                                $newrudeidioma->setFechaModificacion(new \DateTime('now'));
-                                $em->persist($newrudeidioma);
-                                $em->flush();
+                            if($idioma_frecuencia){
+                                foreach ($idioma_frecuencia as $p) {
+                                    $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_idioma');");
+                                    $query->execute();
+                                    $newrudeidioma = new RudeIdioma();
+                                    $newrudeidioma->setRude($newrude);
+                                    $newrudeidioma->setHablaTipo($em->getRepository('SieAppWebBundle:HablaTipo')->findOneById(2));//2 FRECUENCIA
+                                    $newrudeidioma->setIdiomaTipo($em->getRepository('SieAppWebBundle:IdiomaTipo')->findOneById($p["id"]));
+                                    $newrudeidioma->setFechaRegistro(new \DateTime('now'));
+                                    $newrudeidioma->setFechaModificacion(new \DateTime('now'));
+                                    $em->persist($newrudeidioma);
+                                    $em->flush();
+                                }
                             }
                             //SALUD 
-                            foreach ($centrosalud as $p) {
-                                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_centro_salud');");
-                                $query->execute();
-                                $newrudecentrosalud = new RudeCentroSalud();
-                                $newrudecentrosalud->setRude($newrude);
-                                $newrudecentrosalud->setCentroSaludTipo($em->getRepository('SieAppWebBundle:CentroSaludTipo')->findOneById($p["id"]));
-                                $newrudecentrosalud->setFechaRegistro(new \DateTime('now'));
-                                $newrudecentrosalud->setFechaModificacion(new \DateTime('now'));
-                                $em->persist($newrudecentrosalud);
-                                $em->flush();
+                            if($centrosalud){
+                                foreach ($centrosalud as $p) {
+                                    $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_centro_salud');");
+                                    $query->execute();
+                                    $newrudecentrosalud = new RudeCentroSalud();
+                                    $newrudecentrosalud->setRude($newrude);
+                                    $newrudecentrosalud->setCentroSaludTipo($em->getRepository('SieAppWebBundle:CentroSaludTipo')->findOneById($p["id"]));
+                                    $newrudecentrosalud->setFechaRegistro(new \DateTime('now'));
+                                    $newrudecentrosalud->setFechaModificacion(new \DateTime('now'));
+                                    $em->persist($newrudecentrosalud);
+                                    $em->flush();
+                                }
                             }
                             //SERVICIOS BASICOS 
                             if($agua==1){
