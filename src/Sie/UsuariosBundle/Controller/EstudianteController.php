@@ -254,13 +254,13 @@ class EstudianteController extends Controller
                 }
                 //$estudiante->setComplemento('');
                 //added validation segip by krlos
-                if($form['swValidationSegip']==1){
-                    $valSegip = 1;
-                    $messageValSegip = 'SI VALIDADO SEGIP';
-                }else{
-                    $valSegip = 0;
-                    $messageValSegip = 'NO VALIDADO SEGIP';
-                }
+                // if($form['swValidationSegip']==1){
+                //     $valSegip = 1;
+                //     $messageValSegip = 'SI VALIDADO SEGIP';
+                // }else{
+                //     $valSegip = 0;
+                //     $messageValSegip = 'NO VALIDADO SEGIP';
+                // }
 
                 $estudiante->setSegipId($valSegip);
                 $estudiante->setObservacion($messageValSegip);

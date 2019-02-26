@@ -2,21 +2,21 @@ Sie\AppWebBundle\Entity\ApoderadoInscripcionDatos:
     type: entity
     table: apoderado_inscripcion_datos
     indexes:
-        idx_empleo2:
-            columns:
-                - empleo
         idx_apoderado_inscripcion_datos_instruccion_tipo_id:
             columns:
                 - instruccion_tipo_id
         idx_apoderado_inscripcion_datos_idioma_materno_id:
             columns:
                 - idioma_materno_id
-        IDX_52D41EC318853B5C:
+        idx_empleo2:
             columns:
-                - ocupacion_tipo_id
+                - empleo
         IDX_52D41EC34B8E64C7:
             columns:
                 - actividad_tipo_id
+        IDX_52D41EC318853B5C:
+            columns:
+                - ocupacion_tipo_id
     uniqueConstraints:
         uq_apoderado_inscripcion_datos:
             columns:
@@ -54,15 +54,6 @@ Sie\AppWebBundle\Entity\ApoderadoInscripcionDatos:
             nullable: true
             comment: ''
     manyToOne:
-        ocupacionTipo:
-            targetEntity: ApoderadoOcupacionTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                ocupacion_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
         actividadTipo:
             targetEntity: ApoderadoActividadTipo
             cascade: {  }
@@ -90,8 +81,17 @@ Sie\AppWebBundle\Entity\ApoderadoInscripcionDatos:
                 instruccion_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
+        ocupacionTipo:
+            targetEntity: ApoderadoOcupacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ocupacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         idiomaMaterno:
-            targetEntity: IdiomaMaterno
+            targetEntity: IdiomaTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null

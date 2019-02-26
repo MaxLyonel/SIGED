@@ -8,8 +8,8 @@ $("#mb_carnet").numeric("positiveInteger");
 $("#mb_carnet").attr("maxlength",'10');
 
 // aplicamos las mascaras para las fechas
-$("#m_fechaNacimiento").inputmask({ "alias": "dd-mm-yyyy" });
-$("#mb_fechaNacimiento").inputmask({ "alias": "dd-mm-yyyy" });
+$("#m_fechaNacimiento").inputmask({ "alias": "dd-mm-yyyy" ,'placeholder':'dd-mm-aaaa'});
+$("#mb_fechaNacimiento").inputmask({ "alias": "dd-mm-yyyy" ,'placeholder':'dd-mm-aaaa'});
 $("#mb_complemento").inputmask({mask: "9a"});
 
 // convertimos el complemento en mayusculas
@@ -38,6 +38,14 @@ var m_validarTieneMadre = function(){
         $('#m_instruccion').attr('required','required');
         $('#m_parentesco').attr('required','required');
 
+        // Validamos si el usuario tiene carnet
+        var carnet = $('#m_carnet').val();
+        if(carnet.indexOf('SC') != -1){
+            $('#m_carnet').val('');
+            $('#m_carnet').removeAttr('required');
+            $('#m_expedido').attr('disabled','disabled');
+        }
+
     }else{
         $('#m_divMadre').css('display','none');
         $('#m_carnet').removeAttr('required');
@@ -55,6 +63,7 @@ var m_validarTieneMadre = function(){
         $('#m_genero').val('');
         $('#m_correo').val('');
         $('#m_telefono').val('');
+        $('#m_celular').val('');
         $('#m_idioma').val('');
         $('#m_ocupacion').val(0);
         $('#m_instruccion').val(0);
@@ -110,8 +119,20 @@ $('#m_ocupacion').on('change',function(){
 // CAMBIAR ATRIBUTOS DE REQUERIDO
 $('#mb_sinCarnet').on('change', function(){
     if($(this).is(':checked')){
+        $('#mb_carnet').val('');
+        $('#mb_carnet').attr('disabled','disabled');
+        $('#mb_complemento').val('');
+        $('#mb_complemento').attr('disabled','disabled');
+
+        $('#mb_paterno').focus();
+
         $('#m_carnet').removeAttr('required');
     }else{
+        $('#mb_carnet').removeAttr('disabled');
+        $('#mb_complemento').removeAttr('disabled');
+        
+        $('#mb_carnet').focus();
+
         $('#m_carnet').attr('required','required');
     }
 });
@@ -133,7 +154,9 @@ var m_buscarMadre = function(){
     var m_anioActual = m_fechaActual.getFullYear();
 
     if(m_anio < 1900 || (m_anioActual - m_anio) < 15 || (m_anioActual - m_anio) > 100){
-        alert('La fecha de nacimiento no es válida, verfique e intentelo nuevamente.');
+        $('#m_mensaje').empty();
+        m_cambiarFondoMensaje(3);
+        $('#m_mensaje').append('La fecha de nacimiento no es válida, verfique e intentelo nuevamente.');
         return;
     }
     /////////
@@ -152,7 +175,14 @@ var m_buscarMadre = function(){
                 fecha_nacimiento: m_fechaNacimiento
             };
 
+            $('#m_expedido').attr('disabled','disabled');
+            $('#m_expedido').val('');
+
             m_cargarDatos(data);
+
+            $('#m_mensaje').empty();
+            m_cambiarFondoMensaje(2);
+            $('#m_mensaje').append('Datos cargados');
 
         }else{
             // $('#m_idPersona').val('nuevo');
@@ -173,7 +203,7 @@ var m_buscarMadre = function(){
                     $('#m_mensaje').append('Buscando...');
                 },
                 success: function(data){
-
+                    $('#m_expedido').removeAttr('disabled');
                     // Ponemos el id de la madre en nuevo
                     $('#m_idPersona').val('nuevo');
 
@@ -203,7 +233,7 @@ var m_buscarMadre = function(){
                     }
 
                     // Verificar el parentesco con el estudiante
-                    setTimeout("m_validarParentesco()",3000);
+                    // setTimeout("m_validarParentesco()",3000);
 
                 },
                 error: function(data){
@@ -248,6 +278,7 @@ function m_borrarDatos(){
     $('#m_genero').val('');
     $('#m_correo').val('');
     $('#m_telefono').val('');
+    $('#m_celular').val('');
 }
 
 var m_cambiarFondoMensaje = function(opcion){
@@ -306,6 +337,7 @@ function saveFormMadre(){
         success: function(data){
 
             $('#m_id').val(data.id);
+            $('#m_idDatos').val(data.idDatos);
             $('#m_idPersona').val(data.idPersona);
 
             // Pasar a la siguiente pagina

@@ -212,8 +212,9 @@ class InfoMaestroController extends Controller {
 
         $consol_gest_pasada = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim4' => '1'));
         $consol_gest_pasada2 = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim4' => '2'));
+        $consol_gest_pasada3 = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim4' => '3'));
         
-        if(!($consol_gest_pasada or $consol_gest_pasada2)){
+        if(!($consol_gest_pasada or $consol_gest_pasada2 or $consol_gest_pasada3)){
             $activar_acciones = true;
         }
 
@@ -656,20 +657,21 @@ class InfoMaestroController extends Controller {
 
             //Actualizacion en la tabla maestro inscripcion
             $maestroinscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneById($form['idMaestroInscripcion']);
-
-            $maestroinscripcion->setCargoTipo($em->getRepository('SieAppWebBundle:CargoTipo')->findOneById($form['funcion']));
-            $maestroinscripcion->setEstudiaiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->findOneById($form['idiomaOriginario']));
-            $maestroinscripcion->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->findOneById($form['financiamiento']));
-            $maestroinscripcion->setFormacionTipo($em->getRepository('SieAppWebBundle:FormacionTipo')->findOneById($form['formacion']));
-            $maestroinscripcion->setFormaciondescripcion(mb_strtoupper($form['formacionDescripcion'], 'utf-8'));
-            $maestroinscripcion->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['institucionEducativa']));
-            $maestroinscripcion->setInstitucioneducativaSucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa' => $form['institucionEducativa'], 'gestionTipo' => $form['gestion'])));
-            $maestroinscripcion->setLeeescribebraile((isset($form['leeEscribeBraile'])) ? 1 : 0);
-            $maestroinscripcion->setNormalista((isset($form['normalista'])) ? 1 : 0);
-            $maestroinscripcion->setItem($form['item']);
-            $maestroinscripcion->setFechaModificacion(new \DateTime('now'));
-            $em->persist($maestroinscripcion);
-            $em->flush();
+            if (!empty($maestroinscripcion)){
+                $maestroinscripcion->setCargoTipo($em->getRepository('SieAppWebBundle:CargoTipo')->findOneById($form['funcion']));
+                $maestroinscripcion->setEstudiaiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->findOneById($form['idiomaOriginario']));
+                $maestroinscripcion->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->findOneById($form['financiamiento']));
+                $maestroinscripcion->setFormacionTipo($em->getRepository('SieAppWebBundle:FormacionTipo')->findOneById($form['formacion']));
+                $maestroinscripcion->setFormaciondescripcion(mb_strtoupper($form['formacionDescripcion'], 'utf-8'));
+                $maestroinscripcion->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['institucionEducativa']));
+                $maestroinscripcion->setInstitucioneducativaSucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa' => $form['institucionEducativa'], 'gestionTipo' => $form['gestion'])));
+                $maestroinscripcion->setLeeescribebraile((isset($form['leeEscribeBraile'])) ? 1 : 0);
+                $maestroinscripcion->setNormalista((isset($form['normalista'])) ? 1 : 0);
+                $maestroinscripcion->setItem($form['item']);
+                $maestroinscripcion->setFechaModificacion(new \DateTime('now'));
+                $em->persist($maestroinscripcion);
+                $em->flush();
+            }
 
             //Actualizacion de idiomas
             //1ro eliminacion de los anteriores registros
@@ -832,11 +834,12 @@ class InfoMaestroController extends Controller {
 
             //$icom->setEsVigenteMaestro(1 - $icom->getEsVigenteMaestro());
             $cargo = $em->getRepository('SieAppWebBundle:CargoTipo')->findOneById($request->get('idCargo'));
-            $maestroInscripcion->setCargotipo($cargo);
-            $maestroInscripcion->setEsVigenteAdministrativo(1 - $maestroInscripcion->getEsVigenteAdministrativo());
-
-            $em->persist($maestroInscripcion);
-            $em->flush();
+            if(!empty($maestroInscripcion)){
+                $maestroInscripcion->setCargotipo($cargo);
+                $maestroInscripcion->setEsVigenteAdministrativo(1 - $maestroInscripcion->getEsVigenteAdministrativo());
+                $em->persist($maestroInscripcion);
+                $em->flush();
+            }
             $em->getConnection()->commit();
 
             return $this->redirect($this->generateUrl('herramienta_info_maestro_index'));
