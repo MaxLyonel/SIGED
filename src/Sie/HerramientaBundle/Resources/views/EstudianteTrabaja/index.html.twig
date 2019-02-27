@@ -1,7 +1,120 @@
-{% extends "::base.html.twig" %}
+<style type="text/css">
+    input[type="radio"]{
+        margin-left: 15px;
+        margin-right: 10px;
+    }
 
-{% block title %}SieHerramientaBundle:EstudianteTrabaja:index{% endblock %}
+    .jupper{
+        text-transform: uppercase;
+    }
+    .mensajeSuccess{
+        padding: 10px;
+        background: #DBFFE2;
+        color: #679C68;
+    }
+    .mensajeWarning{
+        padding: 10px;
+        background: #FEF7DC;
+        color: #B0AE34;
+    }
+</style>
+<div class="modal-dialog" style="width: 1000px">
+    <div class="modal-content">
+        <div class="panel panel-tab panel-tab-double">
+            <div class="panel-heading no-padding">
+                <div style="height:50px; background:#64CBE2; color:#FFFFFF; margin-top:-10px;">
+                    <h4 style="padding:10px 0px 0px 10px; text-align:center">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        DATOS DE TRABAJO DEL ESTUDIANTE <br>
+                    </h4>
+                </div>
+            </div>
+            <div class="panel-body" id="modal-body">
+                <div class="mensaje"></div>
+                <form id="formTrabajo" onsubmit="save(); return false;">
+                    <div class="row">
+                        <div class="form-group col-md-6 col-sm-6">
+                            <label>Ocupación</label>
+                            {{ form_widget(form.ocupacion, {'attr':{'class':'form-control jupper'} }) }}
+                        </div>
+                        <div class="form-group col-md-6 col-sm-6" id="otro">
+                            <label>Ocupaciòn Otro</label>
+                            {{ form_widget(form.ocupacionOtro, {'attr':{'class':'form-control jupper'} }) }}
+                        </div>
+                    </div>
+                    <fieldset>
+                        <div class="row">
+                            <div class="form-group col-md-6 col-sm-6">
+                                <label>¿Recibe remuneración?</label>
+                                {{ form_widget(form.remuneracion, {'attr':{'class':''} }) }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-12 col-sm-12">
+                                <label>Especificar</label>
+                                {{ form_widget(form.especificacion, {'attr':{'class':'form-control jupper', 'rows':'5'} }) }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <button type="submit" class="btn btn-success btn-block">Guardar</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                    {{ form_widget(form) }}
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</div>
 
-{% block body %}
-<h1>Welcome to the EstudianteTrabaja:index page</h1>
-{% endblock %}
+<script type="text/javascript">
+    function save(){
+        var ocupacion = $('#form_ocupacion').val();
+        if(ocupacion != 0){
+            var data = $('#formTrabajo').serialize();
+            $.ajax({
+                url: Routing.generate('estudiante_trabaja_save'),
+                type: 'post',
+                data: data,
+                beforeSend: function(){
+
+                },
+                success: function(data){
+                    $('.mensaje').empty();
+                    $('.mensaje').append('Registro realizado correctamente');
+                    $('.mensaje').removeClass('mensajeWarning');
+                    $('.mensaje').addClass('mensajeSuccess');
+                },
+                error: function(){
+                    $('.mensaje').removeClass('mensajeSuccess');
+                    $('.mensaje').addClass('mensajeWarning');
+                    $('.mensaje').empty();
+                    $('.mensaje').append('Error en el registro');
+                }
+            });
+        }else{
+            $('.mensaje').removeClass('mensajeSuccess');
+            $('.mensaje').addClass('mensajeWarning');
+            $('.mensaje').empty();
+            $('.mensaje').append('Debe seleccionar una ocupación para realizar el registro');
+        }
+    }
+
+    function validarOtro(){
+        if($('#form_ocupacion').val() == 99){
+            $('#otro').css('display','block');
+        }else{
+            $('#otro').css('display','none');
+            $('#form_ocupacionOtro').val('');
+        }
+    }
+
+    $('#form_ocupacion').on('change', function(){
+        validarOtro();
+    });
+
+    validarOtro();
+
+</script>
