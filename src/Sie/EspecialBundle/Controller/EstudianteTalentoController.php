@@ -161,8 +161,8 @@ class EstudianteTalentoController extends Controller {
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $datos['flujotipo_id'], 'orden' => 1));
         $flujo_tipo = $flujoproceso->getFlujoTipo()->getId() == null? 10 : $flujoproceso->getFlujoTipo()->getId();   //Talento Extraordinario
         $tarea_id = $flujoproceso->getId() == null? 59 : $flujoproceso->getId();     //Solicita Talento, flujo_proceso
-        $tabla = 'estudiante_inscripcion';
-        $estudianteinscripcion_id = $request->get($datos['estudiante_ins_id']);
+        $tabla = 'institucioneducativa';
+        $centroinscripcion_id = $request->get($datos['centro_inscripcion']);
         //$institucioneducativa_id = $request->getSession()->get('ie_id');
         $observaciones = 'Inicio solicitud de talento';
         $tipotramite_id = 47;//Verificar
@@ -178,7 +178,7 @@ class EstudianteTalentoController extends Controller {
         $wfTramiteController = new WfTramiteController();
         $wfTramiteController->setContainer($this->container);
         //$wfTramiteController->guardarTramiteNuevo('', '', '', '', '', '', '', '','', '', '','', '');
-        $result = $wfTramiteController->guardarTramiteNuevo($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $estudianteinscripcion_id, $observaciones, $tipotramite_id,'', $tramite_id, $datos, $lugarlocalidad_id, $distrito_id);
+        $result = $wfTramiteController->guardarTramiteNuevo($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $centroinscripcion_id, $observaciones, $tipotramite_id,'', $tramite_id, json_encode($datos), $lugarlocalidad_id, $distrito_id);
         if ($result['dato'] == true) {
             $msg = $result['msg'];
         } else {
