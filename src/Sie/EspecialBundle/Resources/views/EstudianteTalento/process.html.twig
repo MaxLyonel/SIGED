@@ -22,7 +22,7 @@
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-md-6">
-                                <h3 class="panel-title">Nuevo Estudiante</h3>
+                                <h3 class="panel-title">Cargar Informe</h3>
                             </div>
                             {#<div class="col-md-6 text-right">
                                 <a href="{{path('talento_extraordinario_index')}}" class="btn btn-default"><i class="fa fa-angle-left"></i> Volver</a>
@@ -30,84 +30,50 @@
                         </div>
                     </div>
                     <div class="panel-body">
-                        <div class="row">
+                        {#<div class="row">
                             <div class="col-md-12">
                                 <form class="form-inline text-center">
-                                  <div class="form-group">
-                                    <div class="input-group">
-                                      <input value="5198000720074678" type="text" class="form-control" id="rude" placeholder="Buscar por RUDE">
-                                      <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input value="5198000720074678" type="text" class="form-control" id="rude" placeholder="Buscar por RUDE">
+                                            <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                                        </div>
                                     </div>
-                                  </div>
-                                  <button type="button" class="btn btn-primary" id="buscar" onclick="searchClick()">Buscar</button>
+                                    <button type="button" class="btn btn-primary" id="buscar" onclick="searchClick()">Buscar</button>
                                 </form>
                             </div>
-                        </div>
+                        </div>#}
                         <div id="carga"></div>
                         <hr>
                         <div class="row">
-                            <form id="registro" autocomplete="off">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="nombre">Nombre</label>
-                                        <input type="text" class="form-control noedit" id="nombre" name="nombre" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="paterno">Paterno</label>
-                                        <input type="text" class="form-control noedit" id="paterno" name="paterno">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="materno">Materno</label>
-                                        <input type="text" class="form-control noedit" id="materno" name="materno">
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            <div class="form-group">
-                                                <label for="cedula">Cédula Identidad</label>
-                                                <input type="text" class="form-control noedit" id="cedula" name="cedula" required>
-                                            </div>
+                            <div class="col-md-12">
+                                <form id="modifica" action="">
+                                    <div class="modal-body">
+                                        <p class="text-primary" id="estudiante"></p>
+                                        <input type="hidden" id="talento_id" name="talento_id" required>
+                                        <div class="form-group">
+                                            <label for="es_talento">Es Talento?</label>
+                                            <select type="text" class="form-control" id="es_talento" name="es_talento" required>
+                                                <option value="" disabled selected>Seleccione...</option>
+                                                <option value="true">Si</option>
+                                                <option value="false">No</option>
+                                            </select>
                                         </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="complemento">Complemento</label>
-                                                <input type="text" class="form-control noedit" id="complemento" name="complemento">
-                                            </div>
+                                        <div class="form-group">
+                                            <label for="nro_informe">Número de Informe</label>
+                                            <input type="text" class="form-control" id="nro_informe" name="nro_informe" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="informe">Documento Informe</label>
+                                            <input type="file" class="form-control" id="informe" name="informe" accept=".pdf" required>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="fecha_nacimiento">Fecha Nacimiento</label>
-                                        <input type="text" class="form-control noedit" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Guardar</button>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="hidden" id="estudiante_id" name="estudiante_id">
-                                    <input type="hidden" id="estudiante_ins_id" name="estudiante_ins_id">
-                                    <input type="hidden" id="flujotipo_id" name="flujotipo_id" value="{{ flujotipo_id }}">
-                                    <div class="form-group">
-                                        <label for="institucion_educativa">Unidad Educativa</label>
-                                        <input type="text" class="form-control noedit" id="institucion_educativa" name="institucion_educativa">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="centro_inscripcion">Centro Inscripción</label>
-                                        <select type="text" class="form-control" id="centro_inscripcion" name="centro_inscripcion" required>
-                                            <option value="" disabled selected>Seleccione</option>
-                                            {% for item in centros %}
-                                            <option value="{{ item.id }}">{{ item.institucioneducativa }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="fecha_solicitud">Fecha Solicitud</label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control noedit" id="fecha_solicitud" name="fecha_solicitud" data-date-format="dd/mm/yyyy" required>
-                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12 text-center">
-                                    <button type="submit" class="btn btn-primary" id="guardar">Guardar</button>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -120,7 +86,7 @@
     {#<script src="{{asset('js/jquery-ui.min.js')}}"></script>#}
     <script>
         $(document).ready(function() {
-            $("#centro_inscripcion").select2();
+            //$("#centro_inscripcion").select2();
         });
         $('.noedit').keydown(function() {
             //code to not allow any changes to be made to input field

@@ -24,6 +24,10 @@ talento_extraordinario_save:
     options:
         expose: true
 
+talento_extraordinario_upreport:
+    path:     /informe
+    defaults: { _controller: SieEspecialBundle:EstudianteTalento:upreport }
+
 talento_extraordinario_update:
     path:     /actualiza
     defaults: { _controller: SieEspecialBundle:EstudianteTalento:update }
