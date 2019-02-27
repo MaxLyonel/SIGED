@@ -94,7 +94,7 @@ class EstudianteTrabajaController extends Controller
                             'empty_value'=>false,
                             'expanded'=>true
                         ))
-                    ->add('especificacion', 'textarea')
+                    ->add('especificacion', 'textarea', array('required'=>false))
                     ->getForm();
 
         // dump($form);die;

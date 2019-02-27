@@ -7,6 +7,9 @@
     .jupper{
         text-transform: uppercase;
     }
+    .mensaje{
+        margin-bottom: 10px;
+    }
     .mensajeSuccess{
         padding: 10px;
         background: #DBFFE2;
@@ -94,7 +97,7 @@
                 },
                 success: function(data){
                     $('.mensaje').empty();
-                    $('.mensaje').append('Registro realizado correctamente');
+                    $('.mensaje').append('<i class="fa fa-check"></i> Registro realizado correctamente');
                     $('.mensaje').removeClass('mensajeWarning');
                     $('.mensaje').addClass('mensajeSuccess');
                 },
@@ -102,14 +105,14 @@
                     $('.mensaje').removeClass('mensajeSuccess');
                     $('.mensaje').addClass('mensajeWarning');
                     $('.mensaje').empty();
-                    $('.mensaje').append('Error en el registro');
+                    $('.mensaje').append('<i class="fa fa-warning"></i> Error en el registro');
                 }
             });
         }else{
             $('.mensaje').removeClass('mensajeSuccess');
             $('.mensaje').addClass('mensajeWarning');
             $('.mensaje').empty();
-            $('.mensaje').append('Debe seleccionar una ocupación para realizar el registro');
+            $('.mensaje').append('<i class="fa fa-warning"></i> Debe seleccionar una ocupación para realizar el registro');
         }
     }
 
