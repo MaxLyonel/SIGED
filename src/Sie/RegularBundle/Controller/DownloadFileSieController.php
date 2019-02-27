@@ -474,9 +474,14 @@ class DownloadFileSieController extends Controller {
               $objStatusUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['sie']);
               //get consolidation info UE
               $objSie = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->getGestionBySie($form['sie']);
+              $objSieNew = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+                'unidadEducativa' => $form['sie'] ,
+                'gestion' => $form['gestion']-1
+              ));
+              
               //validation of new UE
               if($objStatusUe->getEstadoInstitucionTipo()->getId()==10 && $objSie){
-                if($operativo < 5){
+                if($objSieNew && $operativo < 5){
                   //$errorValidation = array();
                   $objObservados = array();
                   $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
@@ -941,9 +946,11 @@ class DownloadFileSieController extends Controller {
           $aBimestre[-1]='Consolidado';
         }else{
           if($operativo >= 0){//mt 0 return plas 1
-            $aBimestre[$operativo]=$aBimestres[$operativo];
+            // $aBimestre[$operativo]=$aBimestres[$operativo];
+            $aBimestre[$operativo]=$aBimestres[0];
           }else{ //lt 0 return the same
-            $aBimestre[$operativo]=$aBimestres[$operativo];
+            // $aBimestre[$operativo]=$aBimestres[$operativo];
+            $aBimestre[$operativo]=$aBimestres[0];
           }
 
         }
