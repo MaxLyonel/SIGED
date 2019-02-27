@@ -80,7 +80,9 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
+                                    <input type="hidden" id="estudiante_id" name="estudiante_id">
                                     <input type="hidden" id="estudiante_ins_id" name="estudiante_ins_id">
+                                    <input type="hidden" id="flujotipo_id" name="flujotipo_id" value="{{ flujotipo_id }}">
                                     <div class="form-group">
                                         <label for="institucion_educativa">Unidad Educativa</label>
                                         <input type="text" class="form-control noedit" id="institucion_educativa" name="institucion_educativa">
@@ -161,6 +163,7 @@
                             }
                             $("#fecha_nacimiento").val(fechanacimiento);
                             $("#institucion_educativa").val(data.estudiante.institucion_educativa);
+                            $("#estudiante_id").val(data.estudiante.estudiante_id);
                             $("#estudiante_ins_id").val(data.estudiante.estudiante_ins_id);
                         } else if (data.msg == 'nocurso') {
                             mesage('warning', 'Notificación', 'Estudiante no está inscrito en la gestión actual.');
@@ -197,6 +200,7 @@
             $("#complemento").val('');
             $("#fecha_nacimiento").val('');
             $("#institucion_educativa").val('');
+            $("#estudiante_id").val('');
             $("#estudiante_ins_id").val('');
             // $("#centro_inscripcion").val('');
             $("#fecha_solicitud").val('');
@@ -209,7 +213,7 @@
             $.ajax({
                 type: 'post',
                 url: Routing.generate('talento_extraordinario_save'),
-                data: $(this).serialize(),
+                data: {'solicitud': {'estudiante_id': $("#estudiante_id").val(), 'estudiante_ins_id': $("#estudiante_ins_id").val(), 'flujotipo_id': $("#flujotipo_id").val(), 'centro_inscripcion': $("#centro_inscripcion").val(), 'fecha_solicitud': $("#fecha_solicitud").val()}}, //$(this).serialize()
                 beforeSend: function () {
                     $("#carga").empty();
                     $("#carga").append('<div class="text-center">Guardando datos</div>');
@@ -219,6 +223,8 @@
                     $("#carga").empty();
                     if (data.msg == 'exito') {
                         clearInput();
+                        //location.href = "{ { path('wf_tramite_recibido') }}";
+                        location.href = "{{ path('wf_tramite_index') }}";
                     } else {
                         mesage('error', 'Error', 'Error al guardar datos.');
                     }

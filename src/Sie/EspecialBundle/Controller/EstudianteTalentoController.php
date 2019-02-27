@@ -18,6 +18,8 @@ use Sie\AppWebBundle\DBAL\Types\ModalidadAtencionTipo;
 use Sie\AppWebBundle\Entity\EspecialAreaTipo;
 use Sie\AppWebBundle\DBAL\Types\DiscapacidadEspecialTipo;
 
+use Sie\SieAppWebBundle\Entity\FlujoProceso;
+
 use Sie\AppWebBundle\DBAL\Types\GradoParentescoTipo;
 use Sie\AppWebBundle\DBAL\Types\GradoTalentoTipo;
 use Sie\AppWebBundle\DBAL\Types\OrigenDiscapacidadTipo;
@@ -25,6 +27,9 @@ use Sie\AppWebBundle\DBAL\Types\TalentoTipo;
 use Sie\AppWebBundle\DBAL\Types\ViveConTipo;
 use Sie\AppWebBundle\DBAL\Types\DeteccionTipo;
 use Sie\AppWebBundle\DBAL\Types\DificultadAprendizajeTipo;
+
+use Sie\ProcesosBundle\Controller\TramiteRueController;
+use Sie\AppWebBundle\Controller\WfTramiteController;
 
 /**
  * EstudianteTalento controller.
@@ -74,6 +79,7 @@ class EstudianteTalentoController extends Controller {
 
     public function newAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
+        $flujotipo_id = isset($_GET['id']) == false? 10 : $_GET['id'];
         $centros = array();
 //        dump($request->getSession()->get('ie_id'));die;
         $centro_actual = $request->getSession()->get('ie_id');
@@ -92,7 +98,7 @@ class EstudianteTalentoController extends Controller {
                 );
             }
         }
-        return $this->render('SieEspecialBundle:EstudianteTalento:new.html.twig', array('centros' => $centros));
+        return $this->render('SieEspecialBundle:EstudianteTalento:new.html.twig', array('centros' => $centros, 'flujotipo_id' => $flujotipo_id));
     }
 
     public function searchStudentAction(Request $request) {
@@ -145,16 +151,42 @@ class EstudianteTalentoController extends Controller {
     }
 
     public function saveAction(Request $request) {
-        $msg = "exito";
-        $estudiante_inscripcion_id = $request->get('estudiante_ins_id');
-        $institucioneducativa_id = $request->get('centro_inscripcion');
-        $fecha_solicitud = substr($request->get('fecha_solicitud'), 6, 4).'-'.substr($request->get('fecha_solicitud'), 3, 2).'-'.substr($request->get('fecha_solicitud'), 0, 2);
-
+        $estado = 200;
         $em = $this->getDoctrine()->getManager();
-        $em->getConnection()->beginTransaction();
-        //dump($request->getSession());die;
-        $gestion_actual = $request->getSession()->get('currentyear');
-        try {
+        $datos = $request->get('solicitud');
+        //$em->getConnection()->beginTransaction();
+        $rol_id = $request->getSession()->get('roluser');
+        $usuario_id = $request->getSession()->get('userId');
+        //$flujotipo= $em->getRepository('SieAppWebBundle:FlujoTipo')->findOneById($datos['flujotipo_id']);
+        $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $datos['flujotipo_id'], 'orden' => 1));
+        $flujo_tipo = $flujoproceso->getFlujoTipo()->getId() == null? 10 : $flujoproceso->getFlujoTipo()->getId();   //Talento Extraordinario
+        $tarea_id = $flujoproceso->getId() == null? 59 : $flujoproceso->getId();     //Solicita Talento, flujo_proceso
+        $tabla = 'estudiante_inscripcion';
+        $estudianteinscripcion_id = $request->get($datos['estudiante_ins_id']);
+        //$institucioneducativa_id = $request->getSession()->get('ie_id');
+        $observaciones = 'Inicio solicitud de talento';
+        $tipotramite_id = 47;//Verificar
+        $tramite_id = ''; //Falta, como es inicio de tramite no existe el ID
+        $distrito_id = 0;
+        $lugarlocalidad_id = 0;
+        $ieducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->getSession()->get('ie_id'));
+        if ($ieducativa) {
+            $distrito_id = $ieducativa->getLeJuridicciongeografica()->getLugarTipoIdDistrito();
+            $lugarlocalidad_id = $ieducativa->getLeJuridicciongeografica()->getLugarTipoLocalidad()->getId();
+        }
+
+        $wfTramiteController = new WfTramiteController();
+        $wfTramiteController->setContainer($this->container);
+        //$wfTramiteController->guardarTramiteNuevo('', '', '', '', '', '', '', '','', '', '','', '');
+        $result = $wfTramiteController->guardarTramiteNuevo($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $estudianteinscripcion_id, $observaciones, $tipotramite_id,'', $tramite_id, $datos, $lugarlocalidad_id, $distrito_id);
+        if ($result['dato'] == true) {
+            $msg = $result['msg'];
+        } else {
+            $estado = 500;
+            $msg = $result['msg'];
+        }
+        //$gestion_actual = $request->getSession()->get('currentyear');
+        /*try {
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion_especial_talento');")->execute();
             $estudianteTalento = new EstudianteInscripcionEspecialTalento();
             $estudianteTalento->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($estudiante_inscripcion_id));
@@ -170,10 +202,10 @@ class EstudianteTalentoController extends Controller {
             $msg = "error";
             $em->getConnection()->rollback();
             echo 'Excepción capturada: ', $ex->getMessage(), "\n";
-        }
-        $em->getConnection()->commit();
+        }*/
+        //$em->getConnection()->commit();
         $response = new JsonResponse();
-        return $response->setData(array('msg' => $msg));
+        return $response->setData(array('estado' => $estado, 'msg' => $msg));
     }
 
     public function updateAction(Request $request) {
