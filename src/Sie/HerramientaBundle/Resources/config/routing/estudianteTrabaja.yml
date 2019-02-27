@@ -1,0 +1,7 @@
+index:
+    path:     /index
+    defaults: { _controller: SieHerramientaBundle:EstudianteTrabaja:index }
+
+save:
+    path:     /save
+    defaults: { _controller: SieHerramientaBundle:EstudianteTrabaja:save }
