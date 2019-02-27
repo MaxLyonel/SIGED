@@ -94,7 +94,7 @@
                         </div>
                         <div class="panel-body">
                             {% if (totales) %}
-                            <input type="text" name="roluser" id="roluser" value="{{ roluser}}">
+                            <input type="hidden" name="roluser" id="roluser" value="{{ roluser}}">
                             <button class="btn btn-xs btn-danger rounded glyphicon glyphicon-copy" id="copy-button" data-clipboard-target="#tablaTotales"> Copiar Lista</button>
                                 <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
                                     <table id="tablaTotales" class="display" cellspacing="0" width="100%">

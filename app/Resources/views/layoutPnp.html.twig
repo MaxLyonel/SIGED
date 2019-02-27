@@ -280,7 +280,9 @@
                             </a>
                             <ul>
                                 <li><a href="{{path('sie_pnp_registrar_curso',{ 'plan': 2 })}}">Registrar Curso</a></li>
-                                <li><a href="{{path('sie_pnp_registrar_curso',{ 'plan': 1 })}}">Registrar Curso (Plan Antiguo)</a></li>
+                                {% if ('21' == app.session.get('roluser')) or ('8' == app.session.get('roluser')) %}
+                                    <li><a href="{{path('sie_pnp_registrar_curso',{ 'plan': 1 })}}">Registrar Curso (Plan Antiguo)</a></li>
+                                {% endif %}
                                 <li><a href="{{path('sie_pnp_listar_archivos_editnew')}}">Ver Curso</a></li>
                                 <li><a href="{{path('sie_pnp_curso_vacionew')}}">Cursos sin alumnos (Eliminar)</a></li>
                                 <li><a href="{{path('sie_pnp_eliminar_duplicados')}}">Duplicados Eliminar</a></li>
