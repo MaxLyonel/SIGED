@@ -17,8 +17,11 @@
         background: #FEF7DC;
         color: #B0AE34;
     }
+    .input[type="text"]{
+        color: 
+    }
 </style>
-<div class="modal-dialog" style="width: 1000px">
+<div class="modal-dialog" style="width: 900px">
     <div class="modal-content">
         <div class="panel panel-tab panel-tab-double">
             <div class="panel-heading no-padding">
@@ -31,6 +34,15 @@
             </div>
             <div class="panel-body" id="modal-body">
                 <div class="mensaje"></div>
+                <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                    <tr>
+                        <th>Codigo Rude</th><td style="color:#0086DD">{{estudiante.codigoRude}}</td>
+                    </tr>
+                    <tr>
+                        <th>Estudiante</th><td style="color:#0086DD"><b>{{estudiante.nombre}} {{estudiante.paterno}} {{estudiante.materno}}</b></td>
+                    </tr>
+                </table>
+                <hr>
                 <form id="formTrabajo" onsubmit="save(); return false;">
                     <div class="row">
                         <div class="form-group col-md-6 col-sm-6">
@@ -38,29 +50,28 @@
                             {{ form_widget(form.ocupacion, {'attr':{'class':'form-control jupper'} }) }}
                         </div>
                         <div class="form-group col-md-6 col-sm-6" id="otro">
-                            <label>Ocupaciòn Otro</label>
+                            <label>Especifique otra ocupaciòn </label>
                             {{ form_widget(form.ocupacionOtro, {'attr':{'class':'form-control jupper'} }) }}
                         </div>
                     </div>
-                    <fieldset>
-                        <div class="row">
-                            <div class="form-group col-md-6 col-sm-6">
-                                <label>¿Recibe remuneración?</label>
-                                {{ form_widget(form.remuneracion, {'attr':{'class':''} }) }}
-                            </div>
+                    <div class="row">
+                        <div class="form-group col-md-6 col-sm-6">
+                            <label>¿Recibe remuneración?</label>
+                            {{ form_widget(form.remuneracion, {'attr':{'class':''} }) }}
                         </div>
-                        <div class="row">
-                            <div class="form-group col-md-12 col-sm-12">
-                                <label>Especificar</label>
-                                {{ form_widget(form.especificacion, {'attr':{'class':'form-control jupper', 'rows':'5'} }) }}
-                            </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-12 col-sm-12">
+                            <label>Observación</label>
+                            {{ form_widget(form.especificacion, {'attr':{'class':'form-control jupper', 'rows':'5'} }) }}
                         </div>
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <button type="submit" class="btn btn-success btn-block">Guardar</button>
-                            </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-success">Guardar cambios</button>
                         </div>
-                    </fieldset>
+                    </div>
                     {{ form_widget(form) }}
                 </form>
                 

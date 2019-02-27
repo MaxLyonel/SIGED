@@ -11,6 +11,12 @@ use Sie\AppWebBundle\Entity\EstudianteTrabajoRemuneracion;
 
 class EstudianteTrabajaController extends Controller
 {
+    public $session;
+
+    public function __construct() {
+        $this->session = new Session();
+    }
+
     public function indexAction(Request $request){
 
         $em = $this->getDoctrine()->getManager();
@@ -118,7 +124,7 @@ class EstudianteTrabajaController extends Controller
             $trabajo->setEspecificacion(mb_strtoupper($form['especificacion'],'utf-8'));
             $trabajo->setFechaRegistro(new \DateTime('now'));
             $trabajo->setFechaModificacion(new \DateTime('now'));
-            $trabajo->setUsuarioId(1);
+            $trabajo->setUsuarioId($this->session->get('userId'));
             $em->persist($trabajo);
             $em->flush();
         }else{
@@ -134,7 +140,7 @@ class EstudianteTrabajaController extends Controller
             $trabajo->setRemuneracion($form['remuneracion']);
             $trabajo->setEspecificacion(mb_strtoupper($form['especificacion'],'utf-8'));
             $trabajo->setFechaModificacion(new \DateTime('now'));
-            $trabajo->setUsuarioId(1);
+            $trabajo->setUsuarioId($this->session->get('userId'));
             $em->flush();
         }
 
