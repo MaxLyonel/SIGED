@@ -1,7 +1,145 @@
-{% extends "::base.html.twig" %}
+<style type="text/css">
+    input[type="radio"]{
+        margin-left: 15px;
+        margin-right: 10px;
+    }
 
-{% block title %}SieHerramientaBundle:EstudianteTrabajaNuevo:index{% endblock %}
+    .jupper{
+        text-transform: uppercase;
+    }
+    .mensaje{
+        margin-bottom: 10px;
+    }
+    .mensajeSuccess{
+        padding: 10px;
+        background: #DBFFE2;
+        color: #679C68;
+    }
+    .mensajeWarning{
+        padding: 10px;
+        background: #FEF7DC;
+        color: #B0AE34;
+    }
+    .input[type="text"]{
+        color: 
+    }
+</style>
+<div class="modal-dialog" style="width: 900px">
+    <div class="modal-content">
+        <div class="panel panel-tab panel-tab-double">
+            <div class="panel-heading no-padding">
+                <div style="height:50px; background:#64CBE2; color:#FFFFFF; margin-top:-10px;">
+                    <h4 style="padding:10px 0px 0px 10px; text-align:center">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        BUSQUEDA ESTUDIANTE Y REGISTRO TRABAJO <br>
+                    </h4>
+                </div>
+            </div>
+            <div class="panel-body" id="modal-body">
+                <div class="mensaje"></div>
+            
+                <hr>
 
-{% block body %}
-<h1>Welcome to the EstudianteTrabajaNuevo:index page</h1>
-{% endblock %}
+                <div id="idfind">
+                	
+
+
+                            <!-- Start input grid -->
+                            <div class="panel rounded shadow">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title">Datos de entrada para la busqueda</h3>
+                                    </div>
+                               
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body no-padding">
+
+                                    
+                                    {{form_start(form, {'attr': {'id':'idformfind'}} )}}
+                                        <div class="form-body">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                    	{{form_widget(form.rudeoci)}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                                                            
+                                        </div><!-- /.form-body -->
+                                        <div class="form-footer">
+                                            <div class="pull-right">
+                                                <button class="btn btn-danger mr-5">Cancel</button>
+                                                {{form_widget(form.find)}}
+                                                <!-- <button class="btn btn-success" type="submit">Submit</button> -->
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div><!-- /.form-footer -->
+                                    {{form_end(form)}}
+
+                                </div><!-- /.panel-body -->
+                            </div><!-- /.panel -->
+                            <!--/ End input grid -->
+                        </div>
+                    
+                <div id="idresult">
+                	
+                </div>
+
+                <div id="idlist">
+                	
+                </div>
+
+
+
+            	
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+var findStudent = function(){
+
+	var rudeoci = $('#form_rudeoci').val();
+	if(rudeoci != ''){
+		var data = $('#idformfind').serialize();
+		alert(data);return false;
+		 $.ajax({
+              type: 'post',
+              data: data,
+              url: Routing.generate('estudianteTrabajaNuevo_find'),
+              beforeSend: function () {
+                  $("#idstudents").empty();
+                  $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+              },
+              success: function (data) {
+                  $("#idstudents").empty();
+                  $("#idstudents").append(data);
+                  $('.tooltips').tooltip();
+              },
+              statusCode: {
+                  500: function () {
+
+                  },
+                  404: function () {
+
+                  }
+              }
+          });
+
+	
+
+	}else{
+		alert('El campo RUDE es requerido');
+		return false;
+	}
+};
+   
+
+   
+
+</script>
