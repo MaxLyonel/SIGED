@@ -493,14 +493,15 @@
         x--;
     });
     function cargarFormularioSolicitud() {
+        var solicitud=$('#form_solicitud :selected').text();
         var idsolicitud=$('#form_solicitud').val();
         switch (true){
-            case (idsolicitud == 45):
+            case (solicitud == 'Registro Nuevo'):
                 document.getElementById("titulo").innerHTML = "Formulario de <strong><em>Registro Nuevo</em></strong>";
                 $('#form_regularizacion').hide();
                 $('#form_nuevo').show(2000);
                 break;
-            case (idsolicitud == 46)://ratificacion
+            case (solicitud == 'Ratificación')://ratificacion
                 document.getElementById("titulo").innerHTML= "Formulario de Ratificación";
                 $('#form_nuevo').hide();
                 $('#form_regularizacion').show(2000);
@@ -513,33 +514,34 @@
                     success: function (data) {
                        // console.log(data);
                         var select_array = [];
+                        var mensaje = false;
                         $('#lista_especialidades_ratificacion').empty();
-                        $(data).each(function(i, v){ // indice, valor
+                        $(data).each(function(i, v){
                             if (v.activo == false ) {
-                            $('#lista_especialidades_ratificacion').append('<option disabled="disabled" value="' + v.id + '">' + v.especialidad + '</option>');
+                                $('#lista_especialidades_ratificacion').append('<option disabled="disabled" value="' + v.id + '">' + v.especialidad + '</option>');
+                                select_array.push(v.id); // solo las especialidades que no tiene ningun cambio.
                             } else {
-                            $('#lista_especialidades_ratificacion').append('<option value="' + v.id + '">' + v.especialidad + '</option>');
-                            $('#mensaje').show();
-                            /*alert('Su unidada tiene especialidades que sufrieron cambio, tomar en cuenta.....');*/
-                               /* swal ( "Oops" ,  "Something went wrong!" ,  "alert" );*/
-                                swal({
-                                    icon: "warning",
-                                    text: "Una o todas de sus especialidades con las que cuenta su Unidad Educativa se vio afectada con la Homologación de especialidades - 2019," +'\n'+
-                                            "Por favor se pide una verificación de las mismas.",
-                                    value: true,
-                                    visible: true,
-                                    className: "",
-                                    closeModal: true,
-                                    button: "Entendido!",
-                                });
-
+                                $('#lista_especialidades_ratificacion').append('<option value="' + v.id + '">' + v.especialidad + '</option>');
+                                mensaje = true;
                             }
-                            select_array.push(v.id);
+
                         });
                         $("#lista_especialidades_ratificacion").chosen({ width: "95%" });
                         setTimeout(function () {
                             $("#lista_especialidades_ratificacion").val(select_array).trigger('chosen:updated');
                         },500);
+                        if (mensaje) {
+                            swal({
+                                icon: "warning",
+                                text: "Una o todas de sus especialidades con las que cuenta su Unidad Educativa se vio afectada con la actualización de especialidades - 2019," +'\n'+
+                                      "Se pide seleccionar la(s) especialidad(s) con las que desea iniciar su trámite.",
+                                value: true,
+                                visible: true,
+                                className: "",
+                                closeModal: true,
+                                button: "Entendido",
+                            });
+                        }
                     }
                 });
                 break;
@@ -551,8 +553,9 @@
         * Funcion que envia la solicitud BTH capturando los valor introducidos
         * en el formulario.*/
         var idsolicitud=$('#form_solicitud').val();
+        var solicitud=$('#form_solicitud :selected').text();
         switch (true){
-            case (idsolicitud == 45): //Registro Nuevo
+            case (solicitud == 'Registro Nuevo'): //Registro Nuevo
                 swal({
                     title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
                     text:  "La información llenada será enviada a la Dirección Distrital." +
@@ -585,7 +588,7 @@
                             $.ajax({
                                 type: 'post',
                                 url: "{{ path('solicitud_bth_enviosolicitud') }}",
-                                data:{ipt: ipt,id_distrito: {{ ubicacion['lugarTipoIdDistrito'] }},institucionid:{{ institucion.id }},idsolicitud:idsolicitud,sw:0},
+                                data:{ipt: ipt,id_distrito: {{ ubicacion['lugarTipoIdDistrito'] }},institucionid:{{ institucion.id }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ idflujo }},sw:0},
                                 dataType : 'json',
                                 beforeSend: function () {
                                     swal({
@@ -606,7 +609,8 @@
 
                                     }
                                     else if(data==2 ){
-                                        swal(" Su Unidad Educativa ya se declaro como BTH - Debe iniciar su trámite como 'Ratificacion'");
+                                        swal(" Su Unidad Educativa ya se declaro como BTH - Debe iniciar su trámite como 'Ratificacion', O  \n" +
+                                            " a su Unidada Educativa no corresponde realizar el trámite de solicitud BTH");
                                     }else {
                                         swal('Su formulario no se envío correctamente debido a que: \n' +
                                             '- Su Unidad Educativa ya inicio su trámite como "REGISTRO NUEVO". \n' +
@@ -622,7 +626,7 @@
                         }
                     });
                 break;
-            case (idsolicitud == 46): //Ratificacion
+            case (solicitud == 'Ratificación'): //Ratificacion
 
                 swal({
                     title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
@@ -700,7 +704,7 @@
                             $.ajax({
                                 type: 'post',
                                 url: "{{ path('solicitud_bth_enviosolicitud') }}",
-                                data:{ipt: ipt,id_distrito: {{ ubicacion['lugarTipoIdDistrito'] }},institucionid:{{ institucion.id }},idsolicitud:idsolicitud,sw:0},
+                                data:{ipt: ipt,id_distrito: {{ ubicacion['lugarTipoIdDistrito'] }},institucionid:{{ institucion.id }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ idflujo }},sw:0},
                                 dataType : 'json',
                                 beforeSend: function () {
                                     swal({

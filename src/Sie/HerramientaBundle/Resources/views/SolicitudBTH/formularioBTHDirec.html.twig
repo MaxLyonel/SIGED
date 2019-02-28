@@ -204,7 +204,7 @@
                                         </div><!-- /.panel-body -->
                                     </div>
                                     <div class="panel panel-primary">
-                                        <div class="panel-heading">
+                                        <div class="panel-heading">especialidad
                                             <h3 class="panel-title">5.- Especialidad</h3>
                                         </div><!-- /.panel-heading -->
                                         <div class="panel-body">
@@ -222,10 +222,10 @@
                                                             {% endfor %}
                                                         </select>
                                                     {% else %}{#tramite Ratificacion#}
-                                                    <select data-placeholder="Seleccionar especialidad" id="lista_select_especialidad" name="lista_select_especialidad[]"  class="form-control" multiple=""  >
+                                                    <select data-placeholder="Seleccionar especialidad" id="lista_select_especialidad" class="chosen-select" name="lista_select_especialidad[]"  class="form-control" multiple=""  >
                                                         {% for especialidadarray in especialidadarray %}
-                                                            {#{% if especialidadarray.id ==   %}#}
-                                                            <option value="{{ especialidadarray.id }}">{{ especialidadarray.especialidad }}</option>
+
+                                                            <option value="{{ especialidadarray.id }}"  {% if especialidadarray.activo == false %} disabled="disabled" {% endif %} >{{ especialidadarray.especialidad }}</option>
                                                         {% endfor %}
                                                     </select>
                                                     {% endif %}
@@ -281,12 +281,30 @@
             }
             $('#obs').hide();
             var select_array = [];
-            $('#select_esp').find('li').each(function (index, item) {
-                select_array.push(item.innerHTML);
+            var mensaje =false;
+            $('#lista_select_especialidad').find('option').each(function () {
+
+                if(this.value == 64 || this.value == 65 || this.value == 41 || this.value == 42 ){
+                    mensaje =true;
+                }else{
+                    select_array.push(this.value);
+                }
             });
             setTimeout(function () {
-                $("#select_especialidade").val(select_array).trigger('chosen:updated');
-            },1000);
+                $("#lista_select_especialidad").val(select_array).trigger('chosen:updated');
+            },500);
+            if (mensaje){
+                swal({
+                    icon: "warning",
+                    text: "Una o todas de sus especialidades con las que cuenta su Unidad Educativa se vio afectada con la actualización de especialidades - 2019," +'\n'+
+                    "Se pide seleccionar la(s) especialidad(s) con las que desea iniciar su trámite.",
+                    value: true,
+                    visible: true,
+                    className: "",
+                    closeModal: true,
+                    button: "Entendido",
+                });
+            }
         });
         function muestraobs(){
             var respuesta=$('input:radio[name=radiotype1]:checked').val();
@@ -297,9 +315,9 @@
             }
         }
         function  enviarSolicitubthDis() {
-            var idsolicitud={{ tipoTramite }};
+            var idsolicitud = {{ tipoTramite }};
             switch (true) {
-                case (idsolicitud == 45)://Registro Nuevo
+                case (tramite_tipo == 'Registro Nuevo')://Registro Nuevo
                     swal({
                         title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
                         text: "La información llenada será enviada a la Direccion Distrital.",
@@ -359,7 +377,7 @@
                         });
 
                     break;
-                case (idsolicitud == 46)://Ratificacion
+                case (tramite_tipo == 'Ratificación')://Ratificacion
                     swal({
                         title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
                         text: "La información llenada será enviada a la Direccion Distrital.",
@@ -377,12 +395,52 @@
                                     ip.push({ informe : 1});
                                 else ip.push({ informe : 0 });
                                 ip.push({institucionid : institucionid});
-
-                                    var especialidades_id = [];
+                                var especialidades_id = [];
+                                if($('#lista_select_especialidad').val()){
+                                    var verificar1 = false, verificar2 = false;
+                                    var caso1 = false, caso2 = false;
                                     $("#lista_select_especialidad").find("option").each(function(index, opc){
-                                        especialidades_id.push(opc.value);
+                                        if ($(this).is('[disabled=disabled]')) {
+                                            especialidades_id.push(this.value);
+                                        }
+                                        if (this.value == 41 || this.value == 42) {
+                                            verificar1 = true;
+                                        }
+                                        if (this.value == 64 | this.value == 65) {
+                                            verificar2 = true;
+                                        }
+                                        //especialidades_id.push(opc.value);
                                     });
+                                    var seleccionado = $('#lista_select_especialidad').val();
+                                    if (verificar1) {
+                                        for (var i in seleccionado) {
+                                            if (seleccionado[i] == 41 || seleccionado[i] == 42) {
+                                                especialidades_id.push(seleccionado[i]);
+                                                caso1 = true;
+                                            }
+                                        }
+                                        if (!caso1) {
+                                            swal("Debe seleccionar al menos una especialidad entre TEXTILES y CONFECCIONES o TEJIDOS y TELARES.");
+                                            return false;
+                                        }
+                                    }
+                                    if (verificar2) {
+                                        for (var i in seleccionado) {
+                                            if (seleccionado[i] == 64 || seleccionado[i] == 65) {
+                                                especialidades_id.push(seleccionado[i]);
+                                                caso2 = true;
+                                            }
+                                        }
+                                        if (!caso2) {
+                                            swal("Debe seleccionar al menos una especialidad entre CARPINTERIA EN MADERA  o CARPINTERIA METALICA ");
+                                            return false;
+                                        }
+                                    }
                                     ip.push({"select_especialidad" : especialidades_id});
+                                } else {
+                                    swal("Debe seleccionar al menos una especialidad.");
+                                    return false;
+                                }
 
                                 var obstxt=$('#obstxt').val();
                                 var ipt=JSON.stringify(ip);
@@ -401,6 +459,7 @@
                                         });
                                     },
                                     success: function (data) {
+                                        console.log(data);
                                             if (data==1){
                                                 swal("Su formulario se ha enviado con éxito, con Nro. de Trámite:"+{{ id_tramite}} );
                                                 location.href = "{{ path('wf_tramite_index') }}";
