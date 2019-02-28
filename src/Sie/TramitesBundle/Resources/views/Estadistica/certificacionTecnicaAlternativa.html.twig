@@ -56,22 +56,48 @@
         <div class="row">
             {% if infoSubEntidad is defined %}
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                    <div class="panel">
-                        <div class="panel-heading">
-                            <div class="pull-left">
-                                <h3 class="panel-title"><i class='fa fa-cloud-download' aria-hidden="true"></i></h3>
-                            </div>  
-                            <div class="pull-right">
-                                <button onclick="document.forms['formEstadisticaRegularPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
-                                    <i class="fa fa-file-pdf-o"></i>
-                                </button>
-                                <button onclick="document.forms['formEstadisticaRegularXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
-                                    <i class="fa fa-file-excel-o"></i>
-                                </button>
-                            </div>     
-                            <div class="clearfix"></div>
-                        </div>
-                    </div>                    
+
+                    
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div class="row media">
+                                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                        Estadística General
+                                    </div>    
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                        <form name="formEstadisticaCertificacionTecnica" id="formEstadisticaCertificacionTecnica" role="form" action="{{ path('tramite_estadistica_certificado_tecnico_emitido_descarga_general') }}" method="POST">  
+                                            <input type="hidden" name="gestion" value="{{ gestion }}" />
+                                            <input type="hidden" name="codigo" value="{{ infoEntidad[0]['codigo'] }}" />  
+                                            <input type="hidden" name="codigo" value="{{ infoEntidad[0]['nivel'] }}" />  
+                                            <button name="botonPdf" id="botonPdf" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                                <i class="fa fa-file-pdf-o"></i>
+                                            </button>
+                                            <button name="botonXlsx" id="botonXlsx" title="Descargar en formato EXCEL" class="btn btn-success">
+                                                <i class="fa fa-file-excel-o"></i>
+                                            </button>
+                                        </form>    
+                                    </div>   
+                                </div>
+                                <div class="row media">
+                                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                            Estadística por Especialidad
+                                    </div>    
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                        <form name="formEstadisticaCertificacionTecnicaEspecialidad" id="formEstadisticaCertificacionTecnicaEspecialidad" role="form" action="{{ path('tramite_estadistica_certificado_tecnico_emitido_descarga_especialidad') }}" method="POST">  
+                                            <input type="hidden" name="gestion" value="{{ gestion }}" />
+                                            <input type="hidden" name="codigo" value="{{ infoEntidad[0]['codigo'] }}" />  
+                                            <input type="hidden" name="codigo" value="{{ infoEntidad[0]['nivel'] }}" />  
+                                            <button name="botonPdf" id="botonPdf" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                                <i class="fa fa-file-pdf-o"></i>
+                                            </button>
+                                            <button name="botonXlsx" id="botonXlsx" title="Descargar en formato EXCEL" class="btn btn-success">
+                                                <i class="fa fa-file-excel-o"></i>
+                                            </button>
+                                        </form>    
+                                    </div>   
+                                </div>                                 
+                            </div>
+                        </div>            
                     <div class="panel shadow">
                         <div style="display: block; min-height: 500px;" class="panel-body"> 
                             <span class="text-primary pull-right"><b>{{(infoSubEntidad[0]['total_general'])|number_format(0, ',', '.')}}</b></span><span class="text-primary"><b>Total</b></span>
@@ -106,17 +132,7 @@
                         <div class="panel-footer">
                         </div>
                     </div>
-                </div>  
-                <form name="formEstadisticaRegularPdf" id="formEstadisticaRegularPdf" role="form" action="{{ path('reporte_regular_informacion_general_print_pdf') }}" method="POST">  
-                    <input type="hidden" name="gestion" value="{{ gestion }}" />
-                    <input type="hidden" name="codigo" value="{{ infoEntidad[0]['codigo'] }}" />  
-                    <input type="hidden" name="codigo" value="{{ infoEntidad[0]['nivel'] }}" />  
-                </form> 
-                <form name="formEstadisticaRegularXls" id="formEstadisticaRegularXls" role="form" action="{{ path('reporte_regular_informacion_general_print_xls') }}" method="POST">  
-                    <input type="hidden" name="gestion" value="{{ gestion }}" />
-                    <input type="hidden" name="codigo" value="{{ infoEntidad[0]['codigo'] }}" /> 
-                    <input type="hidden" name="codigo" value="{{ infoEntidad[0]['nivel'] }}" />  
-                </form>                      
+                </div>                      
             {% endif %}
             {% if infoSubEntidad is not defined %}
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">                        
