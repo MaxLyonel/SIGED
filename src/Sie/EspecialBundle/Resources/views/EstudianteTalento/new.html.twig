@@ -221,7 +221,7 @@
                 success: function (data) {
                     $("#guardar").attr('disabled', false);
                     $("#carga").empty();
-                    if (data.msg == 'exito') {
+                    if (data.estado == 200) {
                         clearInput();
                         //location.href = "{ { path('wf_tramite_recibido') }}";
                         location.href = "{{ path('wf_tramite_index') }}";
