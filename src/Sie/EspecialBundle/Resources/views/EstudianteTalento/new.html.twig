@@ -22,7 +22,7 @@
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-md-6">
-                                <h3 class="panel-title">Nuevo Estudiante</h3>
+                                <h3 class="panel-title">Solicitud de Talento</h3>
                             </div>
                             {#<div class="col-md-6 text-right">
                                 <a href="{{path('talento_extraordinario_index')}}" class="btn btn-default"><i class="fa fa-angle-left"></i> Volver</a>
@@ -88,13 +88,9 @@
                                         <input type="text" class="form-control noedit" id="institucion_educativa" name="institucion_educativa">
                                     </div>
                                     <div class="form-group">
-                                        <label for="centro_inscripcion">Centro Inscripción</label>
-                                        <select type="text" class="form-control" id="centro_inscripcion" name="centro_inscripcion" required>
-                                            <option value="" disabled selected>Seleccione</option>
-                                            {% for item in centros %}
-                                            <option value="{{ item.id }}">{{ item.institucioneducativa }}</option>
-                                            {% endfor %}
-                                        </select>
+                                        <input type="hidden" id="centro_inscripcion" name="centro_inscripcion" value="{{ centro_inscripcion }}" readonly>
+                                        <label for="centro">Centro Inscripción</label>
+                                        <input type="text" class="form-control" id="centro" name="centro" value="{{ centro }}" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="fecha_solicitud">Fecha Solicitud</label>
@@ -119,14 +115,12 @@
     {{parent()}}
     {#<script src="{{asset('js/jquery-ui.min.js')}}"></script>#}
     <script>
-        $(document).ready(function() {
-            $("#centro_inscripcion").select2();
-        });
+        // $(document).ready(function() {
+        // });
         $('.noedit').keydown(function() {
-            //code to not allow any changes to be made to input field
             return false;
         });
-        $("#fecha_solicitud").datepicker({ autoclose: true, todayHighlight: true });
+        $("#fecha_solicitud").datepicker({ autoclose: true, todayHighlight: true, defaultDate: "+1w", minDate: 0 });
         $('#rude').keypress(function (event) {
             if (event.keyCode === 10 || event.keyCode === 13) {
                 event.preventDefault();
@@ -146,12 +140,12 @@
                     data: {'rude': rude},
                     beforeSend: function () {
                         $("#carga").empty();
-                        $("#carga").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                        $("#carga").append('<div class="text-center">Buscando... <img src="{{asset('img/loading.gif')}}" /></div>');
                         clearInput();
                     },
                     success: function (data) {
                         $("#carga").empty();
-                        if (data.estado == 200) {
+                        if (data.msg == 'exito') {
                             $("#nombre").val(data.estudiante.nombre);
                             $("#paterno").val(data.estudiante.paterno);
                             $("#materno").val(data.estudiante.materno);
@@ -216,7 +210,7 @@
                 data: {'solicitud': {'estudiante_id': $("#estudiante_id").val(), 'estudiante_ins_id': $("#estudiante_ins_id").val(), 'flujotipo_id': $("#flujotipo_id").val(), 'centro_inscripcion': $("#centro_inscripcion").val(), 'fecha_solicitud': $("#fecha_solicitud").val()}}, //$(this).serialize()
                 beforeSend: function () {
                     $("#carga").empty();
-                    $("#carga").append('<div class="text-center">Guardando datos</div>');
+                    $("#carga").append('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
                 },
                 success: function (data) {
                     $("#guardar").attr('disabled', false);

@@ -1,0 +1,125 @@
+{% extends 'layoutEspecialSie.html.twig' %}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Talento Extraordinario <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{ path('wf_tramite_recibido') }}">Bandeja</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Finalizar</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3 class="panel-title">Finalizar Trámite</h3>
+                            </div>
+                            {#<div class="col-md-6 text-right">
+                                <a href="{{path('talento_extraordinario_index')}}" class="btn btn-default"><i class="fa fa-angle-left"></i> Volver</a>
+                            </div>#}
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="estudiante">Estudiante</label>
+                                    <input type="text" class="form-control" id="estudiante" value="{{ estudiante }}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="es_talento">¿Es Talento?</label>
+                                    <input type="text" class="form-control" id="es_talento" value="{{ es_talento }}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="tipo_talento">Tipo de Talento</label>
+                                    <input type="text" class="form-control" id="tipo_talento" value="{{ tipo_talento }}" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="carga"></div>
+                        <hr>
+                        <div class="row">
+                            <form id="confirmar" action="" autocomplete="off">
+                                <input type="hidden" id="tramite_id" value="{{ tramite_id }}">
+                                <div class="col-md-12 text-center">
+                                    {#<div class="form-group">
+                                        <label for="es_talento">¿Es Talento?</label>
+                                        <select type="text" class="form-control" id="es_talento" name="es_talento" disabled required>
+                                            <option value="" disabled selected>Seleccione...</option>
+                                            <option value="SI">Si</option>
+                                            <option value="NO">No</option>
+                                        </select>
+                                    </div>#}
+                                    <h3>¿Está segura(o) de confirmar la conclusión del trámite?</h3>
+                                </div>
+                                <div class="col-md-12 text-center">
+                                    <button type="submit" class="btn btn-primary" id="confirma">Confirmar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    {#<script src="{{asset('js/jquery-ui.min.js')}}"></script>#}
+    <script>
+        $(document).ready(function() {
+        });
+
+        function mesage(tipo, titulo, msg) {
+            $("#carga").append('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
+                '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                '<strong>'+ titulo +'</strong> '+ msg +' </div>');
+            setTimeout(function () { $("#carga").empty(); }, 3000);
+        }
+
+        $("#confirmar").submit(function (event) {
+            event.preventDefault();
+            $("#confirma").attr('disabled', true);
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('talento_extraordinario_confirm'),
+                data: {'tramite_id': $('#tramite_id').val()},
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#carga").empty();
+                    $("#carga").append('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $("#confirma").attr('disabled', false);
+                    $("#carga").empty();
+                    if (data.estado == 200) {
+                        mesage('info', 'Notificación', data.msg);
+                        location.href = "{{ path('wf_tramite_recibido') }}";
+                    } else {
+                        mesage('warning', 'Notificación', data.msg);
+                    }
+                },
+                error: function (error) {
+                    $("#carga").empty();
+                    $("#confirma").attr('disabled', false);
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+
