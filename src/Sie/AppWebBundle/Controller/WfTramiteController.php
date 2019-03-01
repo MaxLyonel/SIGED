@@ -412,7 +412,7 @@ class WfTramiteController extends Controller
      */
     public function guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos,$lugarTipoLocalidad_id,$lugarTipoDistrito_id)
     {
-
+        //dump($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos,$lugarTipoLocalidad_id,$lugarTipoDistrito_id);die;
         $em = $this->getDoctrine()->getManager();
 
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($tarea);
@@ -658,7 +658,7 @@ class WfTramiteController extends Controller
         (select td.usuario_destinatario_id,count(*) as nro
         from tramite t
         join tramite_detalle td on cast(t.tramite as int)=td.id
-        where flujo_proceso_id=". $tarea_actual_id ." and td.tramite_estado_id=15 group by td.usuario_destinatario_id)b on a.usuario_id=b.usuario_destinatario_id  order by b.nro desc");
+        where flujo_proceso_id=". $tarea_actual_id ." and td.tramite_estado_id in (15,4) group by td.usuario_destinatario_id)b on a.usuario_id=b.usuario_destinatario_id  order by b.nro desc");
         $query->execute();
         $usuarios = $query->fetchAll();
         //dump($usuarios);die;
@@ -971,7 +971,7 @@ class WfTramiteController extends Controller
         $data = $this->listarF($form['proceso'],$form['tramite']);
         //dump($data);die;
 
-        if (($form['proceso'] == 5 || $form['proceso'] == 6 || $form['proceso'] == 7)  && !$data['nombre']) 
+        if (($form['proceso'] == 5 || $form['proceso'] == 6 || $form['proceso'] == 7 || $form['proceso'] == 10)  && !$data['nombre']) 
         {
             //dump($data['nombre']);die;
             $mensaje = 'Número de tramite es incorrecto';
@@ -992,7 +992,7 @@ class WfTramiteController extends Controller
         /**
          * TRAMITE RUE
          */
-        if($flujotipo == 5 || $flujotipo == 6 || $flujotipo == 7) 
+        if($flujotipo == 5 || $flujotipo == 6 || $flujotipo == 7 || $flujotipo == 10) 
         {
             $query = $em->getConnection()->prepare('select p.id, p.flujo,d.institucioneducativa, p.proceso_tipo, p.orden, p.es_evaluacion,p.variable_evaluacion, p.condicion, p.nombre,d.valor_evaluacion, p.condicion_tarea_siguiente, p.plazo, p.tarea_ant_id, p.tarea_sig_id, p.rol_tipo_id,d.id as td_id,d.tramite_id, d.flujo_proceso_id,d.fecha_recepcion,d.fecha_envio,d.usuario_remitente,d.usuario_destinatario,d.obs,d.tramite_estado,d.fecha_envio-d.fecha_recepcion as duracion
         from
@@ -1080,7 +1080,7 @@ class WfTramiteController extends Controller
         $data['flujoDetalle'] = $detalle['detalle'];
         $data['fecha_fin'] = $detalle['fecha_fin'];
         $data['flujotipo'] = $flujotipo;
-        if($flujotipo == 5 || $flujotipo == 6 || $flujotipo == 7)
+        if($flujotipo == 5 || $flujotipo == 6 || $flujotipo == 7 || $flujotipo == 10)
         {
             if($arrData[0]['institucioneducativa']){
                 $data['nombre']=$arrData[0]['institucioneducativa'];

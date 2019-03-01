@@ -8,7 +8,7 @@
 {% endif %}
 <div class="panel panel-primary">
     <div class="panel-heading">
-{% if flujotipo in [6,7] %}
+{% if flujotipo in [6,7,10] %}
     <div><h4>UNIDAD EDUCATIVA: <span>{{nombre}}</span></h4></div>
 {% endif %}
 {% if flujotipo == 5 %}
@@ -17,7 +17,7 @@
 {% if flujotipo in [66,27] %}
     <div><h4>ESTUDIANTE: {{nombre}}</h4></div>
 {% endif %}
- {% if (flujotipo in [5,6,7] and nombre != null) %} 
+ {% if (flujotipo in [5,6,7,10] and nombre != null) %} 
     </div>
     <div class="panel-body">
     <div class="panel">
@@ -63,7 +63,7 @@
                                 <td>{{ d.duracion }}</td>
                                 <td>{{ d.plazo }}</td>
                                 {% if d.tramite_estado %}
-                                    {% if d.tarea_sig_id == null %}
+                                    {% if d.tarea_sig_id == null and d.fecha_envio %}
                                         <td ><span class="label label-success">TRAMITE CONCLUIDO</span></td>
                                     {% else %}
                                         <td>{{ d.tramite_estado }}</td>
