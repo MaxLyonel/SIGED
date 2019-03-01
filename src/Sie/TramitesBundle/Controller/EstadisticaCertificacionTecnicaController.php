@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\HttpFoundation\Response;
 
 use Sie\TramitesBundle\Controller\DefaultController as defaultTramiteController;
 use Sie\AppWebBundle\Controller\ChartController as chartController;
@@ -39,6 +40,11 @@ class EstadisticaCertificacionTecnicaController extends Controller {
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
         $array_user = $sesion->get('roluser');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
 
         if ($request->isMethod('POST')) {
             $gestionActual = (int)$request->get('gestion');
@@ -589,4 +595,146 @@ class EstadisticaCertificacionTecnicaController extends Controller {
 
         return $aDato;
     }
+
+    /**
+     * Imprime reportes estadisticos de centros de educacion especial segun el nivel - Educación Alternativa - Tecnica Tecnologica Productiva
+     * Jurlan
+     * @param Request $request
+     * @return type
+     */
+    public function certTecEmitidoDescargaGeneralAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+        if ($request->isMethod('POST')) {
+            $gestion = $request->get('gestion');
+            $codigoArea = base64_decode($request->get('codigo'));
+            $nivelArea = $request->get('nivel');
+        } else {
+            $gestion = $gestionActual;
+            $codigoArea = 0;
+            $nivelArea = 0;
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $formato = '.pdf';
+        $contentType = 'application/pdf';
+        $rptdesign = 'alt_est_CertificadoTecnico_Emitido_Nacional_v1_rcm.rptdesign&__format='.$formato.'&codigo='.$codigoArea.'&gestion='.$gestion;
+
+        if (isset($_POST['botonPdf'])) {            
+            $formato = 'pdf';
+            $contentType = 'application/pdf';
+        }
+
+        if (isset($_POST['botonXls'])) {      
+            $formato = 'xls';
+            $contentType = 'application/vnd.ms-excel';
+        }
+
+        if (isset($_POST['botonXlsx'])) {      
+            $formato = 'xlsx';
+            $contentType = 'application/vnd.openxmlformats-officedocument-spreadsheetml.sheet';
+        }
+
+        if ($nivelArea == 1){
+            $rptdesign = 'alt_est_CertificadoTecnico_Emitido_Nacional_v1_rcm.rptdesign&__format='.$formato.'&codigo='.$codigoArea.'&gestion='.$gestion;
+        }
+
+        if ($nivelArea == 2){
+            $rptdesign = 'alt_est_CertificadoTecnico_Emitido_Departamental_v1_rcm.rptdesign&__format='.$formato.'&codigo='.$codigoArea.'&gestion='.$gestion;
+        }
+
+        if ($nivelArea == 3){
+            $rptdesign = 'alt_est_CertificadoTecnico_Emitido_Distrital_v1_rcm.rptdesign&__format='.$formato.'&codigo='.$codigoArea.'&gestion='.$gestion;
+        }
+
+        $arch = 'certTec_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.'.$formato;
+        $response = new Response();
+        $response->headers->set('Content-type', $contentType);
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));        
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $rptdesign));  
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+
+
+
+    /**
+     * Imprime reportes estadisticos de centros de educacion especial segun el nivel - Educación Alternativa - Tecnica Tecnologica Productiva
+     * Jurlan
+     * @param Request $request
+     * @return type
+     */
+    public function certTecEmitidoDescargaEspecialidadAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+        if ($request->isMethod('POST')) {
+            $gestion = $request->get('gestion');
+            $codigoArea = base64_decode($request->get('codigo'));
+            $nivelArea = $request->get('nivel');
+        } else {
+            $gestion = $gestionActual;
+            $codigoArea = 0;
+            $nivelArea = 0;
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $formato = '.pdf';
+        $contentType = 'application/pdf';
+        $rptdesign = 'alt_est_CertificadoTecnico_Emitido_Especialidad_Nacional_v1_rcm.rptdesign&__format='.$formato.'&codigo='.$codigoArea.'&gestion='.$gestion;
+
+        if (isset($_POST['botonPdf'])) {      
+            $formato = 'pdf';
+            $contentType = 'application/pdf';
+        }
+
+        if (isset($_POST['botonXls'])) {      
+            $formato = 'xls';
+            $contentType = 'application/vnd.ms-excel';
+        }
+
+        if (isset($_POST['botonXlsx'])) {      
+            $formato = 'xlsx';
+            $contentType = 'application/vnd.openxmlformats-officedocument-spreadsheetml.sheet';
+        }
+
+        if ($nivelArea == 1){
+            $rptdesign = 'alt_est_CertificadoTecnico_Emitido_Especialidad_Nacional_v1_rcm.rptdesign&__format='.$formato.'&codigo='.$codigoArea.'&gestion='.$gestion;
+        }
+
+        if ($nivelArea == 2){
+            $rptdesign = 'alt_est_CertificadoTecnico_Emitido_Especialidad_Departamental_v1_rcm.rptdesign&__format='.$formato.'&codigo='.$codigoArea.'&gestion='.$gestion;
+        }
+
+        if ($nivelArea == 3){
+            $rptdesign = 'alt_est_CertificadoTecnico_Emitido_Especialidad_Distrital_v1_rcm.rptdesign&__format='.$formato.'&codigo='.$codigoArea.'&gestion='.$gestion;
+        }
+
+        $arch = 'certTec_especialidad_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.'.$formato;
+        $response = new Response();
+        $response->headers->set('Content-type', $contentType);
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));        
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $rptdesign));  
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
 }
+
+
+
