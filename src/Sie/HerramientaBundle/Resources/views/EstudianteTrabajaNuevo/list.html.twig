@@ -1,7 +1,55 @@
-{% extends "::base.html.twig" %}
+<div class="row">
+	<div class="col-md-12">
+		<div class="mensaje2"></div>
+	</div>
+</div>
+{% if registrados|length > 0 %}
 
-{% block title %}SieHerramientaBundle:EstudianteTrabajaNuevo:list{% endblock %}
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Rude</th>
+				<th>Nombre</th>
+				<th>Paterno</th>
+				<th>Materno</th>
+				<th>Ocupación</th>
+				<th>¿Recibe Remuneración?</th>
+				<th>Observación</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for registro in registrados %}
+				<tr>
+					<td>{{ registro.codigoRude }}</td>
+					<td>{{ registro.nombre }}</td>
+					<td>{{ registro.paterno }}</td>
+					<td>{{ registro.materno }}</td>
+					<td style="text-transform:uppercase">
+						{% if registro.ocupacionId == 99 %}
+							{{ registro.ocupacionOtro }}
+						{% else %}
+							{{ registro.ocupacion }} 
+						{% endif %}	
+					</td>
+					<td align="center">
+						{% if registro.remuneracion %}
+							SI
+						{% else %}
+							NO
+						{% endif %}
+					</td>
+					<td>{{ registro.especificacion }}</td>
+					<td>
+						<button type="button" class="btn btn-danger btn-xs">Eliminar</button>
+					</td>
+				</tr>
+			{% endfor %}
+			
+		</tbody>
+	</table>
 
-{% block body %}
-<h1>Welcome to the EstudianteTrabajaNuevo:list page</h1>
-{% endblock %}
+{% else %}
+	<hr>
+	<p class="text-danger">No hay estudiantes registrados</p>
+{% endif %}

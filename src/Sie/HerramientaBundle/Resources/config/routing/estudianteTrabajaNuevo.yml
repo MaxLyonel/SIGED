@@ -4,13 +4,17 @@ estudianteTrabajaNuevo_index:
     options:
          expose: true
 
-estudianteTrabajaNuevo_find:
-    path:     /find
-    defaults: { _controller: SieHerramientaBundle:EstudianteTrabajaNuevo:find }
+estudianteTrabajaNuevo_buscar:
+    path:     /buscar
+    defaults: { _controller: SieHerramientaBundle:EstudianteTrabajaNuevo:buscar }
+    options:
+        expose: true
 
-estudianteTrabajaNuevo_result:
-    path:     /result
-    defaults: { _controller: SieHerramientaBundle:EstudianteTrabajaNuevo:Result }
+estudianteTrabajaNuevo_save:
+    path:     /save
+    defaults: { _controller: SieHerramientaBundle:EstudianteTrabajaNuevo:save }
+    options:
+        expose: true
 
 estudianteTrabajaNuevo_doinscription:
     path:     /doinscription

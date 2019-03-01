@@ -36,65 +36,25 @@
                 </div>
             </div>
             <div class="panel-body" id="modal-body">
-                <div class="mensaje"></div>
-            
-                <hr>
-
+                {# <div class="mensaje"></div> #}
                 <div id="idfind">
-                	
-
-
-                            <!-- Start input grid -->
-                            <div class="panel rounded shadow">
-                                <div class="panel-heading">
-                                    <div class="pull-left">
-                                        <h3 class="panel-title">Datos de entrada para la busqueda</h3>
-                                    </div>
-                               
-                                    <div class="clearfix"></div>
-                                </div><!-- /.panel-heading -->
-                                <div class="panel-body no-padding">
-
-                                    
-                                    {{form_start(form, {'attr': {'id':'idformfind'}} )}}
-                                        <div class="form-body">
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                    	{{form_widget(form.rudeoci)}}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                                                            
-                                        </div><!-- /.form-body -->
-                                        <div class="form-footer">
-                                            <div class="pull-right">
-                                                <button class="btn btn-danger mr-5">Cancel</button>
-                                                {{form_widget(form.find)}}
-                                                <!-- <button class="btn btn-success" type="submit">Submit</button> -->
-                                            </div>
-                                            <div class="clearfix"></div>
-                                        </div><!-- /.form-footer -->
-                                    {{form_end(form)}}
-
-                                </div><!-- /.panel-body -->
-                            </div><!-- /.panel -->
-                            <!--/ End input grid -->
+                    <h5>Buscar estudiante</h5>
+                    <form id="formEstudiante" onsubmit="buscarEstudiante(); return false;">
+                        <div class="form-group col-md-8">
+                            {{form_widget(form.rudeoci)}}
                         </div>
-                    
-                <div id="idresult">
+                        <div class="form-group col-md-4">
+                            <button class="btn btn-info btn-block" type="submit"> <i class="fa fa-search"></i> Buscar</button>
+                        </div>
+                        {{ form_widget(form) }}
+                    </form>
+                </div>
+                <div id="resultado">
                 	
                 </div>
-
-                <div id="idlist">
-                	
+                <div id="registrados">
+                	{% include 'SieHerramientaBundle:EstudianteTrabajaNuevo:list.html.twig' with {'registrados': registrados} %}
                 </div>
-
-
-
-            	
-                
-                
             </div>
         </div>
     </div>
@@ -102,44 +62,39 @@
 
 <script type="text/javascript">
 
-var findStudent = function(){
+    var buscarEstudiante = function(){
 
-	var rudeoci = $('#form_rudeoci').val();
-	if(rudeoci != ''){
-		var data = $('#idformfind').serialize();
-		alert(data);return false;
-		 $.ajax({
-              type: 'post',
-              data: data,
-              url: Routing.generate('estudianteTrabajaNuevo_find'),
-              beforeSend: function () {
-                  $("#idstudents").empty();
-                  $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
-              },
-              success: function (data) {
-                  $("#idstudents").empty();
-                  $("#idstudents").append(data);
-                  $('.tooltips').tooltip();
-              },
-              statusCode: {
-                  500: function () {
-
+    	var rudeoci = $('#form_rudeoci').val();
+    	if(rudeoci != ''){
+    		var data = $('#formEstudiante').serialize();
+    		$.ajax({
+                  type: 'post',
+                  data: data,
+                  url: Routing.generate('estudianteTrabajaNuevo_buscar'),
+                  beforeSend: function () {
+                      $("#resultado").empty();
+                      $("#resultado").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
                   },
-                  404: function () {
+                  success: function (data) {
+                      $("#resultado").empty();
+                      $("#resultado").append(data);
+                      validarOtro();
+                  },
+                  statusCode: {
+                      500: function () {
 
+                      },
+                      404: function () {
+
+                      }
                   }
-              }
-          });
+            });
 
-	
-
-	}else{
-		alert('El campo RUDE es requerido');
-		return false;
-	}
-};
-   
-
+    	}else{
+    		alert('El campo RUDE es requerido');
+    		return false;
+    	}
+    };
    
 
 </script>
