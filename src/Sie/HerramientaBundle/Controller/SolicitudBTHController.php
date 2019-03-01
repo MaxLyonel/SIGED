@@ -327,7 +327,7 @@ class SolicitudBTHController extends Controller {
         ));
 
     }
-    public function guardasolicitudAction(Request $request){
+    public function guardasolicitudAction(Request $request){ dump( $request);die;
         $id_Institucion = $request->get('institucionid');
         $gestion =  $request->getSession()->get('currentyear');
         $solicitud = $request->get('solicitud');
@@ -375,7 +375,7 @@ class SolicitudBTHController extends Controller {
          * verificamos el tipo de solicitud 45 tramite nuevo
          */
 
-        if( $request->get('solicitud') == 'Registro Nuevo' ){
+        if( trim($request->get('solicitud')) == 'Registro Nuevo' ){
             if($tramite_iniciado < 1){ //si tiene tramite iniciado
                 if($es_plena==0){ // La ue no se encuentra registrada en la tabla de institucioneducativa_humanistico_tecnico.  si la ue es bth para cualquier gestion
                     $id_rol         = $this->session->get('roluser');
@@ -491,7 +491,7 @@ class SolicitudBTHController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
     }
-    public function formularioDirectorAction(Request $request){
+    public function formularioDirectorAction(Request $request){ //dump($request);die;
         $id_tramite = $request->get('id_tramite');//ID de Tramite
         /*
          * Obtenemios la informacion de la UE
@@ -701,23 +701,25 @@ class SolicitudBTHController extends Controller {
         $especialidadlista = $query->fetchAll();
         $tipoTramite    = $infoUE['tramite_tipo'];
         $tramite_tipo = ($em->getRepository('SieAppWebBundle:TramiteTipo')->findOneById($tipoTramite))->getTramitetipo();
+        $flujotipo = ($em->getRepository('SieAppWebBundle:Tramite')->findOneById($id_tramite))->getFlujoTipo();
                 return $this->render('SieHerramientaBundle:SolicitudBTH:formularioBTHDirec.html.twig',array(
-                    'ieducativa' => $infoUe,
-                    'institucion' => $institucion,
-                    'gestion' => $gestion,
-                    'ubicacion' => $ubicacionUe,
-                    'director' => $director,
-                    'cursos'   => $cursos,
-                    'maestros'=>$maestros,
-                    'especialidad'=>$lista_especialidadRegNuearray,
-                    'especialidadarray'=>$lista_especialidadarray,
+                    'ieducativa'    => $infoUe,
+                    'institucion'   => $institucion,
+                    'gestion'       => $gestion,
+                    'ubicacion'     => $ubicacionUe,
+                    'director'      => $director,
+                    'cursos'        => $cursos,
+                    'maestros'      =>$maestros,
+                    'especialidad'  =>$lista_especialidadRegNuearray,
+                    'especialidadarray' =>$lista_especialidadarray,
                     'especialidadlista' =>$especialidadlista,
-                    'especialidadinfo'=>$especialidadinfo,
-                    'informe'=>$informe,
-                    'id_tramite'=>$id_tramite,
-                    'documento'=>$documento,
-                    'tipoTramite'=>$tipoTramite,
-                    'tramite_tipo' =>$tramite_tipo
+                    'especialidadinfo'  =>$especialidadinfo,
+                    'informe'       =>$informe,
+                    'id_tramite'    =>$id_tramite,
+                    'documento'     =>$documento,
+                    'tipoTramite'   =>$tipoTramite,
+                    'tramite_tipo'  =>trim($tramite_tipo),
+                    'flujotipo'     => $flujotipo->getId()
                 ));
 
     }

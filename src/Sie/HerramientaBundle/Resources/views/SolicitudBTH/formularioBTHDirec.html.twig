@@ -1,7 +1,7 @@
 {% extends 'layoutHerramienta.html.twig' %}
 {% block contentoption %}
     <div class="header-content">
-        <h2><i class="fa fa-table animated fadeIn"></i> Formulario de Solicitud BTH.</h2>
+        <h2><i class="fa fa-table animated fadeIn"></i> Formulario de Solicitud BTH. -  {{ tramite_tipo }}</h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -264,11 +264,7 @@
                 </div>
             </div>
         </div>
-        <ul id="select_esp" style="display: none">
-        {% for especialidadarray in especialidadinfo %}
-            <li>{{ especialidadarray }}</li>
-        {% endfor %}
-        </ul>
+        <input  id="tramite_tipo" value="{{ tramite_tipo }}">
     </div>
 {% endblock %}
 {% block javascripts%}
@@ -315,9 +311,10 @@
             }
         }
         function  enviarSolicitubthDis() {
-            var idsolicitud = {{ tipoTramite }};
-            switch (true) {
-                case (tramite_tipo == 'Registro Nuevo')://Registro Nuevo
+            var idsolicitud  = {{ tipoTramite }};
+            var tramite_tipo = $('#tramite_tipo').val();
+            switch (tramite_tipo) {
+                case 'Registro Nuevo'://Registro Nuevo
                     swal({
                         title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
                         text: "La información llenada será enviada a la Direccion Distrital.",
@@ -346,7 +343,7 @@
                                 $.ajax({
                                     type: 'post',
                                     url: "{{ path('solicitud_bth_enviosolicitud') }}",
-                                    data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},idsolicitud:idsolicitud,sw:1 },
+                                    data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},idsolicitud:idsolicitud,tipoTramite:{{ tramite_tipo }},flujotipo:{{ flujotipo }},sw:1 },
                                     dataType : 'json',
                                     beforeSend: function () {
                                         swal({
@@ -377,7 +374,7 @@
                         });
 
                     break;
-                case (tramite_tipo == 'Ratificación')://Ratificacion
+                case 'Ratificación': //Ratificacion
                     swal({
                         title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
                         text: "La información llenada será enviada a la Direccion Distrital.",
@@ -409,7 +406,6 @@
                                         if (this.value == 64 | this.value == 65) {
                                             verificar2 = true;
                                         }
-                                        //especialidades_id.push(opc.value);
                                     });
                                     var seleccionado = $('#lista_select_especialidad').val();
                                     if (verificar1) {
@@ -448,7 +444,7 @@
                                 $.ajax({
                                     type: 'post',
                                     url: "{{ path('solicitud_bth_enviosolicitud') }}",
-                                    data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},sw:1 },
+                                    data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},idsolicitud:idsolicitud,tipoTramite:{{ tipoTramite }},flujotipo:{{ flujotipo }},sw:1 },
                                     dataType : 'json',
                                     before: function () {
                                         swal({
@@ -460,16 +456,16 @@
                                     },
                                     success: function (data) {
                                         console.log(data);
-                                            if (data==1){
-                                                swal("Su formulario se ha enviado con éxito, con Nro. de Trámite:"+{{ id_tramite}} );
-                                                location.href = "{{ path('wf_tramite_index') }}";
-                                            }
-                                            else if(data==3 ){
-                                                swal("Debe iniciar su trámite como 'Registro Nuevo'");
-                                            }else {
-                                                swal('Su formulario no se envío correctamente');
-                                            }
-                                        },
+                                        if (data==1){
+                                            swal("Su formulario se ha enviado con éxito, con Nro. de Trámite:"+{{ id_tramite}} );
+                                            location.href = "{{ path('wf_tramite_index') }}";
+                                        }
+                                        else if(data==3 ){
+                                            swal("Debe iniciar su trámite como 'Registro Nuevo'");
+                                        }else {
+                                            swal('Su formulario no se envío correctamente');
+                                        }
+                                    },
                                     complete: function () {
                                         swal.stopLoading();
                                         swal.close();
@@ -479,7 +475,11 @@
                         });
                     break;
 
+                default:
+                    break;
             }
+
+
         }
 
     </script>
