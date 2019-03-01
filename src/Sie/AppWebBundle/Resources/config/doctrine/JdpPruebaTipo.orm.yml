@@ -1,0 +1,76 @@
+Sie\AppWebBundle\Entity\JdpPruebaTipo:
+    type: entity
+    table: jdp_prueba_tipo
+    indexes:
+        fk_cla_prueba_cla_disciplina1_f:
+            columns:
+                - disciplina_tipo_id
+        fk_prueba_tipo_genero_tipo_fk:
+            columns:
+                - genero_tipo_id
+        IDX_8982B6B8DDBBC9ED:
+            columns:
+                - prueba_participacion_tipo_id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        prueba:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        clasificadorPuntuacion:
+            type: string
+            nullable: true
+            length: 1
+            fixed: false
+            comment: ''
+            column: clasificador_puntuacion
+        clasificadorTipo:
+            type: string
+            nullable: true
+            length: 1
+            fixed: false
+            comment: ''
+            column: clasificador_tipo
+        esactivo:
+            type: boolean
+            nullable: true
+            comment: ''
+    manyToOne:
+        disciplinaTipo:
+            targetEntity: DisciplinaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                disciplina_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        generoTipo:
+            targetEntity: GeneroTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                genero_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        pruebaParticipacionTipo:
+            targetEntity: JdpPruebaParticipacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                prueba_participacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

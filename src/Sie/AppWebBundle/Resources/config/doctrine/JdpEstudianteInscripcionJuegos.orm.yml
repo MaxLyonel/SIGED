@@ -1,0 +1,122 @@
+Sie\AppWebBundle\Entity\JdpEstudianteInscripcionJuegos:
+    type: entity
+    table: jdp_estudiante_inscripcion_juegos
+    indexes:
+        relationship_114_fk:
+            columns:
+                - estudiante_inscripcion_id
+        relationship_110_fk:
+            columns:
+                - fase_tipo_id
+        relationship_113_fk:
+            columns:
+                - gestion_tipo_id
+        fk_estudiante_inscripcion_prueb:
+            columns:
+                - prueba_tipo_id
+    uniqueConstraints:
+        estudiante_inscripcion_juegos_p:
+            columns:
+                - id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: public.estudiante_inscripcion_jue_id_seq
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        posicion:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        distancia:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 105
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        usuarioId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_id
+        puntaje:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+        marca:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        impreso:
+            type: boolean
+            nullable: true
+            comment: ''
+        esactivo:
+            type: boolean
+            nullable: true
+            comment: ''
+    manyToOne:
+        pruebaTipo:
+            targetEntity: JdpPruebaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                prueba_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        faseTipo:
+            targetEntity: JdpFaseTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                fase_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
