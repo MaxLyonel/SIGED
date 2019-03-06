@@ -264,7 +264,7 @@
                 </div>
             </div>
         </div>
-        <input  id="tramite_tipo" value="{{ tramite_tipo }}">
+        <input  type="hidden" id="tramite_tipo"  value="{{ tramite_tipo }}">
     </div>
 {% endblock %}
 {% block javascripts%}
@@ -343,7 +343,7 @@
                                 $.ajax({
                                     type: 'post',
                                     url: "{{ path('solicitud_bth_enviosolicitud') }}",
-                                    data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},idsolicitud:idsolicitud,tipoTramite:{{ tramite_tipo }},flujotipo:{{ flujotipo }},sw:1 },
+                                    data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},idsolicitud:idsolicitud,tipoTramite:{{ tramite_tipo }},idflujotipo:{{ flujotipo }},sw:1 },
                                     dataType : 'json',
                                     beforeSend: function () {
                                         swal({
@@ -416,7 +416,8 @@
                                             }
                                         }
                                         if (!caso1) {
-                                            swal("Debe seleccionar al menos una especialidad entre TEXTILES y CONFECCIONES o TEJIDOS y TELARES.");
+                                            swal("Usted ya se declaro como BTH en esta gestion  o  \n" +
+                                                "Debe seleccionar al menos una especialidad entre TEXTILES y CONFECCIONES o TEJIDOS y TELARES.");
                                             return false;
                                         }
                                     }
@@ -428,7 +429,8 @@
                                             }
                                         }
                                         if (!caso2) {
-                                            swal("Debe seleccionar al menos una especialidad entre CARPINTERIA EN MADERA  o CARPINTERIA METALICA ");
+                                            swal("Usted ya se declaro como BTH en esta gestion  o  \n" +
+                                                "Debe seleccionar al menos una especialidad entre CARPINTERIA EN MADERA  o CARPINTERIA METALICA ");
                                             return false;
                                         }
                                     }
@@ -444,7 +446,7 @@
                                 $.ajax({
                                     type: 'post',
                                     url: "{{ path('solicitud_bth_enviosolicitud') }}",
-                                    data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},idsolicitud:idsolicitud,tipoTramite:{{ tipoTramite }},flujotipo:{{ flujotipo }},sw:1 },
+                                    data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},idsolicitud:idsolicitud,tipoTramite:{{ tipoTramite }},idflujotipo:{{ flujotipo }},sw:1},
                                     dataType : 'json',
                                     before: function () {
                                         swal({

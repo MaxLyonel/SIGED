@@ -327,12 +327,13 @@ class SolicitudBTHController extends Controller {
         ));
 
     }
-    public function guardasolicitudAction(Request $request){ dump( $request);die;
+    public function guardasolicitudAction(Request $request){
         $id_Institucion = $request->get('institucionid');
         $gestion =  $request->getSession()->get('currentyear');
         $solicitud = $request->get('solicitud');
         $idsolicitud = $request->get('idsolicitud');
         $flujotipo = $request->get('idflujotipo');
+        //dump($id_Institucion,$gestion ,$idsolicitud,$flujotipo);die;
         $em = $this->getDoctrine()->getManager();
         $sw = $request->get('sw');
         if($sw==0){//nuevo
@@ -419,21 +420,11 @@ class SolicitudBTHController extends Controller {
                     $id_usuario = $this->session->get('userId');
                     $id_Institucion = $request->get('institucionid');
                     $id_distrito = $request->get('id_distrito');
-                    //$flujotipo = 7;//SOLICITUDBTH
-
                     $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $flujotipo , 'orden' => 1));
                     $tarea   = $flujoproceso->getId();//34 Solicita BTH
-
-                    //$tarea = 34;//Solicita BTH
                     $tabla = 'institucioneducativa';
-
-                    //$id_tipoTramite = 46;//Ratificacion
-                    $id_tipoTramite = $idsolicitud;//Ratificacion d
-
-                    //$informacion    = json_decode($request->get('ipt',true)) ;
-
+                    $id_tipoTramite = $idsolicitud;//Ratificacion
                     $idTramite = '';
-
                     $wfTramiteController = new WfTramiteController();
                     $wfTramiteController->setContainer($this->container);
                     $datos = ($request->get('ipt'));
