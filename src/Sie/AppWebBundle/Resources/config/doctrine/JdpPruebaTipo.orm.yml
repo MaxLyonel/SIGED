@@ -47,7 +47,7 @@ Sie\AppWebBundle\Entity\JdpPruebaTipo:
             comment: ''
     manyToOne:
         disciplinaTipo:
-            targetEntity: DisciplinaTipo
+            targetEntity: JdpDisciplinaTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null

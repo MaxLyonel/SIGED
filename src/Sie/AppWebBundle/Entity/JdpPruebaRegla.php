@@ -220,4 +220,32 @@ class JdpPruebaRegla
     {
         return $this->clasificacionTipo;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\JdpPruebaTipo
+     */
+    private $pruebaTipo;
+
+
+    /**
+     * Set pruebaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\JdpPruebaTipo $pruebaTipo
+     * @return JdpPruebaRegla
+     */
+    public function setPruebaTipo(\Sie\AppWebBundle\Entity\JdpPruebaTipo $pruebaTipo = null)
+    {
+        $this->pruebaTipo = $pruebaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get pruebaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\JdpPruebaTipo 
+     */
+    public function getPruebaTipo()
+    {
+        return $this->pruebaTipo;
+    }
 }

@@ -35,7 +35,7 @@ class JdpPruebaTipo
     private $esactivo;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\DisciplinaTipo
+     * @var \Sie\AppWebBundle\Entity\JdpDisciplinaTipo
      */
     private $disciplinaTipo;
 
@@ -155,10 +155,10 @@ class JdpPruebaTipo
     /**
      * Set disciplinaTipo
      *
-     * @param \Sie\AppWebBundle\Entity\DisciplinaTipo $disciplinaTipo
+     * @param \Sie\AppWebBundle\Entity\JdpDisciplinaTipo $disciplinaTipo
      * @return JdpPruebaTipo
      */
-    public function setDisciplinaTipo(\Sie\AppWebBundle\Entity\DisciplinaTipo $disciplinaTipo = null)
+    public function setDisciplinaTipo(\Sie\AppWebBundle\Entity\JdpDisciplinaTipo $disciplinaTipo = null)
     {
         $this->disciplinaTipo = $disciplinaTipo;
     
@@ -168,7 +168,7 @@ class JdpPruebaTipo
     /**
      * Get disciplinaTipo
      *
-     * @return \Sie\AppWebBundle\Entity\DisciplinaTipo 
+     * @return \Sie\AppWebBundle\Entity\JdpDisciplinaTipo 
      */
     public function getDisciplinaTipo()
     {

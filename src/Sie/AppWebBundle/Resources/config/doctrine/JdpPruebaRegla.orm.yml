@@ -11,6 +11,9 @@ Sie\AppWebBundle\Entity\JdpPruebaRegla:
         IDX_DA56AB652DC23E1A:
             columns:
                 - clasificacion_tipo_id
+        IDX_DA56AB655A51DE01:
+            columns:
+                - prueba_tipo_id
     id:
         id:
             type: integer
@@ -71,6 +74,15 @@ Sie\AppWebBundle\Entity\JdpPruebaRegla:
             inversedBy: null
             joinColumns:
                 clasificacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        pruebaTipo:
+            targetEntity: JdpPruebaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                prueba_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

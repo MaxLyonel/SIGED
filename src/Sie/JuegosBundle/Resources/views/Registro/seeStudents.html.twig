@@ -98,16 +98,12 @@
                     <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
                 </div>
             {% endfor %}
-
         </div>
     </div>
 {% endif %}
 
-
-
-    <script>
-
-    function getPruebas(es) {
+<script>
+    var getPruebas = function (es) {
         genero = $('#form_genero').val();
         ue = $('#form_sie').val();
 
@@ -133,9 +129,9 @@
                 });
             }
         });
-    }
+    };
 
-    function getInscritos(es) {
+    var getInscritos = function (es) {
         ue = $('#form_sie').val();
 
         $.ajax({
@@ -152,11 +148,11 @@
                 });
             }
         });
-    }
+    };
 
 
 
-    function setDeportistas(es,des) {
+    var setDeportistas = function (es,des) {
         var deportistas = document.getElementsByName('deportistas[]');
         var botonAceptar = document.getElementById('form_submit');
         habilitarBotonSubmit();
@@ -175,9 +171,9 @@
                 padre2.removeChild(lbl);
             }
         }
-    }
+    };
 
-    function habilitarBotonSubmit(){
+    var habilitarBotonSubmit = function (){
             var estudiantes = document.getElementsByName('estudiantes[]');
             var botonAceptar = document.getElementById('form_submit');
             var cant = 0;
@@ -199,5 +195,5 @@
                 }
                 return false;
             }
-        }
+        };
 </script>

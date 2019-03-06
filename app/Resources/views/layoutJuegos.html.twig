@@ -421,23 +421,6 @@
 
             <!-- START @PAGE CONTENT -->
             <section id="page-content">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="page-content">
-                            {% for type, flashMessage in app.session.flashbag.all() %}
-                                <div class="alert alert-{{ type }} alert-dismissible" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    {% if flashMessage.title is defined %}
-                                    <strong><i class='fa fa-envelope'></i> {{ flashMessage.title }}: </strong>
-                                        {{ flashMessage.message }}
-                                    {% else %}
-                                        {{ type }}
-                                    {% endif %}
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
                 {% block contentoption %}
                     <!-- here the iptions content -->
                 {% endblock %}
