@@ -194,4 +194,32 @@ class OlimMateriaTipo
     {
         return $this->olimRegistroOlimpiada;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\OlimClasificadorMateriaTipo
+     */
+    private $olimClasificadoMateriaTipo;
+
+
+    /**
+     * Set olimClasificadoMateriaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\OlimClasificadorMateriaTipo $olimClasificadoMateriaTipo
+     * @return OlimMateriaTipo
+     */
+    public function setOlimClasificadoMateriaTipo(\Sie\AppWebBundle\Entity\OlimClasificadorMateriaTipo $olimClasificadoMateriaTipo = null)
+    {
+        $this->olimClasificadoMateriaTipo = $olimClasificadoMateriaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get olimClasificadoMateriaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\OlimClasificadorMateriaTipo 
+     */
+    public function getOlimClasificadoMateriaTipo()
+    {
+        return $this->olimClasificadoMateriaTipo;
+    }
 }

@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\OlimClasificadorMateriaTipo:
+    type: entity
+    table: olim_clasificador_materia_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        clasificadorMateria:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: clasificador_materia
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }
