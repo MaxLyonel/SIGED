@@ -1,3 +1,9 @@
+donwload_nnats:
+    path: /nnats/{gestion}/{sie}
+    defaults: { _controller: SieAppWebBundle:Download:nnats }
+    options:
+        expose: true
+
 download_ddjjone_web:
     path:    /ddjjone/{rude}/{gestion}/{sie}
     defaults: { _controller: SieAppWebBundle:Download:ddjjone }
