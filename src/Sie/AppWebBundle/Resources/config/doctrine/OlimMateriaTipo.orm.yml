@@ -5,9 +5,6 @@ Sie\AppWebBundle\Entity\OlimMateriaTipo:
         IDX_D55298E1AC1E7EA:
             columns:
                 - olim_registro_olimpiada_id
-        IDX_D55298E17299CE7E:
-            columns:
-                - olim_clasificado_materia_tipo_id
     id:
         id:
             type: integer
@@ -53,15 +50,6 @@ Sie\AppWebBundle\Entity\OlimMateriaTipo:
             inversedBy: null
             joinColumns:
                 olim_registro_olimpiada_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        olimClasificadoMateriaTipo:
-            targetEntity: OlimClasificadorMateriaTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                olim_clasificado_materia_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
