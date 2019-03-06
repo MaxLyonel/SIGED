@@ -137,7 +137,7 @@
                 $.ajax({
                     type: 'post',
                     url: Routing.generate('talento_extraordinario_search'),
-                    data: {'rude': rude},
+                    data: {'rude': rude, 'flujotipo_id': $('#flujotipo_id').val()},
                     beforeSend: function () {
                         $("#carga").empty();
                         $("#carga").append('<div class="text-center">Buscando... <img src="{{asset('img/loading.gif')}}" /></div>');
@@ -166,7 +166,7 @@
                         } else if (data.msg == 'noest') {
                             mesage('warning', 'Notificación', 'El estudiante no existe.');
                         } else if (data.msg == 'existe') {
-                            mesage('warning', 'Notificación', 'El estudiante ya postuló con anterioridad.');
+                            mesage('warning', 'Notificación', 'El estudiante ya solicitó con anterioridad.');
                         }
                         $("#buscar").attr('disabled', false);
                     },

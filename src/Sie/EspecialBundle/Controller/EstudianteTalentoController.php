@@ -90,6 +90,7 @@ class EstudianteTalentoController extends Controller {
     public function searchStudentAction(Request $request) {
         $msg = "existe";
         $rude = trim($request->get('rude'));
+        $flujotipo_id = trim($request->get('flujotipo_id'));
         $em = $this->getDoctrine()->getManager();
         $response = new JsonResponse();
         $estudiante_result = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rude));
@@ -98,12 +99,24 @@ class EstudianteTalentoController extends Controller {
             $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $estudiante_result), array('id' => 'DESC'));
             if (!empty($einscripcion_result)){
                 $estudianteinscripcion_id = $einscripcion_result->getId();
-                $query = $em->getConnection()->prepare('SELECT id FROM tramite WHERE estudiante_inscripcion_id=:estudianteins AND flujo_tipo_id=:flujo');
-                $query->bindValue('estudianteins', $estudianteinscripcion_id);
-                $query->bindValue('flujo', 10);
-                $query->execute();
-                $tramite = $query->fetch();
-                if (!empty($tramite) and $tramite['id'] > 0) {
+                $resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
+                    ->select('wfd')
+                    ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
+                    ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'td.flujoProceso = fp.id')
+                    ->where('fp.flujoTipo='.$flujotipo_id)
+                    ->andWhere('fp.orden=1')
+                    ->andWhere("wfd.esValido=true")
+                    ->orderBy("td.flujoProceso")
+                    ->getQuery()
+                    ->getResult();
+                $valida = false;
+                foreach ($resultDatos as $item) {
+                    $datos = json_decode($item->getdatos());
+                    if ($datos->estudiante_id == $estudiante_result->getId()) {
+                        $valida = true;
+                    }
+                }
+                if ($valida == true) {
                     return $response->setData(array('msg' => $msg));
                 } else {
                     $msg = "exito";
@@ -315,18 +328,20 @@ class EstudianteTalentoController extends Controller {
         $wfTramiteController->setContainer($this->container);
         $result = $wfTramiteController->guardarTramiteEnviado($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $centroinscripcion_id, $observaciones, $evaluacion, $tramite_id, json_encode($tareasDatos), $lugarlocalidad_id, $distrito_id);
         if ($result['dato'] == true) {
-            $estudianteTalento = new EstudianteTalento();
-            $estudianteTalento->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->findOneById($tareasDatos[0]['datos']['estudiante_id']));
-            $estudianteTalento->setTalentoTipo($tareasDatos[1]['datos']['tipo_talento']);
-            $estudianteTalento->setAcelera($tareasDatos[1]['datos']['acelera']);
-            $estudianteTalento->setFechaRegistro(new \DateTime(date('Y-m-d')));
-            //$estudianteTalento->setFechaModificacion(new \DateTime(date('Y-m-d')));
-            $estudianteTalento->setUsuarioRegistro($em->getRepository('SieAppWebBundle:Usuario')->findOneById($usuario_id));
-            //$estudianteTalento->setUsuarioModificacion($em->getRepository('SieAppWebBundle:Usuario')->findOneById($usuario_id));
-            $estudianteTalento->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($centroinscripcion_id));
-            $em->persist($estudianteTalento);
-            $em->flush();
-            $em->flush();
+            if ($tareasDatos[1]['datos']['es_talento'] == 'SI') {
+                $estudianteTalento = new EstudianteTalento();
+                $estudianteTalento->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->findOneById($tareasDatos[0]['datos']['estudiante_id']));
+                $estudianteTalento->setTalentoTipo($tareasDatos[1]['datos']['tipo_talento']);
+                $estudianteTalento->setAcelera($tareasDatos[1]['datos']['acelera']);
+                $estudianteTalento->setFechaRegistro(new \DateTime(date('Y-m-d')));
+                //$estudianteTalento->setFechaModificacion(new \DateTime(date('Y-m-d')));
+                $estudianteTalento->setUsuarioRegistro($em->getRepository('SieAppWebBundle:Usuario')->findOneById($usuario_id));
+                //$estudianteTalento->setUsuarioModificacion($em->getRepository('SieAppWebBundle:Usuario')->findOneById($usuario_id));
+                $estudianteTalento->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($centroinscripcion_id));
+                $em->persist($estudianteTalento);
+                $em->flush();
+                $em->flush();
+            }
             $estado = 200;
             $msg = $result['msg'];
         } else {
