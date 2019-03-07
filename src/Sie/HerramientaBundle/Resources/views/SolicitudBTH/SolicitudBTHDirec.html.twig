@@ -456,7 +456,7 @@
                         <h4 class="modal-title" id="myModalLabel">Modal title</h4>
                     </div>#}
                     <div class="modal-body">
-                        <h2 align="center">¡Su formulario fue enviado con éxito!.</h2>
+                        <h2 align="center"><span id="msg">¡Su formulario fue enviado con éxito!.</span></h2>
 
                         <div class="alert alert-danger">
                             <strong>Nota.- !</strong> Descargue su comporbante en "Trámites Enviados".
@@ -600,7 +600,7 @@
                                 },
                                 success: function (data) {
 
-                                    if (data==1 ){
+                                    if (data.estado==1 ){
                                         swal.stopLoading();
                                         swal.close();
                                         $(".modal-backdrop ").css("display", "none");
@@ -608,7 +608,7 @@
                                         $(".modal-backdrop ").css("display", "none");
 
                                     }
-                                    else if(data==2 ){
+                                    else if(data.estado==2 ){
                                         swal(" Su Unidad Educativa ya se declaro como BTH - Debe iniciar su trámite como 'Ratificacion', O  \n" +
                                             " a su Unidada Educativa no corresponde realizar el trámite de solicitud BTH");
                                     }else {
@@ -717,15 +717,16 @@
                                     });
                                 },
                                 success: function (data) {
-                                    if (data==1){
+                                    if (data.estado==1){
                                         swal.stopLoading();
                                         swal.close();+
                                         $(".modal-backdrop ").css("display", "none");
+                                        $('#msg').text(data.msg);
                                         $('#recargar').modal('show');
                                         $(".modal-backdrop ").css("display", "none");
 
                                     }
-                                    else if(data==2 ){
+                                    else if(data.estado==2 ){
                                         swal("Debe iniciar su trámite como 'Registro Nuevo'");
                                     }else {
                                         swal('Su formulario no se envío correctamente debido a que: \n '   +

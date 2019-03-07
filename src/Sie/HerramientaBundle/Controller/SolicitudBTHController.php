@@ -177,11 +177,11 @@ class SolicitudBTHController extends Controller {
             'listatareas'=>$lista['tramites']
         ));
     }
-    public function nuevasolicitudAction(Request $request){
+    public function nuevasolicitudAction(Request $request){ //dump($request);die;
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("select td.*
                                                 from tramite t
-                                                join tramite_detalle td on cast(t.tramite as int)=td.id where t.id=".$request->get('id'));
+                                                join tramite_detalle td on cast(t.tramite as int)=td.tramite_id where t.id=".$request->get('id'));
         $query->execute();
         $td = $query->fetchAll();
         if ($td[0]['tramite_detalle_id']){
@@ -305,9 +305,9 @@ class SolicitudBTHController extends Controller {
             $grado = (int)$grado['grado_tipo_id'];
         }
         /** Adecuacion a las equivalencias de especialidades */
-        $query = $em->getConnection()->prepare("SELECT eth2.id,eth2.especialidad,eth.especialidad as NuevaEspecialidad
-                                                FROM especialidad_tecnico_humanistico_tipo eth INNER JOIN especialidad_tecnico_humanistico_tipo eth2 on eth.id= eth2. id_equivalente_especialidades
-                                                WHERE eth2.es_vigente is TRUE
+        $query = $em->getConnection()->prepare("SELECT eth.id,eth.especialidad
+                                                FROM especialidad_tecnico_humanistico_tipo eth
+                                                WHERE eth.es_vigente is TRUE
                                                 ORDER BY 2");
         $query->execute();
         $especialidad = $query->fetchAll();
@@ -396,11 +396,14 @@ class SolicitudBTHController extends Controller {
                     $wfTramiteController->setContainer($this->container);
                     if($sw == 0){//primer envio de solicitud
                         $mensaje = $wfTramiteController->guardarTramiteNuevo($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'',$id_tipoTramite,'',$idTramite,$datos,'',$id_distrito);
+
                     }
                     else{//se hizo la devolucion por el distrital
                         $idTramite = $request->get('id_tramite');
                         $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'','',$idTramite,$datos,'',$id_distrito);
+
                     }
+
                     $res = 1;
                 }
                 else{
@@ -444,7 +447,8 @@ class SolicitudBTHController extends Controller {
                 $res = 3; // esq ya inicio un tramite
             }
         }
-        return  new Response($res);
+
+        return  new JsonResponse(array('estado' => $res, 'msg' => $mensaje['msg']));
     }
     public function imprimirDirectorAction(Request $request){
         $tramite_id = $request->get('idtramite');
@@ -1081,7 +1085,7 @@ class SolicitudBTHController extends Controller {
                   dump($tabla);dump($datos);dump($id_distrito);die;*/
                   $mensaje = $wfTramiteController->guardarTramiteRecibido($id_usuario, $tarea1,$id_tramite);
                   $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea1,$tabla,$institucionid,'','',$id_tramite,$datos,'',$id_distrito);
-                 // dump($mensaje);die;
+                  dump($mensaje);die;
               }
 
               $res = 1;
