@@ -100,6 +100,8 @@
                     $('.mensaje').append('<i class="fa fa-check"></i> Registro realizado correctamente');
                     $('.mensaje').removeClass('mensajeWarning');
                     $('.mensaje').addClass('mensajeSuccess');
+
+                    $('#form_id').val(data.id);
                 },
                 error: function(){
                     $('.mensaje').removeClass('mensajeSuccess');
