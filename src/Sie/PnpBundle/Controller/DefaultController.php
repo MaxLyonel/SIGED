@@ -2572,7 +2572,6 @@ order by t2.fecha_inicio";
          //Conocer el departamento del usuario para que solo pueda eliminar de su departamento
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
-
         $userId = $this->session->get('userId');
          $query = "
                SELECT lt.lugar as lugar
@@ -2836,7 +2835,7 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
         foreach ($po as $p) {
             $lugar_usuario = $p["lugar"];
         }
-    
+        
         $lugar_usuario=strtoupper($lugar_usuario);
          switch ($lugar_usuario) {
             case 'CHUQUISACA': $id_curso_ver=80480300; break;
@@ -2880,7 +2879,14 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
                 foreach ($result as $results) {
                     $institucioneducativa_curso_oferta_maestro_id[]=$results->getId();
                 }
-
+                if(!$institucioneducativa_curso_oferta_maestro_id){
+                     //id de la tabla institucioneducativa_curso_oferta_maestro
+                    $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findBy(array('institucioneducativaCursoOferta' => $institucioneducativa_curso_oferta_id )); 
+                    $institucioneducativa_curso_oferta_maestro_id = array();
+                    foreach ($result as $results) {
+                        $institucioneducativa_curso_oferta_maestro_id[]=$results->getId();
+                    }
+                }
                 ////////////////////NUEVO
                 //id de la tabla institucioneducativa_curso_datos
                 $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($institucioneducativa_curso_id);

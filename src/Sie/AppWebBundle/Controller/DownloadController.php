@@ -1097,5 +1097,24 @@ class DownloadController extends Controller {
     //     $response->headers->set('Expires', '0');
     //     return $response;
     // }
+    
 
+    /**
+     * get DDJJJ per UE
+     * @param Request $request
+     * @param type $gestion
+     * @param type $sie
+     * @return Response
+     */
+    public function nnatsAction(Request $request, $gestion, $sie) {
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'nnats_' . $sie . '_' . $gestion . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_centro_nnats_v1_ma.rptdesign&gestion=' . $gestion . '&sie=' . $sie . '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
 }
