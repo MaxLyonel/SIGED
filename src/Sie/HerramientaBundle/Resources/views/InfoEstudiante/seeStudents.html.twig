@@ -29,12 +29,13 @@
                   <i class="fa fa-download" ></i> Listado de Estudiantes del Curso 
                 </a>
           </div>
-
+          {% if gestion == 2018 and nivel != 11 %}
              <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registro Trabajo del estudiante">
                   <button type="button" class="btn btn-block btn-facebook" data-toggle="modal" data-target=".bs-example-modal-table" onclick="registerJobStudent('{{infoUe}}');" >
                       <i class="fa fa-edit"></i>Registro Trabajo del estudiante
                   </button>
               </div>
+            {% endif %}
           {#
           {% if operativo >= 5 %}
             <div class="col-md-4">
