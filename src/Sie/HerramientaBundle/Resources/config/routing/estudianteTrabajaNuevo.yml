@@ -16,6 +16,12 @@ estudianteTrabajaNuevo_save:
     options:
         expose: true
 
+estudianteTrabajaNuevo_eliminar:
+    path:     /eliminar
+    defaults: { _controller: SieHerramientaBundle:EstudianteTrabajaNuevo:eliminar }
+    options:
+        expose: true
+
 estudianteTrabajaNuevo_doinscription:
     path:     /doinscription
     defaults: { _controller: SieHerramientaBundle:EstudianteTrabajaNuevo:doinscription }

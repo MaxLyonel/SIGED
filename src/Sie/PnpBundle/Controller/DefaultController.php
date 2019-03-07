@@ -7778,9 +7778,9 @@ public function listar_depAction($val){
     $contador=0;
     $query = "
            SELECT 
-lt3.lugar as depto,lt1.lugar as  municipio,ic.id as id_curso,
+lt3.lugar as depto,lt1.lugar as  municipio,icd.localidad,ic.id as id_curso,
 coalesce(p.nombre||' '||p.paterno||' '||p.materno) as facilitador,
-p.carnet,ic.ciclo_tipo_id as bloque, ic.grado_tipo_id as parte,
+p.carnet,p.complemento,ic.ciclo_tipo_id as bloque, ic.grado_tipo_id as parte,
 count(*) as insc,
 SUM(CASE WHEN ei.estadomatricula_tipo_id=62
             THEN 1
@@ -7796,7 +7796,7 @@ join lugar_tipo lt1 on lt1.id=icd.lugar_tipo_id_seccion
 join lugar_tipo lt2 on lt2.id=lt1.lugar_tipo_id
 join lugar_tipo lt3 on lt3.id=lt2.lugar_tipo_id
 where ic.institucioneducativa_id=$val 
-GROUP BY lt3.lugar,lt1.lugar,ic.id,
+GROUP BY lt3.lugar,lt1.lugar,ic.id,icd.localidad,p.complemento,
 coalesce(p.nombre||' '||p.paterno||' '||p.materno),
 p.carnet,ic.ciclo_tipo_id, ic.grado_tipo_id,ic.fecha_inicio,ic.fecha_fin
 ORDER BY carnet,bloque,parte,fecha_inicio,municipio
@@ -7812,9 +7812,11 @@ ORDER BY carnet,bloque,parte,fecha_inicio,municipio
         $datos_filas["num"] = $contador;
         $datos_filas["depto"] = $p["depto"];
         $datos_filas["municipio"] = $p["municipio"];
+        $datos_filas["localidad"] = $p["localidad"];
         $datos_filas["id_curso"] = $p["id_curso"];
         $datos_filas["facilitador"] = $p["facilitador"];
         $datos_filas["carnet"] = $p["carnet"];
+        $datos_filas["complemento"] = $p["complemento"];
         $datos_filas["bloque"] = $p["bloque"];
         $datos_filas["parte"] = $p["parte"];
         $datos_filas["insc"] = $p["insc"];

@@ -41,11 +41,10 @@
 					</td>
 					<td>{{ registro.especificacion }}</td>
 					<td>
-						<button type="button" class="btn btn-danger btn-xs">Eliminar</button>
+						<button onclick="eliminar({{registro.id}})" type="button" class="btn btn-danger btn-xs">Eliminar</button>
 					</td>
 				</tr>
 			{% endfor %}
-			
 		</tbody>
 	</table>
 
@@ -53,3 +52,22 @@
 	<hr>
 	<p class="text-danger">No hay estudiantes registrados</p>
 {% endif %}
+
+<script type="text/javascript">
+	function eliminar(id){
+		if(confirm('Realmente desea eliminar'))
+		$.ajax({
+			url: Routing.generate('estudianteTrabajaNuevo_eliminar'),
+			type: 'post',
+			data: {id: id},
+			beforeSend: function(){
+
+			},
+			success: function(data){
+				$('#resultado').empty();
+				$('#registrados').empty();
+				$('#registrados').append(data);
+			}
+		});
+	}
+</script>

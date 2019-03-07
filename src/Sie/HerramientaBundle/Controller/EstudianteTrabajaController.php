@@ -146,7 +146,7 @@ class EstudianteTrabajaController extends Controller
 
         $response = new JsonResponse();
         return $response->setData([
-            'paso'=>2
+            'id'=>$trabajo->getId()
         ]);
         
     }
