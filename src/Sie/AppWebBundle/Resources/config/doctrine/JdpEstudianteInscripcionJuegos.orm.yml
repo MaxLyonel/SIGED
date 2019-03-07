@@ -24,7 +24,7 @@ Sie\AppWebBundle\Entity\JdpEstudianteInscripcionJuegos:
             nullable: false
             unsigned: false
             comment: ''
-            default: public.estudiante_inscripcion_jue_id_seq
+            default: public.jdp_estudiante_inscripcion_juegos_id_seq
             id: true
             generator:
                 strategy: SEQUENCE
