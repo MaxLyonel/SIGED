@@ -183,6 +183,7 @@ class EstudianteTrabajaNuevoController extends Controller{
                         ->andWhere('etr.paralelo = :paralelo')
                         ->andWhere('etr.turno = :turno')
                         ->andWhere('etr.gestion = :gestion')
+                        ->andWhere('etr.traslado = true')
                         ->setParameter('sie', $data['sie'])
                         ->setParameter('nivel', $data['nivel'])
                         ->setParameter('grado', $data['grado'])
@@ -196,4 +197,28 @@ class EstudianteTrabajaNuevoController extends Controller{
         return $registrados;
     }
 
+    public function eliminarAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+
+        $registro = $em->getRepository('SieAppWebBundle:EstudianteTrabajoRemuneracion')->find($request->get('id'));
+        $data = null;
+        if ($registro) {
+            $data = array(
+                'sie'      => $registro->getSie(),
+                'gestion'  => $registro->getGestion(),
+                'nivel'    => $registro->getNivel(),
+                'grado'    => $registro->getGrado(),
+                'paralelo' => $registro->getParalelo(),
+                'turno'    => $registro->getTurno()
+            );
+
+            $em->remove($registro);
+            $em->flush();
+        }
+
+        return $this->render('SieHerramientaBundle:EstudianteTrabajaNuevo:list.html.twig', array(
+            'registrados'=>$this->listaRegistrados($data),
+            'status'=>200
+        ));
+    }
 }
