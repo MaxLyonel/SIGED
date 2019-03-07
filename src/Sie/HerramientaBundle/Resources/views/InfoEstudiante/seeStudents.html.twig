@@ -192,12 +192,13 @@
                                           <i class="fa fa-user"></i>
                                       </button>
                                   </div> #}
-
+                                  {% if gestion == 2018 %}
                                   <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Trabajo del estudiante">
                                       <button type="button" class="btn btn-circle btn-primary " data-toggle="modal" data-target=".bs-example-modal-table" onclick="trabajo('{{infoUe}}','{{jsnInfoStudent}}',0);" >
                                           <i class="fa fa-edit"></i>
                                       </button>
                                   </div>
+                                  {% endif %}
 
                                   {% set styleButton = 'info' %}
                                       {% if data.registroFinalizado %}
