@@ -145,3 +145,12 @@ sie_herramienta_regularizacion_cut:
 sie_herramienta_reportelabofisquim:
     resource: "@SieHerramientaBundle/Resources/config/routing/reportelabofisquim.yml"
     prefix:   /sie/labofisquim
+
+sie_herramienta_estudianteTrabajaNuevo:
+    resource: "@SieHerramientaBundle/Resources/config/routing/estudianteTrabajaNuevo.yml"
+    prefix:   /sie/estudianteTrabajaNuevo    
+
+sie_herramienta_estudianteTrabaja:
+    resource: "@SieHerramientaBundle/Resources/config/routing/estudianteTrabaja.yml"
+    prefix:   /sie/estudianteTrabaja
+ 
