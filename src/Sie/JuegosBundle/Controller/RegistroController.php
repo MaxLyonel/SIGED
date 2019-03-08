@@ -1070,6 +1070,7 @@ class RegistroController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestion = date_format($fechaActual,'Y');
+        $gestion = 2018;
 
         $sesion = $request->getSession();
         $id_usuario = $this->session->get('userId');
@@ -1253,7 +1254,7 @@ class RegistroController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
-
+        $gestionActual = 2018;
         $fase = 1;
 
         $sesion = $request->getSession();
@@ -1750,6 +1751,7 @@ class RegistroController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        $gestionActual = 2018;
         $em = $this->getDoctrine()->getManager();
 
         $sie = $request->get('sie');
@@ -1770,6 +1772,7 @@ class RegistroController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        $gestionActual = 2018;
         $em = $this->getDoctrine()->getManager();
         $respuesta = array();
 
