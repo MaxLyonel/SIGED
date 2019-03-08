@@ -157,7 +157,7 @@
                                 </div>
                                 <div class="clearfix"></div>
                             </div><!-- /.panel-heading -->
-                            <div class="panel-body">      
+                            <div class="panel-body small">      
                                 <div id="listaParticipante"></div> 
                             </div><!-- /.panel-body -->
                         </div>     
@@ -297,7 +297,7 @@
                                     divLista = divLista + '<div class="panel-body">';                     
                                     divLista = divLista + '<ul class="list-group no-margin">';                                                    
                                     $.each(participante, function (j, value) {
-                                        divLista = divLista + '<li id="list' + j + '" class="list-group-item">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(&#39;' + j + '&#39;);"><span class="status"><i class="fa fa-trash fa-lg fg-danger"></i></span></a></div></li>';
+                                        divLista = divLista + '<li id="list' + j + '" class="list-group-item no-padding">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(&#39;' + j + '&#39;);"><span class="status"><i class="fa fa-trash fa-lg fg-danger"></i></span></a></div></li>';
                                     });                                            
                                     divLista = divLista + '</ul>';  
                                     divLista = divLista + '</div>';                               
@@ -332,6 +332,12 @@
                         },
                         statusCode: {
                             500: function () {
+                                $("#form_nivel").removeAttr('disabled');
+                                $("#form_genero").removeAttr('disabled');
+                                $("#form_disciplina").removeAttr('disabled');
+                                $("#form_prueba").removeAttr('disabled');
+                                $('[name="estudiantes[]"]').removeAttr('disabled');
+                                $("#listaParticipante").prepend('<div class="alert alert-danger"><strong>Error: </strong> intente nuevamente</div>');
                             },
                             404: function () {
                             }
@@ -739,7 +745,7 @@
                                 divLista = divLista + '<div class="panel-body">';                     
                                 divLista = divLista + '<ul class="list-group no-margin">';                                                    
                                 $.each(participante, function (j, value) {
-                                    divLista = divLista + '<li id="list' + j + '" class="list-group-item">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(&#39;' + j + '&#39;);"><span class="status"><i class="fa fa-trash fa-lg fg-danger"></i></span></a></div></li>';
+                                    divLista = divLista + '<li id="list' + j + '" class="list-group-item no-padding">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(&#39;' + j + '&#39;);"><span class="status"><i class="fa fa-trash fa-lg fg-danger"></i></span></a></div></li>';
                                 });                                            
                                 divLista = divLista + '</ul>';  
                                 divLista = divLista + '</div>';                               
