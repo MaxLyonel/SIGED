@@ -17,7 +17,9 @@
           <th class="text-center">Especialidad</th>
           <th class="text-center">Paralelo</th>
           <th class="text-center">Turno</th>
-          <th class="text-center">Acciones</th>
+          {% if visible == true %}
+            <th class="text-center">Acciones</th>
+          {% endif %}
         </tr>
       </thead>
 
@@ -33,9 +35,11 @@
             <td>{{data.especialidad_a}}</td>
             <td>{{data.paralelo_raep}} </td>
             <td>{{data.turno_raep}} </td>
-            <td class="text-center">
+            {% if visible == true %}
+              <td class="text-center">
                 <a href="#" onclick="seeNotaNew('{{data.estudiante_inscripcion_id_raep}}', '{{data.estudiante_id_raep}}', '{{data.gestion_tipo_id_raep}}', '2')" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>
-            </td>
+              </td>
+            {% endif %}
           </tr>
         {% endfor %}
       </tbody>

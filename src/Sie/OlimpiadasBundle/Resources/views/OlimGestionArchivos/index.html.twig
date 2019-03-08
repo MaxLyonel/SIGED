@@ -82,9 +82,9 @@
 					    				    		{% if g.grupo.documentoPdf1 != '' %}
 					    				    			{# <embed src="http://olimpiada.sie.gob.bo/uploads/olimpiadas/documentos/{{gestion}}/{{g.grupo.sie}}/{{g.grupo.documentoPdf1}}" width="150px" height="160px"></embed> #}
 					    				    			
-					    				    			{# <a class="btn btn-primary btn-xs" target="_blank" href="{{ asset('uploads/olimpiadas/documentos/' ~ gestion ~ '/' ~ '/' ~ g.grupo.sie ~ '/' ~ g.grupo.documentoPdf1 )}}"> <i class="fa fa-file-pdf-o fa-1x"></i> <b> Abrir archivo </b> </a> #}
+					    				    			<a class="btn btn-primary btn-xs" target="_blank" href="{{ asset('uploads/olimpiadas/documentos/' ~ gestion ~ '/' ~ g.grupo.sie ~ '/' ~ g.grupo.documentoPdf1 )}}"> <i class="fa fa-file-pdf-o fa-1x"></i> <b> Abrir archivo </b> </a>
 					    				    				
-					    				    			<a class="btn btn-primary btn-xs" target="_blank" href="http://olimpiada.sie.gob.bo/uploads/olimpiadas/documentos/{{gestion}}/{{g.grupo.sie}}/{{g.grupo.documentoPdf1}}"> <i class="fa fa-file-pdf-o fa-1x"></i> <b> Abrir archivo </b> </a>
+					    				    			{# <a class="btn btn-primary btn-xs" target="_blank" href="http://olimpiada.sie.gob.bo/uploads/olimpiadas/documentos/{{gestion}}/{{g.grupo.sie}}/{{g.grupo.documentoPdf1}}"> <i class="fa fa-file-pdf-o fa-1x"></i> <b> Abrir archivo </b> </a> #}
 					    				    		{% else %}
 					    				    			<span class="text-danger">No subido !!!</span>
 					    				    			{# <button class="btn btn-default" type="button" onclick="abrir()">Subir</button> #}

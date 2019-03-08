@@ -159,7 +159,7 @@
                     </div>
                 </div>
             {% else %}
-                {% if ('8' == app.session.get('roluser')) %}
+                {% if ('8' == app.session.get('roluser')) or ('21' == app.session.get('roluser')) %}
                     <div class="panel panel-icon panel-primary">
                         <div class="panel-heading">
                             Reporte de cursos

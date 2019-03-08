@@ -1,0 +1,31 @@
+estudianteTrabajaNuevo_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:EstudianteTrabajaNuevo:index }
+    options:
+         expose: true
+
+estudianteTrabajaNuevo_buscar:
+    path:     /buscar
+    defaults: { _controller: SieHerramientaBundle:EstudianteTrabajaNuevo:buscar }
+    options:
+        expose: true
+
+estudianteTrabajaNuevo_save:
+    path:     /save
+    defaults: { _controller: SieHerramientaBundle:EstudianteTrabajaNuevo:save }
+    options:
+        expose: true
+
+estudianteTrabajaNuevo_eliminar:
+    path:     /eliminar
+    defaults: { _controller: SieHerramientaBundle:EstudianteTrabajaNuevo:eliminar }
+    options:
+        expose: true
+
+estudianteTrabajaNuevo_doinscription:
+    path:     /doinscription
+    defaults: { _controller: SieHerramientaBundle:EstudianteTrabajaNuevo:doinscription }
+
+estudianteTrabajaNuevo_list:
+    path:     /list
+    defaults: { _controller: SieHerramientaBundle:EstudianteTrabajaNuevo:list }

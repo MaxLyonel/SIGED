@@ -1071,6 +1071,9 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
                     $params = array();
                     $obs->execute($params);
                     $observaciones = $obs->fetchAll();
+                    if ($ies->getInstitucioneducativa()->getId() == 80730796 and $iest[0]->getTramiteEstado()->getId() == '13'){
+                        $observaciones = "";
+                    }
                     if ($observaciones){
                         return $this->redirect($this->generateUrl('herramienta_alter_reporte_observacionesoperativo'));                    }
                     else{
