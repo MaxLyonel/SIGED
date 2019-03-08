@@ -59,7 +59,7 @@
                                     <td>{{rude}}</td>
                                     <td>{{nombre}}</td>
                                     <td>
-                                        {% if estadoId == 4 %}
+                                        {% if estadoId == 4 or estadoId == 5 or estadoId == 55 %}
                                             <div class="ckbox ckbox-primary">
                                                 <input id="id{{data.eInsId|base64_encode}}" name="estudiantes[]" type="checkbox" value="{{data.eInsId|base64_encode}}" onclick="listar_selecionado(this,'{{ nombre|replace({"'":"&#39;"}) }}')">
                                                 <label for="id{{data.eInsId|base64_encode}}"></label>
