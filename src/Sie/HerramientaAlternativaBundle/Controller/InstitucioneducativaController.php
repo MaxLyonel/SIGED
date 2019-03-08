@@ -664,14 +664,17 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
 
 public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS CERRADOS
 {
+    $usuario_lugar = $this->session->get('roluserlugarid');
     $rol = $request->get('rol');
+    $id_usuario = $request->get('id_usuario');
+    $em = $this->getDoctrine()->getManager();
     if(!$request->get('gestion'))
     {
         $gestion = 'select id from gestion_tipo';
     }else{
         $gestion = $request->get('gestion');
     }
-    $id_usuario = $request->get('id_usuario');
+    
     if ($rol == 8 )
     {
         if(!$request->get('departamento'))
@@ -680,13 +683,63 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
         }else{
             $departamento = $request->get('departamento');
         }
+
+        $query = $em->getConnection()->prepare("SELECT lt1.lugar as departamento, lt.codigo, ie.id, ie.institucioneducativa, ies.sucursal_tipo_id, ies.gestion_tipo_id, CASE WHEN ies.periodo_tipo_id=2 THEN 'PRIMERO' WHEN ies.periodo_tipo_id=3 THEN 'SEGUNDO' WHEN ies.periodo_tipo_id=1 THEN 'ANUAL' END AS periodo_tipo_id , te.tramite_estado, tt.tramite_tipo,te.id AS te_id
+            FROM institucioneducativa ie
+            JOIN institucioneducativa_sucursal ies on ie.id=ies.institucioneducativa_id
+            JOIN institucioneducativa_sucursal_tramite iest ON ies.id=iest.institucioneducativa_sucursal_id
+            JOIN tramite_estado te ON te.id=iest.tramite_estado_id
+            JOIN tramite_tipo tt ON iest.tramite_tipo_id=tt.id
+            JOIN jurisdiccion_geografica le ON ie.le_juridicciongeografica_id=le.id
+            JOIN lugar_tipo lt ON le.lugar_tipo_id_distrito=lt.id
+            JOIN lugar_tipo lt1 ON lt.lugar_tipo_id=lt1.id
+            WHERE ies.gestion_tipo_id IN (". $gestion .")
+            AND ie.estadoinstitucion_tipo_id=10
+            AND ie.institucioneducativa_acreditacion_tipo_id=1
+            AND ie.institucioneducativa_tipo_id=2
+            AND lt1.codigo='" . $departamento . "'");      
+    }elseif($rol == 7){
+        $query = $em->getConnection()->prepare("SELECT lt1.lugar as departamento, lt.codigo, ie.id, ie.institucioneducativa, ies.sucursal_tipo_id, ies.gestion_tipo_id, CASE WHEN ies.periodo_tipo_id=2 THEN 'PRIMERO' WHEN ies.periodo_tipo_id=3 THEN 'SEGUNDO' WHEN ies.periodo_tipo_id=1 THEN 'ANUAL' END AS periodo_tipo_id , te.tramite_estado, tt.tramite_tipo,te.id AS te_id
+            FROM institucioneducativa ie
+            JOIN institucioneducativa_sucursal ies on ie.id=ies.institucioneducativa_id
+            JOIN institucioneducativa_sucursal_tramite iest ON ies.id=iest.institucioneducativa_sucursal_id
+            JOIN tramite_estado te ON te.id=iest.tramite_estado_id
+            JOIN tramite_tipo tt ON iest.tramite_tipo_id=tt.id
+            JOIN jurisdiccion_geografica le ON ie.le_juridicciongeografica_id=le.id
+            JOIN lugar_tipo lt ON le.lugar_tipo_id_distrito=lt.id
+            JOIN lugar_tipo lt1 ON lt.lugar_tipo_id=lt1.id
+            WHERE ies.gestion_tipo_id IN (". $gestion .")
+            AND ie.estadoinstitucion_tipo_id=10
+            AND ie.institucioneducativa_acreditacion_tipo_id=1
+            AND ie.institucioneducativa_tipo_id=2
+            AND lt1.id=" . $usuario_lugar);
+
+    }elseif($rol == 10){
+        $query = $em->getConnection()->prepare("SELECT lt1.lugar as departamento, lt.codigo, ie.id, ie.institucioneducativa, ies.sucursal_tipo_id, ies.gestion_tipo_id, CASE WHEN ies.periodo_tipo_id=2 THEN 'PRIMERO' WHEN ies.periodo_tipo_id=3 THEN 'SEGUNDO' WHEN ies.periodo_tipo_id=1 THEN 'ANUAL' END AS periodo_tipo_id , te.tramite_estado, tt.tramite_tipo,te.id AS te_id
+            FROM institucioneducativa ie
+            JOIN institucioneducativa_sucursal ies on ie.id=ies.institucioneducativa_id
+            JOIN institucioneducativa_sucursal_tramite iest ON ies.id=iest.institucioneducativa_sucursal_id
+            JOIN tramite_estado te ON te.id=iest.tramite_estado_id
+            JOIN tramite_tipo tt ON iest.tramite_tipo_id=tt.id
+            JOIN jurisdiccion_geografica le ON ie.le_juridicciongeografica_id=le.id
+            JOIN lugar_tipo lt ON le.lugar_tipo_id_distrito=lt.id
+            JOIN lugar_tipo lt1 ON lt.lugar_tipo_id=lt1.id
+            WHERE ies.gestion_tipo_id IN (". $gestion .")
+            AND ie.estadoinstitucion_tipo_id=10
+            AND ie.institucioneducativa_acreditacion_tipo_id=1
+            AND ie.institucioneducativa_tipo_id=2
+            AND lt.id=" . $usuario_lugar);
     }
-    $em = $this->getDoctrine()->getManager();
+    
+    $query->execute();
+    $entity = $query->fetchAll();
+
+    
     //$em = $this->getDoctrine()->getEntityManager();
-    $db = $em->getConnection();  
+    //$db = $em->getConnection();  
     
 
-    if ($rol == '8' ){//NACIONAL
+    /* if ($rol == '8' ){//NACIONAL
 //            $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$sesion->get('userId'),'rolTipo'=>$sesion->get('roluser')));            
 //            $coddis = $usuariorol[0]->getLugarTipo()->getCodigo();
 //            dump($usuariorol);
@@ -923,11 +976,12 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
     $stmt = $db->prepare($query);
     $params = array();
     $stmt->execute($params);
-    $po = $stmt->fetchAll();
+    $po = $stmt->fetchAll(); */
 //        dump($po);
 //        die;
+    //dump($entity);die;
     return $this->render($this->session->get('pathSystem') . ':Principal:tablaceaoperativopendiente.html.twig', array(
-            'entities' => $po,
+            'entities' => $entity,
         ));
     }
 
