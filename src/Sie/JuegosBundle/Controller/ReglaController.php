@@ -248,9 +248,22 @@ class ReglaController extends Controller
             $cantidadListaEquipoPruebaInstitucion = count($listaEquipoPruebaInstitucion);
             //dump($cantidadListaEquipoPruebaInstitucion);dump($cupoPresentacion);die;
 
-            if($cantidadListaEquipoPruebaInstitucion >= $cupoPresentacion){
+            if($cantidadListaEquipoPruebaInstitucion > $cupoPresentacion){
                 return array('0' => false, '1' => 'No puede registrar a mas equipos en la prueba '.$pruebaNombre);
-            }           
+            } else {
+                if($cantidadListaEquipoPruebaInstitucion == $cupoPresentacion){
+                    $listaEquipoExiste = false;
+                    foreach ($listaEquipoPruebaInstitucion as $listaEquipo) {
+                        $listaEquipoId = $equipo['equipoId'];
+                        if ($listaEquipoId == $equipoId){
+                            $listaEquipoExiste = true;
+                        }
+                    }
+                    if(!$listaEquipoExiste){
+                        return array('0' => false, '1' => 'No puede registrar a mas equipos en la prueba '.$pruebaNombre);
+                    } 
+                } 
+            }          
         } else {
             $listaPruebaInstitucion = $estudianteInscripcionJuegosController->getEstudianteInscripcionInstitucionGestionFasePrueba($institucionId, $pruebaId, $gestionId, $faseId);
             $cantidadListaPruebaInstitucion = count($listaPruebaInstitucion);
