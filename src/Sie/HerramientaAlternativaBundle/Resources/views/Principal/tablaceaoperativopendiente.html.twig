@@ -35,14 +35,14 @@
                                         <td class="text-center">{{ loop.index }}</td>
                                         <td>
                                             {#<img class="img-circle img-bordered-theme" alt="..." src="../../../img/avatar/35/2.png">#}
-                                            <span>{{ reg.lugar }}</span>
+                                            <span>{{ reg.departamento }}</span>
                                         </td>
-                                        <td>{{ reg.distrito_cod }}</td>
-                                        <td>{{ reg.ieid }}</td>
+                                        <td>{{ reg.codigo }}</td>
+                                        <td>{{ reg.id }}</td>
                                         <td>{{ reg.institucioneducativa }}</td>
-                                        <td class="text-center">{{ reg.nombre_subcea }}</td>
+                                        <td class="text-center">{{ reg.sucursal_tipo_id }}</td>
                                         <td class="text-center">{{ reg.gestion_tipo_id }}</td>
-                                        <td>{{ reg.semestre }}</td>
+                                        <td>{{ reg.periodo_tipo_id }}</td>
                                         {#<td>{{ reg.nombre }} {{ reg.paterno }} {{ reg.materno }}</td>#}
                                         <td>{{ reg.tramite_estado }}</td>
                                         <td class="text-center">
@@ -52,12 +52,12 @@
                                                     Operativo Cerrado
                                                 </button>
                                             {% else %}
-                                                {% if reg.ttid == 5 %}
+                                                {% if reg.te_id in [12,9]  %}
                                                     <button type="submit" class="btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
                                                         <i class="fa fa-hand-paper-o"></i>
                                                         {{reg.tramite_tipo}}
                                                     </button>
-                                                {% elseif  reg.ttid == 4 %}
+                                                {% elseif  reg.te_id in [10,8,14] %}
                                                     <button type="submit" class="btn-lilac btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
                                                         <i class="fa fa-hand-paper-o"></i>
                                                         {{reg.tramite_tipo}}

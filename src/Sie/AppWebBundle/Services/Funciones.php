@@ -905,7 +905,7 @@ class Funciones {
           ){
             $swValidationPrimaria=true;
         }else{
-            if( $centroAllowed &&
+            if( //$centroAllowed &&
                 $objInfoCourse[0]['gestion'] >= 2019 &&
                 $objInfoCourse[0]['sfatCodigo'] == 15 &&
                 $objInfoCourse[0]['setId'] == 13 &&
