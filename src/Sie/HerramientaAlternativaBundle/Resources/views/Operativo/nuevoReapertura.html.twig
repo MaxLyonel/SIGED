@@ -1,0 +1,128 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-th-large"></i>Habilitar Operativo para CEAS nuevas o Reaperturadas</h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+               <li>
+                    <i class="fa fa-users"></i>
+                    Gestión
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="glyphicon glyphicon-cog"></i>
+                    Operativos
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    Habilitar Periodo
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>  
+    <div class="row">
+        <div class="body-content animated fadeIn">
+            <div class="panel panel-success">
+                {% for flashMessage in app.session.flashbag.get('exito') %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('error') %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                <div id="flashMessage"></div>
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Seleccione las opciones</h3>
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+                    {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form', 'id': 'form_regularizar'} } )}}
+                        <div class="row">
+                            <div class="form-group col-md-2">
+                                {{ form_label(form.codsie)}}
+                                {{form_widget(form.codsie) }}
+                            </div>
+                            <div class="form-group col-md-3">
+                                {{ form_label(form.operativo)}}
+                                {{form_widget(form.operativo) }}
+                            </div>
+                            <div class="form-group col-md-2">
+                                {{ form_label(form.fechainicio)}}
+                                {{form_widget(form.fechainicio) }}
+                            </div>
+                            <div class="form-group col-md-2">
+                                {{ form_label(form.fechafin)}}
+                                {{form_widget(form.fechafin) }}
+                            </div>
+                            <div class="form-group col-md-2"> 
+                                <label></label>
+                                {{ form_widget(form.habilitar) }}
+                            </div>
+                        </div>
+                    {{form_end(form)}}
+                    <div id="cea">
+                    </div>
+                </div><!-- /.panel-body -->
+            </div><!-- /.panel -->
+        </div>
+    </div>
+{% endblock %}   
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $( document ).ready(function() {
+            $(function() {
+                $('.datepicker').datepicker({
+                    dateFormat: 'dd-mm-yy',
+                    showButtonPanel: false,
+                    changeMonth: false,
+                    changeYear: false,
+                    /*showOn: "button",
+                    buttonImage: "images/calendar.gif",
+                    buttonImageOnly: true,
+                    minDate: '+1D',
+                    maxDate: '+3M',*/
+                    inline: true
+                });
+            });
+            $.datepicker.regional['es'] = {
+                closeText: 'Cerrar',
+                prevText: '<Ant',
+                nextText: 'Sig>',
+                currentText: 'Hoy',
+                monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
+                dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+                weekHeader: 'Sm',
+                dateFormat: 'dd-mm-yy',
+                firstDay: 1,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: ''
+            };
+            $.datepicker.setDefaults($.datepicker.regional['es']);
+        });
+       
+        $(function(){
+            $(".validar").keydown(function(event){
+            //alert(event.keyCode);
+                if((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !==190  && event.keyCode !==110 && event.keyCode !==8 && event.keyCode !==9  ){
+                    return false;
+                }
+            });
+        });
+    </script>
+{% endblock %} 
