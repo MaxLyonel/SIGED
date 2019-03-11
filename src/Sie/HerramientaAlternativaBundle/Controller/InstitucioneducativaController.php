@@ -685,7 +685,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             $departamento = $request->get('departamento');
         }
 
-        $query = $em->getConnection()->prepare("SELECT lt1.lugar as departamento, lt.codigo, ie.id, ie.institucioneducativa, ies.sucursal_tipo_id, ies.gestion_tipo_id, CASE WHEN ies.periodo_tipo_id=2 THEN 'PRIMERO' WHEN ies.periodo_tipo_id=3 THEN 'SEGUNDO' WHEN ies.periodo_tipo_id=1 THEN 'ANUAL' END AS periodo_tipo_id , te.tramite_estado, tt.tramite_tipo,te.id AS te_id
+        $query = $em->getConnection()->prepare("SELECT lt1.lugar as departamento, lt.codigo, ie.id, ie.institucioneducativa, ies.sucursal_tipo_id, ies.gestion_tipo_id, CASE WHEN ies.periodo_tipo_id=2 THEN 'PRIMERO' WHEN ies.periodo_tipo_id=3 THEN 'SEGUNDO' WHEN ies.periodo_tipo_id=1 THEN 'ANUAL' END AS periodo_tipo_id , te.tramite_estado, CASE WHEN ies.gestion_tipo_id >2017 THEN tt.tramite_tipo ELSE 'OPERATIVO CERRADO' END AS tramite_tipo,te.id AS te_id
             FROM institucioneducativa ie
             JOIN institucioneducativa_sucursal ies on ie.id=ies.institucioneducativa_id
             JOIN institucioneducativa_sucursal_tramite iest ON ies.id=iest.institucioneducativa_sucursal_id
@@ -700,7 +700,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             AND ie.institucioneducativa_tipo_id=2
             AND CAST (lt1.codigo as INT) IN (" . $departamento.")");
     }elseif($rol == 7){
-        $query = $em->getConnection()->prepare("SELECT lt1.lugar as departamento, lt.codigo, ie.id, ie.institucioneducativa, ies.sucursal_tipo_id, ies.gestion_tipo_id, CASE WHEN ies.periodo_tipo_id=2 THEN 'PRIMERO' WHEN ies.periodo_tipo_id=3 THEN 'SEGUNDO' WHEN ies.periodo_tipo_id=1 THEN 'ANUAL' END AS periodo_tipo_id , te.tramite_estado, tt.tramite_tipo,te.id AS te_id
+        $query = $em->getConnection()->prepare("SELECT lt1.lugar as departamento, lt.codigo, ie.id, ie.institucioneducativa, ies.sucursal_tipo_id, ies.gestion_tipo_id, CASE WHEN ies.periodo_tipo_id=2 THEN 'PRIMERO' WHEN ies.periodo_tipo_id=3 THEN 'SEGUNDO' WHEN ies.periodo_tipo_id=1 THEN 'ANUAL' END AS periodo_tipo_id , te.tramite_estado, CASE WHEN ies.gestion_tipo_id >2017 THEN tt.tramite_tipo ELSE 'OPERATIVO CERRADO' END AS tramite_tipo,te.id AS te_id
             FROM institucioneducativa ie
             JOIN institucioneducativa_sucursal ies on ie.id=ies.institucioneducativa_id
             JOIN institucioneducativa_sucursal_tramite iest ON ies.id=iest.institucioneducativa_sucursal_id
@@ -716,7 +716,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             AND lt1.id=" . $usuario_lugar);
 
     }elseif($rol == 10){
-        $query = $em->getConnection()->prepare("SELECT lt1.lugar as departamento, lt.codigo, ie.id, ie.institucioneducativa, ies.sucursal_tipo_id, ies.gestion_tipo_id, CASE WHEN ies.periodo_tipo_id=2 THEN 'PRIMERO' WHEN ies.periodo_tipo_id=3 THEN 'SEGUNDO' WHEN ies.periodo_tipo_id=1 THEN 'ANUAL' END AS periodo_tipo_id , te.tramite_estado, tt.tramite_tipo,te.id AS te_id
+        $query = $em->getConnection()->prepare("SELECT lt1.lugar as departamento, lt.codigo, ie.id, ie.institucioneducativa, ies.sucursal_tipo_id, ies.gestion_tipo_id, CASE WHEN ies.periodo_tipo_id=2 THEN 'PRIMERO' WHEN ies.periodo_tipo_id=3 THEN 'SEGUNDO' WHEN ies.periodo_tipo_id=1 THEN 'ANUAL' END AS periodo_tipo_id , te.tramite_estado, CASE WHEN ies.gestion_tipo_id >2017 THEN tt.tramite_tipo ELSE 'OPERATIVO CERRADO' END AS tramite_tipo,te.id AS te_id
             FROM institucioneducativa ie
             JOIN institucioneducativa_sucursal ies on ie.id=ies.institucioneducativa_id
             JOIN institucioneducativa_sucursal_tramite iest ON ies.id=iest.institucioneducativa_sucursal_id
