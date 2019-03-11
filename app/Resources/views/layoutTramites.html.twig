@@ -299,7 +299,7 @@
 
                     {% if app.session.get('sysname') == "TRAMITES" %}
 
-                        {% if (rol8 or rol16 or rol13) %}
+                        {% if (rol8 or rol16 or rol13 or rol15) %}
                             <li class="submenu">
                                 <a href="javascript:void(0);">
                                     <span class="icon"><i class="fa fa-gear"></i></span>
@@ -324,8 +324,8 @@
                                 </a>
                                 <ul>
                                     {# if rol13 or rol8 #}
-                                    {% if rol9 %}
-                                        <li class=" "><a href="{{path('tramite_certificado_tecnico_registro_busca')}}">Registro</a></li>
+                                    {% if rol9 or rol8 %}
+                                        <li><a href="{{path('tramite_certificado_tecnico_registro_busca')}}">Registro</a></li>
                                     {% endif %}
                                     {% if (rol14 or rol8) and 1 == 2 %}
                                         <li><a href="{{path('tramite_detalle_certificado_tecnico_recepcion_busca')}}">Recepción</a></li>
@@ -380,7 +380,7 @@
                                 </ul>
                             </li>
                         {% endif %}
-                        {% if (rol13 or rol14 or rol15 or rol16 or rol17 or rol8) and 1 == 2%}
+                        {% if (rol13 or rol14 or rol15 or rol16 or rol17 or rol8) and 1 > 2 %}
                             <li class="submenu">
                                 <a href="javascript:void(0);">
                                     <span class="icon"><i class="fa fa-line-chart"></i></span>
@@ -388,9 +388,7 @@
                                     <span class="arrow"></span>
                                 </a>
                                 <ul>
-                                    <li><a href="#">Diplomas</a></li>
-                                    <li><a href="#">Participantes</a></li>
-                                    <li><a href="#">Trámites</a></li>
+                                    <li><a href="{{path('tramite_estadistica_certificado_tecnico_emitido')}}">Por gestión de egreso</a></li>
                                 </ul>
                             </li>
                         {% endif %}
@@ -426,6 +424,18 @@
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>   
+                        {% if (rol16 or rol17 or rol8) %}
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="icon"><i class="fa fa-line-chart"></i></span>
+                                    <span class="text">Educación Regular</span>
+                                    <span class="arrow"></span>
+                                </a>
+                                <ul>
+                                    <li><a href="{{path('note_consultation_ues_sie_index')}}">Boletin centralizador</a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
                     <!--/ End development - sub menu -->
                     {% endif %}
                 </ul><!-- /.sidebar-menu -->

@@ -1,0 +1,113 @@
+{% if estudiante is not null %}
+	<div class="mensaje"></div>
+	<br>
+	<div style="padding:30px; background:#FFFFFF; margin:30px;">
+		<p>Estudiante encontrado</p>
+	    <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+	        <tr>
+	            <th>Codigo Rude</th><td style="color:#0086DD">{{estudiante.codigoRude}}</td>
+	        </tr>
+	        <tr>
+	            <th>Estudiante</th><td style="color:#0086DD"><b>{{estudiante.nombre}} {{estudiante.paterno}} {{estudiante.materno}}</b></td>
+	        </tr>
+	    </table>
+	    <hr>
+	    <form id="formTrabajo" onsubmit="save(); return false;">
+	        <div class="row">
+	            <div class="form-group col-md-6 col-sm-6">
+	                <label>Ocupación</label>
+	                {{ form_widget(formEstudiante.ocupacion, {'attr':{'class':'form-control jupper'} }) }}
+	            </div>
+	            <div class="form-group col-md-6 col-sm-6" id="otro">
+	                <label>Especifique otra ocupaciòn </label>
+	                {{ form_widget(formEstudiante.ocupacionOtro, {'attr':{'class':'form-control jupper'} }) }}
+	            </div>
+	        </div>
+	        <div class="row">
+	            <div class="form-group col-md-6 col-sm-6">
+	                <label>¿Recibe remuneración?</label>
+	                {{ form_widget(formEstudiante.remuneracion, {'attr':{'class':''} }) }}
+	            </div>
+	        </div>
+	        <div class="row">
+	            <div class="form-group col-md-12 col-sm-12">
+	                <label>Observación</label>
+	                {{ form_widget(formEstudiante.especificacion, {'attr':{'class':'form-control jupper', 'rows':'5'} }) }}
+	            </div>
+	        </div>
+	        <div class="row">
+	            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right">
+	                <button type="button" class="btn btn-default" onclick="cerrarResultado();">Cancelar</button>
+	                <button type="submit" class="btn btn-success">Registrar estudiante</button>
+	            </div>
+	        </div>
+	        {{ form_widget(formEstudiante) }}
+	    </form>
+	</div>
+    <br>
+{% else %}
+	<br><br>
+	<div class="alert alert-warning">
+		<i class="fa fa-warning"></i> El estudiante no fue encontrado o no cuenta con inscripción en la gestion 2018.
+	</div>
+{% endif %}
+
+<script type="text/javascript">
+	function validarOtro(){
+	    if($('#form_ocupacion').val() == 99){
+	        $('#otro').css('display','block');
+	    }else{
+	        $('#otro').css('display','none');
+	        $('#form_ocupacionOtro').val('');
+	    }
+	}
+
+	$('#form_ocupacion').on('change', function(){
+	    validarOtro();
+	});
+
+	validarOtro();
+
+	function cerrarResultado(){
+		$('#resultado').empty();
+	}
+
+	function save(){
+        var ocupacion = $('#form_ocupacion').val();
+        if(ocupacion != 0){
+            var data = $('#formTrabajo').serialize();
+            $.ajax({
+                url: Routing.generate('estudianteTrabajaNuevo_save'),
+                type: 'post',
+                data: data,
+                beforeSend: function(){
+
+                },
+                success: function(data){
+
+            		$('#resultado').empty();
+            		$('#registrados').empty();
+            		$('#registrados').append(data);
+
+            		$('.mensaje2').empty();
+            		$('.mensaje2').append('<i class="fa fa-check"></i> Registro realizado correctamente');
+            		$('.mensaje2').removeClass('mensajeWarning');
+            		$('.mensaje2').addClass('mensajeSuccess');
+                    
+                },
+                error: function(){
+                    $('.mensaje2').removeClass('mensajeSuccess');
+                    $('.mensaje2').addClass('mensajeWarning');
+                    $('.mensaje2').empty();
+                    $('.mensaje2').append('<i class="fa fa-warning"></i> Error en el registro');
+                }
+            });
+        }else{
+            $('.mensaje').removeClass('mensajeSuccess');
+            $('.mensaje').addClass('mensajeWarning');
+            $('.mensaje').empty();
+            $('.mensaje').append('<i class="fa fa-warning"></i> Debe seleccionar una ocupación para realizar el registro');
+        }
+    }
+
+</script>

@@ -1,0 +1,175 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> Reportes NNATS</h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-file-text-o"></i>
+                    <a href="{{ path('herramienta_nnats_index')}}">Reportes Nnats</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="pull-left ">
+                            <h3 class="panel-title">Busqueda</h3>
+                        </div>
+                        <div class="pull-right">
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                        {{ form_start(form,{ 'attr': {'id':'form_dep'} } ) }}
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Departamento</label>
+                                    {{ form_widget(form.departamento) }}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Distrito</label>
+                                    {{ form_widget(form.distrito) }}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="button" id="nnats_buscar" onclick="listarNnats()"  class="btn btn-primary btn-lg" style="margin-top: 25px"><i class="fa fa-search"></i> Buscar</button>
+                            </div>
+                        </div>
+                        {{ form_end(form) }}
+                        <div class="row">
+                            <div class="col-md-12" id="l_nnats">
+                            </div>
+                        </div>
+
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts%}
+{{ parent() }}
+<script>
+
+    function cargarDitrito() {
+        var id_departamento = $('#form_departamento').val();
+        var formData = {
+            id_departamento:id_departamento
+        };
+        $('#l_nnats').empty();
+        $('#form_distrito').val('');
+        if (id_departamento == '' ){
+            $("#form_distrito").prop('disabled', 'disabled');
+            $("#nnats_buscar").prop('disabled', 'disabled');
+        } else {
+            if (id_departamento == -1) {
+                $("#form_distrito").prop('disabled', 'disabled');
+                $("#nnats_buscar").prop('disabled', false);
+            } else {
+                $("#form_distrito").prop('disabled', false);
+                $("#nnats_buscar").prop('disabled', true);
+                $.ajax({
+                    type: 'post',
+                    url: "{{ path('herramienta_nnats_distritos') }}",
+                    data:formData,
+                    beforeSend: function () {
+                        $("#form_distrito").empty();
+                        $("#form_distrito").append('<option value="">Buscando...</option>');
+                    },
+                    success: function (data) {
+                        $("#form_distrito").empty();
+                        $("#form_distrito").append('<option value="">Seleccionar...</option>');
+                        $.each(data.distrito, function (i, value) {
+                            $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
+                        });//$("#listamenuroles").append(data.sistemamenuroltabla);
+                    }
+                });
+            }
+        }
+    }
+    function listarNnats() {
+        if ($('#form_distrito').val() == '') {
+            $("#nnats_buscar").prop('disabled', 'disabled');
+        } else {
+            $("#nnats_buscar").prop('disabled', false);
+        }
+        var departamento = $('#form_departamento').val();
+        if (departamento == '') {
+            alert("Debe Seleccionar un Departamento");
+            return false;
+        } else{
+            $("#nnats_buscar").prop('disabled', 'disabled');
+            formData = {id_departamento: $('#form_departamento').val(),id_distrito:$('#form_distrito').val()};
+            $.ajax({
+                type: 'post',
+                url: "{{path('herramienta_nnats_lista')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#l_nnats').empty();
+                    $('#l_nnats').append('<div style="text-align:center">Cargando datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $("#nnats_buscar").prop('disabled', false);
+                    $('#l_nnats').empty();
+                    $('#l_nnats').append(data);
+                    cargatablas();
+                }
+
+            });
+        }
+
+    }
+
+    var cargatablas = function (){
+        // Setup - add a text input to each footer cell
+        $('#dt_nnats tfoot th').each( function () {
+            var title = $(this).text();
+            if(title.trim() === "" || title === "Nro."){
+                $(this).html('');
+            } else {
+                $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+            }
+        } );
+
+        // DataTable
+        var table = $('#dt_nnats').DataTable( {
+                "order": [[ 0, "asc" ]],
+                "columnDefs": [
+                    { "orderable": false, "targets": [0] }
+                ],
+            }
+        );
+
+        // Apply the search
+        table.columns().every( function () {
+            var that = this;
+
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+                if ( that.search() !== this.value ) {
+                    that
+                        .search( this.value )
+                        .draw();
+                }
+            } );
+        } );
+    };
+
+
+
+</script>
+
+
+
+{% endblock %}

@@ -1,4 +1,5 @@
 <div class="panel-body"> 
+<input type="hidden" name="roluser" id="roluser" value="{{app.session.get('roluser')}}">
  <form role="form" method="post" action="{{path('sie_pnp_crear_curso_automatico')}}"> 
     {% if op == 2 %}
     <div class="row">
@@ -81,6 +82,7 @@
  }
 
   function validar_fecha2(){
+    var roluser = document.getElementById("roluser").value;
     var f2 = document.getElementById("form_fecha_inicio2").value;
     var f1 = document.getElementById("fecha_anterior_fin").value;
     var plan = document.getElementById("plan").value;
@@ -91,6 +93,8 @@
     var fFecha2 = Date.UTC(aFecha2[2],aFecha2[1]-1,aFecha2[0]); 
     var dif = fFecha2 - fFecha1;
     var dias = Math.floor(dif / (1000 * 60 * 60 * 24)); 
+    var array_fechasol = fecha_actual.split("/")
+    var anio_actual = parseInt(array_fechasol[2])
     if(dias>0){
         var f22 = document.getElementById("form_fecha_fin2").value;
         var f11 = document.getElementById("form_fecha_inicio2").value;
@@ -101,14 +105,22 @@
         var dif = fFecha22 - fFecha11;
         var dias1 = Math.floor(dif / (1000 * 60 * 60 * 24));         
               //validamos primero q la fecha (año) inicio no sea mayor que la fecha actual (año)
-        var array_fechasol = f11.split("/")
-        var anio = parseInt(array_fechasol[2])
+        var array_fechasol = f11.split("/");
+        var anio = parseInt(array_fechasol[2]),
+        var array_fechasol = f22.split("/");
+        var anio_final = parseInt(array_fechasol[2]);
         // plan antiguo 1 debe estar estre 2009-2017
-        if(plan == 2){//plan 2 nuevo 20018 pero no antes q hoy
-            if(anio < 2018){
-                alert("Error!!!. La gestión de la fecha inicial debe ser mínimo 2018");
-                return false;   
-            }
+        if(plan == 2){//plan 2 nuevo 2018 pero no antes q hoy
+            if(roluser == 29)
+                if(anio_final < anio_actual){
+                    alert("Error!!!. La gestión de la fecha inicial no debe ser menor que la gestión actual");
+                    return false;   
+                }
+            else
+                if(anio < 2018){
+                    alert("Error!!!. La gestión de la fecha inicial debe ser mínimo 2018");
+                    return false;   
+                }
         }
              /////////////////////////////////
     ///////////////VALIDAMOS PLAN 1 ENTRE 90 - 240 Y PLAN 2 ENTRE 150 -180

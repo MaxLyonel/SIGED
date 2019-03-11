@@ -1,0 +1,146 @@
+Sie\AppWebBundle\Entity\JdpComisionJuegosDatos:
+    type: entity
+    table: jdp_comision_juegos_datos
+    indexes:
+        IDX_EF8430C9E27EC77:
+            columns:
+                - fase_tipo_id
+        IDX_EF8430C3AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_EF8430C5A51DE01:
+            columns:
+                - prueba_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: comision_juegos_datos_id_seq
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        carnetIdentidad:
+            type: string
+            nullable: false
+            length: 32
+            fixed: false
+            comment: ''
+            column: carnet_identidad
+        nombre:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+        paterno:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+        materno:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+        celular:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+        correo:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        comisionTipoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: comision_tipo_id
+        foto:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        generoTipo:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: genero_tipo
+        disciplinaTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: _disciplina_tipo_id
+        departamentoTipo:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: departamento_tipo
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        esentrenador:
+            type: boolean
+            nullable: true
+            comment: ''
+        gestionTipoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+        posicion:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        avc:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+    manyToOne:
+        faseTipo:
+            targetEntity: JdpFaseTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                fase_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        pruebaTipo:
+            targetEntity: JdpPruebaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                prueba_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

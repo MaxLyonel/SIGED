@@ -11,6 +11,13 @@
             {% if subsistema == 1 or subsistema == 4 %}
             <table class="table table-condensed table-bordered" style="background:#EEEEEE">
                 <tr>
+                    <th>Gestión</th><td>{{gestion}}</td>
+                    <th>Periodo</th>
+                    <td>
+                        ANUAL
+                    </td>
+                </tr>
+                <tr>
                     <th>Nivel</th><td>{{inscripcion.institucioneducativaCurso.nivelTipo.nivel|upper}}</td>
                     <th>Turno</th><td>{{inscripcion.institucioneducativaCurso.turnoTipo.turno|upper}}</td>
                 </tr>
@@ -70,9 +77,8 @@
                     <th>Estado de matrícula</th><td>{{inscripcion.estadomatriculaTipo.estadomatricula}}</td>
                 </tr>
             </table>
-            
             {% if subsistema == 1 %}
-                {% include 'SieRegularBundle:NoteConsultationParents:nota_regular.html.twig' with {'notas': notas, 'cualitativo': cualitativo, 'inscripcion': inscripcion, 'gestion': gestion} %}
+                {% include 'SieRegularBundle:NoteConsultationParents:nota_regular.html.twig' with {'cabeceras': cabeceras, 'indices': indices, 'notas': notas, 'cualitativo': cualitativo, 'inscripcion': inscripcion, 'gestion': gestion} %}
             {% elseif subsistema == 2 %}
                 {% include 'SieRegularBundle:NoteConsultationParents:nota_alternativa.html.twig' with {'notas': notas, 'inscripcion': inscripcion, 'gestion': gestion} %}
             {% elseif subsistema == 4 %}

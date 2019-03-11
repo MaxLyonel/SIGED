@@ -1,0 +1,30 @@
+Sie\AppWebBundle\Entity\JdpFaseTipo:
+    type: entity
+    table: jdp_fase_tipo
+    uniqueConstraints:
+        fase_tipo_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fase:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }
