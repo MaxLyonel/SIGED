@@ -251,10 +251,11 @@ class ReglaController extends Controller
             if($cantidadListaEquipoPruebaInstitucion > $cupoPresentacion){
                 return array('0' => false, '1' => 'No puede registrar a mas equipos en la prueba '.$pruebaNombre);
             } else {
+                //dump($cantidadListaEquipoPruebaInstitucion);dump($cupoPresentacion);die();
                 if($cantidadListaEquipoPruebaInstitucion == $cupoPresentacion){
                     $listaEquipoExiste = false;
                     foreach ($listaEquipoPruebaInstitucion as $listaEquipo) {
-                        $listaEquipoId = $equipo['equipoId'];
+                        $listaEquipoId = $listaEquipo['equipoId'];
                         if ($listaEquipoId == $equipoId){
                             $listaEquipoExiste = true;
                         }
