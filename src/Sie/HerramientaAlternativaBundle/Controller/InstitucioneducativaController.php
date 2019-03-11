@@ -648,6 +648,7 @@ class InstitucioneducativaController extends Controller {
 //    }
     
 public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERRADOS
+    
     $id_usuario = $this->session->get('userId');
     if (!isset($id_usuario)) {
         return $this->redirect($this->generateUrl('login'));
@@ -663,7 +664,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
 }
 
 public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS CERRADOS
-{
+{   
     $usuario_lugar = $this->session->get('roluserlugarid');
     $rol = $request->get('rol');
     $id_usuario = $request->get('id_usuario');
@@ -697,7 +698,7 @@ public function paneloperativoslistaAction(Request $request) //EX LISTA DE CEAS 
             AND ie.estadoinstitucion_tipo_id=10
             AND ie.institucioneducativa_acreditacion_tipo_id=1
             AND ie.institucioneducativa_tipo_id=2
-            AND lt1.codigo='" . $departamento . "'");      
+            AND CAST (lt1.codigo as INT) IN (" . $departamento.")");
     }elseif($rol == 7){
         $query = $em->getConnection()->prepare("SELECT lt1.lugar as departamento, lt.codigo, ie.id, ie.institucioneducativa, ies.sucursal_tipo_id, ies.gestion_tipo_id, CASE WHEN ies.periodo_tipo_id=2 THEN 'PRIMERO' WHEN ies.periodo_tipo_id=3 THEN 'SEGUNDO' WHEN ies.periodo_tipo_id=1 THEN 'ANUAL' END AS periodo_tipo_id , te.tramite_estado, tt.tramite_tipo,te.id AS te_id
             FROM institucioneducativa ie
