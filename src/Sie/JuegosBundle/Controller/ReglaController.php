@@ -274,7 +274,7 @@ class ReglaController extends Controller
             }
         }
 
-        if($estudianteGestionNacimiento <= $iniGestionId or $estudianteGestionNacimiento >= $finGestionId){
+        if($estudianteGestionNacimiento < $iniGestionId or $estudianteGestionNacimiento > $finGestionId){
             return array('0' => false, '1' => 'Año de nacimiento fuera del rango permitido ('.$iniGestionId.' - '.$finGestionId.')');
         }
 
