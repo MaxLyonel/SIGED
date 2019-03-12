@@ -1,0 +1,39 @@
+Sie\AppWebBundle\Entity\JdpModalidadPrueba:
+    type: entity
+    table: jdp_modalidad_prueba
+    indexes:
+        IDX_332E7D0B5A51DE01:
+            columns:
+                - prueba_tipo_id
+        IDX_332E7D0B80D79EDB:
+            columns:
+                - modalidad_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    manyToOne:
+        pruebaTipo:
+            targetEntity: JdpPruebaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                prueba_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        modalidadTipo:
+            targetEntity: JdpModalidadTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                modalidad_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

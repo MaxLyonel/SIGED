@@ -463,6 +463,19 @@
                       </ul>
                     </li>
                     {% endif %}
+                    {% if app.session.get('roluser') == 8  %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-diamond"></i></span>
+                                <span class="text">Reportes NNATS</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('herramienta_nnats_index')}}">Reportes</a></li>
+
+                            </ul>
+                        </li>
+                    {% endif %}
 
                     {#
                         <li class="submenu">

@@ -2375,7 +2375,7 @@ class TramiteDetalleController extends Controller {
                         $tramiteController->setContainer($this->container);
 
                         if ($flujoSeleccionado == 'Adelante'){
-                            $msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
+                            // $msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
                         }
 
                         if($msgContenido != ""){

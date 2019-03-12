@@ -241,8 +241,8 @@
                 <!-- Start left navigation - profile shortcut -->
                 <div class="sidebar-content">
                     <div class="media">
-                        <a class="pull-left has-notif avatar" href="{{path('sie_juegos_inscripcion_index')}}">
-                            <img src="{{asset('juegos/img/avatar/50/1.png')}}" alt="admin">
+                        <a class="pull-left has-notif avatar" href="{{path('sie_juegos_homepage')}}">
+                            <img src="{{asset('img/photo.png')}}" alt="admin">
                             <i class="online"></i>
                         </a>
                         <div class="media-body">
@@ -421,23 +421,6 @@
 
             <!-- START @PAGE CONTENT -->
             <section id="page-content">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="page-content">
-                            {% for type, flashMessage in app.session.flashbag.all() %}
-                                <div class="alert alert-{{ type }} alert-dismissible" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    {% if flashMessage.title is defined %}
-                                    <strong><i class='fa fa-envelope'></i> {{ flashMessage.title }}: </strong>
-                                        {{ flashMessage.message }}
-                                    {% else %}
-                                        {{ type }}
-                                    {% endif %}
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
                 {% block contentoption %}
                     <!-- here the iptions content -->
                 {% endblock %}

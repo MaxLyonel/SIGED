@@ -1,0 +1,17 @@
+herramienta_nnats_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:Nnats:index}
+
+herramienta_nnats_distritos:
+    path:     /nnatsdistritos
+    defaults: { _controller: SieHerramientaBundle:Nnats:busquedadistritos}
+
+herramienta_nnats_lista:
+    path:     /nnatsdistritos_lista
+    defaults: { _controller: SieHerramientaBundle:Nnats:listarNnats}
+
+
+
+
+
+
