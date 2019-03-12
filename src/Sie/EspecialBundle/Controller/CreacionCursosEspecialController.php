@@ -549,7 +549,13 @@ class CreacionCursosEspecialController extends Controller {
     			'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
                                     WHERE n.id IN (:id)'
     		)->setParameter('id',array(401,402,405,410,411));
-    	}
+        }
+        elseif ($area == "4" ) {   //educacion en casa alternativa-regular
+            $query = $em->createQuery(
+                    'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
+                                        WHERE n.id IN (:id)'
+                )->setParameter('id',array(411));
+        }
     	/*elseif ($area == "6" ) {    //DIFICULTADES EN EL APRENDIZAJE
     		$query = $em->createQuery(
     				'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
@@ -561,7 +567,7 @@ class CreacionCursosEspecialController extends Controller {
     	elseif ($area == "8" ) {
     			$query = $em->createQuery(
     					'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
-                                    WHERE n.id IN (:id)'
+                                    WHERE n.id IN (:id)'    
     					)->setParameter('id',array(406,410,411));
 
     	}
@@ -712,7 +718,7 @@ class CreacionCursosEspecialController extends Controller {
                                     WHERE p.id IN (:id) order by p.programa'
                     //)->setParameter('id',array(1,2,3,4,5,6));
                     )->setParameter('id',array(5,6,17));
-    	}elseif ($area == "11" and $nivel == "411" and  $grado == "99" ) {
+    	}elseif ($area == "4" and $nivel == "411" and  $grado == "99" ) {
             $query = $em->createQuery(
                 'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
                                 WHERE p.id IN (:id) order by p.programa'

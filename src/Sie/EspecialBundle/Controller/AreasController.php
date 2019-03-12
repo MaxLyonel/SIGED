@@ -596,6 +596,7 @@ class AreasController extends Controller {
                                     )->setParameter('ids',array())
                                     ->getResult();
                                     break;
+                                case 13:
                                 case 17:
                                     $asignaturas = $em->createQuery(
                                             'SELECT at

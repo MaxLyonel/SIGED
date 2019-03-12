@@ -134,7 +134,7 @@ class InfoNotasController extends Controller {
                     }
                     $actualizarMatricula = false;
                     if($operativo >= 4 or $gestion < $gestionActual){
-                        $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(5,11)));
+                        $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(48,77)));
                     }
                     break;
                 case 7: // Talento extraordinario

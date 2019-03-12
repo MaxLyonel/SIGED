@@ -127,7 +127,7 @@
 
         function listarNiveles() {
             var area = $('#form_area').val();
-            if(area== 6 || area== 7){
+            if(area== 4 || area== 6 || area== 7){
                 $("#divgrado").hide();
                 $("#divtecnica").hide();
                 $("#divniveltec").hide();
@@ -138,11 +138,15 @@
             }
             $("#divservicio").show();
             $("#divprograma").show();
-            $("#form_educacionCasa").attr('checked', false);
             if(area == 1 || area== 2 || area== 3 || area == 4 || area== 5){
                 $("#divEc").show();
             }else{
                 $("#divEc").hide();
+            }
+            if(area == 4){
+                $("#form_educacionCasa").prop('checked', true);
+            }else{
+                $("#form_educacionCasa").prop('checked', false);
             }
             $.ajax({
                 type: 'get',
