@@ -34,6 +34,14 @@ talento_extraordinario_confirm:
     options:
         expose: true
 
+talento_extraordinario_new_comprobante:
+    path:     /reporte/solicitud
+    defaults: { _controller: SieEspecialBundle:EstudianteTalento:rptSolicitud }
+
+"talento_extraordinario_check_comprobante":
+    path:     /reporte/informe
+    defaults: { _controller: SieEspecialBundle:EstudianteTalento:rptInforme }
+
 
 talento_extraordinario_index:
     path:     /

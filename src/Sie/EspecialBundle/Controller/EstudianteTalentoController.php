@@ -352,4 +352,66 @@ class EstudianteTalentoController extends Controller {
         $response = new JsonResponse();
         return $response->setData(array('estado' => $estado, 'msg' => $msg));
     }
+
+    public function rptSolicitudAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $tramite_id = $request->get('idtramite');// $_GET['idtramite']; //1560043
+        $tareadetalle_id = $request->get('id_td'); //$_GET['id_td'];//75147645
+
+        $tramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneById($tramite_id);
+        $institucioneducativa_id = $tramite->getInstitucioneducativa()->getId();
+        $gestion_id = $tramite->getGestionId();
+
+        $resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
+            ->select('wfd')
+            ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
+            ->where('td.id='.$tareadetalle_id)
+            ->getQuery()
+            ->getSingleResult();
+        $estudiante_id = json_decode($resultDatos->getdatos())->estudiante_id;
+        $filename = $institucioneducativa_id.'TE_Solicitud_'.$gestion_id. '_'.date('YmdHis').'.pdf';
+
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $filename));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'talento_extraordinario_solicitud_v1a.rptdesign&&institucioneducativa_id='.$institucioneducativa_id.'&&gestion_id='.$gestion_id.'&&estudiante_id='.$estudiante_id.'&&tramite_id='.$tramite_id.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    public function rptInformeAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $tramite_id = $request->get('idtramite');// $_GET['idtramite']; //1560043
+        $tareadetalle_id = $request->get('id_td'); //$_GET['id_td'];//75147645
+
+        $tramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneById($tramite_id);
+        $institucioneducativa_id = $tramite->getInstitucioneducativa()->getId();
+        $gestion_id = $tramite->getGestionId();
+
+        $resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
+            ->select('wfd')
+            ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
+            ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'td.flujoProceso = fp.id')
+            ->where('td.tramite='.$tramite_id)
+            ->andWhere('fp.orden=1')
+            ->andWhere("wfd.esValido=true")
+            ->orderBy("td.flujoProceso")
+            ->getQuery()
+            ->getSingleResult();
+        $estudiante_id = json_decode($resultDatos->getdatos())->estudiante_id;
+        $filename = $institucioneducativa_id.'TE_Solicitud_'.$gestion_id. '_'.date('YmdHis').'.pdf';
+        //dump($estudiante_id);die;
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $filename));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'talento_extraordinario_informe_v1a.rptdesign&&institucioneducativa_id='.$institucioneducativa_id.'&&gestion_id='.$gestion_id.'&&estudiante_id='.$estudiante_id.'&&tramite_id='.$tramite_id.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
 }
