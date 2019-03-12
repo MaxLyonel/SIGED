@@ -290,7 +290,7 @@ class EstudianteNotasController extends Controller {
          */
         $estadosGenerales = null;
         if($gestion == 2019){
-            $estadosGenerales = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(5,22,3,10)));
+            $estadosGenerales = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(5,22,3,6)));
         }
 
         $em->getConnection()->commit();
@@ -488,7 +488,7 @@ class EstudianteNotasController extends Controller {
             // 5 = PROMOVIDO
             // 22 = POSTERGADO
             // 3 = RETIRADO
-            // 10 = RETIRADO ABANDONO
+            // 6 = NO INCORPORADO
 
             if ($estadoGeneral != "") {
                 $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
