@@ -29,13 +29,14 @@
                   <i class="fa fa-download" ></i> Listado de Estudiantes del Curso 
                 </a>
           </div>
-          {% if gestion == 2018 and nivel != 11 %}
+          {# {% if gestion == 2018 and nivel != 11 %}
              <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registro Trabajo del estudiante">
                   <button type="button" class="btn btn-block btn-facebook" data-toggle="modal" data-target=".bs-example-modal-table" onclick="registerJobStudent('{{infoUe}}');" >
                       <i class="fa fa-edit"></i>Registro Trabajo del estudiante
                   </button>
               </div>
-            {% endif %}
+          {% endif %} #}
+
           {#
           {% if operativo >= 5 %}
             <div class="col-md-4">
@@ -193,13 +194,14 @@
                                           <i class="fa fa-user"></i>
                                       </button>
                                   </div> #}
-                                  {% if gestion == 2018 and nivel != 11 %}
+                                  
+                                  {# {% if gestion == 2018 and nivel != 11 %}
                                   <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Trabajo del estudiante">
                                       <button type="button" class="btn btn-circle btn-primary " data-toggle="modal" data-target=".bs-example-modal-table" onclick="trabajo('{{infoUe}}','{{jsnInfoStudent}}',0);" >
                                           <i class="fa fa-edit"></i>
                                       </button>
                                   </div>
-                                  {% endif %}
+                                  {% endif %} #}
 
                                   {% set styleButton = 'info' %}
                                       {% if data.registroFinalizado %}
