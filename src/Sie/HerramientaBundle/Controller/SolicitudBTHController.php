@@ -407,7 +407,7 @@ class SolicitudBTHController extends Controller {
                     $res = 1;
                 }
                 else{
-                    $res = 2;//No puede iniciar su trámite como nuevo
+                     $res = 2;  //No puede iniciar su trámite como nuevo
                 }
             }else{
                 $res = 3;
@@ -447,8 +447,13 @@ class SolicitudBTHController extends Controller {
                 $res = 3; // esq ya inicio un tramite
             }
         }
+        if(isset($mensaje['msg'])){
+            $mensaje = $mensaje['msg'];
+        }else{
+            $mensaje = '';
 
-        return  new JsonResponse(array('estado' => $res, 'msg' => $mensaje['msg']));
+        }
+        return  new JsonResponse(array('estado' => $res, 'msg' => $mensaje));
     }
     public function imprimirDirectorAction(Request $request){
         $tramite_id = $request->get('idtramite');
