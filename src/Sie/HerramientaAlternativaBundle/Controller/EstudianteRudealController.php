@@ -284,7 +284,7 @@ class EstudianteRudealController extends Controller {
                             },
                             'property'=>'sigla',
                             'empty_value' => 'Seleccionar...',
-                            'required' => true,
+                            'required' => false,
                             'data'=>($e->getExpedido())?$e->getExpedido():'',
                             'mapped'=>false
                         ))
