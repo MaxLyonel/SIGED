@@ -186,7 +186,7 @@ class NnatsController extends Controller {
         $departamento_distrito = $request->get('departamento_distrito');
         $em = $this->getDoctrine()->getManager();
         $lugarTipo = $em->getRepository('SieAppWebBundle:LugarTipo')->find($departamento_distrito);
-        $idDepartamento = $lugarTipo->getCodigo();//dump($idDepartamento);die;
+        $idDepartamento = $lugarTipo->getCodigo();
 
         $arch = 'NNATS'.'_'.date('YmdHis').'.pdf';
         $response = new Response();
@@ -202,10 +202,6 @@ class NnatsController extends Controller {
         {
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_departamental_nnats_v1_ma.rptdesign&__format=pdf&gestion='.$gestion.'&depto='.$idDepartamento));
         }
-       /* if($roluser == 10 ) // Tecnico Distrital
-        {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_distrital_nnats_v1_ma.rptdesign&__format=pdf&gestion='.$gestion.'&distrito='.$departamento_distrito));
-        }*/
 
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
@@ -220,7 +216,7 @@ class NnatsController extends Controller {
         $departamento_distrito = $request->get('departamento_distrito');
         $em = $this->getDoctrine()->getManager();
         $lugarTipo = $em->getRepository('SieAppWebBundle:LugarTipo')->find($departamento_distrito);
-        $idDepartamento = $lugarTipo->getCodigo(); //dump($idDepartamento);die;
+        $idDepartamento = $lugarTipo->getCodigo();
 
         $arch =  'NNATS'.'_'.date('YmdHis').'.xlsx';
         $response = new Response();
@@ -236,10 +232,6 @@ class NnatsController extends Controller {
         {
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_departamental_nnats_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion.'&depto='.$idDepartamento));
         }
-       /* if($roluser == 10 ) // Tecnico Distrital
-        {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_distrital_nnats_v1_ma.rptdesign&__format=pdf&gestion='.$gestion.'&distrito='.$departamento_distrito));
-        }*/
 
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
@@ -247,7 +239,7 @@ class NnatsController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
     }
-    //especifico
+    //Especifico
     public function ReporteNnatsEspecificoNacionalPrintPdfAction(Request $request){
         $roluser = $request->get('roluser');
         // $gestion = $request->get('gestion');
@@ -255,7 +247,7 @@ class NnatsController extends Controller {
         $departamento_distrito = $request->get('departamento_distrito');
         $em = $this->getDoctrine()->getManager();
         $lugarTipo = $em->getRepository('SieAppWebBundle:LugarTipo')->find($departamento_distrito);
-        $idDepartamento = $lugarTipo->getCodigo();//dump($idDepartamento);die;
+        $idDepartamento = $lugarTipo->getCodigo();
 
         $arch = 'NNATS'.'_'.date('YmdHis').'.pdf';
         $response = new Response();
@@ -290,8 +282,6 @@ class NnatsController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $lugarTipo = $em->getRepository('SieAppWebBundle:LugarTipo')->find($departamento_distrito);
         $idDepartamento = $lugarTipo->getCodigo();
-      //  $idDistrito = $lugarTipo->getCodigo(); //dump($departamento_distrito);die;
-
         $arch =  'NNATS'.'_'.date('YmdHis').'.xlsx';
         $response = new Response();
         $response->headers->set('Content-type', 'application/vnd.ms-excel');
