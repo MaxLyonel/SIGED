@@ -67,8 +67,8 @@
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                                         <form name="formEstadisticaCertificacionTecnica" id="formEstadisticaCertificacionTecnica" role="form" action="{{ path('tramite_estadistica_certificado_tecnico_emitido_descarga_general') }}" method="POST">  
                                             <input type="hidden" name="gestion" value="{{ gestion }}" />
-                                            <input type="hidden" name="codigo" value="{{ infoEntidad[0]['codigo'] }}" />  
-                                            <input type="hidden" name="codigo" value="{{ infoEntidad[0]['nivel'] }}" />  
+                                            <input type="hidden" name="codigo" value="{{ infoEntidad[0]['codigo']|base64_encode }}" />  
+                                            <input type="hidden" name="nivel" value="{{ infoEntidad[0]['nivel_actual'] }}" />  
                                             <button name="botonPdf" id="botonPdf" title="Descargar en formato PDF" class="btn btn-googleplus">
                                                 <i class="fa fa-file-pdf-o"></i>
                                             </button>
@@ -85,8 +85,8 @@
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                                         <form name="formEstadisticaCertificacionTecnicaEspecialidad" id="formEstadisticaCertificacionTecnicaEspecialidad" role="form" action="{{ path('tramite_estadistica_certificado_tecnico_emitido_descarga_especialidad') }}" method="POST">  
                                             <input type="hidden" name="gestion" value="{{ gestion }}" />
-                                            <input type="hidden" name="codigo" value="{{ infoEntidad[0]['codigo'] }}" />  
-                                            <input type="hidden" name="codigo" value="{{ infoEntidad[0]['nivel'] }}" />  
+                                            <input type="hidden" name="codigo" value="{{ infoEntidad[0]['codigo']|base64_encode }}" />  
+                                            <input type="hidden" name="nivel" value="{{ infoEntidad[0]['nivel_actual'] }}" />  
                                             <button name="botonPdf" id="botonPdf" title="Descargar en formato PDF" class="btn btn-googleplus">
                                                 <i class="fa fa-file-pdf-o"></i>
                                             </button>

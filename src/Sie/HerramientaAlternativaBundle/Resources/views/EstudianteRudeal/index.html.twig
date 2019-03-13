@@ -968,8 +968,10 @@
         if($('#form_seguroSalud_0').is(':checked')){
             $('#form_acudioCentro').val('');
             $('#form_acudioCentro').attr('disabled','disabled');
+            $('#form_acudioCentro').removeAttr('required');
         }else{
             $('#form_acudioCentro').removeAttr('disabled');
+            $('#form_acudioCentro').attr('required','required');
         }
     }
 
