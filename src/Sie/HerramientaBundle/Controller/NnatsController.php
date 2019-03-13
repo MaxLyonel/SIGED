@@ -175,4 +175,146 @@ class NnatsController extends Controller {
         }
         return $this->render('SieHerramientaBundle:Nnats:listaNnats.html.twig',array('data'=>$data));
     }
+
+    /**
+     * Reportes Generales - Completo
+     */
+    public function ReporteNnatsCompletaNacionalPrintPdfAction(Request $request){
+        $roluser = $request->get('roluser');
+       // $gestion = $request->get('gestion');
+        $gestion =  2018; // solo para el operativo del 2018
+        $departamento_distrito = $request->get('departamento_distrito');
+        $em = $this->getDoctrine()->getManager();
+        $lugarTipo = $em->getRepository('SieAppWebBundle:LugarTipo')->find($departamento_distrito);
+        $idDepartamento = $lugarTipo->getCodigo();//dump($idDepartamento);die;
+
+        $arch = 'NNATS'.'_'.date('YmdHis').'.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+
+        if($roluser == 8) // Tecnico Nacional
+        {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_nacional_nnats_v1_ma.rptdesign&__format=pdf&gestion='.$gestion));
+        }
+
+        if($roluser == 7 ) // Tecnico Departamental
+        {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_departamental_nnats_v1_ma.rptdesign&__format=pdf&gestion='.$gestion.'&depto='.$idDepartamento));
+        }
+       /* if($roluser == 10 ) // Tecnico Distrital
+        {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_distrital_nnats_v1_ma.rptdesign&__format=pdf&gestion='.$gestion.'&distrito='.$departamento_distrito));
+        }*/
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+    public function ReporteNnatsCompletaNacionalPrintXlsAction(Request $request){
+        $roluser = $request->get('roluser');
+        $gestion = $request->get('gestion');
+        $gestion =  2018; // solo para el operativo del 2018
+        $departamento_distrito = $request->get('departamento_distrito');
+        $em = $this->getDoctrine()->getManager();
+        $lugarTipo = $em->getRepository('SieAppWebBundle:LugarTipo')->find($departamento_distrito);
+        $idDepartamento = $lugarTipo->getCodigo(); //dump($idDepartamento);die;
+
+        $arch =  'NNATS'.'_'.date('YmdHis').'.xlsx';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+
+        if($roluser == 8) // Tecnico Nacional
+        {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_nacional_nnats_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion));
+        }
+
+        if($roluser == 7 ) // Tecnico Departamental
+        {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_departamental_nnats_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion.'&depto='.$idDepartamento));
+        }
+       /* if($roluser == 10 ) // Tecnico Distrital
+        {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_distrital_nnats_v1_ma.rptdesign&__format=pdf&gestion='.$gestion.'&distrito='.$departamento_distrito));
+        }*/
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+    //especifico
+    public function ReporteNnatsEspecificoNacionalPrintPdfAction(Request $request){
+        $roluser = $request->get('roluser');
+        // $gestion = $request->get('gestion');
+        $gestion =  2018; // solo para el operativo del 2018
+        $departamento_distrito = $request->get('departamento_distrito');
+        $em = $this->getDoctrine()->getManager();
+        $lugarTipo = $em->getRepository('SieAppWebBundle:LugarTipo')->find($departamento_distrito);
+        $idDepartamento = $lugarTipo->getCodigo();//dump($idDepartamento);die;
+
+        $arch = 'NNATS'.'_'.date('YmdHis').'.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+
+        if($roluser == 8) // Tecnico Nacional
+        {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_nacional_nnats_v2_ma.rptdesign&__format=pdf&gestion='.$gestion));
+        }
+
+        if($roluser == 7 ) // Tecnico Departamental
+        {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_departamental_nnats_v2_ma.rptdesign&__format=pdf&gestion='.$gestion.'&depto='.$idDepartamento));
+        }
+        if($roluser == 10 ) // Tecnico Distrital
+        {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_distrital_nnats_v1_ma.rptdesign&__format=pdf&gestion='.$gestion.'&distrito='.$idDepartamento));
+        }
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+    public function ReporteNnatsEspecificoNacionalPrintXlsAction(Request $request){
+        $roluser = $request->get('roluser');
+        $gestion = $request->get('gestion');
+        $gestion =  2018; // solo para el operativo del 2018
+        $departamento_distrito = $request->get('departamento_distrito');
+        $em = $this->getDoctrine()->getManager();
+        $lugarTipo = $em->getRepository('SieAppWebBundle:LugarTipo')->find($departamento_distrito);
+        $idDepartamento = $lugarTipo->getCodigo();
+      //  $idDistrito = $lugarTipo->getCodigo(); //dump($departamento_distrito);die;
+
+        $arch =  'NNATS'.'_'.date('YmdHis').'.xlsx';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+
+        if($roluser == 8) // Tecnico Nacional
+        {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_nacional_nnats_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion));
+        }
+
+        if($roluser == 7 ) // Tecnico Departamental
+        {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_departamental_nnats_v2_ma.rptdesign&__format=xlsx&gestion='.$gestion.'&depto='.$idDepartamento));
+        }
+        if($roluser == 10 ) // Tecnico Distrital
+        {
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_distrital_nnats_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion.'&distrito='.$idDepartamento));
+        }
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
 }
