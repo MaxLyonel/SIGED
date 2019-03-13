@@ -136,6 +136,7 @@ class ReglaController extends Controller
 
         $pruebaEntity = $em->getRepository('SieAppWebBundle:JdpPruebaTipo')->findOneBy(array('id' => $pruebaId));
         $disciplinaId = $pruebaEntity->getDisciplinaTipo()->getId();   
+        $disciplinaNombre = $pruebaEntity->getDisciplinaTipo()->getDisciplina();   
         $pruebaParticipacionId = $pruebaEntity->getPruebaParticipacionTipo()->getId();   
         $pruebaParticipacionCantidad = $pruebaEntity->getPruebaParticipacionTipo()->getCantidad();   
         $pruebaParticipacionNombre = $pruebaEntity->getPruebaParticipacionTipo()->getDisciplinaParticipacion();    
@@ -149,7 +150,13 @@ class ReglaController extends Controller
         if($cantidadPruebaEstudiante < $pruebaParticipacionCantidad){
             return array('0' => true, '1' => '');
         } else {
-            return array('0' => false, '1' => 'El estudiante ya cuenta con la cantidad maxima de participaciones permitidas en la Prueba '.$pruebaParticipacionNombre.', intente nuevamente');
+            $cantidadDisciplinaPruebaParticipacion = $this->getDisciplinaPruebaParticipacion($disciplinaId, $pruebaParticipacionId);
+            //dump($cantidadDisciplinaPruebaParticipacion);dump($cantidadPruebaEstudiante);die;
+            if ($cantidadPruebaEstudiante < $cantidadDisciplinaPruebaParticipacion){
+                return array('0' => true, '1' => '');
+            } else {
+                return array('0' => false, '1' => 'El estudiante ya cuenta con la cantidad maxima de participaciones permitidas en la Prueba '.$pruebaParticipacionNombre.', intente nuevamente');
+            }
         }
     }
 
@@ -321,6 +328,30 @@ class ReglaController extends Controller
         $entity= $this->getDoctrine()->getRepository('SieAppWebBundle:JdpDisciplinaParticipacionTipo');
         $query = $entity->createQueryBuilder('dpt')
             ->select('sum(dpt.cantidad) as cantidad')
+            ->getQuery();
+        $entity = $query->getResult();
+        if (count($entity) > 0){
+            return $entity[0]['cantidad']; 
+        } else {
+            return 0; 
+        }               
+    }
+
+    /**
+     * busca el maximo id equipo creado
+     * @param type $nivelId
+     * @param type $generoId
+     * return list of pruebas
+     */
+    public function getDisciplinaPruebaParticipacion($disciplinaId, $pruebaParticipacionId) {
+        $em = $this->getDoctrine()->getManager();
+        $entity= $this->getDoctrine()->getRepository('SieAppWebBundle:JdpDisciplinaPruebaParticipacion');
+        $query = $entity->createQueryBuilder('dpp')
+            ->select('dpp.cantidad as cantidad')
+            ->where('dpp.disciplinaTipo = :codDisciplina')
+            ->andwhere('dpp.pruebaParticipacionTipo = :codPruebaParticipacion')
+            ->setParameter('codDisciplina', $disciplinaId)
+            ->setParameter('codPruebaParticipacion', $pruebaParticipacionId)
             ->getQuery();
         $entity = $query->getResult();
         if (count($entity) > 0){
