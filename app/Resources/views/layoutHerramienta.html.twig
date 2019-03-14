@@ -420,9 +420,7 @@
                         </a>
                         <ul>
                             <li><a href="{{ path('herramienta_ieducativa_equipamiento_laboratorio_detalle')}}">Laboratorio</a></li>
-                            {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 20 %}
-                                <li><a href="{{ path('herramienta_reportelabofisquim_index')}}">Reportes</a></li>
-                            {% endif %}
+                            <li><a href="{{ path('herramienta_reportelabofisquim_index')}}">Reportes</a></li>
                         </ul>
                     </li>
 
