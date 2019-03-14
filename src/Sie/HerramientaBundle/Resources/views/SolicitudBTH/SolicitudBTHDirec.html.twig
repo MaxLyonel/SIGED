@@ -517,14 +517,11 @@
                         var mensaje = false;
                         $('#lista_especialidades_ratificacion').empty();
                         $(data).each(function(i, v){
-                            if (v.activo == false ) {
-                                $('#lista_especialidades_ratificacion').append('<option disabled="disabled" value="' + v.id + '">' + v.especialidad + '</option>');
-                                select_array.push(v.id); // solo las especialidades que no tiene ningun cambio.
-                            } else {
-                                $('#lista_especialidades_ratificacion').append('<option value="' + v.id + '">' + v.especialidad + '</option>');
+                            if (v.activo == true ) {
                                 mensaje = true;
                             }
-
+                            $('#lista_especialidades_ratificacion').append('<option disabled="disabled" value="' + v.id + '">' + v.especialidad + '</option>');
+                            select_array.push(v.id); // solo las especialidades que no tiene ningun cambio.
                         });
                         $("#lista_especialidades_ratificacion").chosen({ width: "95%" });
                         setTimeout(function () {
@@ -533,8 +530,7 @@
                         if (mensaje) {
                             swal({
                                 icon: "warning",
-                                text: "Una o todas de sus especialidades con las que cuenta su Unidad Educativa se vio afectada con la actualización de especialidades - 2019," +'\n'+
-                                      "Se pide seleccionar la(s) especialidad(s) con las que desea iniciar su trámite.",
+                                text: "Una o todas de sus especialidades con las que cuenta su Unidad Educativa se vio afectada con la actualización de especialidades - 2019," +'\n',
                                 value: true,
                                 visible: true,
                                 className: "",
@@ -650,10 +646,10 @@
                             };
                             ip.push({institucionid : institucionid});
                             var especialidades_id = [];
-                            /*$("#lista_especialidades_ratificacion").find("option").each(function(index, opc){
-                                especialidades_id.push(opc.value);
-                            });*/
-                            if($('#lista_especialidades_ratificacion').val()) {
+                            $("#lista_especialidades_ratificacion").find("option").each(function(){
+                                especialidades_id.push(this.value);
+                            });
+                            /*if($('#lista_especialidades_ratificacion').val()) {
                                 var verificar1 = false, verificar2 = false;
                                 var caso1 = false, caso2 = false;
                                 $("#lista_especialidades_ratificacion").find('option').each(function () {
@@ -700,7 +696,8 @@
                                 swal("Debe seleccionar al menos una especialidad.");
                                 return false;
                             } //alert(especialidades_id);
-                            console.log('res',especialidades_id);
+                            console.log('res',especialidades_id);*/
+                            ip.push({select_especialidad : especialidades_id});
                             var ipt=JSON.stringify(ip);
                             var imagen = '{{ asset("img/loading96.gif") }}';
                             $.ajax({

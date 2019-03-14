@@ -224,8 +224,7 @@
                                                     {% else %}{#tramite Ratificacion#}
                                                     <select data-placeholder="Seleccionar especialidad" id="lista_select_especialidad" class="chosen-select" name="lista_select_especialidad[]"  class="form-control" multiple=""  >
                                                         {% for especialidadarray in especialidadarray %}
-
-                                                            <option value="{{ especialidadarray.id }}"  {% if especialidadarray.activo == false %} disabled="disabled" {% endif %} >{{ especialidadarray.especialidad }}</option>
+                                                            <option value="{{ especialidadarray.id }}" disabled="disabled" >{{ especialidadarray.especialidad }}</option>
                                                         {% endfor %}
                                                     </select>
                                                     {% endif %}
@@ -279,12 +278,10 @@
             var select_array = [];
             var mensaje =false;
             $('#lista_select_especialidad').find('option').each(function () {
-
-                if(this.value == 64 || this.value == 65 || this.value == 41 || this.value == 42 ){
+                if(this.value == 3 || this.value == 4 ){
                     mensaje =true;
-                }else{
-                    select_array.push(this.value);
                 }
+                select_array.push(this.value);
             });
             setTimeout(function () {
                 $("#lista_select_especialidad").val(select_array).trigger('chosen:updated');
@@ -393,7 +390,11 @@
                                 else ip.push({ informe : 0 });
                                 ip.push({institucionid : institucionid});
                                 var especialidades_id = [];
-                                if($('#lista_select_especialidad').val()){
+                                $("#lista_select_especialidad").find("option").each(function(){
+                                    especialidades_id.push(this.value);
+                                });
+                                ip.push({"select_especialidad" : especialidades_id});
+                                /*if($('#lista_select_especialidad').val()){
                                     var verificar1 = false, verificar2 = false;
                                     var caso1 = false, caso2 = false;
                                     $("#lista_select_especialidad").find("option").each(function(index, opc){
@@ -438,7 +439,7 @@
                                 } else {
                                     swal("Debe seleccionar al menos una especialidad.");
                                     return false;
-                                }
+                                }*/
 
                                 var obstxt=$('#obstxt').val();
                                 var ipt=JSON.stringify(ip);
@@ -458,11 +459,11 @@
                                     },
                                     success: function (data) {
                                         console.log(data);
-                                        if (data==1){
+                                        if (data.estado==1){
                                             swal("Su formulario se ha enviado con éxito, con Nro. de Trámite:"+{{ id_tramite}} );
                                             location.href = "{{ path('wf_tramite_index') }}";
                                         }
-                                        else if(data==3 ){
+                                        else if(data.estado==3 ){
                                             swal("Debe iniciar su trámite como 'Registro Nuevo'");
                                         }else {
                                             swal('Su formulario no se envío correctamente');
