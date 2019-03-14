@@ -128,7 +128,20 @@
                               </div>
                           </div>
                           </br>
-
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="alert alert-danger alert" role="alert">
+                                        <button type="button" class="close"  ><span aria-hidden="true"></span></button>
+                                        <strong>Importante!</strong> Se pide que llene el siguiente cuadro de texto, explicando la razón para la inscripción para Extemporáneos/Omitidos.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {{form_label(formInscription.observacionOmitido)}}
+                                    {{form_widget(formInscription.observacionOmitido, {'attr':{'onkeyUp':'observacionOmitido(this.value)'}  } )}}
+                                </div>
+                            </div>
                           {{form_widget(formInscription.save, {'attr':{'class':'btn btn-default'} }) }}
                           {{form_end(formInscription)}}
                         </td>

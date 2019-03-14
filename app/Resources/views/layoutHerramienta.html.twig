@@ -473,6 +473,21 @@
                             </ul>
                         </li>
                     {% endif %}
+                    {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7  %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-diamond"></i></span>
+                                <span class="text">Inscripciones</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('inscription_ini_pri_rue_index')}}">Omitidos/Extemporáneos</a></li>
+                                <li><a href="{{ path('inscription_extranjeros_index')}}">Extranjeros/Inicial</a></li>
+                                <li><a href="{{ path('remove_inscription_student_free_index')}}">Cambio de Paralelo</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+
 
                     {#
                         <li class="submenu">
