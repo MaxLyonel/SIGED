@@ -414,7 +414,7 @@ class InscriptionIniPriTrueController extends Controller {
          $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
          $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($form['idStudent']));
          $studentInscription->setObservacion($form['observacionOmitido']);
-         $studentInscription->setObservacionId(($em->getRepository('SieAppWebBundle:ObservacionInscripcionTipo')->find(6))->getId());
+         $studentInscription->setObservacionId(($em->getRepository('SieAppWebBundle:ObservacionInscripcionTipo')->find(6)));
          $studentInscription->setFechaInscripcion(new \DateTime('now'));
          $studentInscription->setFechaRegistro(new \DateTime('now'));
          $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($objCurso->getId()));
