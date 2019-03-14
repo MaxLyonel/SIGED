@@ -402,7 +402,7 @@ class IeducativaEquipamientoLaboratorioController extends Controller {
      * @return type
      */
     private function getInstitucionEducativaEquipoLaboratorio($sie) {
-        $adjuntoDir = '/siged/web/uploads/equipamiento_laboratorio/';
+        $adjuntoDir = '/uploads/equipamiento_laboratorio/';
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("
             select elfq.*, elfqct.construccion, '".$adjuntoDir."'||elfqf1.foto as foto1, '".$adjuntoDir."'||elfqf2.foto as foto2 from equip_labo_fisi_quim as elfq 
