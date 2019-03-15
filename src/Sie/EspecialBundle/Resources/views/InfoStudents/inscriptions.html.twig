@@ -23,7 +23,7 @@
                     <table id="datatable-ajax" class="table table-striped table-danger dataTable" role="grid" aria-describedby="datatable-ajax_info">
                       <thead>
                           <tr role="row">
-                          <th data-class="expand" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Name: activate to sort column descending" aria-sort="ascending">Rudeal</th>
+                          <th data-class="expand" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Name: activate to sort column descending" aria-sort="ascending">Rudes</th>
                           <th data-class="expand" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Name: activate to sort column descending" aria-sort="ascending">CI</th>
                           <th data-class="expand" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Name: activate to sort column descending" aria-sort="ascending">Paterno</th>
                           <th data-hide="phone" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending">Materno</th>
@@ -96,6 +96,12 @@
           <strong>Alerta!</strong> {{ flashMessage }}
       </div>
   {% endfor %}
+      {% for flashMessage in app.session.flashbag.get('notalento') %}
+          <div class="alert alert-warning alert-dismissible" >
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+              <strong>Alerta!</strong> {{ flashMessage }}
+          </div>
+      {% endfor %}
   </div>
 </div>
 {% endif %}

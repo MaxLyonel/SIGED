@@ -199,7 +199,6 @@ class InfoStudentsController extends Controller {
   *find student method
   **/
   public function findStudentAction(Request $request){
-
     //crete the connexion into the DB
     //get the info send
     $em = $this->getDoctrine()->getManager();
@@ -210,22 +209,31 @@ class InfoStudentsController extends Controller {
     $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$form['rudeal']));
     //check if the student exist
     if($objStudent){
+      if($dataUe['ueducativaInfoId']['areaEspecialId']==7) {
+        $estudianteTalento = $em->getRepository('SieAppWebBundle:EstudianteTalento')->findOneBy(array('estudiante' => $objStudent->getId()));
+        if (empty($estudianteTalento)) {
+            $this->session->getFlashBag()->add('notalento', 'El Estudiante no está registrado como Talento Extraordinario');
+            return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array(
+                'exist'=>false
+            ));
+        }
+      }
       $inscription2 = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
       $query = $inscription2->createQueryBuilder('ei')
-              ->select('ei.id as id, iec.id as iecStudentId')
-              ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso=iec.id')
-              ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
-              ->leftJoin('SieAppWebBundle:InstitucioneducativaTipo', 'it', 'WITH', 'i.institucioneducativaTipo = it.id')
-              ->where('ei.estudiante = :id')
-              ->andwhere('iec.gestionTipo = :gestion')
-              // ->andwhere('it.id = :ietipo')
-              ->andwhere('ei.estadomatriculaTipo IN (:mat)')
-              ->setParameter('id', $objStudent->getId())
-              ->setParameter('gestion', $dataUe['requestUser']['gestion'])
-              ->setParameter('mat', array(4,5))
-              //->setParameter('mat2', '5')
-              // ->setParameter('ietipo', 1)
-              ->getQuery();
+        ->select('ei.id as id, iec.id as iecStudentId')
+        ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso=iec.id')
+        ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
+        ->leftJoin('SieAppWebBundle:InstitucioneducativaTipo', 'it', 'WITH', 'i.institucioneducativaTipo = it.id')
+        ->where('ei.estudiante = :id')
+        ->andwhere('iec.gestionTipo = :gestion')
+        // ->andwhere('it.id = :ietipo')
+        ->andwhere('ei.estadomatriculaTipo IN (:mat)')
+        ->setParameter('id', $objStudent->getId())
+        ->setParameter('gestion', $dataUe['requestUser']['gestion'])
+        ->setParameter('mat', array(4,5))
+        //->setParameter('mat2', '5')
+        // ->setParameter('ietipo', 1)
+        ->getQuery();
 
       $selectedInscriptionStudent = $query->getResult();
       if($selectedInscriptionStudent){
@@ -245,13 +253,13 @@ class InfoStudentsController extends Controller {
               'exist'=>true
 
             ));
-      }else{
+        }else{
           //the student has an inscription on the same level
           $this->session->getFlashBag()->add('noinscription', 'Estudiante ya cuenta con inscripcion...');
           return $this->render($this->session->get('pathSystem').':InfoStudents:inscriptions.html.twig', array(
             'exist'=>false
           ));
-      }
+        }
 
 
       }else{
