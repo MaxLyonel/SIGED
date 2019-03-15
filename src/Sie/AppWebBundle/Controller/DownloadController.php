@@ -91,6 +91,19 @@ class DownloadController extends Controller {
         return $response;
     }
 
+    public function listStudentPerCourseSegAction(Request $request, $ue, $gestion, $nivel, $grado, $paralelo, $turno) {
+
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'list_C_' . $ue . '_' . $gestion . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesInscritos_Curso_gral_v1_ma.rptdesign&ue=' . $ue . '&gestion=' . $gestion . '&nivel=' . $nivel . '&grado=' . $grado . '&turno=' . $turno . '&Paralelo=' . $paralelo . '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
     /**
      * get the list of students per UE
      * @param Request $request
@@ -104,6 +117,19 @@ class DownloadController extends Controller {
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'list_ue_' . $ue . '_' . $gestion . '.pdf'));
         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesInscritos_UnidadEducativa_gral_v1.rptdesign&ue=' . $ue . '&gestion=' . $gestion . '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    public function listStudentPerUeSegAction(Request $request, $ue, $gestion) {
+
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'list_ue_' . $ue . '_' . $gestion . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesInscritos_UnidadEducativa_gral_v1_ma.rptdesign&ue=' . $ue . '&gestion=' . $gestion . '&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -1072,4 +1098,49 @@ class DownloadController extends Controller {
 
     }
 
+    /**
+     * Descarga de CUt para bachilleres con tecnica tecnologica
+     * @param Request $request
+     * @return object CUT
+     */
+    // public function downloadCutAction(Request $request) {
+
+    //     $idInscripcion = $request->get('idInscripcion');
+
+    //     /**
+    //      * completar con la consulta si es que hubiera
+    //      * por el momento solo mandamos el id de inscripcion
+    //      * cambiar el nombre del reporte
+    //      */
+
+    //     $response = new Response();
+    //     $response->headers->set('Content-type', 'application/pdf');
+    //     $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'CUT_' . $rude . '_' . $gestion . '.pdf'));
+    //     $response->setContent(file_get_contents($this->container->getParameter('urlreportweb').'reporte_cut.rptdesign&inscripid=' . $idInscripcion . '&&__format=pdf&'));
+    //     $response->setStatusCode(200);
+    //     $response->headers->set('Content-Transfer-Encoding', 'binary');
+    //     $response->headers->set('Pragma', 'no-cache');
+    //     $response->headers->set('Expires', '0');
+    //     return $response;
+    // }
+    
+
+    /**
+     * get DDJJJ per UE
+     * @param Request $request
+     * @param type $gestion
+     * @param type $sie
+     * @return Response
+     */
+    public function nnatsAction(Request $request, $gestion, $sie) {
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'nnats_' . $sie . '_' . $gestion . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_centro_nnats_v1_ma.rptdesign&gestion=' . $gestion . '&sie=' . $sie . '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
 }

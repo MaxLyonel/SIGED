@@ -54,6 +54,18 @@ estudiante_rudeal_listarmunicipios:
     options:
          expose: true
 
+estudiante_rudeal_listarcantones:
+    path:     /listarcantones/{muni}
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteRudeal:listarcantones" }
+    options:
+         expose: true
+
+estudiante_rudeal_listarlocalidades:
+    path:     /listarlocalidades/{cantn}
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteRudeal:listarlocalidades" }
+    options:
+         expose: true
+
 estudiante_rudeal_save_formDireccion:
     path:     /saveFormDireccion
     defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteRudeal:saveFormDireccion" }

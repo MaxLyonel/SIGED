@@ -1,0 +1,20 @@
+Sie\AppWebBundle\Entity\EquipLaboFisiQuimTipoFoto:
+    type: entity
+    table: equip_labo_fisi_quim_tipo_foto
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        tipo:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

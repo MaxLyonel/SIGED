@@ -1,5 +1,5 @@
 <p>
-<form role="form" method="post" action="{{path('sie_pnp_curso_listado_editnew', { 'id': id_curso })}}">
+<form role="form" method="post" action="{{path('sie_pnp_curso_listado_editnew', { 'id': id_curso_enc })}}">
 <div class="panel panel-info">
     <div class="panel-heading">
         <h4>NOTAS DEL PARTICIPANTE. (EDITAR) </br> {{ nombre }} &nbsp;&nbsp;&nbsp; CI: {{ carnet }}{% if complemento != '' %}-{{complemento}}{% endif %} </h4>
@@ -149,8 +149,7 @@
 </div>
 <div class="row">
     <div class="col-xs-12">
-        <button type="submit" class="btn btn-success btn-large glyphicon glyphicon-pencil"> Guardar Cambios</button>
-        <button type="" class="btn btn-default btn-large glyphicon glyphicon-remove-sign" onclick="modaluserclose();"> Cerrar</button>
+        <button type="submit" class="btn rounded btn-success btn-large glyphicon glyphicon-pencil"> Guardar Cambios</button>
     </div>
 </div>
 </form>

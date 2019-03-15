@@ -71,7 +71,7 @@ class DipHumHomologacionController extends Controller {
         $defaultTramiteController->setContainer($this->container);
         $route = $request->get('_route');
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        //$activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         $em = $this->getDoctrine()->getManager();
 
@@ -81,6 +81,8 @@ class DipHumHomologacionController extends Controller {
         }
         return $this->render($this->session->get('pathSystem') . ':Homologacion:index.html.twig', array(
                     'form' => $this->createSearchForm()->createView(),
+                    'titulo' => 'Homologación',
+                    'subtitulo' => 'Busqueda e Inscripción'
         ));
     }
 
@@ -106,6 +108,17 @@ class DipHumHomologacionController extends Controller {
                     ))
                 ->add('ci', 'text', array('label' => 'CI', 'mapped' => false, 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{5,10}', 'maxlength' => '10')))
                 ->add('complemento', 'text', array('required' => false, 'mapped' => false, 'label' => 'Complemento', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Complemento no es lo mismo que la expedicion de su CI, por favor no coloque abreviaturas de departamentos", 'maxlength' => '2')))
+                
+                ->add('expedido', 'entity', array('label' => 'Expedido', 'attr' => array('class' => 'form-control'),
+                    'mapped' => false, 'class' => 'SieAppWebBundle:DepartamentoTipo', 
+                    'query_builder' => function (EntityRepository $e) {
+                        return $e->createQueryBuilder('dt')
+                            ->where('dt.id != :id')
+                            ->setParameter('id', 0)
+                            ->orderBy('dt.id', 'ASC');
+                    }, 'property' => 'departamento',
+                    'data' => $em->getReference("SieAppWebBundle:DepartamentoTipo", '1')
+                ))
                 ->add('generoTipo', 'entity', array('label' => 'Género', 'attr' => array('class' => 'form-control'),
                     'mapped' => false, 'class' => 'SieAppWebBundle:GeneroTipo',
                     'query_builder' => function (EntityRepository $e) {
@@ -118,7 +131,7 @@ class DipHumHomologacionController extends Controller {
                 ->add('materno', 'text', array('label' => 'Materno', 'mapped' => false, 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[a-zñ A-ZÑ]{3,45}', 'style' => 'text-transform:uppercase')))
                 ->add('nombre', 'text', array('label' => 'Nombre', 'mapped' => false, 'required' => true, 'attr' => array('class' => 'form-control', 'pattern' => '[a-zñ A-ZÑ]{3,40}', 'style' => 'text-transform:uppercase')))
                 //->add('fnacimiento', 'text', array('mapped' => false, 'required' => true, 'label' => 'Fecha Nacimiento', 'attr' => array('class' => 'form-control')))
-                ->add('fnacimiento', 'text', array('mapped' => false, 'label' => 'Fecha Nacimiento', 'attr' => array('class' => 'form-control')))
+                ->add('fnacimiento', 'text', array('mapped' => false, 'label' => 'Fecha Nacimiento', 'attr' => array('class' => 'form-control', 'placeholder'=>'DD-MM-YYYY', 'title'=>'DD-MM-YYYY', 'required'=>true, 'pattern'=>'[0-9]{2}-[0-9]{2}-[0-9]{4}')))
                 ->add('pais', 'entity', array('label' => 'Pais', 'attr' => array('class' => 'form-control'),
                     'mapped' => false, 'class' => 'SieAppWebBundle:PaisTipo',
                     'query_builder' => function (EntityRepository $e) {
@@ -204,11 +217,12 @@ class DipHumHomologacionController extends Controller {
         $form['yearStudent'] = $form['gestion'];
 
         //build the information on the view
-        $this->session->getFlashBag()->add('notiiniprimaria', 'Resultado de la busqueda');
         return $this->render($this->session->get('pathSystem') . ':Homologacion:samestudents.html.twig', array(
                     'samestudents' => $this->getCoincidenciasStudent($form),
                     'formninguno' => $this->nobodyform($form)->createView(),
-                    'gestion' => $form['gestion']
+                    'gestion' => $form['gestion'],
+                    'titulo' => 'Homologación',
+                    'subtitulo' => 'Inscripciones Similares'
         ));
     }
 
@@ -240,7 +254,9 @@ class DipHumHomologacionController extends Controller {
         $formInscription = $this->createFormInscription($request->get('form'), '', $data['yearStudent']);
         return $this->render($this->session->get('pathSystem') . ':Homologacion:new.html.twig', array(
                     'newstudent' => $data,
-                    'formInscription' => $formInscription->createView()
+                    'formInscription' => $formInscription->createView(),
+                    'titulo' => 'Homologación',
+                    'subtitulo' => 'Inscripción estudiante'
         ));
     }
 
@@ -358,9 +374,10 @@ class DipHumHomologacionController extends Controller {
                 $mat = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
                 $rude = $form['institucionEducativa'] . $form['gestion'] . $mat . $this->generarRude($form['institucionEducativa'] . $this->session->get('currentyear') . $mat);
                 
-
                 $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante');");
                 $query->execute();
+
+                $entityExpedido = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneBy(array('id' => $newStudent['expedido']));
 
                 $student = new Estudiante();
                 $student->setPaterno(strtoupper($newStudent['paterno']));
@@ -368,6 +385,7 @@ class DipHumHomologacionController extends Controller {
                 $student->setNombre(strtoupper($newStudent['nombre']));
                 $student->setCarnetIdentidad($newStudent['ci']);
                 $student->setComplemento($newStudent['complemento']);
+                $student->setExpedido($entityExpedido);
                 $student->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($newStudent['generoTipo']));
                 $student->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($newStudent['pais']));
                 if (isset($newStudent['provincia'])){
@@ -388,13 +406,13 @@ class DipHumHomologacionController extends Controller {
 
             if(count($verIE) == 0){
                 $em->getConnection()->rollback();
-                $this->session->getFlashBag()->add('notiiniprim', 'No existe la unidad educativa con cigo sie: '.$form['institucionEducativa']);
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'notiiniprim', 'No existe la unidad educativa con cigo sie: '.$form['institucionEducativa']));
                 return $this->redirect($this->generateUrl('tramite_homologacion_diploma_humanistico_index'));
             }
             
             if ($verInscripcion){
                 $em->getConnection()->rollback();
-                $this->session->getFlashBag()->add('notiiniprim', 'El Registro del estudiante en la gestión, nivel y grado seleccionado, ya existe ...');
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'notiiniprim', 'El Registro del estudiante en la gestión, nivel y grado seleccionado, ya existe ...'));
             } else {
                 //look for the course to the student
                 $objCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array(
@@ -439,19 +457,19 @@ class DipHumHomologacionController extends Controller {
                 $studentInscription = new EstudianteInscripcion();
                 $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['institucionEducativa']));
                 $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($form['gestion']));
-                $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
+                $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
                 $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($studentId));
                 $studentInscription->setObservacion(1);
                 $studentInscription->setFechaInscripcion(new \DateTime('now'));
                 $studentInscription->setFechaRegistro(new \DateTime('now'));
                 $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($objCurso->getId()));
-                $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(59));
+                $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(45));
                 $studentInscription->setCodUeProcedenciaId(0);
                 $em->persist($studentInscription);
                 $em->flush();
                 //do the commit of DB
                 $em->getConnection()->commit();
-                $this->session->getFlashBag()->add('goodiniprim', 'El Registro de homologación del estudiante fue correcto ...');
+                $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'El Registro de homologación del estudiante fue correcto ...'));
             }
             return $this->redirect($this->generateUrl('tramite_homologacion_diploma_humanistico_index'));
         } catch (Exception $ex) {
@@ -581,7 +599,9 @@ class DipHumHomologacionController extends Controller {
             $formInscription = $this->createFormInscription($request->get('form'), $data[0]['rude'], $gestion);
             return $this->render($this->session->get('pathSystem') . ':Homologacion:new.html.twig', array(
                         'newstudent' => $data[0],
-                        'formInscription' => $formInscription->createView()
+                        'formInscription' => $formInscription->createView(),
+                        'titulo' => 'Homologación',
+                        'subtitulo' => 'Inscripción estudiante'
             ));
         } catch (Exception $ex) {
             
@@ -762,6 +782,7 @@ class DipHumHomologacionController extends Controller {
         // separamos en partes las fechas 
         $array_nacimiento = explode("-", $fecha_nacimiento);
         $array_actual = explode("-", $fecha_actual);
+        //dump($array_nacimiento);dump($array_actual);die;
 
         $anos = $array_actual[2] - $array_nacimiento[2]; // calculamos años 
         $meses = $array_actual[1] - $array_nacimiento[1]; // calculamos meses 

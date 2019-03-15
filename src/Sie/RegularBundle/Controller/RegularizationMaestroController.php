@@ -258,8 +258,6 @@ class RegularizationMaestroController extends Controller {
         throw $e;
       }
 
-      dump($form);die;
-
     }
 
     /*
@@ -268,7 +266,7 @@ class RegularizationMaestroController extends Controller {
 
     private function formSearch($gestionactual) {
         $gestiones = array();
-        for($i=$this->session->get('currentyear')-1;$i>=$this->session->get('currentyear')-2;$i--){
+        for($i=$this->session->get('currentyear')-1;$i>=$this->session->get('currentyear')-1;$i--){
             $gestiones[$i] = $i;
         }
         $form = $this->createFormBuilder()
@@ -1050,7 +1048,7 @@ class RegularizationMaestroController extends Controller {
                     ->setParameter('idCursoOferta',$ieco)
                     ->getQuery()
                     ->getResult();
-
+                    
         $sie = $curso[0]['sie'];
         $gestion = $curso[0]['gestion'];
 
@@ -1107,14 +1105,16 @@ class RegularizationMaestroController extends Controller {
                         ->where('ie.id = :sie')
                         ->andWhere('gt.id = :gestion')
                         ->andWhere('rt.id = 2')
+                        ->andWhere('mi.esVigenteAdministrativo = :vigente')
                         ->orderBy('p.paterno','ASC')
                         ->addOrderBy('p.materno','ASC')
                         ->addOrderBy('p.nombre','ASC')
                         ->setParameter('sie',$sie)
                         ->setParameter('gestion',$gestion)
+                        ->setParameter('vigente','t')
                         ->getQuery()
                         ->getResult();
-
+                        
         $operativo = $this->operativo($sie,$gestion);
 
         //dump($arrayMaestros);die;
@@ -1236,7 +1236,7 @@ class RegularizationMaestroController extends Controller {
 
     private function formReset($gestionactual) {
         $gestiones = array();
-        for($i=2016;$i>=2016;$i--){
+        for($i=$this->session->get('currentyear')-1;$i>=$this->session->get('currentyear')-1;$i--){
             $gestiones[$i] = $i;
         }
         $form = $this->createFormBuilder()

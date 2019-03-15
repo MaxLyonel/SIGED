@@ -4399,7 +4399,7 @@ class ReporteController extends Controller {
         $gestionActual = date_format($fechaActual,'Y');
         $fechaEstadistica = $fechaActual->format('d-m-Y H:i:s');
         
-        $gestionProcesada = $gestionActual - 1;
+        $gestionProcesada = $gestionActual;
 
         $codigo = 0;
 		$nivel = 0;	
@@ -4494,7 +4494,7 @@ class ReporteController extends Controller {
         $gestionActual = date_format($fechaActual,'Y');
         $fechaEstadistica = $fechaActual->format('d-m-Y H:i:s');
         
-        $gestionProcesada = $gestionActual - 1;
+        $gestionProcesada = $gestionActual;
 
         $codigo = 0;
 		$nivel = 0;	

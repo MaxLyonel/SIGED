@@ -2,6 +2,7 @@
 
 namespace Sie\UsuariosBundle\Controller;
 
+use Proxies\__CG__\Sie\AppWebBundle\Entity\DepartamentoTipo;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -51,7 +52,7 @@ class PersonaController extends Controller
         try {
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('persona');");
             $query->execute();
-            //dump($form );die;
+
             $newpersona = new Persona();            
             $newpersona->setPaterno(mb_strtoupper($form['paterno'], "utf-8"));
             $newpersona->setMaterno(mb_strtoupper($form['materno'], "utf-8"));    
@@ -64,7 +65,7 @@ class PersonaController extends Controller
             $newpersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->findOneById(0));
             $newpersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->findOneById(0));
             $newpersona->setRda('0');
-            $newpersona->setSegipId('0');            
+            $newpersona->setSegipId('0');
             $newpersona->setFechaNacimiento(\DateTime::createFromFormat('d/m/Y', $fecha));
             $newpersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['generoTipo']));
             $newpersona->setCorreo(mb_strtolower($form['correo'], "utf-8"));            
@@ -72,6 +73,7 @@ class PersonaController extends Controller
             $newpersona->setEsVigente('1');
             $newpersona->setEsvigenteApoderado('1');
             $newpersona->setCountEdit('1');
+            $newpersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($form['departamentoTipo']));
             $em->persist($newpersona);
             $em->flush();
             
@@ -164,6 +166,7 @@ class PersonaController extends Controller
         $form->get('fechaNacimiento')->setData($persona->getFechaNacimiento());
         $form->get('generoTipo')->setData($persona->getGeneroTipo());
         $form->get('correo')->setData($persona->getCorreo());
+        $form->get('departamentoTipo')->setData($persona->getExpedido());
                 
         return $this->render('SieUsuariosBundle:Persona:edit.html.twig', array(
                     'form' => $form->createView(),
@@ -176,15 +179,20 @@ class PersonaController extends Controller
     
     public function personaupdateAction(Request $request) {        
         $form = $request->get('sie_usuarios_persona_edit');
+
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         $persona = $em->getRepository('SieAppWebBundle:Persona')->find($form['idpersona']);
         $response = new JsonResponse();
         try {
-            //**** SOLO MODIFICA GENERO Y CORREO ELECTRONICO */
-            if ($persona->getSegipId() == 1){                
-                $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['generoTipo']));                
-                $persona->setCorreo($form['correo']);                                              
+            //SÓLO MODIFICA GÉNERO, FECHA DE NACIMIENTO, EXPEDIDO Y CORREO ELECTRÓNICO
+            if ($persona->getSegipId() == 1){
+                $fechaNac = str_pad($form['fechaNacimiento']['day'], 2, '0', STR_PAD_LEFT).'/'.str_pad($form['fechaNacimiento']['month'], 2, '0', STR_PAD_LEFT).'/'.$form['fechaNacimiento']['year'];
+                $fechaNac = \DateTime::createFromFormat('d/m/Y', $fechaNac);
+                $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['generoTipo']));
+                $persona->setCorreo($form['correo']);
+                $persona->setFechaNacimiento($fechaNac);
+                $persona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneById($form['departamentoTipo']));
                 $em->persist($persona);
                 $em->flush();
                 $em->getConnection()->commit();
@@ -246,7 +254,8 @@ class PersonaController extends Controller
 
                     if ($obs != ''){
                         //*** CAMBIO DE DATO DEL CARNET ANTERIOR*/
-                        $persona->setCarnet('9-'.$persona->getCarnet());
+                        $persona->setCarnet($persona->getCarnet().'±');
+                        $persona->setSegipId('0');
                         $em->persist($persona);
                         $em->flush();
                         

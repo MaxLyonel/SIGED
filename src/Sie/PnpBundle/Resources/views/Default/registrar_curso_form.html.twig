@@ -1,110 +1,82 @@
- <div class="row">
-    <div class="col-lg-12">
-        <div class="portlet portlet-blue">
-            <div class="portlet-heading">
-                <div class="portlet-title">
-                    <h4>Datos del Facilitador</h4>
-                </div>
-                <div class="portlet-widgets">
-                    <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation1"><i class="fa fa-chevron-down"></i></a>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-            <div id="pinformation1" class="panel-collapse collapse in">
-                <div class="portlet-body" align="center">
-                <div class="row" align="center">
-                    <div class="form-group col-lg-4 col-md-6" align="center">
-                       <h4>Nombre(s): <small>{{ persona.nombre }}</small></h4>
-                    </div>
-                    <div class="form-group col-lg-4 col-md-6" align="center">
-                        <h4>Primer Apellido: <small>{{ persona.paterno }}</small></h4>
-                    </div>
-                    <div class="form-group col-lg-4 col-md-6" align="center">
-                        <h4>Segundo Apellido: <small>{{ persona.materno }}</small></h4>
-                    </div>
-                </div>
-                <div class="row" align="center">
-                    <div class="form-group col-lg-6 col-md-6" align="center">
-                        <h4>Fecha Nacimiento: <small>{{ persona.fechaNacimiento|date("d/m/Y") }}</small></h4>
-                    </div>
-                    <div class="form-group col-lg-6 col-md-6" align="center">
-                        <h4>Carnet de Identidad: <small>{{ persona.carnet }}{% if persona.complemento != '' %}-{{persona.complemento}}{% endif %}</small></h4>
-                    </div>
-                </div>
-                <hr style="background-color: #3B78B0; height: 5px;" />
-                <div align="center"><h3 style="color: #3B78B0; text-decoration: underline;">NUEVO CURSO {% if plan == 1 %} (Plan Antiguo) {% endif %}</h3></div>
-                <div class="panel-body"> 
-                {{ form_start(form) }} 
-                    <input name="persona_id" value="{{ persona_id }}" style="visibility:hidden" />
-                    <div class="row">
-                        <div class="form-group col-lg-3 col-md-6">
-                            {{ form_row(form.departamento,{'attr': {'class':'form-control'},'id':'form_departamento'}) }}
-                        </div>
-                        <div class="form-group col-lg-3 col-md-6">
-                            {{ form_row(form.provincia, {'attr': {'class':'form-control'},'id': 'form_provincia'}) }}
-                        </div>
-                        <div class="form-group col-lg-3 col-md-6">
-                            {{ form_row(form.municipio, {'attr': {'class':'form-control'},'id': 'form_municipio'}) }}
-                        </div>
-                        <div class="form-group col-lg-3 col-md-6">
-                            {{ form_row(form.localidad, {'attr': {'class':'form-control'},'id': 'form_localidad'}) }}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-lg-3 col-md-6">
-                            <label for=""></label>
-                            {{ form_row(form.bloque, { 'attr': {'class':'form-control'},'id': 'form_bloque'}) }}
-                        </div>
-                        <div class="form-group col-lg-3 col-md-6">
-
-                            {{ form_row(form.parte, { 'attr': {'class':'form-control'},'id': 'form_parte'}) }}
-                        </div>
-                        <div class="form-group col-lg-3 col-md-6">
-                            {{ form_row(form.fecha_inicio, { 'attr': {'class':'form-control'},'id': 'form_fecha_inicio'}) }}
-                        </div>
-                        <div class="form-group col-lg-3 col-md-6">
-                            {{ form_row(form.fecha_fin, { 'attr': {'class':'form-control'},'id': 'form_fecha_fin'}) }}
-                        </div>
-                            {{ form_row(form.plan, { 'attr': {'class':'form-control','value':plan},'id': 'form_plan'}) }}
-                        
-
-    <br>
-    <div class="row">            
-            <div class="col-xs-12" align="center">
-                {{ form_row(form.save, { 'id': 'save','attr': { 'onclick':'return validar_fecha()' }}) }}
-            </div>
-        {{ form_end(form) }}
+<div class="panel panel-icon panel-primary">
+    <div class="panel-heading">
+        Datos del Facilitador
     </div>
-    </div>
-   <div align="left"> <small align="left" style="color: red;">Por temas de <strong>SEGURIDAD</strong> se guardará su <strong>NOMBRE</strong> al crear el curso o al crear curso posterior.</small></div>
-                </div>
+    <div class="panel-body">
+        <div class="row" align="center">
+        <input type="hidden" name="roluser" id="roluser" value="{{app.session.get('roluser')}}">
+            <div class="form-group col-lg-4 col-md-6" align="center">
+               <h4>Nombre(s): <small>{{ persona.nombre }}</small></h4>
+            </div>
+            <div class="form-group col-lg-4 col-md-6" align="center">
+                <h4>Primer Apellido: <small>{{ persona.paterno }}</small></h4>
+            </div>
+            <div class="form-group col-lg-4 col-md-6" align="center">
+                <h4>Segundo Apellido: <small>{{ persona.materno }}</small></h4>
             </div>
         </div>
-    </div>  
-
-
-
- <div class="row">
-    <div class="col-lg-12">
-        <div class="portlet portlet-blue">
-            <div class="portlet-heading">
-                <div class="portlet-title">
-                    <h4>Cursos del Facilitador (Crear Curso Posterior)</h4>
-                </div>
-                <div class="portlet-widgets">
-                    <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation2"><i class="fa fa-chevron-down"></i></a>
-                </div>
-                <div class="clearfix"></div>
+        <div class="row" align="center">
+            <div class="form-group col-lg-6 col-md-6" align="center">
+                <h4>Fecha Nacimiento: <small>{{ persona.fechaNacimiento|date("d/m/Y") }}</small></h4>
             </div>
-            <div id="pinformation2" class="panel-collapse collapse in">
-                <div class="portlet-body" align="center">
-                </div><input type="hidden" name="fecha_anterior_fin" id="fecha_anterior_fin" value="" />
+            <div class="form-group col-lg-6 col-md-6" align="center">
+                <h4>Carnet de Identidad: <small>{{ persona.carnet }}{% if persona.complemento != '' %}-{{persona.complemento}}{% endif %}</small></h4>
+            </div>
+        </div>
+        <hr style="background-color: #3B78B0; height: 5px;" />
+        <div align="center"><h3 style="color: #3B78B0; text-decoration: underline;">NUEVO CURSO {% if plan == 1 %} (Plan Antiguo) {% endif %}</h3></div>
+      {{ form_start(form) }} 
+        <input name="persona_id" value="{{ persona_id }}" style="visibility:hidden" />
+        <div class="row">
+            <div class="form-group col-lg-3 col-md-6">
+                {{ form_row(form.departamento,{'attr': {'class':'form-control'},'id':'form_departamento'}) }}
+            </div>
+            <div class="form-group col-lg-3 col-md-6">
+                {{ form_row(form.provincia, {'attr': {'class':'form-control'},'id': 'form_provincia'}) }}
+            </div>
+            <div class="form-group col-lg-3 col-md-6">
+                {{ form_row(form.municipio, {'attr': {'class':'form-control'},'id': 'form_municipio'}) }}
+            </div>
+            <div class="form-group col-lg-3 col-md-6">
+                {{ form_row(form.localidad, {'attr': {'class':'form-control'},'id': 'form_localidad'}) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-lg-3 col-md-6">
+                {{ form_row(form.bloque, { 'attr': {'class':'form-control'},'id': 'form_bloque'}) }}
+            </div>
+            <div class="form-group col-lg-3 col-md-6">
+                {{ form_row(form.parte, { 'attr': {'class':'form-control'},'id': 'form_parte'}) }}
+            </div>
+            <div class="form-group col-lg-3 col-md-6">
+                {{ form_row(form.fecha_inicio, { 'attr': {'class':'form-control'},'id': 'form_fecha_inicio'}) }}
+            </div>
+            <div class="form-group col-lg-3 col-md-6">
+                {{ form_row(form.fecha_fin, { 'attr': {'class':'form-control'},'id': 'form_fecha_fin'}) }}
+            </div>
+                {{ form_row(form.plan, { 'attr': {'class':'form-control','value':plan},'id': 'form_plan'}) }}
+            
+        <br>
+        <div class="row">            
+                <div class="col-xs-12" align="center">
+                    {{ form_row(form.save, { 'id': 'save','attr': { 'onclick':'return validar_fecha()' }}) }}
+                </div>
+            {{ form_end(form) }}
+        <br>
+        <div align="left"> <small align="left" style="color: red;">Por temas de <strong>SEGURIDAD</strong> se guardará su <strong>NOMBRE</strong> al crear el curso o al crear curso posterior.</small></div>  
+    </div>
+<div class="panel panel-icon panel-primary">
+    <div class="panel-heading">
+        Cursos del Facilitador (Crear Curso Posterior)
+    </div>
+    <div class="panel-body">
+        <input type="hidden" name="fecha_anterior_fin" id="fecha_anterior_fin" value="" />
              <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
                 <table id="tablaTotales" class="display" cellspacing="0" width="100%">    
                     <thead>
                         <tr>
                             <th>Id del Curso</th>
-                            <th>Consolidado</th>
+                            <th>Opciones</th>
                             <!--<th>Lista Participantes</th>-->
                             <th>Carnet</th>
                             <th>Nombre</th>
@@ -124,8 +96,8 @@
                         {% if plan == 1 and (fila.ciclo_tipo_id == 1 or fila.ciclo_tipo_id == 2) or plan == 2 and (fila.ciclo_tipo_id == 34  or fila.ciclo_tipo_id == 35) %}
                         <tr>
                             <td>{{ fila.id }}</td>
-                            <td><a role="button" class="btn btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id': fila.id~"|"~fila.ciclo_tipo_id~"|"~fila.grado_tipo_id,'esactivo':0}) }}" > Imprimir Consolidado</a></td>
-                            <!--<td><a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado', { 'id': fila.id }) }}" > Ver participantes</a></td>-->
+                            <td><a role="button" class="btn rounded rounded btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id_enc': fila.id_enc~"|"~fila.ciclo_tipo_id~"|"~fila.grado_tipo_id}) }}" title="Imprimir Curso"></a></td>
+                            <!--<td><a role="button" class="btn rounded btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado', { 'id': fila.id }) }}" > Ver participantes</a></td>-->
                             <td>{{ fila.carnet }}{% if fila.complemento != '' %}-{{fila.complemento}}{% endif %}</td>
                             <td>{{ fila.nombre }}</td>                            
                             <td>{{ fila.paterno }}</td>
@@ -140,7 +112,7 @@
                                 <td>Último Curso</td>
                             {% else %}
                                 {% if fila.esactivo == 1 %}
-                                    <td><a role="button" onclick="vermodal({{ fila.id }},'{{ fila.fecha_fin|date("d/m/Y") }}')" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="#" > Crear Curso Posterior</a></td>
+                                    <td><a role="button" onclick="vermodal({{ fila.id }},'{{ fila.fecha_fin|date("d/m/Y") }}')" class="btn rounded btn-success rounded btn-xs glyphicon glyphicon-arrow-right" href="#" > Crear Curso Posterior</a></td>
                                 {% else %}
                                     <td>Curso Abierto.</td>
                                 {% endif %}
@@ -151,62 +123,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
     </div>
 </div>
 
- <div class="modal modal-flex fade" id="ModalUser" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title" id="flexModalLabel">Creación de Curso Posterior.</h4>             
-                </div>
-                <div class="modal-body">
-                    <div id="notasModal">
-                            
-                    </div>
-                </div>
-                <div class="modal-pie">
-                    <HR>
-                </div>                    
-            </div>                
-        </div>
-    </div>
-
-
-<!--<div class="modal modal-flex fade" id="ModalUser" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title" id="flexModalLabel">NUEVO CURSO (FECHAS).</h4>             
-            </div>
-            <div class="modal-body">
-                <div id="notasModal">
-                     <form role="form" method="post" action="{{path('sie_pnp_crear_curso_automatico')}}" class="form-inline">
-                        <input type="text" style="display:none" name="id_curso" id="id_curso" value="" />
-                        <input type="text" style="display:none" name="fecha_anterior_fin" id="fecha_anterior_fin" value="" />
-                      <div class="form-group">
-                        <label for="fecha_inicio">Fecha Inicio</label>
-                        <input type="text" required="required" class="form-control" name="fecha_inicio" id="fecha_inicio" placeholder="Digite Fecha Inicial (dd/mm/YYYY)">
-                      </div>
-                      <div class="form-group">
-                        <label for="fecha_fin">Fecha Final</label>
-                        <input type="text" class="form-control" required="required" name="fecha_fin" id="fecha_fin" placeholder="Digite Fecha Final (dd/mm/YYYY)">
-                      </div>
-                      <br/>
-                      <div align="center"><br/><button type="submit" onclick="return validar_fecha2()" class="btn btn-success">Registrar Curso</button></div>
-                    </form>
-                    <!--<a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="{# path('sie_pnp_crear_curso_automatico', { 'id_curso': fila.id }) #}}" > Crear Curso Posterior</a>
-                </div>
-            </div>
-            <div class="modal-pie">
-                <HR>
-            </div>                    
-        </div>                
-    </div>
-</div>-->
 <script type="text/javascript">
 function vermodal(id_curso,fecha_anterior_fin){
         
@@ -261,45 +180,7 @@ function modaluserclose(){
         
     $(document).ready(function() {
         
-        var dtable = $('#tablaTotales').dataTable( {"oLanguage": espanol,
-         'dom': 'lfrtip <"clear">',
-        'buttons': [
-             {   
-                extend: 'colvis',
-                text:'Visibilizar Columnas'
-            },
-            {
-                extend: 'print',
-                text: 'Imprimir',
-                autoPrint: true,
-                title: 'PNP - LISTA DE ARCHIVOS SUBIDOS RUP - 4',
-                header:true,
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            {
-                extend:'pdf',
-                title: 'PNP - LISTA DE ARCHIVOS SUBIDOS RUP - 4',
-                filename:'Lista de archivos subidos RUP-4',
-                orientation:'landscape',
-                exportOptions: {
-                modifier: {
-                    page: 'Lista de archivos subidos RUP-4'
-                    }
-                }
-            },
-            {
-            extend: 'excel',
-            text: 'Excel',
-            filename:'Lista de archivos subidos RUP-4',
-            exportOptions: {
-                modifier: {
-                    page: 'Lista de archivos subidos RUP-4'
-                    }
-                }
-            },
-        ]} );
+        var dtable = $('#tablaTotales').dataTable( {"oLanguage": espanol} );
         
         
 
@@ -323,8 +204,7 @@ function modaluserclose(){
     });
 
  function validar_fecha(){
-    
-
+    var roluser = document.getElementById("roluser").value;
     var f1 = document.getElementById("form_fecha_inicio").value;
     var f2 = document.getElementById("form_fecha_fin").value;
     var plan = document.getElementById("form_plan").value;
@@ -346,8 +226,12 @@ function modaluserclose(){
    // alert(dias_a);return false;
     
     //validamos primero q la fecha (año) inicio no sea mayor que la fecha actual (año)
-    var array_fechasol = f1.split("/")
-    var anio = parseInt(array_fechasol[2])
+    var array_fechasol = f1.split("/");
+    var anio = parseInt(array_fechasol[2]);
+    var array_fechasol = fecha_actual.split("/");
+    var anio_actual = parseInt(array_fechasol[2]);
+    var array_fechasol = f2.split("/")
+    var anio_final = parseInt(array_fechasol[2]);
     // plan antiguo 1 debe estar estre 2009-2017
     if (plan == 1){
         if(anio > 2017 || anio < 2009){
@@ -356,9 +240,17 @@ function modaluserclose(){
         }
     }
     else{//plan 2 nuevo 20018 pero no antes q hoy
-        if(anio < 2018 || dias_a > 0){
-            alert("Error!!!. La gestión de la fecha inicial debe ser mínimo 2018 y no mayor a la fecha de hoy");
-            return false;   
+        if(roluser == 29){
+            if(anio_final < anio_actual || dias_a > 0){
+                alert("Error!!!. La gestión de la fecha inicial debe ser actual y no mayor a la fecha de hoy");
+                return false;   
+            }
+        }
+        else{
+            if(anio < 2018 || dias_a > 0){
+                alert("Error!!!. La gestión de la fecha inicial debe ser mínimo 2018 y no mayor a la fecha de hoy");
+                return false;   
+            }
         }
     }
     /////////////////////////////////
@@ -380,12 +272,12 @@ function modaluserclose(){
             }    
         }
         else{ // PLAN 2
-            if(dias>=140 && dias<190){
+            if(dias>=140 && dias<=200){
                 document.getElementById("save").style.visibility = 'hidden';
                 return true;
             }
             else{
-                alert("La fecha final debe ser mínimo 140 días mayor que la fecha inicial pero no mayor a 180 días (5 meses a 6 meses)");
+                alert("La fecha final debe ser mínimo 140 días mayor que la fecha inicial pero no mayor a 200 días (5 meses a 6 meses)");
                 return false;
             }   
         }

@@ -62,10 +62,20 @@
 
             <div id="omitidos" class="panel-collapse collapse in">
                 <div class="portlet-body">
+                    {% if dataInscriptionR %}
+                        {% include 'SieRegularBundle:NewHistoryInscription:historial_regular.html.twig' with {'dataInscription': dataInscriptionR, 'visible': visible} %}
+                    {% endif %}
+                    {% if dataInscriptionA %}
+                        {% include 'SieRegularBundle:NewHistoryInscription:historial_alternativa.html.twig' with {'dataInscription': dataInscriptionA, 'visible': visible} %}
+                    {% endif %}
+                    {% if dataInscriptionE %}
+                        {% include 'SieRegularBundle:NewHistoryInscription:historial_especial.html.twig' with {'dataInscription': dataInscriptionE, 'visible': visible} %}
+                    {% endif %}
+                    {% if dataInscriptionP %}
+                        {% include 'SieRegularBundle:NewHistoryInscription:historial_pnp.html.twig' with {'dataInscription': dataInscriptionP, 'visible': visible} %}
+                    {% endif %}
 
-
-
-                    <div id="no-more-tables">
+                    {# <div id="no-more-tables">
                         <table class="table table-bordered table-hover cf">
                             <thead class="cf">
                                 <tr class="info">
@@ -94,7 +104,7 @@
                                 {%endfor%}
                             </tbody>
                         </table>
-                    </div>
+                    </div> #}
 
 
                 </div>

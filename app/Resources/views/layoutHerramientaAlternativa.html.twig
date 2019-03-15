@@ -506,8 +506,10 @@
                                     </a>
                                     <ul>
                                         <li><a href="{{path('alternativa_operativo_home')}}">Habilitar Operativo</a></li> 
+                                        <li><a href="{{path('alternativa_operativo_gestion_pasada')}}">Habilitar Operativo Gestión Pasada</a></li> 
                                         <li><a href="{{path('alternativa_operativo_ampliar')}}">Ampliar Operativo</a></li> 
                                         <li><a href="{{path('alternativa_operativo_regularizar')}}">Regularizar Operativo</a></li> 
+                                        <li><a href="{{path('alternativa_operativo_nuevo_reapertura')}}">Habilitar Operativo CEAS Nuevos</a></li> 
                                         <li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
                                         <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>
                                     </ul>
@@ -518,8 +520,8 @@
                                 {#<li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>#}
 
                                 <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
-                                <li><a href="{{path('herramientalt_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>                       
-                                {#<li><a href="{{path('herramientalt_ceducativa_crear_sucursal')}}">Habilitar Sucursal </a></li>#}
+                                {# <li><a href="{{path('herramientalt_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>                        #}
+                                <li><a href="{{path('herramientalt_ceducativa_crear_sucursal')}}">Habilitar Sucursal </a></li>
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
                                 {#<li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
                                 <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>#}
@@ -585,7 +587,8 @@
                                     <ul>
                                         <li><a href="{{path('alternativa_operativo_home')}}">Habilitar Operativo</a></li> 
                                         <li><a href="{{path('alternativa_operativo_ampliar')}}">Ampliar Operativo</a></li>
-                                        <li><a href="{{path('alternativa_operativo_regularizar')}}">Regularizar Operativo</a></li>  
+                                        <li><a href="{{path('alternativa_operativo_regularizar')}}">Regularizar Operativo</a></li>
+                                        <li><a href="{{path('alternativa_operativo_nuevo_reapertura')}}">Habilitar Operativo CEAS Nuevos</a></li> 
                                         <li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
                                         <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>
                                     </ul>
@@ -635,10 +638,11 @@
                                         <span class="arrow"></span>
                                     </a>
                                     <ul>
-                                        <li><a href="{{path('alternativa_operativo_home')}}">Habilitar Operativo</a></li>                        
-                                        {#<li><a href="{{path('herramientalt_ceducativa_crear_sucursal')}}">Habilitar Sucursal </a></li>#}
+                                        <li><a href="{{path('alternativa_operativo_home')}}">Habilitar Operativo</a></li>
+                                        <li><a href="{{path('herramientalt_ceducativa_crear_sucursal')}}">Habilitar Sucursal </a></li>
                                         <li><a href="{{path('alternativa_operativo_ampliar')}}">Ampliar Operativo</a></li>
-                                        <li><a href="{{path('alternativa_operativo_regularizar')}}">Regularizar Operativo</a></li> 
+                                        <li><a href="{{path('alternativa_operativo_regularizar')}}">Regularizar Operativo</a></li>
+                                        <li><a href="{{path('alternativa_operativo_nuevo_reapertura')}}">Habilitar Operativo CEAS Nuevos</a></li>
                                         <li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
                                         <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>
                                     </ul>
@@ -702,7 +706,7 @@
                                 <span class="arrow"></span>
                             </a>
                             <ul>
-                                <li><a href="{{path('herramienta_alter_notas_maestro_index')}}">Registro de Notas </a></li>
+                                <li><a href="{{path('herramienta_alter_notas_maestro_seleccionar_gestion')}}">Registro de Notas </a></li>
                             </ul>
                         </li>
                     {% endif %}

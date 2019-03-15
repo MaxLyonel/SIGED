@@ -1,0 +1,13 @@
+herramienta_reportelabofisquim_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:ReporteLaboFisQuim:index}
+
+herramienta_reportelabofisquim_fotos:
+    path:     /fotos
+    defaults: { _controller: SieHerramientaBundle:ReporteLaboFisQuim:fotos}
+    options:
+        expose: true
+
+herramienta_reportelabofisquim_reportexls:
+    path:     /repLaboFisQuim/
+    defaults: { _controller: "SieHerramientaBundle:ReporteLaboFisQuim:reporte" }

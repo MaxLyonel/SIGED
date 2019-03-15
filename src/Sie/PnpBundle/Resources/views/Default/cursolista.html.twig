@@ -1,19 +1,27 @@
 {% extends 'layoutPnp.html.twig' %}
 
 {% block body -%}
-     <div class="row">
-        <div class="col-lg-12">
-            <div class="page-title">
-                <h1 class="glyphicon glyphicon-user"> PARTICIPANTES DEL CURSO</h1>
-                <ol class="breadcrumb">
-                    <li>
-                    </li>
-                </ol>
-            </div>
+    <div class="header-content">
+        <h2><i class="fa fa-home animated flip"></i>PARTICIPANTES DEL CURSO <span></span></h2>
+    </div><!-- /.header-content -->
+    <div class="modal modal-flex fade" id="ModalUser" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h5 class="modal-title" id="flexModalLabel">NOTAS CONSOLIDADAS DEL ESTUDIANTE.</h5>             
+                </div>
+                <div class="modal-body">
+                    <div id="notasModal">
+                            
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn rounded btn-default" data-dismiss="modal">Cerrar</button>
+                  </div>                
+            </div>                
         </div>
-        <!-- /.col-lg-12 -->
     </div>
-
     <div style="width: 100%;">
         <div class="row">
             <div class="col-xs-12">
@@ -34,110 +42,87 @@
                         <strong>¡Advertencia!</strong> {{ flashMessage }}
                     </div>
                 {% endfor %}
-        <!-- /.row -->
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="portlet portlet-blue">
-                <div class="portlet-heading">
-                    <div class="portlet-title">
-                        <h4>Datos Generales del Curso</h4>
-                    </div>
-                    <div class="portlet-widgets">
-                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation"><i class="fa fa-chevron-down"></i></a>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div id="pinformation" class="panel-collapse collapse in">
-                    <div class="portlet-body">
-            {% for datos in datosentity %}
-            <div class="row">
-                <div class="col-sm-4">
-                    <h4><small>DEPARTAMENTO :</small><br>{{ datos.departamento }}</h4>
-                </div>
-                <div class="col-xs-4">
-                    <h4><small>FACILITADOR :</small><br>{{ datos.nombre }} {{ datos.paterno }} {{ datos.materno }}</h4>                    
-                </div>
-                <div class="col-xs-4">
-                    <h4><small>CI. DEL FACILITADOR :</small><br>{{ datos.carnet }}{% if datos.complemento != '' %}-{{datos.complemento}}{% endif %}</h4>                        
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-4">
-                    <h4><small>PROVINCIA :</small><br>{{ datos.provincia }}</h4>                    
-                </div>
-                <div class="col-xs-4">
-                    <h4><small>FECHA DE INICIO :</small></small><br>{% if datos.fecha_inicio %}{{ datos.fecha_inicio|date('d/m/Y') }}{% endif %}</h4>
-                </div>
-                <div class="col-md-4">
-                    <h4><small>CICLO :</small><br>{% if datos.plan == 1 %}BLOQUE {% endif %}{{ datos.nciclo }}</h4>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <h4><small>MUNICIPIO :</small><br>{{ datos.municipio }}</h4>                   
-                </div>
-                <div class="col-md-4">
-                    <h4><small>FECHA DE FIN :</small><br>{% if datos.fecha_fin %}{{ datos.fecha_fin|date('d/m/Y') }}{% endif %}</h4>
-                </div>
-                <div class="col-xs-4">
-                    <h4><small>GRADO:{% if datos.plan == 2 %} ÁMBITO DE APRENDIZAJE:{% endif %}</small><br>{% if datos.plan == 1 %}PARTE {% endif %}{{ datos.ngrado }}</h4>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-4">
-                    <h4><small>LOCALIDAD :</small><br>{{ datos.localidad }}</h4>
-                </div>
-                <div class="col-xs-4">
-                    <h4><small>GESTIÓN:</small><br>{{ datos.gestion_tipo_id }}</h4>
-                </div>
-                <div class="col-sm-4">
-                    <h4><small>NRO. MATERIAS :</small><br>{{ datos.nro_materias }}</h4>
-                </div>
-            </div>
-            <div class="row">    
-                <div class="col-xs-4">
-                    <h4><small>COD: INSTITUTO EDUCATIVO :</small><br>{{ datos.institucioneducativa_id }}</h4>                    
-                </div>
-                <div class="col-xs-4">
-                    <h4><small>ID DEL ARCHIVO CONSOLIDADO :</small><br>{{ datos.id }}</h4>                        
-                </div>
-            </div>
-            
-        </div>
-    </div>
-     </div>
 
-    </div>
-                  
-            </div>
-        </div>
-    </div>  
-     <div class="row">
-        <div class="col-lg-12">
-            <div class="portlet portlet-blue">
-                <div class="portlet-heading">
-                    <div class="portlet-title">
-                        <h4>Lista de Participantes del Curso</h4>
+    {% for datos in datosentity %}
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-xs-12 col-lg-12">
+                <div class="panel panel-icon panel-primary">
+                    <div class="panel-heading">
+                        Datos Generales del Curso
                     </div>
-                    <div class="portlet-widgets">
-                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation1"><i class="fa fa-chevron-down"></i></a>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <h5><small>DEPARTAMENTO :</small><br>{{ datos.departamento }}</h5>
+                            </div>
+                            <div class="col-xs-4">
+                                <h5><small>FACILITADOR :</small><br>{{ datos.nombre }} {{ datos.paterno }} {{ datos.materno }}</h5>                    
+                            </div>
+                            <div class="col-xs-4">
+                                <h5><small>CI. DEL FACILITADOR :</small><br>{{ datos.carnet }}{% if datos.complemento != '' %}-{{datos.complemento}}{% endif %}</h5>                        
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <h5><small>PROVINCIA :</small><br>{{ datos.provincia }}</h5>                    
+                            </div>
+                            <div class="col-xs-4">
+                                <h5><small>FECHA DE INICIO :</small></small><br>{% if datos.fecha_inicio %}{{ datos.fecha_inicio|date('d/m/Y') }}{% endif %}</h5>
+                            </div>
+                            <div class="col-md-4">
+                                <h5><small>CICLO :</small><br>{% if datos.plan == 1 %}BLOQUE {% endif %}{{ datos.nciclo }}</h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h5><small>MUNICIPIO :</small><br>{{ datos.municipio }}</h5>                   
+                            </div>
+                            <div class="col-md-4">
+                                <h5><small>FECHA DE FIN :</small><br>{% if datos.fecha_fin %}{{ datos.fecha_fin|date('d/m/Y') }}{% endif %}</h5>
+                            </div>
+                            <div class="col-xs-4">
+                                <h5><small>GRADO:{% if datos.plan == 2 %} ÁMBITO DE APRENDIZAJE:{% endif %}</small><br>{% if datos.plan == 1 %}PARTE {% endif %}{{ datos.ngrado }}</h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <h5><small>LOCALIDAD :</small><br>{{ datos.localidad }}</h5>
+                            </div>
+                            <div class="col-xs-4">
+                                <h5><small>GESTIÓN:</small><br>{{ datos.gestion_tipo_id }}</h5>
+                            </div>
+                            <div class="col-sm-4">
+                                <h5><small>NRO. MATERIAS :</small><br>{{ datos.nro_materias }}</h5>
+                            </div>
+                        </div>
+                        <div class="row">    
+                            <div class="col-xs-4">
+                                <h5><small>COD: INSTITUTO EDUCATIVO :</small><br>{{ datos.institucioneducativa_id }}</h5>                    
+                            </div>
+                            <div class="col-xs-4">
+                                <h5><small>ID DEL ARCHIVO CONSOLIDADO :</small><br>{{ datos.id }}</h5>                        
+                            </div>
+                        </div>
                     </div>
-                    <div class="clearfix"></div>
                 </div>
-                <div id="pinformation1" class="panel-collapse collapse in">
-                    <div class="portlet-body">
-            <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+                <div class="panel panel-icon panel-primary">
+                    <div class="panel-heading">
+                        Lista de Participantes del Curso
+                    </div>
+                    <div class="panel-body">
+                        <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
                 <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
                     <thead>
                         <tr>
-                            <th>Calificaciones</th>
                             <th>Codigo Rude</th>
+                            <th>Opciones</th>
                             <th>Carnet Identidad</th>
                             <th>Paterno</th>
                             <th>Materno</th>
                             <th>Nombre</th>
                             <th>Fecha de Nacimiento</th>
-                            <th>Genero</th>
+                            <th>Género</th>
                             <th>Alfabetizado|Idioma|Cultura</th>
                             <th>Estado Matricula</th>
                         </tr>
@@ -145,10 +130,10 @@
                     <tbody>
                     {% for estudiante in estudiantes %}
                         <tr>
-                            <td data-title="VerNota" class="text-center">
-                                 <a href="#" onclick="SeeNotas('{{estudiante.inscripcion_id}}',{{ datos.id }})" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>
-                            </td>
                             <td>{{ estudiante.codigo_rude }}</td>
+                            <td data-title="VerNota" class="text-center">
+                                 <a href="#" role="button" onclick="SeeNotas('{{estudiante.inscripcion_id}}',{{ datos.id }})" class="btn rounded btn-xs btn-primary glyphicon glyphicon glyphicon-list-alt" title="Ver Calificaciones"></a>
+                            </td>
                             <td>{{ estudiante.carnet_identidad }}{% if estudiante.complemento != '' %}-{{estudiante.complemento}}{% endif %}</td>
                             <td>{{ estudiante.paterno }}</td>
                             <td>{{ estudiante.materno }}</td> 
@@ -162,27 +147,13 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-    </div>
-    {% endfor %}
-    <div class="modal modal-flex fade" id="ModalUser" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title" id="flexModalLabel">NOTAS CONSOLIDADAS DEL ESTUDIANTE.</h4>             
-                </div>
-                <div class="modal-body">
-                    <div id="notasModal">
-                            
                     </div>
                 </div>
-                <div class="modal-pie">
-                    <HR>
-                </div>                    
-            </div>                
+            </div>
         </div>
-    </div>
+        <!-- /.row -->
+    {% endfor %}
+    
 {% endblock %}
 
 {% block javascripts %}
@@ -218,45 +189,7 @@
         var currentLang = espanol;    
 
         //var table = $('#tablaListadoPersonas').DataTable();
-        var dtable = $('#tablaListadoPersonas').dataTable( {"oLanguage": espanol,
-         'dom': 'lBfrtip <"clear">',
-        'buttons': [
-             {   
-                extend: 'colvis',
-                text:'Visibilizar Columnas'
-            },
-            {
-                extend: 'print',
-                text: 'Imprimir',
-                autoPrint: true,
-                title: 'PNP - LISTA DE PARTICIPANTES',
-                header:true,
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            {
-                extend:'pdf',
-                title: 'PNP LISTA DE PARTICIPANTES',
-                filename:'Lista de archivos subidos RUP-4',
-                orientation:'landscape',
-                exportOptions: {
-                modifier: {
-                    page: 'Lista de Participantes'
-                    }
-                }
-            },
-            {
-            extend: 'excel',
-            text: 'Excel',
-            filename:'Lista de Participantes',
-            exportOptions: {
-                modifier: {
-                    page: 'Lista de Participantes'
-                    }
-                }
-            },
-        ]} );
+        var dtable = $('#tablaListadoPersonas').dataTable( {"oLanguage": espanol} );
         
         
         $('#tablaListadoPersonas tbody').on( 'click', 'tr', function () {

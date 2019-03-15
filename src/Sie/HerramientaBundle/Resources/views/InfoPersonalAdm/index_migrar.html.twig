@@ -94,10 +94,12 @@
                                             <tr>
                                                 <th>N°</th>
                                                 <th>Carnet de Identidad</th>
+                                                <th>Complemento</th>
                                                 <th>Paterno</th>
                                                 <th>Materno</th>
                                                 <th>Nombre(s)</th>
-                                                <th>Función</th>
+                                                <th>Fecha de Nacimiento</th>
+                                                <th>Cargo</th>
                                                 <th>Formación</th>
                                                 <th>Fecha Registro</th>
                                             </tr>
@@ -112,7 +114,8 @@
                                                     <td data-title="Paterno">{{ persona.paterno }}</td>
                                                     <td data-title="Materno">{{ persona.materno }}</td>
                                                     <td data-title="Nombre(s)">{{ persona.nombre }}</td>
-                                                    <td data-title="Función">{{ personal.cargoTipo }}</td>
+                                                    <td data-title="FechaNac">{{ persona.fechaNacimiento|date('d-m-Y') }}</td>
+                                                    <td data-title="Cargo">{{ personal.cargoTipo }}</td>
                                                     <td data-title="Formación">{{ formacion.formacion }}</td>
                                                     <td data-title="FechReg">{% if personal.fechaRegistro %}{{ personal.fechaRegistro|date('d-m-Y') }}{% else %}-{% endif %}</td>
                                                 </tr>
@@ -185,13 +188,14 @@
                                             <tr>
                                                 <th>N°</th>
                                                 <th>Carnet de Identidad</th>
+                                                <th>Complemento</th>
                                                 <th>Paterno</th>
                                                 <th>Materno</th>
                                                 <th>Nombre(s)</th>
-                                                <th>Función</th>
+                                                <th>Fecha de Nacimiento</th>
+                                                <th>Cargo</th>
                                                 <th>Formación</th>
                                                 <th>Fecha Registro</th>
-                                                <th>Fecha Modificación</th>
                                                 <th>Marcar para ratificar</th>
                                             </tr>
                                         </thead>
@@ -202,13 +206,14 @@
                                                 <tr>
                                                     <td data-title="N°">{{ loop.index }}</td>
                                                     <td data-title="Carnet">{{ persona.carnet }}</td>
+                                                    <td data-title="Carnet">{{ persona.complemento }}</td>
                                                     <td data-title="Paterno">{{ persona.paterno }}</td>
                                                     <td data-title="Materno">{{ persona.materno }}</td>
                                                     <td data-title="Nombre(s)">{{ persona.nombre }}</td>
-                                                    <td data-title="Función">{{ personal.cargoTipo }}</td>
+                                                    <td data-title="FechaNac">{{ persona.fechaNacimiento|date('d-m-Y') }}</td>
+                                                    <td data-title="Cargo">{{ personal.cargoTipo }}</td>
                                                     <td data-title="Formación">{{ formacion.formacion }}</td>
                                                     <td data-title="FechReg">{% if personal.fechaRegistro %}{{ personal.fechaRegistro|date('d-m-Y') }}{% else %}-{% endif %}</td>
-                                                    <td data-title="FechMod">{% if personal.fechaModificacion %}{{ personal.fechaModificacion|date('d-m-Y') }}{% else %}-{% endif %}</td>
                                                     <td data-title="Acciones">
                                                         <input type="checkbox" id="ratificarMaestro_{{persona.id}}" name="ratificarMaestro[{{persona.id}}]">
                                                     </td>

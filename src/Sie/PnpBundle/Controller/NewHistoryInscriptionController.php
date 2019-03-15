@@ -71,6 +71,7 @@ class NewHistoryInscriptionController extends Controller {
                       $dataInscriptionE[$key] = $inscription;
                       break;
                     case '5':
+                      $inscription["institucioneducativa_curso_id_enc_raep"]=$this->encriptar($inscription["institucioneducativa_curso_id_raep"]);
                       $dataInscriptionP[$key] = $inscription;
                       break;
                   }
@@ -84,7 +85,7 @@ class NewHistoryInscriptionController extends Controller {
               return $this->redirectToRoute('sie_pnp_buscar_historial_estudiante_rude');
             }
         }
-
+        
         return $this->render($this->session->get('pathSystem') . ':NewHistoryInscription:index.html.twig', array(
                     'form' => $this->createSearchForm()->createView(),
                     'datastudent' => $student,
@@ -175,7 +176,6 @@ class NewHistoryInscriptionController extends Controller {
             }
         }
         $sw = true;
-
         return $this->render($this->session->get('pathSystem') . ':NewHistoryInscription:index_history.html.twig', array(
             'datastudent' => $student,
             'dataInscriptionR' => $dataInscriptionR,
@@ -184,5 +184,19 @@ class NewHistoryInscriptionController extends Controller {
             'dataInscriptionP' => $dataInscriptionP,
             'sw' => $sw
         ));
+    }
+    public function encriptar ($string) {
+        $data = base64_encode($string);
+        $data = str_replace(array('+','/','='),array('-','_','.'),$data);
+        return $data; 
+    }
+
+    public function desencriptar ($string) {
+        $data = str_replace(array('-','_','.'),array('+','/','='),$string);
+        $mod4 = strlen($data) % 4;
+        if ($mod4) {
+            $data .= substr('====', $mod4);
+        }
+        return base64_decode($data); 
     }
 }

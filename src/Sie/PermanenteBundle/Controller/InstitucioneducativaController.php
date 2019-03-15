@@ -1028,7 +1028,7 @@ class InstitucioneducativaController extends Controller {
         $repository = $em->getRepository('SieAppWebBundle:GestionTipo');
         $query = $repository->createQueryBuilder('g')
             ->orderBy('g.id', 'DESC')
-            ->where('g.id < 2019 AND g.id > 2013')
+            ->where('g.id > 2013')
             ->getQuery();
         $gestiones = $query->getResult();
         $gestionesArray = array();

@@ -1,22 +1,25 @@
 {% extends 'layoutPnp.html.twig' %}
 
 {% block body -%}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-home animated flip"></i>ABRIR CURSO(S) <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">
+                    Curso
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
 
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="page-title">
-                <h1 class="glyphicon glyphicon-home"> ABRIR CURSO(S)</h1>
-                <ol class="breadcrumb">
-                    
-
-                </ol>
-            </div>
-        </div>
-        <!-- /.col-lg-12 -->
-    </div>
-
-    <div class="row">
-
+                <li class="active">Abrir Curso(s)</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
         <div class="col-md-12">
             {% for flashMessage in app.session.flashbag.get('notice') %}
                     <div class="alert alert-success alert-dismissible" role="alert">
@@ -30,49 +33,34 @@
                         <strong>¡Advertencia!</strong> {{ flashMessage }}
                     </div>
                 {% endfor %}
-            <form action="{{ path('sie_pnp_abrir_curso') }}" method="POST">
+
+
+    <form action="{{ path('sie_pnp_abrir_curso') }}" method="POST">
             <!-- Website Stats  Widget -->
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-xs-12 col-lg-12">
-                        <div class="panel panel-icon panel-primary">
-                            <div class="panel-heading">
-                                <div class="portlet-title">
-                                    Inserte Datos
-                                </div>
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-xs-12 col-lg-12">
+                <div class="panel panel-icon panel-primary">
+                    <div class="panel-heading">
+                        Inserte Datos
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>Digitar los Id de los cursos Ej: (ID,ID,ID)</h4>
                             </div>
-                            <div class="panel-body">
-
-                              
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <h4>Digitar los Id de los cursos Ej: (ID,ID,ID)</h4>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <textarea name="cursos" id="cursos" class="form-control" required="required"></textarea>
-                                    </div>
-                
-                                </div>
-                                <br />
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <input type="submit" id="boton" value="Abrir Curso(s)" class="btn btn-success btn-large">
-                                    </div>
-                                </div>
-
+                            <div class="col-md-12">
+                                <textarea name="cursos" id="cursos" class="form-control" required="required"></textarea>
+                            </div>
+        
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="submit" id="boton" value="Abrir Curso(s)" class="btn rounded btn-success btn-large">
                             </div>
                         </div>
-
                     </div>
                 </div>
-            </div>
-            </form>
-
-
-            <!-- End of Website Stats Widget -->
-
-        </div>
-    </div>
-
-
+        </form>
 {% endblock %}

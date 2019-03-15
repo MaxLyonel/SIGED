@@ -62,6 +62,10 @@ sie_herramienta_ieducativa:
     resource: "@SieHerramientaBundle/Resources/config/routing/ieducativa.yml"
     prefix:   /sie/infoIeducativa
 
+sie_herramienta_ieducativa_equipamiento_laboratorio:
+    resource: "@SieHerramientaBundle/Resources/config/routing/ieducativaEquipamientoLaboratorio.yml"
+    prefix:   /sie/infoIeducativa/equipamiento/laboratorio
+
 sie_herramienta_mallacurricular:
     resource: "@SieHerramientaBundle/Resources/config/routing/mallacurricular.yml"
     prefix:   /sie/malla
@@ -134,6 +138,7 @@ sie_herramienta_solicitud_bth:
     resource: "@SieHerramientaBundle/Resources/config/routing/solicitudBTH.yml"
     prefix:   /sie/solicitudbth
 
+
 #sie_herramienta_wf_tramite:
 #    resource: "@SieAppWebBundle/Resources/config/routing/wftramite.yml"
 #    prefix:   /sie/tramite
@@ -153,3 +158,25 @@ sie_herramienta_regularization_docente:
 # sie_herramienta_regularization_docente_to_distrito:
 #     resource: "@SieHerramientaBundle/Resources/config/routing/regularizationlistdocentetodistrito.yml"
 #     prefix:   /sie/regularizationlistdocente
+
+sie_herramienta_regularizacion_cut:
+    resource: "@SieHerramientaBundle/Resources/config/routing/regularizationCUT.yml"
+    prefix:   /sie/regcut
+
+sie_herramienta_reportelabofisquim:
+    resource: "@SieHerramientaBundle/Resources/config/routing/reportelabofisquim.yml"
+    prefix:   /sie/labofisquim
+
+sie_herramienta_estudianteTrabajaNuevo:
+    resource: "@SieHerramientaBundle/Resources/config/routing/estudianteTrabajaNuevo.yml"
+    prefix:   /sie/estudianteTrabajaNuevo    
+
+sie_herramienta_estudianteTrabaja:
+    resource: "@SieHerramientaBundle/Resources/config/routing/estudianteTrabaja.yml"
+    prefix:   /sie/estudianteTrabaja
+
+sie_herramienta_nnats:
+    resource: "@SieHerramientaBundle/Resources/config/routing/reportesNnats.yml"
+    prefix:   /sie/Nnats
+ 
+

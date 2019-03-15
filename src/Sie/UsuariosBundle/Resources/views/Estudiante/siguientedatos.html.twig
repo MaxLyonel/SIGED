@@ -16,33 +16,45 @@
                             <form id="busquedaDatosTotForm" name="busquedaDatosTotForm" method="get" class="navbar-form" onsubmit="return enviaformdatostotal();">
                                 <div class="form-group has-feedback">                                           
                                     <div class="row">
+                                            {% set disabledOption = true %}
                                         <div class="col-lg-4">
                                             <label class="required">C.I :</label>
-                                            <input type="text" class="form-control typeahead rounded" name="busquedaDatosTotForm[InputCi]" id="busquedaDatosTotForm_InputCi" placeholder="Carnet de identidad" onkeypress="return soloNumeros(event);">                                                    
+                                            <input type="text" class="form-control typeahead rounded" name="busquedaDatosTotForm[InputCi]" value="{{datbas['carnet']}}" id="busquedaDatosTotForm_InputCi" placeholder="Carnet de identidad" onkeypress="return soloNumeros(event);" readonly="{{disabledOption}}">                                                    
                                         </div>
                                         <div class="col-lg-4">
                                             <label class="required">Complemento :</label>
-                                            <input type="text" class="form-control typeahead rounded" name="busquedaDatosTotForm[InputComplemento]" id="busquedaDatosTotForm_InputComplemento" placeholder="Complemento" maxlength="2" onkeypress="return soloComplemento(event);">
+                                            <input type="text" class="form-control typeahead rounded" name="busquedaDatosTotForm[InputComplemento]" value="{{datbas['complemento']}}" id="busquedaDatosTotForm_InputComplemento" placeholder="Complemento" maxlength="2" onkeypress="return soloComplemento(event);" readonly="{{disabledOption}}">
                                         </div>
                                         <div class="col-lg-4">
+
                                             <label class="required">Genero :</label><br/>
-                                            <select class="form-control" id="busquedaDatosTotForm_Genero" name="busquedaDatosTotForm[Genero]">                                                            
-                                                <option value="-999">...</option> 
-                                                <option value="1">MASCULINO</option> 
-                                                <option value="2">FEMENINO</option> 
+                                            <select class="form-control" id="busquedaDatosTotForm_Genero" name="busquedaDatosTotForm[Genero]">
+                                                <option value="-999">...</option>
+                                                <option value="1">MASCULINO</option>
+                                                <option value="2">FEMENINO</option>
                                             </select>
+
                                         </div>
                                     </div>
                                     <div class="row">    
-                                        <div class="col-lg-12">
+                                        <div class="col-lg-3">
+                                            <label class="required">Expedido:</label><br/>
+                                            <select class="form-control" class="form-control" id="busquedaDatosTotForm_Expedido" name="busquedaDatosTotForm[Expedido]">
+                                                <!--<option value="-999">...</option>-->
+                                                {% for expedido in ex %}
+                                                    <option value="{{expedido.id}}">{{expedido.sigla}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-9">
                                             <label class="required">País :</label><br/>
                                             <select class="form-control" class="form-control" id="busquedaDatosTotForm_Pais" name="busquedaDatosTotForm[Pais]">
                                                 <!--<option value="-999">...</option>-->
                                                 {% for pais in pt %}
-                                                   <option value="{{pais.id}}">{{pais.pais}}</option>
-                                                {% endfor %}                                               
+                                                    <option value="{{pais.id}}">{{pais.pais}}</option>
+                                                {% endfor %}
                                             </select>
-                                        </div>     
+                                        </div>
                                     </div>
                                     <div class="row">    
                                         <div class="col-lg-6">    
@@ -83,6 +95,7 @@
                                                 <input type="hidden" id="busquedaDatosTotForm_Day" name="busquedaDatosTotForm[Day]" value="{{datbas['day']}}">
                                                 <input type="hidden" id="busquedaDatosTotForm_Mount" name="busquedaDatosTotForm[Mount]" value="{{datbas['mount']}}">
                                                 <input type="hidden" id="busquedaDatosTotForm_Year" name="busquedaDatosTotForm[Year]" value="{{datbas['year']}}">
+                                                <input type="hidden" id="busquedaDatosTotForm_swValidationSegip" name="busquedaDatosTotForm[swValidationSegip]" value="{{datbas['swValidationSegip']}}">
                                                 <div id="butguardar">
                                                     <button type="submit" class="btn btn-danger fa fa-plus-square form-control-feedback rounded"> Registrar datos en nuevo Rude</button>                                                
                                                 </div>    
@@ -177,7 +190,7 @@
             var provincia = $('#busquedaDatosTotForm_Provincia').val();
             var localidad = $('#busquedaDatosTotForm_Localidad').val();
             var sie = $('#busquedaDatosTotForm_Sie').val();
-            
+
             var stop = true;
             
             /*if ((carnet === '') && (stop == true)){
@@ -257,17 +270,23 @@
                         $("#butguardar").empty();
                     },
                     success: function (data) {
-                        $("#busquedaDatosTotForm_InputCi").prop("disabled", true );
-                        $("#busquedaDatosTotForm_InputComplemento").prop("disabled", true );
+                        $("#busquedaDatosTotForm_InputCi").prop("readonly", true );
+                        $("#busquedaDatosTotForm_InputComplemento").prop("readonly", true );
                         $("#busquedaDatosTotForm_Genero").prop("disabled", true );
                         $("#busquedaDatosTotForm_Pais").prop("disabled", true );
                         $("#busquedaDatosTotForm_Depto").prop("disabled", true );
                         $("#busquedaDatosTotForm_Provincia").prop("disabled", true );
                         $("#busquedaDatosTotForm_Localidad").prop("disabled", true );
                         $("#busquedaDatosTotForm_Sie").prop("disabled", true );
+                        $("#busquedaDatosTotForm_Expedido").prop("disabled", true );
                         
                         $("#butguardar").empty();
-                        $("#butguardar").html('<div class="alert alert-success alert-dismissible" role="alert"><strong>'+data.mensaje+'</strong></div>');
+                        if(data.error){
+                            $("#butguardar").html('<div class="alert alert-warning alert-dismissible" role="alert"><strong>'+data.mensaje+'</strong></div>');
+                        }else{
+                            $("#butguardar").html('<div class="alert alert-success alert-dismissible" role="alert"><strong>'+data.mensaje+'</strong></div>');    
+                        }
+                        
                     },
                     error: function () {
                         $("#busquedaDatosTotForm_InputCi").prop("disabled", true );
@@ -277,6 +296,7 @@
                         $("#busquedaDatosTotForm_Provincia").prop("disabled", true );
                         $("#busquedaDatosTotForm_Localidad").prop("disabled", true );
                         $("#busquedaDatosTotForm_Sie").prop("disabled", true );
+                        $("#busquedaDatosTotForm_Expedido").prop("disabled", true );
                         
                         $("#butguardar").empty();
                         $("#butguardar").html('<div class="alert alert-success alert-dismissible" role="alert"><strong>'+data.mensaje+'</strong></div>');

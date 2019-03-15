@@ -50,7 +50,9 @@ class InscriptionExtranjerosController extends Controller {
         }
     }
 
-    public function indexAction() {
+    public function indexAction(Request $request) {
+        $this->session = $request->getSession();
+        $rol_id = $this->session->get('roluser');
 
         $em = $this->getDoctrine()->getManager();
 
@@ -63,11 +65,11 @@ class InscriptionExtranjerosController extends Controller {
         //   return $this->redirect($this->generateUrl('login'));
         // }
         return $this->render($this->session->get('pathSystem') . ':InscriptionExtranjeros:chooseIncription.html.twig', array(
-                    'form' => $this->chooseIncriptionForm()->createView(),
+                    'form' => $this->chooseIncriptionForm($rol_id)->createView(),
         ));
     }
 
-    private function chooseIncriptionForm(){
+    private function chooseIncriptionForm($rol_id){//dump($this->arrOptionInscription);die;
 
     //     $this->arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria','77'=> 'Post Bachillerato' );
 
@@ -77,11 +79,19 @@ class InscriptionExtranjerosController extends Controller {
     //     // else{
     // //     $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria' );
     // // }
-
-      
+        $opciones = array();
+        if ($rol_id == 9) {
+            foreach ($this->arrOptionInscription as $key=>$value) {
+                if ($key == 59) {
+                    $opciones[$key] = $value;
+                }
+            }
+        } else {
+            $opciones = $this->arrOptionInscription;
+        }
       $form = $this->createFormBuilder()
               ->setAction($this->generateUrl('inscription_extranjeros_main'))
-              ->add('optionInscription', 'choice', array('mapped' => false, 'label' => 'Inscripción', 'choices' => $this->arrOptionInscription, 'attr' => array('class' => 'form-control')))
+              ->add('optionInscription', 'choice', array('mapped' => false, 'label' => 'Inscripción', 'choices' => $opciones, 'attr' => array('class' => 'form-control')))
               ->add('buscar', 'submit', array('label' => 'Continuar'))
               ->getForm();
       return $form;

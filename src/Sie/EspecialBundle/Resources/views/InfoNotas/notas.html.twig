@@ -41,7 +41,7 @@
 					            <th>Estado de matrícula</th><td>{{inscripcion.estadomatriculaTipo.estadomatricula}}</td>
 					        </tr>
 					    </table>
-						<h5>Notas <small style="float:right;color:#4D8595">Op__{{notas.operativo}}</small></h5>
+						<h5>Notas <small style="float:right;color:#4D8595">Operativo Actual-{{notas.operativo}}</small></h5>
 					    {% include 'SieAppWebBundle:Services/Notas:'~ template ~'.html.twig' with {'notas':notas, 'vista':vista} %}
 
 						{% if (operativo >= 4 and notas.estadoMatricula in notas.estadosPermitidos and notas.cuantitativas|length > 0 and actualizar == false) or (notas.gestion < notas.gestionActual and notas.tipoNota == 'Trimestral' and discapacidad != 1) or (notas.gestion < notas.gestionActual and discapacidad == 1 and notas.nivel in [1,11,403]) and notas.cuantitativas|length > 0 %}

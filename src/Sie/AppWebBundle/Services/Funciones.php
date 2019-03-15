@@ -78,6 +78,7 @@ class Funciones {
             }
         }
 
+
         if( in_array($this->session->get('roluser'), array(7,8,10)) ){
             $operativo = $operativo - 1;
         }
@@ -585,7 +586,7 @@ class Funciones {
                         $studentAsignatura->setFechaRegistro(new \DateTime('now'));
                         $this->em->persist($studentAsignatura);
                         $this->em->flush();
-                        dump($studentAsignatura);
+                        // dump($studentAsignatura);
                     }
                     
                     
@@ -822,7 +823,7 @@ class Funciones {
           ){
             $swValidationPrimaria=true;
         }else{
-            if( $centroAllowed &&
+            if( 
                 $gestion >= 2019 &&
                 $arrInfoUe['ueducativaInfoId']['sfatCodigo'] == 15 &&
                 $arrInfoUe['ueducativaInfoId']['setId'] == 13 &&
@@ -904,7 +905,7 @@ class Funciones {
           ){
             $swValidationPrimaria=true;
         }else{
-            if( $centroAllowed &&
+            if( //$centroAllowed &&
                 $objInfoCourse[0]['gestion'] >= 2019 &&
                 $objInfoCourse[0]['sfatCodigo'] == 15 &&
                 $objInfoCourse[0]['setId'] == 13 &&
@@ -969,6 +970,150 @@ class Funciones {
           return $objobsQA;
         }
 
+
+     /**
+     * get the stutdents inscription - the record
+     * @param type $id
+     * @return \Sie\AppWebBundle\Controller\Exception
+     */
+    public function getCurrentInscriptionStudentByRude($data) {
+
+        $entity = $this->em->getRepository('SieAppWebBundle:Estudiante');
+        $query = $entity->createQueryBuilder('e')
+                ->select('n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId',
+                 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId',
+                 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa, IDENTITY(iec.cicloTipo) as cicloId, e.fechaNacimiento as fechaNacimiento', 'ei.id as estInsId')
+                ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaTipo', 'it', 'WITH', 'i.institucioneducativaTipo = it.id')
+                ->leftjoin('SieAppWebBundle:NivelTipo', 'n', 'WITH', 'iec.nivelTipo = n.id')
+                ->leftjoin('SieAppWebBundle:GradoTipo', 'g', 'WITH', 'iec.gradoTipo = g.id')
+                ->leftjoin('SieAppWebBundle:ParaleloTipo', 'p', 'WITH', 'iec.paraleloTipo = p.id')
+                ->leftjoin('SieAppWebBundle:TurnoTipo', 't', 'WITH', 'iec.turnoTipo = t.id')
+                ->leftJoin('SieAppWebBundle:EstadoMatriculaTipo', 'em', 'WITH', 'ei.estadomatriculaTipo = em.id')
+                ->where('e.codigoRude = :id')
+                ->andWhere('it = :idTipo')
+                ->andWhere('iec.nivelTipo = :level')
+                ->andWhere('iec.gradoTipo in (:levels)')
+                ->setParameter('id', $data['codigoRude'])
+                ->setParameter('idTipo',1)
+                ->setParameter('levels',array(3,4,5,6))
+                ->setParameter('level', 13)
+                ->orderBy('iec.gestionTipo', 'ASC')
+                ->addorderBy('ei.fechaInscripcion', 'ASC')
+                ->getQuery();
+        try {
+            return $query->getResult();
+        } catch (Exception $ex) {
+            return $ex;
+        }
+    }
+
+
+       /**
+     * get the select the studdent inscription -
+     * @param type $estInsId
+     * @return \Sie\AppWebBundle\Controller\Exception
+     */
+    public function getSelectStudentInscription($estInsId) {
+
+        $entity = $this->em->getRepository('SieAppWebBundle:Estudiante');
+        $query = $entity->createQueryBuilder('e')
+                ->select('n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId',
+                 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId',
+                 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa, IDENTITY(iec.cicloTipo) as cicloId, e.fechaNacimiento as fechaNacimiento', 'ei.id as estInsId')
+                ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaTipo', 'it', 'WITH', 'i.institucioneducativaTipo = it.id')
+                ->leftjoin('SieAppWebBundle:NivelTipo', 'n', 'WITH', 'iec.nivelTipo = n.id')
+                ->leftjoin('SieAppWebBundle:GradoTipo', 'g', 'WITH', 'iec.gradoTipo = g.id')
+                ->leftjoin('SieAppWebBundle:ParaleloTipo', 'p', 'WITH', 'iec.paraleloTipo = p.id')
+                ->leftjoin('SieAppWebBundle:TurnoTipo', 't', 'WITH', 'iec.turnoTipo = t.id')
+                ->leftJoin('SieAppWebBundle:EstadoMatriculaTipo', 'em', 'WITH', 'ei.estadomatriculaTipo = em.id')
+                ->where('ei.id = :id')
+                ->setParameter('id', $estInsId)
+                ->orderBy('iec.gestionTipo', 'ASC')
+                ->addorderBy('ei.fechaInscripcion', 'ASC')
+                ->getQuery();
+        try {
+            return $query->getResult();
+        } catch (Exception $ex) {
+            return $ex;
+        }
+    }
+
+    public function getSpeciality(){
+           $query = $this->em->createQueryBuilder()
+                    ->select('esp')
+                    ->from('SieAppWebBundle:EspecialTecnicaEspecialidadTipo', 'esp')
+                    ->orderBy('esp.id', 'ASC')
+                    ->getQuery();
+         
+            $arrSpeciality = $query->getResult();
+            return $arrSpeciality;
+    }
+
+    public function verificarGradoCerrado($sie,$gestion){
+        $repositorio = $this->em->getRepository('SieAppWebBundle:RegistroConsolidacion');
+        $regConsol = $repositorio->createQueryBuilder('rc')
+                ->where('rc.unidadEducativa = :ue')
+                ->andWhere('rc.gestion = :gestion')
+                ->setParameter('ue',$sie)
+                ->setParameter('gestion',$gestion)
+                ->getQuery()
+                ->getResult();
+
+        $response = false;
+        // Verificamos si se realizo el cierre de sexto grado
+        // if($regConsol[0]->getCierreSextosec() != null){
+        //     $response = true;
+        // }
+        
+        return $response;
+
+    }
+
+
+     /**
+     * get the stutdents inscription - the record
+     * @param type $id
+     * @return \Sie\AppWebBundle\Controller\Exception
+     */
+    public function getInscriptionBthByRude($codigoRude) {
+
+        $entity = $this->em->getRepository('SieAppWebBundle:Estudiante');
+        $query = $entity->createQueryBuilder('e')
+                ->select('n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId',
+                 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId',
+                 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa, IDENTITY(iec.cicloTipo) as cicloId, e.fechaNacimiento as fechaNacimiento', 'ei.id as estInsId')
+                ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaTipo', 'it', 'WITH', 'i.institucioneducativaTipo = it.id')
+                ->leftjoin('SieAppWebBundle:NivelTipo', 'n', 'WITH', 'iec.nivelTipo = n.id')
+                ->leftjoin('SieAppWebBundle:GradoTipo', 'g', 'WITH', 'iec.gradoTipo = g.id')
+                ->leftjoin('SieAppWebBundle:ParaleloTipo', 'p', 'WITH', 'iec.paraleloTipo = p.id')
+                ->leftjoin('SieAppWebBundle:TurnoTipo', 't', 'WITH', 'iec.turnoTipo = t.id')
+                ->leftJoin('SieAppWebBundle:EstadoMatriculaTipo', 'em', 'WITH', 'ei.estadomatriculaTipo = em.id')
+                ->where('e.codigoRude = :id')
+                ->andWhere('it = :idTipo')
+                ->andWhere('iec.nivelTipo = :level')
+                ->andWhere('iec.gradoTipo in (:levels)')
+                ->setParameter('id', $codigoRude)
+                ->setParameter('idTipo',1)
+                ->setParameter('levels',array(6))
+                ->setParameter('level', 13)
+                ->orderBy('iec.gestionTipo', 'ASC')
+                ->addorderBy('ei.fechaInscripcion', 'ASC')
+                ->getQuery();
+        try {
+            return $query->getResult();
+        } catch (Exception $ex) {
+            return $ex;
+        }
+    }
 
 
 
@@ -1060,6 +1205,7 @@ class Funciones {
 
         return $tiempo;
     }
+
 
 
     /**
@@ -1177,6 +1323,43 @@ class Funciones {
 
         return $aparalelos;
     }
+
+  /**
+     * save the log information about sie file donwload
+     * @param  [type] $form [description]
+     * @return [type]       [description]
+     */
+
+    public function saveDataInstitucioneducativaOperativoLog($data){
+        //conexion to DB
+        
+        try {
+        
+        $objDownloadFilenewOpe = new InstitucioneducativaOperativoLog();
+
+        //save the log data
+        $objDownloadFilenewOpe->setInstitucioneducativaOperativoLogTipo($this->em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find($data['operativoTipo']));
+        $objDownloadFilenewOpe->setGestionTipoId($data['gestion']);
+        $objDownloadFilenewOpe->setPeriodoTipo($this->em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
+        $objDownloadFilenewOpe->setInstitucioneducativa($this->em->getRepository('SieAppWebBundle:Institucioneducativa')->find($data['id']));
+        $objDownloadFilenewOpe->setInstitucioneducativaSucursal(0);
+        $objDownloadFilenewOpe->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find(0));
+        $objDownloadFilenewOpe->setDescripcion('...');
+        $objDownloadFilenewOpe->setEsexitoso('t');
+        $objDownloadFilenewOpe->setEsonline('t');
+        $objDownloadFilenewOpe->setUsuario($this->session->get('userId'));
+        $objDownloadFilenewOpe->setFechaRegistro(new \DateTime('now'));
+        $dataClient = json_encode(array('userAgent'=>$_SERVER['HTTP_USER_AGENT'], 'ip'=>$_SERVER['HTTP_HOST']));
+        $objDownloadFilenewOpe->setClienteDescripcion($dataClient);
+        $this->em->persist($objDownloadFilenewOpe);
+        $this->em->flush();
+
+        return $objDownloadFilenewOpe;
+        } catch (Exception $e) {  
+          echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+        }
+    }    
+
 
 
 }

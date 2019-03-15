@@ -52,11 +52,11 @@ class NoteConsultationUesController extends Controller {
         }
 
         return $this->createFormBuilder()
-                        //->setAction($this->generateUrl('remove_inscription_sie_index'))
-                        ->add('sie', 'text', array('label' => 'SIE', 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{3,8}', 'maxlength' => '8', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
-                        ->add('gestion', 'choice', array('label' => 'Gestión', 'choices' => $arrGestion, 'attr' => array('class' => 'form-control')))
-                        ->add('search', 'button', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary', 'onclick' => 'findInscription()')))
-                        ->getForm();
+        //->setAction($this->generateUrl('remove_inscription_sie_index'))
+        ->add('sie', 'text', array('label' => 'SIE', 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{3,8}', 'maxlength' => '8', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
+        ->add('gestion', 'choice', array('label' => 'Gestión', 'choices' => $arrGestion, 'attr' => array('class' => 'form-control')))
+        ->add('search', 'button', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary', 'onclick' => 'findInscription()')))
+        ->getForm();
     }
 
     /**
@@ -65,7 +65,6 @@ class NoteConsultationUesController extends Controller {
      * @return type the list of student and inscripion data
      */
     public function resultAction(Request $request) {
-
         //get the value to send
         $sie = $request->get('sie');
         $gestion = $request->get('gestion');
@@ -170,9 +169,14 @@ class NoteConsultationUesController extends Controller {
              
         }
 
+        $data = array(
+            'operativoTipo' => 7,
+            'gestion' => $gestion,
+            'id' => $sie,
 
-
-       
+        );
+ 
+        $operativo = $this->get('funciones')->saveDataInstitucioneducativaOperativoLog($data);
 
         return $this->render($this->session->get('pathSystem') . ':NoteConsultationUes:result.html.twig', array(
                     'unidadEducativa' => $objUe,

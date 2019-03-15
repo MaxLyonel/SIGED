@@ -35,11 +35,6 @@ class ApoderadoInscripcionDatos
     private $tieneocupacion;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\ApoderadoOcupacionTipo
-     */
-    private $ocupacionTipo;
-
-    /**
      * @var \Sie\AppWebBundle\Entity\ApoderadoActividadTipo
      */
     private $actividadTipo;
@@ -55,7 +50,12 @@ class ApoderadoInscripcionDatos
     private $instruccionTipo;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\IdiomaMaterno
+     * @var \Sie\AppWebBundle\Entity\ApoderadoOcupacionTipo
+     */
+    private $ocupacionTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\IdiomaTipo
      */
     private $idiomaMaterno;
 
@@ -163,29 +163,6 @@ class ApoderadoInscripcionDatos
     }
 
     /**
-     * Set ocupacionTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\ApoderadoOcupacionTipo $ocupacionTipo
-     * @return ApoderadoInscripcionDatos
-     */
-    public function setOcupacionTipo(\Sie\AppWebBundle\Entity\ApoderadoOcupacionTipo $ocupacionTipo = null)
-    {
-        $this->ocupacionTipo = $ocupacionTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get ocupacionTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\ApoderadoOcupacionTipo 
-     */
-    public function getOcupacionTipo()
-    {
-        return $this->ocupacionTipo;
-    }
-
-    /**
      * Set actividadTipo
      *
      * @param \Sie\AppWebBundle\Entity\ApoderadoActividadTipo $actividadTipo
@@ -255,12 +232,35 @@ class ApoderadoInscripcionDatos
     }
 
     /**
-     * Set idiomaMaterno
+     * Set ocupacionTipo
      *
-     * @param \Sie\AppWebBundle\Entity\IdiomaMaterno $idiomaMaterno
+     * @param \Sie\AppWebBundle\Entity\ApoderadoOcupacionTipo $ocupacionTipo
      * @return ApoderadoInscripcionDatos
      */
-    public function setIdiomaMaterno(\Sie\AppWebBundle\Entity\IdiomaMaterno $idiomaMaterno = null)
+    public function setOcupacionTipo(\Sie\AppWebBundle\Entity\ApoderadoOcupacionTipo $ocupacionTipo = null)
+    {
+        $this->ocupacionTipo = $ocupacionTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get ocupacionTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\ApoderadoOcupacionTipo 
+     */
+    public function getOcupacionTipo()
+    {
+        return $this->ocupacionTipo;
+    }
+
+    /**
+     * Set idiomaMaterno
+     *
+     * @param \Sie\AppWebBundle\Entity\IdiomaTipo $idiomaMaterno
+     * @return ApoderadoInscripcionDatos
+     */
+    public function setIdiomaMaterno(\Sie\AppWebBundle\Entity\IdiomaTipo $idiomaMaterno = null)
     {
         $this->idiomaMaterno = $idiomaMaterno;
     
@@ -270,7 +270,7 @@ class ApoderadoInscripcionDatos
     /**
      * Get idiomaMaterno
      *
-     * @return \Sie\AppWebBundle\Entity\IdiomaMaterno 
+     * @return \Sie\AppWebBundle\Entity\IdiomaTipo 
      */
     public function getIdiomaMaterno()
     {

@@ -1,7 +1,13 @@
-herramienta_alter_notas_maestro_index:
+
+herramienta_alter_notas_maestro_seleccionar_gestion:
     path:     /
-    defaults: { _controller: "SieHerramientaAlternativaBundle:NotasMaestro:index" }
+    defaults: { _controller: "SieHerramientaAlternativaBundle:NotasMaestro:seleccionarGestion" }
     methods:  [GET, POST]
+
+herramienta_alter_notas_maestro_index:
+    path:     /asignaturas
+    defaults: { _controller: "SieHerramientaAlternativaBundle:NotasMaestro:index"}
+    methods:  GET
 
 herramienta_alter_notas_maestro_new:
     path:     /new

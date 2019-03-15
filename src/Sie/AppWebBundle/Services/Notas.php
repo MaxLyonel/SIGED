@@ -725,22 +725,22 @@ class Notas{
                         }
                     }else{
                         $updateNota = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->find($idEstudianteNota[$i]);
-                        $regAnterior = clone $updateNota;
+                        // $regAnterior = clone $updateNota;
                         if($updateNota){
                             if($nivel == 11){
                                 // Verificamos si la nota fue modificada o no para guardar los datos del usuario
-                                if($updateNota->getNotaCualitativa() != mb_strtoupper($notas[$i],'utf-8')){
+                                if($updateNota->getNotaCualitativa() != mb_strtoupper($notas[$i],'utf-8') and $notas[$i] != ""){
                                     //$updateNota->setUsuarioId($this->session->get('userId'));
                                     $updateNota->setFechaModificacion(new \DateTime('now'));
+                                    $updateNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
                                 }
-                                $updateNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
                             }else{
                                 // Verificamos si la nota fue modificada o no para guardar los datos del usuario
-                                if($updateNota->getNotaCuantitativa() != $notas[$i]){
+                                if($updateNota->getNotaCuantitativa() != $notas[$i] and $notas[$i] != 0 and $notas[$i] > 0 and $notas[$i] < 100 ){
                                     //$updateNota->setUsuarioId($this->session->get('userId'));
                                     $updateNota->setFechaModificacion(new \DateTime('now'));
+                                    $updateNota->setNotaCuantitativa($notas[$i]);
                                 }
-                                $updateNota->setNotaCuantitativa($notas[$i]);
                             }
                             $this->em->flush();
 

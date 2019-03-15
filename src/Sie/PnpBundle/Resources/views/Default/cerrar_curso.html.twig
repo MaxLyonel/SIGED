@@ -1,89 +1,76 @@
 {% extends 'layoutPnp.html.twig' %}
 
 {% block body -%}
+    <div class="header-content">
+        <h2><i class="fa fa-home animated flip"></i>CERRAR CURSO(S) <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">
+                    Curso
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
 
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="page-title">
-                <h1 class="glyphicon glyphicon-home"> CERRAR CURSO(S)</h1>
-                <ol class="breadcrumb">
-                    
+                <li class="active">Cerrar Curso(s)</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    
+    <div class="col-md-12">
+        {% for flashMessage in app.session.flashbag.get('notice') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Bien!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('error') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>¡Advertencia!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
 
-                </ol>
-            </div>
-        </div>
-        <!-- /.col-lg-12 -->
-    </div>
-
-    <div class="row">
-
-        <div class="col-md-12">
-            {% for flashMessage in app.session.flashbag.get('notice') %}
-                    <div class="alert alert-success alert-dismissible" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <strong>Bien!</strong> {{ flashMessage }}
-                    </div>
-                {% endfor %}
-                {% for flashMessage in app.session.flashbag.get('error') %}
-                    <div class="alert alert-danger alert-dismissible" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <strong>¡Advertencia!</strong> {{ flashMessage }}
-                    </div>
-                {% endfor %}
-            <form action="{{ path('sie_pnp_cerrar_curso') }}" method="POST">
-            <!-- Website Stats  Widget -->
-            <div class="container-fluid">
+        <form action="{{ path('sie_pnp_cerrar_curso') }}" method="POST">
+            <div class="body-content animated fadeIn">
                 <div class="row">
                     <div class="col-xs-12 col-lg-12">
                         <div class="panel panel-icon panel-primary">
                             <div class="panel-heading">
-                                <div class="portlet-title">
-                                    Inserte Datos
-                                </div>
+                                Inserte Datos
                             </div>
                             <div class="panel-body">
-                                <div class="row">
-                                    <form class="form-inline">
-                                        <div class="col-md-7" align="center">
-                                            <div class="form-group">  
-                                                <label for="exampleInputName2">Digitar los Id de los cursos Ej: (ID,ID,ID)</label>
-                                               <textarea name="curso_id" id="curso_id" class="form-control" required="required"></textarea>
-                                            </div>
+                                <form class="form-inline">
+                                    <div class="col-md-7" align="center">
+                                        <div class="form-group">  
+                                            <label for="exampleInputName2">Digitar los Id de los cursos Ej: (ID,ID,ID)</label>
+                                           <textarea name="curso_id" id="curso_id" class="form-control" required="required"></textarea>
                                         </div>
-                                        <div class="col-md-3" align="center">
-                                            <div class="form-group">          
-                                                <label for="exampleInputEmail2">CI del Informátcio Departamental</label>
-                                                 <input name="ci" id="ci" class="form-control" minlength="6" maxlength="9"  pattern="[0-9]{6,9}" title="Ci facilitador" required="required" placeholder="Ci FACILITADOR" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;">
-                                            </div>
+                                    </div>
+                                    <div class="col-md-3" align="center">
+                                        <div class="form-group">          
+                                            <label for="exampleInputEmail2">CI del Informátcio Departamental</label>
+                                             <input name="ci" id="ci" class="form-control" minlength="6" maxlength="9"  pattern="[0-9]{6,9}" title="Ci facilitador" required="required" placeholder="Ci FACILITADOR" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;">
                                         </div>
-                                        <div class="col-md-2" align="center">
-                                            <div class="form-group">          
-                                                <label for="exampleInputEmail2">Complemento</label>
-                                                 <input name="complemento" id="complemento" class="form-control" minlength="2" maxlength="2" title="Complemento del facilitador" placeholder="Complemento" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();">
-                                            </div>
+                                    </div>
+                                    <div class="col-md-2" align="center">
+                                        <div class="form-group">          
+                                            <label for="exampleInputEmail2">Complemento</label>
+                                             <input name="complemento" id="complemento" class="form-control" minlength="2" maxlength="2" title="Complemento del facilitador" placeholder="Complemento" style="text-transform:uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                         </div>
-                                        <div class="col-md-2">
-                                            <div>&nbsp;</div>
-                                            <a role="button" onclick="return SeeBuscar()" class="btn btn-primary" href="#" > Buscar</a><br/><br/>
-                                        </div>
-                                    </form>
-                                </div>
-
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div>&nbsp;</div>
+                                        <a role="button" onclick="return SeeBuscar()" class="btn rounded btn-primary" href="#" > Buscar</a><br/><br/>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-
+                        <div id="facilitador"></div>
                     </div>
                 </div>
-            </div>
-           <div id="facilitador"></div>
-
-
-            <!-- End of Website Stats Widget -->
-
-        </div>
-    </div>
-
-
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
