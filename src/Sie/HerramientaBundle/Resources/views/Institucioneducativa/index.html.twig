@@ -507,7 +507,7 @@
                                                                 <td data-title="Paralelo">{{c.paraleloTipo.paralelo}}</td>
                                                                 <td data-title="Acciones">
                                                                   {% if app.session.get('lastOperativo') != 5%}
-                                                                  {% if gestion < app.session.get('currentyear') %}
+                                                                  {# {% if gestion < app.session.get('currentyear') %} #}
                                                                     <button class="btn btn-xs btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getAreas('{{c.id}}');">
                                                                         <i class="fa fa-list"></i> Áreas
                                                                     </button>
@@ -516,7 +516,7 @@
                                                                         <button type="submit" class="btn btn-xs btn-danger" onclick="return confirm('Se eliminará el registro. ¿Desea continuar?');"><i class="fa fa-eraser"></i> Eliminar</button>
                                                                     </form>
                                                                     {% endif %}
-                                                                  {% endif %}
+                                                                  {# {% endif %} #}
                                                                 </td>
                                                             </tr>
                                                         {% endfor %}
