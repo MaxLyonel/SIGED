@@ -1047,7 +1047,7 @@ class EstudianteRudealController extends Controller {
 
         // CENTROS DE SALUD
         $centrosEstudiante = $em->getRepository('SieAppWebBundle:RudeCentroSalud')->findBy(array('rude'=>$rude));
-        dump($centrosEstudiante);die;
+        // dump($centrosEstudiante);die;
         $arrayCentros = [];
         foreach ($centrosEstudiante as $ce) {
             $arrayCentros[] = $ce->getCentroSaludTipo()->getId();
