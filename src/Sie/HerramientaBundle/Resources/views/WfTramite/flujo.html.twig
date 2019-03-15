@@ -45,9 +45,9 @@
                                         <tr>
                                             <td>{{ loop.index }}</td>
                                             <td>{{ d.proceso_tipo }}</td>
-                                            <td>{{ d.fecha_recepcion }}</td>
-                                            <td>{{ d.fecha_envio }}</td>
-                                            <td class="text-danger">{{ d.fecha_vencimiento }}</td>
+                                            <td>{{ d.fecha_recepcion ? d.fecha_recepcion|date('d-m-Y'):"" }}</td>
+                                            <td>{{ d.fecha_envio ? d.fecha_envio|date('d-m-Y'):"" }}</td>
+                                            <td class="text-danger">{{ d.fecha_vencimiento ? d.fecha_vencimiento|date('d-m-Y'):"" }}</td>
                                             <td>{{ d.duracion }}</td>
                                             <td>{{ d.plazo }}</td>
                                             {% if d.tramite_estado %}
@@ -78,10 +78,11 @@
                         </div><!-- /.panel-body -->
                     </div><!--/ End collapsible panel -->
                 </div>
+                {# {{dump(flujo)}} #}
                 <div style= "display:none" >
                     <textarea id="code" style="width: 100%;" rows="11">
-                        st=>start: Inicio|past
-                        e=>end: Fin|past
+                        st=>start: Inicio|inicio
+                        e=>end: Fin|inicio
                         {% set sw = 0 %}
                         {% for f in flujo %}
                             {% if f.fecha_envio %}
@@ -89,16 +90,20 @@
                             {% else %}
                                 {% set estado = "past" %}
                             {% endif %}
-                            {% if f.es_evaluacion =="1" %}
+                            {% if f.fecha_envio %}
                                 {{f.id}}=>operation: {{f.proceso_tipo}}
-                                {{ f.fecha_envio }}
-                                {{f.variable_evaluacion}}={{ f.valor_evaluacion }}|{{estado}}
+                                {{f.fecha_envio|date('d-m-Y') }}|{{estado}}
+                                {# {{f.variable_evaluacion}}={{ f.valor_evaluacion }}|{{estado}} #}
                             {% else %}
-                                {{f.id}}=>operation: {{f.proceso_tipo}}
-                                {{ f.fecha_envio }}|{{estado}}
+                                {{f.id}}=>operation: {{f.proceso_tipo}}|{{estado}}
                             {% endif %}
                             {% if f.es_evaluacion =="1" %}
-                                c{{f.id}}=>condition: {{f.variable_evaluacion}}?|past
+                                {% if f.valor_evaluacion %}
+                                    c{{f.id}}=>condition: ¿{{f.variable_evaluacion}}?
+                                    {{ f.valor_evaluacion }}|current
+                                {% else %}
+                                    c{{f.id}}=>condition: {{f.variable_evaluacion}}?|past
+                                {% endif %}
                             {% endif %}
                         {% endfor %}
                         {% set sw = 0 %}

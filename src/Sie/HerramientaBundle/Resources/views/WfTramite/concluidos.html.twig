@@ -1,4 +1,12 @@
 {% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .modal-dialog{
+            width: 70%;
+        }
+    </style>
+{% endblock %}
 
 {% block contentoption %}
 
@@ -85,8 +93,8 @@
                                             <td>{{ entity.flujo }}</td>
                                             <td>{{ entity.tramite_tipo }}</td>
                                             <td>{{ entity.nombre }}</td>
-                                            <td>{{ entity.fecha_registro }}</td>
-                                            <td>{{ entity.fecha_fin }}</td>
+                                            <td>{{ entity.fecha_registro|date('d-m-Y') }}</td>
+                                            <td>{{ entity.fecha_fin|date('d-m-Y') }}</td>
                                             <td>{{ entity.duracion }}</td>
                                             <td><span class="label label-success">{{ entity.estado }} </span></td>
                                             <td class="text-center">

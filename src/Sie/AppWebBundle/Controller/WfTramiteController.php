@@ -71,6 +71,7 @@ class WfTramiteController extends Controller
      */
     public function nuevoAction(Request $request,$id)
     {
+        //dump($id);die;
         $this->session = $request->getSession();
         //dump($this->session);die;
         $usuario = $this->session->get('userId');
@@ -953,7 +954,7 @@ class WfTramiteController extends Controller
             //->setAction($this->generateUrl('flujoproceso_guardar'))
             ->add('proceso','entity',array('label'=>'Trámite','required'=>true,'attr' => array('class' => 'form-control'),'class'=>'SieAppWebBundle:FlujoTipo','query_builder'=>function(EntityRepository $ft){
                 return $ft->createQueryBuilder('ft')->where('ft.id > 5')->andWhere("ft.obs like '%ACTIVO%'")->orderBy('ft.flujo','ASC');},'property'=>'flujo','empty_value' => 'Seleccione trámite'))
-            ->add('tramite','text',array('label'=>'Nro. de Trámite','required'=>true,'attr' => array('placeholder'=>'Nro. de trámite')))
+            ->add('tramite','text',array('label'=>'Nro. de Trámite','required'=>true,'attr' => array('placeholder'=>'Nro. de trámite','class'=>'form-control validar')))
             ->getForm();
         return $form;
     }
@@ -1069,12 +1070,13 @@ class WfTramiteController extends Controller
                 (SELECT t1.id,t1.tramite_id, t1.flujo_proceso_id,te.tramite_estado,t1.fecha_recepcion,t1.fecha_envio,pr.nombre as usuario_remitente,pd.nombre as usuario_destinatario,i.institucioneducativa,t1.valor_evaluacion,t1.obs
                     FROM tramite_detalle t1 join tramite t on t1.tramite_id=t.id
                     join tramite_estado te on t1.tramite_estado_id=te.id
+                    join wf_solicitud_tramite wfs on wfs.tramite_detalle_id=t1.id
                     left join usuario ur on t1.usuario_remitente_id=ur.id
                     left join persona pr on ur.persona_id=pr.id
                     left join usuario ud on t1.usuario_destinatario_id=ud.id
                     left join persona pd on ud.persona_id=pd.id
                     left join institucioneducativa i on t.institucioneducativa_id=i.id
-                    where t1.tramite_id='. $idtramite .' order by t1.id)d
+                    where t1.tramite_id='. $idtramite .' and wfs.es_valido=true order by t1.id)d
                 ON p.id=d.flujo_proceso_id order by p.orden,d.fecha_envio');
         }
         
