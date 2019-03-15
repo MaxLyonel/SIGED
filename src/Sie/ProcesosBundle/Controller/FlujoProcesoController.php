@@ -69,7 +69,8 @@ class FlujoProcesoController extends Controller
             ->add('tarea','entity',array('label'=>'Tarea','required'=>true,'class'=>'SieAppWebBundle:ProcesoTipo','property'=>'proceso_tipo','empty_value' => 'Seleccionar tarea'))
             ->add('rol','entity',array('label'=>'Tipo de rol','required'=>true,'class'=>'SieAppWebBundle:RolTipo','property'=>'rol','empty_value' => 'Seleccionar rol'))
             ->add('observacion','text',array('label'=>'Observación', 'required'=>false))
-            ->add('asignacion','entity',array('label'=>'Tipo de asignación de tarea','required'=>true,'class'=>'SieAppWebBundle:WfAsignacionTareaTipo','property'=>'nombre','empty_value' => 'Seleccionar asignacion'))
+            ->add('asignacion','entity',array('label'=>'Tipo de asignación de tarea','required'=>true,'class'=>'SieAppWebBundle:WfAsignacionTareaTipo','query_builder'=>function(EntityRepository $wfa){
+                return $wfa->createQueryBuilder('wfa')->where('wfa.id =1 ');},'property'=>'nombre','empty_value' => 'Seleccionar asignacion'))
             ->add('evaluacion','choice',array('label'=>'Evaluación','required'=>true,'choices'=>array(true => 'SI',false => 'NO'),'empty_value' => '¿Tiene evaluacion?'))
             ->add('varevaluacion','text',array('label'=>'Variable a evaluar','required'=>false,'attr'=>array('style'=>'text-transform:uppercase')))
             ->add('tareaant','choice',array('label'=>'Tarea','required'=>false,'empty_value' => 'Seleccionar tarea anterior'))
@@ -100,7 +101,8 @@ class FlujoProcesoController extends Controller
             ->add('ctarea','choice',array('label'=>'Tarea','required'=>true,'empty_value' => 'Seleccionar tarea'))
             ->add('condiciones','choice',array('label'=>'Condición','required'=>true,'choices'=>array('SI' => 'SI','NO' => 'NO'),'empty_value' => 'Seleccione condición'))
             ->add('ctareasig','choice',array('label'=>'Tarea','required'=>true,'empty_value' => 'Seleccionar tarea'))
-            ->add('tipocondicion','entity',array('label'=>'Tipo de asignación de tarea','required'=>true,'class'=>'SieAppWebBundle:WfCompuerta','property'=>'nombre','empty_value' => 'Seleccionar tipo de compuerta'))
+            ->add('tipocondicion','entity',array('label'=>'Tipo de asignación de tarea','required'=>true,'class'=>'SieAppWebBundle:WfCompuerta','query_builder'=>function(EntityRepository $wfc){
+                return $wfc->createQueryBuilder('wfc')->where('wfc.id =3 ');},'property'=>'nombre','empty_value' => 'Seleccionar tipo de compuerta'))
             ->getForm();
         return $form;
     }
@@ -168,7 +170,7 @@ class FlujoProcesoController extends Controller
                         $flujoproceso->setTareaSigId((int)$form['tareasig']);
                     }
                 }
-                $flujoproceso->setVariableEvaluacion($form['varevaluacion']);
+                $flujoproceso->setVariableEvaluacion(strtoupper($form['varevaluacion']));
                 $flujoproceso->setWfAsignacionTareaTipo($wfasignacion);
                 $flujoproceso->setFlujoTipo($flujotipo);
                 $flujoproceso->setRolTipo($roltipo);
@@ -854,18 +856,19 @@ class FlujoProcesoController extends Controller
         //dump($entity);die;
         $em = $this->getDoctrine()->getManager();
         $rol = $em->getRepository('SieAppWebBundle:RolTipo')->findBy(array(),array('rol' => 'ASC'));
-        $tipoasignacion = $em->getRepository('SieAppWebBundle:WfAsignacionTareaTipo')->findAll();
+        $tipoasignacion = $em->getRepository('SieAppWebBundle:WfAsignacionTareaTipo')->find(1);
         $rolArray = array();
-        $tipoasignacionArray = array();
         //dump($rol);die;
         foreach($rol as $r){
             //dump($r);die;
             $rolArray[$r->getId()]=$r->getRol();
         }
-        //dump($rolArray);die;
-        foreach($tipoasignacion as $t){
+        //dump($tipoasignacion);die;
+        //$tipoasignacionArray = array();
+        $tipoasignacionArray = array($tipoasignacion->getId()=>$tipoasignacion->getNombre());
+        /* foreach($tipoasignacion as $t){
             $tipoasignacionArray[$t->getId()]=$t->getNombre();
-        }
+        } */
         //dump($tipoasignacionArray);die;
         //dump($entity->getWfPasosTipo()->getId());die;
         $form = $this->createFormBuilder()
@@ -914,7 +917,7 @@ class FlujoProcesoController extends Controller
                 }
                 $entity->setWfAsignacionTareaTipo($wfasignaciontareatipo);
                 if($form['evaluacion_edit'] == 1){
-                    $entity->setVariableEvaluacion($form['varevaluacion_edit']);
+                    $entity->setVariableEvaluacion(strtoupper($form['varevaluacion_edit']));
                     $entity->setTareaSigId($form['id']);
                 }else{
                     $entity->setVariableEvaluacion("");
@@ -992,10 +995,12 @@ class FlujoProcesoController extends Controller
         foreach($tarea as $t){
             $tareasArray[$t['id']] = $t['procesoTipo'];
         }
-        $wfcompuerta = $em->getRepository('SieAppWebBundle:WfCompuerta')->findAll();
+        $wfc = $em->getRepository('SieAppWebBundle:WfCompuerta')->find(3);
+        $wfcompuertaArray[$wfc->getId()] = $wfc->getNombre();
+        /* $wfcompuerta = $em->getRepository('SieAppWebBundle:WfCompuerta')->findAll();
         foreach($wfcompuerta as $wfc){
             $wfcompuertaArray[$wfc->getId()] = $wfc->getNombre();
-        }
+        } */
         $form = $this->createFormBuilder()
             ->add('id','hidden',array('data'=>$entity->getId()))
             ->add('ctarea_edit','choice',array('label'=>'Tarea','required'=>true,'data'=>$entity->getFlujoProceso()->getId(),'choices'=>$ctareasArray))

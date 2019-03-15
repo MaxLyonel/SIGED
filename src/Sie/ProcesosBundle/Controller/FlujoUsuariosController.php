@@ -56,6 +56,7 @@ class FlujoUsuariosController extends Controller
                 ->innerJoin('SieAppWebBundle:ProcesoTipo', 'pt', 'with', 'pt.id = fp.proceso')
                 ->where('fp.flujoTipo='.$flujotipo)
                 ->andWhere('fp.rolTipo not in (1,2,3,5,9)') //usuarios individuales como ser estudiante, maestro,director,apoderado
+                ->orderBy('fp.id') //usuarios individuales como ser estudiante, maestro,director,apoderado
                 ->getQuery()
                 ->getResult();
         $tareasArray = array();
