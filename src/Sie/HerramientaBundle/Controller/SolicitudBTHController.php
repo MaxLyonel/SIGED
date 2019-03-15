@@ -835,15 +835,7 @@ class SolicitudBTHController extends Controller {
              return new JsonResponse($lista_especialidadarray);
         }
      }
- //Distrital
-     /*public function SolicitidBTHDisAction(Request $request){
-         $id_rol= $this->session->get('roluser');
-         $id_usuario= $this->session->get('userId');
-         $TramiteController = new TramiteRueController();
-         $TramiteController->setContainer($this->container);
-         $lista = $TramiteController->tramiteTarea(34,35,7,$id_usuario,$id_rol,'');
-         return $this->render('SieHerramientaBundle:SolicitudBTH:inicioDistrital.html.twig',array('lista_tramites'=>$lista['tramites']));
-     }*/
+
 
      public function  VerSolicitudBTHDisAction(Request $request){
 
