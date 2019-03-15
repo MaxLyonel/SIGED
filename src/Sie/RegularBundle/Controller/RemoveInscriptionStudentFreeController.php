@@ -150,7 +150,7 @@ class RemoveInscriptionStudentFreeController extends Controller {
       //get the send dataInfo
       $dataInfo = $request->get('dataInfo');
       $arrDataInfo = json_decode($dataInfo,true);
-      //get data student
+
       $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($arrDataInfo['estId']);
       //get the student's inscription
       $objEstudiantInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($arrDataInfo['estInsId']);
@@ -186,7 +186,7 @@ class RemoveInscriptionStudentFreeController extends Controller {
       // $arrEstados = array('4'=>'Efectivo', '10'=>'Abandono');
       $rolesAllowed = array(7,8,10);
       if(in_array($rolUser,$rolesAllowed)){
-        $arrEstados = array('4'=>'EFECTIVO', '10'=>'RETIRO ABANDONO',/*'6'=>'NO INCORPORADO','9'=>'RETIRADO TRASLADO'*/);
+        $arrEstados = array('4'=>'EFECTIVO', /*'10'=>'RETIRO ABANDONO',*/'6'=>'NO INCORPORADO',/*'9'=>'RETIRADO TRASLADO'*/);
       }else{
         $arrEstados = array( '10'=>'RETIRO ABANDONO',/*'6'=>'NO INCORPORADO','9'=>'RETIRADO TRASLADO'*/);
       }

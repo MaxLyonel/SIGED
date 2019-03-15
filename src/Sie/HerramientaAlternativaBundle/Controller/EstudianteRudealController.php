@@ -284,7 +284,7 @@ class EstudianteRudealController extends Controller {
                             },
                             'property'=>'sigla',
                             'empty_value' => 'Seleccionar...',
-                            'required' => true,
+                            'required' => false,
                             'data'=>($e->getExpedido())?$e->getExpedido():'',
                             'mapped'=>false
                         ))
@@ -1047,6 +1047,7 @@ class EstudianteRudealController extends Controller {
 
         // CENTROS DE SALUD
         $centrosEstudiante = $em->getRepository('SieAppWebBundle:RudeCentroSalud')->findBy(array('rude'=>$rude));
+        // dump($centrosEstudiante);die;
         $arrayCentros = [];
         foreach ($centrosEstudiante as $ce) {
             $arrayCentros[] = $ce->getCentroSaludTipo()->getId();
@@ -1078,7 +1079,7 @@ class EstudianteRudealController extends Controller {
 
         $cea = $this->session->get('ie_id');
         if($cea == 80730796){
-            $this->estdo = false;
+            $this->estado = false;
         }else{
             $this->estado = true;
         }

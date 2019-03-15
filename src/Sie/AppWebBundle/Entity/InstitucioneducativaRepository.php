@@ -152,13 +152,13 @@ class InstitucioneducativaRepository extends EntityRepository {
                 ->andwhere('iec.nivelTipo = :nivel')
                 ->andwhere('iec.gradoTipo = :grado')
                 ->andwhere('e.generoTipo = :genero')
-                ->andwhere('emt.id = :matricula')
+                //->andwhere('emt.id = :matricula')
                 ->setParameter('sie', $sie)
                 ->setParameter('gestion', $gestion)
                 ->setParameter('nivel', $nivel)
                 ->setParameter('grado', $grado)
                 ->setParameter('genero', $genero)
-                ->setParameter('matricula', 4)
+                //->setParameter('matricula', 4)
                 ->orderBy('pt.id, e.paterno, e.materno, e.nombre')
         ;
         return $qb->getQuery()->getResult();

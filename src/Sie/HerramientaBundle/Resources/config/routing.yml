@@ -153,4 +153,8 @@ sie_herramienta_estudianteTrabajaNuevo:
 sie_herramienta_estudianteTrabaja:
     resource: "@SieHerramientaBundle/Resources/config/routing/estudianteTrabaja.yml"
     prefix:   /sie/estudianteTrabaja
+
+sie_herramienta_nnats:
+    resource: "@SieHerramientaBundle/Resources/config/routing/reportesNnats.yml"
+    prefix:   /sie/Nnats
  

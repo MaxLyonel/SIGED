@@ -650,7 +650,7 @@
                                                 <div class="form-group row">
                                                     <label class="col-md-6">Lugar de registro</label>
                                                     <div class="col-md-6 col-sm-6">
-                                                        {{ form_widget(formLugar.lugarRegistroRude, {'attr':{'class':'form-control jupper','readonly':'readonly'} }) }}
+                                                        {{ form_widget(formLugar.lugarRegistroRude, {'attr':{'class':'form-control jupper'} }) }}
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
@@ -968,8 +968,10 @@
         if($('#form_seguroSalud_0').is(':checked')){
             $('#form_acudioCentro').val('');
             $('#form_acudioCentro').attr('disabled','disabled');
+            $('#form_acudioCentro').removeAttr('required');
         }else{
             $('#form_acudioCentro').removeAttr('disabled');
+            $('#form_acudioCentro').attr('required','required');
         }
     }
 

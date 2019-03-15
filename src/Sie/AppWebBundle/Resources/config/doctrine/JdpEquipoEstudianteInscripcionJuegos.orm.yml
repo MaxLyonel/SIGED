@@ -1,0 +1,41 @@
+Sie\AppWebBundle\Entity\JdpEquipoEstudianteInscripcionJuegos:
+    type: entity
+    table: jdp_equipo_estudiante_inscripcion_juegos
+    indexes:
+        IDX_62936F09B31299FE:
+            columns:
+                - estudiante_inscripcion_juegos_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        equipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: equipo_id
+        equipoNombre:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: equipo_nombre
+    manyToOne:
+        estudianteInscripcionJuegos:
+            targetEntity: JdpEstudianteInscripcionJuegos
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_juegos_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
