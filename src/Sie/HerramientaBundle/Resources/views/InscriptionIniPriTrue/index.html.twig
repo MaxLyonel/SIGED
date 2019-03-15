@@ -1,21 +1,26 @@
-{% extends 'layoutRegular.html.twig' %}
+{% extends 'layoutHerramienta.html.twig' %}
 
 {% block contentoption%}
 
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="page-title">
-                <h1>Inscripción
-                    <small></small>
-                </h1>
-                <ol class="breadcrumb">
-                    <li><i class="fa fa-dashboard"></i>  <a href="#">Buscar</a></li>
+   <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> Inscripción  <span> Busqueda</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Inscripción - Busqueda</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
 
-                </ol>
-            </div>
-        </div>
-        <!-- /.col-lg-12 -->
-    </div>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+   <!-- the new -->
+   <div class="body-content animated fadeIn">
 
     <div class="row">
 
@@ -44,12 +49,17 @@
                     <strong>Observaci&oacute;n! {{ flashMessage }}</strong> 
                 </div>
             {% endfor %}
-            <div class="alert alert-warning alert-dismissible" role="alert">
-                <strong> Observaci&oacute;n!  Después de realizar la inscripción, Debe actualizar los datos en el formulario RUDE </strong>
-            </div>
+            
             <!-- Website Stats  Widget -->
-            <div class="container-fluid">
-                <div class="row">
+            <!-- End of Website Stats Widget -->
+
+        </div>
+    </div>
+
+       <div class="alert alert-warning alert-dismissible" role="alert">
+           <strong> Observaci&oacute;n!  Después de realizar la inscripción, debe actualizar los datos en el formulario RUDE </strong>
+       </div>
+    <div class="row">
                     <div class="col-xs-12 col-lg-12">
                         <div class="panel panel-icon panel-primary">
                             <div class="panel-heading">
@@ -91,13 +101,12 @@
 
                     </div>
                 </div>
-            </div>
 
+       
+   </div>
+   <!-- the new end -->
 
-            <!-- End of Website Stats Widget -->
-
-        </div>
-    </div>
+    
 
 
 {% endblock %}

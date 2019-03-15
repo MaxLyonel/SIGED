@@ -1,0 +1,219 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+    <style type='text/css'>
+        .btn-file {
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-file input[type=file] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 100%;
+            min-height: 100%;
+            font-size: 100px;
+            text-align: right;
+            filter: alpha(opacity=0);
+            opacity: 0;
+            outline: none;
+            background: white;
+            cursor: inherit;
+            display: block;
+        }
+    </style>
+{% endblock %}
+
+
+{% block contentoption%}
+
+    <!-- begin PAGE TITLE AREA -->
+    <!-- Use this section for each page's title and breadcrumb layout. In this example a date range picker is included within the breadcrumb. -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1><i class="fa fa-exchange"></i> Consolidación de Archivo emp
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li class="active"><i class="fa fa-exchange"></i> Consolidar Información</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-md-12">
+
+            {% for flashMessage in app.session.flashbag.get('noticeddjj') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('successddjj') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+
+
+    <!--div class='row'>
+
+        <div class='col-md-8 col-md-offset-5'><div id="resultloading"></div></div>
+
+    </div-->
+
+    <!-- Modal -->
+
+
+    <div class="row">
+
+
+        <div class="col-xs-12 col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="portlet portlet-blue">
+                        <div class="portlet-heading">
+                            <div class="portlet-title">
+                                <h4><i class="fa fa-home fa-fw"></i> Información Insitución Educativa</h4>
+                            </div>
+                            <div class="portlet-widgets">
+                                <!-- Button Dropdown -->
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="portlet-body">
+
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <!--here the body of portlet-->
+
+                                    {% if institutionData %}
+                                        <div id="no-more-tables">
+                                            <table class="table table-bordered table-hover cf">
+                                                <thead class="cf">
+                                                    <tr class="info">
+                                                        <th>SIE</th>
+                                                        <th>Institución Educativa</th>
+                                                        <th>Carnet</th>
+                                                        <th>Nombre</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td data-title="Sie">{{ institutionData[0].instId }}</td>
+                                                        <td data-title="Ins. Educativa">{{ institutionData[0].institucioneducativa }}</td>
+                                                        <td data-title="CI">{{ institutionData[0].carnet }}</td>
+                                                        <td data-title="Nombre"> {{ institutionData[0].paterno }} {{ institutionData[0].materno }} {{ institutionData[0].nombre }}</td>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
+                                {% else %}
+
+                                    <div id="no-more-tables">
+                                        <table class="table table-bordered table-hover cf">
+                                            <thead class="cf">
+                                                <tr class="info">
+                                                    <th>SIE</th>
+                                                    <th>Institución Educativa</th>
+                                                    <th>Nro. Resolución</th>
+                                                    <th>I.E Antes</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td data-title="Sie">{{ instEdu.Id }}</td>
+                                                    <td data-title="Ins. Educativa">{{ instEdu.institucioneducativa }}</td>
+                                                    <td data-title="Nro. Resolución">{{ instEdu.NroResolucion }}</td>
+                                                    <td data-title="I.E Antes"> {{ instEdu.DesUeAntes }}</td>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% endif %}
+
+
+
+
+                            </div>
+
+                            <div class="clearfix"></div>
+                            <div class="row">
+                                <div class='col-md-12'>
+                                    <h4 class='text-blue'> Seleccione Archivo a Consolidar:</h4>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {{ form_start(form,  { 'attr':{'data-toggle':'validator'} } ) }}
+                                    <div class="form-group">
+                                        <label for="exampleInputFile">Archivo EMP</label>
+                                        <div class='row'>
+
+                                            <div class='col-md-3'>
+                                                {{  form_widget(form.upfile, { 'attr':{'class':'btn btn-default' } } ) }}
+                                                <p class="help-block">Click sobre el boton para subir el EMP</p>
+                                            </div>
+                                            <div class='col-md-2 col-md-offset-1'>
+                                                <div id="resultloading"></div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    {{ form_widget(form.up,  { 'attr':{'class':'btn btn-primary', 'onClick':'' } } ) }}
+
+                                    {{ form_end(form) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+        $('#form_up').click(function () {
+            if ($('#form_upfile').val() == '') {
+                alert('Debe seleccionar un archivo...');
+                return false;
+            }
+            //alert($('#form_upfile').val());return false;
+            $.ajax({
+                url: "{{ path('consolidation_checkit_web') }}",
+                type: "POST",
+                data: {"data": 'krlos'},
+                success: function (data) {
+                    $('#resultloading').html(data.formulario);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown)
+                {
+                    alert('Error: ' + errorThrown);
+                }
+            });
+
+        });
+
+    </script>
+
+
+{% endblock %}

@@ -1,21 +1,26 @@
-{% extends 'layoutRegular.html.twig' %}
+{% extends 'layoutHerramienta.html.twig' %}
 
 {% block contentoption%}
 
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="page-title">
-                <h1>Inscripción
-                    <small></small>
-                </h1>
-                <ol class="breadcrumb">
-                    <li><i class="fa fa-dashboard"></i>  <a href="#">Buscar</a></li>
+  <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> Seleccione Inscripción  <span> Busqueda</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Seleccione Inscripción - Busqueda</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
 
-                </ol>
-            </div>
-        </div>
-        <!-- /.col-lg-12 -->
-    </div>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+  <!-- THE NEW -->
+  <div class="body-content animated fadeIn">
 
     <div class="row">
 
@@ -23,7 +28,7 @@
             {% for flashMessage in app.session.flashbag.get('notiext') %}
                 <div class="alert alert-danger alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong></strong> {{ flashMessage }}
+                    <strong>Obs!</strong> {{ flashMessage }}
                 </div>
             {% endfor %}
             {% for flashMessage in app.session.flashbag.get('goodext') %}
@@ -32,57 +37,42 @@
                     <strong>Bien!</strong> {{ flashMessage }}
                 </div>
             {% endfor %}
-             {% for flashMessage in app.session.flashbag.get('notiext') %}
-                <div class="alert alert-danger alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong>Obs!</strong> {{ flashMessage }}
-                </div>
-            {% endfor %}
             {% for flashMessage in app.session.flashbag.get('studentObservation') %}
                 <div class="alert alert-danger alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong>Observaci&oacute;n! {{ flashMessage }}</strong> 
+                    <strong>Observaci&oacute;n!  {{ flashMessage }}</strong>
                 </div>
             {% endfor %}
-            <div class="alert alert-warning alert-dismissible" role="alert">
-                <strong> Observaci&oacute;n!  Después de realizar la inscripción, Debe actualizar los datos en el formulario RUDE </strong>
-            </div>
+
             <!-- Website Stats  Widget -->
             <div class="container-fluid">
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <strong> Observaci&oacute;n!  Después de realizar la inscripción, debe actualizar los datos en el formulario RUDE. </strong>
+                </div>
                 <div class="row">
                     <div class="col-xs-12 col-lg-12">
                         <div class="panel panel-icon panel-primary">
                             <div class="panel-heading">
-                                <i class="fa fa-search"></i> Inserte Rude
+                                <i class="fa fa-search"></i>
                             </div>
                             <div class="panel-body">
 
                                 {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
-                                <div class="form-group">
-                                    <label for="form_codigoRude" class="col-sm-2 control-label">
-                                        {{form_label(form.codigoRude)}}
-                                    </label>
-                                    <div class="col-sm-10">
-                                        {{ form_widget(form.codigoRude) }}
-                                        <div class="help-block with-errors"></div>
-                                    </div>
-                                </div>
+
 
                                 <div class="form-group">
-                                    <label for="form_gestion" class="col-sm-2 control-label">
-                                        {{form_label(form.gestion)}}
+                                    <label for="form_codigoRude" class="col-sm-2 control-label">
+                                        {{form_label(form.optionInscription)}}
                                     </label>
                                     <div class="col-sm-10">
-                                        {{ form_widget(form.gestion) }}
+                                        {{ form_widget(form.optionInscription) }}
                                         <div class="help-block with-errors"></div>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-10">
-
                                         {{ form_widget(form.buscar,{ 'attr':{'class':'btn btn-primary' } } ) }}
-
                                     </div>
                                 </div>
                                 {{form_end(form)}}
@@ -98,6 +88,11 @@
 
         </div>
     </div>
+      
+  </div>
+  <!-- THE NEW END -->
+
+    
 
 
 {% endblock %}

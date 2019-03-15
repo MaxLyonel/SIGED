@@ -1,6 +1,9 @@
 {% extends 'layoutHerramienta.html.twig' %}
 
 {% block contentoption %}
+    {% set roluser =  app.session.get('roluser') %}
+    {% set roluserlugarid =  app.session.get('roluserlugarid') %}
+    {% set currentyear =  app.session.get('currentyear') %}
     <div class="header-content">
         <h2><i class="fa fa-list-alt"></i> Reportes NNATS</h2>
         <div class="breadcrumb-wrapper hidden-xs">
@@ -16,8 +19,65 @@
     </div><!-- /.header-content -->
 
     <div class="body-content animated fadeIn">
+    {%  if roluser == 8 %}
         <div class="row">
-            <div class="col-12">
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <div class="pull-left ">
+                                            <h3 class="panel-title">Consulta NNATS General </h3>
+                                        </div>
+                                        <div class="pull-right">
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <strong>Generales</strong>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button id="tour-13" onclick="document.forms['formReporteGeneralNnatsNacionalPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                                    <i class="fa fa-file-pdf-o"></i>
+                                                </button>
+                                                <button id="tour-14" onclick="document.forms['formReporteGeneralNnatsNacionalXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                                    <i class="fa fa-file-excel-o"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div><!-- /.panel-body -->
+                                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="pull-left ">
+                            <h3 class="panel-title">Constulta NNATS Especifica </h3>
+                        </div>
+                        <div class="pull-right">
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <strong>Especificos</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <button id="tour-13" onclick="document.forms['formReporteEspecificoNnatsNacionalPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                    <i class="fa fa-file-pdf-o"></i>
+                                </button>
+                                <button id="tour-14" onclick="document.forms['formReporteEspecificoNnatsNacionalXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                    <i class="fa fa-file-excel-o"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                         <div class="pull-left ">
@@ -47,6 +107,35 @@
                             </div>
                         </div>
                         {{ form_end(form) }}
+                        {#<div class="row" style = "display:none" id="reportes_nnats"  >
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                    Reportes Generales
+                                    </div>
+                                    <div class="col-md-3">
+                                     <button id="tour-13" onclick="document.forms['formReporteGeneralNnatsNacionalPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                      <i class="fa fa-file-pdf-o"></i>
+                                      </button>
+                                      <button id="tour-14" onclick="document.forms['formReporteGeneralNnatsNacionalXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                      <i class="fa fa-file-excel-o"></i>
+                                      </button>
+                                    </div>
+                                    <div class="col-md-3">
+                                    Reportes Especificos
+                                    </div>
+                                    <div class="col-md-3">
+                                     <button id="tour-13" onclick="document.forms['formReporteEspecificoNnatsNacionalPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                     <i class="fa fa-file-pdf-o"></i>
+                                     </button>
+                                     <button id="tour-14" onclick="document.forms['formReporteEspecificoNnatsNacionalXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                     <i class="fa fa-file-excel-o"></i>
+                                     </button>
+                                    </div>
+                                 </div>
+                            </div>
+                        </div>#}
+
                         <div class="row">
                             <div class="col-md-12" id="l_nnats">
                             </div>
@@ -56,13 +145,147 @@
                 </div>
             </div>
         </div>
+         {% elseif roluser == 7 %}
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="pull-left ">
+                            <h3 class="panel-title">Descarga de Reportes NNATS </h3>
+                        </div>
+                        <div class="pull-right">
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                               <strong>Reportes Generales</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <button id="tour-13" onclick="document.forms['formReporteGeneralNnatsDepartamentalPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                    <i class="fa fa-file-pdf-o"></i>
+                                </button>
+                                <button id="tour-14" onclick="document.forms['formReporteGeneralNnatsDepartamentalXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                    <i class="fa fa-file-excel-o"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-3">
+                               <strong>Reportes Específicos</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <button id="tour-13" onclick="document.forms['formReporteEspecificoNnatsDepartamentalPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                    <i class="fa fa-file-pdf-o"></i>
+                                </button>
+                                <button id="tour-14" onclick="document.forms['formReporteEspecificoNnatsDepartamentalXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                    <i class="fa fa-file-excel-o"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+         </div>
+        {% else %}
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="pull-left ">
+                            <h3 class="panel-title">Descarga de Reportes NNATS  </h3>
+                        </div>
+                        <div class="pull-right">
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <strong>Reportes Específicos</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <button id="tour-13" onclick="document.forms['formReporteEspecificoNnatsNacionalPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                    <i class="fa fa-file-pdf-o"></i>
+                                </button>
+                                <button id="tour-14" onclick="document.forms['formReporteEspecificoNnatsNacionalXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                    <i class="fa fa-file-excel-o"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+    {% endif %}
     </div>
+    {#Nacional#}
+    {#GENERAL#}
+    <form name="formReporteGeneralNnatsNacionalPdf" id="formReporteGeneralNnatsNacionalPdf" role="form" action="{{ path('reporte_nnats_completa_nacional_print_pdf') }}" method="POST">
+        <input type="hidden" name="roluser" value="{{ roluser }}" />
+        <input type="hidden" name="gestion" value="{{ currentyear }}" />
+        <input type="hidden" name="departamento_distrito" value="{{ roluserlugarid }}" />
+    </form>
+    <form name="formReporteGeneralNnatsNacionalXls" id="formReporteGeneralNnatsNacionalXls" role="form" action="{{ path('reporte_nnats_completa_nacional_print_xls') }}" method="POST">
+        <input type="hidden" name="roluser" value="{{ roluser }}" />
+        <input type="hidden" name="gestion" value="{{ currentyear }}" />
+        <input type="hidden" name="departamento_distrito" value="{{ roluserlugarid }}" />
+    </form>
+    {#ESPECIFICO#}
+    <form name="formReporteEspecificoNnatsNacionalPdf" id="formReporteEspecificoNnatsNacionalPdf" role="form" action="{{ path('reporte_nnats_especifico_nacional_print_pdf') }}" method="POST">
+        <input type="hidden" name="roluser" value="{{ roluser }}" />
+        <input type="hidden" name="gestion" value="{{ currentyear }}" />
+        <input type="hidden" name="departamento_distrito" value="{{ roluserlugarid }}" />
+    </form>
+    <form name="formReporteEspecificoNnatsNacionalXls" id="formReporteEspecificoNnatsNacionalXls" role="form" action="{{ path('reporte_nnats_especifico_nacional_print_xls') }}" method="POST">
+        <input type="hidden" name="roluser" value="{{ roluser }}" />
+        <input type="hidden" name="gestion" value="{{ currentyear }}" />
+        <input type="hidden" name="departamento_distrito" value="{{ roluserlugarid }}" />
+    </form>
+    {#Departamental#}
+    {#GENERAL#}
+    <form name="formReporteGeneralNnatsDepartamentalPdf" id="formReporteGeneralNnatsDepartamentalPdf" role="form" action="{{ path('reporte_nnats_completa_nacional_print_pdf') }}" method="POST">
+        <input type="hidden" name="roluser" value="{{ roluser }}" />
+        <input type="hidden" name="gestion" value="{{ currentyear }}" />
+        <input type="hidden" name="departamento_distrito" value="{{ roluserlugarid }}" />
+    </form>
+    <form name="formReporteGeneralNnatsDepartamentalXls" id="formReporteGeneralNnatsDepartamentalXls" role="form" action="{{ path('reporte_nnats_completa_nacional_print_xls') }}" method="POST">
+        <input type="hidden" name="roluser" value="{{ roluser }}" />
+        <input type="hidden" name="gestion" value="{{ currentyear }}" />
+        <input type="hidden" name="departamento_distrito" value="{{ roluserlugarid }}" />
+    </form>
+    {#ESPECIFICO#}
+    <form name="formReporteEspecificoNnatsDepartamentalPdf" id="formReporteEspecificoNnatsDepartamentalPdf" role="form" action="{{ path('reporte_nnats_especifico_nacional_print_pdf') }}" method="POST">
+        <input type="hidden" name="roluser" value="{{ roluser }}" />
+        <input type="hidden" name="gestion" value="{{ currentyear }}" />
+        <input type="hidden" name="departamento_distrito" value="{{ roluserlugarid }}" />
+    </form>
+    <form name="formReporteEspecificoNnatsDepartamentalXls" id="formReporteEspecificoNnatsDepartamentalXls" role="form" action="{{ path('reporte_nnats_especifico_nacional_print_xls') }}" method="POST">
+        <input type="hidden" name="roluser" value="{{ roluser }}" />
+        <input type="hidden" name="gestion" value="{{ currentyear }}" />
+        <input type="hidden" name="departamento_distrito" value="{{ roluserlugarid }}" />
+    </form>
+    {#Distrital#}
+    {#ESPECIFICO#}
+    {#PDF#}
+    <form name="formReporteEspecificoNnatsNacionalPdf" id="formReporteEspecificoNnatsNacionalPdf" role="form" action="{{ path('reporte_nnats_especifico_nacional_print_pdf') }}" method="POST">
+        <input type="hidden" name="roluser" value="{{ roluser }}" />
+        <input type="hidden" name="gestion" value="{{ currentyear }}" />
+        <input type="hidden" name="departamento_distrito" value="{{ roluserlugarid }}" />
+    </form>
+    {#XLS#}
+    <form name="formReporteEspecificoNnatsNacionalXls" id="formReporteEspecificoNnatsNacionalXls" role="form" action="{{ path('reporte_nnats_especifico_nacional_print_xls') }}" method="POST">
+        <input type="hidden" name="roluser" value="{{ roluser }}" />
+        <input type="hidden" name="gestion" value="{{ currentyear }}" />
+        <input type="hidden" name="departamento_distrito" value="{{ roluserlugarid }}" />
+    </form>
 {% endblock %}
-
 {% block javascripts%}
 {{ parent() }}
 <script>
-
     function cargarDitrito() {
         var id_departamento = $('#form_departamento').val();
         var formData = {
@@ -122,6 +345,7 @@
                 },
                 success: function (data) {
                     $("#nnats_buscar").prop('disabled', false);
+                    $("#reportes_nnats").show();
                     $('#l_nnats').empty();
                     $('#l_nnats').append(data);
                     cargatablas();
@@ -129,9 +353,7 @@
 
             });
         }
-
     }
-
     var cargatablas = function (){
         // Setup - add a text input to each footer cell
         $('#dt_nnats tfoot th').each( function () {
@@ -165,9 +387,6 @@
             } );
         } );
     };
-
-
-
 </script>
 
 
