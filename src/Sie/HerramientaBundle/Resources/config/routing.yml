@@ -18,6 +18,10 @@ sie_app_web_inscription_ue_all:
     resource: "@SieHerramientaBundle/Resources/config/routing/inscriptionUeAll.yml"
     prefix:   /sie/inscriptionUeAll
 
+sie_herramienta_students_inscriptions_seguimiento:
+    resource: "@SieHerramientaBundle/Resources/config/routing/studentsInscriptionSeguimiento.yml"
+    prefix:   /sie/estudiantesInscritoSeguimiento
+
 sie_app_web_areas:
     resource: "@SieHerramientaBundle/Resources/config/routing/adicioneliminacionareas.yml"
     prefix:   /sie/adicionEliminacionAreas
@@ -157,4 +161,5 @@ sie_herramienta_estudianteTrabaja:
 sie_herramienta_nnats:
     resource: "@SieHerramientaBundle/Resources/config/routing/reportesNnats.yml"
     prefix:   /sie/Nnats
- 
+
+
