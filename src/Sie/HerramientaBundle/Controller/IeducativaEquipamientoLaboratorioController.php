@@ -160,10 +160,9 @@ class IeducativaEquipamientoLaboratorioController extends Controller {
     }
     public function  eliminaAction(Request $request){
         $em = $this->getDoctrine()->getManager();
-        $form = $request->get('form');//equip_labo_fisi_quim
-
+        $form = $request->get('form');
         $equip_labo_fisi_quim = $em->getRepository('SieAppWebBundle:EquipLaboFisiQuim')->findBy(array('institucioneducativa'=>$form['sie']));
-        $equip_labo_fisi_quim_id = $equip_labo_fisi_quim[0]->getId();// dump($equip_labo_fisi_quim_id);die;
+        $equip_labo_fisi_quim_id = $equip_labo_fisi_quim[0]->getId();
         $query = $em->getConnection()->prepare("SELECT * FROM equip_labo_fisi_quim_fotos WHERE equip_labo_fisi_quim_id = $equip_labo_fisi_quim_id");
         $query->execute();
         $equip_labo_fisi_quim_fotos = $query->fetchAll();;
@@ -651,7 +650,6 @@ class IeducativaEquipamientoLaboratorioController extends Controller {
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl('herramienta_ieducativa_equipamiento_laboratorio_elimina'))
             ->add('sie', 'hidden', array('attr' => array('value' => $sie)))
-           // ->add('ges', 'hidden', array('attr' => array('value' => base64_encode($ges))))
             ->add('eliminar', 'submit', array('label' => 'Eliminar información reportada', 'attr' => array('class' => 'btn btn-danger')))
             ->getForm();
         return $form;
