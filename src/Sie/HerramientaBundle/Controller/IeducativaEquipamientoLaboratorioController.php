@@ -160,21 +160,28 @@ class IeducativaEquipamientoLaboratorioController extends Controller {
     }
     public function  eliminaAction(Request $request){
         $em = $this->getDoctrine()->getManager();
-        $form = $request->get('form');
-        $equip_labo_fisi_quim = $em->getRepository('SieAppWebBundle:EquipLaboFisiQuim')->findBy(array('institucioneducativa'=>$form['sie']));
-        $equip_labo_fisi_quim_id = $equip_labo_fisi_quim[0]->getId();
-        $query = $em->getConnection()->prepare("SELECT * FROM equip_labo_fisi_quim_fotos WHERE equip_labo_fisi_quim_id = $equip_labo_fisi_quim_id");
-        $query->execute();
-        $equip_labo_fisi_quim_fotos = $query->fetchAll();;
-        for($i = 0; $i<count($equip_labo_fisi_quim_fotos); $i++){
-            $entity = $em->getRepository('SieAppWebBundle:EquipLaboFisiQuimFotos')->find($equip_labo_fisi_quim_fotos[$i]['id']);
-            $em->remove($entity);
-            $em->flush();
-        }
-        $entity = $em->getRepository('SieAppWebBundle:EquipLaboFisiQuim')->find($equip_labo_fisi_quim[0]->getId());
-        $em->remove($entity);
-        $em->flush(); //dump("eliminadodasd");die;
 
+        $form = $request->get('form');
+        if ($form == null){
+            return $this->redirect($this->generateUrl('herramienta_ieducativa_equipamiento_laboratorio_index'));
+        }
+        $equip_labo_fisi_quim = $em->getRepository('SieAppWebBundle:EquipLaboFisiQuim')->findOneBy(array('institucioneducativa'=>$form['sie']));
+        if($equip_labo_fisi_quim){
+            $equip_labo_fisi_quim_id = $equip_labo_fisi_quim->getId();
+            $query = $em->getConnection()->prepare("SELECT * FROM equip_labo_fisi_quim_fotos WHERE equip_labo_fisi_quim_id = $equip_labo_fisi_quim_id");
+            $query->execute();
+            $equip_labo_fisi_quim_fotos = $query->fetchAll();;
+            for($i = 0; $i<count($equip_labo_fisi_quim_fotos); $i++){
+                $entity = $em->getRepository('SieAppWebBundle:EquipLaboFisiQuimFotos')->find($equip_labo_fisi_quim_fotos[$i]['id']);
+                $em->remove($entity);
+                $em->flush();
+            }
+            $entity = $em->getRepository('SieAppWebBundle:EquipLaboFisiQuim')->find($equip_labo_fisi_quim_id);
+            if($entity){
+                $em->remove($entity);
+                $em->flush();
+            }
+        }
         $sie = $form['sie'];
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
