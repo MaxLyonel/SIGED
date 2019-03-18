@@ -287,8 +287,8 @@
     };
 
     var saveCambioEstado = function(){
+        $("#answerValidate").empty();
         if ($("#justificacionCE").val()=='') {
-            $("#answerValidate").empty();
             $("#answerValidate").append('<div class="text-center"><p style="color:#308AB7">Ingrese la justificación de cambio de estado.</p></div>');
             $("#justificacionCE").focus();
         } else {
