@@ -193,12 +193,12 @@ class InstitucioneducativaHumanisticoTecnico
         return $this->institucioneducativaHumanisticoTecnicoTipo;
     }
     /**
-     * @var \DateTime
+     * @var \DateTimeTz
      */
     private $fechaCreacion;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeTz
      */
     private $fechaModificacion;
 
