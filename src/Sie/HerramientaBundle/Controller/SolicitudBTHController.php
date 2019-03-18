@@ -688,7 +688,7 @@ class SolicitudBTHController extends Controller {
         $query->execute();
         $especialidadlista = $query->fetchAll();
         $tipoTramite    = $infoUE['tramite_tipo'];
-        $tramite_tipo = ($em->getRepository('SieAppWebBundle:TramiteTipo')->findOneById($tipoTramite))->getTramitetipo();
+        $tramite_tipo = ($em->getRepository('SieAppWebBundle:TramiteTipo')->findOneById($tipoTramite))->getTramiteTipo();
         $flujotipo = ($em->getRepository('SieAppWebBundle:Tramite')->findOneById($id_tramite))->getFlujoTipo();
                 return $this->render('SieHerramientaBundle:SolicitudBTH:formularioBTHDirec.html.twig',array(
                     'ieducativa'    => $infoUe,
