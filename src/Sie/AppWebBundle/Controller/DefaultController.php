@@ -199,6 +199,7 @@ class DefaultController extends Controller {
                     $this->session->set('pathSystem', "SieTramitesBundle");
                     break;
             case 'juegos.minedu.gob.bo':
+            case '172.20.196.9:8018':
                 $sysname = 'JUEGOS';
                 $sysporlet = 'jdp';
                 $sysbutton = false;
@@ -270,16 +271,21 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieOlimpiadasBundle");
                 break;
             default :
-                $sysname = 'REGULAR';
-                $sysporlet = 'blue';
-                $sysbutton = true;
-                $layout = 'layoutRegular.html.twig';
-                $this->session->set('pathSystem', "SieRegularBundle");
+                // $sysname = 'REGULAR';
+                // $sysporlet = 'blue';
+                // $sysbutton = true;
+                // $layout = 'layoutRegular.html.twig';
+                // $this->session->set('pathSystem', "SieRegularBundle");
                 //$sysname = 'Herramienta Alternativa';
                 //$sysporlet = 'blue';
                 //$sysbutton = true;
                 //$layout = 'layoutHerramientaAlternativa.html.twig';
                 //$this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
+                $sysname = 'Procesos';
+                $sysporlet = 'blue';
+                $sysbutton = true;
+                $layout = 'layoutProcesos.html.twig';
+                $this->session->set('pathSystem', "SieProcesosBundle");
                 break;
             case 'pnp.sie.gob.bo':
                 $sysname = 'PNP';

@@ -133,16 +133,17 @@
                                     <div class="alert alert-danger alert" role="alert">
                                         <button type="button" class="close"  ><span aria-hidden="true"></span></button>
                                         <strong>Importante!</strong> Se pide que llene el siguiente cuadro de texto, explicando la razón para la inscripción para Extemporáneos/Omitidos.
+                                        <br>(Máximo 250 caracteres).
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     {{form_label(formInscription.observacionOmitido)}}
-                                    {{form_widget(formInscription.observacionOmitido, {'attr':{'onkeyUp':'observacionOmitido(this.value)'}  } )}}
+                                    {{form_widget(formInscription.observacionOmitido, {'attr':{'required':'true','onkeyUp':'observacionOmitido(this.value)'}  } )}}
                                 </div>
                             </div>
-                          {{form_widget(formInscription.save, {'attr':{'class':'btn btn-default'} }) }}
+                          {{form_widget(formInscription.save, {'attr':{'class':'btn btn-primary'} }) }}
                           {{form_end(formInscription)}}
                         </td>
                     </tr>
@@ -339,8 +340,9 @@
           var grado = $('#form_grado').val();
           var paralelo = $('#form_paralelo').val();
           var turno = $('#form_turno').val();
+          var obs = $('#form_observacionOmitido').val();
 
-          if(sie.length > 0 && nivel.length > 0 && grado.length > 0 && paralelo.length > 0 && turno.length > 0){
+          if(sie.length > 0 && nivel.length > 0 && grado.length > 0 && paralelo.length > 0 && turno.length > 0 && obs.length > 0 ) {
 
             formInscription = $('#formInscription').serialize();
             $.ajax({
@@ -368,7 +370,7 @@
             });
             $('#form_save').attr("disabled", true);
           }else{
-            alert('Necesita SIE, NIVEL, GRADO, PARALELO Y TURNO, para realizar la inscripción');
+            alert('Necesita SIE, NIVEL, GRADO, PARALELO , TURNO Y JUSTIFICATIVO, para realizar la inscripción');
             return false;
           }
 

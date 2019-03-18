@@ -3,12 +3,12 @@ Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnico:
     table: institucioneducativa_humanistico_tecnico
     repositoryClass: Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnicoRepository
     indexes:
-        IDX_C6AECF52B57AF92D:
-            columns:
-                - institucioneducativa_humanistico_tecnico_tipo_id
         IDX_C6AECF52C6447610:
             columns:
                 - grado_tipo_id
+        IDX_C6AECF52B57AF92D:
+            columns:
+                - institucioneducativa_humanistico_tecnico_tipo_id
     id:
         id:
             type: integer
@@ -41,16 +41,17 @@ Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnico:
             type: boolean
             nullable: true
             comment: ''
+        fechaCreacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_creacion
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
     manyToOne:
-        institucioneducativaHumanisticoTecnicoTipo:
-            targetEntity: InstitucioneducativaHumanisticoTecnicoTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                institucioneducativa_humanistico_tecnico_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
         gradoTipo:
             targetEntity: GradoTipo
             cascade: {  }
@@ -58,6 +59,15 @@ Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnico:
             inversedBy: null
             joinColumns:
                 grado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaHumanisticoTecnicoTipo:
+            targetEntity: InstitucioneducativaHumanisticoTecnicoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_humanistico_tecnico_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

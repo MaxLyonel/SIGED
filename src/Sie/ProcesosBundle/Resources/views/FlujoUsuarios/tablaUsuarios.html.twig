@@ -1,0 +1,63 @@
+
+<div class="panel">
+    <div class="panel-heading">
+         <div class="pull-right">
+            {#<input type="submit" value="enviar">#}
+            <button type="submit" onclick = "asignar()" class="btn btn-success"id="asignar">Asignar</button>
+        </div>
+        <div class="clearfix"></div>
+    </div><!-- /.panel-heading -->
+    {#<form action="{{path('flujousuarios_guardar_usuarios')}}"id ="form_usuarios" method="post">#}
+    <form action=""id ="form_usuarios" method="post">
+        <input type="hidden" name="tarea" value="{{tarea}}">
+    <div class="panel-body">
+        <div class="table-responsive col-md-12">
+            <table class="table table-bordered table-striped table-primary" id="data_tabla1">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Rol</th>
+                        <th>Nombre</th>
+                        <th>Paterno</th>
+                        <th>Materno</th>
+                        <th>Lugar</th>
+                        <th>Nivel</th>
+                        <th>Asignar</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Rol</th>
+                        <th>Nombre</th>
+                        <th>Paterno</th>
+                        <th>Materno</th>
+                        <th>Lugar</th>
+                        <th>Nivel</th>
+                        <th>Asignar</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                {% for usuario in usuarios %}
+                    <tr>
+                        <td>{{ usuario.username }}</a></td>
+                        <td>{{ usuario.rol }}</td>
+                        <td>{{ usuario.nombre }}</td>
+                        <td>{{ usuario.paterno }}</td>
+                        <td>{{ usuario.materno }}</td>
+                        <td>{{ usuario.lugar }}</td>
+                        <td>{{ usuario.nivel }}</td>         
+                        <td>
+                            <input type="checkbox" name="usuario[]" value='{"usuario":"{{usuario.id}}","lugar_tipo":"{{usuario.lugar_tipo}}"}'>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div><!-- /.panel-body -->
+</div>
+</form>
+      
+
+

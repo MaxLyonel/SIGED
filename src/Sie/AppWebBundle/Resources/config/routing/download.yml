@@ -16,9 +16,17 @@ donwload_listStudentPerCourse:
     path: /listStudentPerCourse/{ue}/{gestion}/{nivel}/{grado}/{paralelo}/{turno}
     defaults: { _controller: SieAppWebBundle:Download:listStudentPerCourse }
 
+donwload_listStudentPerCourseSeg:
+    path: /listStudentPerCourseSeg/{ue}/{gestion}/{nivel}/{grado}/{paralelo}/{turno}
+    defaults: { _controller: SieAppWebBundle:Download:listStudentPerCourseSeg }
+
 donwload_listStudentPerUe:
     path: /listStudentPerUe/{ue}/{gestion}
     defaults: { _controller: SieAppWebBundle:Download:listStudentPerUe }
+
+donwload_listStudentPerUeSeg:
+    path: /listStudentPerUeSeg/{ue}/{gestion}
+    defaults: { _controller: SieAppWebBundle:Download:listStudentPerUeSeg }
 
 donwload_listStudentPerUeUnAcredited:
     path: /listStudentPerUe/{sie}

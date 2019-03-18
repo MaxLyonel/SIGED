@@ -1,0 +1,1306 @@
+{% for d in datos %}
+    {% if d.flujoProceso == 39 %}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">1. DATOS DEL FORMULARIO DE DISTRITO</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="form-group col-md-12">
+		        	<div class="col-md-3">
+                        <strong>TIPO DE TRAMITE:</strong>
+                    </div>
+                    <div class="col-md-9">
+						{{ d.datos.tramitetipo }}
+                    </div>
+		        </div>
+                {% if d.datos.idrue %}
+                    <div class="form-group col-md-12">
+		        		<div class="col-md-3">
+                            <strong>CODIGO RUE:</strong>
+                        </div>
+                        <div class="col-md-9">
+							{{ d.datos.idrue }}
+                        </div>
+					</div>
+                {% endif %}
+                <div class="form-group col-md-12">
+		        	<div class="col-md-3">
+                        <strong>INSTITUCIÓN EDUCATIVA:</strong>
+                    </div>
+                    <div class="col-md-9">
+						{{ d.datos.institucioneducativa }}
+                    </div>
+				</div>
+                <div class="form-group col-md-12">
+		            <div class="col-md-3">
+                        <strong>TIPO DE EDUCACIÓN:</strong>
+                    </div>
+                    <div class="col-md-9">
+						{{ d.datos.tipoeducacion }}
+                    </div>
+				</div>
+                <div class="form-group col-md-12">
+		        	<div class="col-md-3">
+                        <strong>TIPO DE DEPENDENCIA:</strong>
+                    </div>
+                    <div class="col-md-9">
+					    {{ d.datos.dependenciatipo }}
+                    </div>
+				</div>
+                <div class="form-group col-md-12">
+		        	<div class="col-md-3">
+                        <strong>OBSERVACIÓN:</strong>
+                    </div>
+                    <div class="col-md-9">
+						{{ d.datos.observacion }}
+                    </div>
+				</div>
+                <div class="form-group col-md-12">
+		        	<div class="col-md-3">
+                        <strong>REQUISITOS ADJUNTADOS:</strong>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="ckbox ckbox-primary">
+                            <input id="checkbox-primary1" checked="checked" type="checkbox" disabled="disabled">
+                            <label for="checkbox-primary1">{{ d.datos.requisitos.0 }}</label>
+                        </div>
+                        <div class="ckbox ckbox-primary">
+                            <input id="checkbox-primary1" checked="checked" type="checkbox" disabled="disabled">
+                            <label for="checkbox-primary1">{{ d.datos.requisitos.1 }}</label>
+                        </div>
+                        <div class="ckbox ckbox-primary">
+                            <input id="checkbox-primary1" checked="checked" type="checkbox" disabled="disabled">
+                            <label for="checkbox-primary1">{{ d.datos.requisitos.2 }}</label>
+                        </div>
+                        <div class="ckbox ckbox-primary">
+                            <input id="checkbox-primary1" checked="checked" type="checkbox" disabled="disabled">
+                            <label for="checkbox-primary1">{{ d.datos.requisitos.3 }}</label>
+                        </div>
+                    </div>
+				</div>
+            </div>
+        </div>
+    {% endif %}
+    {% if d.flujoProceso == 40 %}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">2. FORMULARIO DE INFORME DISTRITAL</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="form-group col-md-12">
+		            <div class="col-md-3">
+                        <strong>NRO. DE INFORME:</strong>
+                    </div>
+                    <div class="col-md-9">
+		    			{{ d.datos.informe }}
+                    </div>
+			    </div>
+                <div  class="form-group col-md-12">
+		        	<div class="col-md-3">
+                        <strong>FECHA DE INFORME:</strong>
+                    </div>
+                    <div class="col-md-9">
+	    			    {{ d.datos.fechainforme }}
+                    </div>
+				</div>
+                <div class="form-group col-md-12">
+		        	<div class="col-md-3">
+                        <strong>OBSERVACIÓN:</strong>
+                    </div>
+                    <div class="col-md-9">
+						{{ d.datos.observacion }}
+                    </div>
+				</div>
+            </div>
+        </div>
+    {% endif %}
+    {% if d.flujoProceso == 41 %}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">3. DATOS DEL FORMULARIO ÚNICO DE TRÁMITE RUE</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="form-group col-md-12"><h5><strong>I. NATURALEZA DE LA SOLICITUD</strong></h5></div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="form-group col-md-12">
+		        			<div class="col-md-5">
+                                <strong>TIPO DE TRÁMITE:</strong>
+                            </div>
+                            <div class="col-md-7">
+								{{ d.datos.tipotramite.tramitetipo }}
+                            </div>
+						</div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-5">
+        	    		        <strong>TIPO DE EDUCACIÓN:</strong>
+                            </div>
+                            <div class="col-md-7">
+                                {{ d.datos.tipoeducacion }}
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-5">
+        	    		        <strong>DEPENDENCIA:</strong>
+                            </div>
+                            <div class="col-md-7">
+                                {{ d.datos.dependenciatipo }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-5">
+                                <strong>TURNOS:</strong>
+                            </div>
+                            <div class="col-md-7">
+                                {{ d.datos.turno }}
+                            </div>
+                        </div>
+                        {% if d.datos.participantes %}
+                            <div class="form-group col-md-12">
+                                <div class="col-md-5">
+                                    <strong>CANTIDAD DE PARTICIPANTES:</strong>
+                                </div>
+                                <div class="col-md-7">
+                                    {{ d.datos.participantes }}
+                                </div>
+					        </div>
+                        {% endif %} 
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class="col-md-12">
+                            <strong>NIVELES AUTORIZADOS:</strong>
+                        </div>
+                        {% for n in d.datos.niveltipo %}
+                            <div class="col-md-12">
+                                {% if d.datos.tipotramite.id == 27 %}   
+                                    <div class="ckbox ckbox-primary">
+                                        <input id="checkbox-primary1" checked="checked" type="checkbox" disabled="disabled">
+                                        <label for="checkbox-primary1">{{ n.nivel }}</label>
+                                    </div>
+                                {% else %}
+                                    <div class="ckbox ckbox-primary">
+                                        <input id="checkbox-primary1" checked="checked" type="checkbox" disabled="disabled">
+                                        <label for="checkbox-primary1">{{ n.nivelTipo.nivel }}</label>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+					</div>
+                    {% if d.datos.areaespecial %}
+                        <div class="form-group col-md-3">
+                            <div class="col-md-12"><strong>ÁREAS AUTORIZADAS:</strong></div>
+						        {% for a in d.datos.areaespecial %}
+                                    <div class="col-md-12">
+                                        -{{ a.especialAreaTipo.areaEspecial }}
+                                    </div>
+                                {% endfor %}   
+					        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group col-md-12"><h5><strong>II. IDENTIFICACIÓN GENERAL DE LA UNIDAD EDUCATIVA</strong></h5></div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <div class="form-group col-md-12">
+                            <div class="col-md-6">
+        	    		        <strong>NOMBRE DEL CENTRO EDUCACTIVO:</strong>
+                            </div>
+                            <div class="col-md-6">
+                                {{ d.datos.institucioneducativa }}
+                            </div>
+                        </div>
+                        {% if d.datos.codrue %}
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+        	    		            <strong>CÓDIGO RUE-SIE DEL CENTRO EDUCATIVO:</strong>
+                                </div>
+                                <div class="col-md-6">
+                                    {{ d.datos.codrue }}
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if d.datos.le %}
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+        	    		            <strong>CÓDIGO RUE-SIE DEL EDIFICIO EDUCATIVO:</strong>
+                                </div>
+                                <div class="col-md-6">
+                                    {{ d.datos.le }}
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if d.datos.resolucion %}
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+        	    		            <strong>RESOLUCIÓN ADMINISTRATIVA:</strong>
+                                </div>
+                                <div class="col-md-6">
+                                    {{ d.datos.resolucion }}
+                                </div>
+                            </div>
+                        {% endif %}
+                        <div class="form-group col-md-12">
+                            <div class="col-md-6">
+        	    		        <strong>ZONA:</strong>
+                            </div>
+                            <div class="col-md-6">
+                                {{ d.datos.zona }}
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-6">
+        	    		        <strong>DIRECCIÓN:</strong>
+                            </div>
+                            <div class="col-md-6">
+                                {{ d.datos.direccion }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <div class="form-group col-md-12">
+                            <div class="col-md-4">
+        	    		        <strong>DEPARTAMENTO:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {{ d.datos.departamento }}
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-4">
+            	    		    <strong>PROVINCIA:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {{ d.datos.provincia }}
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">  
+                            <div class="col-md-4">
+        	    		        <strong>MUNICIPIO:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {{ d.datos.municipio }}
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-4">
+        	    		        <strong>CANTÓN:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {{ d.datos.canton }}
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-4">
+        	        	    	<strong>LOCALIDAD:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {{ d.datos.localidad }}
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-4">
+        	        		    <strong>DISTRITO EDUCATIVO:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {{ d.datos.distrito }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-12"><h5><strong>III. INFORMACIÓN LEGAL</strong></h5></div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <div class="col-md-6">
+        	    		    La persona jurídica que hace la solicitud corresponde a:
+                        </div>
+                        <div class="col-md-6">
+                            {{ d.datos.solicitante }}
+                        </div>
+                    </div>
+                    {% if d.datos.solicitante_otro %}
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-6">
+                                Otro:
+                            </div>
+                            <div class="col-md-6">
+                                {{ d.datos.solicitante_otro }}
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if d.datos.iiia_acta %}
+                        <div class="form-group  col-md-12">
+                            <div class="form-group  col-md-12">
+                                <strong>PRESENTACIÓN DE REQUISITOS LEGALES (Privadas)</strong>
+                            </div>
+                            <div class="col-md-6">
+                                a) Copia Notariada del Acta de Constitución:
+                            </div>
+                            <div class="col-md-6">
+                                {{ d.datos.iiia_acta }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-6">
+                                b) Copia Notariada de los estatutos de la U.E./CEA:
+                            </div>
+                            <div class="col-md-6">
+                                {{ d.datos.iiib_estatutos }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-6">
+                                c) Copia legalizada de la Resolución que otorga la personeria jurídica:
+                            </div>
+                            <div class="col-md-6">
+                                {{ d.datos.iiic_resolucion }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-6">
+                                d) Fotocopia legalizada de la matricula y resolucion de FUNDAEMPRESA:
+                            </div>
+                            <div class="col-md-6">
+                                {{ d.datos.iiic_resolucion }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-6">
+                                e) Fotocopia legalizada del NIT:
+                            </div>
+                            <div class="col-md-6">
+                                {{ d.datos.iiie_nit }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-6">
+                                f) Fotocopia legalizada del carnet de identidad del propietario:
+                            </div>
+                            <div class="col-md-6">
+                                {{ d.datos.iiif_ci }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-6">
+                                g) Balance de Apertura Sellado por el Servicio de Impuestos Nacionales:
+                            </div>
+                            <div class="col-md-6">
+                                {{ d.datos.iiig_balance }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-6">
+                                h) Último Balance Sellado por el Servicio de Impuestos Nacionales
+                            </div>
+                            <div class="col-md-6">
+                                {{ d.datos.iiih_ultimobalance }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-6">
+                                i) Acreditación del representante legal:
+                            </div>
+                            <div class="col-md-6">
+                                {{ d.datos.iiii_acreditacion }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-6">
+                                j) Fotocopia legalizada del Padrón de funcionamiento municipal:
+                            </div>
+                            <div class="col-md-6">
+                                {{ d.datos.iiij_padron }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-6">
+                                k) Resolución de funcionamiento del Ministerio de Relaciones Exteriores y Culto:
+                            </div>
+                            <div class="col-md-6">
+                                {{ d.datos.iiik_funcionamientoculto }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-6">
+                                l) Nombre del representante legal:
+                            </div>
+                            <div class="col-md-6">
+                                {{ d.datos.iiil_nombrerepresentante }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-6">
+                                m) Dirección del representante legal:
+                            </div>
+                            <div class="col-md-6">
+                                {{ d.datos.iiim_direccionrepresentante }}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group col-md-12"><h5><strong>IV. ÁREAS DEL TERRENO</strong></h5></div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-6">
+                                Área total del terreno en m<sup>2</sup>:
+                            </div>
+                            <div class="col-md-6">
+                                {{ d.datos.iv_areaterreno }}
+                            </div>
+                        </div>  
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-6">
+                                Área construida en m<sup>2</sup>:
+                            </div>
+                            <div class="col-md-6">
+                                {{ d.datos.iv_areaconstruida }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-6">
+                                Área de esparcimiento en m<sup>2</sup>:
+                            </div>
+                            <div class="col-md-6">
+                                {{ d.datos.iv_areaesparcimiento }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-6">
+                                Área no construida en m<sup>2</sup>:
+                            </div>
+                            <div class="col-md-6">
+                                {{ d.datos.iv_areanoconstruida }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-6">
+                                Área de cultivo (Área libre) en m<sup>2</sup>:
+                            </div>
+                            <div class="col-md-6">
+                                {{ d.datos.iv_areacultivo }}
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-6">
+                                El edificio es:
+                            </div>
+                            <div class="col-md-6">
+                                {{ d.datos.iv_edificioes }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-12"><h5><strong>V. DOCUMENTACIÓN DE INFRAESTRUCTURA, MOBILIARIO Y EQUIPAMIENTO</strong></h5></div>
+                <div class="row">
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-8">
+                            a) Copia legalizada del Testimonio del derecho propietario o Folio Real que acredite que los ambientes destinados a la unidad educativa pertenecen a la o el propietario o a las o los propietarios:
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.va_folioreal }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-8">
+                            b) En caso de ser infraestructura arrendada, copia notariada de contrato de arrendamiento de alquiler o antícresis por un plazo no menor a seis años:
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.vb_copiacontratoalquiler }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-8">
+                            c) Planos arquitectónicos firmados por profesional competente (especificando la distribución de los ambientes) aprobados por el Gobierno Municipal para infraestructura o ambientes propios y arrendados que contemplen la adecuación progresiva para la atención a la población con discapacidad leve, acorde a los parámetros establecidos por normativa vigente:
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.vc_planos }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-8">
+                            d) Detalle y características del mobiliario y equipamiento de acuerdo a las normas establecidas por el Ministerio de Educación:
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.vd_detallemobiliario }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-8">
+                            e) Las Unidades Educativas que oferten Educación Secundaria Comunitaria Productiva, deben contar con talleres, laboratorios y otros espacios productivos con características de construcción que se encuentren bajo normativas nacionales e internacionales de acuerdo a la implementación del Bachillerato Técnico Humanístico:
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.ve_tallereslaboratorios }}
+                        </div>
+                    </div>
+                </div><!-- /.row -->
+                <div class="form-group col-md-12"><h5><strong>VI. REQUISITOS CURRICULARES</strong></h5></div>
+                <div class="row">
+                    <div class=" form-group col-md-12"><strong>MODALIDADES:</strong></div>
+                    <div class=" form-group col-md-12">
+                        <div class="col-md-6">
+                            <div class="form-group  col-md-12">
+                                <div class="col-md-6">
+                                    a) Modalidad de atención:
+                                </div>
+                                <div class="col-md-6">
+                                    {{ d.datos.vi_modalidadatencion }}
+                                </div>
+                            </div>
+                            <div class="form-group  col-md-12">
+                                <div class="col-md-6">
+                                    b) Modalidad de lengua:
+                                </div>
+                                <div class="col-md-6">
+                                    {{ d.datos.vi_modalidadlengua }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group  col-md-12">
+                                <div class="col-md-6">
+                                    c) Modalidad de aprendizaje:
+                                </div>
+                                <div class="col-md-6">
+                                    {{ d.datos.vi_modalidadaprendizaje }}
+                                </div>
+                            </div>
+                            <div class="form-group  col-md-12">
+                                <div class="col-md-6">
+                                    d) Modalidad de Docencia:
+                                </div>
+                                <div class="col-md-6">
+                                    {{ d.datos.vi_modalidaddocencia }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12"><strong>PLANES Y PROGRAMAS:</strong></div>
+                    <div class="form-group col-md-5"></div>
+                    <div class="form-group col-md-3"><strong>DOCUMENTOS PRESENTADOS:</strong></div>
+                    <div class="form-group col-md-4"><strong>DOCUMENTOS EVALUADOS:</strong></div>
+                    <div class="form-group col-md-12">
+                        <div class="col-md-5">a) Fundamentos Teóricos generales:</div>
+                        <div class="col-md-3">
+                            {{ d.datos.via_teorico }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.via_teoricoEvaluado }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">b) Enfoque intercultural:</div>
+                        <div class="col-md-3">
+                            {{ d.datos.vib_intercultural }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.vib_interculturalEvaluado }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">c) Propuesta de modalidad de lengua:</div>
+                        <div class="col-md-3">
+                            {{ d.datos.vic_propuestalengua }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.vic_propuestalenguaEvaluado }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">d) Propuesta de los niveles y ciclos ofertados:</div>
+                        <div class="col-md-3">
+                            {{ d.datos.vid_propuestaciclos }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.vid_propuestaciclosEvaluado }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">e) Propuesta de integración educativa:</div>
+                        <div class="col-md-3">
+                            {{ d.datos.vie_propuestaintegracion }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.vie_propuestaintegracionEvaluado }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">f) Denominación de los niveles y ciclos ofertados:</div>
+                        <div class="col-md-3">
+                            {{ d.datos.vif_denominacionnivel }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.vif_denominacionnivelEvaluado }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">g) Organización de los niveles y ciclos:</div>
+                        <div class="col-md-3">
+                            {{ d.datos.vig_organizacionciclos }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.vig_organizacionciclosEvaluado }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">h) Incorporación de temas transversales:</div>
+                        <div class="col-md-3">
+                            {{ d.datos.vih_temastransversales }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.vih_temastransversalesEvaluado }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">i) Enfoque de las áreas curriculares:</div>
+                        <div class="col-md-3">
+                            {{ d.datos.vii_areascurriculares }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.vii_areascurricularesEvaluado }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">j) Planteamiento de competencias y objetivos:</div>
+                        <div class="col-md-3">
+                            {{ d.datos.vij_competencias }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.vij_competenciasEvaluado }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">k) Planteamiento de indicadores:</div>
+                        <div class="col-md-3">
+                            {{ d.datos.vik_indicadores }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.vik_indicadoresEvaluado }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">l) Organización de contenidos:</div>
+                        <div class="col-md-3">
+                            {{ d.datos.vil_contenidos }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.vil_contenidosEvaluado }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">m) Propuesta metodológica:</div>
+                        <div class="col-md-3">
+                            {{ d.datos.vim_metodologia }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.vim_metodologiaEvaluado }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">n) Propuesta de evaluación:</div>
+                        <div class="col-md-3">
+                            {{ d.datos.vin_evaluacion }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.vin_evaluacionEvaluado }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">o) Organización del horario:</div>
+                        <div class="col-md-3">
+                            {{ d.datos.vio_horario }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.vio_horarioEvaluado }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">p) Organización del calendario:</div>
+                        <div class="col-md-3">
+                            {{ d.datos.vip_calendario }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.vip_calendarioEvaluado }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">q) Textos o módulos propuestos para el uso con alumnos / participantes:</div>
+                        <div class="col-md-3">
+                            {{ d.datos.viq_textos }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.viq_textosEvaluado }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">r) Propuesta de gestión curricular:</div>
+                        <div class="col-md-3">
+                            {{ d.datos.vir_curriculo }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.vir_curriculoEvaluado }}
+                        </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">s) Pertinencia de nuevas áreas no incluidas en el tronco comun:</div>
+                        <div class="col-md-3">
+                            {{ d.datos.vis_areasnoincluidas }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ d.datos.vis_areasnoincluidasEvaluado }}
+                        </div>
+                    </div>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-5">
+                            PLANES Y PROGRAMAS:
+                        </div>
+                        <div class="col-md-7">
+                            {{ d.datos.vi_planesprogramas }}
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <div class="col-md-5">
+                            Observación:
+                        </div>
+                        <div class="col-md-7">
+                            {{ d.datos.observacion }}
+                        </div>
+				    </div>
+                </div>
+            </div><!-- /.panel-body -->
+        </div><!-- /.panel-primary -->
+    {% endif %}
+    {% if d.flujoProceso == 42 %}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">4. VERIFICACIÓN SUBDIRECCIÓN DEPARTAMENTAL</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="col-md-12"><h5><strong>VERIFICAR TRÁMITE</strong></h5></div>
+                <div class="form-group  col-md-12">
+                    <div class="col-md-3">OBSERVAR Y DEVOLVER TRÁMITE:</div>
+                    <div class="col-md-9">
+                        {% if d.datos.varevaluacion1 == "SI" %}        
+                            NO
+                        {% else %}
+                            SI
+                        {% endif %}
+                    </div>
+                </div>
+                {% if d.datos.varevaluacion1 == "NO" %}
+                    <div class="form-group col-md-12">
+                        <div class="col-md-3">
+						    Observación:
+                        </div>
+                        <div class="col-md-9">
+		        		    {{ d.datos.observacion1 }}
+                        </div>
+				    </div>
+                {% endif %}
+                {% if d.datos.varevaluacion1 == "SI" %}   
+                    <div class="form-group col-md-12"><h5><strong>DATOS DEL INFORME</strong></h5></div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-3">
+                            INFORME PROCEDENTE:
+                        </div>
+                        <div class="col-md-9">
+                            {{ d.datos.varevaluacion2 }}
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <div class="col-md-3">
+	        			    Nro. Informe:
+                        </div>   
+	        		    <div class="col-md-9">
+                            {{ d.datos.informesubdireccion }}
+					    </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <div class="col-md-3">
+	    					Fecha de Informe:
+                        </div>
+                        <div class="col-md-9">
+	    		    		{{ d.datos.fechainformesubdireccion }}
+                        </div>
+			        </div>
+                    <div class="form-group col-md-12">
+                        <div class="col-md-3">
+        					Observación:
+                        </div>
+                        <div class="col-md-9">
+	            			{{ d.datos.observacion2 }}
+                        </div>
+                	</div>
+                {% endif %}
+            </div><!-- /.panel-body -->
+        </div><!-- /.panel-primary -->
+    {% endif %}
+    {% if d.flujoProceso == 44 %}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">5. VERIFICACIÓN ASUNTOS JURÍDICOS DEPARTAMENTAL</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="col-md-12"><h5><strong>VERIFICAR TRÁMITE</strong></h5></div>
+                <div class="form-group  col-md-12">
+                    <div class="col-md-3">OBSERVAR Y DEVOLVER TRÁMITE:</div>
+                    <div class="col-md-9">
+                        {% if d.datos.varevaluacion1 == "SI" %}        
+                            NO
+                        {% else %}
+                            SI
+                        {% endif %}
+                    </div>
+                </div>
+                {% if d.datos.varevaluacion1 == "NO" %}
+                    <div class="form-group col-md-12">
+                        <div class="col-md-3">
+						    Observación:
+                        </div>
+                        <div class="col-md-9">
+		        		    {{ d.datos.observacion1 }}
+                        </div>
+				    </div>
+                {% endif %}
+                {% if d.datos.varevaluacion1 == "SI" %}   
+                    <div class="form-group col-md-12"><h5><strong>DATOS DEL INFORME</strong></h5></div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-3">
+                            INFORME PROCEDENTE:
+                        </div>
+                        <div class="col-md-9">
+                            {{ d.datos.varevaluacion2 }}
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <div class="col-md-3">
+	        			    Nro. Informe:
+                        </div>   
+	        		    <div class="col-md-9">
+                            {{ d.datos.informejuridica }}
+					    </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <div class="col-md-3">
+	    					Fecha de Informe:
+                        </div>
+                        <div class="col-md-9">
+	    		    		{{ d.datos.fechainformejuridica }}
+                        </div>
+			        </div>
+                    <div class="form-group col-md-12">
+                        <div class="col-md-3">
+        					Observación:
+                        </div>
+                        <div class="col-md-9">
+	            			{{ d.datos.observacion2 }}
+                        </div>
+                	</div>
+                    {% if d.datos.varevaluacion2 == "SI"%}
+                        <div class="form-group col-md-12"><h5><strong>DATOS DE LA RESOLUCIÓN ADMINISTRATIVA</strong></h5></div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-3">
+	        			        Nro. de Resolución:
+                            </div>   
+	        		        <div class="col-md-9">
+                                {{ d.datos.resolucion }}
+					        </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-3">
+	    					    Fecha de Resolución:
+                            </div>
+                            <div class="col-md-9">
+	    		    		    {{ d.datos.fecharesolucion }}
+                            </div>
+			            </div>
+                    {% endif %}
+                {% endif %}
+            </div><!-- /.panel-body -->
+        </div><!-- /.panel-primary -->
+    {% endif %}
+    {% if d.flujoProceso == 47 %}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">6. ENVIAR FORMULARIOS SIE, RUE, INFRA Y LE</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group col-md-12"><h5><strong>VERIFICAR TRÁMITE</strong></h5></div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-3">TRÁMITE PROCEDENTE:</div>
+                            <div class="col-md-9">
+                                {{ d.datos.varevaluacion }}        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if d.datos.varevaluacion == "SI" %}
+                    <div class="form-group col-md-12"><h5><strong>REGISTRO DE UNIDADES EDUCATIVAS-FORMULARIO DE INSCRIPCIÓN</strong></h5></div>
+                    <div class="form-group col-md-12"><h5><strong>IDENTIFIACIÓN</strong></h5></div>
+                    <div class="row">
+                        <div class="form-group  col-md-12">
+                            {% if d.datos.idrue %}
+                                <div class="form-group  col-md-4">
+                                    <div class="col-md-6">
+                                        Código de la unidad educativa/centro educativo:
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ d.datos.idrue }}
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <div class="form-group  col-md-4">
+                                <div class="col-md-6">
+                                    Número de resolución administrativa:
+                                </div>
+                                <div class="col-md-6">
+                                    {{ d.datos.resolucion }}
+                                </div>
+                            </div>
+                            <div class="form-group  col-md-4">
+                                <div class="col-md-6">
+                                    Fecha de resolución administrativa:
+                                </div>
+                                <div class="col-md-6">
+                                    {{ d.datos.fecharesolucion }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-2">
+                                Nombre del Centro Educativo:
+                            </div>
+                            <div class="col-md-10">
+                                {{ d.datos.institucioneducativa }}
+                            </div>
+                        </div>
+                        {% if d.datos.idrue =="" %}
+                            <div class="form-group  col-md-12">
+                                <div class="col-md-2">
+                                    Nombre Director o Director encargado de la U.E./Centro:
+                                </div>
+                                <div class="col-md-10">
+                                    {{ d.datos.director }}
+                                </div>
+                            </div>
+                            <div class="form-group  col-md-12">
+                                <div class="form-group  col-md-4">
+                                    <div class="col-md-6">
+                                        C.I. Director o Director encargado:
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ d.datos.ci }}
+                                    </div>
+                                </div>
+                                <div class="form-group  col-md-4">
+                                    <div class="col-md-6">
+                                        Tiene cargo
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ d.datos.tienecargo }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group col-md-12"><h5><strong>UBICACIÓN GEOGRÁFICA Y JURISDICCIÓN ADMINISTRATIVA</strong></h5></div>
+                    <div class="row">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <div class="form-group  col-md-12">
+                                    <div class="col-md-3">  
+                                        Código de edificio escolar:
+                                    </div>
+                                    <div class="col-md-9">
+                                        {{ d.datos.lejurisdiccion }}
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-3">
+        	    		                Departamento:
+                                    </div>
+                                    <div class="col-md-9">
+                                        {{ d.datos.departamento }}
+                                    </div>
+                                </div>
+                                <div class="form-group  col-md-12">
+                                    <div class="col-md-3">
+                                        Provincia:
+                                    </div>
+                                    <div class="col-md-9">
+                                        {{ d.datos.provincia }}
+                                    </div>
+                                </div>
+                                <div class="form-group  col-md-12">
+                                    <div class="col-md-3">
+                                        Municipio:
+                                    </div>
+                                    <div class="col-md-9">
+                                        {{ d.datos.municipio }}
+                                    </div>
+                                </div>
+                                <div class="form-group  col-md-12">
+                                    <div class="col-md-3">
+                                        Cantón:
+                                    </div>
+                                    <div class="col-md-9">
+                                        {{ d.datos.canton }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <div class="form-group  col-md-12">
+                                    <div class="col-md-3">
+                                        Localidad:
+                                    </div>
+                                    <div class="col-md-9">
+                                        {{ d.datos.localidad }}
+                                    </div>
+                                </div>
+                                <div class="form-group  col-md-12">
+                                    <div class="col-md-3">
+                                        Zona o barrio:
+                                    </div>
+                                    <div class="col-md-9">
+                                        {{ d.datos.zona }}
+                                    </div>
+                                </div>
+                                <div class="form-group  col-md-12">
+                                    <div class="col-md-3">
+                                        Dirección:
+                                    </div>
+                                    <div class="col-md-9">
+                                        {{ d.datos.direccion }}
+                                    </div>
+                                </div>
+                                <div class="form-group  col-md-12">
+                                    <div class="col-md-3">
+                                        Nombre de distrito educativo:
+                                    </div>
+                                    <div class="col-md-9">
+                                        {{ d.datos.distrito }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% if d.datos.idrue =="" %}
+                            <div class="row">
+                                <div class="form-group  col-md-6">
+                                    <div class="form-group  col-md-12">
+                                        <div class="col-md-3">
+                                            Telefono propio de la U.E./Centro:
+                                        </div>
+                                        <div class="col-md-9">
+                                            {{ d.datos.telefono }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group  col-md-12">
+                                        <div class="col-md-3">
+                                            Otro telefono para comunicarse con la U.E./Centro:
+                                        </div>
+                                        <div class="col-md-9">
+                                            {{ d.datos.otrotelefono }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group  col-md-12">
+                                        <div class="col-md-3">
+                                            Correo electrónico de la U.E./Centro:
+                                        </div>
+                                        <div class="col-md-9">
+                                            {{ d.datos.email }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group  col-md-6">
+                                    <div class="form-group  col-md-12">
+                                        <div class="col-md-3">
+                                            Fax de la U.E.:
+                                        </div>
+                                        <div class="col-md-9">
+                                            {{ d.datos.fax }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group  col-md-12">
+                                        <div class="col-md-3">
+                                            Pertenece a (cargo o relación):
+                                        </div>
+                                        <div class="col-md-9">
+                                            {{ d.datos.otropertenece }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group  col-md-12">
+                                        <div class="col-md-3">
+                                            Casilla postal de la U.E./Centro:
+                                        </div>
+                                        <div class="col-md-9">
+                                            {{ d.datos.casilla }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group col-md-12"><h5><strong>DEPENDENCIA, ÁREAS Y NIVELES DE ORGANIZACIÓN CURRICULAR</strong></h5></div>
+                    <div class="row">
+                        <div class="form-group col-md-5">
+                            <div class="form-group col-md-12">
+                                <div class="col-md-5">
+        	    		            Dependencia:
+                                </div>
+                                <div class="col-md-7">
+                                    {{ d.datos.dependencia }}
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-5">
+        	    		            Tipo de educación:
+                                </div>
+                                <div class="col-md-7">
+                                    {{ d.datos.tipoeducacion }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <div class="col-md-12"><strong>NIVELES AUTORIZADOS:</strong></div>
+		    				<div class="col-md-12">
+                                {% for a in d.datos.niveltipo %}
+                                    <div class="ckbox ckbox-primary">
+                                        <input id="checkbox-primary1" checked="checked" type="checkbox" disabled="disabled">
+                                        <label for="checkbox-primary1">{{ a.nivel }}</label>
+                                    </div>
+                                {% endfor %} 
+                            </div>
+					    </div>
+                        {% if tipoeducacion == 4 %}
+                            <div class="form-group col-md-3">
+                                <div class="col-md-12"><strong>ÁREAS AUTORIZADAS:</strong></div>
+                                <div class="col-md-12">
+						            {% for a in d.datos.areaEspecialTipo %}
+                                        <div class="ckbox ckbox-primary">
+                                            <input id="checkbox-primary1" checked="checked" type="checkbox" disabled="disabled">
+                                            <label for="checkbox-primary1">{{ a.areaEspecial }}</label>
+                                        </div>
+                                    {% endfor %}   
+		    			        </div>
+                        {% endif %}
+                        <div class="form-group col-md-5">
+                            <div class="form-group col-md-12">
+                                <div class="col-md-5">
+                                    Tipo de bachillerato:
+                                </div>
+		    	    		    <div class="col-md-7">
+                                    {{ d.datos.tipobachillerato }}
+					            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12"><h5><strong>COMPARTE EL EDIFICIO ESCOLAR CON:</strong></h5></div>
+                    <div class="row">
+                        <div class="form-group  col-md-12">
+        			    	<div class="col-md-1"><strong>Nro.</strong></div>
+                            <div class="col-md-3"><strong>Código de unidad educativa</strong></div>
+                            <div class="col-md-8"><strong>Nombre de la unidda educativa</strong></div>
+                            <div id="comparte">
+                                {% for a in d.datos.comparteLe %}
+                                    <div class="col-md-1">{{ loop.index }}</div>
+                                    <div class="col-md-3">{{ a.idrue }}</div>
+                                    <div class="col-md-8">{{ a.nombre }}</div>
+                                {% endfor %} 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12"><h5><strong>FORMULARIOS:</strong></h5></div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-3">FORMULARIOS ENVIADOS:</div>
+                        <div class="col-md-9">
+                            {% for f in d.datos.formularios %}
+                                <div class="ckbox ckbox-primary">
+                                    <input id="checkbox-primary1" checked="checked" type="checkbox" disabled="disabled">
+                                    <label for="checkbox-primary1">{{ f }}</label>
+                                </div>
+                            {% endfor %} 
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <div class="col-md-3">
+						    Observación:
+                        </div>
+                        <div class="col-md-9">
+		        		    {{ d.datos.observacion }}
+                            </div>
+				        </div>
+                    </div>
+                {% else %}
+                    <div class="form-group col-md-12">
+                        <div class="col-md-3">
+						    TRÁMITE OBSERVADO PARA:
+                        </div>
+                        <div class="col-md-9">
+		        		    {% if d.datos.varevaluacion1 == "SI" %}
+                                JURÍDICA
+                            {% else %}
+                                SUBDIRECCIÓN DE EDUCACIÓN
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <div class="col-md-3">
+						    Observación:
+                        </div>
+                        <div class="col-md-9">
+		        		    {{ d.datos.observacion1 }}
+                        </div>
+                    </div>
+                {% endif %}
+            </div><!-- /.panel-body -->
+        </div><!-- /.panel-primary -->
+    {% endif %}
+    {% if d.flujoProceso == 48 %}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">7. ANÁLISIS TÉCNICO-MINISTERIO DE EDUCACIÓN</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="form-group col-md-12">
+		        	<div class="col-md-3">
+                        <strong>TRÁMITE PROCEDENTE:</strong>
+                    </div>
+                    <div class="col-md-9">
+						{{ d.datos.varevaluacion }}
+                    </div>
+		        </div>
+                <div class="form-group col-md-12">
+		        	<div class="col-md-3">
+                        Observación:
+                    </div>
+                    <div class="col-md-9">
+						{{ d.datos.observacion }}
+                    </div>
+				</div>
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}
