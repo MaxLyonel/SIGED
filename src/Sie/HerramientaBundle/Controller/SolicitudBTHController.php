@@ -432,7 +432,7 @@ class SolicitudBTHController extends Controller {
                     $idTramite = '';
                     $wfTramiteController = new WfTramiteController();
                     $wfTramiteController->setContainer($this->container);
-                    $datos = ($request->get('ipt'));
+                    $datos = ($request->get('ipt')); //dump ($datos);DIE;
                     if ($sw == 0) {//primer envio de solicitud como ratificacion
                         $mensaje = $wfTramiteController->guardarTramiteNuevo($id_usuario, $id_rol, $flujotipo, $tarea, $tabla, $id_Institucion, '', $id_tipoTramite, '', $idTramite, $datos, '', $id_distrito);
 
@@ -481,7 +481,7 @@ class SolicitudBTHController extends Controller {
             ->getQuery()
             ->getResult();
         $datos = json_decode($wfSolicitudTramite[0]->getDatos(),true);
-        //dump($idUE);dump($gestion);dump($tramite_id);die;
+        dump($idUE);dump($gestion);dump($tramite_id);die;
         $arch = 'FORMULARIO_'.$request->get('idUE').'_' . date('YmdHis') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
