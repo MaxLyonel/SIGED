@@ -559,6 +559,7 @@ class InfoEstudianteController extends Controller {
         $paralelo = $aInfoUeducativa['ueducativaInfoId']['paraleloId'];
         $gradoname = $aInfoUeducativa['ueducativaInfo']['grado'];
         $paraleloname = $aInfoUeducativa['ueducativaInfo']['paralelo'];
+        $nivelname = $aInfoUeducativa['ueducativaInfo']['nivel'];
         //get db connexion
         $em = $this->getDoctrine()->getManager();
 
@@ -763,7 +764,7 @@ class InfoEstudianteController extends Controller {
                     'aData' => $aData,
                     'gradoname' => $gradoname,
                     'paraleloname' => $paraleloname,
-                    // 'nivelname' => $nivelname,
+                    'nivelname' => $nivelname,
                     'form' => $this->createFormStudentInscription($infoUe)->createView(),
                     'infoUe' => $infoUe,
                     'exist' => $exist,
@@ -791,6 +792,7 @@ class InfoEstudianteController extends Controller {
         //this is a switch to find the courses
         $sw = 1;
         //loof for the courses of student
+        $ind = 0;
         while (($acourses = current($cursos)) !== FALSE && $sw) {
             if (current($cursos) == $nivel . '-' . $ciclo . '-' . $grado) {
                 $ind = key($cursos);
@@ -811,6 +813,7 @@ class InfoEstudianteController extends Controller {
         //this is a switch to find the courses
         $sw = 1;
         //loof for the courses of student
+        $ind = 0;
         while (( $acourses = current($cursos)) !== FALSE && $sw) {
             if (current($cursos) == $nivel . '-' . $ciclo . '-' . $grado) {
                 $ind = key($cursos);
