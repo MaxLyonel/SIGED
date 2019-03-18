@@ -551,6 +551,7 @@ class RemoveInscriptionStudentFreeController extends Controller {
           $inscriptionStudent = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($arrDataInfo['estInsId']);
           $oldInscriptionStudent = clone $inscriptionStudent;
           $inscriptionStudent->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($form['estadoNew']));
+          $inscriptionStudent->setObservacion($form['justificacionCE']==null?'':$form['justificacionCE']);//$form['justificacionCE']
           $em->persist($inscriptionStudent);
           $em->flush();
           
