@@ -1,0 +1,50 @@
+
+regularization_docente_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:RegularizationListDocente:index }
+
+regularization_docente_find:
+    path:     /find
+    defaults: { _controller: SieHerramientaBundle:RegularizationListDocente:find }
+
+regularization_docente_getnivel:
+    path:     /getnivel/{idturno}/{sie}/{gestion}
+    defaults: { _controller: SieHerramientaBundle:RegularizationListDocente:getnivel }
+    options:
+         expose: true
+
+regularization_docente_getgrado:
+    path:     /getgrado/{idnivel}/{sie}/{gestion}/{idturno}
+    defaults: { _controller: SieHerramientaBundle:RegularizationListDocente:getgrado }
+    options:
+         expose: true
+
+regularization_docente_getparalelo:
+    path:     /getgrado/{sie}/{gestion}/{idturno}/{idnivel}/{idgrado}
+    defaults: { _controller: SieHerramientaBundle:RegularizationListDocente:getparalelo }
+    options:
+         expose: true
+
+regularization_docente_loaddatacourse:
+    path:     /loadDataCourse
+    defaults: { _controller: SieHerramientaBundle:RegularizationListDocente:loadDataCourse }
+    options:
+         expose: true
+
+regularization_docente_maestros:
+    path:     /maestros
+    defaults: { _controller: SieHerramientaBundle:RegularizationListDocente:maestros }
+    options:
+         expose: true
+
+regularization_docente_maestrosasignar:
+    path:     /maestrosasignar
+    defaults: { _controller: SieHerramientaBundle:RegularizationListDocente:maestrosasignar }
+    options:
+         expose: true
+
+regularization_docente_enviarsolicitud:
+    path:     /enviarsolicitud
+    defaults: { _controller: SieHerramientaBundle:RegularizationListDocente:enviarSolicitud }
+    options:
+         expose: true

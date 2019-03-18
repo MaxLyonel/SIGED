@@ -1,0 +1,155 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> Trámites <span>Nuevo Trámite</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Inicio</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                {% if app.session.flashBag.has('exito') %}
+                    <div class="alert alert-success">
+                        {% for msg in app.session.flashBag.get('exito') %}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <i class="glyphicon glyphicon-ok"></i> {{ msg }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if app.session.flashBag.has('error') %}
+                    <div class="alert alert-danger">
+                        {% for msg in app.session.flashBag.get('error') %}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <i class="glyphicon glyphicon-remove"></i> {{ msg }}
+                        {% endfor %}
+                    </div>
+                {% endif %}    
+                <!-- Start default panel -->
+                <div class="panel panel-primary rounded shadow">
+                    <!-- Start panel heading -->
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{titulo}}</h3>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <!--/ End panel heading -->
+                    <!-- Start panel content -->
+                    
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-middle table-primary">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" style="max-width: 5px">No.</th>
+                                                <th>Trámite</th>
+                                                <th class="text-center" style="max-width: 20px">Nuevo Trámite</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for entity in entities %}
+                                                <tr>
+                                                    <td class="text-center" style="max-width: 5px">
+                                                        <strong>{{ loop.index }}</strong>
+                                                    </td>
+                                                    <td>{{ entity.flujo }}</td>
+                                                    <td class="text-center" style="max-width: 20px">
+                                                        <a href="{{ path('wf_tramite_nuevo', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Iniciar Trámite">
+                                                            <i class="fa fa-pencil"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- /.panel-body -->
+                    <!--/ End panel content -->
+                </div><!-- /.panel -->
+                <!--/ End default panel -->
+            </div>
+        </div><!-- /.row -->
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var registroConsol = function (gestionid) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('herramienta_especial_registro_consol', {'gestionid': gestionid}),
+                beforeSend: function () {
+                    $("#tableConsol").empty();
+                    $("#tableConsol").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" style="width: 80px;" /></div>');
+                },
+                success: function (data) {
+                    $("#listaConsol").remove();
+                    $("#tableConsol").empty();
+                    $("#tableConsol").append(data);
+                    cargatablas();
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+        var cargatablas = function (identif){
+            // Setup - add a text input to each footer cell
+            $('#listaConsol tfoot th').each( function () {
+                var title = $(this).text();
+                if(title.trim() === "" || title === "#"){
+                    $(this).html('');
+                } else {
+                    $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+                }
+            } );
+
+            // DataTable
+            var table = $('#listaConsol').DataTable( {
+                    "order": [[ 0, "asc" ]],
+                    "columnDefs": [
+                        { "orderable": false, "targets": [8,7,6,5] }
+                    ],
+                }
+            );
+
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        };
+
+        $(document).ready(function(){
+            cargatablas();
+        });
+    </script>
+{% endblock %}

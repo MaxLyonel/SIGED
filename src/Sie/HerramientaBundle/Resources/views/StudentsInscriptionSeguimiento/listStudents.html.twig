@@ -1,0 +1,86 @@
+
+<div class="row">
+
+
+    <div class="col-xs-12 col-lg-12">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <table cellspacing="20" cellpadding="20">
+                    <tr>
+                        <td><small>Nivel: {{dataInfo.nivel}}</small></td>
+                        <td><small>Grado: {{dataInfo.grado}}</small></td>
+                        <td><small>Paralelo: {{dataInfo.paralelo}}</small></td>
+                        <td><small>Turno: {{dataInfo.turno}}</small></td>
+
+                    </tr>
+                </table>
+                <div class="portlet portlet-blue">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4><i class="fa fa-home fa-fw"></i> </h4>
+                        </div>
+                        <div class="portlet-widgets">
+                            <!-- Button Dropdown -->
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="portlet-body">
+
+                        <div class="row">
+
+                            <div class="col-md-12">
+                                <!--here the body of portlet-->
+
+
+                                <div id="no-more-tables">
+                                    <table class="table table-bordered table-hover cf">
+                                        <thead class="cf">
+                                            <tr class="info">
+                                                <th class="text-center">No</th>
+                                                <th class="text-center">Rude</th>
+                                                <th class="text-center" >Nombre</th>
+                                                <th class="text-center">CI</th>
+                                                <th class="text-center">F. Nac</th>
+                                                <th class="text-center">Género</th>
+                                                <th class="text-center">Estado Inscripción</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for student in students%}
+
+                                                <tr>
+                                                    <td data-title="No"><small>{{loop.index}}</small></td>
+                                                    <td data-title="Rude"><small>{{student.codigoRude}}</small></td>
+                                                    <td data-title="Nombre" ><small> {{student.paterno}} {{student.materno}} {{student.nombre}}</small></td>
+                                                    <td data-title="CI"><small>{{student.carnetIdentidad}}</small></td>
+                                                    <td data-title="F. Nac"><small>{{student.fechaNacimiento|date('d-m-Y')}}</small></td>
+                                                    <td data-title="Género" class="text-center">
+                                                        {% if student.generoId == 1 %}
+                                                            <small>M</small>
+                                                        {%else%}
+                                                            <small>F</small>
+                                                        {%endif%}
+                                                    </td>
+                                                    <td data-title="Estado Inscripción"><small>{{student.seguimiento}}</small></td>
+                                                </tr>
+
+                                            {%endfor%}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
