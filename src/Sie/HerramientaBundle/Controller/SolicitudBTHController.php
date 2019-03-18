@@ -27,6 +27,7 @@ use Sie\AppWebBundle\Entity\EspecialidadTecnicoHumanisticoTipo;
 use Sie\AppWebBundle\Entity\GestionTipo;
 use Sie\AppWebBundle\Entity\TramiteDetalle;
 use Sie\AppWebBundle\Entity\Tramite;
+use Sie\AppWebBundle\Entity\TramiteTipo;
 
 
 
@@ -687,8 +688,8 @@ class SolicitudBTHController extends Controller {
         $query->execute();
         $especialidadlista = $query->fetchAll();
         $tipoTramite    = $infoUE['tramite_tipo'];
-        $tramite_tipo = ($em->getRepository('SieAppWebBundle:TramiteTipo')->findOneById($tipoTramite))->getTramitetipo();
-        $flujotipo = ($em->getRepository('SieAppWebBundle:Tramite')->findOneById($id_tramite))->getFlujoTipo();
+        $tramite_tipo = $em->getRepository('SieAppWebBundle:TramiteTipo')->find($tipoTramite)->getTramiteTipo();
+        $flujotipo = $em->getRepository('SieAppWebBundle:Tramite')->find($id_tramite)->getFlujoTipo();
                 return $this->render('SieHerramientaBundle:SolicitudBTH:formularioBTHDirec.html.twig',array(
                     'ieducativa'    => $infoUe,
                     'institucion'   => $institucion,
