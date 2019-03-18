@@ -51,7 +51,7 @@
                             {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 9 or app.session.get('roluser') == 10 or app.session.get('roluser') == 20 %}
                                 <div class='row'>
                                     <div class='col-md-4 col-md-offset-4'>
-                                        <a class="btn btn-block btn-default btn-pinterest" href="{{ path('donwload_listStudentPerUe', {'gestion':gestionSelected, 'ue':unidadEducativa.id} )}}">
+                                        <a class="btn btn-block btn-default btn-pinterest" href="{{ path('donwload_listStudentPerUeSeg', {'gestion':gestionSelected, 'ue':unidadEducativa.id} )}}">
                                             <i class="fa fa-download"></i> Listado de Estudiantes
                                         </a>
                                     </div>
@@ -69,7 +69,7 @@
                                             <th>Paralelo</th>
                                             <th>Turno</th>
                                             <th># Estudiantes</th>
-                                            <th>ver</th>
+                                            {#<th>ver</th>#}
                                             <th >Form</th>
 
                                         </tr>
@@ -84,15 +84,15 @@
                                                 <td data-title="Turno" >{{ entity.turno }}</td>
                                                 <td data-title="Estudiantes">{{entity.students}}</td>
 
-                                                <td class="text-center">
-                                                    <a href="#" class="btn btn-link" id="viewList" onclick="openList({{unidadEducativa.id}}, '{{gestionSelected}}',{{entity.nivelId}} ,{{entity.gradoId}} ,{{entity.paraleloId}} ,{{entity.turnoId}} )" >
-                                                        Ver
-                                                    </a>
-                                                </td>
+                                                {#<td class="text-center">#}
+                                                    {#<a href="#" class="btn btn-link" id="viewList" onclick="openList({{unidadEducativa.id}}, '{{gestionSelected}}',{{entity.nivelId}} ,{{entity.gradoId}} ,{{entity.paraleloId}} ,{{entity.turnoId}} )" >#}
+                                                        {#Ver#}
+                                                    {#</a>#}
+                                                {#</td>#}
 
                                                 <td class="text-center">
                                                     {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 9 or app.session.get('roluser') == 10 %}
-                                                        <a href="{{path('donwload_listStudentPerCourse', {'ue': unidadEducativa.id, 'gestion': gestionSelected, 'nivel':entity.nivelId,'grado':entity.gradoId, 'paralelo':entity.paraleloId,'turno':entity.turnoId } )}}">
+                                                        <a href="{{path('donwload_listStudentPerCourseSeg', {'ue': unidadEducativa.id, 'gestion': gestionSelected, 'nivel':entity.nivelId,'grado':entity.gradoId, 'paralelo':entity.paraleloId,'turno':entity.turnoId } )}}">
                                                             Descargar
                                                         {# <img src="{{asset('img/pdf.png') }}" data-1x="{{asset('img/pdf.png')}}" data-2x="{{asset('img/pdf.png')}}" height="10" width="10"   class="hisrc img-responsive"  > #}
                                                         </a>
@@ -118,7 +118,26 @@
         </div>
 
 
+            <div class="modal fade bs-example-modal-table" id="listStudentsue" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+                <div class="modal-dialog higherWider">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="flexModalLabel">Lista de Estudiantes</h4>
+                            {{unidadEducativa.institucioneducativa}} -<b>{{unidadEducativa.id}}
+                        </div>
+                        <div class="modal-body">
+                            <div id="idstudents"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
 
     </div>
     <!-- the new view end -->
@@ -159,10 +178,10 @@
 
             $.ajax({
                 type: 'get',
-                url: Routing.generate('students_inscriptions_openhistoric', {'sie': sie, 'gestion': gestion, 'nivel': nivel, 'grado': grado, 'paralelo': paralelo, 'turno': turno}),
+                url: Routing.generate('students_inscriptions_seguimiento_openhistoric', {'sie': sie, 'gestion': gestion, 'nivel': nivel, 'grado': grado, 'paralelo': paralelo, 'turno': turno}),
                 beforeSend: function () {
                     $("#idstudents").empty();
-                    $("#idstudents").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                    $("#idstudents").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
                 },
                 success: function (data) {
                     $("#idstudents").empty();

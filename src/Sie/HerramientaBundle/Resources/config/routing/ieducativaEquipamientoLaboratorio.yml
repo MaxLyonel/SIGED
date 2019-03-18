@@ -17,3 +17,7 @@ herramienta_ieducativa_equipamiento_laboratorio_vista:
 herramienta_ieducativa_equipamiento_laboratorio_vista_pdf:
     path:     /vista/pdf
     defaults: { _controller: SieHerramientaBundle:IeducativaEquipamientoLaboratorio:vistaPdf}
+
+herramienta_ieducativa_equipamiento_laboratorio_elimina:
+    path:     /elimina
+    defaults: { _controller: SieHerramientaBundle:IeducativaEquipamientoLaboratorio:elimina}
