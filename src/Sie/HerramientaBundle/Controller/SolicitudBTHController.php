@@ -1552,18 +1552,8 @@ class SolicitudBTHController extends Controller {
                             $gestiontipo = $em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear'));
                             $entity->setInstitucioneducativa($ue);
                             $entity->setEspecialidadTecnicoHumanisticoTipo($espe);
-
-                            /*if (($idespecialidad == 64 or $idespecialidad == 65) and $sesenta64 == true and $sesenta65 == true and $estado6 == true) {
-                                $entity->setObs($observaciones);
-                                $estado6 = false;
-                            }
-                            if (($idespecialidad == 41 or $idespecialidad == 42) and $cuarenta41 == true and $cuarenta42 == true and $estado4 == true) {
-                                    $entity->setObs($observaciones);
-                                    $estado4 = false;
-                            }*/
                             $entity->setGestionTipo($gestiontipo);
                             $entity->setFechaRegistro(new \DateTime($infoUE['fecha_tramite']));
-                            //dump($entity);die;
                             $em->persist($entity);
                             $em->flush();
                         }
@@ -1600,12 +1590,5 @@ class SolicitudBTHController extends Controller {
             $res = 0;
         }
         return  new Response($res);
-
-
-
     }
-
-
-
-
 }
