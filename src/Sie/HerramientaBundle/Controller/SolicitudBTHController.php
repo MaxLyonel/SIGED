@@ -823,7 +823,7 @@ class SolicitudBTHController extends Controller {
         }
      }
 
-
+//Distrital
      public function  VerSolicitudBTHDisAction(Request $request){
 
          //validation if the user is logged
@@ -995,9 +995,9 @@ class SolicitudBTHController extends Controller {
      public function  guardasolicitudDepAction(Request $request){
         $documento = $request->files->get('docpdf');
         if(!empty($documento)){
-            $destination_path = 'uploads/archivos/';
+            $destination_path = 'uploads/archivos/Bth';
             $imagen = date('YmdHis').'.'.$documento->getClientOriginalExtension();
-            $documento->move($destination_path, $imagen);
+            $documento->src/Sie/AppWebBundle/Controller/DefaultController.php($destination_path, $imagen);
         }else{
             $imagen='default-2x.pdf';
         }
@@ -1348,7 +1348,7 @@ class SolicitudBTHController extends Controller {
     public function guardasolicitudDepartamentalAction(Request $request){//dump($request);die;
         $documento = $request->files->get('docpdf');
         if(!empty($documento)){
-            $destination_path = 'uploads/archivos/';
+            $destination_path = 'uploads/archivos/Bth';
             $imagen = date('YmdHis').'.'.$documento->getClientOriginalExtension();
             $documento->move($destination_path, $imagen);
         }else{
