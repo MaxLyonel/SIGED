@@ -215,7 +215,7 @@
                                                 <div class="col-md-3">
                                                 </div>
                                                 <div class="col-md-5">
-                                                    {% if (tipoTramite == 45)  %} {#tramite Nuevo#}
+                                                    {% if (tramite_tipo == 'Registro Nuevo')  %} {#tramite Nuevo#}
                                                         <select  id="select_especialidade" name="select_especialidade[]" class="chosen-select" multiple="" tabindex="-1" style="display: none;">
                                                             {% for especialidad in especialidadlista %}
                                                                 <option value="{{ especialidad.id }}">{{ especialidad.especialidad }}</option>
@@ -322,8 +322,7 @@
                     })
                         .then(function(willDelete)  {
                             if (willDelete) {
-                                var institucionid={{ institucion.id }}
-                                var tipoTramite={{ tipoTramite }}
+                                var institucionid={{ institucion.id }};
                                 var ip = [];
                                 if($('#informe:checked').val())
                                     ip.push({ informe : 1});
@@ -340,7 +339,7 @@
                                 $.ajax({
                                     type: 'post',
                                     url: "{{ path('solicitud_bth_enviosolicitud') }}",
-                                    data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},idsolicitud:idsolicitud,tipoTramite:{{ tramite_tipo }},idflujotipo:{{ flujotipo }},sw:1 },
+                                    data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},idsolicitud:idsolicitud,solicitud:tramite_tipo,idflujotipo:{{ flujotipo }},sw:1 },
                                     dataType : 'json',
                                     beforeSend: function () {
                                         swal({
@@ -352,11 +351,11 @@
                                     },
                                     success: function (data) {
                                         console.log(data);
-                                        if (data==1 ){
+                                        if (data.estado ==1 ){
                                             swal("Su formulario se ha enviado con éxito, con Nro. Trámite: " + {{ id_tramite}} );
                                             location.href = "{{ path('wf_tramite_index') }}";
                                         }
-                                        else if(data==2 ){
+                                        else if(data.estado ==2 ){
                                             swal("Debe iniciar su trámite como 'Ratificacion'");
                                         }else {
                                             swal('Su formulario no se envío correctamente');
