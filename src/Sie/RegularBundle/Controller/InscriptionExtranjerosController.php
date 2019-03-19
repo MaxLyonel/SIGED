@@ -49,7 +49,6 @@ class InscriptionExtranjerosController extends Controller {
             $this->arrOptionInscription[100] = 'Incial/Primaria R.M. No 2378/2017';
             $this->arrOptionInscription[77] = 'Post Bachillerato';
         }
-
     }
 
     public function indexAction(Request $request) {
@@ -958,7 +957,7 @@ class InscriptionExtranjerosController extends Controller {
                 'estudiante_inscripcion',
                 'C',
                 '',
-                '',
+                $studentInscription,
                 '',
                 'SIGED',
                 json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
