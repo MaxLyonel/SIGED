@@ -85,7 +85,8 @@ class NewHistoryInscriptionController extends Controller {
                     'dataInscriptionA' => $dataInscriptionA,
                     'dataInscriptionE' => $dataInscriptionE,
                     'dataInscriptionP' => $dataInscriptionP,
-                    'sw' => $sw
+                    'sw' => $sw,
+                    'visible' => true
         ));
     }
 

@@ -78,7 +78,7 @@ class EstudianteTrabajaController extends Controller
                             'class' => 'SieAppWebBundle:ActividadTipo',
                             'query_builder' => function (EntityRepository $e) {
                                 return $e->createQueryBuilder('at')
-                                        ->where('at.id != 3');
+                                        ->where('at.id != 20');
                             },
                             'property'=>'descripcionOcupacion',
                             'empty_value' => 'Selecionar...',

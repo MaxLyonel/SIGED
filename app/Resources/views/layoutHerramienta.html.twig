@@ -420,9 +420,7 @@
                         </a>
                         <ul>
                             <li><a href="{{ path('herramienta_ieducativa_equipamiento_laboratorio_detalle')}}">Laboratorio</a></li>
-                            {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 20 %}
-                                <li><a href="{{ path('herramienta_reportelabofisquim_index')}}">Reportes</a></li>
-                            {% endif %}
+                            <li><a href="{{ path('herramienta_reportelabofisquim_index')}}">Reportes</a></li>
                         </ul>
                     </li>
 
@@ -463,6 +461,33 @@
                       </ul>
                     </li>
                     {% endif %}
+                    {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10  %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-diamond"></i></span>
+                                <span class="text">Reportes NNATS</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('herramienta_nnats_index')}}">Reportes</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                    {% if  app.session.get('roluser') == 9 and app.session.get('ie_id') >= 40730001  and app.session.get('ie_id') <= 40730468   %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-diamond"></i></span>
+                                <span class="text">Inscripciones</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('inscription_ini_pri_rue_index')}}">Omitidos/Extemporáneos</a></li>
+                                <li><a href="{{ path('inscription_extranjeros_index')}}">Inicial/Primaria</a></li>
+                                <li><a href="{{ path('change_paralelo_sie_index')}}">Cambio de Paralelo</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+
 
                     {#
                         <li class="submenu">
