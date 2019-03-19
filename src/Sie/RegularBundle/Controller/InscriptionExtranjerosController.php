@@ -779,7 +779,7 @@ class InscriptionExtranjerosController extends Controller {
                         //validate the year of student
                         $idStudent = $form ['idStudent'];
                         $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($idStudent);
-                        $tiempo = $this->tiempo_transcurrido($objStudent->getFechaNacimiento()->format('d-m-Y'), '30-6-2018');
+                        $tiempo = $this->tiempo_transcurrido($objStudent->getFechaNacimiento()->format('d-m-Y'), '30-6-'.$this->session->get('currentyear'));
 
                         switch ($tiempo[0]) {
                           case 3:
