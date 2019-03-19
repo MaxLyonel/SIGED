@@ -43,10 +43,11 @@ class InscriptionExtranjerosController extends Controller {
     **/
     public function fillOptionsInscriptions(){
 
-         $this->arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria','77'=> 'Post Bachillerato' );
+         $this->arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria', );
 
         if($this->session->get('roluser') == 7 || $this->session->get('roluser') == 8){
             $this->arrOptionInscription[100] = 'Incial/Primaria R.M. No 2378/2017';
+            $this->arrOptionInscription[77] = 'Post Bachillerato';
         }
     }
 
@@ -956,7 +957,7 @@ class InscriptionExtranjerosController extends Controller {
                 'estudiante_inscripcion',
                 'C',
                 '',
-                '',
+                $studentInscription,
                 '',
                 'SIGED',
                 json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
