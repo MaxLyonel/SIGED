@@ -45,12 +45,13 @@
                 <input type="hidden" name="idInstitucionCurso" id="idInstitucionCurso">
                 <input type="hidden" name="idNivel" id="idNivel">
                 <input type="hidden" name="educacionTipo" id="educacionTipo" value="{{app.session.get('sysname')}}">
-                <div class="modal-header" style="background-color: red; ">
+                <div class="modal-header" style="background: red; color: white">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     <h4 class="modal-title" id="flexModalLabel">Adición de Áreas</h4>
-                    <span id="nivelModal"></span>
+                    {# <span id="nivelModal"></span>
                     - <span id="gradoModal"></span>
-                    - <span id="paraleloModal"></span>
+                    - <span id="paraleloModal"></span> #}
+                    <span id="modal-subtitle"></span>
                 </div>
                 <div class="modal-body">
                     <div id="areasModal">
@@ -369,13 +370,13 @@
             return false;
         }
 
-        function mostrarAreas(nivel, grado, paralelo, idInstitucionCurso, idNivel, divResultado) {
-            $('#nivelModal').empty();
-            $('#nivelModal').append((nivel));
-            $('#gradoModal').empty();
-            $('#gradoModal').append(grado);
-            $('#paraleloModal').empty();
-            $('#paraleloModal').append(paralelo);
+        function mostrarAreas(nivel, grado, paralelo, idInstitucionCurso, idNivel, lugar, divResultado) {
+            //$('#nivelModal').empty();
+            //$('#nivelModal').append((nivel));
+            //$('#gradoModal').empty();
+            //$('#gradoModal').append(grado);
+            //$('#paraleloModal').empty();
+            //$('#paraleloModal').append(paralelo);
 
             $('#divResultado').empty();
             $('#divResultado').val(divResultado);
@@ -383,6 +384,8 @@
             $('#idInstitucionCurso').val(idInstitucionCurso);
             $('#idNivel').empty();
             $('#idNivel').val(idNivel);
+            $('#idNivel').empty();
+            $('#modal-subtitle').html(nivel+' - '+grado+' - '+paralelo+(lugar==null?'':' - '+ lugar));
 
             $.ajax({
                 type: 'get',

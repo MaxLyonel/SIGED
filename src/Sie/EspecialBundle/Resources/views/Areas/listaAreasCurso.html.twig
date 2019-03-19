@@ -1,12 +1,12 @@
 {% set onlyview = app.session.get('onlyview') %}
 <div class="col-lg-12">
-<h4 class="text-orange text-center"><ins>{{curso.nivelTipo.nivel}} - {{curso.gradoTipo.grado}} - {{curso.paraleloTipo.paralelo}}</ins></h4>
+<h4 class="text-orange text-center"><ins>{{curso.nivelTipo.nivel}} - {{curso.gradoTipo.grado}} - {{curso.paraleloTipo.paralelo}} {% if(curso.lugar) %} - {{curso.lugar}} {% endif %}</ins></h4>
 <hr>
 </div>
 <div class="col-lg-12">
     <div class="pull-right">
         {% if onlyview == false %}
-            <button data-title="3456" onclick="mostrarAreas(new String('{{curso.nivelTipo.nivel}}'), '{{curso.gradoTipo.grado}}', '{{curso.paraleloTipo.paralelo}}',{{curso.id}} ,{{curso.nivelTipo.id}} , 'divAreas')" class="btn btn-primary btn-md"><i class="fa fa-plus-circle text-white"></i> Adicionar Área para especial </button>
+            <button data-title="3456" onclick="mostrarAreas(new String('{{curso.nivelTipo.nivel}}'), '{{curso.gradoTipo.grado}}', '{{curso.paraleloTipo.paralelo}}',{{curso.id}} ,{{curso.nivelTipo.id}}, '{{curso.lugar}}' , 'divAreas')" class="btn btn-primary btn-md"><i class="fa fa-plus-circle text-white"></i> Adicionar Área para especial </button>
         {% endif %}
     </div> 
 </div>
@@ -78,7 +78,7 @@
 <div style="display:none">
 <h4><i class="fa fa-list-alt"></i> Áreas Técnicas
     <span style="float:right; margin-bottom:10px">
-        <button data-title="3456" onclick="mostrarAreas(new String('{{curso.nivelTipo.nivel}}'), '{{curso.gradoTipo.grado}}', '{{curso.paraleloTipo.paralelo}}',{{curso.id}} ,{{curso.nivelTipo.id}} , 'divAreas')" class="btn btn-green btn-xs"><i class="fa fa-plus-circle text-white"></i> Adicionar Ã�rea</button>
+        <button data-title="3456" onclick="mostrarAreas(new String('{{curso.nivelTipo.nivel}}'), '{{curso.gradoTipo.grado}}', '{{curso.paraleloTipo.paralelo}}',{{curso.id}} ,{{curso.nivelTipo.id}}, '{{curso.lugar}}' , 'divAreas')" class="btn btn-green btn-xs"><i class="fa fa-plus-circle text-white"></i> Adicionar Ã�rea</button>
     </span>
 </h4>
 {% if areasCurso is empty %}
