@@ -107,13 +107,25 @@ class WfTramiteController extends Controller
             }    
         }else{
             if($rol == $flujoproceso[0]->getRolTipo()->getId()){
-                return $this->redirectToRoute($flujoproceso[0]->getRutaFormulario(),array('id'=>$id));    
+                $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
+                $query->bindValue(':user_id', $usuario);
+                $query->bindValue(':sie', $this->session->get('ie_id'));
+                $query->bindValue(':rolId', $rol);
+                $query->execute();
+                $aTuicion = $query->fetchAll();
+                if ($aTuicion[0]['get_ue_tuicion']) {
+                    return $this->redirectToRoute($flujoproceso[0]->getRutaFormulario(),array('id'=>$id));  
+                }else{
+                    $request->getSession()
+                            ->getFlashBag()
+                            ->add('error', "No tiene tuición para iniciar un nuevo tramite: ". $flujoproceso[0]->getFlujoTipo()->getFlujo());
+                    return $this->redirectToRoute('wf_tramite_index');    
+                }        
             }else{
                 $request->getSession()
-
-                    ->getFlashBag()
-                    ->add('error', "No tiene tuición para iniciar un nuevo tramite: ". $flujoproceso[0]->getFlujoTipo()->getFlujo());
-                    return $this->redirectToRoute('wf_tramite_index');    
+                        ->getFlashBag()
+                        ->add('error', "No tiene tuición para iniciar un nuevo tramite: ". $flujoproceso[0]->getFlujoTipo()->getFlujo());
+                return $this->redirectToRoute('wf_tramite_index');    
             }
         }
     }
@@ -611,8 +623,8 @@ class WfTramiteController extends Controller
                 if($flujoprocesoSiguiente->getRolTipo()->getId() == 9){  // si es director
                     $query = $em->getConnection()->prepare("select u.* from maestro_inscripcion m
                     join usuario u on m.persona_id=u.persona_id
-                    where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=2018 and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
-                    //where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=".(new \DateTime())->format('Y')." and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
+                    where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=".(new \DateTime())->format('Y')." and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
+                    //where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=2018 and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
 
                     $query->execute();
                     $uDestinatario = $query->fetchAll();
