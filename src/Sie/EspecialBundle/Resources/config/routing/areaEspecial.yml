@@ -87,3 +87,9 @@ area_especial_maestros_asignar:
     defaults: { _controller: "SieEspecialBundle:Areas:maestrosAsignar"}
     options:
          expose: true
+
+area_especial_listar_maestros_resp:
+    path:     /maestros_responsables/
+    defaults: { _controller: "SieEspecialBundle:Areas:maestrosResponsable"}
+    options:
+         expose: true

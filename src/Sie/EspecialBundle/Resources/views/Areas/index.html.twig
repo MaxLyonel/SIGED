@@ -45,27 +45,20 @@
                 <input type="hidden" name="idInstitucionCurso" id="idInstitucionCurso">
                 <input type="hidden" name="idNivel" id="idNivel">
                 <input type="hidden" name="educacionTipo" id="educacionTipo" value="{{app.session.get('sysname')}}">
+                <input type="hidden" id="lugar">
                 <div class="modal-header" style="background: red; color: white">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     <h4 class="modal-title" id="flexModalLabel">Adición de Áreas</h4>
-                    {# <span id="nivelModal"></span>
-                    - <span id="gradoModal"></span>
-                    - <span id="paraleloModal"></span> #}
                     <span id="modal-subtitle"></span>
                 </div>
                 <div class="modal-body">
                     <div id="areasModal">
-
                     </div>
                 </div>
-
             </form>
         </div>
-        <!-- /.modal-content -->
     </div>
-    <!-- /.modal-dialog -->
 </div>
-<!-- Start page header -->
 <div class="header-content">
     <h2><i class="fa fa-table"></i> Asignación Área/Maestro <span>Lista</span></h2>
     <div class="breadcrumb-wrapper hidden-xs">
@@ -94,11 +87,9 @@
             </li>
             <li class="active">Asignación</li>
         </ol>
-    </div><!-- /.breadcrumb-wrapper -->
-</div><!-- /.header-content -->
-<!--/ End page header -->
+    </div>
+</div>
 <div class="body-content animated fadeIn">
-
     {% if institucion %}
         {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Asignación Área/Maestro', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
     {% else %}
@@ -377,16 +368,14 @@
             //$('#gradoModal').append(grado);
             //$('#paraleloModal').empty();
             //$('#paraleloModal').append(paralelo);
-
-            $('#divResultado').empty();
+            $('#divResultado').empty();$('#modalidadCasa').css('display', 'none');
             $('#divResultado').val(divResultado);
             $('#idInstitucionCurso').empty();
             $('#idInstitucionCurso').val(idInstitucionCurso);
             $('#idNivel').empty();
             $('#idNivel').val(idNivel);
             $('#idNivel').empty();
-            $('#modal-subtitle').html(nivel+' - '+grado+' - '+paralelo+(lugar==null?'':' - '+ lugar));
-
+            $('#modal-subtitle').html(nivel+' - '+grado+' - '+paralelo+((lugar==null || lugar=='')?'':' - '+ lugar));
             $.ajax({
                 type: 'get',
                 url: Routing.generate('area_especial_listar_areas_nivel', {'idNivel': idNivel, 'idCurso': idInstitucionCurso}),
@@ -397,6 +386,13 @@
                 success: function (data) {
                     $("#areasModal").empty();
                     $("#areasModal").append(data);
+                    if (lugar==null || lugar=='') {
+                        $('#lugar').val('');
+                        $('#modalidadCasa').css('display', 'none');
+                    } else if(lugar.trim() == "EDUCACION EN CASA" || lugar.trim() == "EDUCACIÓN EN CASA"){
+                        $('#lugar').val(lugar);
+                        $('#modalidadCasa').css('display', 'block');
+                    }
                 }
             });
             $('#newModal').modal('show');
@@ -438,6 +434,10 @@
 
             var div = $('#divResultado').val();
             var formData = $('#formAreasModal').serialize();
+            if ($('#lugar').val()=="EDUCACION EN CASA" || $('#lugar').val() == "EDUCACIÓN EN CASA") {
+                alert('Seleccione al maestro responsable.');
+                return 0;
+            }
             $.ajax({
                 type: 'get',
                 url: Routing.generate('area_especial_listar_areas_curso_adicionar_eliminar'),

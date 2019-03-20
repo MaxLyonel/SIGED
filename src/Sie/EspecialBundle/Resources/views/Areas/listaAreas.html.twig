@@ -42,10 +42,30 @@
     </div>
     <div id="step2">
         <div class="row">
-                
+            <div class="col-md-12s">
                 <div id="divAdicionMaestros" style="display:none">
                     <div class="alert-info"><i class="fa fa-info-circle"></i>
                         NOTA: Debe asignar el(los) maestro(s) a las áreas adicionadas.
+                    </div>
+                    <div class="row" id="modalidadCasa" style="display: none">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="centro_educativo">Centro Educativo</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="centro_educativo" name="centro_educativo">
+                                    <span class="input-group-addon" onclick="getMaestros()" style="cursor: pointer;"><i class="fa fa-search"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="form-group">
+                                <label for="maestro_responsable">Maestro responsable</label>
+                                <select class="form-control" id="maestro_responsable" name="maestro_responsable">
+                                    <option value="" disabled selected>Seleccione...</option>
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <div id="no-more-tables">
                         <table class="table table-bordered cf" id="tablaAdicionMaestros">
@@ -76,7 +96,7 @@
                 <div style="text-align: right">
                     <button type="submit" class="btn btn-success" onclick="return confirm('¿Está completamente segura/o de agregar el curso?, Nota: Una vez agregado no se puede eliminar.')"><i class="fa fa-save fa-fw"></i>Guardar cambios</button>
                 </div>
-            
+            </div>
         </div>
     </div>
 </div>
@@ -101,7 +121,36 @@
         }else{
             $('#divAdicionMaestros').css('display','block');
         }
-
+    }
+    $('#centro_educativo').on('keypress',function(e) {
+        if(e.which == 13) {
+            e.preventDefault();
+            getMaestros();
+        }
+    });
+    function getMaestros() {
+        var centro = $('#centro_educativo').val();
+        if (centro == '') {
+            $('#centro_educativo').focus();
+        } else {
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('area_especial_listar_maestros_resp'),
+                data: {'centro_educativo': centro},
+                dataType: "json",
+                beforeSend: function () {
+                    $("#maestro_responsable").empty();
+                    $("#maestro_responsable").append('<option value="">Buscando...</option>');
+                },
+                success: function (data) {
+                    $("#maestro_responsable").empty();
+                    $("#maestro_responsable").append('<option value="" disabled selected>Seleccione...</option>');
+                    $.each(data.maestros, function (i, value) {
+                        $("#maestro_responsable").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
     }
 </script>
 {% else %}

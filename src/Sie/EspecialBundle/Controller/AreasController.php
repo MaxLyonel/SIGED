@@ -1299,4 +1299,30 @@ class AreasController extends Controller {
         return $lit;
     }
 
+    public function maestrosResponsableAction(Request $request){
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $gestion = $this->session->get('idGestion');
+            $institucioneducativa = $request->get('centro_educativo');
+            // $em->getConnection()->beginTransaction();
+            $query = $em->getConnection()->prepare('SELECT pers.id, pers.nombre, pers.paterno, pers.materno FROM maestro_inscripcion mins
+                INNER JOIN persona pers ON pers.id = mins.persona_id WHERE mins.estadomaestro_id = :estado
+                AND mins.gestion_tipo_id = :gestion AND mins.institucioneducativa_id = :institucioneducativa ORDER BY pers.paterno');
+            $query->bindValue('estado', 1);
+            $query->bindValue('gestion', $gestion);
+            $query->bindValue('institucioneducativa', $institucioneducativa);
+            $query->execute();
+            $maestros = $query->fetchAll();
+           
+            $maestrosArray = array();
+            for ($i = 0; $i < count($maestros); $i++) {
+                $maestrosArray[$maestros[$i]['id']] = $maestros[$i]['paterno'].' '.$maestros[$i]['materno'].' '.$maestros[$i]['nombre'];
+            }
+            //$em->getConnection()->commit();
+            $response = new JsonResponse();
+            return $response->setData(array('maestros' => $maestrosArray));
+        } catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+        }
+    }
 }
