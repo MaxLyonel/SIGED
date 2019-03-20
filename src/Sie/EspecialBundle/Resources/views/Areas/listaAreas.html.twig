@@ -52,7 +52,7 @@
                             <div class="form-group">
                                 <label for="centro_educativo">Centro Educativo</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="centro_educativo" name="centro_educativo">
+                                    <input type="text" class="form-control" id="centro_educativo">
                                     <span class="input-group-addon" onclick="getMaestros()" style="cursor: pointer;"><i class="fa fa-search"></i></span>
                                 </div>
                             </div>
@@ -62,7 +62,6 @@
                                 <label for="maestro_responsable">Maestro responsable</label>
                                 <select class="form-control" id="maestro_responsable" name="maestro_responsable">
                                     <option value="" disabled selected>Seleccione...</option>
-                                    <option value=""></option>
                                 </select>
                             </div>
                         </div>
@@ -94,7 +93,7 @@
                     </div>
                 </div>
                 <div style="text-align: right">
-                    <button type="submit" class="btn btn-success" onclick="return confirm('¿Está completamente segura/o de agregar el curso?, Nota: Una vez agregado no se puede eliminar.')"><i class="fa fa-save fa-fw"></i>Guardar cambios</button>
+                    <button type="submit" class="btn btn-success" id="btnsave" onclick="return confirm('¿Está completamente segura/o de agregar el curso?, Nota: Una vez agregado no se puede eliminar.')"><i class="fa fa-save fa-fw"></i>Guardar cambios</button>
                 </div>
             </div>
         </div>
@@ -148,6 +147,7 @@
                     $.each(data.maestros, function (i, value) {
                         $("#maestro_responsable").append('<option value="' + i + '">' + value + '</option>');
                     });
+                    $("#maestro_responsable").chosen({allow_single_deselect:false}); 
                 }
             });
         }

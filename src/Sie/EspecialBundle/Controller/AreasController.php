@@ -463,7 +463,7 @@ class AreasController extends Controller {
      * ventana modal
      */
 
-    public function lista_areas_nivelAction($idNivel, $idCurso) {
+    public function lista_areas_nivelAction($idNivel, $idCurso, $mTipo) {
         try {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
@@ -741,9 +741,11 @@ class AreasController extends Controller {
                            ->where('ie.id = :idInstitucion')
                            ->andWhere('gt.id = :gestion')
                            ->andWhere('rt.id = :rol')
+                           ->andWhere('ct.id = :cargoTipo')
                            ->setParameter('idInstitucion',$this->session->get('idInstitucion'))
                            ->setParameter('gestion',$this->session->get('idGestion'))
                            ->setParameter('rol',2)
+                           ->setParameter('cargoTipo',$mTipo)
                            ->orderBy('p.paterno','asc')
                            ->addOrderBy('p.materno','asc')
                            ->addOrderBy('p.nombre','asc')
@@ -845,7 +847,13 @@ class AreasController extends Controller {
             $em->getConnection()->beginTransaction();
             $this->session = new Session;
             $idCurso = $request->get('idInstitucionCurso');
+            $idMaestroResponsable = $request->get('maestro_responsable');
             $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($idCurso);
+            if ($idMaestroResponsable!=null) {
+                $curso->setMaestroInscripcionAsesor($em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($idMaestroResponsable));
+                $em->persist($curso);
+                $em->flush();
+            }
             /*
              * Areas a registrar nuevos
              */
@@ -1305,7 +1313,7 @@ class AreasController extends Controller {
             $gestion = $this->session->get('idGestion');
             $institucioneducativa = $request->get('centro_educativo');
             // $em->getConnection()->beginTransaction();
-            $query = $em->getConnection()->prepare('SELECT pers.id, pers.nombre, pers.paterno, pers.materno FROM maestro_inscripcion mins
+            $query = $em->getConnection()->prepare('SELECT mins.id, pers.nombre, pers.paterno, pers.materno FROM maestro_inscripcion mins
                 INNER JOIN persona pers ON pers.id = mins.persona_id WHERE mins.estadomaestro_id = :estado
                 AND mins.gestion_tipo_id = :gestion AND mins.institucioneducativa_id = :institucioneducativa ORDER BY pers.paterno');
             $query->bindValue('estado', 1);
