@@ -1128,7 +1128,7 @@ class AreasController extends Controller {
 
         // Obtener datos del curso
         $curso = $em->createQueryBuilder()
-                    ->select('ie.id as sie, gt.id as gestion')
+                    ->select('ie.id as sie, gt.id as gestion,iec.lugar')
                     ->from('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco')
                     ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ieco.insitucioneducativaCurso = iec.id')
                     ->innerJoin('SieAppWebBundle:Institucioneducativa','ie','with','iec.institucioneducativa = ie.id')
@@ -1183,6 +1183,11 @@ class AreasController extends Controller {
                                             'idco'=>$ieco);
             }
         }
+        if($curso[0]['lugar']){
+            $idcargo = 15;
+        }else{
+            $idcargo = 0;
+        }
 
         $maestros = $em->createQueryBuilder()
                         ->select('mi')
@@ -1195,11 +1200,13 @@ class AreasController extends Controller {
                         ->where('ie.id = :sie')
                         ->andWhere('gt.id = :gestion')
                         ->andWhere('rt.id = 2')
+                        ->andWhere('ct.id = :idcargo')
                         ->orderBy('p.paterno','ASC')
                         ->addOrderBy('p.materno','ASC')
                         ->addOrderBy('p.nombre','ASC')
                         ->setParameter('sie',$sie)
                         ->setParameter('gestion',$gestion)
+                        ->setParameter('idcargo',$idcargo)
                         ->getQuery()
                         ->getResult();
 
