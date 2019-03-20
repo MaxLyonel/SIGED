@@ -137,10 +137,10 @@
                 url: Routing.generate('area_especial_listar_maestros_resp'),
                 data: {'centro_educativo': centro},
                 dataType: "json",
-                beforeSend: function () {console.log("aaa");
+                beforeSend: function () {
                     $("#maestro_responsable").empty();
                     $("#maestro_responsable").append('<option value="">Buscando...</option>');
-                    $("#maestro_responsable").trigger("chosen:updated");//.chosen({allow_single_deselect:false});
+                    $("#maestro_responsable").trigger("chosen:updated");
                 },
                 success: function (data) {
                     $("#maestro_responsable").empty();
