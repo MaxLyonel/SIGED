@@ -60,14 +60,25 @@ class ReglaController extends Controller
                 }                
             }
             
-            $msg = $this->valPruebaParticipacion($estudianteInscripcionId, $gestionId, $pruebaId, $faseId);            
-            if ($msg[0]){
+            $msg = $this->valPruebaParticipacion($estudianteInscripcionId, $gestionId, $pruebaId, $faseId);   
+
+            if (!$msg[0]){
                 //dump('no tiene prueba');die;
                 $msg1 = $this->valConjuntoPruebaParticipacion($estudianteInscripcionId, $gestionId, $pruebaId, $faseId);
                 if (!$msg1[0]){
                     //dump($msg[1]);die;
                     return $msg1;
-                }
+                }                
+                $msg = array('0' => true, '1' => '');
+            }
+
+            if ($msg[0]){
+                //dump('no tiene prueba');die;
+                // $msg1 = $this->valConjuntoPruebaParticipacion($estudianteInscripcionId, $gestionId, $pruebaId, $faseId);
+                // if (!$msg1[0]){
+                //     //dump($msg[1]);die;
+                //     return $msg1;
+                // }
                 
                 $msg2 = $this->valPruebaRegla($estudianteInscripcionId, $gestionId, $pruebaId, $faseId, $equipoId);
                 if (!$msg2[0]){
@@ -151,11 +162,10 @@ class ReglaController extends Controller
             return array('0' => true, '1' => '');
         } else {
             $cantidadDisciplinaPruebaParticipacion = $this->getDisciplinaPruebaParticipacion($disciplinaId, $pruebaParticipacionId);
-            //dump($cantidadDisciplinaPruebaParticipacion);dump($cantidadPruebaEstudiante);die;
+            // dump($cantidadDisciplinaPruebaParticipacion);dump($cantidadPruebaEstudiante);die;
+            return array('0' => false, '1' => 'El estudiante ya cuenta con la cantidad maxima de participaciones permitidas en la Prueba '.$pruebaParticipacionNombre.', intente nuevamente');
             if ($cantidadPruebaEstudiante < $cantidadDisciplinaPruebaParticipacion){
                 return array('0' => true, '1' => '');
-            } else {
-                return array('0' => false, '1' => 'El estudiante ya cuenta con la cantidad maxima de participaciones permitidas en la Prueba '.$pruebaParticipacionNombre.', intente nuevamente');
             }
         }
     }
