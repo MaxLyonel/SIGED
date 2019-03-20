@@ -541,7 +541,7 @@ class SolicitudBTHController extends Controller {
             ->setParameter('idInstitucion', $institucion)
             ->getQuery();
         $inss = $query->getResult();
-        //$gestion = $inss[0][1];
+        $gestion = $inss[0][1];
         $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
         $query = $repository->createQueryBuilder('ie')
             ->select('ie, ies')
@@ -613,7 +613,7 @@ class SolicitudBTHController extends Controller {
          */
         $maestros = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion, 'cargoTipo' => 0));
         //no hay maestros inscritos para la gestion 2019
-        $gestion = 2018;
+        //$gestion = 2018;
         $repository = $em->getRepository('SieAppWebBundle:MaestroInscripcion');
         $query = $repository->createQueryBuilder('mins')
             ->select('per.carnet, per.paterno, per.materno, per.nombre')
@@ -813,9 +813,6 @@ class SolicitudBTHController extends Controller {
      }
 //Distrital
      public function  VerSolicitudBTHDisAction(Request $request){
-
-         //validation if the user is logged
-
          $id_tramite = $request->get('id');//ID de Tramite
          $em = $this->getDoctrine()->getManager();
          $query = $em->getConnection()->prepare("select td.*
@@ -825,7 +822,6 @@ class SolicitudBTHController extends Controller {
          $td = $query->fetchAll();
          $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find($td[0]['tramite_detalle_id']);
              if($tramiteDetalle->getTramiteEstado()->getId()==4){
-
                  return $this->redirectToRoute('solicitud_bth_formularioDis',array('lista_tramites_id'=>$request->get('id')));
              }
         /*
@@ -837,7 +833,7 @@ class SolicitudBTHController extends Controller {
                                                 INNER JOIN tramite_detalle td  ON trm.id=td.tramite_id
                                                 INNER JOIN wf_solicitud_tramite wfsol ON td.id=wfsol.tramite_detalle_id
                                                 WHERE trm.id=$id_tramite
-                                                ORDER BY wfsol.id DESC limit 1 ");
+                                                ORDER BY wfsol.id DESC limit 1");
         $query->execute();
         $infoUE = $query->fetch();
        //dump($infoUE);die;
@@ -964,8 +960,6 @@ class SolicitudBTHController extends Controller {
             $especialidadarray[] = array('id' => $especialidad['id'], 'especialidad' => $especialidad['especialidad']);
             $especialidadifno[$i] = $idespecialidad;
         }
-
-
         return $this->render('SieHerramientaBundle:SolicitudBTH:SolicitudBTHDis.html.twig',array(
             'ieducativa' => $infoUe,
             'institucion' => $institucion,
@@ -983,7 +977,16 @@ class SolicitudBTHController extends Controller {
      public function  guardasolicitudDepAction(Request $request){
         $documento = $request->files->get('docpdf');
         if(!empty($documento)){
-            $destination_path = 'uploads/archivos/Bth';
+            /*$dirtmp = $this->get('kernel')->getRootDir() . '/../web/empfiles/' . $aName[0];
+            if (!file_exists($dirtmp)) {
+                mkdir($dirtmp, 0777);
+            }else{
+                system('rm -fr ' . $dirtmp.'/*');
+            }
+
+            //move the file emp to the directory temp
+            $file = $oFile->move($dirtmp, $originalName);*/
+            $destination_path = 'uploads/archivos/flujos/'.$request->get('institucionid');
             $imagen = date('YmdHis').'.'.$documento->getClientOriginalExtension();
             $documento->move($destination_path, $imagen);
         }else{
@@ -1318,7 +1321,7 @@ class SolicitudBTHController extends Controller {
     public function guardasolicitudDepartamentalAction(Request $request){//dump($request);die;
         $documento = $request->files->get('docpdf');
         if(!empty($documento)){
-            $destination_path = 'uploads/archivos/Bth';
+            $destination_path = 'uploads/archivos/flujos/'.$request->get('institucionid');
             $imagen = date('YmdHis').'.'.$documento->getClientOriginalExtension();
             $documento->move($destination_path, $imagen);
         }else{
