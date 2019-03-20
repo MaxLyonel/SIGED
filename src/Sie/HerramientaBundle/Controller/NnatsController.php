@@ -193,12 +193,12 @@ class NnatsController extends Controller {
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
-        if($roluser == 8) // Tecnico Nacional
+        if($roluser == 8 or $roluser == 20 ) // Tecnico Nacional
         {
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_nacional_nnats_v1_ma.rptdesign&__format=pdf&gestion='.$gestion));
         }
 
-        if($roluser == 7 ) // Tecnico Departamental
+        if($roluser == 7  ) // Tecnico Departamental
         {
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_departamental_nnats_v1_ma.rptdesign&__format=pdf&gestion='.$gestion.'&depto='.$idDepartamento));
         }
@@ -223,12 +223,12 @@ class NnatsController extends Controller {
         $response->headers->set('Content-type', 'application/vnd.ms-excel');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
-        if($roluser == 8) // Tecnico Nacional
+        if($roluser == 8 or $roluser == 20 ) // Tecnico Nacional
         {
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_nacional_nnats_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion));
         }
 
-        if($roluser == 7 ) // Tecnico Departamental
+        if($roluser == 7  ) // Tecnico Departamental
         {
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_departamental_nnats_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion.'&depto='.$idDepartamento));
         }
@@ -254,16 +254,16 @@ class NnatsController extends Controller {
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
-        if($roluser == 8) // Tecnico Nacional
+        if($roluser == 8 or $roluser == 20) // Tecnico Nacional
         {
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_nacional_nnats_v2_ma.rptdesign&__format=pdf&gestion='.$gestion));
         }
 
-        if($roluser == 7 ) // Tecnico Departamental
+        if($roluser == 7  ) // Tecnico Departamental
         {
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_departamental_nnats_v2_ma.rptdesign&__format=pdf&gestion='.$gestion.'&depto='.$idDepartamento));
         }
-        if($roluser == 10 ) // Tecnico Distrital
+        if($roluser == 10  ) // Tecnico Distrital
         {
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_distrital_nnats_v1_ma.rptdesign&__format=pdf&gestion='.$gestion.'&distrito='.$idDepartamento));
         }
@@ -287,16 +287,16 @@ class NnatsController extends Controller {
         $response->headers->set('Content-type', 'application/vnd.ms-excel');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
-        if($roluser == 8) // Tecnico Nacional
+        if($roluser == 8 or $roluser == 20) // Tecnico Nacional
         {
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_nacional_nnats_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion));
         }
 
-        if($roluser == 7 ) // Tecnico Departamental
+        if($roluser == 7  ) // Tecnico Departamental
         {
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_departamental_nnats_v2_ma.rptdesign&__format=xlsx&gestion='.$gestion.'&depto='.$idDepartamento));
         }
-        if($roluser == 10 ) // Tecnico Distrital
+        if($roluser == 10  ) // Tecnico Distrital
         {
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_distrital_nnats_v1_ma.rptdesign&__format=xlsx&gestion='.$gestion.'&distrito='.$idDepartamento));
         }
