@@ -467,8 +467,9 @@ class WfTramiteController extends Controller
                     $uDestinatario = $this->obtieneUsuarioDestinatario($tarea,$tarea_sig_id,$id_tabla,$tabla,$tramite);
                     if($uDestinatario == false){
                         $em->getConnection()->rollback();
-                        $this->get('session')->getFlashBag()->add('error', '¡Error, no existe usuario destinatario registrado.!');
-                        return $this->redirectToRoute('wf_tramite_recibido');
+                        $mensaje['dato'] = false;
+                        $mensaje['msg'] = '¡Error, no existe usuario destinatario registrado.!';
+                        return $mensaje;
                     }else{
                         $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
                     }
@@ -623,9 +624,8 @@ class WfTramiteController extends Controller
                 if($flujoprocesoSiguiente->getRolTipo()->getId() == 9){  // si es director
                     $query = $em->getConnection()->prepare("select u.* from maestro_inscripcion m
                     join usuario u on m.persona_id=u.persona_id
-                    where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=".(new \DateTime())->format('Y')." and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
-                    //where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=2018 and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
-
+                    where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=2018 and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
+                    //where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=".(new \DateTime())->format('Y')." and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
                     $query->execute();
                     $uDestinatario = $query->fetchAll();
                     //dump($uDestinatario);die;
