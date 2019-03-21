@@ -345,7 +345,9 @@ class InscriptionIniPriTrueController extends Controller {
     }else{
       //do inscription inicial/ primaria or extranjero
       //get the year of student
+
       $dataStudent = unserialize($form['newdata']);
+      $arrStudentFecnac = array();
       $arrStudentFecnac = (explode(' ',$dataStudent['fechaNacimiento']->date));
       list($year, $month, $day) = (explode('-',$arrStudentFecnac[0]));
       $tiempo = $this->tiempo_transcurrido($day.'-'.$month.'-'.$year, '30-6-2016');
@@ -902,6 +904,7 @@ class InscriptionIniPriTrueController extends Controller {
         $cursos = $this->aCursosOld;
         //this is a switch to find the courses
         $sw = 1;
+        $ind=0;
         //loof for the courses of student
         while (( $acourses = current($cursos)) !== FALSE && $sw) {
             if (current($cursos) == $nivel . '-' . $ciclo . '-' . $grado) {
