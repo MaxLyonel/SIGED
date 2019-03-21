@@ -208,8 +208,8 @@ class SolicitudBTHController extends Controller {
                 ->setParameter('idInstitucion', $institucion)
                 ->getQuery();
             $inss = $query->getResult();
-            //$gestion = $inss[0][1];
-            $gestion = 2018;
+            $gestion = $inss[0][1];
+            //$gestion = 2018;
             $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
             $query = $repository->createQueryBuilder('ie')
                 ->select('ie, ies')
@@ -501,8 +501,8 @@ class SolicitudBTHController extends Controller {
             ->setParameter('idInstitucion', $idUE )
             ->getQuery();
         $inss = $query->getResult();
-        //$gestion = $inss[0][1];
-        $gestion=2018;//adecuacion a la gestion anterior hasta que pase la etapa de inscripciones
+        $gestion = $inss[0][1];
+        //$gestion=2018;//adecuacion a la gestion anterior hasta que pase la etapa de inscripciones
         /*$wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
             ->select('wf')
             ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wf.tramiteDetalle')
@@ -548,8 +548,8 @@ class SolicitudBTHController extends Controller {
             ->setParameter('idInstitucion', $institucion)
             ->getQuery();
         $inss = $query->getResult();
-        //$gestion = $inss[0][1];
-        $gestion = 2018;
+        $gestion = $inss[0][1];
+        //$gestion = 2018;
         $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
         $query = $repository->createQueryBuilder('ie')
             ->select('ie, ies')
@@ -621,7 +621,7 @@ class SolicitudBTHController extends Controller {
          */
         $maestros = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion, 'cargoTipo' => 0));
         //no hay maestros inscritos para la gestion 2019
-        //$gestion = 2018;
+
         $repository = $em->getRepository('SieAppWebBundle:MaestroInscripcion');
         $query = $repository->createQueryBuilder('mins')
             ->select('per.carnet, per.paterno, per.materno, per.nombre')
@@ -852,8 +852,8 @@ class SolicitudBTHController extends Controller {
             ->setParameter('idInstitucion', $institucion)
             ->getQuery();
         $inss = $query->getResult();
-         //$gestion = $inss[0][1];
-         $gestion = 2018;
+         $gestion = $inss[0][1];
+         //$gestion = 2018;
         $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
         $query = $repository->createQueryBuilder('ie')
             ->select('ie, ies')
@@ -1060,8 +1060,8 @@ class SolicitudBTHController extends Controller {
             ->setParameter('idInstitucion', $institucion)
             ->getQuery();
         $inss = $query->getResult();
-        //$gestion = $inss[0][1];
-        $gestion = 2018;
+        $gestion = $inss[0][1];
+        //$gestion = 2018;
         $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
         $query = $repository->createQueryBuilder('ie')
             ->select('ie, ies')
@@ -1206,8 +1206,8 @@ class SolicitudBTHController extends Controller {
             ->setParameter('idInstitucion', $institucion)
             ->getQuery();
         $inss = $query->getResult();
-        //$gestion = $inss[0][1];
-        $gestion = 2018;
+        $gestion = $inss[0][1];
+        //$gestion = 2018;
         $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
         $query = $repository->createQueryBuilder('ie')
             ->select('ie, ies')
@@ -1394,8 +1394,8 @@ class SolicitudBTHController extends Controller {
                     ->setParameter('idInstitucion', $institucionid)
                     ->getQuery();
                 $inss = $query->getResult();
-                //$gestiontipo = $inss[0][1];
-                $gestiontipo=2018; //pase las inscripciones
+                $gestiontipo = $inss[0][1];
+                //$gestiontipo=2018; //pase las inscripciones
                 $query = $em->getConnection()->prepare("SELECT * from institucioneducativa  ie 
                                                         INNER JOIN institucioneducativa_sucursal ies on ies.institucioneducativa_id= ie.id
                                                         WHERE ie.id = $institucionid and ies.gestion_tipo_id= $gestiontipo ");
