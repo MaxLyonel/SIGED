@@ -208,8 +208,8 @@ class SolicitudBTHController extends Controller {
                 ->setParameter('idInstitucion', $institucion)
                 ->getQuery();
             $inss = $query->getResult();
-            $gestion = $inss[0][1];
-            //$gestion = 2018;
+            //$gestion = $inss[0][1];
+            $gestion = 2018;
             $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
             $query = $repository->createQueryBuilder('ie')
                 ->select('ie, ies')
