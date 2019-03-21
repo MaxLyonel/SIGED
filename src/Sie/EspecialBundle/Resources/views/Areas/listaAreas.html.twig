@@ -50,9 +50,9 @@
                     <div class="row" id="modalidadCasa" style="display: none">
                         <div class="col-md-5">
                             <div class="form-group">
-                                <label for="centro_educativo">Centro Educativo</label>
+                                <label for="centro_educativo">Código SIE</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="centro_educativo" name="centro_educativo">
+                                    <input type="text" class="form-control" id="centro_educativo" autocomplete="off">
                                     <span class="input-group-addon" onclick="getMaestros()" style="cursor: pointer;"><i class="fa fa-search"></i></span>
                                 </div>
                             </div>
@@ -60,9 +60,8 @@
                         <div class="col-md-7">
                             <div class="form-group">
                                 <label for="maestro_responsable">Maestro responsable</label>
-                                <select class="form-control" id="maestro_responsable" name="maestro_responsable">
+                                <select class="chosen-select form-control" id="maestro_responsable" name="maestro_responsable">
                                     <option value="" disabled selected>Seleccione...</option>
-                                    <option value=""></option>
                                 </select>
                             </div>
                         </div>
@@ -94,7 +93,7 @@
                     </div>
                 </div>
                 <div style="text-align: right">
-                    <button type="submit" class="btn btn-success" onclick="return confirm('¿Está completamente segura/o de agregar el curso?, Nota: Una vez agregado no se puede eliminar.')"><i class="fa fa-save fa-fw"></i>Guardar cambios</button>
+                    <button type="submit" class="btn btn-success" id="btnsave" onclick="return confirm('¿Está completamente segura/o de agregar el curso?, Nota: Una vez agregado no se puede eliminar.')"><i class="fa fa-save fa-fw"></i>Guardar cambios</button>
                 </div>
             </div>
         </div>
@@ -103,8 +102,8 @@
 <script>
 
     $(function () {
-        $('.chosen-select').chosen({allow_single_deselect:false}); 
-        $('.chosen-container').css('width','100%');
+        $('.chosen-select').chosen({allow_single_deselect:false});
+        $("#maestro_responsable").chosen({allow_single_deselect:false});
     });
 
     $('#wizard').bwizard();
@@ -141,6 +140,7 @@
                 beforeSend: function () {
                     $("#maestro_responsable").empty();
                     $("#maestro_responsable").append('<option value="">Buscando...</option>');
+                    $("#maestro_responsable").trigger("chosen:updated");
                 },
                 success: function (data) {
                     $("#maestro_responsable").empty();
@@ -148,6 +148,7 @@
                     $.each(data.maestros, function (i, value) {
                         $("#maestro_responsable").append('<option value="' + i + '">' + value + '</option>');
                     });
+                    $("#maestro_responsable").trigger("chosen:updated");
                 }
             });
         }

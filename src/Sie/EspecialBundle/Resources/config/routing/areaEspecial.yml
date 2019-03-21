@@ -47,7 +47,7 @@ area_especial_listar_areas_curso:
          expose: true
 
 area_especial_listar_areas_nivel:
-    path:     /lista_areas_nivel/{idNivel}/{idCurso}
+    path:     /lista_areas_nivel/{idNivel}/{idCurso}/{mTipo}
     defaults: { _controller: "SieEspecialBundle:Areas:lista_areas_nivel" }
     options:
          expose: true

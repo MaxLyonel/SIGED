@@ -1,6 +1,6 @@
 {% set onlyview = app.session.get('onlyview') %}
 <div class="col-lg-12">
-<h4 class="text-orange text-center"><ins>{{curso.nivelTipo.nivel}} - {{curso.gradoTipo.grado}} - {{curso.paraleloTipo.paralelo}} {% if(curso.lugar) %} - {{curso.lugar}} {% endif %}</ins></h4>
+<h4 class="text-orange text-center"><ins>{{curso.nivelTipo.nivel}} - {{curso.gradoTipo.grado}} - {{curso.paraleloTipo.paralelo}} {% if(curso.lugar) %} ({{curso.lugar}}) {% endif %}</ins></h4>
 <hr>
 </div>
 <div class="col-lg-12">

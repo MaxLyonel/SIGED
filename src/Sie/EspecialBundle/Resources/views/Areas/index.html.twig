@@ -46,7 +46,7 @@
                 <input type="hidden" name="idNivel" id="idNivel">
                 <input type="hidden" name="educacionTipo" id="educacionTipo" value="{{app.session.get('sysname')}}">
                 <input type="hidden" id="lugar">
-                <div class="modal-header" style="background: red; color: white">
+                <div class="modal-header bg-danger">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     <h4 class="modal-title" id="flexModalLabel">Adición de Áreas</h4>
                     <span id="modal-subtitle"></span>
@@ -362,12 +362,12 @@
         }
 
         function mostrarAreas(nivel, grado, paralelo, idInstitucionCurso, idNivel, lugar, divResultado) {
-            //$('#nivelModal').empty();
-            //$('#nivelModal').append((nivel));
-            //$('#gradoModal').empty();
-            //$('#gradoModal').append(grado);
-            //$('#paraleloModal').empty();
-            //$('#paraleloModal').append(paralelo);
+            var modalidad_texto = '';
+            var modalidad_tipo = 0;
+            if (lugar!=null && lugar!='') {
+                modalidad_texto = ' (' + lugar + ')';
+                modalidad_tipo = 15;
+            }
             $('#divResultado').empty();$('#modalidadCasa').css('display', 'none');
             $('#divResultado').val(divResultado);
             $('#idInstitucionCurso').empty();
@@ -375,10 +375,10 @@
             $('#idNivel').empty();
             $('#idNivel').val(idNivel);
             $('#idNivel').empty();
-            $('#modal-subtitle').html(nivel+' - '+grado+' - '+paralelo+((lugar==null || lugar=='')?'':' - '+ lugar));
+            $('#modal-subtitle').html(nivel+' - '+grado+' - '+paralelo+modalidad_texto);
             $.ajax({
                 type: 'get',
-                url: Routing.generate('area_especial_listar_areas_nivel', {'idNivel': idNivel, 'idCurso': idInstitucionCurso}),
+                url: Routing.generate('area_especial_listar_areas_nivel', {'idNivel': idNivel, 'idCurso': idInstitucionCurso, 'mTipo': modalidad_tipo}),
                 beforeSend: function () {
                     $("#areasModal").empty();
                     $("#areasModal").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
@@ -430,14 +430,16 @@
                     return 0;
                 }
             }
-
-
             var div = $('#divResultado').val();
             var formData = $('#formAreasModal').serialize();
             if ($('#lugar').val()=="EDUCACION EN CASA" || $('#lugar').val() == "EDUCACIÓN EN CASA") {
-                alert('Seleccione al maestro responsable.');
-                return 0;
+                if ($('#maestro_responsable').val()==null || $('#maestro_responsable').val()=='') {
+                    $('#centro_educativo').focus();
+                    alert('Seleccione al maestro responsable.');
+                    return 0;
+                }
             }
+            $('#btnsave').attr('disabled', true);
             $.ajax({
                 type: 'get',
                 url: Routing.generate('area_especial_listar_areas_curso_adicionar_eliminar'),
@@ -450,13 +452,15 @@
                     $("#divAreas").append(data);
                     $('.chosen-select').chosen({allow_single_deselect: false});
                     $('.chosen-container').css('width', '100%');
+                    $('#newModal').modal('hide');
+                    $('#btnsave').attr('disabled', false);
                 },
                 error: function(data){
                     $("#img-loading").css('display','none');
                     $("#divAreas").append("<div class='alert alert-danger'>Ocurrio un error al registrar las �reas, int�ntelo de nuevo o comun�quese con un responsable del sistema</div>")
+                    $('#btnsave').attr('disabled', false);
                 }
             });
-            $('#newModal').modal('hide');
         }
 
         function eliminarArea(idCursoOferta) {
