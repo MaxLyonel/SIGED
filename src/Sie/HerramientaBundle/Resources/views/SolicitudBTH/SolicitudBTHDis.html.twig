@@ -367,7 +367,7 @@
                                     buttons: false
                                 });
                             },
-                            success: function (data) { //console.log(data.msg);
+                            success: function (data) { console.log(data);
                                 if (data.estado==1){
                                     swal("Su respuesta se ha enviado con éxito, con Nro. de Trámite: "+ {{ id_tramite}});
                                     location.href = "{{ path('wf_tramite_recibido') }}";

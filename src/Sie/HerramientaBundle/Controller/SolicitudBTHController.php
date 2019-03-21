@@ -1030,11 +1030,11 @@ class SolicitudBTHController extends Controller {
           catch (Exception $exceptione){
               $res = 0;
           }
-         if(isset($mensaje['msg'])){
+         /*if(isset($mensaje['msg'])){
              $mensaje = $mensaje['msg'];
          }else{
              $mensaje = '';
-         }
+         }*/
          return  new JsonResponse(array('estado' => $res, 'msg' => $mensaje['msg']));
       }
     public function FormularioBTHDisAction(Request $request){
