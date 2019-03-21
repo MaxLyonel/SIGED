@@ -412,7 +412,7 @@
                                         console.log(data);
                                         if (data.estado==1){
                                             swal("Su formulario se ha enviado con éxito, con Nro. de Trámite:"+{{ id_tramite}} );
-                                            location.href = "{{ path('wf_tramite_index') }}";
+                                            location.href = "{{ path('wf_tramite_recibido') }}";
                                         }
                                         else if(data.estado==3 ){
                                             swal("Debe iniciar su trámite como 'Registro Nuevo'");
