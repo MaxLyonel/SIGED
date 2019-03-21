@@ -138,12 +138,14 @@ class IeducativaEquipamientoLaboratorioController extends Controller {
         //dump($entityInstitucionEducativaEquipoLaboratorio);die;
         if ($entityInstitucionEducativaEquipoLaboratorio) {
             $this->session->getFlashBag()->set('warning', array('title' => 'Error', 'message' => 'La unidad educativa '.$sie.' ya registro su Fomulario para el Equipamiento de Laboratorio en fecha: '.$entityInstitucionEducativaEquipoLaboratorio[0]['fecha_modificacion']));
+
             return $this->render($this->session->get('pathSystem') . ':IeducativaEquipamientoLaboratorio:equipamientoLaboratorioVista.html.twig', array(
                 'entity' => $entityIntitucionEducativaGestion[0]
                 , 'entityGrado' => $entityInstitucionEducativaSecundariaGrados
                 , 'entityEdificio' => $entityInstitucionEducativaEdificio
                 , 'entityEquipoLaboratorio' => $entityInstitucionEducativaEquipoLaboratorio[0]
                 , 'formPdf' => $this->creaFormularioVistaPdf($sie,$gestionActual)->createView()
+                , 'eliminarregistro' => $this->eliminarRegistro($sie,$gestionActual)->createView()
             ));
         }
 
@@ -155,6 +157,103 @@ class IeducativaEquipamientoLaboratorioController extends Controller {
             , 'entityEdificio' => $entityInstitucionEducativaEdificio
             , 'formLaboratorio' => $this->creaFormularioLaboratorio($sie,$gestionActual)->createView()
         ));
+    }
+    public function  eliminaAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+
+        $form = $request->get('form');
+        if ($form == null){
+            return $this->redirect($this->generateUrl('herramienta_ieducativa_equipamiento_laboratorio_index'));
+        }
+        $equip_labo_fisi_quim = $em->getRepository('SieAppWebBundle:EquipLaboFisiQuim')->findOneBy(array('institucioneducativa'=>$form['sie']));
+        if($equip_labo_fisi_quim){
+            $equip_labo_fisi_quim_id = $equip_labo_fisi_quim->getId();
+            $query = $em->getConnection()->prepare("SELECT * FROM equip_labo_fisi_quim_fotos WHERE equip_labo_fisi_quim_id = $equip_labo_fisi_quim_id");
+            $query->execute();
+            $equip_labo_fisi_quim_fotos = $query->fetchAll();;
+            for($i = 0; $i<count($equip_labo_fisi_quim_fotos); $i++){
+                $entity = $em->getRepository('SieAppWebBundle:EquipLaboFisiQuimFotos')->find($equip_labo_fisi_quim_fotos[$i]['id']);
+                $em->remove($entity);
+                $em->flush();
+            }
+            $entity = $em->getRepository('SieAppWebBundle:EquipLaboFisiQuim')->find($equip_labo_fisi_quim_id);
+            if($entity){
+                $em->remove($entity);
+                $em->flush();
+            }
+        }
+        $sie = $form['sie'];
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = (int)$fechaActual->format('Y');
+
+        $entityIntitucionEducativa = $this->getInstitucionEducativa($sie);
+        if (!$entityIntitucionEducativa) {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'La unidad educativa '.$sie.' no pertence al Sub Sistema de Educación Regular'));
+            return $this->redirect($this->generateUrl('herramienta_ieducativa_equipamiento_laboratorio_index'));
+        }
+
+        $entityInstitucionEducativaSecundaria = $this->getInstitucionEducativaSecundaria($sie);
+        if (!$entityInstitucionEducativaSecundaria) {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'La unidad educativa '.$sie.' no esta autorizado en el Nivel de Educación Secundaria Comunitaria Productiva'));
+            return $this->redirect($this->generateUrl('herramienta_ieducativa_equipamiento_laboratorio_index'));
+        }
+
+        $entityInstitucionEducativaDependencia = $this->getInstitucionEducativaDependencia($sie);
+        if (!$entityInstitucionEducativaDependencia) {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'La unidad educativa '.$sie.' no cuenta con dependencia Fiscal o Convenio'));
+            return $this->redirect($this->generateUrl('herramienta_ieducativa_equipamiento_laboratorio_index'));
+        }
+
+        do {
+            $entityIntitucionEducativaGestion = $this->getInstitucionEducativaGestion($sie,$gestionActual);
+            if (count($entityIntitucionEducativaGestion)>0){
+                $gestionActual = $gestionActual;
+            } else {
+                $gestionActual = $gestionActual-1;
+            }
+        } while (count($entityIntitucionEducativaGestion)==0 and $gestionActual > 2009);
+
+        // $entityIntitucionEducativaGestion = $this->getInstitucionEducativaGestion($sie,$gestionActual);
+        // if (!$entityIntitucionEducativaGestion){
+        //     $entityIntitucionEducativaGestion = $this->getInstitucionEducativaGestion($sie,($gestionActual-1));
+        //     $gestionActual = $gestionActual-1;
+        // }
+
+        if (!$entityIntitucionEducativaGestion) {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'La unidad educativa '.$sie.' no cuenta con registros desde la gestión 2010 en adelante'));
+            return $this->redirect($this->generateUrl('herramienta_ieducativa_equipamiento_laboratorio_index'));
+        }
+
+        $entityInstitucionEducativaSecundariaGrados = $this->getInstitucionEducativaSecundariaGrados($sie,$gestionActual);
+
+        $entityInstitucionEducativaEdificio = $this->getInstitucionEducativaEdificio($sie,$gestionActual);
+
+        $entityInstitucionEducativaEquipoLaboratorio = $this->getInstitucionEducativaEquipoLaboratorio($sie);
+        //dump($entityInstitucionEducativaEquipoLaboratorio);die;
+        /*if ($entityInstitucionEducativaEquipoLaboratorio) {
+            $this->session->getFlashBag()->set('warning', array('title' => 'Error', 'message' => 'La unidad educativa '.$sie.' ya registro su Fomulario para el Equipamiento de Laboratorio en fecha: '.$entityInstitucionEducativaEquipoLaboratorio[0]['fecha_modificacion']));
+
+            return $this->render($this->session->get('pathSystem') . ':IeducativaEquipamientoLaboratorio:equipamientoLaboratorioVista.html.twig', array(
+                'entity' => $entityIntitucionEducativaGestion[0]
+            , 'entityGrado' => $entityInstitucionEducativaSecundariaGrados
+            , 'entityEdificio' => $entityInstitucionEducativaEdificio
+            , 'entityEquipoLaboratorio' => $entityInstitucionEducativaEquipoLaboratorio[0]
+            , 'formPdf' => $this->creaFormularioVistaPdf($sie,$gestionActual)->createView()
+            , 'eliminarregistro' => $this->eliminarRegistro($sie,$gestionActual)->createView()
+            ));
+        }*/
+
+        //dump($entityInstitucionEducativaEdificio);die;
+        return $this->render($this->session->get('pathSystem') . ':IeducativaEquipamientoLaboratorio:equipamientoLaboratorio.html.twig', array(
+            'form' => $this->creaFormularioBusqueda('herramienta_ieducativa_equipamiento_laboratorio_detalle',$sie)->createView()
+        , 'entity' => $entityIntitucionEducativaGestion[0]
+        , 'entityGrado' => $entityInstitucionEducativaSecundariaGrados
+        , 'entityEdificio' => $entityInstitucionEducativaEdificio
+        , 'formLaboratorio' => $this->creaFormularioLaboratorio($sie,$gestionActual)->createView()
+        ));
+
+
     }
 
     public function registroAction(Request $request){
@@ -552,6 +651,15 @@ class IeducativaEquipamientoLaboratorioController extends Controller {
             ->add('download', 'submit', array('label' => 'Descargar Pdf', 'attr' => array('class' => 'btn btn-lilac')))
             ->getForm();
         return $form;        
+    }
+    public function eliminarRegistro($sie, $ges)
+    {
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl('herramienta_ieducativa_equipamiento_laboratorio_elimina'))
+            ->add('sie', 'hidden', array('attr' => array('value' => $sie)))
+            ->add('eliminar', 'submit', array('label' => 'Eliminar información reportada', 'attr' => array('class' => 'btn btn-danger')))
+            ->getForm();
+        return $form;
     }
 
     public function vistaPdfAction(Request $request) {

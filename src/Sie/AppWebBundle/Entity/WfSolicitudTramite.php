@@ -192,4 +192,88 @@ class WfSolicitudTramite
     {
         return $this->tramite;
     }
+    /**
+     * @var integer
+     */
+    private $lugarTipoLocalidadId;
+
+    /**
+     * @var integer
+     */
+    private $lugarTipoDistritoId;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\TramiteDetalle
+     */
+    private $tramiteDetalle;
+
+
+    /**
+     * Set lugarTipoLocalidadId
+     *
+     * @param integer $lugarTipoLocalidadId
+     * @return WfSolicitudTramite
+     */
+    public function setLugarTipoLocalidadId($lugarTipoLocalidadId)
+    {
+        $this->lugarTipoLocalidadId = $lugarTipoLocalidadId;
+    
+        return $this;
+    }
+
+    /**
+     * Get lugarTipoLocalidadId
+     *
+     * @return integer 
+     */
+    public function getLugarTipoLocalidadId()
+    {
+        return $this->lugarTipoLocalidadId;
+    }
+
+    /**
+     * Set lugarTipoDistritoId
+     *
+     * @param integer $lugarTipoDistritoId
+     * @return WfSolicitudTramite
+     */
+    public function setLugarTipoDistritoId($lugarTipoDistritoId)
+    {
+        $this->lugarTipoDistritoId = $lugarTipoDistritoId;
+    
+        return $this;
+    }
+
+    /**
+     * Get lugarTipoDistritoId
+     *
+     * @return integer 
+     */
+    public function getLugarTipoDistritoId()
+    {
+        return $this->lugarTipoDistritoId;
+    }
+
+    /**
+     * Set tramiteDetalle
+     *
+     * @param \Sie\AppWebBundle\Entity\TramiteDetalle $tramiteDetalle
+     * @return WfSolicitudTramite
+     */
+    public function setTramiteDetalle(\Sie\AppWebBundle\Entity\TramiteDetalle $tramiteDetalle = null)
+    {
+        $this->tramiteDetalle = $tramiteDetalle;
+    
+        return $this;
+    }
+
+    /**
+     * Get tramiteDetalle
+     *
+     * @return \Sie\AppWebBundle\Entity\TramiteDetalle 
+     */
+    public function getTramiteDetalle()
+    {
+        return $this->tramiteDetalle;
+    }
 }

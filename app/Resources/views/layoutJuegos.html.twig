@@ -273,18 +273,18 @@
                                     {% if app.session.get('roluser') == 10 or app.session.get('roluser') == 9 or app.session.get('roluser') == 8 %}
                                         <li><a href="{{path('sie_juegos_registro_fp_index')}}">Fase Previa</a></li>
                                     {% endif %}
-                                    {% if app.session.get('roluser') == 10 %}
+                                    {% if app.session.get('roluser') == 10 and 1 > 1 %}
                                     <li><a href="{{path('sie_juegos_clasificacion_f1_index')}}">Primera Fase</a></li>
                                     {% endif %}
-                                    {% if app.session.get('roluser') == 10 %}
+                                    {% if app.session.get('roluser') == 10 and 1 > 1 %}
                                         <li><a href="{{path('sie_juegos_comision_entrenador_f1_lista_index')}}">Registro Entrenadores</a></li>
                                     {% endif %}
-                                    {% if app.session.get('roluser') == 6 %}
+                                    {% if app.session.get('roluser') == 6 and 1 > 1 %}
                                         <li><a href="{{path('sie_juegos_clasificacion_f2_index')}}">Segunda Fase</a></li>
                                         <li><a href="{{path('sie_juegos_comision_entrenador_f2_lista_index')}}">Clasificacion Entrenadores</a></li>
                                         <li><a href="{{path('estudiantedatopersonal_juegos_deportistas_fase2')}}">Deportistas Datos Personales</a></li>
                                     {% endif %}
-                                    {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 28 %}
+                                    {% if (app.session.get('roluser') == 7 or app.session.get('roluser') == 28) and 1 > 1 %}
                                         <li><a href="{{path('sie_juegos_clasificacion_f3_index')}}">Tercera Fase</a></li>
                                         <li><a href="{{path('estudiantedatopersonal_juegos_deportistas_fase3')}}">Deportistas Datos Personales</a></li>
                                         <li><a href="{{path('sie_juegos_comision_entrenador_f3_lista_index')}}">Registro Acompañante</a></li>
@@ -306,6 +306,7 @@
                                     <span class="arrow"></span>
                                 </a>
                                 <ul>
+                                    <li><a href="{{ path('sie_juegos_estadistica_fase_lugar',{'fase':'1'}) }}">Fase Previa</a></li>    
                                     {% if app.session.get('roluser') == 10 %}
                                         <li><a href="{{ path('sie_juegos_clasificacion_lista_deportistas_inscritos_fase',{'fase':1,'usuario':app.session.get('userId')}) }}">Estadística Primera Fase</a></li>
                                     {% endif %}

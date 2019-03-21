@@ -461,7 +461,29 @@
                       </ul>
                     </li>
                     {% endif %}
-                    {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10  %}
+                    {# <li class="submenu">
+                        <a href="javascript:void(0);">
+                            <span class="icon"><i class="fa fa-home"></i></span>
+                            <span class="text">Trámites</span>
+                            <span class="arrow"></span>
+                        </a>
+                        <ul>
+                            <li><a href="{{ path('wf_tramite_index')}}">Nuevo Trámite</a></li>
+                        </ul>
+                        <ul>
+                            <li><a href="{{ path('wf_tramite_recibido')}}">Recibidos</a></li>
+                        </ul>
+                        <ul>
+                            <li><a href="{{ path('wf_tramite_enviados')}}">Enviados</a></li>
+                        </ul>
+                        <ul>
+                            <li><a href="{{ path('wf_tramite_concluidos')}}">Concluidos</a></li>
+                        </ul>
+                        <ul>
+                            <li><a href="{{ path('wf_tramite_seguimiento')}}">Seguimiento</a></li>
+                        </ul>
+                    </li> #}
+                    {% if app.session.get('roluser') == 8  or app.session.get('roluser') == 20  %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
@@ -473,7 +495,7 @@
                             </ul>
                         </li>
                     {% endif %}
-                    {% if  app.session.get('roluser') == 9 and app.session.get('ie_id') >= 40730001  and app.session.get('ie_id') <= 40730468   %}
+                    {% if  app.session.get('roluser') == 9   %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
@@ -484,6 +506,7 @@
                                 <li><a href="{{ path('inscription_ini_pri_rue_index')}}">Omitidos/Extemporáneos</a></li>
                                 <li><a href="{{ path('inscription_extranjeros_index')}}">Inicial/Primaria</a></li>
                                 <li><a href="{{ path('change_paralelo_sie_index')}}">Cambio de Paralelo</a></li>
+                                <li><a href="{{ path('students_inscriptions_seguimiento_index')}}">Reporte Extemporáneos</a></li>
                             </ul>
                         </li>
                     {% endif %}
