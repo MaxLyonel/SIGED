@@ -354,6 +354,9 @@
 
         var listar_nivel = function (sie) {
             var peticion;
+            
+            var sie =  sie.replace(/[^0-9]/g,'');
+
             if(sie.length>=8){
                 peticion = $.ajax({
                     type: 'POST',
@@ -397,6 +400,7 @@
                             $("#botonLista").removeAttr('disabled');
                         }
                     },
+                    timeout: 5000, // sets timeout to 3 seconds
                     statusCode: {
                         500: function () {
                         },
@@ -405,6 +409,7 @@
                     }
                 });
             } else {
+                $("#form_sie").val(sie);
                 $("#form_nivel").attr('disabled', 'true');
                 $('#form_nivel').empty();
                 $("#form_nivel").append('<option value="">Seleccionar nivel</option>');
