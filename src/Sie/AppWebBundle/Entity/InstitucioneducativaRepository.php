@@ -546,7 +546,7 @@ class InstitucioneducativaRepository extends EntityRepository {
                 ->select('tt.id as turnoId, nt.id as nivelId, gt.id as gradoId, pt.id as paraleloId, tt.turno,
                           nt.nivel, gt.grado, pt.paralelo, IDENTITY(iec.cicloTipo) as cicloTipoId, eat.id as areaEspecialId,
                           IDENTITY(iece.especialProgramaTipo) as especialProgramaTipo, ept.programa as programa,
-                          iec.id as iecId, eat.areaEspecial,iece.id as ieceId
+                          iec.id as iecId, eat.areaEspecial,iece.id as ieceId, iec.lugar as iecLugar
                           ')
                 ->from('SieAppWebBundle:InstitucioneducativaCurso', 'iec')
                 ->leftJoin('SieAppWebBundle:InstitucioneducativaCursoEspecial', 'iece', 'WITH', 'iec.id = iece.institucioneducativaCurso')
@@ -562,7 +562,8 @@ class InstitucioneducativaRepository extends EntityRepository {
                 ->setParameter('gestion', $gestion)
                 //->distinct()
                 ->groupBy('tt.id, nt.id,ept.programa, gt.id, pt.id, iec.cicloTipo,eat.id, iec.id,iece.id')
-                ->orderBy('tt.id, nt.id,ept.programa, gt.id, pt.id, iec.cicloTipo,eat.id, iec.id,iece.id')
+                //->orderBy('tt.id, nt.id,ept.programa, gt.id, pt.id, iec.cicloTipo,eat.id, iec.id,iece.id')
+                ->orderBy('tt.id,eat.id, nt.id,ept.programa, gt.id, pt.id, iec.cicloTipo, iec.id,iece.id')
 
 
         ;
