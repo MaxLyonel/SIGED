@@ -82,7 +82,7 @@ class EstudianteTalentoController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $flujotipo_id = isset($_GET['id']) == false ? 10 : $_GET['id'];
         $ieducativa_result = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->getSession()->get('ie_id'));
-        $centro_inscripcion = $ieducativa_result == null ? '' : $ieducativa_result->getId();
+        $centro_inscripcion = $ieducativa_result == null ? '' : $ieducativa_result->getId();//dump($ieducativa_result, $ieducativa_result->getInstitucioneducativa());die;
         $centro = $ieducativa_result == null ? '' : $ieducativa_result->getInstitucioneducativa();
         return $this->render('SieEspecialBundle:EstudianteTalento:new.html.twig', array('centro_inscripcion' => $centro_inscripcion, 'centro' => $centro, 'flujotipo_id' => $flujotipo_id));
     }
@@ -281,7 +281,8 @@ class EstudianteTalentoController extends Controller {
         $datos1 = json_decode($resultDatos[1]->getdatos());
         $es_talento = $datos1->es_talento;
         $tipo_talento = $datos1->tipo_talento;
-        return $this->render('SieEspecialBundle:EstudianteTalento:confirm.html.twig', array('tramite_id' => $tramite_id, 'estudiante' => $estudiante, 'es_talento' => $es_talento, 'tipo_talento' => $tipo_talento));
+        $documento = $datos1->informe;
+        return $this->render('SieEspecialBundle:EstudianteTalento:confirm.html.twig', array('tramite_id' => $tramite_id, 'estudiante' => $estudiante, 'es_talento' => $es_talento, 'tipo_talento' => $tipo_talento, 'documento' => $documento));
     }
 
     public function confirmAction(Request $request) {
@@ -317,8 +318,9 @@ class EstudianteTalentoController extends Controller {
         $centroinscripcion_id = $tareasDatos[0]['datos']['centro_inscripcion'];
         $distrito_id = 0;
         $lugarlocalidad_id = 0;
-
+        
         $ieducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($centroinscripcion_id);
+        //dump("tpruewsa", $ieducativa);die;
         if ($ieducativa) {
             $distrito_id = $ieducativa->getLeJuridicciongeografica()->getLugarTipoIdDistrito();
             $lugarlocalidad_id = $ieducativa->getLeJuridicciongeografica()->getLugarTipoLocalidad()->getId();

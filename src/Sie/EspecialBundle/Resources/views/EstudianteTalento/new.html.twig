@@ -35,7 +35,7 @@
                                 <form class="form-inline text-center">
                                   <div class="form-group">
                                     <div class="input-group">
-                                      <input value="5198000720074678" type="text" class="form-control" id="rude" placeholder="Buscar por RUDE">
+                                      <input type="text" class="form-control" id="rude" placeholder="Buscar por RUDE">
                                       <div class="input-group-addon"><i class="fa fa-search"></i></div>
                                     </div>
                                   </div>
@@ -88,7 +88,7 @@
                                         <input type="text" class="form-control noedit" id="institucion_educativa" name="institucion_educativa">
                                     </div>
                                     <div class="form-group">
-                                        <input type="hidden" id="centro_inscripcion" name="centro_inscripcion" value="{{ centro_inscripcion }}" readonly>
+                                        <input type="hidden" id="centro_inscripcion" name="centro_inscripcion" value="{{ centro_inscripcion }}">
                                         <label for="centro">Centro Inscripción</label>
                                         <input type="text" class="form-control" id="centro" name="centro" value="{{ centro }}" readonly>
                                     </div>
@@ -196,9 +196,7 @@
             $("#institucion_educativa").val('');
             $("#estudiante_id").val('');
             $("#estudiante_ins_id").val('');
-            // $("#centro_inscripcion").val('');
             $("#fecha_solicitud").val('');
-            $('#centro_inscripcion').val('').trigger('change')
         }
 
         $("#registro").submit( function (event) {
