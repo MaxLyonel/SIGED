@@ -39,7 +39,7 @@ class InscriptionExtranjerosController extends Controller {
     }
 
     /**
-    function to load all inscription options
+    *function to load all inscription options
     **/
     public function fillOptionsInscriptions(){
 
@@ -182,6 +182,13 @@ class InscriptionExtranjerosController extends Controller {
      * @return type
      */
     public function saveextAction(Request $request) {
+        $this->session = $request->getSession();
+        
+        $id_usuario = $this->session->get('userId');
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
 
@@ -244,6 +251,12 @@ class InscriptionExtranjerosController extends Controller {
     }
 
     public function savenewAction(Request $request) {
+        $this->session = $request->getSession();
+        
+        $id_usuario = $this->session->get('userId');
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
         $form = $request->get('form');
 
         $sw = 0;
@@ -287,6 +300,13 @@ class InscriptionExtranjerosController extends Controller {
      *
      */
     public function savenewextranjeroAction(Request $request) {
+        $this->session = $request->getSession();
+        
+        $id_usuario = $this->session->get('userId');
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         $form = $request->get('form');
@@ -478,6 +498,12 @@ class InscriptionExtranjerosController extends Controller {
      * @param Request $request
      */
     public function resultAction(Request $request) {
+        $this->session = $request->getSession();
+        
+        $id_usuario = $this->session->get('userId');
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
 
         $em = $this->getDoctrine()->getManager();
         //flag to know is a new estranjero student
