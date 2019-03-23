@@ -108,7 +108,7 @@ class RemoveInscriptionStudentFreeController extends Controller {
         $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude']));
         //check if the student exists
         if ($objStudent) {
-            $objInscriptionCurrent = $em->getRepository('SieAppWebBundle:Estudiante')->findCurrentStudentInscriptionWithOutEstado($objStudent->getId(), $form['gestion']);
+            // $objInscriptionCurrent = $em->getRepository('SieAppWebBundle:Estudiante')->findCurrentStudentInscriptionWithOutEstado($objStudent->getId(), $form['gestion']);
 
             //validate to student with nivel 11
             /*if($objInscriptionCurrent[0]['nivelId'] == 11){

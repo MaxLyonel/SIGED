@@ -665,10 +665,10 @@ class EstudianteRudealController extends Controller {
                         ->add('zona','text',array('data' => $rude->getZona(), 'required' => false, 'attr' => array('class' => 'form-control')));
                     }
                     $form=$form
-                    ->add('avenida','text',array('label'=>'Avenida / Calle','data'=>$rude->getAvenida(), 'requried'=>false))
-                    ->add('numero','text',array('label'=>'Numero','data'=>$rude->getNumero(), 'requried'=>false))
-                    ->add('celular','text',array('label'=>'Celular','data'=>$rude->getCelular(), 'requried'=>false))
-                    ->add('telefonoFijo','text',array('label'=>'Telefono','data'=>$rude->getTelefonoFijo(), 'requried'=>false))
+                    ->add('avenida','text',array('label'=>'Avenida / Calle','data'=>$rude->getAvenida(), 'required'=>false))
+                    ->add('numero','text',array('label'=>'Numero','data'=>$rude->getNumero(), 'required'=>false))
+                    ->add('celular','text',array('label'=>'Celular','data'=>$rude->getCelular(), 'required'=>false))
+                    ->add('telefonoFijo','text',array('label'=>'Telefono','data'=>$rude->getTelefonoFijo(), 'required'=>false))
                     ->getForm();
 
         return $form;
