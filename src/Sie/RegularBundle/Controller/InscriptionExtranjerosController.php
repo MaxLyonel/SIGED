@@ -39,18 +39,21 @@ class InscriptionExtranjerosController extends Controller {
     }
 
     /**
-    function to load all inscription options
+    *function to load all inscription options
     **/
     public function fillOptionsInscriptions(){
 
-         $this->arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria','77'=> 'Post Bachillerato' );
+         $this->arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria', );
 
         if($this->session->get('roluser') == 7 || $this->session->get('roluser') == 8){
             $this->arrOptionInscription[100] = 'Incial/Primaria R.M. No 2378/2017';
+            $this->arrOptionInscription[77] = 'Post Bachillerato';
         }
     }
 
-    public function indexAction() {
+    public function indexAction(Request $request) {
+        $this->session = $request->getSession();
+        $rol_id = $this->session->get('roluser');
 
         $em = $this->getDoctrine()->getManager();
 
@@ -63,11 +66,11 @@ class InscriptionExtranjerosController extends Controller {
         //   return $this->redirect($this->generateUrl('login'));
         // }
         return $this->render($this->session->get('pathSystem') . ':InscriptionExtranjeros:chooseIncription.html.twig', array(
-                    'form' => $this->chooseIncriptionForm()->createView(),
+                    'form' => $this->chooseIncriptionForm($rol_id)->createView(),
         ));
     }
 
-    private function chooseIncriptionForm(){
+    private function chooseIncriptionForm($rol_id){//dump($this->arrOptionInscription);die;
 
     //     $this->arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria','77'=> 'Post Bachillerato' );
 
@@ -77,11 +80,19 @@ class InscriptionExtranjerosController extends Controller {
     //     // else{
     // //     $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria' );
     // // }
-
-      
+        $opciones = array();
+        if ($rol_id == 9) {
+            foreach ($this->arrOptionInscription as $key=>$value) {
+                if ($key == 59) {
+                    $opciones[$key] = $value;
+                }
+            }
+        } else {
+            $opciones = $this->arrOptionInscription;
+        }
       $form = $this->createFormBuilder()
               ->setAction($this->generateUrl('inscription_extranjeros_main'))
-              ->add('optionInscription', 'choice', array('mapped' => false, 'label' => 'Inscripción', 'choices' => $this->arrOptionInscription, 'attr' => array('class' => 'form-control')))
+              ->add('optionInscription', 'choice', array('mapped' => false, 'label' => 'Inscripción', 'choices' => $opciones, 'attr' => array('class' => 'form-control')))
               ->add('buscar', 'submit', array('label' => 'Continuar'))
               ->getForm();
       return $form;
@@ -171,6 +182,13 @@ class InscriptionExtranjerosController extends Controller {
      * @return type
      */
     public function saveextAction(Request $request) {
+        $this->session = $request->getSession();
+        
+        $id_usuario = $this->session->get('userId');
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
 
@@ -233,6 +251,12 @@ class InscriptionExtranjerosController extends Controller {
     }
 
     public function savenewAction(Request $request) {
+        $this->session = $request->getSession();
+        
+        $id_usuario = $this->session->get('userId');
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
         $form = $request->get('form');
 
         $sw = 0;
@@ -276,6 +300,13 @@ class InscriptionExtranjerosController extends Controller {
      *
      */
     public function savenewextranjeroAction(Request $request) {
+        $this->session = $request->getSession();
+        
+        $id_usuario = $this->session->get('userId');
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         $form = $request->get('form');
@@ -467,6 +498,12 @@ class InscriptionExtranjerosController extends Controller {
      * @param Request $request
      */
     public function resultAction(Request $request) {
+        $this->session = $request->getSession();
+        
+        $id_usuario = $this->session->get('userId');
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
 
         $em = $this->getDoctrine()->getManager();
         //flag to know is a new estranjero student
@@ -769,7 +806,7 @@ class InscriptionExtranjerosController extends Controller {
                         //validate the year of student
                         $idStudent = $form ['idStudent'];
                         $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($idStudent);
-                        $tiempo = $this->tiempo_transcurrido($objStudent->getFechaNacimiento()->format('d-m-Y'), '30-6-2018');
+                        $tiempo = $this->tiempo_transcurrido($objStudent->getFechaNacimiento()->format('d-m-Y'), '30-6-'.$this->session->get('currentyear'));
 
                         switch ($tiempo[0]) {
                           case 3:

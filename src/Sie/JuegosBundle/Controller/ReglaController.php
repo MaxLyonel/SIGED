@@ -60,14 +60,25 @@ class ReglaController extends Controller
                 }                
             }
             
-            $msg = $this->valPruebaParticipacion($estudianteInscripcionId, $gestionId, $pruebaId, $faseId);            
-            if ($msg[0]){
+            $msg = $this->valPruebaParticipacion($estudianteInscripcionId, $gestionId, $pruebaId, $faseId);   
+            
+            if (!$msg[0]){
                 //dump('no tiene prueba');die;
                 $msg1 = $this->valConjuntoPruebaParticipacion($estudianteInscripcionId, $gestionId, $pruebaId, $faseId);
                 if (!$msg1[0]){
                     //dump($msg[1]);die;
                     return $msg1;
-                }
+                }                
+                $msg = array('0' => true, '1' => '');
+            }
+
+            if ($msg[0]){
+                //dump('no tiene prueba');die;
+                // $msg1 = $this->valConjuntoPruebaParticipacion($estudianteInscripcionId, $gestionId, $pruebaId, $faseId);
+                // if (!$msg1[0]){
+                //     //dump($msg[1]);die;
+                //     return $msg1;
+                // }
                 
                 $msg2 = $this->valPruebaRegla($estudianteInscripcionId, $gestionId, $pruebaId, $faseId, $equipoId);
                 if (!$msg2[0]){
@@ -136,6 +147,7 @@ class ReglaController extends Controller
 
         $pruebaEntity = $em->getRepository('SieAppWebBundle:JdpPruebaTipo')->findOneBy(array('id' => $pruebaId));
         $disciplinaId = $pruebaEntity->getDisciplinaTipo()->getId();   
+        $disciplinaNombre = $pruebaEntity->getDisciplinaTipo()->getDisciplina();   
         $pruebaParticipacionId = $pruebaEntity->getPruebaParticipacionTipo()->getId();   
         $pruebaParticipacionCantidad = $pruebaEntity->getPruebaParticipacionTipo()->getCantidad();   
         $pruebaParticipacionNombre = $pruebaEntity->getPruebaParticipacionTipo()->getDisciplinaParticipacion();    
@@ -149,7 +161,14 @@ class ReglaController extends Controller
         if($cantidadPruebaEstudiante < $pruebaParticipacionCantidad){
             return array('0' => true, '1' => '');
         } else {
-            return array('0' => false, '1' => 'El estudiante ya cuenta con la cantidad maxima de participaciones permitidas en la Prueba '.$pruebaParticipacionNombre.', intente nuevamente');
+            $cantidadDisciplinaPruebaParticipacion = $this->getDisciplinaPruebaParticipacion($disciplinaId, $pruebaParticipacionId);
+            // dump($cantidadDisciplinaPruebaParticipacion);dump($cantidadPruebaEstudiante);die;
+            
+            if ($cantidadPruebaEstudiante < $cantidadDisciplinaPruebaParticipacion){
+                return array('0' => true, '1' => '');
+            } else {
+                return array('0' => false, '1' => 'El estudiante ya cuenta con la cantidad maxima de participaciones permitidas en la Prueba '.$pruebaParticipacionNombre.', intente nuevamente');
+            }
         }
     }
 
@@ -171,7 +190,7 @@ class ReglaController extends Controller
             $disciplinaNombre = $modalidadPruebaEntity->getPruebaTipo()->getDisciplinaTipo()->getDisciplina();   
             $generoId = $modalidadPruebaEntity->getPruebaTipo()->getGeneroTipo()->getId();   
 
-            $conjuntoPruebaEntity = $em->getRepository('SieAppWebBundle:JdpPruebaTipo')->findOneBy(array('disciplinaTipo' => $disciplinaId, 'generoTipo' => $generoId));
+            // $conjuntoPruebaEntity = $em->getRepository('SieAppWebBundle:JdpPruebaTipo')->findOneBy(array('disciplinaTipo' => $disciplinaId, 'generoTipo' => $generoId));
             $conjuntoPruebaEntity= $this->getDoctrine()->getRepository('SieAppWebBundle:JdpModalidadPrueba');
             $query = $conjuntoPruebaEntity->createQueryBuilder('mp')
                 ->innerJoin('SieAppWebBundle:JdpPruebaTipo','pt','WITH','pt.id = mp.pruebaTipo')
@@ -183,6 +202,7 @@ class ReglaController extends Controller
                 ->setParameter('codGenero', $generoId)
                 ->getQuery();
             $conjuntoPruebaEntity = $query->getResult();
+            // dump($conjuntoPruebaEntity);die;
 
             $estudianteInscripcionJuegosController = new estudianteInscripcionJuegosController();
             $estudianteInscripcionJuegosController->setContainer($this->container);
@@ -192,14 +212,14 @@ class ReglaController extends Controller
             $cantidadPruebaConjunto = count($conjuntoPruebaEntity);
             $cantidadPruebaEstudiante = count($listaPruebaEstudiante);
 
-            //dump($cantidadPruebaEstudiante);dump($cantidadPruebaConjunto);
+            // dump($cantidadPruebaEstudiante);dump($cantidadPruebaConjunto);
             if($cantidadPruebaEstudiante < $cantidadPruebaConjunto){
                 return array('0' => true, '1' => '');
             } else {
                 return array('0' => false, '1' => 'El estudiante ya cuenta con la cantidad maxima de pruebas permitidas dentro de una disciplina');
             }
         }  else {
-            return array('0' => true, '1' => '');
+            return array('0' => false, '1' => 'No cuenta con mas pruebas por registrase en la disciplina');
         }    
 
         
@@ -251,10 +271,11 @@ class ReglaController extends Controller
             if($cantidadListaEquipoPruebaInstitucion > $cupoPresentacion){
                 return array('0' => false, '1' => 'No puede registrar a mas equipos en la prueba '.$pruebaNombre);
             } else {
+                //dump($cantidadListaEquipoPruebaInstitucion);dump($cupoPresentacion);die();
                 if($cantidadListaEquipoPruebaInstitucion == $cupoPresentacion){
                     $listaEquipoExiste = false;
                     foreach ($listaEquipoPruebaInstitucion as $listaEquipo) {
-                        $listaEquipoId = $equipo['equipoId'];
+                        $listaEquipoId = $listaEquipo['equipoId'];
                         if ($listaEquipoId == $equipoId){
                             $listaEquipoExiste = true;
                         }
@@ -273,7 +294,7 @@ class ReglaController extends Controller
             }
         }
 
-        if($estudianteGestionNacimiento <= $iniGestionId or $estudianteGestionNacimiento >= $finGestionId){
+        if($estudianteGestionNacimiento < $iniGestionId or $estudianteGestionNacimiento > $finGestionId){
             return array('0' => false, '1' => 'Año de nacimiento fuera del rango permitido ('.$iniGestionId.' - '.$finGestionId.')');
         }
 
@@ -320,6 +341,30 @@ class ReglaController extends Controller
         $entity= $this->getDoctrine()->getRepository('SieAppWebBundle:JdpDisciplinaParticipacionTipo');
         $query = $entity->createQueryBuilder('dpt')
             ->select('sum(dpt.cantidad) as cantidad')
+            ->getQuery();
+        $entity = $query->getResult();
+        if (count($entity) > 0){
+            return $entity[0]['cantidad']; 
+        } else {
+            return 0; 
+        }               
+    }
+
+    /**
+     * busca el maximo id equipo creado
+     * @param type $nivelId
+     * @param type $generoId
+     * return list of pruebas
+     */
+    public function getDisciplinaPruebaParticipacion($disciplinaId, $pruebaParticipacionId) {
+        $em = $this->getDoctrine()->getManager();
+        $entity= $this->getDoctrine()->getRepository('SieAppWebBundle:JdpDisciplinaPruebaParticipacion');
+        $query = $entity->createQueryBuilder('dpp')
+            ->select('dpp.cantidad as cantidad')
+            ->where('dpp.disciplinaTipo = :codDisciplina')
+            ->andwhere('dpp.pruebaParticipacionTipo = :codPruebaParticipacion')
+            ->setParameter('codDisciplina', $disciplinaId)
+            ->setParameter('codPruebaParticipacion', $pruebaParticipacionId)
             ->getQuery();
         $entity = $query->getResult();
         if (count($entity) > 0){

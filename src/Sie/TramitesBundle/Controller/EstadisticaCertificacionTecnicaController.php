@@ -35,7 +35,7 @@ class EstadisticaCertificacionTecnicaController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = $fechaActual->format('Y');
-        $gestionActual = 2018;
+        // $gestionActual = 2018;
 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -59,6 +59,7 @@ class EstadisticaCertificacionTecnicaController extends Controller {
         $entityCertTecAltLista = $this->certificadoTecnicoAlternativaLista($nivelArea, $codigoArea, $gestionActual);
 
         $entityCertTecAltEstadistica = $this->certificadoTecnicoAlternativaEstadistica($nivelArea, $codigoArea, $gestionActual);
+        //dump($nivelArea);dump($codigoArea);dump($gestionActual);die;
 
         if(count($entityCertTecAltLista)>0 and isset($entityCertTecAltLista)){
             $totalgeneral = 0;
@@ -111,6 +112,9 @@ class EstadisticaCertificacionTecnicaController extends Controller {
             $entityCertTecAltLista = array();
         }
 
+        //dump($nivelArea);dump($codigoArea);dump($gestionActual);dump($entityCertTecAltEstadistica);die;
+        //dump($entityCertTecAltLista);dump($entityCertTecAltEstadistica);die;
+
         if(count($entityCertTecAltLista)>0 and isset($entityCertTecAltLista)){
             return $this->render($this->session->get('pathSystem') . ':Estadistica:certificacionTecnicaAlternativa.html.twig', array(
                 'infoEntidad'=>$entityCertTecAltEstadistica,
@@ -123,6 +127,7 @@ class EstadisticaCertificacionTecnicaController extends Controller {
                 'datoGraficoGenero2'=>$chartGenero2,
                 'datoGraficoDependencia2'=>$chartDependencia2,
                 'fechaEstadistica'=>$fechaActual,
+                'infoGestion'=>$entityGestion,
             ));
         } else {
             return $this->render($this->session->get('pathSystem') . ':Estadistica:certificacionTecnicaAlternativa.html.twig', array(
@@ -135,6 +140,7 @@ class EstadisticaCertificacionTecnicaController extends Controller {
                 'datoGraficoGenero2'=>$chartGenero2,
                 'datoGraficoDependencia2'=>$chartDependencia2,
                 'fechaEstadistica'=>$fechaActual,
+                'infoGestion'=>$entityGestion,
             ));
         }
 
@@ -311,6 +317,8 @@ class EstadisticaCertificacionTecnicaController extends Controller {
     public function certificadoTecnicoAlternativaEstadistica($nivelArea, $codigoArea, $gestion) {
         $em = $this->getDoctrine()->getManager();
 
+        //dump($nivelArea);dump($codigoArea);dump($gestion);die;
+
         $query = $em->getConnection()->prepare("
             with tabla as (
                 select ies.gestion_tipo_id, pert.periodo as periodo, pert.id as periodo_id
@@ -372,7 +380,6 @@ class EstadisticaCertificacionTecnicaController extends Controller {
         ");
 
         if ($nivelArea == 2){
-            dump($nivelArea);dump($codigoArea);dump($gestion);
             $query = $em->getConnection()->prepare("
                 with tabla as (
                     select lt14.id as departamento_id, lt14.codigo as departamento_codigo, lt14.lugar as departamento
@@ -619,6 +626,8 @@ class EstadisticaCertificacionTecnicaController extends Controller {
             $codigoArea = 0;
             $nivelArea = 0;
         }
+
+        //dump($nivelArea);dump($codigoArea);dump($gestion);die;
 
         $em = $this->getDoctrine()->getManager();
         $formato = '.pdf';

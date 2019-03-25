@@ -77,6 +77,7 @@
                                                 <td>
                                                     {% if registro.id is not null %}
                                                         <button onclick="verFotos({{registro.id}})" class="btn btn-xs btn-info"> <i class="fa fa-eye"></i> </button>
+                                                        <button onclick="detalle({{registro.rue}})" class="btn btn-xs btn-success"> <i class="fa fa-list"></i> </button>
                                                     {% endif %}
                                                 </td>
                                             </tr>
@@ -97,6 +98,9 @@
       </div>
     </div>
 <div class="modal fade" id="modalFotos"> </div>
+<div class="modal fade" id="modalDetalle">
+    
+</div>
 
 {% endblock %}
 {% block javascripts%}
@@ -153,6 +157,26 @@
                 $('#modalFotos').empty();
                 $('#modalFotos').append(data);
                 $('#modalFotos').modal('show');
+            },
+            error: function(data){
+
+            }
+        });
+        
+    }
+
+    function detalle(sie){
+        $.ajax({
+            url: Routing.generate('herramienta_reportelabofisquim_detalle'),
+            type: 'post',
+            data: {sie: sie},
+            beforeSend: function(){
+
+            },
+            success: function(data){
+                $('#modalDetalle').empty();
+                $('#modalDetalle').append(data);
+                $('#modalDetalle').modal('show');
             },
             error: function(data){
 

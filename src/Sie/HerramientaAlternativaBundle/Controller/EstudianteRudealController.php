@@ -284,7 +284,7 @@ class EstudianteRudealController extends Controller {
                             },
                             'property'=>'sigla',
                             'empty_value' => 'Seleccionar...',
-                            'required' => true,
+                            'required' => false,
                             'data'=>($e->getExpedido())?$e->getExpedido():'',
                             'mapped'=>false
                         ))
@@ -651,7 +651,7 @@ class EstudianteRudealController extends Controller {
                             ->add('municipioDir', 'choice', array('data' => $m_id, 'label' => 'Municipio', 'required' => true, 'choices' => $muniArray, 'empty_value' => 'Seleccionar...','attr' => array('class' => 'form-control', 'onchange' => 'listarCantones(this.value)')))
                             ->add('cantonDir', 'choice', array('data' => $c_id, 'label' => 'Cantón', 'required' => true, 'choices' => $cantnArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarLocalidades(this.value)')))
                             ->add('localidadDir', 'choice', array('data' => $l_id, 'label' => 'Localidad', 'required' => true, 'choices' => $localdArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
-                            ->add('zona', 'text', array('data' => $rude->getZona(), 'required' => true, 'attr' => array('class' => 'form-control')));
+                            ->add('zona', 'text', array('data' => $rude->getZona(), 'required' => false, 'attr' => array('class' => 'form-control')));
                         }
                     }else{
                         $form=$form
@@ -662,13 +662,13 @@ class EstudianteRudealController extends Controller {
                         ->add('localidadDir', 'choice', array('data' => $l_id, 'label' => 'Localidad', 'required' => true, 'choices' => $localdArray, 'empty_value' => 'Seleccionar...','mapped'=>false))
                         // ->add('municipioLugarTipo', 'choice', array('data' => $m_id, 'label' => 'Municipio', 'required' => true, 'choices' => $muniArray, 'empty_value' => 'Seleccionar...','mapped'=>false))
                         // ->add('localidad')
-                        ->add('zona','text',array('data' => $rude->getZona(), 'required' => true, 'attr' => array('class' => 'form-control')));
+                        ->add('zona','text',array('data' => $rude->getZona(), 'required' => false, 'attr' => array('class' => 'form-control')));
                     }
                     $form=$form
-                    ->add('avenida','text',array('label'=>'Avenida / Calle','data'=>$rude->getAvenida()))
-                    ->add('numero','text',array('label'=>'Numero','data'=>$rude->getNumero()))
-                    ->add('celular','text',array('label'=>'Celular','data'=>$rude->getCelular()))
-                    ->add('telefonoFijo','text',array('label'=>'Telefono','data'=>$rude->getTelefonoFijo()))
+                    ->add('avenida','text',array('label'=>'Avenida / Calle','data'=>$rude->getAvenida(), 'required'=>false))
+                    ->add('numero','text',array('label'=>'Numero','data'=>$rude->getNumero(), 'required'=>false))
+                    ->add('celular','text',array('label'=>'Celular','data'=>$rude->getCelular(), 'required'=>false))
+                    ->add('telefonoFijo','text',array('label'=>'Telefono','data'=>$rude->getTelefonoFijo(), 'required'=>false))
                     ->getForm();
 
         return $form;
@@ -1047,6 +1047,7 @@ class EstudianteRudealController extends Controller {
 
         // CENTROS DE SALUD
         $centrosEstudiante = $em->getRepository('SieAppWebBundle:RudeCentroSalud')->findBy(array('rude'=>$rude));
+        // dump($centrosEstudiante);die;
         $arrayCentros = [];
         foreach ($centrosEstudiante as $ce) {
             $arrayCentros[] = $ce->getCentroSaludTipo()->getId();
@@ -1078,7 +1079,7 @@ class EstudianteRudealController extends Controller {
 
         $cea = $this->session->get('ie_id');
         if($cea == 80730796){
-            $this->estdo = false;
+            $this->estado = false;
         }else{
             $this->estado = true;
         }

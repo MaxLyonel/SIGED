@@ -2,9 +2,9 @@ Sie\AppWebBundle\Entity\WfSolicitudTramite:
     type: entity
     table: wf_solicitud_tramite
     indexes:
-        IDX_C719D200820C2849:
+        IDX_C719D20042145B6B:
             columns:
-                - tramite_id
+                - tramite_detalle_id
     id:
         id:
             type: integer
@@ -36,20 +36,26 @@ Sie\AppWebBundle\Entity\WfSolicitudTramite:
             nullable: true
             comment: ''
             column: fecha_modificacion
-        lugarTipoId:
+        lugarTipoLocalidadId:
             type: integer
-            nullable: false
+            nullable: true
             unsigned: false
             comment: ''
-            column: lugar_tipo_id
+            column: lugar_tipo_localidad_id
+        lugarTipoDistritoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: lugar_tipo_distrito_id
     manyToOne:
-        tramite:
-            targetEntity: Tramite
+        tramiteDetalle:
+            targetEntity: TramiteDetalle
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                tramite_id:
+                tramite_detalle_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
