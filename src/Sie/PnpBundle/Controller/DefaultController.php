@@ -8532,7 +8532,59 @@ public function rudeal_guardarAction(Request $request){
         }
     }
 }
+    public function reporte_usuariosAction(){
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
 
+        $userId = $this->session->get('userId');
+        $query = "
+               SELECT lt.lugar as lugar,ur.rol_tipo_id
+               FROM lugar_tipo lt,
+               usuario_rol ur 
+               WHERE ur.lugar_tipo_id=lt.id and ur.esactivo=true and ur.usuario_id=$userId";
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $filas = array();
+        $datos_filas = array();
+        foreach ($po as $p) {
+            $lugar_usuario = $p["lugar"];
+            $rol_tipo_id = $p["rol_tipo_id"];
+        }
+        $where="";
+        if($rol_tipo_id==21)$where="and upper(lt.lugar)='$lugar_usuario'";
+        $lugar_usuario=strtoupper($lugar_usuario);
+         $query = "
+         SELECT p.paterno,p.materno,p.nombre,p.carnet,p.complemento,rt.rol,rt.id as rol_id,upper(lt.lugar) as lugar,u.esactivo,ur.esactivo
+from usuario u
+join usuario_rol ur on ur.usuario_id=u.id
+join persona p on u.persona_id=p.id
+join rol_tipo rt on ur.rol_tipo_id=rt.id
+join lugar_tipo lt on ur.lugar_tipo_id=lt.id
+where (ur.rol_tipo_id=21 or ur.rol_tipo_id=29) and u.esactivo and ur.esactivo $where
+order by rt.id,lt.lugar
+                ";
+    $stmt = $db->prepare($query);
+    $params = array();
+    $stmt->execute($params);
+    $po = $stmt->fetchAll();
+    $filas = array();
+    $datos_filas = array();
+    foreach ($po as $p){
+        $datos_filas["lugar"] = $p["lugar"];
+        $datos_filas["paterno"] = $p["paterno"];
+        $datos_filas["materno"] = $p["materno"];
+        $datos_filas["nombre"] = $p["nombre"];
+        $datos_filas["carnet"] = $p["carnet"];
+        $datos_filas["complemento"] = $p["complemento"];
+        if($p["rol_id"]==21)$datos_filas["rol"] = "Informático";else $datos_filas["rol"] = "Pedagogo";
+        $filas[] = $datos_filas;
+    }   
+
+        return $this->render('SiePnpBundle:Default:reporte_usuarios.html.twig',array(
+        'filas'=>$filas));
+}
 /////////////////////////////////busquedas//////////////////////
 // buscar datos estudiantes
     public function retornar_estudianteAction($where){
