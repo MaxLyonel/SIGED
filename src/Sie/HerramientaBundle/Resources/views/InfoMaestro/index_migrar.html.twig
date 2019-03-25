@@ -94,9 +94,11 @@
                                             <tr>
                                                 <th>N°</th>
                                                 <th>Carnet de Identidad</th>
+                                                <th>Complemento</th>
                                                 <th>Paterno</th>
                                                 <th>Materno</th>
                                                 <th>Nombre(s)</th>
+                                                <th>Fecha de Nacimiento</th>
                                                 <th>Formación</th>
                                                 <th>Fecha Registro</th>
                                             </tr>
@@ -106,9 +108,11 @@
                                                 <tr>
                                                     <td data-title="N°">{{ loop.index }}</td>
                                                     <td data-title="Carnet">{{ maestro.carnet }}</td>
+                                                    <td data-title="Complemento">{{ maestro.complemento }}</td>
                                                     <td data-title="Paterno">{{ maestro.paterno }}</td>
                                                     <td data-title="Materno">{{ maestro.materno }}</td>
                                                     <td data-title="Nombre(s)">{{ maestro.nombre }}</td>
+                                                    <td data-title="FechaNac">{{ maestro.fechaNacimiento|date('d-m-Y') }}</td>
                                                     <td data-title="Formación">{{ maestro.formacion }}</td>
                                                     <td data-title="FechReg">{% if maestro.fechaRegistro %}{{ maestro.fechaRegistro|date('d-m-Y') }}{% else %}-{% endif %}</td>
                                                 </tr>
@@ -153,12 +157,13 @@
                                             <tr>
                                                 <th>N°</th>
                                                 <th>Carnet de Identidad</th>
+                                                <th>Complemento</th>
                                                 <th>Paterno</th>
                                                 <th>Materno</th>
                                                 <th>Nombre(s)</th>
+                                                <th>Fecha de Nacimiento</th>
                                                 <th>Formación</th>
                                                 <th>Fecha Registro</th>
-                                                <th>Fecha Modificación</th>
                                                 <th>Marcar para ratificar</th>
                                             </tr>
                                         </thead>
@@ -167,12 +172,13 @@
                                                 <tr>
                                                     <td data-title="N°">{{ loop.index }}</td>
                                                     <td data-title="Carnet">{{ maestro.carnet }}</td>
+                                                    <td data-title="Complemento">{{ maestro.complemento }}</td>
                                                     <td data-title="Paterno">{{ maestro.paterno }}</td>
                                                     <td data-title="Materno">{{ maestro.materno }}</td>
                                                     <td data-title="Nombre(s)">{{ maestro.nombre }}</td>
+                                                    <td data-title="FechaNac">{{ maestro.fechaNacimiento|date('d-m-Y') }}</td>
                                                     <td data-title="Formación">{{ maestro.formacion }}</td>
                                                     <td data-title="FechReg">{% if maestro.fechaRegistro %}{{ maestro.fechaRegistro|date('d-m-Y') }}{% else %}-{% endif %}</td>
-                                                    <td data-title="FechMod">{% if maestro.fechaModificacion %}{{ maestro.fechaModificacion|date('d-m-Y') }}{% else %}-{% endif %}</td>
                                                     <td data-title="Acciones">
                                                         <input type="checkbox" id="ratificarMaestro_{{maestro.perId}}" name="ratificarMaestro[{{maestro.perId}}]">
                                                     </td>

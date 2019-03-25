@@ -38,6 +38,8 @@
             <link href="{{asset('webPermanente/assets/global/plugins/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.css')}}" rel="stylesheet">
             <link href="{{asset('webPermanente/assets/global/plugins/bower_components/jasny-bootstrap-fileinput/css/jasny-bootstrap-fileinput.min.css')}}" rel="stylesheet">
             <link href="{{asset('webPermanente/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.min.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
             <link href="{{asset('webPermanente/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.css')}}" rel="stylesheet">
             <link href="{{asset('webPermanente/assets/global/plugins/bower_components/datatables/css/datatables.responsive.css')}}" rel="stylesheet">
             <link href="{{asset('webPermanente/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
@@ -78,6 +80,7 @@
             <![endif]-->
             <!--/ END IE SUPPORT -->
             <link rel="stylesheet" type="text/css" href="CSS.css">
+            <link href="{{asset('css/plugins/bootstrap-datepicker/datepicker3.css')}}" rel="stylesheet">
             <link href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
         </head>
     {%endblock%}
@@ -374,7 +377,7 @@
                             <li><a href="{{path('notascualitativas')}}">Notas Cualitativas</a></li>
                         </ul>
                     </li>#}
-                    {#{% if (app.session.get('roluser') == 31) %} #}{#SUPER USUARIO#}{#
+                    {% if (app.session.get('roluser') == 31) %} {#SUPER USUARIO#}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-users"></i></span>
@@ -389,7 +392,7 @@
                         </li>
                     {% endif %}
 
-                    {% if (app.session.get('roluser') == 8) %} #}{#NACIONAL#}{#
+                    {% if (app.session.get('roluser') == 8) %} {#NACIONAL#}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-users"></i></span>
@@ -397,29 +400,33 @@
                                 <span class="arrow"></span>
                             </a>
                             <ul>
-
                                 <li><a href="{{path('per_estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
                                 <li><a href="{{path('herramienta_per_ceducativa_crear_periodo')}}">Habilitar Gestión </a></li>
                                 <li><a href="{{path('herramienta_permanente_admin')}}">Administración de Cursos </a></li>
 
-
-                                #}{#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}{#
-                                  #}{#<li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>#}{#
+                                {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
+                                  {#<li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>#}
                                 {% if (app.session.get('ie_id') != -1) %}
                                     <li><a href="{{path('sie_per_ges_sub_sem')}}">Operativos </a></li>
-
-
-
                                 {% endif %}
-
                                 <li><a href="{{path('herramienta_per_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
-
+                            </ul>
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-suitcase"></i></span>
+                                <span class="text">Administración de Cursos</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                               <li><a href="{{path('herramienta_permanente_admin')}}">Administración Cursos Cortos </a></li>
+                                {#<li><a href="{{path('herramienta_permanente_admin_especialidades')}}">Especialidades Cursos Largos </a></li>#}
                             </ul>
                         </li>
+
+
                     {% endif %}
 
 
-                    {% if (app.session.get('roluser') == 20) %} #}{#NACIONAL INVITADO#}{#
+                    {% if (app.session.get('roluser') == 20) %} {#NACIONAL INVITADO#}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-users"></i></span>
@@ -435,7 +442,7 @@
                         </li>
                     {% endif %}
 
-                    {% if (app.session.get('roluser') == 7) %} #}{#DEPTO#}{#
+                    {% if (app.session.get('roluser') == 7) %} {#DEPTO#}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-users"></i></span>
@@ -443,16 +450,16 @@
                                 <span class="arrow"></span>
                             </a>
                             <ul>
-                                #}{#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}{#
-                                #}{#<li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>#}{#
+                                {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
+                                {#<li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>#}
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
                                 <li><a href="{{path('herramienta_per_ceducativa_crear_periodo')}}">Habilitar Gestión </a></li>
                                 <li><a href="{{path('herramienta_permanente_admin')}}">Administración de Cursos </a></li>
 
-                                #}{#<li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>#}{#
-                                #}{#<li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>#}{#
-                                #}{#<li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>#}{#
-                                #}{#<li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>#}{#
+                                {#<li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>#}
+                                {#<li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>#}
+                                {#<li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>#}
+                                {#<li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>#}
                                 {% if (app.session.get('ie_id') != -1) %}
                                     <li><a href="{{path('sie_per_ges_sub_sem')}}">Operativos </a></li>
                                 {% endif %}
@@ -460,7 +467,7 @@
                                 <li><a href="{{path('herramienta_per_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
                             </ul>
                         </li>
-                        #}{#<li class="submenu">
+                        {#<li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
                                 <span class="text">Bachiller de Excelencia</span>
@@ -469,9 +476,9 @@
                             <ul>
                                 <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>
                             </ul>
-                        </li>#}{#
+                        </li>#}
                     {% endif %}
-                    {% if app.session.get('roluser') == 10 %} #}{#DISTRITAL#}{#
+                    {% if app.session.get('roluser') == 10 %} {#DISTRITAL#}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-users"></i></span>
@@ -483,13 +490,13 @@
                                 <li><a href="{{path('herramienta_per_ceducativa_crear_periodo')}}">Habilitar Gestión </a></li>
                                 <li><a href="{{path('herramienta_permanente_admin')}}">Administración de Cursos </a></li>
 
-                                #}{#<li><a onclick="selceadistritoShow();">Listar mis CEAS.</a></li>#}{#
-                                #}{#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}{#
-                                #}{#<li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>#}{#
-                                #}{#<li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>#}{#
-                                #}{#<li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>#}{#
-                                #}{#<li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>#}{#
-                                #}{#<li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>#}{#
+                                {#<li><a onclick="selceadistritoShow();">Listar mis CEAS.</a></li>#}
+                                {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
+                                {#<li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>#}
+                                {#<li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>#}
+                                {#<li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>#}
+                                {#<li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>#}
+                                {#<li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>#}
                                 {% if (app.session.get('ie_id') != -1) %}
                                     <li><a href="{{path('sie_per_ges_sub_sem')}}">Operativos </a></li>
                                 {% endif %}
@@ -499,7 +506,7 @@
                             </ul>
                         </li>
                     {% endif %}
-                    {% if app.session.get('roluser') == 9 %}#}{#DIRECTOR#}{#
+                    {% if app.session.get('roluser') == 9 %}{#DIRECTOR#}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-users"></i></span>
@@ -517,25 +524,24 @@
 
                         </li>
 
-                        #}{#<li class="submenu">#}{#
-                            #}{#<a href="javascript:void(0);">#}{#
-                                #}{#<span class="icon"><i class="fa fa-home"></i></span>#}{#
-                                #}{#<span class="text">Bachiller de Excelencia</span>#}{#
-                                #}{#<span class="arrow"></span>#}{#
-                            #}{#</a>#}{#
-                            #}{#<ul>#}{#
-                              #}{#<!-- <li><a href="#">Operativo Concluido</a></li> -->#}{#
+                        {#<li class="submenu">#}
+                            {#<a href="javascript:void(0);">#}
+                                {#<span class="icon"><i class="fa fa-home"></i></span>#}
+                                {#<span class="text">Bachiller de Excelencia</span>#}
+                                {#<span class="arrow"></span>#}
+                            {#</a>#}
+                            {#<ul>#}
+                              {#<!-- <li><a href="#">Operativo Concluido</a></li> -->#}
 
-                              #}{#<li><a href="{{ path('bach_exc_alt_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li>#}{#
-                              #}{#<li><a href="{{ path('bach_exc_alt_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li>#}{#
-                              #}{#<li><a href="{{ path('bach_exc_alt')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>#}{#
-                              #}{#<li><a href="{{ path('bach_exc_alt_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>#}{#
-                            #}{##}{#
+                              {#<li><a href="{{ path('bach_exc_alt_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li>#}
+                              {#<li><a href="{{ path('bach_exc_alt_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li>#}
+                              {#<li><a href="{{ path('bach_exc_alt')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>#}
+                              {#<li><a href="{{ path('bach_exc_alt_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>#}
+                            {##}
 
-                            #}{#</ul>#}{#
-                        #}{#</li>#}{#
-                    {% endif %}#}
-                    {{ render(controller('SieAppWebBundle:GestionMenu:generamenuSistema',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  app.session.get('sistemaid') ,'userId':app.session.get('userId')  })) }}
+                            {#</ul>#}
+                        {#</li>#}
+                    {% endif %}
                 </ul><!-- /.sidebar-menu -->
                 <!--/ End left navigation - menu -->
 
@@ -1067,6 +1073,10 @@
             <script src="{{asset('webPermanente/assets/global/plugins/bower_components/ion.rangeSlider/js/ion.rangeSlider.min.js')}}"></script>
             <script src="{{asset('webPermanente/assets/commercial/plugins/cube-portfolio/cubeportfolio/js/jquery.cubeportfolio.min.js')}}"></script>
             <script src="{{asset('webPermanente/assets/global/plugins/bower_components/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/js/fuelux.min.js')}}"></script>
             {#<script src="{{asset('webherramienta/assets/global/plugins/bower_components/x-editable/dist/inputs-ext/typeaheadjs/lib/typeahead.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/x-editable/dist/inputs-ext/typeaheadjs/typeaheadjs.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/x-editable/dist/inputs-ext/address/address.js')}}"></script>#}
@@ -1089,6 +1099,7 @@
             <!-- START @PAGE LEVEL SCRIPTS -->
             <script src="{{asset('webPermanente/assets/admin/js/apps.js')}}"></script>
             <script src="{{asset('webPermanente/assets/admin/js/pages/blankon.chart.easypie.js')}}"></script>
+          //  <script src="{{asset('js/plugins/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
             {#<script src="{{asset('webherramienta/assets/admin/js/pages/blankon.dashboard.retail.js')}}"></script>#}
             <script src="{{asset('webPermanente/assets/admin/js/pages/blankon.blog.type2.js')}}"></script>
             <script src="{{asset('webPermanente/assets/admin/js/pages/blankon.slider.js')}}"></script>
@@ -1097,6 +1108,7 @@
             <script src="{{asset('webPermanente/assets/admin/js/demo.js')}}"></script>
             {#<script src="{{asset('webPermanente/assets/admin/js/initialize.js')}}"></script>#}
             <script src="{{ asset('js/initialize.js')}}"></script>
+            <script src="{{ asset('js/plugins/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
             <script src="{{asset('webPermanente/assets/admin/js/menuTree.js')}}"></script>
             {#<script src="{{asset('webherramienta/assets/admin/js/pages/blankon.chart.morris.js')}}"></script>            #}
             {#<script src="{{asset('webherramienta/assets/admin/js/pages/blankon.project.portfolio.type4.js')}}"></script>#}

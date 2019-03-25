@@ -52,7 +52,7 @@
                         <table class="table table-bordered table-striped table-primary" id="data_tabla">
                             <thead>
                                 <tr>
-                                    <th WIDTH="30">Id</th>
+                                    <th style="width:2%">Id</th>
                                     <th>Tarea</th>
                                     <th>Observación</th>
                                     <th>Acciones</th>
@@ -60,7 +60,7 @@
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <th WIDTH="30">Id</th>
+                                    <th style="width:2%">Id</th>
                                     <th>Tarea</th>
                                     <th>Observación</th>
                                     <th>Acciones</th>
@@ -74,10 +74,10 @@
                                     <td>{{ entity.obs }}</td>
                                     <td>
                                         <a href="{{ path('procesotipo_edit', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Editar">
-                                            <i class="fa fa-pencil"></i>
+                                            <i class="glyphicon glyphicon-pencil"></i>
                                         </a>
                                         <a href="{{ path('procesotipo_delete', { 'id': entity.id }) }}" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="return confirm('¿Esta suguro de eliminar?')">
-                                            <i class="fa fa-times"></i>
+                                            <i class="glyphicon glyphicon-trash"></i>
                                         </a>
                                     </td>
                                 </tr>

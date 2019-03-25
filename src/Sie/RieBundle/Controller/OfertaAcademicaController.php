@@ -141,16 +141,20 @@ class OfertaAcademicaController extends Controller {
     	try{
             $em = $this->getDoctrine()->getManager();
             $form = $request->get('form');
+            
             $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idRie']);
             //Validando los datos
-            $query = $em->createQuery('SELECT ie
-                                         FROM SieAppWebBundle:TtecInstitucioneducativaCarreraAutorizada ie
+            $query = $em->createQuery('SELECT rc
+                                         FROM SieAppWebBundle:TtecResolucionCarrera rc
+                                         INNER JOIN rc.ttecInstitucioneducativaCarreraAutorizada ie
                                         WHERE ie.institucioneducativa = :idInstitucion
                                           AND ie.ttecCarreraTipo = :ieCarrera 
-                                          AND ie.esVigente = :ieEsVigente')
+                                          AND ie.esVigente = :ieEsVigente
+                                          AND rc.nivelTipo = :rcNivel')
                                         ->setParameter('idInstitucion', $form['idRie'])
                                         ->setParameter('ieCarrera', $form['ttecCarreraTipo'])
-                                        ->setParameter('ieEsVigente', TRUE);
+                                        ->setParameter('ieEsVigente', TRUE)
+                                        ->setParameter('rcNivel', $form['nivelTipo']);
             $datoCarrera = $query->getResult();
 
             if($datoCarrera){

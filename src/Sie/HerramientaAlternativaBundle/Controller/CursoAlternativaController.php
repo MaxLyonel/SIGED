@@ -220,52 +220,52 @@ class CursoAlternativaController extends Controller {
                 $em->persist($siep);
                 $em->flush();
                 
-                if ($var['areacod'] == '15'){//id 13 HUMANISTICA
-                    //MATEMATICAS
-                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
-                    $smp = new SuperiorModuloPeriodo();
-                    $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52419'));
-                    $smp->setInstitucioneducativaPeriodo($siep);
-                    $smp->setHorasModulo('0');
-                    $em->persist($smp);
-                    $em->flush();
+                // if ($var['areacod'] == '15'){//id 13 HUMANISTICA
+                //     //MATEMATICAS
+                //     $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
+                //     $smp = new SuperiorModuloPeriodo();
+                //     $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52419'));
+                //     $smp->setInstitucioneducativaPeriodo($siep);
+                //     $smp->setHorasModulo('0');
+                //     $em->persist($smp);
+                //     $em->flush();
 
-                    //LENGUAJE
-                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
-                    $smp = new SuperiorModuloPeriodo();
-                    $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52420'));
-                    $smp->setInstitucioneducativaPeriodo($siep);
-                    $smp->setHorasModulo('0');
-                    $em->persist($smp);
-                    $em->flush();
+                //     //LENGUAJE
+                //     $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
+                //     $smp = new SuperiorModuloPeriodo();
+                //     $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52420'));
+                //     $smp->setInstitucioneducativaPeriodo($siep);
+                //     $smp->setHorasModulo('0');
+                //     $em->persist($smp);
+                //     $em->flush();
 
-                    //CIENCIAS SOCIALES
-                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
-                    $smp = new SuperiorModuloPeriodo();
-                    $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52421'));
-                    $smp->setInstitucioneducativaPeriodo($siep);
-                    $smp->setHorasModulo('0');
-                    $em->persist($smp);
-                    $em->flush();
+                //     //CIENCIAS SOCIALES
+                //     $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
+                //     $smp = new SuperiorModuloPeriodo();
+                //     $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52421'));
+                //     $smp->setInstitucioneducativaPeriodo($siep);
+                //     $smp->setHorasModulo('0');
+                //     $em->persist($smp);
+                //     $em->flush();
 
-                    //CIENCIAS NATURALES
-                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
-                    $smp = new SuperiorModuloPeriodo();
-                    $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52422'));
-                    $smp->setInstitucioneducativaPeriodo($siep);
-                    $smp->setHorasModulo('0');
-                    $em->persist($smp);
-                    $em->flush();
+                //     //CIENCIAS NATURALES
+                //     $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
+                //     $smp = new SuperiorModuloPeriodo();
+                //     $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52422'));
+                //     $smp->setInstitucioneducativaPeriodo($siep);
+                //     $smp->setHorasModulo('0');
+                //     $em->persist($smp);
+                //     $em->flush();
 
-                    //IDIOMA ORIGINARIO
-                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
-                    $smp = new SuperiorModuloPeriodo();
-                    $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52426'));
-                    $smp->setInstitucioneducativaPeriodo($siep);
-                    $smp->setHorasModulo('0');
-                    $em->persist($smp);
-                    $em->flush();
-                }
+                //     //IDIOMA ORIGINARIO
+                //     $em->getConnection()->prepare("select * from sp_reinicia_secuencia('superior_modulo_periodo');")->execute();
+                //     $smp = new SuperiorModuloPeriodo();
+                //     $smp->setSuperiorModuloTipo($em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find('52426'));
+                //     $smp->setInstitucioneducativaPeriodo($siep);
+                //     $smp->setHorasModulo('0');
+                //     $em->persist($smp);
+                //     $em->flush();
+                // }
 //                else{//TECNICA
 
 //                }
@@ -303,9 +303,9 @@ class CursoAlternativaController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();        
         $query = "  select *
-		from
-			(select h.institucioneducativa_id, y.institucioneducativa, a.codigo as nivel, b.id as saeid, b.codigo as ciclo_id,  b.especialidad as ciclo,d.id as satId, d.codigo as grado_id,d.acreditacion as grado
-			   ,h.grado_tipo_id                          
+        from
+            (select h.institucioneducativa_id, y.institucioneducativa, a.codigo as nivel, b.id as saeid, b.codigo as ciclo_id,  b.especialidad as ciclo,d.id as satId, d.codigo as grado_id,d.acreditacion as grado
+               ,h.grado_tipo_id                          
                           ,x.paralelo
                           ,h.turno_tipo_id as turnoCurso, count(h.id) as count
                           , array_agg(cast(h.id as varchar)) as iec
@@ -318,13 +318,13 @@ class CursoAlternativaController extends Controller {
                                               inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id 
                                                   inner join superior_institucioneducativa_periodo g on g.superior_institucioneducativa_acreditacion_id=e.id 
                                                       inner join institucioneducativa_curso h on h.superior_institucioneducativa_periodo_id=g.id
-							inner join institucioneducativa y on h.institucioneducativa_id = y.id
+                            inner join institucioneducativa y on h.institucioneducativa_id = y.id
                                                           inner join paralelo_tipo x on h.paralelo_tipo_id = x.id
                           where f.gestion_tipo_id=2016 and f.periodo_tipo_id=2
-			group by h.institucioneducativa_id, y.institucioneducativa, a.codigo, b.id, b.codigo,  b.especialidad,d.id, d.codigo,d.acreditacion
-			   ,h.grado_tipo_id                          
+            group by h.institucioneducativa_id, y.institucioneducativa, a.codigo, b.id, b.codigo,  b.especialidad,d.id, d.codigo,d.acreditacion
+               ,h.grado_tipo_id                          
                           ,x.paralelo
-                          ,h.turno_tipo_id	
+                          ,h.turno_tipo_id  
                          order by h.turno_tipo_id, b.codigo) a
                          where a.count = 2";       
         $cursos= $db->prepare($query);
@@ -502,8 +502,8 @@ class CursoAlternativaController extends Controller {
                             inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
                                 inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id 
                                     inner join superior_institucioneducativa_acreditacion e on e.acreditacion_especialidad_id=c.id 
-                                inner join	superior_turno_tipo stt on stt.id = e.superior_turno_tipo_id
-                                        inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id			
+                                inner join  superior_turno_tipo stt on stt.id = e.superior_turno_tipo_id
+                                        inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id           
                                             inner join superior_institucioneducativa_periodo g on g.superior_institucioneducativa_acreditacion_id=e.id 
                                                 inner join institucioneducativa_curso h on h.superior_institucioneducativa_periodo_id=g.id 
                                     inner join paralelo_tipo pt on pt.id = h.paralelo_tipo_id

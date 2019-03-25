@@ -134,10 +134,46 @@ class DownloadFileSieController extends Controller {
           //add validation for bim
           $inconsistencia = array();
           $swCtrlMenu = true;
+
+           //first validations calidad
+          /***********************************\
+          * *
+          * Validacion CONTROL DE CALIDAD
+          * send array => sie, gestion, reglas *
+          * return observations UE *
+          * *
+          \************************************/
+          $form['reglas'] = '1,2,3,10,12,13,16,27,48';
+      
+          $objObsQA = $this->get('funciones')->appValidationQuality($form);
+          if ($objObsQA) {
+            
+            $swCtrlMenu = false;
+            // set the ctrol menu with false
+            // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,$swCtrlMenu);
+            $em->getConnection()->commit();
+              //get ue data
+              return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:fileDownload.html.twig', array(
+                          'uEducativa'        => $errorValidation,
+                          'objUe'             => $objUe[0],
+                          'objinconsistencia' => $objObsQA,
+                          'form'              => '',
+                          'swvalidation'      => '1',
+                          'swinconsistencia'  => '0',
+                          'flagValidation'    => '0',
+                          'swObservados'      => '1',
+                          'ueModular'         => '0',
+                          'validationPersonal' => '0',
+                          'validationRegistroConsolidado' => '0',
+                          'sistemaRegular' => '0'
+              ));
+          }
+
+
           $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
           if($form['bimestre']>=1 && $form['gestion'] == $this->session->get('currentyear')){
           //the rule to donwload file with validations
-          $form['reglas'] = '1,2,3,10,12,13,16';
+          // $form['reglas'] = '1,2,3,10,12,13,16,27';
 
           //first validations calidad
           /***********************************\
@@ -147,7 +183,7 @@ class DownloadFileSieController extends Controller {
           * return observations UE *
           * *
           \************************************/
-          $objObsQA = $this->getObservationQA($form);
+          $objObsQA = $this->get('funciones')->appValidationQuality($form);
           if ($objObsQA) {
             
             $swCtrlMenu = false;
@@ -438,9 +474,14 @@ class DownloadFileSieController extends Controller {
               $objStatusUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['sie']);
               //get consolidation info UE
               $objSie = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->getGestionBySie($form['sie']);
+              $objSieNew = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+                'unidadEducativa' => $form['sie'] ,
+                'gestion' => $form['gestion']-1
+              ));
+              
               //validation of new UE
               if($objStatusUe->getEstadoInstitucionTipo()->getId()==10 && $objSie){
-                if($operativo < 5){
+                if($objSieNew && $operativo < 5){
                   //$errorValidation = array();
                   $objObservados = array();
                   $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
@@ -782,7 +823,7 @@ class DownloadFileSieController extends Controller {
 
         //get path of the file
         $dir = $this->get('kernel')->getRootDir() . '/../web/uploads/instaladores/';
-        $file = 'instalador_SIGED_SIE_v126.exe';
+        $file = 'instalador_SIGED_SIE_v129.exe';
 
         //create response to donwload the file
         $response = new Response();
@@ -797,6 +838,33 @@ class DownloadFileSieController extends Controller {
         $response->setContent(readfile($dir . $file));
         return $response;
     }
+
+     /**
+   * to download the sie install
+   * by krlos pacha pckrlos.a.gmail.dot.com
+   * @param type
+   * @return void
+   */
+    public function updatedownloadAction(Request $request) {
+
+        //get path of the file
+        $dir = $this->get('kernel')->getRootDir() . '/../web/uploads/instaladores/';
+        $file = 'actualizador_SIGED_v126_a_v128.exe';
+
+        //create response to donwload the file
+        $response = new Response();
+        //then send the headers to foce download the zip file
+        $response->headers->set('Content-Type', 'application/exe');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $file));
+        $response->setContent(file_get_contents($dir) . $file);
+        $response->headers->set('Pragma', "no-cache");
+        $response->headers->set('Expires', "0");
+        $response->headers->set('Content-Transfer-Encoding', "binary");
+        $response->sendHeaders();
+        $response->setContent(readfile($dir . $file));
+        return $response;
+    }
+
 
     public function getgestionAction($sie) {
         $em = $this->getDoctrine()->getManager();
@@ -878,9 +946,11 @@ class DownloadFileSieController extends Controller {
           $aBimestre[-1]='Consolidado';
         }else{
           if($operativo >= 0){//mt 0 return plas 1
-            $aBimestre[$operativo]=$aBimestres[$operativo];
+            // $aBimestre[$operativo]=$aBimestres[$operativo];
+            $aBimestre[$operativo]=$aBimestres[0];
           }else{ //lt 0 return the same
-            $aBimestre[$operativo]=$aBimestres[$operativo];
+            // $aBimestre[$operativo]=$aBimestres[$operativo];
+            $aBimestre[$operativo]=$aBimestres[0];
           }
 
         }

@@ -1,0 +1,58 @@
+Sie\AppWebBundle\Entity\JdpPersonaInscripcionJuegos:
+    type: entity
+    table: jdp_persona_inscripcion_juegos
+    indexes:
+        IDX_8A64518AB31299FE:
+            columns:
+                - estudiante_inscripcion_juegos_id
+        IDX_8A64518AF5F88DB9:
+            columns:
+                - persona_id
+        IDX_8A64518A2C887590:
+            columns:
+                - comision_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        estudianteInscripcionJuegos:
+            targetEntity: JdpEstudianteInscripcionJuegos
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_juegos_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        comisionTipo:
+            targetEntity: JdpComisionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                comision_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

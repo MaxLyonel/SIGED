@@ -2,26 +2,47 @@ Sie\AppWebBundle\Entity\Persona:
     type: entity
     table: persona
     indexes:
-        fk_persona_estado_civil_tipo1_f:
+        fk__persona31:
             columns:
-                - estadocivil_tipo_id
-        carnet_index:
-            columns:
-                - carnet
-        fk_persona_idioma_materno1_fk:
-            columns:
-                - idioma_materno_id
-        fk_persona_grupo_sanguineo1_fk:
-            columns:
-                - sangre_tipo_id
-        idxapod2:
-            columns:
-                - carnet
                 - paterno
                 - materno
-        fk_dat_rde_persona_cla_genero1_:
+                - nombre
+                - fecha_nacimiento
+                - carnet
+        fk__persona32:
+            columns:
+                - paterno
+                - materno
+                - nombre
+                - carnet
+        fk__persona30:
+            columns:
+                - paterno
+                - materno
+                - nombre
+        IDX_51E5B69B1C73F6E:
+            columns:
+                - expedido_id
+        IDX_51E5B69BCD9F4106:
+            columns:
+                - idioma_materno_id
+        IDX_51E5B69B2BCFBA7:
             columns:
                 - genero_tipo_id
+        IDX_51E5B69B70591119:
+            columns:
+                - sangre_tipo_id
+        IDX_51E5B69B1C30CFD:
+            columns:
+                - estadocivil_tipo_id
+    uniqueConstraints:
+        uniq_carnet_idx:
+            columns:
+                - carnet
+        uniq_carnet:
+            columns:
+                - carnet
+                - complemento
     id:
         id:
             type: integer
@@ -90,10 +111,11 @@ Sie\AppWebBundle\Entity\Persona:
             column: segip_id
         complemento:
             type: string
-            nullable: true
+            nullable: false
             length: 2
             fixed: false
             comment: ''
+            default: ''
         activo:
             type: boolean
             nullable: true
@@ -139,23 +161,27 @@ Sie\AppWebBundle\Entity\Persona:
             unsigned: false
             comment: ''
             column: count_edit
+        obsSegip:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: obs_segip
+        esExtranjero:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: es_extranjero
     manyToOne:
-        generoTipo:
-            targetEntity: GeneroTipo
+        expedido:
+            targetEntity: DepartamentoTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                genero_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        estadocivilTipo:
-            targetEntity: EstadoCivilTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                estadocivil_tipo_id:
+                expedido_id:
                     referencedColumnName: id
             orphanRemoval: false
         idiomaMaterno:
@@ -167,6 +193,15 @@ Sie\AppWebBundle\Entity\Persona:
                 idioma_materno_id:
                     referencedColumnName: id
             orphanRemoval: false
+        generoTipo:
+            targetEntity: GeneroTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                genero_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         sangreTipo:
             targetEntity: SangreTipo
             cascade: {  }
@@ -174,6 +209,15 @@ Sie\AppWebBundle\Entity\Persona:
             inversedBy: null
             joinColumns:
                 sangre_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estadocivilTipo:
+            targetEntity: EstadoCivilTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estadocivil_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

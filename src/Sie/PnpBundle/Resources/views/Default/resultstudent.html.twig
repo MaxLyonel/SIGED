@@ -7,20 +7,46 @@
             margin-top:20px;
         }
     </style>
+    <div class="header-content">
+        <h2><i class="fa fa-search animated flip"></i>Resultado de la busqueda <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-search"></i>
+                    <a href="#">
+                    Buscar
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                    <a href="{{path('sie_pnp_buscar_historial_estudiante')}}">
+                    Historial del Participante
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
 
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="page-title">
-                <h1>Buscar Estudiante
-                    <small></small>
-                </h1>
-                <ol class="breadcrumb">
-                    <li><i class="fa fa-dashboard"></i>  <a href="{{path('sie_pnp_buscar_historial_estudiante')}}">Buscar</a></li>
-                    <li><i class="fa fa-reddit"></i> Resultado</li>
-                </ol>
+                <li class="active">Resultado</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <div class="modal modal-flex fade" id="historyInscriptions" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+        <div class="modal-dialog higherWider">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="flexModalLabel">Historial de Inscripción</h4>
+
+                </div>
+                <div class="modal-body">
+                    <div id="idHistory"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn rounded btn-default" data-dismiss="modal">Cerrar</button>
+
+                </div>
             </div>
+            <!-- /.modal-content -->
         </div>
-        <!-- /.col-lg-12 -->
+        <!-- /.modal-dialog -->
     </div>
     <div class="row">
         <div class="col-md-12">
@@ -33,25 +59,16 @@
             {% endfor %}
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="portlet portlet-blue">
-                <div class="portlet-heading">
-                    <div class="portlet-title">
-                        <h4>Estudiantes</h4>
+    
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-xs-12 col-lg-12">
+                <div class="panel panel-icon panel-primary">
+                    <div class="panel-heading">
+                        Historial del Participante
                     </div>
-                    <div class="portlet-widgets">
-
-                        <span class="divider"></span>
-                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinfoestudiante"><i class="fa fa-chevron-down"></i></a>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div id="pinfoestudiante" class="panel-collapse collapse in">
-                    <div class="portlet-body">
-
+                    <div class="panel-body">
                         <div id="no-more-tables">
-
                             <table style="font-size:13px" id="myTable" class="table table-bordered table-hover cf dataTable">
 
                                 <thead class="">
@@ -72,7 +89,7 @@
                                     {% for entity in entities %}
                                         <tr>
                                             <td data-title="No.">{{loop.index}}</td>
-                                            <td data-title="Rude"><a href="#" class="btn btn-link" onclick="openHistoryInsc({{entity.id}})">{{ entity.codigoRude }}</a></td>
+                                            <td data-title="Rude"><a href="#" class="btn rounded btn-link" onclick="openHistoryInsc({{entity.id}})">{{ entity.codigoRude }}</a></td>
                                             <td data-title="CI">{{ entity.carnetIdentidad }}
                                             {% if entity.complemento != '' %}-{{entity.complemento}}{% endif %}</td>
                                             <td data-title="Paterno">{{ entity.paterno }}</td>
@@ -81,47 +98,17 @@
                                             <td data-title="F. Nac.">{{ entity.fechaNacimiento |date('d-m-Y') }}</td>
                                             <td data-title="Opción">
                                                 <span class="glyphicon glyphicon-eye-open"></span>
-                                                <a href="#" class="btn btn-link" onclick="openHistoryInsc({{entity.id}})">Historial</a>
+                                                <a href="#" class="btn rounded btn-link" onclick="openHistoryInsc({{entity.id}})">Historial</a>
                                             </td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
-
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="modal modal-flex fade" id="historyInscriptions" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
-        <div class="modal-dialog higherWider">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="flexModalLabel">Historial de Inscripción</h4>
-
-                </div>
-                <div class="modal-body">
-                    <div id="idHistory"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <a href="{{path('sie_pnp_buscar_historial_estudiante')}}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver</a>
-        </div>
-    </div>
 {% endblock %}
 
 {%block javascripts %}

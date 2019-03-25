@@ -1,20 +1,10 @@
 <form method="post" action="{{path('sie_pnp_reconocimiento_saberes')}}">
-
-<div class="row">
-    <div class="col-lg-12">
-        <div class="portlet portlet-blue">
-            <div class="portlet-heading">
-                <div class="portlet-title">
-                    <h4>Datos del Estudiante</h4>
-                </div>
-                <div class="portlet-widgets">
-                    <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation1"><i class="fa fa-chevron-down"></i></a>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-            <div id="pinformation1" class="panel-collapse collapse in">
-                <div class="portlet-body">
-                    <div class="row">
+<div class="panel panel-icon panel-primary">
+    <div class="panel-heading">
+        Datos del Participante
+    </div>
+    <div class="panel-body">
+        <div class="row">
                         <div class="col-lg-12">
                             <h4 style="color: #3B78B0; text-decoration: underline;">Datos Generales Unidad Educativa Evaluadora</h4>
                         </div>
@@ -163,15 +153,11 @@
                         <input name="tipo" id="tipo" required="required" value="{{ result.tipo }}" style="visibility:hidden"  />
                         <input name="opc" id="opc" required="required" value="{{ opc }}" style="visibility:hidden"  />
                         <div class="row" align="center">
-                            <button type="submit" class="btn btn-default">&nbsp;Registrar Datos</button>
+                            <button type="submit" class="btn rounded btn-success">&nbsp;Registrar Datos</button>
                         </div>
                     </div>
-                </div>          
-                </div> 
-            </div>
-        </div> 
     </div>
-</div>
+</div>            
 </form>
 
   

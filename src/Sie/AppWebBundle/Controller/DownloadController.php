@@ -91,6 +91,19 @@ class DownloadController extends Controller {
         return $response;
     }
 
+    public function listStudentPerCourseSegAction(Request $request, $ue, $gestion, $nivel, $grado, $paralelo, $turno) {
+
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'list_C_' . $ue . '_' . $gestion . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesInscritos_Curso_gral_v1_ma.rptdesign&ue=' . $ue . '&gestion=' . $gestion . '&nivel=' . $nivel . '&grado=' . $grado . '&turno=' . $turno . '&Paralelo=' . $paralelo . '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
     /**
      * get the list of students per UE
      * @param Request $request
@@ -104,6 +117,19 @@ class DownloadController extends Controller {
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'list_ue_' . $ue . '_' . $gestion . '.pdf'));
         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesInscritos_UnidadEducativa_gral_v1.rptdesign&ue=' . $ue . '&gestion=' . $gestion . '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    public function listStudentPerUeSegAction(Request $request, $ue, $gestion) {
+
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'list_ue_' . $ue . '_' . $gestion . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesInscritos_UnidadEducativa_gral_v1_ma.rptdesign&ue=' . $ue . '&gestion=' . $gestion . '&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -546,7 +572,9 @@ class DownloadController extends Controller {
 
         if($this->session->get('ue_tecteg') == false){
             $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
-            $operativo = $operativo - 1;
+            if( !in_array($this->session->get('roluser'), array(7,8,10)) ){
+                $operativo = $operativo - 1;
+            }
             if($gestion == $this->session->get('currentyear') and $operativo >= 1 and $operativo <= 3){
                 switch ($nivel) {
                     case 11: $reporte = 'reg_est_LibretaEscolar_inicial_b'.$operativo.'_v1_rcm.rptdesign'; break;
@@ -581,7 +609,7 @@ class DownloadController extends Controller {
         }else{
             // Tecnica tecnologica
             if($this->session->get('ue_tecteg') == true){
-                if($gestion >= 2011 and $gestion <=2013 and $sie != '80730460'){
+                if($gestion >= 2009 and $gestion <= 2013){
                     $reporte = 'reg_est_CertificadoNotas_UnidadesEducativasTecnologicas2013_trimestral_v1_ivg.rptdesign';
                 }else{
                     $reporte = 'reg_est_CertificadoNotas_UnidadesEducativasTecnologicas2016_v1_ivg.rptdesign';
@@ -594,8 +622,88 @@ class DownloadController extends Controller {
         $response = new Response();
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'libreta_tecnica_' . $rude . '_' . $gestion . '.pdf'));
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'libreta_' . $rude . '_' . $gestion . '.pdf'));
         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+      /**
+     * build the CUT report - cut report download pdf
+     * @param Request $request
+     * @return object cut report
+     */
+    public function downloadCutAction(Request $request) {
+
+        $idInscripcion = $request->get('idInscripcion');
+        $rude = $request->get('rude');
+        $sie = $request->get('sie');
+        $gestion = $request->get('gestion');
+        $nivel = $request->get('nivel');
+        $grado = $request->get('grado');
+        $paralelo = $request->get('paralelo');
+        $turno = $request->get('turno');
+        $ciclo = $request->get('ciclo');
+
+        $em = $this->getDoctrine()->getManager();
+        $informacion = $em->createQueryBuilder()
+                    ->select('IDENTITY(eiht.especialidadTecnicoHumanisticoTipo) as especialidad')
+                    ->from('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico','eiht')
+                    ->where('eiht.estudianteInscripcion = :idInscripcion')
+                    ->setParameter('idInscripcion',$idInscripcion)
+                    ->getQuery()
+                    ->getResult();
+        $especialidad = $informacion[0]['especialidad'];
+        
+
+        //$datos = "2869471|624600252014167A|62460025|2015|11|2|1|1|0";
+        $datos = $idInscripcion.'|'.$rude.'|'.$sie.'|'.$turno.'|'.$grado.'|'.$paralelo.'|'.$especialidad.'|'.$gestion;
+
+        // Cadena de seguridad
+        $codes = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/';
+
+        // Encriptamos los datos
+        $result = "";
+        $a = 0;
+        $b = 0;
+        for($i=0;$i<strlen($datos);$i++){
+            //$x = strpos($codes, $datos[$i]) ;
+            $x = ord($datos[$i]) ;
+            $b = $b * 256 + $x;
+            $a = $a + 8;
+
+            while ( $a >= 6) {
+                $a = $a - 6;
+                $x = floor($b/(1 << $a));
+                $b = $b % (1 << $a);
+                $result = $result.''.substr($codes, $x,1);
+            }
+        }
+        if($a > 0){
+            $x = $b << (6 - $a);
+            $result = $result.''.substr($codes, $x,1);
+        }
+
+        // generanos el link, para codigo QR
+        $link = 'http://academico.sie.gob.bo/bth/'.$result;
+
+        // Validamos que tipo de libreta se ha de imprimir
+        // Modular y plena
+
+        if($this->session->get('ue_plena')){
+           $reporte = 'reg_cert_cut_v1_ma.rptdesign';
+        }
+        //dump($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&&__format=pdf&');die;
+        // Generamos el reporte
+
+        $response = new Response();
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'cut_' . $rude . '_' . $gestion . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb').$reporte.'&rude=' . $rude .'&lk=' . $link . '&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -990,4 +1098,49 @@ class DownloadController extends Controller {
 
     }
 
+    /**
+     * Descarga de CUt para bachilleres con tecnica tecnologica
+     * @param Request $request
+     * @return object CUT
+     */
+    // public function downloadCutAction(Request $request) {
+
+    //     $idInscripcion = $request->get('idInscripcion');
+
+    //     /**
+    //      * completar con la consulta si es que hubiera
+    //      * por el momento solo mandamos el id de inscripcion
+    //      * cambiar el nombre del reporte
+    //      */
+
+    //     $response = new Response();
+    //     $response->headers->set('Content-type', 'application/pdf');
+    //     $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'CUT_' . $rude . '_' . $gestion . '.pdf'));
+    //     $response->setContent(file_get_contents($this->container->getParameter('urlreportweb').'reporte_cut.rptdesign&inscripid=' . $idInscripcion . '&&__format=pdf&'));
+    //     $response->setStatusCode(200);
+    //     $response->headers->set('Content-Transfer-Encoding', 'binary');
+    //     $response->headers->set('Pragma', 'no-cache');
+    //     $response->headers->set('Expires', '0');
+    //     return $response;
+    // }
+    
+
+    /**
+     * get DDJJJ per UE
+     * @param Request $request
+     * @param type $gestion
+     * @param type $sie
+     * @return Response
+     */
+    public function nnatsAction(Request $request, $gestion, $sie) {
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'nnats_' . $sie . '_' . $gestion . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_centro_nnats_v1_ma.rptdesign&gestion=' . $gestion . '&sie=' . $sie . '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
 }

@@ -55,17 +55,25 @@
                                 <div class="col-lg-3">                                    
                                     <label for="complemento">Complemento</label>
                                     <input class="form-control" type="text" value="{{complemento}}" disabled>                                    
-                                </div>                                                                   
+                                </div>
                                 <div class="col-lg-6">
-                                    {{ form_row(form.fechaNacimiento, { 'id': 'fechanacimiento' }) }}
+                                    {{ form_row(form.departamentoTipo, { 'id': 'sigla' }) }}
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-3">
+                                <div class="col-lg-6">
                                     {{ form_row(form.generoTipo, { 'id': 'genero' }) }}
                                     <div class="help-block with-errors"></div>
                                 </div>
+                                <div class="col-lg-6">
+                                    {{ form_row(form.fechaNacimiento, { 'id': 'fechanacimiento' }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+
                                 <div class="col-lg-9">
                                     {{ form_row(form.correo, { 'id': 'correo' }) }}
                                     <div class="help-block with-errors"></div>
@@ -159,15 +167,14 @@
 
             //GUARDAR FORMULARIO PERSONA
             //GUARDAR FORMULARIO PERSONA
-            if (confirm('Está por modificar datos personales del SIGED, se registrara la fecha y su usuario para esta acción.¿Esta seguro de continuar?')) {
+            if (confirm('Está por modificar datos personales del SIGED, se registrará la fecha y su usuario para esta acción ¿Está segura/o de continuar?')) {
                 var formData = $('#sie_usuarios_persona_edit').serialize();
                 $.ajax({
                     type: 'post',
                     url: Routing.generate('sie_usuario_persona_insert'),
                     data: formData,
                     beforeSend: function () {
-                        
-                        {#$("#divAlert").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");#}                                
+
                     },
                     success: function (data) {
                         var numfila = 0;
@@ -177,19 +184,12 @@
 
                         $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[3].innerHTML = $("#nombre").val().toUpperCase()+$("#paterno").val().toUpperCase()+$("#materno").val().toUpperCase()+' Ci:'+$("#carnet").val().toUpperCase()+$("#complemento").val().toUpperCase();
                         
-                        //$($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[4].innerHTML = $("#nombre").val().toUpperCase()+$("#paterno").val().toUpperCase()+$("#materno").val().toUpperCase();
-                        //$($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[5].innerHTML = $("#paterno").val().toUpperCase();
-                        //$($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[6].innerHTML = $("#materno").val().toUpperCase();                        
-                        //$($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[7].innerHTML = $("#sie_usuarios_persona_edit_fechaNacimiento_day").val().toUpperCase()+'/'+$("#sie_usuarios_persona_edit_fechaNacimiento_month").val().toUpperCase()+'/'+$("#sie_usuarios_persona_edit_fechaNacimiento_year").val().toUpperCase();
-                        //$($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[8].innerHTML = '<span class="label label-success"><i class="fa fa-check-square-o" aria-hidden="true"></i></span>';
-                        //$($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[9].innerHTML = '<span class="label label-success"><i class="fa fa-check-square-o" aria-hidden="true"></i></span>';
-                        
                         $("#divAlertUser").html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');
                         $('#ModalUser').modal('hide');                        
                     },
-                    error: function () {                        
+                    error: function (data) {                        
                         $("#divAlertUser").empty();
-                        $("#divAlertUser").append('<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Proceso detenido. Se ha detectado inconsistencia de datos.</div>');
+                        $("#divAlertUser").append('<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');
                         $('#ModalUser').modal('hide');
                     }
                 });

@@ -24,7 +24,7 @@ class NoteConsultationParentsController extends Controller {
     /**
      * note consultation parents Index
      * @param Request $request
-     * @return type
+     * @return type                                                                                                                                                                                                                                   
      */
     public function indexAction(Request $request) {
         $sesion = $request->getSession();
@@ -147,59 +147,99 @@ class NoteConsultationParentsController extends Controller {
         ));
     }
 
-    public function notaNewAction($inscripcionid, $idstudent, $nivel, $grado, $paralelo, $turno, $gestion, $sie, $estadomatriculaTipo) {
+    // public function notaNewAction($inscripcionid, $idstudent, $nivel, $grado, $paralelo, $turno, $gestion, $sie, $estadomatriculaTipo) {        
+    //     $em = $this->getDoctrine()->getManager();
+    //     //get the info about inscription
+    //     $aData = array(
+    //         'sie' => $sie, 'gestion' => $gestion,'estadomatriculaTipo'=>$estadomatriculaTipo,'inscripcionid'=>$inscripcionid,
+    //         'unidadEducativa' => $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie)->getInstitucioneducativa(),
+    //         'nivel' => $em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel)->getNivel(),
+    //         'grado' => $em->getRepository('SieAppWebBundle:GradoTipo')->find($grado)->getGrado(),
+    //         'paralelo' => $em->getRepository('SieAppWebBundle:ParaleloTipo')->find($paralelo)->getParalelo(),
+    //         'turno' => $em->getRepository('SieAppWebBundle:TurnoTipo')->find($turno)->getTurno()
+    //     );
 
+    //     //get the nota data
+    //     $objNota = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->getNotasStudentNew($inscripcionid, $idstudent, $nivel, $grado, $paralelo, $turno, $gestion, $sie);
+    //     //get the correct cualitaiva note
+
+    //     if ($nivel == 11 || $nivel == 1)
+    //         $objNotaCualitativa = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->getNotasStudentCualitativaIniNew($inscripcionid, $idstudent, $nivel, $grado, $paralelo, $turno, $gestion, $sie);
+    //     else
+    //         $objNotaCualitativa = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->getNotasStudentCualitativaNew($inscripcionid, $idstudent, $nivel, $grado, $paralelo, $turno, $gestion, $sie);
+
+    //     //init the data values
+    //     $aNota = array();
+    //     $aBim = array();
+    //     $aNotaCualitativa = array();
+
+    //     //build the nota
+    //     foreach ($objNota as $nota) {
+    //         //get the correct label to the libreta
+    //         $expr = '/(?<=\s|^)[a-z]/i';
+    //         preg_match_all($expr, $nota['notaTipoLiteral'], $matches);
+    //         $labelLib = implode('.', $matches[0]);
+    //         ($nota['notaTipo']) ? $aNota[$nota['asignatura']][$nota['notaTipo']] = ($nivel == 11) ? $nota['notaCualitativa'] : $nota['notaCuantitativa'] : '';
+    //         //($nota['notaTipo']) ? $aBim[$nota['notaTipo']] = ($nota['notaTipo'] == 5) ? 'Prom' : $nota['notaTipo'] . '.B' : '';
+    //         if ($labelLib)
+    //             $aBim[$nota['notaTipo']] = $labelLib;
+    //     }
+    //     $student = $em->getRepository('SieAppWebBundle:Estudiante')->find($idstudent);
+    //     $tablesize = ($nivel == 11) ? '12' : '7';
+    //     $aBim = ($aBim) ? $aBim : array();
+    //     return $this->render('SieRegularBundle:NoteConsultationParents:nota.html.twig', array(
+    //                 'notastudent' => $aNota,
+    //                 'bimestres' => $aBim,
+    //                 'objNotaCualitativa' => ($objNotaCualitativa) ? $objNotaCualitativa : array(),
+    //                 'level' => $nivel,
+    //                 'tablesize' => $tablesize,
+    //                 'datastudent' => $student,
+    //                 'dataInfo' => $aData,
+    //                 'setNotasForm'   => $this->setNotasForm('krlos')->createView(),
+    //     ));
+    // }
+
+    public function notaNewAction($inscripcionid, $estudianteid, $gestion, $subsistema) {
         $em = $this->getDoctrine()->getManager();
-        //get the info about inscription
-        $aData = array(
-            'sie' => $sie, 'gestion' => $gestion,'estadomatriculaTipo'=>$estadomatriculaTipo,'inscripcionid'=>$inscripcionid,
-            'unidadEducativa' => $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie)->getInstitucioneducativa(),
-            'nivel' => $em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel)->getNivel(),
-            'grado' => $em->getRepository('SieAppWebBundle:GradoTipo')->find($grado)->getGrado(),
-            'paralelo' => $em->getRepository('SieAppWebBundle:ParaleloTipo')->find($paralelo)->getParalelo(),
-            'turno' => $em->getRepository('SieAppWebBundle:TurnoTipo')->find($turno)->getTurno()
-        );
+        //inscripción
+        $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);
+        $cabeceraArray = $em->getRepository('SieAppWebBundle:CatalogoLibretaTipo')->findBy(array(
+            'gestionTipoId' => $gestion,
+            'nivelTipoId' => $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId(),
+            'gradoTipoId' => $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId()
+        ), array('orden' => 'asc'));
+        
+        //generar notas
+        $query = $em->getConnection()->prepare("select * from sp_genera_notas_estudiante_cuan_cual('".$inscripcionid."','".$subsistema."');");
+        $query->execute();
+        $notasJson = $query->fetchAll();
+        $notasArray = array();
 
-        //get the nota data
-        $objNota = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->getNotasStudentNew($inscripcionid, $idstudent, $nivel, $grado, $paralelo, $turno, $gestion, $sie);
-        //get the correct cualitaiva note
-
-        if ($nivel == 11 || $nivel == 1)
-            $objNotaCualitativa = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->getNotasStudentCualitativaIniNew($inscripcionid, $idstudent, $nivel, $grado, $paralelo, $turno, $gestion, $sie);
-        else
-            $objNotaCualitativa = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->getNotasStudentCualitativaNew($inscripcionid, $idstudent, $nivel, $grado, $paralelo, $turno, $gestion, $sie);
-
-        //init the data values
-        $aNota = array();
-        $aBim = array();
-        $aNotaCualitativa = array();
-
-        //build the nota
-        foreach ($objNota as $nota) {
-            //get the correct label to the libreta
-            $expr = '/(?<=\s|^)[a-z]/i';
-            preg_match_all($expr, $nota['notaTipoLiteral'], $matches);
-            $labelLib = implode('.', $matches[0]);
-            ($nota['notaTipo']) ? $aNota[$nota['asignatura']][$nota['notaTipo']] = ($nivel == 11) ? $nota['notaCualitativa'] : $nota['notaCuantitativa'] : '';
-            //($nota['notaTipo']) ? $aBim[$nota['notaTipo']] = ($nota['notaTipo'] == 5) ? 'Prom' : $nota['notaTipo'] . '.B' : '';
-            if ($labelLib)
-                $aBim[$nota['notaTipo']] = $labelLib;
+        foreach ($notasJson as $key => $value) {
+            $notasArray[$key] = json_decode($value['sp_genera_notas_estudiante_cuan_cual'], true);
         }
-        $student = $em->getRepository('SieAppWebBundle:Estudiante')->find($idstudent);
-        $tablesize = ($nivel == 11) ? '12' : '7';
-        $aBim = ($aBim) ? $aBim : array();
+
+        $indicesArray = array();
+        foreach ($cabeceraArray as $key => $value) {
+            $indicesArray[$key] = strtolower($value->getNotaAbrev().'_cuant');
+        }
+        // dump($indicesArray);dump($notasArray);die;
+
+        $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($estudianteid);
+        $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);
+        $cuali = $em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findBy(array('estudianteInscripcion' => $inscripcionid), array('notaTipo' => 'ASC'));
+
         return $this->render('SieRegularBundle:NoteConsultationParents:nota.html.twig', array(
-                    'notastudent' => $aNota,
-                    'bimestres' => $aBim,
-                    'objNotaCualitativa' => ($objNotaCualitativa) ? $objNotaCualitativa : array(),
-                    'level' => $nivel,
-                    'tablesize' => $tablesize,
-                    'datastudent' => $student,
-                    'dataInfo' => $aData,
-                    'setNotasForm'   => $this->setNotasForm('krlos')->createView(),
+            'cabeceras' => $cabeceraArray,
+            'indices' => $indicesArray,
+            'notas' => $notasArray,
+            'estudiante' => $estudiante,
+            'inscripcion' => $inscripcion,
+            'gestion' => $gestion,
+            'subsistema' => $subsistema,
+            'cualitativo' => $cuali
         ));
     }
-
     /*
     // this is the next step to do the setting up NOTAS to student
     */

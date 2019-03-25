@@ -69,6 +69,7 @@ class BusquedasController extends Controller
     }
     
     public function carnetpersonabuscarAction(Request $request) {
+        
         $formNacional = $this->createForm(new BuscarPersonaType(array('opcion'=>0)));
         $formNacional->handleRequest($request);
         
@@ -81,7 +82,7 @@ class BusquedasController extends Controller
             }else{
                 $resultService = $servicioPersona->buscarPersona($data['ci'], $data['complemento'], $data['extranjero']);
             }    
-                        
+
             if($resultService->type_msg === "success"){
                 $idperson = $resultService->result[0]->id;
                 //dump($resultService->result);die;
@@ -115,6 +116,7 @@ class BusquedasController extends Controller
                 $params = array();
                 $stmt->execute($params);
                 $po = $stmt->fetchAll();
+                
                 $accion = 'undefined';
                 if (count($po) === 1){//PERSONA SEGIP CON UN USUARIO CORRECTAMENTE ENCONTRADOS
                     //VERIFICANDO TUISION DE ROLES DEL USUARIO
@@ -134,7 +136,8 @@ class BusquedasController extends Controller
                     $stmt = $db->prepare($query);
                     $params = array();
                     $stmt->execute($params);
-                    $potuision = $stmt->fetchAll();                    
+                    $potuision = $stmt->fetchAll(); 
+                    
                     //VERIFICANDO TUISION JURISDICCIÓN                                        
                     //dump($this->session->get('roluserlugarid'));dump($po);die;
                     
@@ -502,9 +505,7 @@ class BusquedasController extends Controller
                             LEFT JOIN usuario z ON z.persona_id = k.id 
 
                     WHERE (institucioneducativa_curso.institucioneducativa_id = '".$this->session->get('ie_id')."') 
-                            and (institucioneducativa_curso.gestion_tipo_id = '2018') 
-                            and k.segip_id <> 0
-
+                            and (institucioneducativa_curso.gestion_tipo_id = '2018')
                     GROUP BY 
                             z.id, z.username, z.esactivo,
                             k.id, k.carnet, k.nombre, k.paterno, k.materno,
@@ -536,4 +537,3 @@ class BusquedasController extends Controller
     }   
     
 }
-

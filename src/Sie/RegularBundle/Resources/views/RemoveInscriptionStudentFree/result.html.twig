@@ -212,6 +212,7 @@
               <div class="modal-body">
                 <div id='idcambioparalelo'></div>
                 <div id='answerVerfication'></div>
+                <div id='answerValidate'></div>
               </div>
               <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -261,6 +262,7 @@
 
     var verificarCambio = function(dataInfo){
       var estadonew = $('#form_estadonew').val();
+      $("#answerValidate").empty();
       $.ajax({
              type: 'post',
              url: Routing.generate('remove_inscription_student_free_verificarcambio'),
@@ -285,57 +287,63 @@
     };
 
     var saveCambioEstado = function(){
-        var enviar = true;
-        var mensaje = "";
-    	$(".nota").each(function (index) {
-            if($(this).val() == 0 ){
-            	enviar = false;
-                mensaje = "Las notas registradas no pueden estar vacias o estar en cero";
-            }
-        });
-        $(".cualitativas").each(function (index) {
-            if($(this).val().length < 15 ){
-            	enviar = false;
-                if(mensaje.length == 0){
-                    mensaje = "Las notas cualitativas deben tener al menos 15 caracteres";
+        $("#answerValidate").empty();
+        if ($("#justificacionCE").val()=='') {
+            $("#answerValidate").append('<div class="text-center"><p style="color:#308AB7">Ingrese la justificación de cambio de estado.</p></div>');
+            $("#justificacionCE").focus();
+        } else {
+            var enviar = true;
+            var mensaje = "";
+            $(".nota").each(function (index) {
+                if($(this).val() == 0 ){
+                    enviar = false;
+                    mensaje = "Las notas registradas no pueden estar vacias o estar en cero";
                 }
+            });
+            $(".cualitativas").each(function (index) {
+                if($(this).val().length < 15 ){
+                    enviar = false;
+                    if(mensaje.length == 0){
+                        mensaje = "Las notas cualitativas deben tener al menos 15 caracteres";
+                    }
+                }
+            });
+            if(enviar == false){
+                alert(mensaje);
             }
-        });
-        if(enviar == false){
-        	alert(mensaje);
+            if(enviar == true){
+                formData = $('#formCambioEstadoNotasId').serialize();
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('remove_inscription_student_free_savecambioestado'),
+                    data: formData,
+                    beforeSend: function () {
+                        $("#answerVerfication").empty();
+                        $("#answerVerfication").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                    },
+                    success: function (data) {
+                        $("#answerVerfication").empty();
+                        if(data.reloadIt){
+                            $("#answerVerfication").append('<p>'+data.mssg+'</p>');
+                            location.reload(true);
+                        }else{
+                            $("#answerVerfication").append(data);
+                        }
+
+
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+            }
         }
-        if(enviar == true){
-            formData = $('#formCambioEstadoNotasId').serialize();
-            $.ajax({
-                   type: 'post',
-                   url: Routing.generate('remove_inscription_student_free_savecambioestado'),
-                   data: formData,
-                   beforeSend: function () {
-                       $("#answerVerfication").empty();
-                       $("#answerVerfication").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
-                   },
-                   success: function (data) {
-                       $("#answerVerfication").empty();
-                       if(data.reloadIt){
-                         $("#answerVerfication").append('<p>'+data.mssg+'</p>');
-                         location.reload(true);
-                       }else{
-                         $("#answerVerfication").append(data);
-                       }
-
-
-                   },
-                   statusCode: {
-                       500: function () {
-
-                       },
-                       404: function () {
-
-                       }
-                   }
-               });
-           }
-    }
+    };
 
     function validarNota(e,id,nota){
         var key = e || window.event;

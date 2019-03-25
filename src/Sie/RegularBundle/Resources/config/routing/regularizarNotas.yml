@@ -26,3 +26,8 @@ regularizarNotas_cargar_paralelos:
     defaults: { _controller: "SieRegularBundle:Notas:cargarParalelos"}
     options:
          expose: true
+
+regularizarNotasPostbachillerato_update:
+    path:     /postbachilleratoUpdate/
+    defaults: { _controller: "SieRegularBundle:RegularizarNotas:postbachilleratoUpdate" }
+    methods:  [POST]

@@ -4,34 +4,25 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <div class="page-title">
-                <h1>Homologación - Busqueda e Inscripción
-                    <small></small>
-                </h1>
-                <ol class="breadcrumb">
-                    <li><i class="fa fa-dashboard"></i>  <a href="{{path('tramite_homologacion_diploma_humanistico_index')}}">Buscar</a></li>
-
-                </ol>
+            <div class="page-content">
+                {% for type, flashMessage in app.session.flashbag.all() %}
+                    <div class="alert alert-{{ type }} alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {% if flashMessage.title is defined %}
+                            <strong><i class='fa fa-envelope'></i> {{ flashMessage.title }}: </strong>
+                            {{ flashMessage.message }}
+                        {% else %}
+                            {{ type }}
+                        {% endif %}
+                    </div>
+                {% endfor %}
             </div>
         </div>
-        <!-- /.col-lg-12 -->
     </div>
 
     <div class="row">
 
-        <div class="col-md-12">
-            {% for flashMessage in app.session.flashbag.get('notiiniprim') %}
-                <div class="alert alert-danger alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong>Warning!</strong> {{ flashMessage }}
-                </div>
-            {% endfor %}
-            {% for flashMessage in app.session.flashbag.get('goodiniprim') %}
-                <div class="alert alert-success alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong>Bien!</strong> {{ flashMessage }}
-                </div>
-            {% endfor %}
+        <div class="col-md-12">            
             <!-- Website Stats  Widget -->
             <div class="container-fluid">
                 <div class="row">
@@ -58,11 +49,16 @@
                                         <div class="help-block with-errors"></div>
                                     </div>
                                     <div class="col-md-3">
-                                        {{form_label(form.generoTipo)}}
-                                        {{form_widget(form.generoTipo)}}
+                                        {{form_label(form.expedido)}}
+                                        {{form_widget(form.expedido)}}
+                                        <div class="help-block with-errors"></div>
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <div class="col-md-3">
+                                        {{form_label(form.generoTipo)}}
+                                        {{form_widget(form.generoTipo)}}
+                                    </div>
                                     <div class="col-md-3">
                                         {{form_label(form.paterno)}}
                                         {{form_widget(form.paterno)}}
@@ -73,12 +69,13 @@
                                         {{form_widget(form.materno)}}
                                         <div class="help-block with-errors"></div>
                                     </div>
-
                                     <div class="col-md-3 form-group">
                                         {{form_label(form.nombre)}}
                                         {{form_widget(form.nombre)}}
                                         <div class="help-block with-errors"></div>
                                     </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-md-3 form-group">
                                         {{form_label(form.fnacimiento)}}
                                         <div id="sandbox-container">
@@ -86,28 +83,26 @@
                                         </div>
                                         <div class="help-block with-errors"></div>
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-md-3">
                                         {{form_label(form.pais)}}
                                         {{form_widget(form.pais,{'attr':{'onchange':'dep(this.value)'} })}}
-
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-6">
                                         {{form_label(form.departamento)}}
                                         {{form_widget(form.departamento,{'attr':{'onchange':'prov(this.value)'} })}}
-
                                     </div>
-                                    <div class="col-md-3">
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
                                         {{form_label(form.provincia)}}
                                         {{form_widget(form.provincia)}}
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-6">
                                         {{form_label(form.localidad)}}
                                         {{form_widget(form.localidad)}}
                                     </div>
                                 </div>
-
                                 <div class="row">
                                     <div class="col-md-3">
                                         {{form_label(form.oficialia)}}

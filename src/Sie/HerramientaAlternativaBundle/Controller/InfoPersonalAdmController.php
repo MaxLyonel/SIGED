@@ -337,16 +337,7 @@ class InfoPersonalAdmController extends Controller {
             $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idInstitucion'));
             $periodo = $this->session->get('ie_per_cod');
             $maestroInscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('id' => $request->get('idMaestroInscripcion'), 'gestionTipo' => $gestion, 'institucioneducativa' => $institucion, 'periodoTipo' => $periodo));
-
-            if ($request->get('idCargo') == 1 || $request->get('idCargo') == 12) {
-                $maestroInscripcion_aux = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findBy(array('cargoTipo' => $request->get('idCargo'), 'gestionTipo' => $gestion, 'institucioneducativa' => $institucion, 'periodoTipo' => $periodo));
-                foreach ($maestroInscripcion_aux as $aux) {
-                    $aux->setEsVigenteAdministrativo(0);
-                }
-            }
-
-            $cargo = $em->getRepository('SieAppWebBundle:CargoTipo')->findOneById($request->get('idCargo'));
-            $maestroInscripcion->setCargotipo($cargo);
+       
             $maestroInscripcion->setEsVigenteAdministrativo(1 - $maestroInscripcion->getEsVigenteAdministrativo());
 
             $em->persist($maestroInscripcion);

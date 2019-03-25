@@ -332,4 +332,60 @@ class FlujoProceso
     {
         return $this->wfAsignacionTareaTipo;
     }
+    /**
+     * @var string
+     */
+    private $rutaFormulario;
+
+
+    /**
+     * Set rutaFormulario
+     *
+     * @param string $rutaFormulario
+     * @return FlujoProceso
+     */
+    public function setRutaFormulario($rutaFormulario)
+    {
+        $this->rutaFormulario = $rutaFormulario;
+    
+        return $this;
+    }
+
+    /**
+     * Get rutaFormulario
+     *
+     * @return string 
+     */
+    public function getRutaFormulario()
+    {
+        return $this->rutaFormulario;
+    }
+    /**
+     * @var string
+     */
+    private $rutaReporte;
+
+
+    /**
+     * Set rutaReporte
+     *
+     * @param string $rutaReporte
+     * @return FlujoProceso
+     */
+    public function setRutaReporte($rutaReporte)
+    {
+        $this->rutaReporte = $rutaReporte;
+    
+        return $this;
+    }
+
+    /**
+     * Get rutaReporte
+     *
+     * @return string 
+     */
+    public function getRutaReporte()
+    {
+        return $this->rutaReporte;
+    }
 }

@@ -1,0 +1,171 @@
+{% extends "::layoutTramites.html.twig"%}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+    </style>
+{% endblock %}
+
+{% block contentBread %}
+    <ol class="breadcrumb">
+        <li>
+            <i class="fa fa-home"></i>
+            <a href="{{path('tramite_documento_firma_diploma_humanistico_autorizacion_lista')}}">Perfil</a>
+            <i class="fa fa-angle-right"></i>
+            <a href="#">Autorización Firma</a>
+        </li>
+        {% block contentSearchBread %}
+        {% endblock %}
+    </ol>
+{% endblock %}
+
+{% block contentoption %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    {% if form is defined  %}
+                        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'class': 'form-horizontal'} } )}}
+                            <div class="form-body">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{ form_label(form.persona) }} </label>
+                                    <div class="col-sm-7">
+                                        {{ form_widget(form.persona) }}
+                                    </div>
+                                </div><!-- /.form-group -->
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{ form_label(form.maximo) }} </label>
+                                    <div class="col-sm-7">
+                                        {{ form_widget(form.maximo) }}
+                                    </div>
+                                </div><!-- /.form-group -->
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{ form_label(form.documentoTipo) }} </label>
+                                    <div class="col-sm-7">
+                                        {{ form_widget(form.documentoTipo) }}
+                                    </div>
+                                </div><!-- /.form-group -->
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{ form_label(form.obs) }} </label>
+                                    <div class="col-sm-7">
+                                        {{ form_widget(form.obs) }}
+                                    </div>
+                                </div><!-- /.form-group -->
+                            </div><!-- /.form-body -->
+                            <div class="form-footer">
+                                <div class="col-sm-12">
+                                    {{ form_widget(form.save,{ 'attr':{'class':'btn btn-primary mb-15 btn-block' } } ) }}
+                                </div>
+                            </div><!-- /.form-footer -->
+                        {{form_end(form)}}
+                    {% else %}
+                        <div class="alert alert-warning">
+                            <strong>Alerta!</strong> Para autorizar firmas, debe contar con firmas registradas y habilitadas.
+                        </div>
+                    {% endif %}
+                </div><!-- /.panel-body -->
+            </div>
+        </div>
+    </div><!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table class="table table-issue-tracker table-middle table-info">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Tipo Firmante</th>
+                                <th>Estado</th>
+                                <th>Fecha Registro</th>
+                                <th>Departamento</th>
+                                <th>Tipo de Documento</th>
+                                <th>Cupo</th>
+                                <th>Utilizado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if firmas is defined  %}
+                                {% for detalle in firmas %}  
+                                    <tr>
+                                        <td>
+                                            {{ loop.index }}
+                                        </td>
+                                        <td>
+                                            {{ detalle.persona }}
+                                        </td>
+                                        <td>
+                                            {% if detalle.usado == 0  %}
+                                                <div class="ckbox ckbox-lilac">
+                                                    <input name="estado" id="estado{{ detalle.id }}" {% if detalle.esactivo %} checked="checked"  {% endif %}value="{{ detalle.id|base64_encode }}"  type="checkbox" onchange="validarEstado(this);">
+                                                    <label for="estado{{ detalle.id }}"></label>
+                                                </div>
+                                            {% else %}
+                                                {% if detalle.usado == detalle.maximo  %}
+                                                    <div class="ckbox ckbox-inverse">
+                                                        <input name="estado" id="estado{{ detalle.id }}" {% if detalle.esactivo %} checked="checked"  {% endif %}value="{{ detalle.id|base64_encode }}"  type="checkbox" onchange="validarEstado(this);">
+                                                        <label for="estado{{ detalle.id }}"></label>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="ckbox ckbox-success">
+                                                        <input name="estado" id="estado{{ detalle.id }}" {% if detalle.esactivo %} checked="checked"  {% endif %}value="{{ detalle.id|base64_encode }}"  type="checkbox" onchange="validarEstado(this);">
+                                                        <label for="estado{{ detalle.id }}"></label>
+                                                    </div>
+                                                {% endif %}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {{ detalle.fecha_registro|date('d/m/Y h:i') }}
+                                        </td>
+                                        <td>
+                                            {{ detalle.lugar }}
+                                        </td>
+                                        <td>
+                                            {{ detalle.documento_tipo }}
+                                        </td>
+                                        <td>
+                                            {{ detalle.maximo }}
+                                        </td>
+                                        <td>
+                                            {{ detalle.usado }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div><!-- /.panel-body -->
+            </div>
+        </div>
+    </div><!-- /.row -->
+    {% block contentsearch %}
+    {% endblock %}
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+
+       $(window).load(function(){
+
+        });
+
+        function validarEstado(es) {
+            var check = !es.checked;
+            es.checked = check;
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('tramite_documento_firma_diploma_humanistico_autorizacion_cambia_estado', {'registro': es.value}),
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    //alert(data.aregistro[0]);
+                    es.checked = data.aregistro[0];
+                    //if(data.aregistro[0]){
+                    //    es.setAttribute('checked','checked');
+                    //} else {
+                    //    es.removeAttribute('checked');
+                    //}
+                }
+            });
+        }
+    </script>
+{% endblock %}

@@ -672,18 +672,6 @@ class TramiteController extends Controller {
                 return $retorna;
             }
 
-            $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :roluser::INT)');
-            $query->bindValue(':user_id', $id_usuario);
-            $query->bindValue(':sie', $institucionEducativa->getId());
-            $query->bindValue(':roluser', $identificador);
-            $query->execute();
-            $aTuicion = $query->fetchAll();
-
-            //            if (!$aTuicion[0]['get_ue_tuicion']) {
-            //                $this->session->getFlashBag()->set('danger',array('title' => 'Error','message' => 'No tiene tuición sobre la Unidad Educativa'));
-            //                return $this->redirectToRoute('sie_diploma_tramite_recepcion_distrito');
-            //            }
-
             $bachilleres = $this->buscaEstudiantesUnidadEducativa($sie, $ges, $identificador, $lista);
 
             $query = $em->getConnection()->prepare('SELECT * FROM flujo_tipo order by id');
@@ -835,19 +823,6 @@ class TramiteController extends Controller {
                 }
                 return $retorna;
             }
-
-            $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :roluser::INT)');
-            $query->bindValue(':user_id', $id_usuario);
-            $query->bindValue(':sie', $institucionEducativa->getId());
-            $query->bindValue(':roluser', $identificador);
-            $query->execute();
-            $aTuicion = $query->fetchAll();
-
-            //            if (!$aTuicion[0]['get_ue_tuicion']) {
-            //                $this->session->getFlashBag()->set('danger',array('title' => 'Error','message' => 'No tiene tuición sobre la Unidad Educativa'));
-            //                return $this->redirectToRoute('sie_diploma_tramite_recepcion_distrito');
-            //            }
-
             //die($sie." - ".$ges." - ".$suc." - ".$per." - ".$identificador." - ".$lista);
             $bachilleres = $this->buscaEstudiantesCentroEducacionAlternativa($sie, $ges, $suc, $per, $identificador, $lista);
             $query = $em->getConnection()->prepare('SELECT * FROM flujo_tipo order by id');
@@ -1437,12 +1412,13 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                 $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->findOneBy(array('id' => $numeroSerie.$tipoSerie));
             }
             $entityDocumentoEstado = $em->getRepository('SieAppWebBundle:DocumentoEstado')->findOneBy(array('id' => 1));
+            $entityUsuario = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('id' => $usuarioId));
             $entityDocumento = new Documento();
             $entityDocumento->setDocumento('');
             $entityDocumento->setDocumentoTipo($entityDocumentoTipo);
             $entityDocumento->setObs($entityDocumentoTipo->getDocumentoTipo() . ' generado');
             $entityDocumento->setDocumentoSerie($entityDocumentoSerie);
-            $entityDocumento->setUsuarioId($usuarioId);
+            $entityDocumento->setUsuario($entityUsuario);
             $entityDocumento->setFechaImpresion($fecha);
             $entityDocumento->setFechaRegistro($fechaActual);
             $entityDocumento->setTramite($entityTramite[0]);

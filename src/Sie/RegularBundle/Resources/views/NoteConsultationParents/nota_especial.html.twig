@@ -1,0 +1,87 @@
+{% if notas %}
+    <h5 class="text-info">Notas</h5>
+    <table class="table table-bordered table-striped cf" style="backgroud:#FFFFFF; font-size: 9pt">
+    {% if gestion > 2013  %}
+        <thead class="cf">
+            <tr>
+                <th>Asignatura</th>
+                <th>Primer Bimestre</th>
+                <th>Segundo Bimestre</th>
+                <th>Tercer Bimestre</th>
+                <th>Cuarto Bimestre</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for notas in notas %}
+                <tr>
+                    <td><strong>{{notas.asignatura}}</strong></td>
+                    {% if notas.b1_cual is defined %}
+                        <td class="text-justify">
+                            {% if notas.b1_cual == '1' %}AOSA{% endif %}
+                            {% if notas.b1_cual == '2' %}AOCA{% endif %}
+                            {% if notas.b1_cual == '3' %}AOCMA{% endif %}
+                            {% if notas.b1_cual == '4' %}NAO{% endif %}
+                        </td>
+                    {% endif %}
+                    {% if notas.b2_cual is defined %}
+                        <td class="text-justify">
+                            {% if notas.b2_cual == '1' %}AOSA{% endif %}
+                            {% if notas.b2_cual == '2' %}AOCA{% endif %}
+                            {% if notas.b2_cual == '3' %}AOCMA{% endif %}
+                            {% if notas.b2_cual == '4' %}NAO{% endif %}
+                        </td>
+                    {% endif %}
+                    {% if notas.b3_cual is defined %}
+                        <td class="text-justify">
+                            {% if notas.b3_cual == '1' %}AOSA{% endif %}
+                            {% if notas.b3_cual == '2' %}AOCA{% endif %}
+                            {% if notas.b3_cual == '3' %}AOCMA{% endif %}
+                            {% if notas.b3_cual == '4' %}NAO{% endif %}
+                        </td>
+                    {% endif %}
+                    {% if notas.b4_cual is defined %}
+                        <td class="text-justify">
+                            {% if notas.b4_cual == '1' %}AOSA{% endif %}
+                            {% if notas.b4_cual == '2' %}AOCA{% endif %}
+                            {% if notas.b4_cual == '3' %}AOCMA{% endif %}
+                            {% if notas.b4_cual == '4' %}NAO{% endif %}
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    {% else %}
+        <thead class="cf">
+            <tr>
+                <th>Asignatura</th>
+                <th>Valoración Cualitativa</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for notas in notas %}
+                <tr>
+                    <td><strong>{{notas.asignatura}}</strong></td>
+                    {% if notas.ee_cual is defined %}<td class="text-justify">{{notas.ee_cual}}</td>{% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    {% endif %}
+    </table>
+    <h5 class="text-info">Notas</h5>
+    <table class="table table-bordered table-striped cf" style="backgroud:#FFFFFF; font-size: 9pt">
+        <legend>Ayuda</legend>
+        <thead>
+            <tr><th>Orientaciones de calificación</th></tr>
+        </thead>
+        <tbody>
+            <tr><th>AOSA</th><td>Alcanzó los Objetivos Sin Apoyo</td></tr>
+            <tr><th>AOCA</th><td>Alcanzó los Objetivos Con Apoyo</td></tr>
+            <tr><th>AOCMA</th><td>Alcanzó los Objetivos Con Mucho Apoyo</td></tr>
+            <tr><th>NAO</th><td>No Alcanzó los Objetivos</td></tr>
+        </tbody>
+    </table>
+{% else %}
+    <div class="alert alert-info">
+        <strong>¡Información!</strong> No se encontraron calificaciones para la presente gestión.
+    </div>
+{% endif %}

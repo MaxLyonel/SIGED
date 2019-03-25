@@ -48,27 +48,19 @@ class SeguimientoController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        // $defaultTramiteController = new defaultTramiteController();
-        // $defaultTramiteController->setContainer($this->container);
+        $defaultTramiteController = new defaultTramiteController();
+        $defaultTramiteController->setContainer($this->container);
 
-        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
-        // $documentoController = new documentoController();
-        // $documentoController->setContainer($this->container);
+        $documentoController = new documentoController();
+        $documentoController->setContainer($this->container);
 
-        // $rolPermitido = array(8,9,12,13,14,15,16,17,20,32,33);
+        $rolPermitido = array(8,9,12,13,14,15,16,17,20,32,33);
 
-        // $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
+        $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
-        $roles = $sesion->get('roluser');
-        //$roles = implode(',',array_map(function ($rol) { return $rol['id']; }, $roles)); // PHP 4 >= 4.0.6, PHP 5 PHP 7
-        $rolUsuario = implode(',',array_column($roles,'id')); // PHP 5 >= 5.5.0, PHP 7
-        $sistemaPermitido = '5,3'; // diplomas: 5, certificacion: 3
-
-        $servicioFunciones = $this->get('sie_app_web.funciones');
-        $validacionMenu = $servicioFunciones->controlaccesomenus($sistemaPermitido, $rolUsuario, $id_usuario, $route);
-
-        if (!$validacionMenu){
+        if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
             return $this->redirect($this->generateUrl('tramite_homepage'));
         }
@@ -225,27 +217,19 @@ class SeguimientoController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        // $defaultTramiteController = new defaultTramiteController();
-        // $defaultTramiteController->setContainer($this->container);
+        $defaultTramiteController = new defaultTramiteController();
+        $defaultTramiteController->setContainer($this->container);
 
-        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
-        // $tramiteController = new tramiteController();
-        // $tramiteController->setContainer($this->container);
+        $tramiteController = new tramiteController();
+        $tramiteController->setContainer($this->container);
 
-        // $rolPermitido = array(8,9,12,13,14,15,16,17,20,32,33);
+        $rolPermitido = array(8,9,12,13,14,15,16,17,20,32,33);
 
-        // $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
+        $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
-        $roles = $sesion->get('roluser');
-        //$roles = implode(',',array_map(function ($rol) { return $rol['id']; }, $roles)); // PHP 4 >= 4.0.6, PHP 5 PHP 7
-        $rolUsuario = implode(',',array_column($roles,'id')); // PHP 5 >= 5.5.0, PHP 7
-        $sistemaPermitido = '5,3'; // diplomas: 5, certificacion: 3
-
-        $servicioFunciones = $this->get('sie_app_web.funciones');
-        $validacionMenu = $servicioFunciones->controlaccesomenus($sistemaPermitido, $rolUsuario, $id_usuario, $route);
-
-        if (!$validacionMenu){
+        if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
             return $this->redirect($this->generateUrl('tramite_homepage'));
         }
@@ -401,27 +385,19 @@ class SeguimientoController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        // $defaultTramiteController = new defaultTramiteController();
-        // $defaultTramiteController->setContainer($this->container);
+        $defaultTramiteController = new defaultTramiteController();
+        $defaultTramiteController->setContainer($this->container);
 
-        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        //$activeMenu = $defaultTramiteController->setActiveMenu($route);
 
-        // $tramiteController = new tramiteController();
-        // $tramiteController->setContainer($this->container);
+        $tramiteController = new tramiteController();
+        $tramiteController->setContainer($this->container);
 
-        // $rolPermitido = array(8,9,12,13,14,15,16,17,20,32,33);
+        $rolPermitido = array(8,9,12,13,14,15,16,17,20,32,33);
 
-        // $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
+        $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
-        $roles = $sesion->get('roluser');
-        //$roles = implode(',',array_map(function ($rol) { return $rol['id']; }, $roles)); // PHP 4 >= 4.0.6, PHP 5 PHP 7
-        $rolUsuario = implode(',',array_column($roles,'id')); // PHP 5 >= 5.5.0, PHP 7
-        $sistemaPermitido = '3'; // diplomas: 5, certificacion: 3
-
-        $servicioFunciones = $this->get('sie_app_web.funciones');
-        $validacionMenu = $servicioFunciones->controlaccesomenus($sistemaPermitido, $rolUsuario, $id_usuario, $route);
-
-        if (!$validacionMenu){
+        if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
             return $this->redirect($this->generateUrl('tramite_homepage'));
         }
@@ -538,6 +514,23 @@ class SeguimientoController extends Controller {
 
                 $entityDocumentoDetalle = $documentoController->getDocumentoDetalle($entityTramite['tramite']);
 
+                $aRoles = $this->session->get('roluser');
+                $permisoTramiteDetalle = false;
+                foreach ($aRoles as $rol){
+                    if($rol['id'] != 20){
+                        $permisoTramiteDetalle = true;
+                    } 
+                }
+
+                if (!$permisoTramiteDetalle){
+                    return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
+                        'titulo' => 'Seguimiento',
+                        'subtitulo' => 'Trámite',
+                        'listaDocumento' => $entityTramite,
+                        'listaDocumentoDetalle' => $entityDocumentoDetalle,
+                    ));
+                }
+
                 return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
                     'titulo' => 'Seguimiento',
                     'subtitulo' => 'Trámite',
@@ -578,27 +571,19 @@ class SeguimientoController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        // $defaultTramiteController = new defaultTramiteController();
-        // $defaultTramiteController->setContainer($this->container);
+        $defaultTramiteController = new defaultTramiteController();
+        $defaultTramiteController->setContainer($this->container);
 
-        // $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        $activeMenu = $defaultTramiteController->setActiveMenu($route);
 
-        // $tramiteController = new tramiteController();
-        // $tramiteController->setContainer($this->container);
+        $tramiteController = new tramiteController();
+        $tramiteController->setContainer($this->container);
 
-        // $rolPermitido = array(8,9,12,13,14,15,16,17,20,32,33);
+        $rolPermitido = array(8,9,12,13,14,15,16,17,20,32,33);
 
-        // $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
+        $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
-        $roles = $sesion->get('roluser');
-        //$roles = implode(',',array_map(function ($rol) { return $rol['id']; }, $roles)); // PHP 4 >= 4.0.6, PHP 5 PHP 7
-        $rolUsuario = implode(',',array_column($roles,'id')); // PHP 5 >= 5.5.0, PHP 7
-        $sistemaPermitido = '5,3'; // diplomas: 5, certificacion: 3
-
-        $servicioFunciones = $this->get('sie_app_web.funciones');
-        $validacionMenu = $servicioFunciones->controlaccesomenus($sistemaPermitido, $rolUsuario, $id_usuario, $route);
-
-        if (!$validacionMenu){
+        if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
             return $this->redirect($this->generateUrl('tramite_homepage'));
         }

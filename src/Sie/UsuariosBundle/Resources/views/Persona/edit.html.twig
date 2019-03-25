@@ -19,18 +19,10 @@
             <div class="portlet portlet-green">
                 <div class="portlet-heading">
                     <div class="portlet-title">
-                        {% if segipId != 0  %}
-                            {% if fechaEditOn == 'true'  %}                           
-                                <h4>Información Persona <span class="label label-danger">Solo se podra actualizar la información de Fecha de Nacimiento, Genero y Correo Electrónico.</span></h4>
-                            {% else %}
-                                <h4>Información Persona <span class="label label-danger">Solo se podra actualizar la información de Genero y Correo Electrónico.</span></h4>
-                            {% endif %}
-                        {% elseif (count_edit == 1) or (count_edit == '')  %}
-                            <h4>Información Persona <span class="label label-info">Usted cuenta con una edicion de datos personales para este registro.</span></h4>                            
-                        {% elseif count_edit == 2  %}
-                            <h4>Información Persona <span class="label label-warning">Este es la ultima edición datos personales que podra realizar en este registro</span></h4>                            
-                        {% elseif count_edit == 3  %}
-                            <h4>Información Persona <span class="label label-danger">Solo se podra actualizar la información de genero y correo electrónico.</span></h4>                                                   
+                        {% if segipId == true   %}
+                            <h4>Información Persona <span class="label label-danger">Este registro esta validado por el SEGIP solo podrá actualizar la información de fecha de nacimiento, género y correo electrónico.</span></h4>
+                        {% else %}
+                            <h4>Información Persona <span class="label label-warning">Complete el formulario para realizar la validación correspondiente.</span></h4>
                         {% endif %}
                     </div>
                     <div class="portlet-widgets">
@@ -51,12 +43,12 @@
                                 </div>                                                              
                             </div>
                             <div class="row">                                                                 
-                                <div class="col-lg-6">
-                                    {{ form_row(form.paterno, { 'id': 'paterno' }) }}
+                                <div class="col-lg-6">                                    
+                                    {{ form_row(form.paterno, { 'id': 'paterno' }) }}                                    
                                     <div class="help-block with-errors"></div>
                                 </div>    
-                                <div class="col-lg-6">
-                                    {{ form_row(form.materno, { 'id': 'materno' }) }}
+                                <div class="col-lg-6">                                    
+                                    {{ form_row(form.materno, { 'id': 'materno' }) }}                                   
                                     <div class="help-block with-errors"></div>
                                 </div>                                
                             </div>
@@ -86,8 +78,12 @@
                                     {{ form_row(form.generoTipo, { 'id': 'genero' }) }}
                                     <div class="help-block with-errors"></div>
                                 </div>
-                                <div class="col-lg-9">
+                                <div class="col-lg-6">
                                     {{ form_row(form.correo, { 'id': 'correo' }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="col-lg-3">
+                                    {{ form_row(form.departamentoTipo, { 'id': 'departamentoTipo' }) }}
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
@@ -180,7 +176,7 @@
                     url: Routing.generate('sie_usuario_persona_update'),
                     data: formData,
                     beforeSend: function () {
-                        {#$("#divAlert").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");#}
+                        
                     },
                     success: function (data) {
                         
@@ -189,16 +185,10 @@
                         if (numfila != ''){
                             //ACTUALIZANDO TABLA alert(numfila+data.username);                            
                             $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[0].innerHTML = '<span class="label label-warning">Registro Actualizado!</span>'
-                            
-                            {#$($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[3].innerHTML = $("#carnet").val().toUpperCase();
-                            $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[4].innerHTML = $("#nombre").val().toUpperCase();
-                            $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[5].innerHTML = $("#paterno").val().toUpperCase();
-                            $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[6].innerHTML = $("#materno").val().toUpperCase();#}
                         }
                         
                         $("#divAlertUser").html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');
                         $('#ModalUser').modal('hide');                        
-                        {#$("#divAlert").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");#}
                     },
                     error: function () {                        
                         $("#divAlertUser").empty();

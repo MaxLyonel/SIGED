@@ -1,5 +1,14 @@
 {% extends 'layoutHerramientaAlternativa.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .higherWider {
+            width:800px;
+            margin-top:100px;
+        }
+    </style>
 
+{% endblock %}
 {% block contentoption %}
 
     <!-- Start page header -->
@@ -107,7 +116,7 @@
         </div>
     </div>
     
-    <div class="modal modal-flex fade" id="myModalNotas" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+    <div class="modal modal-flex fade" id="modalNotas" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
         <div class="modal-dialog higherWider">
             <div class="modal-content">
                 <div class="modal-header">
@@ -131,15 +140,14 @@
 {% block javascripts %}
     {{parent()}}
     <script>
-        var seeNotaNew = function (inscripcionid, idstudent, nivel, grado, paralelo, turno, gestion, sie, estadomatriculaTipo) {
-
-            $('#myModalNotas').modal('show');
+        var seeNotaNew = function (inscripcionid, estudianteid, gestion, subsistema) {
+            $('#modalNotas').modal('show');
             $.ajax({
                 type: 'get',
-                url: Routing.generate('note_consultation_parents_sie_nota_new', {'inscripcionid': inscripcionid,'idstudent': idstudent, 'nivel': nivel, 'grado': grado, 'paralelo': paralelo, 'turno': turno, 'gestion': gestion, 'sie': sie,'estadomatriculaTipo': estadomatriculaTipo}),
+                url: Routing.generate('note_consultation_parents_sie_nota_new', {'inscripcionid': inscripcionid,'estudianteid': estudianteid, 'gestion': gestion, 'subsistema': subsistema}),
                 beforeSend: function () {
                     $("#idNotas").empty();
-                    $("#idNotas").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                    $("#idNotas").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" /></div>');
                 },
                 success: function (data) {
                     $("#idNotas").empty();

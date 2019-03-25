@@ -255,3 +255,9 @@ sie_app_web_close_modules:
 sie_app_web_segip:
     resource: "@SieAppWebBundle/Resources/config/routing/segip.yml"
     prefix:   /sie/segip
+
+#modulo de tramites con flujos
+sie_app_web_wf_tramite:
+    resource: "@SieAppWebBundle/Resources/config/routing/wftramite.yml"
+    prefix:   /sie/tramite
+

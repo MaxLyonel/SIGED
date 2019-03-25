@@ -1,0 +1,39 @@
+Sie\AppWebBundle\Entity\JdpComisionTipo:
+    type: entity
+    table: jdp_comision_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        comision:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+        cantidad:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        estado:
+            type: boolean
+            nullable: true
+            comment: ''
+        nivelTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: nivel_tipo_id
+        esactivo:
+            type: boolean
+            nullable: true
+            comment: ''
+    lifecycleCallbacks: {  }

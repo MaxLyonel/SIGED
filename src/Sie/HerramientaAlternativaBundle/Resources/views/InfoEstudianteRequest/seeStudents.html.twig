@@ -98,6 +98,23 @@
                 </button>
             </div-->
         {% endif %}
+        
+        {#
+          print CERTIFICADOS To PRIMARIA
+          #}
+        {% if (app.session.get('ie_per_estado') == '0') and primariaNuevo and ((app.session.get('ie_gestion') >= '2018')) %}
+        
+         <div class="col-md-3">
+                <form action="{{path('herramienta_alter_certificados_primaria')}}" method="post" style="">
+                    <input type="hidden" name="data" value="{{infoUe}}">
+                    <button type="submit" class="btn btn-primary btn-stroke">
+                        <i class="fa fa-cloud-download"></i> Imprimir Certificados
+                    </button>
+                </form>
+         </div>       
+        
+        {% endif %}
+        
       </div>
       <BR>
     {#<div class="row">
@@ -169,23 +186,22 @@
                                                 <ul class="dropdown-menu">
                                                     {#SE CONTROLA EL ACESSO EN LA PANTALLA DE NOTAS POR ESO ESTA ACTIVO PARA TODOS LO ESTADOS MENOS INCRIPCIONES#}
                                                     {% if (app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '0') %}
-                                                        <li>
-                                                          <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}', '{{jsnInfoStudent}}');" >
-                                                            <span class="label label-primary"><i class="fa fa-list"></i> Registro de Notas</span>
-                                                          </a>
-                                                        </li>
 
-                                                        {# <li>
-                                                          <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotasPrimaria('{{infoUe}}', '{{jsnInfoStudent}}');" >
-                                                            <span class="label label-default"><i class="fa fa-list"></i> Registro de Notas Primaria</span>
-                                                          </a>
-                                                        </li> #}
-
-
-
-
-
+                                                        {% if primariaNuevo %}
+                                                            <li>
+                                                              <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotasPrimaria('{{infoUe}}', '{{jsnInfoStudent}}');" >
+                                                                <span class="label label-primary"><i class="fa fa-list"></i> Registro de Notas</span>
+                                                              </a>
+                                                            </li>
+                                                        {% else %}
+                                                            <li>
+                                                              <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}', '{{jsnInfoStudent}}');" >
+                                                                <span class="label label-primary"><i class="fa fa-list"></i> Registro de Notas</span>
+                                                              </a>
+                                                            </li>
+  
                                                     {% endif %}
+                                                {% endif %}
 
                                                     {#LIBRETAS SOLO EN MODO LECTURA Y AÑOS 2015,2016,2017#}
                                                     {% if (app.session.get('ie_per_estado') == '0') and ((app.session.get('ie_gestion') == '2015') or (app.session.get('ie_gestion') == '2016') or (app.session.get('ie_gestion') == '2017') or (app.session.get('ie_gestion') == '2018') or (app.session.get('ie_gestion') == '2019')) %}
@@ -212,16 +228,21 @@
                                                                 </a>
                                                                 </li>
                                                             {% else %}
-                                                                    <li>
+                                                                    {# <li>
+                                                                        <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getRudealNew('{{infoUe}}', '{{jsnInfoStudent}}');" >
+                                                                            <span class="label label-success"><i class="fa fa-edit"></i> Registro de Rudeal</span>
+                                                                        </a>
+                                                                    </li> #}
+                                                                    {# <li>
                                                                         <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getRudeal('{{infoUe}}', '{{jsnInfoStudent}}');" >
                                                                             <span class="label label-success"><i class="fa fa-edit"></i> Registro de Rudeal</span>
                                                                         </a>
-                                                                    </li>
-                                                                    <li>
+                                                                    </li> #}
+                                                                    {# <li>
                                                                         <a href="{{path('herramienta_alter_reporte_socioeconomico', {'inscripcionId': data.eInsId,'rude': data.codigoRude })}}">
                                                                             <span class="label label-warning"> <i class="fa fa-credit-card"></i> Imprimir Formulario Rudeal</span>
                                                                         </a>
-                                                                    </li>
+                                                                    </li> #}
                                                                 {% endif %}                                                            
                                                     {% endif %} 
                                                     
@@ -377,6 +398,32 @@
         });
     }
 
+    var getRudealNew = function (infoUe, infoStudent) {
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: "{{ path('estudiante_rudeal_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $("#modal").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+                reloadmyform();
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    }
+
     function reloadmyform(){
 /*
         $('#id').change(function () {
@@ -386,7 +433,7 @@
             listarmenu($('#form_seccioniiEducacionDiversa').val());
         });*/
       //  alert($('#form_seccioniiEducacionDiversa').val());return false;
-        $("#answerID").trigger(onchange(listarmenu($('#form_seccioniiEducacionDiversaTipo').val())));
+        //$("#answerID").trigger(onchange(listarmenu($('#form_seccioniiEducacionDiversaTipo').val())));
        // $("#answerIDUM").trigger(onchange(tipomili($('#form_seccioniiUnidadMilitarTipo').val())));
         //$("#answerIDP").trigger(onchange(tipopenal($('#form_seccioniiPenalTipo').val())));
     }

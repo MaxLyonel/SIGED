@@ -45,7 +45,7 @@ class InfoMaestroMigrarController extends Controller {
         if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
         }
-
+        
         ////////////////////////////////////////////////////
         $em = $this->getDoctrine()->getManager();
 
@@ -81,13 +81,14 @@ class InfoMaestroMigrarController extends Controller {
 
         $consol_gest_pasada = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $request->getSession()->get('currentyear') - 1 , 'unidadEducativa' => $institucion, 'bim4' => '1'));
         $consol_gest_pasada2 = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $request->getSession()->get('currentyear') - 1 , 'unidadEducativa' => $institucion, 'bim4' => '2'));
+        $consol_gest_pasada3 = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $request->getSession()->get('currentyear') - 1 , 'unidadEducativa' => $institucion, 'bim4' => '3'));
         
         $registro_gest_pasada = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $request->getSession()->get('currentyear') - 1 , 'unidadEducativa' => $institucion));
         
         if(!$registro_gest_pasada){
             $gestion = $request->getSession()->get('currentyear');
         }
-        else if(!($consol_gest_pasada or $consol_gest_pasada2)){
+        else if(!($consol_gest_pasada or $consol_gest_pasada2 or $consol_gest_pasada3)){
             $gestion = $request->getSession()->get('currentyear') - 1;
             $request->getSession()->set('idGestion', $gestion);
             $activar_acciones = true;
@@ -121,17 +122,19 @@ class InfoMaestroMigrarController extends Controller {
         $repository = $em->getRepository('SieAppWebBundle:MaestroInscripcion');
 
         $query = $repository->createQueryBuilder('mi')
-                ->select('p.id perId, p.carnet, p.paterno, p.materno, p.nombre, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, ft.formacion')
+                ->select('p.id perId, p.carnet, p.complemento, p.paterno, p.materno, p.nombre, p.fechaNacimiento, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, ft.formacion')
                 ->innerJoin('SieAppWebBundle:Persona', 'p', 'WITH', 'mi.persona = p.id')
                 ->innerJoin('SieAppWebBundle:FormacionTipo', 'ft', 'WITH', 'mi.formacionTipo = ft.id')
                 ->where('mi.institucioneducativa = :idInstitucion')
                 ->andWhere('mi.gestionTipo = :gestion')
                 ->andWhere('mi.cargoTipo IN (:cargos)')
                 ->andWhere('mi.esVigenteAdministrativo = :esvigente')
+                ->andWhere('p.segipId = :segip')
                 ->setParameter('idInstitucion', $institucion)
                 ->setParameter('gestion', $request->getSession()->get('currentyear'))
                 ->setParameter('cargos', $cargosArray)
                 ->setParameter('esvigente', 't')
+                ->setParameter('segip', 1)
                 ->distinct()
                 ->orderBy('p.paterno')
                 ->addOrderBy('p.materno')
@@ -147,7 +150,7 @@ class InfoMaestroMigrarController extends Controller {
             }
 
             $query = $repository->createQueryBuilder('mi')
-            ->select('p.id perId, p.carnet, p.paterno, p.materno, p.nombre, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, ft.formacion')
+            ->select('p.id perId, p.carnet, p.complemento, p.paterno, p.materno, p.nombre, p.fechaNacimiento, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, ft.formacion')
             ->innerJoin('SieAppWebBundle:Persona', 'p', 'WITH', 'mi.persona = p.id')
             ->innerJoin('SieAppWebBundle:FormacionTipo', 'ft', 'WITH', 'mi.formacionTipo = ft.id')
             ->where('mi.institucioneducativa = :idInstitucion')
@@ -155,11 +158,13 @@ class InfoMaestroMigrarController extends Controller {
             ->andWhere('mi.cargoTipo IN (:cargos)')
             ->andWhere('p.id NOT IN (:personas)')
             ->andWhere('mi.esVigenteAdministrativo = :esvigente')
+            ->andWhere('p.segipId = :segip')
             ->setParameter('idInstitucion', $institucion)
             ->setParameter('gestion', $gestion)
             ->setParameter('cargos', $cargosArray)
             ->setParameter('personas', $maestro_auxArray)
-            ->setParameter('esvigente', 'f')
+            ->setParameter('esvigente', 't')
+            ->setParameter('segip', 1)
             ->distinct()
             ->orderBy('p.paterno')
             ->addOrderBy('p.materno')
@@ -167,17 +172,19 @@ class InfoMaestroMigrarController extends Controller {
             ->getQuery(); 
         } else {
             $query = $repository->createQueryBuilder('mi')
-            ->select('p.id perId, p.carnet, p.paterno, p.materno, p.nombre, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, ft.formacion')
+            ->select('p.id perId, p.carnet, p.complemento, p.paterno, p.materno, p.nombre, p.fechaNacimiento, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, ft.formacion')
             ->innerJoin('SieAppWebBundle:Persona', 'p', 'WITH', 'mi.persona = p.id')
             ->innerJoin('SieAppWebBundle:FormacionTipo', 'ft', 'WITH', 'mi.formacionTipo = ft.id')
             ->where('mi.institucioneducativa = :idInstitucion')
             ->andWhere('mi.gestionTipo = :gestion')
             ->andWhere('mi.cargoTipo IN (:cargos)')
             ->andWhere('mi.esVigenteAdministrativo = :esvigente')
+            ->andWhere('p.segipId = :segip')
             ->setParameter('idInstitucion', $institucion)
             ->setParameter('gestion', $gestion)
             ->setParameter('cargos', $cargosArray)
-            ->setParameter('esvigente', 'f')
+            ->setParameter('esvigente', 't')
+            ->setParameter('segip', 1)
             ->distinct()
             ->orderBy('p.paterno')
             ->addOrderBy('p.materno')
@@ -186,9 +193,9 @@ class InfoMaestroMigrarController extends Controller {
         }
         
         $maestro = $query->getResult();
-
+        
         $query = $repository->createQueryBuilder('mi')
-            ->select('p.id perId, p.carnet, p.paterno, p.materno, p.nombre, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, ft.formacion')
+            ->select('p.id perId, p.carnet, p.complemento, p.paterno, p.materno, p.nombre, p.fechaNacimiento, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, ft.formacion')
             ->innerJoin('SieAppWebBundle:Persona', 'p', 'WITH', 'mi.persona = p.id')
             ->innerJoin('SieAppWebBundle:FormacionTipo', 'ft', 'WITH', 'mi.formacionTipo = ft.id')
             ->leftJoin('SieAppWebBundle:MaestroInscripcionIdioma', 'maii', 'WITH', 'maii.maestroInscripcion = mi.id')
@@ -197,10 +204,12 @@ class InfoMaestroMigrarController extends Controller {
             ->andWhere('mi.cargoTipo IN (:cargos)')
             ->andWhere('maii.id IS NULL')
             ->andWhere('mi.esVigenteAdministrativo = :esvigente')
+            ->andWhere('p.segipId = :segip')
             ->setParameter('idInstitucion', $institucion)
             ->setParameter('gestion', $gestion)
             ->setParameter('cargos', $cargosArray)
             ->setParameter('esvigente', 'f')
+            ->setParameter('segip', 1)
             ->distinct()
             ->orderBy('p.paterno')
             ->addOrderBy('p.materno')
@@ -256,25 +265,25 @@ class InfoMaestroMigrarController extends Controller {
                 $contador++;
                 if($contador > 2){
                     $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($key);
-                    $maestro_inscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('persona' => $persona, 'institucioneducativa' => $institucioneducativa, 'gestionTipo' => $gestionTipo, 'esVigenteAdministrativo' => false));
+                    $maestro_inscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('persona' => $persona, 'institucioneducativa' => $institucioneducativa, 'gestionTipo' => $gestionTipo, 'esVigenteAdministrativo' => true));
                     $gestionTipo_aux = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($request->getSession()->get('currentyear'));
-                    $maestro_inscripcion_aux = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('persona' => $persona, 'institucioneducativa' => $institucioneducativa, 'gestionTipo' => $gestionTipo_aux, 'esVigenteAdministrativo' => false));
+                    $maestro_inscripcion_aux = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('persona' => $persona, 'institucioneducativa' => $institucioneducativa, 'gestionTipo' => $gestionTipo_aux, 'esVigenteAdministrativo' => true));
                     if(!$maestro_inscripcion_aux){
                         $maestrosArray[$key] = $maestro_inscripcion;
                     }
                 }
             }
         }
-
+        
         $gestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($request->getSession()->get('currentyear'));
         
         foreach ($maestrosArray as $key => $maestro_inscripcion) {
             //Registrar maestro_inscriocion gestión actual
-            //$query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('maestro_inscripcion');")->execute();
             $persona_verificar = $em->getRepository('SieAppWebBundle:Persona')->findOneById($key);
             $maestro_verificar = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('persona' => $persona_verificar, 'gestionTipo' => $gestionTipo, 'cargoTipo' => '0', 'institucioneducativa' => $institucioneducativa));
-
+            
             if (!$maestro_verificar) {
+                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('maestro_inscripcion');")->execute();
                 $maestro_inscripcion_aux = clone $maestro_inscripcion;
                 $maestro_inscripcion_aux->setGestionTipo($gestionTipo);
                 $maestro_inscripcion_aux->setFechaRegistro(new \DateTime('now'));
@@ -289,6 +298,7 @@ class InfoMaestroMigrarController extends Controller {
                 $maestro_inscripcion_idioma = $em->getRepository('SieAppWebBundle:MaestroInscripcionIdioma')->findBy(array('maestroInscripcion' => $maestro_inscripcion));
 
                 foreach ($maestro_inscripcion_idioma as $key => $value) {
+                    $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('maestro_inscripcion_idioma');")->execute();
                     $maestro_inscripcion_idioma_aux = clone $value;
                     $maestro_inscripcion_idioma_aux->setMaestroInscripcion($maestro_inscripcion_aux);
                     $em->persist($maestro_inscripcion_idioma_aux);
@@ -298,7 +308,6 @@ class InfoMaestroMigrarController extends Controller {
         }
 
         $em->getConnection()->commit();
-        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('maestro_inscripcion');")->execute();
 
         $request->getSession()->set('idInstitucion', $sie);
         $request->getSession()->set('idGestion', $request->getSession()->get('currentyear'));

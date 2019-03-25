@@ -56,4 +56,60 @@ class IdiomaTipo
     public function __toString() {
         return $this->idioma;
     }
+    /**
+     * @var integer
+     */
+    private $obs;
+
+
+    /**
+     * Set obs
+     *
+     * @param integer $obs
+     * @return IdiomaTipo
+     */
+    public function setObs($obs)
+    {
+        $this->obs = $obs;
+    
+        return $this;
+    }
+
+    /**
+     * Get obs
+     *
+     * @return integer 
+     */
+    public function getObs()
+    {
+        return $this->obs;
+    }
+    /**
+     * @var boolean
+     */
+    private $esVigente;
+
+
+    /**
+     * Set esVigente
+     *
+     * @param boolean $esVigente
+     * @return IdiomaTipo
+     */
+    public function setEsVigente($esVigente)
+    {
+        $this->esVigente = $esVigente;
+    
+        return $this;
+    }
+
+    /**
+     * Get esVigente
+     *
+     * @return boolean 
+     */
+    public function getEsVigente()
+    {
+        return $this->esVigente;
+    }
 }

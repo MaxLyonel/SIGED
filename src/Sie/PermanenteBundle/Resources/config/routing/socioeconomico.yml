@@ -1,0 +1,42 @@
+socioeconomicoper_index:
+    path:     /
+    defaults: { _controller: "SiePermanenteBundle:EstudianteInscripcionSocioeconomicoPermanente:index" }
+    options:
+         expose: true
+
+socioeconomicoper_show:
+    path:     /{id}/show
+    defaults: { _controller: "SiePermanenteBundle:EstudianteInscripcionSocioeconomicoPermanente:show" }
+
+socioeconomicoper_new:
+    path:     /new
+    defaults: { _controller: "SiePermanenteBundle:EstudianteInscripcionSocioeconomicoPermanente:new" }
+
+socioeconomicoper_create:
+    path:     /create
+    defaults: { _controller: "SiePermanenteBundle:EstudianteInscripcionSocioeconomicoPermanente:create" }
+    methods:  POST
+
+socioeconomicoper_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SiePermanenteBundle:EstudianteInscripcionSocioeconomicoPermanente:edit" }
+
+socioeconomicoper_update:
+    path:     /update
+    defaults: { _controller: "SiePermanenteBundle:EstudianteInscripcionSocioeconomicoPermanente:update" }
+    methods:  [POST]
+
+socioeconomicoper_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SiePermanenteBundle:EstudianteInscripcionSocioeconomicoPermanente:delete" }
+    methods:  [POST, DELETE]
+
+socioeconomicoper_result:
+    path:    /result
+    defaults: { _controller: "SiePermanenteBundle:EstudianteInscripcionSocioeconomicoPermanente:result" } 
+    options:
+         expose: true   
+
+socioeconomicoper_list_dptos_nac:
+    path:     /altlistardptosnac/{pais}
+    defaults: { _controller: "SiePermanenteBundle:EstudianteInscripcionSocioeconomicoPermanente:listarDepartamentosNac" }

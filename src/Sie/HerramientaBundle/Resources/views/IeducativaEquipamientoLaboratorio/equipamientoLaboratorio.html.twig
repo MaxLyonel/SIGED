@@ -1,0 +1,553 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+{% endblock %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Formulario <span>equipamiento de laboratorio</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Equipamiento de laboratorio</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-content">
+                    {% for type, flashMessage in app.session.flashbag.all() %}
+                        <div class="alert alert-{{ type }} alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            {% if flashMessage.title is defined %}
+                                <strong><i class='fa fa-envelope'></i> {{ flashMessage.title }}: </strong>
+                                {{ flashMessage.message }}
+                            {% else %}
+                                &nbsp;
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% if formLaboratorio is defined  %}
+            {{form_start(formLaboratorio, { 'attr': {'data-toggle': 'validator','role': "form",'onsubmit': 'return confirma();'} } )}}        
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">I. DATOS GENERALES DE LA UNIDAD EDUCATIVA</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-body">
+                                    <div class="row">
+                                        <div class="form-group col-sm-3">
+                                            <label for="11" class="control-label">1.1. CÓDIGO R.U.E.</label>
+                                            <button type="button" id="11" class="btn btn-primary form-control btn-xs">{{ entity.institucioneducativa_id }}</button>
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label for="12" class="control-label">1.2. NOMBRE DE LA UNIDAD EDUCATIVA</label>
+                                            <button type="button" id="12" class="btn btn-primary form-control btn-xs">{{ entity.institucioneducativa }}</button>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label for="13" class="control-label">1.3. DEPENDENCIA</label>
+                                            <button type="button" id="13" class="btn btn-primary form-control btn-xs">{{ entity.dependencia }}</button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-4">
+                                            <label for="14" class="control-label">1.4. NIVEL/ÁREA DE ATENCIÓN.</label>
+                                            <button type="button" id="14" class="btn btn-primary form-control btn-xs">{{ entity.niveles_abrv }}</button>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <label for="15" class="control-label">1.5. TURNO</label>
+                                            <button type="button" id="15" class="btn btn-primary form-control btn-xs">{{ entity.turno }}</button>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label for="16" class="control-label">1.6. ÁREA URBANA / ÁREA RURAL (censo 2001)</label>
+                                            <button type="button" id="16" class="btn btn-primary form-control btn-xs">
+                                                {% if entity.area == 'U' %}
+                                                    URBANO
+                                                {% elseif entity.area == 'R' %}
+                                                    RURAL
+                                                {% else %}
+                                                {% endif %}
+                                            </button>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label for="17" class="control-label">1.7. NÚMERO TOTAL DE ESTUDIANTE (Solo Nivel Secundario {% if entityGrado.gestion_tipo_id is defined  %}{{ entityGrado.gestion_tipo_id }}{% endif %})</label>
+                                            <button type="button" id="17" class="btn btn-primary form-control btn-xs">{% if entityGrado.matricula is defined  %}{{ entityGrado.matricula }}{% endif %}</button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-2">
+                                            <label for="171" class="control-label">1.7.1. PRIMERO.</label>
+                                            <button type="button" id="171" class="btn btn-primary form-control btn-xs">{% if entityGrado.primero is defined  %}{{ entityGrado.primero }}{% endif %}</button>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <label for="172" class="control-label">1.7.2. SEGUNDO</label>
+                                            <button type="button" id="172" class="btn btn-primary form-control btn-xs">{% if entityGrado.segundo is defined  %}{{ entityGrado.segundo }}{% endif %}</button>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <label for="173" class="control-label">1.7.3. TERCERO</label>
+                                            <button type="button" id="173" class="btn btn-primary form-control btn-xs">{% if entityGrado.tercero is defined  %}{{ entityGrado.tercero }}{% endif %}</button>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <label for="174" class="control-label">1.7.4. CUARTO</label>
+                                            <button type="button" id="174" class="btn btn-primary form-control btn-xs">{% if entityGrado.cuarto is defined  %}{{ entityGrado.cuarto }}{% endif %}</button>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <label for="175" class="control-label">1.7.5. QUINTO</label>
+                                            <button type="button" id="175" class="btn btn-primary form-control btn-xs">{% if entityGrado.quinto is defined  %}{{ entityGrado.quinto }}{% endif %}</button>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <label for="176" class="control-label">1.7.6. SEXTO</label>
+                                            <button type="button" id="176" class="btn btn-primary form-control btn-xs">{% if entityGrado.sexto is defined  %}{{ entityGrado.sexto }}{% endif %}</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">II. LOCALIZACIÓN DEL EDIFICIO ESCOLAR (censo 2001)</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-body">
+                                    <div class="row">
+                                        <div class="form-group col-sm-2">
+                                            <label for="21" class="control-label">2.1. CÓDIGO L.E.</label>
+                                            <button type="button" id="21" class="btn btn-primary form-control btn-xs">{{ entity.edificioeducativo_id }}</button>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <label for="22" class="control-label">2.2. DEPARTAMENTO</label>
+                                            <button type="button" id="22" class="btn btn-primary form-control btn-xs">{{ entity.departamento }}</button>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <label for="23" class="control-label">2.3. PROVINCIA</label>
+                                            <button type="button" id="23" class="btn btn-primary form-control btn-xs">{{ entity.provincia }}</button>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <label for="24" class="control-label">2.4. MUNICIPIO</label>
+                                            <button type="button" id="24" class="btn btn-primary form-control btn-xs">{{ entity.municipio }}</button>
+                                        </div>
+                                        <div class="form-group col-sm-4">
+                                            <label for="25" class="control-label">2.5. DISTRITO EDUCATIVO</label>
+                                            <button type="button" id="25" class="btn btn-primary form-control btn-xs">{{ entity.distrito }}</button>
+                                        </div>
+                                        <div class="form-group col-sm-12">
+                                            <div class="radio">
+                                                <label style="padding-left: 0px;">2.6. ¿LA UNIDAD EDUCATIVA COMPARTE LA INFRAESTRUCTURA CON OTRAS UNIDADES EDUCATIVAS?</label>
+                                                <label class="radio-inline">
+                                                    <div class="rdio rdio-theme circle radio-inline">
+                                                        <input id="radio-type-rounded2" name="radiotype2" type="radio" disabled="disabled" {% if entityEdificio|length > 0 %}checked="true"{% endif %}>
+                                                        <label for="radio-type-rounded2">SI</label>
+                                                    </div>
+                                                </label>
+                                                <label class="radio-inline">
+                                                    <div class="rdio rdio-theme circle radio-inline">
+                                                        <input id="radio-type-circle2" name="radiotype2" type="radio" disabled="disabled" {% if entityEdificio|length < 1 %}checked="true"{% endif %}>
+                                                        <label for="radio-type-circle2">NO</label>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>                                    
+                                    </div>  
+                                    <div class="row">
+                                    </div> 
+                                    <div class="row">
+                                        <div class="form-group col-sm-8">
+                                            <label class="control-label">2.6.1. NOMBRE DE LA UNIDAD EDUCATIVA CON LA QUE SE COMPARTE LA INFRAESTRUCTURA</label>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <label class="control-label">2.6.2. CÓDIGO R.U.E.</label>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <label class="control-label">2.6.3. TURNO</label>
+                                        </div>
+                                        {% for dato in entityEdificio %}
+                                            <div class="form-group col-sm-8">
+                                                <button type="button" class="btn btn-primary form-control btn-xs">{{ dato.institucioneducativa }}</button>
+                                            </div>
+                                            <div class="form-group col-sm-2">
+                                                <button type="button" class="btn btn-primary form-control btn-xs">{{ dato.institucioneducativa_id }}</button>
+                                            </div>
+                                            <div class="form-group col-sm-2">
+                                                <button type="button" class="btn btn-primary form-control btn-xs">{{ dato.turno }}</button>
+                                            </div>
+                                        {% endfor %}                                    
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>   
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">III. DATOS GENERALES DEL DIRECTOR(A) O RESPONSABLE DE LA UNIDAD EDUCATIVA Y ALCALDE MUNICIPAL</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-body">
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label for="31" class="control-label">3.1. NOMBRE(S) Y APELLIDO(S) DEL DIRECTOR(A) O RESPONSABLE DE LA UNIDAD EDUCATIVA</label>
+                                            <button type="button" id="31" class="btn btn-primary form-control btn-xs">{{ entity.director }}</button>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label for="311" class="control-label">3.1.1. NÚMERO DE CÉDULA DE IDENTIDAD</label>
+                                            <button   type="button" id="311" class="btn btn-primary form-control btn-xs">{{ entity.ci_director }}</button>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label for="312" class="control-label">3.1.2. NÚMERO DE CELULAR</label>
+                                            <button type="button" id="312" class="btn btn-primary form-control btn-xs">{{ entity.celular_director }}</button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-8">
+                                            <label for="nombreAlcalde" class="control-label">3.2. NOMBRE(S) Y APELLIDO(S) DEL ALCALDE MUNICIPAL.</label>
+                                            {{ form_widget(formLaboratorio.nombreAlcalde, { 'attr': {'class': 'form-control input-sm mb-15'} }) }}  
+                                        </div>
+                                        <div class="form-group col-sm-4">
+                                            <label for="telefonoAlcalde" class="control-label">3.3. NÚMERO DE TELÉFONO O CELULAR</label>
+                                            {{ form_widget(formLaboratorio.telefonoAlcalde, { 'attr': {'class': 'form-control input-sm mb-15'} }) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>        
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">IV. DATOS DE INFRAESTRUCTURA DE LABORATORIO</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-body">
+                                    <div class="row">
+                                        <div class="form-group col-sm-4 ">
+                                            <label for="constructor" class="control-label">4.1. LA INFRAESTRUCTURA DE LA UNIDAD EDUCATIVA FUE CONSTRUIDA POR:</label>
+                                            {{ form_widget(formLaboratorio.constructor, { 'attr': {'class': 'form-control input-sm mt-20'} }) }} 
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label for="radiotype1" class="control-label">4.2. ¿LA UNIDAD EDUCATIVA CUENTA CON AMBIENTE(S) DESTINADO PARA LABORATORIO DE CIENCIAS NATURALES FÍSICA, QUÍMICA Y BIOLOGÍA-GEOGRAFÍA?</label>
+                                            <div class="rdio rdio-theme circle radio-inline">
+                                                <input id="radio421" name="radio42" type="radio" value=true checked="checked">
+                                                <label for="radio421">SI</label>
+                                            </div>
+                                            <div class="rdio rdio-theme circle radio-inline">
+                                                <input id="radio422" name="radio42" type="radio" value=false>
+                                                <label for="radio422">NO</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <label for="cantidadAmbiente" class="control-label">4.2.1. CANTIDAD DE AMBIENTES</label>
+                                            {{ form_widget(formLaboratorio.cantidadAmbiente, { 'attr': {'class': 'form-control input-sm mt-20'} }) }} 
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-2">
+                                            <label for="nombre_alcalde" class="control-label mb-25">4.3. ¿CUENTA CON MESONES FIJOS?.</label>
+                                            <div class="rdio rdio-theme circle radio-inline">
+                                                <input id="radio431" name="radio43" type="radio" value=true checked="checked">
+                                                <label for="radio431">SI</label>
+                                            </div>
+                                            <div class="rdio rdio-theme circle radio-inline">
+                                                <input id="radio432" name="radio43" type="radio" value=false>
+                                                <label for="radio432">NO</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <label for="telefono_alcalde" class="control-label">4.3.1. ¿LOS REBESTIMIENTOS DE LOS MESONES SON DE CERÁMICA?</label>
+                                            <div class="rdio rdio-theme circle radio-inline">
+                                                <input id="radio4311" name="rad431" type="radio" value=true checked="checked">
+                                                <label for="radio4311">SI</label>
+                                            </div>
+                                            <div class="rdio rdio-theme circle radio-inline">
+                                                <input id="radio4312" name="rad431" type="radio" value=false>
+                                                <label for="radio4312">NO</label>
+                                            </div>
+
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <label for="nombre_alcalde" class="control-label">4.4. ¿CUENTA CON PILETAS Y LAVADEROS?.</label>
+                                            <div class="rdio rdio-theme circle radio-inline">
+                                                <input id="radio441" name="radio44" type="radio" value=true checked="checked">
+                                                <label for="radio441">SI</label>
+                                            </div>
+                                            <div class="rdio rdio-theme circle radio-inline">
+                                                <input id="radio442" name="radio44" type="radio" value=false>
+                                                <label for="radio442">NO</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <label for="cantidadPiletaLavadero" class="control-label">4.4.1. CANTIDAD DE PILETAS Y LAVADEROS</label>
+                                            {{ form_widget(formLaboratorio.cantidadPiletaLavadero, { 'attr': {'class': 'form-control input-sm'} }) }}                                                                                                 
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <label for="nombre_alcalde" class="control-label">4.5. ¿CUENTA CON INSTALACIÓN ELECTRICA?.</label>
+                                            <div class="rdio rdio-theme circle radio-inline">
+                                                <input id="radio451" name="radio45" type="radio" value=true checked="checked">
+                                                <label for="radio451">SI</label>
+                                            </div>
+                                            <div class="rdio rdio-theme circle radio-inline">
+                                                <input id="radio452" name="radio45" type="radio" value=false>
+                                                <label for="radio452">NO</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <label for="cantidadTomaCorriente" class="control-label">4.5.1. CANTIDAD DE TOMA CORRIENTES ADOSADOS A LA PARED Y/O MESONES</label>
+                                            {{ form_widget(formLaboratorio.cantidadTomaCorriente, { 'attr': {'class': 'form-control input-sm'} }) }}                                                                                                 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">V. DOTACIÓN DE LABORATORIOS DE CIENCIAS NATURALES: FÍSICA, QUÍMICA Y BIOLOGÍA-GEOGRAFÍA</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-body">
+                                    <div class="row">
+                                        <div class="form-group col-sm-4">
+                                            <label for="constructor" class="control-label">5.1. ¿LA UNIDAD EDUCATIVA FUE EQUIPADO CON EQUIPOS Y MATERIALES DE LABORATORIO DE CIENCIAS NATURALES?:</label>
+                                            <div class="rdio rdio-theme circle radio-inline">
+                                                <input id="radio511" name="radio51" type="radio" value=true checked="checked">
+                                                <label for="radio511">SI</label>
+                                            </div>
+                                            <div class="rdio rdio-theme circle radio-inline">
+                                                <input id="radio512" name="radio51" type="radio" value=false>
+                                                <label for="radio512">NO</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label for="gestionEquipado" class="control-label">5.1.1. AÑO EN LA QUE FUE EQUIPADO</label>
+                                            {{ form_widget(formLaboratorio.gestionEquipado, { 'attr': {'class': 'form-control input-sm mt-20'} }) }} 
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label for="institucionEquipo" class="control-label">5.1.2. ¿QUÉ INSTITUCIÓN EQUIPÓ EL/LOS LABORATORIO(S)?</label>
+                                            {{ form_widget(formLaboratorio.institucionEquipo, { 'attr': {'class': 'form-control input-sm'} }) }} 
+                                        </div>
+                                        <div class="form-group col-sm-2">
+                                            <label for="cantidadEquipo" class="control-label">5.1.3. CANTIDAD DE ÍTEMS RECIBIDOS</label>
+                                            {{ form_widget(formLaboratorio.cantidadEquipo, { 'attr': {'class': 'form-control input-sm mt-20'} }) }} 
+                                        </div>
+                                    </div>                                            
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">VI. INSERTAR FOTOGRAFIAS</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-body">
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label for="foto61" class="control-label">6.1. AMBIENTE DE LABORATORIO CON VISTA GENERAL DE LOS MESONES</label>
+                                            <div class="fileinput fileinput-new" data-provides="fileinput">
+                                                <div class="fileinput-preview thumbnail col-sm-12" data-trigger="fileinput" style="height: 350px;"></div>
+                                                <div>
+                                                    <span class="btn btn-info btn-file">
+                                                        <span class="fileinput-new col-sm-6">Seleccionar imagen</span>
+                                                        <span class="fileinput-exists col-sm-6">Cambiar</span>
+                                                        {{ form_widget(formLaboratorio.foto61, { 'attr': {'class': 'col-sm-12'} }) }} 
+                                                    </span>
+                                                    <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Quitar</a>
+                                                </div>
+                                            </div>                                            
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label for="foto62" class="control-label">6.2. UN MESÓN DONDE ESTE VISIBLE LAS CONEXIONES ELÉCTRICAS, AGUA Y LAVADEROS</label>
+                                            <div class="fileinput fileinput-new" data-provides="fileinput">
+                                                <div class="fileinput-preview thumbnail col-sm-12" data-trigger="fileinput" style="height: 350px;"></div>
+                                                <div>
+                                                    <span class="btn btn-info btn-file">
+                                                        <span class="fileinput-new col-sm-6">Seleccionar imagen</span>
+                                                        <span class="fileinput-exists col-sm-6">Cambiar</span>
+                                                        {{ form_widget(formLaboratorio.foto62, { 'attr': {'class': 'col-sm-12'} }) }} 
+                                                    </span>
+                                                    <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Quitar</a>
+                                                </div>
+                                            </div>                                           
+                                        </div>
+                                    </div>                                            
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">VII. CORREO ELECTRÓNICO PARA ADJUNTAR FOTOGRAFÍAS ADICIONALES (NO INDISPENSABLE)</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-body">
+                                    <div class="row">
+                                        <div class="form-group col-sm-4">
+                                            <label class="control-label text-primary">lapaz.lab.dges@gmail.com</label>
+                                        </div>
+                                        <div class="form-group col-sm-4">
+                                            <label class="control-label text-primary">oruro.lab.dges@gmail.com</label>
+                                        </div>
+                                        <div class="form-group col-sm-4">
+                                            <label class="control-label text-primary">potosi.lab.dges@gmail.com</label>
+                                        </div>
+                                    </div>     
+                                    <div class="row">
+                                        <div class="form-group col-sm-4">
+                                            <label class="control-label text-primary">cochabamba.lab.dges@gmail.com</label>
+                                        </div>
+                                        <div class="form-group col-sm-4">
+                                            <label class="control-label text-primary">tarija.lab.dges@gmail.com</label>
+                                        </div>
+                                        <div class="form-group col-sm-4">
+                                            <label class="control-label text-primary">pando.lab.dges@gmail.com</label>
+                                        </div>
+                                    </div>  
+                                    <div class="row">
+                                        <div class="form-group col-sm-4">
+                                            <label class="control-label text-primary">beni.lab.dges@gmail.com</label>
+                                        </div>
+                                        <div class="form-group col-sm-4">
+                                            <label class="control-label text-primary">santacruz.lab.dges@gmail.com</label>
+                                        </div>
+                                        <div class="form-group col-sm-4">
+                                            <label class="control-label text-primary">chuquisaca.lab.dges@gmail.com</label>
+                                        </div>
+                                    </div>                                         
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ form_widget(formLaboratorio.save,{ 'attr':{'class':'btn btn-success col-lg-12 col-md-12 col-sm-12 col-xs-12' } } ) }}
+                    </div>
+                </div>                  
+            {{form_end(formLaboratorio)}}
+        {% endif %}
+    </div> 
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}  
+    <script>
+        var confirma = function(){
+            var r = confirm("¿ Está seguro de guardar el registro con los datos ingresados ?, considere que al guardar no podra modificar los datos ingresados");
+            return r;
+        }
+
+        $(document).ready(function () {
+            
+            $('input[type=radio][name=radio42]').on('change', function() {
+                switch($(this).val()) {
+                    case 'true':
+                        $("#form_cantidadAmbiente").removeAttr("disabled"); 
+                        $('#form_cantidadAmbiente').val("");
+                        break;
+                    case 'false':
+                        $("#form_cantidadAmbiente").attr("disabled", "disabled");
+                        $('#form_cantidadAmbiente').val(0);
+                        break;
+                }
+            });
+
+
+            $('input[type=radio][name=radio43]').on('change', function() {
+                switch($(this).val()) {
+                    case 'true':
+                        $("#radio4311").removeAttr("disabled"); 
+                        $("#radio4312").removeAttr("disabled"); 
+                        break;
+                    case 'false':
+                        $("#radio4311").attr("disabled", "disabled");
+                        $("#radio4312").attr("disabled", "disabled");
+                        break;
+                }
+            });
+
+            $('input[type=radio][name=radio44]').on('change', function() {
+                switch($(this).val()) {
+                    case 'true':
+                        $("#form_cantidadPiletaLavadero").removeAttr("disabled"); 
+                        $('#form_cantidadPiletaLavadero').val("");
+                        break;
+                    case 'false':
+                        $("#form_cantidadPiletaLavadero").attr("disabled", "disabled");
+                        $('#form_cantidadPiletaLavadero').val(0);
+                        break;
+                }
+            });
+
+            $('input[type=radio][name=radio45]').on('change', function() {
+                switch($(this).val()) {
+                    case 'true':
+                        $("#form_cantidadTomaCorriente").removeAttr("disabled"); 
+                        $('#form_cantidadTomaCorriente').val("");
+                        break;
+                    case 'false':
+                        $("#form_cantidadTomaCorriente").attr("disabled", "disabled");
+                        $('#form_cantidadTomaCorriente').val(0);
+                        break;
+                }
+            });
+
+            $('input[type=radio][name=radio51]').on('change', function() {
+                switch($(this).val()) {
+                    case 'true':
+                        $("#form_gestionEquipado").removeAttr("disabled"); 
+                        $('#form_gestionEquipado').val("");
+                        $("#form_institucionEquipo").removeAttr("disabled"); 
+                        $('#form_institucionEquipo').val("");
+                        $("#form_cantidadEquipo").removeAttr("disabled"); 
+                        $('#form_cantidadEquipo').val("");
+                        break;
+                    case 'false':
+                        $("#form_gestionEquipado").attr("disabled", "disabled");
+                        $('#form_gestionEquipado').val("");
+                        $("#form_institucionEquipo").attr("disabled", "disabled");
+                        $('#form_institucionEquipo').val("");
+                        $("#form_cantidadEquipo").attr("disabled", "disabled");
+                        $('#form_cantidadEquipo').val(0);
+                        break;
+                }
+            });
+        });
+    </script>
+{% endblock %}

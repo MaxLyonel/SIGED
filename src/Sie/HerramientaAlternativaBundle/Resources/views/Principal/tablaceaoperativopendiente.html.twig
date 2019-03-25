@@ -11,7 +11,7 @@
                                     <th>Gestión</th>
                                     <th>Periodo</th>
                                     <th>Estado</th>
-                                    <th class="text-center">Operativos</th>
+                                    <th class="text-center">Operativo</th>
                                 </tr>
                                 </thead>
                                 <tfoot>
@@ -25,7 +25,7 @@
                                     <th>Gestión</th>
                                     <th>Periodo</th>
                                     <th>Estado</th>
-                                    <th class="text-center"></th>
+                                    <th class="text-center">Operativo</th>
                                 </tr>
                                 </tfoot>
                                 <tbody>
@@ -35,62 +35,39 @@
                                         <td class="text-center">{{ loop.index }}</td>
                                         <td>
                                             {#<img class="img-circle img-bordered-theme" alt="..." src="../../../img/avatar/35/2.png">#}
-                                            <span>{{ reg.lugar }}</span>
+                                            <span>{{ reg.departamento }}</span>
                                         </td>
-                                        <td>{{ reg.distrito_cod }}</td>
-                                        <td>{{ reg.ieid }}</td>
+                                        <td>{{ reg.codigo }}</td>
+                                        <td>{{ reg.id }}</td>
                                         <td>{{ reg.institucioneducativa }}</td>
-                                        <td class="text-center">{{ reg.nombre_subcea }}</td>
+                                        <td class="text-center">{{ reg.sucursal_tipo_id }}</td>
                                         <td class="text-center">{{ reg.gestion_tipo_id }}</td>
-                                        <td>{{ reg.semestre }}</td>
+                                        <td>{{ reg.periodo_tipo_id }}</td>
                                         {#<td>{{ reg.nombre }} {{ reg.paterno }} {{ reg.materno }}</td>#}
                                         <td>{{ reg.tramite_estado }}</td>
                                         <td class="text-center">
-                                            {% if ((reg.teid == '6') or (reg.teid == '7') or (reg.teid == '11') or (reg.teid == '13') or (reg.teid == '5')) %}
+                                            {% if (reg.gestion_tipo_id <= '2017') %}
                                                 <button type="submit" class="btn-danger btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
                                                     <i class="fa fa-hand-paper-o"></i>
-                                                    {{reg.obs}}
+                                                    Operativo Cerrado
                                                 </button>
-                                            {% elseif (reg.teid == '14') %}     {#¡Fin de Semestre - Cerrado! #}
-                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_solicitud_cambiar_estado_a_regularizado', {'iestid': reg.iestid})}}" method="post" style="display:inline-block" onsubmit="return verificarRegularizacion();">
+                                            {% else %}
+                                                {% if reg.te_id in [12,9]  %}
+                                                    <button type="submit" class="btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
+                                                        <i class="fa fa-hand-paper-o"></i>
+                                                        {{reg.tramite_tipo}}
+                                                    </button>
+                                                {% elseif  reg.te_id in [10,8,14] %}
+                                                    <button type="submit" class="btn-lilac btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
+                                                        <i class="fa fa-hand-paper-o"></i>
+                                                        {{reg.tramite_tipo}}
+                                                    </button>
+                                                {% else %}
                                                     <button type="submit" class="btn-warning btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
-                                                        <i class="fa fa-edit"></i>
-                                                        Autorización para regularizar operativo Fin de Semestre
+                                                        <i class="fa fa-hand-paper-o"></i>
+                                                        {{reg.tramite_tipo}}
                                                     </button>
-                                                </form>
-                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_continuar_sig_operativo', {'iestid': reg.iestid})}}" method="post" style="display:inline-block">
-                                                    <button type="submit" class="btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
-                                                        <i class="fa fa-arrow-circle-right"></i>
-                                                        Continuar con operativo Inicio de Semestre
-                                                    </button>
-                                                </form>
-                                            {% elseif (reg.teid == '12') %}      {#¡Inicio de Semestre - Cerrado!  #}
-                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_solicitud_cambiar_estado_a_regularizado', {'iestid': reg.iestid})}}" method="post" style="display:inline-block" onsubmit="return verificarRegularizacion();">
-                                                    <button type="submit" class="btn-warning btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
-                                                        <i class="fa fa-edit"></i>
-                                                        Autorización para regularizar operativo Inicio de Semestre
-                                                    </button>
-                                                </form>
-                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_continuar_sig_operativo', {'iestid': reg.iestid})}}" method="post" style="display:inline-block" onsubmit="return verificarSiguienteOperativo();">
-                                                    <button type="submit" class="btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
-                                                        <i class="fa fa-arrow-circle-right"></i>
-                                                        Continuar con operativo Fin de Semestre
-                                                    </button>
-                                                </form>
-                                            {% elseif (reg.teid == '8') %}    {#Fin de Semestre Regularizado - Cerrado#}
-                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_continuar_sig_operativo', {'iestid': reg.iestid})}}" method="post" style="display:inline-block">
-                                                    <button type="submit" class="btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
-                                                        <i class="fa fa-arrow-circle-right"></i>
-                                                        Continuar con operativo Inicio de Semestre
-                                                    </button>
-                                                </form>
-                                            {% elseif (reg.teid == '9') %}    {#Inicio de Semestre  Regularizado - Cerrado#}
-                                                <form action="{{path('sie_alt_ges_sub_sem_tramite_continuar_sig_operativo', {'iestid': reg.iestid})}}" method="post" style="display:inline-block" onsubmit="return verificarSiguienteOperativo();">
-                                                    <button type="submit" class="btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="">
-                                                        <i class="fa fa-arrow-circle-right"></i>
-                                                        Continuar con operativo Fin de Semestre
-                                                    </button>
-                                                </form>
+                                                {% endif %}
                                             {% endif %}
                                         </td>
                                     </tr>

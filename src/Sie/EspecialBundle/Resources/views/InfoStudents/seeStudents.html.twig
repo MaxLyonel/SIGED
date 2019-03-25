@@ -35,7 +35,7 @@
                 </a>
           </div>#}
           <div class="col-md-12 text-center">
-            {% if onlyview == false %}
+            {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 %}
               <button type="button" class="btn btn-md btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}');" >
                   <i class="fa fa-user"></i> Inscripción
               </button>
@@ -90,45 +90,26 @@
                             {# set jsnInfoStudent = objInfoStudent|json_encode() #}
                             <tr >
                                 <td>{{loop.index}}</td>
-                                <td  align="">{{data.codigoRude}}</td>
-                                <td  align="">{{data.paterno}} {{data.materno}} {{data.nombre}} </td>
+                                <td>{{data.codigoRude}}</td>
+                                <td>{{data.paterno}} {{data.materno}} {{data.nombre}} </td>
 
-                                <td  align="">
+                                <td>
+                                    {# {% if 1==1 %} #}
+                                    {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 %}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
                                         <button type="button" class="btn btn-circle btn-danger " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{data.estInsEspId}});" >
                                             <i class="fa fa-list"></i>
                                         </button>
                                     </div>
-                                    {#
-                                    { if gestion == 2017 and  arrDataLibreta.areaEspecialId==3 and  arrDataLibreta.nivelId!=405 }
-                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Libreta">
-                                        <a type="button" class="btn btn-circle btn-warning " data-toggle="" data-target=""  href="{{path('donwload_especial_libreta', {'infoUe': infoUe, 'gestion': gestion, 'estInsEspId':data.estInsEspId,'estInsId':data.estInsId, 'codigoRude':data.codigoRude } )}}" >
-                                            <i class="fa fa-file-text-o"></i>
-                                        </a>
-                                    </div>
-                                    { endif }
-                                    #}
-                                    {% if gestion >= 2013 and gestion <= 2016 and onlyview == false %}
+                                    {% endif %}
+                                    {% if onlyview == false and gestion == app.session.get('currentyear') %}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
                                         <button type="button" class="btn btn-circle btn-warning " data-toggle="" data-target="" onclick="removeInscriptionSpecial('{{infoUe}}',{{data.estInsEspId}},{{data.estInsId}});" >
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </div>
                                     {% endif %}
-
-                                    {% if  1 == 2 %}
-                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
-                                        <button type="button" class="btn btn-circle btn-info " data-toggle="modal" data-target=".bs-example-modal-table" onclick="socioeconomico('{{infoUe}}','{{jsnInfoStudent}}',0);" >
-                                            <i class="fa fa-user"></i>
-                                        </button>
-                                    </div>
-                                    {% endif %}
-                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" data-placement="top" title data-original-title="Imprimir Libreta">
-                                    </div>
-                                   </td>
-                                  </td>
                                 </td>
-
                             </tr>
                         {% endfor %}
 

@@ -18,21 +18,18 @@ Sie\AppWebBundle\Entity\RolPersona:
             generator:
                 strategy: SEQUENCE
     fields:
+        personaId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: persona_id
         fechaRegistro:
             type: date
             nullable: true
             comment: ''
             column: fecha_registro
     manyToOne:
-        persona:
-            targetEntity: Persona
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                persona_id:
-                    referencedColumnName: id
-            orphanRemoval: false
         rolTipo:
             targetEntity: RolTipo
             cascade: {  }

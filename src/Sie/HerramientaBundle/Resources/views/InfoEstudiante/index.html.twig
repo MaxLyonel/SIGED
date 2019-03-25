@@ -12,10 +12,23 @@
         <!--div class="container" style="margin-top:30px;"-->
         {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Administración Unidad Educativa', 'gestion': gestion,'sie': odataUedu.id, 'ieducativa':odataUedu.institucioneducativa, 'opcion': 'Información Estudiante'} %}
         {% include 'SieHerramientaBundle:Principal:onlyview.html.twig'%}
-        {% include 'SieHerramientaBundle:Principal:closeRude.html.twig'%}
+        {# {% include 'SieHerramientaBundle:Principal:closeRude.html.twig'%} #} 
+        <div class="row">
+            <div class="col-md-12 text-right">
+                {#
+                    {% if mostrarSextoCerrado %}
+                        <button type="button" class="btn btn-success" onclick="cerrarSextoGrado({{odataUedu.id}},{{gestion}});">
+                          <i class="fa fa-edit" ></i> Cerrar sexto grado
+                        </button>
+                    {% endif %}
+                    #}
+                
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-4">
                 <a class="btn btn-block btn-twitter" href="{{ path('donwload_listStudentPerUe', {'gestion': gestion, 'ue': odataUedu.id} )}}"><i class="fa fa-download"></i> Listado de Estudiantes</a>
+                <a class="btn btn-block btn-info" href="{{ path('donwload_nnats', {'gestion': gestion, 'sie': odataUedu.id} )}}"><i class="fa fa-download"></i> Reporte NNATs</a>
             </div>
         </div>
 
@@ -498,7 +511,23 @@
         });
       };
 
+      function cerrarSextoGrado(sie, gestion){
+          $.ajax({
+            url: Routing.generate('herramienta_info_estudiante_cerrarSextoGrado'),
+            // type: 'POST',
+            data: {sie: sie, gestion: gestion},
+            beforeSend: function(){
 
+            },
+            success: function(data){
+
+                location.reload();
+            },
+            error: function(){
+
+            }
+          });
+      }
 
 
     </script>

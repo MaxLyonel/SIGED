@@ -45,7 +45,6 @@ class DefaultController extends Controller {
         //settear variables a usar antes de la interfaz login
         switch ($request->server->get('HTTP_HOST')) {
             case '172.20.196.9:8011':
-            case '172.20.196.184':
             case 'siged.sie.gob.bo':
                 $sysname = 'REGULAR';
                 $sysporlet = 'blue';
@@ -53,7 +52,6 @@ class DefaultController extends Controller {
                 $layout = 'layoutRegular.html.twig';
                 $this->session->set('pathSystem', "SieRegularBundle");
                 break;
-            case '172.20.196.184':
             case '172.20.196.9:8015':
                 $sysname = 'ALTERNATIVA';
                 $sysporlet = 'green';
@@ -62,6 +60,7 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieAlternativaBundle");
                 break;
             case '172.20.16.239a':
+            case '172.20.196.7':
                 $sysname = 'Herramienta';
                 $sysporlet = 'blue';
                 $sysbutton = true;
@@ -87,7 +86,6 @@ class DefaultController extends Controller {
                 break;
             case '172.20.196.9:8016':
             case 'www.herramientaalternativa.local':
-            case '172.20.196.184':
             case 'alternativa.sie.gob.bo':
                 $sysname = 'Herramienta Alternativa';
                 $sysporlet = 'blue';
@@ -95,9 +93,7 @@ class DefaultController extends Controller {
                 $layout = 'layoutHerramientaAlternativa.html.twig';
                 $this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
                 break;
-
             case 'eduper.sie.gob.bo':
-            case '172.20.196.237':
                 $sysname = 'PERMANENTE';
                 $sysporlet = 'green';
                 $sysbutton = false;
@@ -181,21 +177,29 @@ class DefaultController extends Controller {
                 $layout = 'layoutCertification.html.twig';
                 $this->session->set('pathSystem', "SieTramitesBundle");
                 break;
-            case '172.20.196.17':
+            case '172.20.196.17a':
                 $sysname = 'JUEGOS';
                 $sysporlet = 'jdp';
                 $sysbutton = false;
                 $layout = 'layoutJuegos.html.twig';
                 $this->session->set('pathSystem', "SieJuegosBundle");
                 break;
-            case '172.20.196.17a':
-                $sysname = 'TRAMITES';
+            case '172.20.196.17':
+                $sysname = 'TRAMITE';
                 $sysporlet = 'green';
                 $sysbutton = false;
                 $layout = 'layoutTramites.html.twig';
                 $this->session->set('pathSystem', "SieTramitesBundle");
                 break;
+            case 'tramite.sie.gob.bo':
+                    $sysname = 'TRAMITE';
+                    $sysporlet = 'green';
+                    $sysbutton = false;
+                    $layout = 'layoutTramites.html.twig';
+                    $this->session->set('pathSystem', "SieTramitesBundle");
+                    break;
             case 'juegos.minedu.gob.bo':
+            case '172.20.196.9:8018':
                 $sysname = 'JUEGOS';
                 $sysporlet = 'jdp';
                 $sysbutton = false;
@@ -259,7 +263,6 @@ class DefaultController extends Controller {
                 break;
             case '172.20.196.9:8030':
             case '172.20.196.7':
-            case '172.20.196.184':
             case 'olimpiada.sie.gob.bo':
                 $sysname = 'olimpiadas';
                 $sysporlet = 'blue';
@@ -268,72 +271,22 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieOlimpiadasBundle");
                 break;
             default :
-                $sysname = 'REGULAR';
+                // $sysname = 'REGULAR';
+                // $sysporlet = 'blue';
+                // $sysbutton = true;
+                // $layout = 'layoutRegular.html.twig';
+                // $this->session->set('pathSystem', "SieRegularBundle");
+                //$sysname = 'Herramienta Alternativa';
+                //$sysporlet = 'blue';
+                //$sysbutton = true;
+                //$layout = 'layoutHerramientaAlternativa.html.twig';
+                //$this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
+                $sysname = 'Procesos';
                 $sysporlet = 'blue';
                 $sysbutton = true;
-                $layout = 'layoutRegular.html.twig';
-                $this->session->set('pathSystem', "SieRegularBundle");
-                $this->session->set('sistemaid', 1);
+                $layout = 'layoutProcesos.html.twig';
+                $this->session->set('pathSystem', "SieProcesosBundle");
                 break;
-
-                /*$sysname = 'TRAMITES';
-                $sysporlet = 'green';
-                $sysbutton = false;
-                $layout = 'layoutCertification.html.twig';
-                $this->session->set('pathSystem', "SieTramitesBundle");
-                break;*/
-
-                /*$sysname = 'PERMANENTE';
-                $sysporlet = 'green';
-                $sysbutton = false;
-                $layout = 'layoutPermanente.html.twig';
-                $this->session->set('pathSystem', "SiePermanenteBundle");
-                $this->session->set('sistemaid', 14);
-                break;*/
-
-                /*$sysname = 'olimpiadas';
-                $sysporlet = 'blue';
-                $sysbutton = true;
-                $layout = 'layoutOlimpiadas.html.twig';
-                $this->session->set('pathSystem', "SieOlimpiadasBundle");
-                $this->session->set('sistemaid', 13);
-                break;*/
-
-                /*$sysname = 'Herramienta';
-                $sysporlet = 'blue';
-                $sysbutton = true;
-                $layout = 'layoutHerramienta.html.twig';
-                $this->session->set('pathSystem', "SieHerramientaBundle");
-                break;*/
-                /*$sysname = 'DIPLOMAS';
-                $sysporlet = 'dpl';
-                $sysbutton = false;
-                $layout = 'layoutDiplomas.html.twig';
-                $this->session->set('pathSystem', "SieDiplomaBundle");
-                $this->session->set('sistemaid', 5);
-                break;*/
-
-                /*$sysname = 'Herramienta Alternativa';
-                $sysporlet = 'blue';
-                $sysbutton = true;
-                $layout = 'layoutHerramientaAlternativa.html.twig';
-                $this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
-                break;*/
-                /*$sysname = 'TRAMITES';
-                $sysporlet = 'green';
-                $sysbutton = false;
-                $layout = 'layoutCertification.html.twig';
-                $this->session->set('pathSystem', "SieTramitesBundle");
-                $this->session->set('sistemaid', 3);
-                break;*/
-
-                /*$sysname = 'Herramienta Alternativa';
-                $sysporlet = 'blue';
-                $sysbutton = true;
-                $layout = 'layoutHerramientaAlternativa.html.twig';
-                $this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
-                $this->session->set('sistemaid', 8);
-                break;*/
             case 'pnp.sie.gob.bo':
                 $sysname = 'PNP';
                 $sysporlet = 'blue';
@@ -356,7 +309,6 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieRegularBundle");
                 break;
             case 'herramientalt.local':
-            case '172.20.196.184':
                 $sysname = 'Herramienta Alternativa';
                 $sysporlet = 'blue';
                 $sysbutton = true;
@@ -432,50 +384,52 @@ class DefaultController extends Controller {
         $this->session->set('layout', $layout);
 
         $em = $this->getDoctrine()->getManager();
-
+        // dump($sysname);die;
         //***********************
         //*****CONFIGURACIONES EXTAS PARA SISTEMAS DE REPORTES
         //review if the system is Reportes
         if ($sysname === 'REPORTES') {
-            $reporteController = new ReporteEstaditicoRegular();
-            $reporteController->setContainer($this->container);
-            $em = $this->getDoctrine()->getManager();
-            /*
-             * Define la zona horaria y halla la fecha actual
-             */
-            date_default_timezone_set('America/La_Paz');
-            $fechaActual = new \DateTime(date('Y-m-d'));
-            $gestionActual = date_format($fechaActual,'Y');
-            $entidad = $reporteController->buscaEntidadRol(0,0);
-            $subEntidades = $reporteController->buscaSubEntidadRol(0,0);
-            $entityEstadistica = $reporteController->buscaEstadisticaAreaRol(0,0);
-            //$entityEstadisticaUE = $reporteController->buscaEstadisticaUERol(0,0);
-            //$entityEstadisticaEE = $reporteController->buscaEstadisticaEERol(0,0);
-            $fechaEstadisticaRegular = $reporteController->buscaFechaVistaMaterializadaRegular($gestionActual);
-            $chartMatricula = $reporteController->chartColumnInformacionGeneral($entityEstadistica,"Matrícula",$gestionActual,1,"chartContainerMatricula");
-            $chartNivel = $reporteController->chartDonut3dInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio",$gestionActual,2,"chartContainerEfectivoNivel");
-            $chartNivelGrado = $reporteController->chartDonutInformacionGeneralNivelGrado($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio y Año de Escolaridad ",$gestionActual,6,"chartContainerEfectivoNivelGrado");
-            $chartGenero = $reporteController->chartPieInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Sexo",$gestionActual,3,"chartContainerEfectivoGenero");
-            $chartArea = $reporteController->chartPyramidInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Área Geográfica",$gestionActual,4,"chartContainerEfectivoArea");
-            $chartDependencia = $reporteController->chartColumnInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Dependencia",$gestionActual,5,"chartContainerEfectivoDependencia");
-            return $this->render($this->session->get('pathSystem') . ':Reporte:matriculaEducativaRegular.html.twig', array(
-                'infoEntidad'=>$entidad,
-                'infoSubEntidad'=>$subEntidades,
-                'infoEstadistica'=>$entityEstadistica,
-                //'infoEstadisticaUE'=>$entityEstadisticaUE,
-                //'infoEstadisticaEE'=>$entityEstadisticaEE,
-                'rol'=>0,
-                'datoGraficoMatricula'=>$chartMatricula,
-                'datoGraficoNivel'=>$chartNivel,
-                'datoGraficoNivelGrado'=>$chartNivelGrado,
-                'datoGraficoGenero'=>$chartGenero,
-                'datoGraficoArea'=>$chartArea,
-                'datoGraficoDependencia'=>$chartDependencia,
-                'mensaje'=>'$("#modal-bootstrap-tour").modal("show");',
-                'gestion'=>$gestionActual,
-                'fechaEstadisticaRegular'=>$fechaEstadisticaRegular,
-                'form' => $this->createLoginForm()->createView()
-            ));
+
+            return $this->redirectToRoute('reporte_regular_index');
+            // $reporteController = new ReporteEstaditicoRegular();
+            // $reporteController->setContainer($this->container);
+            // $em = $this->getDoctrine()->getManager();
+            // /*
+            //  * Define la zona horaria y halla la fecha actual
+            //  */
+            // date_default_timezone_set('America/La_Paz');
+            // $fechaActual = new \DateTime(date('Y-m-d'));
+            // $gestionActual = date_format($fechaActual,'Y');
+            // $entidad = $reporteController->buscaEntidadRol(0,0);
+            // $subEntidades = $reporteController->buscaSubEntidadRol(0,0);
+            // $entityEstadistica = $reporteController->buscaEstadisticaAreaRol(0,0);
+            // //$entityEstadisticaUE = $reporteController->buscaEstadisticaUERol(0,0);
+            // //$entityEstadisticaEE = $reporteController->buscaEstadisticaEERol(0,0);
+            // $fechaEstadisticaRegular = $reporteController->buscaFechaVistaMaterializadaRegular($gestionActual);
+            // $chartMatricula = $reporteController->chartColumnInformacionGeneral($entityEstadistica,"Matrícula",$gestionActual,1,"chartContainerMatricula");
+            // $chartNivel = $reporteController->chartDonut3dInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio",$gestionActual,2,"chartContainerEfectivoNivel");
+            // $chartNivelGrado = $reporteController->chartDonutInformacionGeneralNivelGrado($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio y Año de Escolaridad ",$gestionActual,6,"chartContainerEfectivoNivelGrado");
+            // $chartGenero = $reporteController->chartPieInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Sexo",$gestionActual,3,"chartContainerEfectivoGenero");
+            // $chartArea = $reporteController->chartPyramidInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Área Geográfica",$gestionActual,4,"chartContainerEfectivoArea");
+            // $chartDependencia = $reporteController->chartColumnInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Dependencia",$gestionActual,5,"chartContainerEfectivoDependencia");
+            // return $this->render($this->session->get('pathSystem') . ':Reporte:matriculaEducativaRegular.html.twig', array(
+            //     'infoEntidad'=>$entidad,
+            //     'infoSubEntidad'=>$subEntidades,
+            //     'infoEstadistica'=>$entityEstadistica,
+            //     //'infoEstadisticaUE'=>$entityEstadisticaUE,
+            //     //'infoEstadisticaEE'=>$entityEstadisticaEE,
+            //     'rol'=>0,
+            //     'datoGraficoMatricula'=>$chartMatricula,
+            //     'datoGraficoNivel'=>$chartNivel,
+            //     'datoGraficoNivelGrado'=>$chartNivelGrado,
+            //     'datoGraficoGenero'=>$chartGenero,
+            //     'datoGraficoArea'=>$chartArea,
+            //     'datoGraficoDependencia'=>$chartDependencia,
+            //     'mensaje'=>'$("#modal-bootstrap-tour").modal("show");',
+            //     'gestion'=>$gestionActual,
+            //     'fechaEstadisticaRegular'=>$fechaEstadisticaRegular,
+            //     'form' => $this->createLoginForm()->createView()
+            // ));
         }
         //*****FIN DE CONFIGURACIONES PARA OTROS SUBSISTEMAS
         //***********************
@@ -495,7 +449,7 @@ class DefaultController extends Controller {
         */
         return $this->render($this->session->get('pathSystem') . ':Login:login.html.twig',array(
             'last_username'=>$this->get('request')->getSession()->get(SecurityContext::LAST_USERNAME),
-            'error'=>$this->get('request')->getSession()->get(SecurityContext::AUTHENTICATION_ERROR)
+            'error' => $this->get('request')->getSession()->get(SecurityContext::AUTHENTICATION_ERROR) // 'error'=>array('message'=>'¡Ocurrió un error interno!')
         ));
     }
 
@@ -514,14 +468,13 @@ class DefaultController extends Controller {
 
             $user = $this->container->get('security.context')->getToken()->getUser();
             //dump($user);die();
-            if ( $user ) {//USUARIO Y CONTRASEÑA CORRECTAS
+            if ( $user and is_object($user) ) {//USUARIO Y CONTRASEÑA CORRECTAS
                 //*******SE VERIFICA SI SE TRATA DE RESETEO DE CONTRASEÑA
                 $this->session->set('userId', $user->getId());
+                
                 if (md5($user->getUsername()) == $user->getPassword()) {
                     return $this->redirect($this->generateUrl('sie_usuarios_reset_login', array('usuarioid' => $user->getId())));
                 }
-
-
 
                 //*******************
                 //BUSCANDO ROLES ACTIVOS Y UNIDADES O CENTROS DONDE ESTES COMO VIGENTES
@@ -578,45 +531,48 @@ class DefaultController extends Controller {
                         //review if the system is Reportes
                         if ($this->session->get('sysname') === 'REPORTES') {
                             $this->session->set('roluser', $aRoles);
-                            $reporteController = new ReporteEstaditicoRegular();
-                            $reporteController->setContainer($this->container);
-                            $em = $this->getDoctrine()->getManager();
-                            /*
-                            * Define la zona horaria y halla la fecha actual
-                            */
-                            date_default_timezone_set('America/La_Paz');
-                            $fechaActual = new \DateTime(date('Y-m-d'));
-                            $gestionActual = date_format($fechaActual,'Y');
-                            $entidad = $reporteController->buscaEntidadRol(0,0);
-                            $subEntidades = $reporteController->buscaSubEntidadRol(0,0);
-                            $entityEstadistica = $reporteController->buscaEstadisticaAreaRol(0,0);
-                            //$entityEstadisticaUE = $reporteController->buscaEstadisticaUERol(0,0);
-                            //$entityEstadisticaEE = $reporteController->buscaEstadisticaEERol(0,0);
-                            $fechaEstadisticaRegular = $reporteController->buscaFechaVistaMaterializadaRegular($gestionActual);
-                            $chartMatricula = $reporteController->chartColumnInformacionGeneral($entityEstadistica,"Matrícula",$gestionActual,1,"chartContainerMatricula");
-                            $chartNivel = $reporteController->chartDonut3dInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio",$gestionActual,2,"chartContainerEfectivoNivel");
-                            $chartNivelGrado = $reporteController->chartDonutInformacionGeneralNivelGrado($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio y Año de Escolaridad ",$gestionActual,6,"chartContainerEfectivoNivelGrado");
-                            $chartGenero = $reporteController->chartPieInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Sexo",$gestionActual,3,"chartContainerEfectivoGenero");
-                            $chartArea = $reporteController->chartPyramidInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Área Geográfica",$gestionActual,4,"chartContainerEfectivoArea");
-                            $chartDependencia = $reporteController->chartColumnInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Dependencia",$gestionActual,5,"chartContainerEfectivoDependencia");
-                            return $this->render($this->session->get('pathSystem') . ':Reporte:matriculaEducativaRegular.html.twig', array(
-                                'infoEntidad'=>$entidad,
-                                'infoSubEntidad'=>$subEntidades,
-                                'infoEstadistica'=>$entityEstadistica,
-                                //'infoEstadisticaUE'=>$entityEstadisticaUE,
-                                //'infoEstadisticaEE'=>$entityEstadisticaEE,
-                                'rol'=>0,
-                                'datoGraficoMatricula'=>$chartMatricula,
-                                'datoGraficoNivel'=>$chartNivel,
-                                'datoGraficoNivelGrado'=>$chartNivelGrado,
-                                'datoGraficoGenero'=>$chartGenero,
-                                'datoGraficoArea'=>$chartArea,
-                                'datoGraficoDependencia'=>$chartDependencia,
-                                'mensaje'=>'$("#modal-bootstrap-tour").modal("show");',
-                                'gestion'=>$gestionActual,
-                                'fechaEstadisticaRegular'=>$fechaEstadisticaRegular,
-                                'form' => $this->createLoginForm()->createView()
-                            ));
+
+                            return $this->redirectToRoute('reporte_regular_index');
+
+                            // $reporteController = new ReporteEstaditicoRegular();
+                            // $reporteController->setContainer($this->container);
+                            // $em = $this->getDoctrine()->getManager();
+                            // /*
+                            // * Define la zona horaria y halla la fecha actual
+                            // */
+                            // date_default_timezone_set('America/La_Paz');
+                            // $fechaActual = new \DateTime(date('Y-m-d'));
+                            // $gestionActual = date_format($fechaActual,'Y');
+                            // $entidad = $reporteController->buscaEntidadRol(0,0);
+                            // $subEntidades = $reporteController->buscaSubEntidadRol(0,0);
+                            // $entityEstadistica = $reporteController->buscaEstadisticaAreaRol(0,0);
+                            // //$entityEstadisticaUE = $reporteController->buscaEstadisticaUERol(0,0);
+                            // //$entityEstadisticaEE = $reporteController->buscaEstadisticaEERol(0,0);
+                            // $fechaEstadisticaRegular = $reporteController->buscaFechaVistaMaterializadaRegular($gestionActual);
+                            // $chartMatricula = $reporteController->chartColumnInformacionGeneral($entityEstadistica,"Matrícula",$gestionActual,1,"chartContainerMatricula");
+                            // $chartNivel = $reporteController->chartDonut3dInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio",$gestionActual,2,"chartContainerEfectivoNivel");
+                            // $chartNivelGrado = $reporteController->chartDonutInformacionGeneralNivelGrado($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio y Año de Escolaridad ",$gestionActual,6,"chartContainerEfectivoNivelGrado");
+                            // $chartGenero = $reporteController->chartPieInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Sexo",$gestionActual,3,"chartContainerEfectivoGenero");
+                            // $chartArea = $reporteController->chartPyramidInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Área Geográfica",$gestionActual,4,"chartContainerEfectivoArea");
+                            // $chartDependencia = $reporteController->chartColumnInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Dependencia",$gestionActual,5,"chartContainerEfectivoDependencia");
+                            // return $this->render($this->session->get('pathSystem') . ':Reporte:matriculaEducativaRegular.html.twig', array(
+                            //     'infoEntidad'=>$entidad,
+                            //     'infoSubEntidad'=>$subEntidades,
+                            //     'infoEstadistica'=>$entityEstadistica,
+                            //     //'infoEstadisticaUE'=>$entityEstadisticaUE,
+                            //     //'infoEstadisticaEE'=>$entityEstadisticaEE,
+                            //     'rol'=>0,
+                            //     'datoGraficoMatricula'=>$chartMatricula,
+                            //     'datoGraficoNivel'=>$chartNivel,
+                            //     'datoGraficoNivelGrado'=>$chartNivelGrado,
+                            //     'datoGraficoGenero'=>$chartGenero,
+                            //     'datoGraficoArea'=>$chartArea,
+                            //     'datoGraficoDependencia'=>$chartDependencia,
+                            //     'mensaje'=>'$("#modal-bootstrap-tour").modal("show");',
+                            //     'gestion'=>$gestionActual,
+                            //     'fechaEstadisticaRegular'=>$fechaEstadisticaRegular,
+                            //     'form' => $this->createLoginForm()->createView()
+                            // ));
                         }
                         //review if the system is Diplomas
                         if ($this->session->get('pathSystem') === 'SieTramitesBundle') {
@@ -760,6 +716,7 @@ class DefaultController extends Controller {
                     }
 
                     if (($exp == 'true') || ($carnetban == 'true') || ($mendir == 'true')){
+                        //dump($rolselected);die;
                         return $this->render('SieAppWebBundle:Login:rolesunidades.html.twig',
                         array(
                             'titulosubsistema' => $this->session->get('sysname'),
@@ -774,6 +731,8 @@ class DefaultController extends Controller {
                     //*******************
                     //CUANDO EL USUARIO SOLO TIENE UN ROL ACTIVO
                     //SE ENVIA AL CONTROLADOR LOGIN PARA ULTIMAS VERIFICACIONES
+                    $sesion->set('directorAlternativa', false);
+                    //dump($rolselected);die;
                     if (count($rolselected) == 1) {
                         if ( ($rolselected[0]['id'] == 2) || ($rolselected[0]['id'] == 9) ){
                             $this->session->set('roluser', $rolselected[0]['id']);
@@ -783,6 +742,17 @@ class DefaultController extends Controller {
                             $this->session->set('ie_nombre', $rolselected[0]['institucioneducativa']);
                             $this->session->set('cuentauser', $rolselected[0]['rol']);
                             $this->session->set('tiposubsistema', $rolselected[0]['idietipo']);
+                             //to show the option create rude on alternativa by krlos
+                                if($rolselected[0]['id'] == 9){
+                                    $objInstitucioneducativaAlt = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array(
+                                    'id'=> $rolselected[0]['sie'],
+                                    'institucioneducativaTipo'=>2
+                                        ));
+                                    if($objInstitucioneducativaAlt && $rolselected[0]['sie']!='80730796'){
+                                        $sesion->set('directorAlternativa', true);
+                                    }
+
+                                }
                         }else{
                             $this->session->set('roluser', $rolselected[0]['id']);
                             $this->session->set('roluserlugarid', $rolselected[0]['rollugarid']);
@@ -792,6 +762,7 @@ class DefaultController extends Controller {
                             $this->session->set('cuentauser', $rolselected[0]['rol']);
                             $this->session->set('tiposubsistema', $rolselected[0]['idietipo']);
                         }
+                        
                         return $this->redirect($this->generateUrl('sie_login_homepage'));
                     }
                     //FIN DE CUANDO EL USUARIO SOLO TIENE UN ROL ACTIVO
@@ -840,10 +811,18 @@ class DefaultController extends Controller {
     }
 
     public function sigedrolselectAction(Request $request, $key) {
+        $em =  $this->getDoctrine()->getManager();
         $sesion = $request->getSession();
+        //$id_usuario = $this->sesion->get('userId');
+        //dump($sesion);die;
+        if (!$sesion->get('personaId')) {
+            return $this->redirect($this->generateUrl('login'));
+        }
         $rolselected = $this->get('login')->verificarRolesActivos($sesion->get('personaId'),$key);
         //dump($rolselected);
         //die;
+        //to show the option create rude on alternativa
+        $sesion->set('directorAlternativa', false);
         if (sizeof($rolselected) == 1) {
             if ( ($rolselected[0]['id'] == 2) || ($rolselected[0]['id'] == 9) ){
                 $sesion->set('roluser', $rolselected[0]['id']);
@@ -853,6 +832,19 @@ class DefaultController extends Controller {
                 $sesion->set('ie_nombre', $rolselected[0]['institucioneducativa']);
                 $sesion->set('cuentauser', $rolselected[0]['rol']);
                 $sesion->set('tiposubsistema', $rolselected[0]['idietipo']);
+                // dump($rolselected);die;
+                //to show the option create rude on alternativa by krlos
+                if($rolselected[0]['id'] == 9){
+                    $objInstitucioneducativaAlt = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array(
+                    'id'=> $rolselected[0]['sie'],
+                    'institucioneducativaTipo'=>2
+                        ));
+                    if($objInstitucioneducativaAlt && $rolselected[0]['sie']!='80730796'){
+                        $sesion->set('directorAlternativa', true);
+                    }
+
+                }
+
             }else{
                 $sesion->set('roluser', $rolselected[0]['id']);
                 $sesion->set('roluserlugarid', $rolselected[0]['rollugarid']);

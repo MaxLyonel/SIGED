@@ -29,28 +29,39 @@
                   <i class="fa fa-download" ></i> Listado de Estudiantes del Curso 
                 </a>
           </div>
-          <div class="col-md-4">
+          {% if gestion == 2018 and nivel != 11 %}
+             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registro Trabajo del estudiante">
+                  <button type="button" class="btn btn-block btn-facebook" data-toggle="modal" data-target=".bs-example-modal-table" onclick="registerJobStudent('{{infoUe}}');" >
+                      <i class="fa fa-edit"></i>Registro Trabajo del estudiante
+                  </button>
+              </div>
+          {% endif %}
+          {#
+          {% if operativo >= 5 %}
+            <div class="col-md-4">
 
-                <a class="btn btn-block btn-linkedin" href="{{path('donwload_boletinPromoPerUe', {'ue': sie, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'gestion': gestion, 'ciclo':ciclo, 'itemsUe':itemsUe } )}}">
-                  <i class="fa fa-download" ></i> Boletín Centralizador
-                </a>
-          </div>
+                  <a class="btn btn-block btn-linkedin" href="{{path('donwload_boletinPromoPerUe', {'ue': sie, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'gestion': gestion, 'ciclo':ciclo, 'itemsUe':itemsUe } )}}">
+                    <i class="fa fa-download" ></i> Boletín Centralizador
+                  </a>
+            </div>
+          {% endif %}
+          #}
           <div class="col-md-4">
             {# if gestion == 2017 %}
               <button type="button" class="btn btn-inverse btn-stroke" disabled="disabled">
                   <i class="fa fa-user"></i> Inscrip. con Rude
               </button>
             { else #}
-              {% if app.session.get('ue_modular') or app.session.get('ue_regularizar') or app.session.get('ue_noturna') or app.session.get('ue_tecteg') or app.session.get('ue_general') or app.session.get('allowInscription') or app.session.get('ie_id')=='80900081' %}
-                  {% if app.session.get('lastOperativo') == 5%}
+              {% if app.session.get('ue_modular') or app.session.get('ue_regularizar') or app.session.get('ue_humanistica_web') or app.session.get('ue_noturna') or app.session.get('ue_tecteg') or app.session.get('ue_general') or app.session.get('allowInscription') or app.session.get('ie_id')=='80900081' %}
+                  {% if app.session.get('lastOperativo') == 5 %}
                   {% else %}
 
-                    {% if app.session.get('currentyear') < date('Y') %}
-                      {#  commented to BJP by krlos
+                    {% if gestion < app.session.get('currentyear') %}
+                      
                         <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}');" >
                             <i class="fa fa-user"></i> Inscrip. con Rude
                         </button>
-                      #}
+                      
                     {% endif %}
                     {# 
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick=" getCargaHorariaPlenaFinalizarRegistro('{{infoUe}}');" >
@@ -156,7 +167,7 @@
                                                   {% if data.estadomatriculaId == 4 %}
                                                   <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
                                                   {% else %}
-                                                   <button type="button" class="btn btn-default btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
+                                                   <button type="button" class="btn btn-default btn-stroke btn-xs"  onclick="#">
                                                   {% endif %}
                                                      {{data.estadomatricula}}
                                                    </button>
@@ -172,13 +183,43 @@
 
                                 </td>
                                 <td  align="">
-                                  
+                                  {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
+                                      <button type="button" class="btn btn-circle btn-warning " data-toggle="modal" data-target=".bs-example-modal-table" onclick="rude('{{infoUe}}','{{jsnInfoStudent}}',0);" >
+                                          <i class="fa fa-user"></i>
+                                      </button>
+                                  </div>
+                                  <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
+                                      <button type="button" class="btn btn-circle btn-primary " data-toggle="modal" data-target=".bs-example-modal-table" onclick="rudeNuevo('{{infoUe}}','{{jsnInfoStudent}}',0);" >
+                                          <i class="fa fa-user"></i>
+                                      </button>
+                                  </div> #}
+                                  {% if gestion == 2018 and nivel != 11 %}
+                                  <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Trabajo del estudiante">
+                                      <button type="button" class="btn btn-circle btn-primary " data-toggle="modal" data-target=".bs-example-modal-table" onclick="trabajo('{{infoUe}}','{{jsnInfoStudent}}',0);" >
+                                          <i class="fa fa-edit"></i>
+                                      </button>
+                                  </div>
+                                  {% endif %}
+
                                   {% set styleButton = 'info' %}
                                       {% if data.registroFinalizado %}
                                         {% set styleButton = 'success' %}
                                       {% else %}
                                         {% set styleButton = 'info' %}
                                       {% endif %}
+                                    {% if  data.esvalidoPlena %}
+                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="CUT">
+                                            <a class="btn btn-circle btn-success btn-stroke" href="{{path('download_cut', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
+                                              <i class="fa fa-file-pdf-o" style="color:#11AA00"></i>
+                                            </a>
+                                        </div>
+                                    {% endif %}  
+
+                                    {% if imprimirLibreta == true and data.estadomatriculaId in estadosPermitidosImprimir %}
+                                            <a class="btn btn-circle btn-lilac" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
+                                              <i class="fa fa-archive" style="color:#FFFFFF"></i>
+                                            </a>
+                                    {% endif %}
                                       
                                     {# if  app.session.get('ue_humanistica') #}
                                     {% if
@@ -190,7 +231,7 @@
                                       ( app.session.get('ue_tecteg') )
                                     %}
                                       
-                                      {% if data.estadomatriculaId == 4 or (data.estadomatriculaId in [5,11,55] and gestion == app.session.get('currentyear')) or app.session.get('ie_id') == '81981478'  or app.session.get('ie_id') == '81700043' or app.session.get('ie_id') == '80980175' %}
+                                      {% if data.estadomatriculaId == 4 or (data.estadomatriculaId in [5,11,55] and gestion == app.session.get('currentyear')) or app.session.get('ie_id') == '81981478'  or app.session.get('ie_id') == '81700043' or app.session.get('ie_id') == '80980175' or (data.estadomatriculaId == 55 and gestion < app.session.get('currentyear')) %}
                                           {% if
                                             ( app.session.get('ue_humanistica') ) or
                                             (app.session.get('ue_plena')  and app.session.get('ue_humanistica') ) or
@@ -198,9 +239,8 @@
                                             (app.session.get('ue_humanistica_web') and app.session.get('ue_humanistica') ) or
                                             (app.session.get('ue_modular') and app.session.get('ue_humanistica') or false )
                                           %}
-                                            {# DESCOMENTAR PARA VER EL NUEVO MODULO RUDE
 
-                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
+                                             {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
                                                 <button type="button" class="btn btn-circle btn-warning " data-toggle="modal" data-target=".bs-example-modal-table" onclick="rude('{{infoUe}}','{{jsnInfoStudent}}',0);" >
                                                     <i class="fa fa-user"></i>
                                                 </button>
@@ -233,11 +273,7 @@
 
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" data-placement="top" title data-original-title="Imprimir Libreta">
 
-                                      {% if imprimirLibreta == true and data.estadomatriculaId in estadosPermitidosImprimir %}
-                                              <a class="btn btn-circle btn-lilac" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
-                                                <i class="fa fa-archive"></i>
-                                              </a>
-                                      {% endif %}
+                                      
 
                                     </div>
                                     {% if false %}
@@ -299,6 +335,17 @@
                                        {% endif %}
                                     {% endif %}
                                   {% endif %}<!-- here is the end to UE HUMANISTICA -->
+                                  
+                                  {# //////////// Imprimir cut ///////////// #}
+                                  {% if mostrarSextoCerrado == false and data.conespecialidad and data.imprimirCut and gestion >= 2018 and nivel == 13 and grado == 6 and operativo == 4 and data.estadomatriculaId in [4,5] %}
+                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Imprimir CUT">
+                                      <a class="btn btn-circle btn-success" href="#">
+                                        <i class="fa fa-file"></i>
+                                      </a>
+                                    </div>
+                                  {% endif %}
+                                  
+    
                                    </td>
                                   </td>
                                 </td>
@@ -442,6 +489,102 @@
             beforeSend: function () {
                 $('#modal').empty();
                 $('#modal').append('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="panel panel-tab panel-tab-double"><div class="panel-heading no-padding"><div style="height:50px; background:#64CBE2; color:#FFFFFF; margin-top:-10px;"><h4 style="padding:10px 0px 0px 10px; text-align:center">RUDE</h4></div></div><div class="panel-body no-padding" id="modal-body"><div style="text-align:center; color:#69A7E2; font-size:17px; padding:20px"><img src="{{asset("img/loading.gif")}}"><br>Cargando...</div></div></div></div></div>');
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+                $('#sandbox-container input').datepicker({
+                  autoclose: true,
+                  todayHighlight: true,
+                  format: 'dd-mm-yyyy',
+                  language: "es"
+                });
+                //$('#modal').modal({backdrop: 'static', keyboard: false})
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+    var rudeNuevo = function (infoUe, infoStudent, editar) {
+
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent, editar: editar}),
+            url: "{{ path('info_estudiante_rude_nuevo_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $('#modal').append('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="panel panel-tab panel-tab-double"><div class="panel-heading no-padding"><div style="height:50px; background:#64CBE2; color:#FFFFFF; margin-top:-10px;"><h4 style="padding:10px 0px 0px 10px; text-align:center">RUDE</h4></div></div><div class="panel-body no-padding" id="modal-body"><div style="text-align:center; color:#69A7E2; font-size:17px; padding:20px"><img src="{{asset("img/loading.gif")}}"><br>Cargando...</div></div></div></div></div>');
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+                $('#sandbox-container input').datepicker({
+                  autoclose: true,
+                  todayHighlight: true,
+                  format: 'dd-mm-yyyy',
+                  language: "es"
+                });
+                //$('#modal').modal({backdrop: 'static', keyboard: false})
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+    var trabajo = function (infoUe, infoStudent) {
+
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: "{{ path('estudiante_trabaja_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $('#modal').append('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="panel panel-tab panel-tab-double"><div class="panel-heading no-padding"><div style="height:50px; background:#64CBE2; color:#FFFFFF; margin-top:-10px;"><h4 style="padding:10px 0px 0px 10px; text-align:center">DATOS DE TRABAJO DEL ESTUDIANTE</h4></div></div><div class="panel-body no-padding" id="modal-body"><div style="text-align:center; color:#69A7E2; font-size:17px; padding:20px"><img src="{{asset("img/loading.gif")}}"><br>Cargando...</div></div></div></div></div>');
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+                $('#sandbox-container input').datepicker({
+                  autoclose: true,
+                  todayHighlight: true,
+                  format: 'dd-mm-yyyy',
+                  language: "es"
+                });
+                //$('#modal').modal({backdrop: 'static', keyboard: false})
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+     var registerJobStudent = function (infoUe, infoStudent) {
+
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: "{{ path('estudianteTrabajaNuevo_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $('#modal').append('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="panel panel-tab panel-tab-double"><div class="panel-heading no-padding"><div style="height:50px; background:#64CBE2; color:#FFFFFF; margin-top:-10px;"><h4 style="padding:10px 0px 0px 10px; text-align:center">BUSQUEDA ESTUDIANTE Y REGISTRO TRABAJO</h4></div></div><div class="panel-body no-padding" id="modal-body"><div style="text-align:center; color:#69A7E2; font-size:17px; padding:20px"><img src="{{asset("img/loading.gif")}}"><br>Cargando...</div></div></div></div></div>');
             },
             success: function (data) {
                 $('#modal').empty();

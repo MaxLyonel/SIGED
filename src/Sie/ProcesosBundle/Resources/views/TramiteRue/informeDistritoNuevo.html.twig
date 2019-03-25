@@ -1,26 +1,6 @@
-{% extends 'layoutProcesos.html.twig' %}
-{% block contentoption %}
-    <!-- Start page header -->
-    <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> Tramite RUE<span>Informe</span></h2>
-        <div class="breadcrumb-wrapper hidden-xs">
-            <span class="label">Usted esta aquí:</span>
-            <ol class="breadcrumb">
-                <li>
-                    <i class="fa fa-home"></i>
-                    <a href="dashboard.html">Trámite</a>
-                    <i class="fa fa-angle-right"></i>
-                </li>
-
-            </ol>
-        </div><!-- /.breadcrumb-wrapper -->
-    </div><!-- /.header-content -->
-    <!--/ End page header -->
-    
-    <div class="body-content animated fadeIn">
-        <div class="row">
-            <div class="col-12">
-                <div class="panel rounded shadow">
+<div class="modal-dialog">
+    <div class="modal-content">
+                <div class="panel panel-primary">
                     <div class="panel-heading">
                         {% if app.session.flashBag.has('exito') %}
                             <div class="alert alert-success">
@@ -39,78 +19,50 @@
                             </div>
                         {% endif %}    
                         <div class="pull-left">
-                            <h3 class="panel-title"></h3>
+                            <h3 class="panel-title">TRÁMITE Nro. {{ idtramite }}</h3>
                         </div>
-                        {#<div class="pull-left">
-                            <label>Código RUE:</label>
-                            <input type="text" value="" id="idrue">
-                            <a href="#" class="btn btn-primary" id="buscar_rue">
-                                <i class="fa fa-plus"></i> Buscar
-                            </a>
-                        </div>#}
                         <div class="clearfix"></div>
                     </div><!-- /.panel-heading -->
                     <div class="panel-body">
                         {{ form_start(form) }}
                         <div class="row">
-							<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
-								{{ form_label(form.idrue) }}
-								{{ form_widget(form.idrue, {'attr':{'class':'form-control'} }) }}
+							<div class="form-group col-md-6">
+								{{ form_label(form.informe) }}
+								{{ form_widget(form.informe, {'attr':{'class':'form-control'} }) }}
 							</div>
-                            <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
-								{{ form_label(form.institucioneducativa) }}
-								{{ form_widget(form.institucioneducativa, {'attr':{'class':'form-control'} }) }}
+                            <div class="form-group col-md-6">
+                                <div id='sandbox-container'>
+                                {{ form_label(form.fechainforme) }}
+								{{ form_widget(form.fechainforme, {'attr':{'class':'form-control','autocomplete':'off'} }) }}
+                                </div>
 							</div>
-                            <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
-								{{ form_label(form.tipotramite) }}
-								{{ form_widget(form.tipotramite, {'attr':{'class':'form-control'} }) }}
-							</div>
-                            {#<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
-								 {{ form_label(form.estadoinstitucioneducativa) }}
-								{{ form_widget(form.estadoinstitucioneducativa, {'attr':{'class':'form-control'} }) }}
-							</div>#}
-                            <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                         
+                            <div class="col-md-12">
+                            <div class="form-group col-md-12">
 								{{ form_label(form.observacion) }}
 								{{ form_widget(form.observacion, {'attr':{'class':'form-control'} }) }}
 							</div>
-                            <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
-								{{ form_label(form.varevaluacion) }}
-								{{ form_widget(form.varevaluacion, {'attr':{'class':'form-control'} }) }}
-							</div>
+                            </div>
                             <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
 								{{ form_label(form.guardar) }}
                                 {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary'} }) }}
-                                <a href="{{path('tramite_rue_informe_distrito')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                                {#<a href="{{path('tramite_rue_informe_distrito')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>#}
 							</div>
                         </div>    
         			    {{ form_end(form) }}
 			        </div><!-- /.panel-body -->
                 </div>
-            </div>
-        </div>
-
     </div>
-{% endblock %}
+</div>
  {% block javascripts %}
-    {{ parent() }} 
+
     <script>
-        $('#form_buscar').click(function(){
-            var formData = {idrue: $('#form_idrue').val()};
-            $.ajax({
-                type: 'GET',
-                url: "{{path('tramite_rue_buscar_rue')}}",
-                data: formData,
-                success: function (data) {
-                    $('#form_institucioneducativa').val(data.ie);
-                    $("#form_dependencia").val(data.dep);
-                    $("#form_tipoeducacion").val(data.tipo);
-                    $("#form_estadoinstitucioneducativa").val(data.estado);
-                    $("#form_departamento").val(data.departamento);
-                    $("#form_distrito").val(data.distrito);
-                },
-
-            });
-
-        });      
+        $('#sandbox-container input').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd-mm-yyyy',
+            language: "es"
+        });
     </script>
     {% endblock %}

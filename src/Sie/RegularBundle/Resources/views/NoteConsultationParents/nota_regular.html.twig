@@ -1,0 +1,44 @@
+{% if notas %}
+    {% set prefijo = 0 %}
+    <h5 class="text-info">Notas</h5> 
+    <table class="table table-bordered table-striped cf" style="backgroud:#FFFFFF; font-size: 9pt">
+        <thead class="cf">
+            <tr>
+                <th>Asignatura</th>
+                {% for cabeceras in cabeceras %}
+                    <th>{{cabeceras.notaAbrev}}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for notas in notas %}
+                <tr>
+                    <td><strong>{{notas.asignatura}}</strong></td>
+                    {% for indices in indices %}
+                        <td>{{notas[indices]}}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="alert alert-info">
+        <strong>¡Información!</strong> No se encontraron calificaciones para la presente gestión.
+    </div>
+{% endif %}
+
+{% if cualitativo %}
+    {% set cont = 0 %}
+    <h5 class="text-info">Valoración cualitativa</h5>
+    <table class="table table-bordered table-striped cf text-justify" style="backgroud:#FFFFFF; font-size: 9pt">
+    {% for cuali in cualitativo %}
+        {% set cont = cont + 1 %}
+        <tr>
+            <td>
+                <h6 class="text-primary">Bimestre {{cont}}:</h6>
+                {{cuali.notaCualitativa}}
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endif %}

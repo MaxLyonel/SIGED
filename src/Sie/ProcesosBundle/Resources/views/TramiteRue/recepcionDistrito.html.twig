@@ -54,7 +54,7 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center border-right" WIDTH="50">No. Tramite</th>
-                                        <th>Unidad Educativa</th>
+                                        <th>Cod. RUE</th>
                                         <th>Tipo de Trámite</th>
                                         <th>Fecha de Trámite</th>
                                         <th>Observación</th>
@@ -66,7 +66,7 @@
                                 <tfoot>
                                     <tr>
                                         <th class="text-center border-right">No. Tramite</th>
-                                        <th>Unidad Educativa</th>
+                                        <th>Cod. RUE</th>
                                         <th>Tipo de Trámite</th>
                                         <th>Fecha de Trámite</th>
                                         <th>Observación</th>
@@ -79,7 +79,7 @@
                                 {% for tramite in tramites %}
                                     <tr>
                                         <td>{{ tramite.id }}</a></td>
-                                        <td>{{ tramite.institucioneducativa }}</td>
+                                        <td>{{ tramite.cod_sie }}</td>
                                         <td>{{ tramite.tramite_tipo }}</td>
                                         <td>{{ tramite.fecha_registro }}</a></td>
                                         <td>{{ tramite.obs }}</a></td>

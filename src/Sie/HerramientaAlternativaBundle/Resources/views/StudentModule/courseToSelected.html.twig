@@ -52,7 +52,11 @@
                            Módulo
                       </div>
                     </th>
-                    <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="Office">Selecionar</th>
+                    <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="Office">Selecionar
+                      </br>
+                      <!-- select all boxes -->
+                      <input type="checkbox" name="select-all" id="select-all" />Todo
+                    </th>
                   </tr>
                   </thead>
 
@@ -175,4 +179,19 @@
 
 
   };
+
+
+
+  $('#select-all').click(function(event) {   
+    if(this.checked) {
+        // Iterate each checkbox
+        $(':checkbox').each(function() {
+            this.checked = true;                        
+        });
+    } else {
+        $(':checkbox').each(function() {
+            this.checked = false;                       
+        });
+    }
+});
 </script>

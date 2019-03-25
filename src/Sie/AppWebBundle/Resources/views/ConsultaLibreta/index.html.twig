@@ -66,7 +66,7 @@
                                     <strong>Warning!</strong> {{ flashMessage }}
                                 </div>
                             {% endfor %}
-                            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form', 'class':'form-horizontal'} } )}}
+                            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form', 'class':'form-horizontal', 'onsubmit':'verificarForm(this);return false;', 'id':'formConsultaLibreta'} } )}}
 
                             <fieldset>
                                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
@@ -129,6 +129,31 @@
         <!-- THEME SCRIPTS -->
         <script src="{{asset('js/flex.js')}}"></script>
         <script>
+        // added validation to send the correct values
+        var verificarForm = function(form){
+            var message = ''
+            // get varibles
+            var codigoRude = $('#form_rudeoci').val();
+            var fechaNacimiento = $('#form_fechaNacimiento').val();
+            // validate the values send
+            if(codigoRude == ''){
+                message +='El campo Rude o Ci es requerido\n';
+            }
+            if(fechaNacimiento == ''){
+                message +='El campo fecha Nacimiento es requerido\n';
+            }
+            if(fechaNacimiento.length < 10){
+                message +='Formato de Fecha de Nacimiento incorrecto\n';
+            }
+            if(message != ''){
+                alert(message);
+                return false;
+            }else{
+                form.submit();
+                return true;    
+            }
+            
+        }
 //datepicker calendario
             $('#sandbox-container input').datepicker({
                 autoclose: true,

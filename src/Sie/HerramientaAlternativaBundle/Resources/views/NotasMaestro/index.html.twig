@@ -1,17 +1,14 @@
 {% extends 'layoutHerramientaAlternativa.html.twig' %}
 
 {% block contentoption %}
-
-
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-table"></i> Centros Educativos <span>Disponibles</span></h2>
+        <h2><i class="fa fa-table"></i> Registro de notas <span> Lista de materias - {{ gestion }}</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aqui:</span>
             <ol class="breadcrumb">
                 <li>
-                    <i class="glyphicon glyphicon-leaf"></i>
-                        <a href="{{path('principal_web')}}">Bienvenida</a>
+                    <a href="{{path('herramienta_alter_notas_maestro_seleccionar_gestion')}}">Seleccionar gestion</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
                 <li>
@@ -29,7 +26,7 @@
             <div class="panel rounded shadow no-overflow">
                 <div class="panel-heading">
                     <div class="pull-left">
-                        <h3 class="panel-title">Lista de materias y/o modulos impartidos</h3>
+                        <h3 class="panel-title">Lista de materias y/o modulos impartidos en la gestión {{gestion}} </h3>
                     </div>
                     <div class="pull-right">
                         <button class="btn btn-sm" data-action="refresh" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Refresh" data-original-title="" title=""><i class="fa fa-refresh"></i></button>
@@ -44,7 +41,6 @@
                         <table class="table table-striped dataTable">
                             <tr>
                                 <th>Nro</th>
-                                <th>Gestión</th>
                                 <th>Sie</th>
                                 <th>Centro</th>
                                 <th>Sucursal</th>
@@ -59,7 +55,6 @@
                             {% for a in asignaturas %}
                                 <tr>
                                     <td>{{loop.index}}</td>
-                                    <td>{{a.gestion}}</td>
                                     <td>{{a.sie}}</td>
                                     <td>{{a.institucioneducativa}}</td>
                                     <td>{{a.sucursal}}</td>
@@ -70,10 +65,16 @@
                                     <td>{{a.turno}}</td>
                                     <td>{{a.paralelo}}</td>
                                     <td>
-                                        <form action="{{path('herramienta_alter_notas_maestro_new')}}" method="post">
-                                            <input type="hidden" name="idCursoOferta" value="{{a.idCursoOferta}}">
-                                            <button type="submit" class="btn btn-lilac btn-stroke btn-sm">Reg.Notas</button>
-                                        </form>
+                                        {% if app.session.get('ie_per_estado') != '0' %}
+                                            <form action="{{path('herramienta_alter_notas_maestro_new')}}" method="post">
+                                                <input type="hidden" name="gestion" value="{{gestion}}">
+                                                <input type="hidden" name="idCursoOferta" value="{{a.idCursoOferta}}">
+                                                <input type="hidden" name="idSucursal" value="{{a.idSucursal}}">
+                                                <button type="submit" class="btn btn-lilac btn-stroke btn-sm">Reg.Notas</button>
+                                            </form>
+                                        {% else %}
+                                            <button type="button" class="btn btn-danger btn-stroke btn-sm" data-toggle="tooltip" data-placement="top" data-original-title="¡Operativo fuera de plazo, contactese con su tecnico SIE.!" disabled>Reg.Notas</button>
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}

@@ -1,0 +1,151 @@
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="panel">
+        <div class="panel-body">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><strong>Resultado: </strong></h3>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body" >
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12 col-xs-12">
+                            <table class="table" id="infounidad">
+                                <tbody>
+                                <tr>
+                                    <td class="col-md-4"><label for="sie"  class="pull-left text-capitalize" ><strong>SIE </strong> </label></td>
+                                    <td ><label for="sie " class="text-strong fg-teals" >{{ infoInstitucion.id }}</label></td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4"><label for="sie" class="pull-left text-capitalize"><strong>Institución Educativa </strong></label></td>
+                                    <td ><label for="institucion " class="text-strong fg-teals">{{ infoInstitucion.institucioneducativa }}</label></td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4"><label for="sie"class="pull-left text-capitalize"><strong>Director (a)</strong> </label></td>
+                                    <td ><label for="director" class="    text-strong fg-teals">{% if  infoDirector.nombre_director is defined  %}
+                                                {{  infoDirector.nombre_director }}
+                                            {% else %}  Director(a) No Reportado
+                                            {% endif %}
+                                        </label></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row" >
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <!-- Start color horizontal tabs -->
+                            <div class="panel panel-tab panel-tab-double shadow">
+                                <!-- Start tabs heading -->
+                                <div class="panel-heading no-padding">
+
+                                </div><!-- /.panel-heading -->
+                                <!--/ End tabs heading -->
+
+                                <!-- Start tabs content -->
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="table-responsive col-md-12">
+                                            <table class="table table-bordered table-striped table-default" id="maestros_institucion" >
+                                                <thead>
+                                                <tr >
+                                                    <th class="text-center border-right" style="min-width: 5px">No.</th>
+                                                    <th>Nombre</th>
+                                                    <th>Paterno</th>
+                                                    <th>Materno</th>
+                                                    <th>Cargo</th>
+                                                    <th>Formación</th>
+                                                    <th>CI</th>
+                                                    <th>Complemento</th>
+                                                    <th>Ver</th>
+                                                </tr>
+                                                </thead>
+                                                <tfoot>
+                                                <tr>
+                                                    <th class="text-center border-right" style="min-width: 5px">No.</th>
+                                                    <th>Nombre</th>
+                                                    <th>Paterno</th>
+                                                    <th>Materno</th>
+                                                    <th>Cargo</th>
+                                                    <th>Formación</th>
+                                                    <th>CI</th>
+                                                    <th>Complemento</th>
+                                                    <th>Ver</th>
+                                                </tr>
+                                                </tfoot>
+                                                <tbody id = "contenido_institucion">
+                                                {% for lista_maestros in data %}
+                                                    <tr>
+                                                        <td class="text-center" style="min-width: 5px">{{ loop.index }}</td>
+                                                        <td>{{ lista_maestros.nombre }}</td>
+                                                        <td>{{ lista_maestros.paterno }}</td>
+                                                        <td>{{ lista_maestros.materno }}</td>
+                                                        <td>{{ lista_maestros.cargo }}</td>
+                                                        <td>{{ lista_maestros.formacion }}</td>
+                                                        <td>{{ lista_maestros.carnet }}</td>
+                                                        <td>{{ lista_maestros.complemento }}</td>
+                                                        <td>
+                                                            <a href="{{ path('consulta_Maestro_fichamaestro',{'ci':lista_maestros.carnet,'gestion':lista_maestros.gestion_tipo_id,'complemento':lista_maestros.complemento,'idinstitucion': idinstitucion }) }}" class="btn btn-warning btn-xs"   title="Ver Detalles"><i class="fa fa-eye"></i></a>
+                                                        </td>
+
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div><!-- /.panel-body -->
+                                <!--/ End tabs content -->
+                            </div><!-- /.panel -->
+                            <!--/ End color horizontal tabs -->
+                        </div>
+                    </div>
+                </div><!-- /.panel-body -->
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block javascripts%}
+
+    <script>
+    $( document ).ready(function() {
+        cargatablas();
+
+    });
+    var cargatablas = function (identif){
+        // Setup - add a text input to each footer cell
+        $('#maestros_institucion tfoot th').each( function () {
+            var title = $(this).text();
+            if(title.trim() === "" || title === "Ver"){
+                $(this).html('');
+            } else {
+                $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+            }
+        } );
+
+        // DataTable
+        var table = $('#maestros_institucion').DataTable( {
+                "order": [[ 0, "asc" ]],
+                "columnDefs": [
+                    { "orderable": false, "targets": [0] }
+                ],
+            }
+        );
+
+        // Apply the search
+        table.columns().every( function () {
+            var that = this;
+
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+                if ( that.search() !== this.value ) {
+                    that
+                        .search( this.value )
+                        .draw();
+                }
+            } );
+        } );
+    };
+
+
+    </script>
+
+    {% endblock %}

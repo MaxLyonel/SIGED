@@ -1,0 +1,85 @@
+<input type="hidden" name="idInscripcion" value="{{notas.idInscripcion}}">
+
+{% if notas.cuantitativas|length > 0 %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <table class="table table-bordered cf" style="backgroud:#FFFFFF">
+                <thead class="cf">
+                    <tr>
+                        <th>
+                            Asignatura
+                        </th>
+                        <th>Promedio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in notas.cuantitativas %}
+                        <tr>
+                            <td data-title="Asignatura">
+                                {{ a.asignatura }}
+                            </td>
+                            {% for n in a.notas %}
+                                <td data-title="{{n.idNotaTipo}} Bimestre">
+                                {% if n.nota == 0 or n.nota == '' %}
+                                    <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
+                                    <input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
+                                    <input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
+                                    
+                                    <input type="text" id="{{n.id}}" name="nota[]" value="{{n.nota}}" size="2" onkeypress="return validarNota(event,this.id,this.value)"  onblur="notaVacia(this,'{{notas.idInscripcion}}_{{a.idAsignatura}}')"  class="form-control input-sm nota {{notas.idInscripcion}}_{{a.idAsignatura}}" style="width:50px" maxlength="3" autocomplete="off">
+                                {% else %}
+                                    <input type="text" value="{{n.nota}}" size="2"  class="form-control input-sm nota {{notas.idInscripcion}}_{{a.idAsignatura}}" style="width:50px" maxlength="3" autocomplete="off" readonly="readonly">
+                                {% endif %}
+                                </td>
+                                
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endif %}
+
+<script type="text/javascript">
+    var notaVacia = function(control,clase){
+        if(control.value == ""){ control.value = 0; }
+        if(control.value < 0){ control.value = 0; }
+        if(control.value > 100){ control.value = 100; }
+    }
+
+    var validarNota = function(e){
+        var key = e || window.event;
+        var k = key.charCode || key.keyCode;
+        if ((k < 48 || k > 57) //NUmeros
+            && (k != 13) //ENTER
+            && (k != 8) //retroceso
+            && (k != 9) //tab
+        )
+        return false;
+    }
+
+    var validarEnvioNotas = function(){
+        var enviar = true;
+        var mensaje = "";
+        $(".nota").each(function (index) {
+            if($(this).val() == 0){
+                enviar = false;
+                mensaje = 'Las notas registradas no pueden ser cero';
+            }
+            if($(this).val() < 51){
+                enviar = false;
+                mensaje = 'Las notas registradas no pueden ser menores a 51';
+            }
+        });
+
+        if(enviar == false){
+            alert(mensaje);
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+</script>

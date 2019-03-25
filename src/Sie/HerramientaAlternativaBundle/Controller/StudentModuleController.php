@@ -46,31 +46,51 @@ class StudentModuleController extends Controller {
       $infoStudent = $request->get('infoStudent');
       $arrInfoUe = unserialize($infoUe);
       $arrInfoStudent = json_decode($infoStudent, true);
-      //get the modules per course
-      $objModulesPerCourse = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findModulesByCourse($arrInfoUe);
-      $arrCourseToSelected = array();
-      foreach ($objModulesPerCourse as $key => $course) {
-        # look for the student asignatura
-        $objStudentAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneBy(array(
-          'gestionTipo'                     => $this->session->get('ie_gestion'),
-          'estudianteInscripcion'           => $arrInfoStudent['eInsId'],
-          'institucioneducativaCursoOferta' => $course['iecoId']
-        ));
 
 
-        //check if exists the course if no exists add in array
-        if($objStudentAsignatura){
-          $course['takeModulo']='checked="checked"';
+     
+      $arrCourseToSelected=array();
 
-        }else{
-          $course['takeModulo']='';
-        }
-        $arrCourseToSelected[]=$course;
+      //check data to set the new funcionalty and new way to load the curricula
+      // if( $this->get('funciones')->validatePrimaria($this->session->get('ie_id'),$this->session->get('currentyear'),$infoUe)
+      //     ){
 
-      }
+      //   $data = array('iecId'=>$arrInfoUe['ueducativaInfoId']['iecId'], 'eInsId'=>$arrInfoStudent['eInsId']);
 
+      //   $objNewCurricula = $this->get('funciones')->setCurriculaStudent($data);
+      //   // $arrCourseToSelected = $this->get('funciones')->getCurriculaStudent($data);
+      //   $form=array();
+      //   $useTemplate = 'newcourseToSelected';
+      //  }else{
+      //     $form = $this->addModuloStudentForm($infoUe, $infoStudent, json_encode($arrCourseToSelected) )->createView();
+      //     $useTemplate = 'courseToSelected';
+      //  }
+      
+         // all funcionality 
+                  //get the modules per course
+          $objModulesPerCourse = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findModulesByCourse($arrInfoUe);
 
-      //get the inscription info and set the student info
+          foreach ($objModulesPerCourse as $key => $course) {
+            # look for the student asignatura
+            $objStudentAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneBy(array(
+              'gestionTipo'                     => $this->session->get('ie_gestion'),
+              'estudianteInscripcion'           => $arrInfoStudent['eInsId'],
+              'institucioneducativaCursoOferta' => $course['iecoId']
+            ));
+            //check if exists the course if no exists add in array
+            if($objStudentAsignatura){
+              $course['takeModulo']='checked="checked"';
+
+            }else{
+              $course['takeModulo']='';
+            }
+            $arrCourseToSelected[]=$course;
+
+          }
+      $form = $this->addModuloStudentForm($infoUe, $infoStudent, json_encode($arrCourseToSelected) )->createView();
+      $useTemplate = 'courseToSelected';
+        //get required info about the studens 
+       //get the inscription info and set the student info
       $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($arrInfoStudent['eInsId']);
       $arrDataStudent = array(
                           'codigoRude'=>$arrInfoStudent['codigoRude'],
@@ -79,21 +99,25 @@ class StudentModuleController extends Controller {
                         );
 
       $objStudentInfo = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($arrInfoStudent['id']);
-      
-      return $this->render('SieHerramientaAlternativaBundle:StudentModule:courseToSelected.html.twig', array(
-                                                                                                            'arrCourseToSelected' => $arrCourseToSelected,
-                                                                                                            'infoUe'              => $infoUe,
-                                                                                                            'infoStudent'         => $infoStudent,
-                                                                                                            'dataStudent'         => $arrDataStudent,
-                                                                                                            'especialidad'        => $arrInfoUe['ueducativaInfo']['ciclo'],
-                                                                                                            'area'                => $arrInfoUe['ueducativaInfo']['nivel'],
-                                                                                                            'acreditacion'        => $arrInfoUe['ueducativaInfo']['grado'],
-                                                                                                            'paralelo'            => $arrInfoUe['ueducativaInfo']['paralelo'],
-                                                                                                            'turno'               => $arrInfoUe['ueducativaInfo']['turno'],
-                                                                                                            'form'                => $this->addModuloStudentForm($infoUe, $infoStudent, json_encode($arrCourseToSelected) )->createView(),
-                                                                                                            'objStudentInfo'      => $objStudentInfo
 
-                                                                                                           ));
+          
+      
+      return $this->render('SieHerramientaAlternativaBundle:StudentModule:'.$useTemplate.'.html.twig', array(
+        'arrCourseToSelected' => $arrCourseToSelected,
+        'infoUe'              => $infoUe,
+        'infoStudent'         => $infoStudent,
+        'dataStudent'         => $arrDataStudent,
+        'especialidad'        => $arrInfoUe['ueducativaInfo']['ciclo'],
+        'area'                => $arrInfoUe['ueducativaInfo']['nivel'],
+        'acreditacion'        => $arrInfoUe['ueducativaInfo']['grado'],
+        'paralelo'            => $arrInfoUe['ueducativaInfo']['paralelo'],
+        'turno'               => $arrInfoUe['ueducativaInfo']['turno'],
+        'form'                => $form,
+        'objStudentInfo'      => $objStudentInfo
+
+       ));
+
+
 
     }
 
@@ -102,7 +126,7 @@ class StudentModuleController extends Controller {
           ->add('infoUe', 'hidden', array('data'=>$infoUe))
           ->add('infoStudent', 'hidden', array('data'=>$infoStudent))
           ->add('courses', 'hidden', array('data'=>$courses))
-          ->add('save', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-theme','onclick'=>'saveModulesToStudent()' )))
+          ->add('save', 'button', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-theme','onclick'=>'saveModulesToStudent()' )))
           ->getForm();
       return $form;
     }

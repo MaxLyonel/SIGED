@@ -126,7 +126,6 @@ class InfoPersonalAdmController extends Controller {
         $query = $em->createQuery(
                         'SELECT count(mi.id) FROM SieAppWebBundle:MaestroInscripcion mi
                     WHERE mi.institucioneducativa = :idInstitucion
-                    AND mi.esVigenteAdministrativo = true
                     AND mi.gestionTipo = :gestion
                     AND mi.cargoTipo IN (:cargos)')
                 ->setParameter('idInstitucion', $institucion)
@@ -197,8 +196,9 @@ class InfoPersonalAdmController extends Controller {
 
         $consol_gest_pasada = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim4' => '1'));
         $consol_gest_pasada2 = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim4' => '2'));
+        $consol_gest_pasada3 = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim4' => '3'));
         
-        if(!($consol_gest_pasada or $consol_gest_pasada2)){
+        if(!($consol_gest_pasada or $consol_gest_pasada2 or $consol_gest_pasada3)){
             $activar_acciones = true;
         }
 
@@ -359,6 +359,12 @@ class InfoPersonalAdmController extends Controller {
         $em->getConnection()->beginTransaction();
         try {
             $form = $request->get('form');
+            // Registrar sucursal
+            $sucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa' => $form['institucionEducativa'], 'gestionTipo' => $form['gestion']));
+
+            if(!$sucursal) {
+                $query = $em->getConnection()->prepare("select * from sp_genera_institucioneducativa_sucursal('".$form['institucionEducativa']."','0','".$form['gestion']."','1');")->execute();
+            }
             // Verificar si la persona ya esta registrada
 
             $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($form['persona']);
@@ -475,20 +481,11 @@ class InfoPersonalAdmController extends Controller {
             $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idInstitucion'));
             $maestroInscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('id' => $request->get('idMaestroInscripcion'), 'gestionTipo' => $gestion, 'institucioneducativa' => $institucion));
 
+            $maestroInscripcion->setEsVigenteAdministrativo(1 - $maestroInscripcion->getEsVigenteAdministrativo());
 
-            if ($request->get('idCargo') == 1 || $request->get('idCargo') == 12) {
-                $maestroInscripcion_aux = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findBy(array('cargoTipo' => $request->get('idCargo'), 'gestionTipo' => $gestion, 'institucioneducativa' => $institucion));
-                foreach ($maestroInscripcion_aux as $aux) {
-                    $aux->setEsVigenteAdministrativo(1 - $aux->getEsVigenteAdministrativo());
-                    $em->persist($aux);
-                    $em->flush();
-                }
-            } else {
-                $maestroInscripcion->setEsVigenteAdministrativo(1 - $maestroInscripcion->getEsVigenteAdministrativo());
+            $em->persist($maestroInscripcion);
+            $em->flush();
 
-                $em->persist($maestroInscripcion);
-                $em->flush();
-            }
             $em->getConnection()->commit();
 
             return $this->redirect($this->generateUrl('herramienta_info_personal_adm_index'));

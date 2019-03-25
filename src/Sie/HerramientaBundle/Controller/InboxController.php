@@ -204,9 +204,15 @@ class InboxController extends Controller {
         //get the ue plena info
         //$objValidateUePlena=array();
         //if(!$arrSieInfo)
+
+        $operativoPerUe = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent(array('sie'=> $this->session->get('ie_id'), 'gestion'=>$this->session->get('currentyear')-1));
+        //get the current year
+        $gestionOpeUnidadEducativa = (($operativoPerUe == 0))?$this->session->get('currentyear'):($operativoPerUe-1 == 4)?$this->session->get('currentyear'):$this->session->get('currentyear')-1;
+
+
         $objValidateUePlena = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array(
           'institucioneducativaId' => $this->unidadEducativa,
-          'gestionTipoId' => $this->session->get('currentyear')
+          'gestionTipoId' => $gestionOpeUnidadEducativa
 
         ));
         //set the modular variable if exist
@@ -214,7 +220,7 @@ class InboxController extends Controller {
         // $this->session->set('ue_regularizar', (array_search("$this->unidadEducativa",$this->arrUeRegularizar,true)!=false)?true:false);
         // $this->session->set('ue_noturna', (array_search("$this->unidadEducativa",$this->arrUeNocturnas,true)!=false)?true:false);
         //get type of UE
-        $objTypeOfUE = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->getTypeOfUE(array('sie'=>$this->unidadEducativa,'gestion'=>$this->session->get('currentyear')));
+        $objTypeOfUE = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->getTypeOfUE(array('sie'=>$this->unidadEducativa,'gestion'=>$gestionOpeUnidadEducativa));
 
         if($objValidateUePlena){
           //switch to the kind of UE
@@ -240,7 +246,7 @@ class InboxController extends Controller {
               $this->session->set('ue_humanistica_web', true);
                 break;
             default:
-              # code...
+              $this->session->set('ue_humanistica', true);
               break;
           }
 
@@ -256,14 +262,14 @@ class InboxController extends Controller {
         ));
         // dump($this->unidadEducativa);die;
 
-        if($objRegularUe && ( ((int)$this->unidadEducativa <= 71980071 && (int)$this->unidadEducativa >=71980001 )
-        || ((int)$this->unidadEducativa <= 82230136 && (int)$this->unidadEducativa >=82230001 )
-        || ((int)$this->unidadEducativa <= 80730824
-         && (int)$this->unidadEducativa >=80730002 )
+        // if($objRegularUe && ( ((int)$this->unidadEducativa <= 71980071 && (int)$this->unidadEducativa >=71980001 )
+        // || ((int)$this->unidadEducativa <= 82230136 && (int)$this->unidadEducativa >=82230001 )
+        // || ((int)$this->unidadEducativa <= 80730824
+        //  && (int)$this->unidadEducativa >=80730002 )
 
-        ) ){
-            $this->session->set('ue_humanistica', true);
-        }
+        // ) or $this->unidadEducativa == 71700024 ){
+            
+        // }
 
 
         // $this->session->set('ue_general', (array_search("$this->unidadEducativa",$this->arrUeGeneral,true)!=false)?true:false);
@@ -504,8 +510,10 @@ class InboxController extends Controller {
                 ->leftJoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'mi.institucioneducativa = i.id')
                 ->where('mi.persona = :persona')
                 ->andwhere('mi.gestionTipo = :gestion')
+                ->andwhere('i.orgcurricularTipo = :curricularTipo')
                 ->setParameter('persona', $persona)
                 ->setParameter('gestion', $gestion)
+                ->setParameter('curricularTipo', 1)
                 ->setMaxResults(1)
                 ->getQuery();
         //print_r($query);die;
@@ -597,7 +605,7 @@ class InboxController extends Controller {
           // $em->flush();
         }
 
-      $form['reglas'] = '1,2,3,8,10,12,13,16';
+      $form['reglas'] = '1,2,3,10,12,13,16,27';
       $form['gestion'] = $data['gestion'];
       $form['sie'] = $data['id'];
 
@@ -917,7 +925,7 @@ class InboxController extends Controller {
       if ($this->session->get('ue_modular')) {
         $inconsistencia = null;
       } else {
-        if($this->session->get('ie_id')=='80730460'){
+        if($this->session->get('ie_id')=='80730460' && $form['gestion']==2018){
           $query = $em->getConnection()->prepare('select * from sp_validacion_regular_insamericano_web(:gestion, :sie, :periodo)');
           $query->bindValue(':gestion', $form['gestion']);
           $query->bindValue(':sie', $form['sie']);
@@ -932,7 +940,6 @@ class InboxController extends Controller {
           $query->execute();
           $inconsistencia = $query->fetchAll();
         }
-
       }
 
       /***********************************\

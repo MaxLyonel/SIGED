@@ -1,0 +1,153 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-th-large"></i>Ampliar operativo para la gestión {{app.session.get('currentyear')}}</h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+               <li>
+                    <i class="fa fa-users"></i>
+                    Gestión
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="glyphicon glyphicon-cog"></i>
+                    Operativos
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    Ampliar Operativo
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>  
+    <div class="row">
+        <div class="body-content animated fadeIn">
+            <div class="panel panel-success">
+                {% for flashMessage in app.session.flashbag.get('exito') %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('error') %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Datos del operativo</h3>
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form', 'id': 'form_operativo_edit', 'onsubmit':'validar()'} } )}}
+                    <div class="panel-body">
+                        <div id="msg1"></div>
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <div class="col-md-2">
+                                    {{ form_label(form.operativo)}}
+                                </div>
+                                <div class="col-md-4">
+                                    {{form_widget(form.operativo) }}
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-2">
+                                    {{ form_label(form.distrito)}}
+                                </div>
+                                <div class="col-md-4">
+                                    {{form_widget(form.distrito) }}
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-2">
+                                    {{ form_label(form.fechainicio)}}
+                                </div>
+                                <div class="col-md-4">
+                                    {{form_widget(form.fechainicio) }}
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-2">
+                                    {{ form_label(form.fechafin)}}
+                                </div>
+                                <div class="col-md-4">
+                                    {{form_widget(form.fechafin) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- /.panel-body -->
+                    <div class="panel-footer">
+                        <div class="form-group col-md-12">
+                            <div class="col-md-2">
+                                {{ form_widget(form.guardar ) }}
+                            </div>
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                {{form_end(form)}}
+            </div><!-- /.panel -->
+        </div>
+    </div>
+{% endblock %}   
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $( document ).ready(function() {
+            $(function() {
+                $('.datepicker').datepicker({
+                    dateFormat: 'dd-mm-yy',
+                    showButtonPanel: false,
+                    changeMonth: false,
+                    changeYear: false,
+                    /*showOn: "button",
+                    buttonImage: "images/calendar.gif",
+                    buttonImageOnly: true,
+                    minDate: '+1D',
+                    maxDate: '+3M',*/
+                    inline: true
+                });
+            });
+            $.datepicker.regional['es'] = {
+                closeText: 'Cerrar',
+                prevText: '<Ant',
+                nextText: 'Sig>',
+                currentText: 'Hoy',
+                monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
+                dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+                weekHeader: 'Sm',
+                dateFormat: 'dd-mm-yy',
+                firstDay: 1,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: ''
+            };
+            $.datepicker.setDefaults($.datepicker.regional['es']);
+        });
+        function validar(){
+            if($('#form_fechainicio').val() == $('#form_fechafin').val()){alert('Rango de fechas incorrecto.'); return false;}
+            var fechainicio = $('#form_fechainicio').val().split('-');
+            var fechafin = $('#form_fechafin').val().split('-');
+            var inicio = new Date(fechainicio[2],fechainicio[1],fechainicio[0]);
+            var fin = new Date(fechafin[2],fechafin[1],fechafin[0]);
+            if(inicio > fin){alert('Rango de fechas incorrecto.'); return false;}
+            if(confirm('¿Está seguro de guardar los datos?')){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    </script>
+{% endblock %}

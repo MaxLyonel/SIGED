@@ -1,227 +1,89 @@
-<div class='row'>
-    <small>
-        <div class='col-md-3'> <b>Rude:</b> {{datastudent.codigoRude}}</div>
-        <div class='col-md-3'> <b>Nombre:</b> {{ datastudent.nombre|e }}</div>
-        <div class='col-md-3'><b> Paterno:</b> {{datastudent.paterno|e}}</div>
-        <div class='col-md-3'><b>Materno:</b> {{datastudent.materno|e}}</div>
-    </small>
-</div>
+<div class="panel panel-default">
+    <div class="modal-header" style="background:#2F4254">
+        <div class="pull-left">
+            <h3 class="panel-title" style="color:#FFFFFF">Notas del Estudiante</h3>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="panel-body no-padding" id="modal-body">
+        <div class="alert " style="padding:10px">
+            <h5 class="text-info">Datos del Curso</h5>
+            {% if subsistema == 1 or subsistema == 4 %}
+            <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                <tr>
+                    <th>Gestión</th><td>{{gestion}}</td>
+                    <th>Periodo</th>
+                    <td>
+                        ANUAL
+                    </td>
+                </tr>
+                <tr>
+                    <th>Nivel</th><td>{{inscripcion.institucioneducativaCurso.nivelTipo.nivel|upper}}</td>
+                    <th>Turno</th><td>{{inscripcion.institucioneducativaCurso.turnoTipo.turno|upper}}</td>
+                </tr>
+                <tr>
+                    <th>Grado</th><td>{{inscripcion.institucioneducativaCurso.gradoTipo.grado|upper}}</td>
+                    <th>Paralelo</th><td>{{inscripcion.institucioneducativaCurso.paraleloTipo.paralelo|upper}}</td>
+                </tr>
+            </table>
+            {% elseif subsistema == 2 %}
+                <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                    <tr>
+                        <th>Gestión</th><td>{{gestion}}</td>
+                        <th>Periodo</th>
+                        <td>
+                            {% set periodo = inscripcion.institucioneducativaCurso.superiorInstitucioneducativaPeriodo.superiorInstitucioneducativaAcreditacion.institucioneducativaSucursal.periodoTipoId %}
+                            {% if periodo == 1 %}ANUAL{% elseif periodo == 2 %}PRIMER SEMESTRE{% elseif periodo == 3 %}SEGUNDO SEMESTRE{% endif %}
+                        </td>
+                    </tr>
+                </table>
+                {% if inscripcion.institucioneducativaCurso.superiorInstitucioneducativaPeriodo.superiorInstitucioneducativaAcreditacion.acreditacionEspecialidad.superiorEspecialidadTipo.superiorFacultadAreaTipo.id == 15 %}
+                    <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                        <tr>
+                            <th>Nivel</th><td>{{inscripcion.institucioneducativaCurso.superiorInstitucioneducativaPeriodo.superiorInstitucioneducativaAcreditacion.acreditacionEspecialidad.superiorEspecialidadTipo.especialidad}}</td>
+                            <th>Turno</th><td>{{inscripcion.institucioneducativaCurso.turnoTipo.turno}}</td>
+                        </tr>
+                        <tr>
+                            <th>Etapa</th><td>{{inscripcion.institucioneducativaCurso.superiorInstitucioneducativaPeriodo.superiorInstitucioneducativaAcreditacion.acreditacionEspecialidad.superiorAcreditacionTipo.acreditacion}}</td>
+                            <th>Paralelo</th><td>{{inscripcion.institucioneducativaCurso.paraleloTipo.paralelo|upper}}</td>
+                        </tr>
+                    </table>
+                {% else %}
+                    <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                        <tr>
+                            <th>Area</th><td>{{inscripcion.institucioneducativaCurso.superiorInstitucioneducativaPeriodo.superiorInstitucioneducativaAcreditacion.acreditacionEspecialidad.superiorEspecialidadTipo.superiorFacultadAreaTipo.facultadArea}}</td>
+                            <th>Turno</th><td>{{inscripcion.institucioneducativaCurso.turnoTipo.turno}}</td>
+                        </tr>
+                        <tr>
+                            <th>Especialidad</th><td>{{inscripcion.institucioneducativaCurso.superiorInstitucioneducativaPeriodo.superiorInstitucioneducativaAcreditacion.acreditacionEspecialidad.superiorEspecialidadTipo.especialidad}}</td>
+                            <th>Paralelo</th><td>{{inscripcion.institucioneducativaCurso.paraleloTipo.paralelo|upper}}</td>
+                        </tr>
+                        <tr>
+                            <th>Nivel de Acreditación</th><td colspan="3">{{inscripcion.institucioneducativaCurso.superiorInstitucioneducativaPeriodo.superiorInstitucioneducativaAcreditacion.acreditacionEspecialidad.superiorAcreditacionTipo.acreditacion}}</td>
+                        </tr>
+                    </table>
+                {% endif %}
+            {% endif %}
 
-<div class='row'>
-    <small>
-        <div class='col-md-4'> <b>CI:</b> {{datastudent.carnetIdentidad}}</div>
-        <div class='col-md-4'> <b>Género:</b> {{datastudent.generoTipo}} </div>
-        <div class='col-md-4'> <b>F. Nacimiento:</b> {{datastudent.fechaNacimiento|date('d-m-Y')}}</div>
-
-    </small>
-</div>
-
-<div class='row'>
-    <small>
-        <div class='col-md-4'> <b>Gestion:</b> {{dataInfo.gestion}}</div>
-        <div class='col-md-4'> <b>SIE:</b> {{ dataInfo.sie|e }}</div>
-        <div class='col-md-4'><b> U. Educativa:</b> {{dataInfo.unidadEducativa|e}}</div>
-    </small>
-</div>
-<div class='row'>
-    <small>
-        <div class='col-md-4'><b> Nivel:</b> {{dataInfo.nivel|e}}</div>
-        <div class='col-md-2'> <b>Grado:</b> {{dataInfo.grado}}</div>
-        <div class='col-md-2'> <b>Paralelo:</b> {{dataInfo.paralelo}}</div>
-        <div class='col-md-3'> <b>Turno:</b> {{dataInfo.turno}}</div>
-    </small>
-</div>
-
-<div class="col-lg-12">
-    <div class="portlet portlet-basic">
-
-        <div class="portlet-body">
-            <div class="row show-grid">
-
-                <div class="row show-grid">
-                    <div class="col-md-{{tablesize}}">
-                        <table class="table table-bordered table-hover cf">
-                            <thead class="cf">
-                                <tr class="success">
-                                    <th ><small> Área</small></th>
-                                        {% for bim in bimestres %}
-                                        <th >
-                                            <small> {{bim}}</small>
-                                        </th>
-                                    {% endfor %}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for key,notas in notastudent %}
-                                    <tr>
-                                        <td data-title="Asignatura">
-                                            <small><p class="text-blue"><small>{{ key }}</small></p></small>
-                                        </td>
-
-                                        {% for k,nota in notas %}
-                                            <td data-title="{{ key }}. Bimestre" align=''>
-                                                <small>{{nota}} </small>
-                                            </td>
-                                        {% endfor %}
-                                    </tr>
-                                {% endfor %}
-
-                            </tbody>
-                        </table>
-                        {% if level == 11%}
-                            <div id="no-more-tables">
-
-                                <table class="table table-bordered table-hover cf">
-                                    <thead class="cf">
-                                        <tr class="success">
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for key,notacualitativa in objNotaCualitativa %}
-                                            <tr class="success">
-                                                <td data-title="" align='center'>
-                                                    <small><p class="text-blue">Nota Cualitativa</p></small>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td data-title="">
-                                                    <small><p class="text-black">{{ notacualitativa.notaCualitativa }}</p></small>
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
-
-                                    </tbody>
-                                </table>
-
-                            </div>
-                        {% endif%}
-
-
-                    </div>
-                    {% if level != 11%}
-                        <small>
-                            <div class="col-md-5">
-
-                                <div id="no-more-tables">
-
-                                    <table class="table table-bordered table-hover cf">
-                                        <thead class="cf">
-                                            <tr class="success">
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for key,notacualitativa in objNotaCualitativa %}
-                                                <tr class="success">
-                                                    <td data-title="" align='center'>
-                                                        <small><p class="text-blue">{{ notacualitativa.notaTipo }}</p></small>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td data-title="">
-                                                        <small><p class="text-black">{{ notacualitativa.notaCualitativa }}</p></small>
-                                                    </td>
-                                                </tr>
-                                            {% endfor %}
-
-                                        </tbody>
-                                    </table>
-
-                                </div>
-
-                            </div>
-                        </small>
-                    {%endif%}
-                </div>
-
-            </div>
+            <h5 class="text-info">Datos del Estudiante</h5>
+            <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                <tr>
+                    <th>Codigo Rude</th><td style="color:#0086DD">{{inscripcion.estudiante.codigoRude}}</td>
+                </tr>
+                <tr>
+                    <th>Estudiante</th><td style="color:#0086DD"><b>{{inscripcion.estudiante.nombre}} {{inscripcion.estudiante.paterno}} {{inscripcion.estudiante.materno}}</b></td>
+                </tr>
+                <tr>
+                    <th>Estado de matrícula</th><td>{{inscripcion.estadomatriculaTipo.estadomatricula}}</td>
+                </tr>
+            </table>
+            {% if subsistema == 1 %}
+                {% include 'SieRegularBundle:NoteConsultationParents:nota_regular.html.twig' with {'cabeceras': cabeceras, 'indices': indices, 'notas': notas, 'cualitativo': cualitativo, 'inscripcion': inscripcion, 'gestion': gestion} %}
+            {% elseif subsistema == 2 %}
+                {% include 'SieRegularBundle:NoteConsultationParents:nota_alternativa.html.twig' with {'notas': notas, 'inscripcion': inscripcion, 'gestion': gestion} %}
+            {% elseif subsistema == 4 %}
+                {% include 'SieRegularBundle:NoteConsultationParents:nota_especial.html.twig' with {'notas': notas, 'inscripcion': inscripcion, 'gestion': gestion} %}
+            {% endif %}
         </div>
     </div>
 </div>
-<!-- /.col-lg-12 -->
-</div>
-
-
-{% if app.session.get('roluser') == 8 or app.session.get('roluser') == 10 or app.session.get('roluser') == 7 %}
-  {% if app.session.get('currentyear') == dataInfo.gestion and dataInfo.estadomatriculaTipo == 4 %}
-
-  <div class="btn-group btn-group-justified">
-    <div class="alert alert-warning">
-        <strong>Importante:</strong> En caso de no haber reportado las calificaciones, se le hablita la opcioń para poder registrar</br> las mimas.
-    </div>
-    <center>
-      {{form_start(setNotasForm)}}
-        <input type='hidden' id='idInscripcion' name='idInscripcion' value='{{dataInfo.inscripcionid}}'>
-      {{form_end(setNotasForm)}}
-    </center>
-  </div>
-  {% endif %}
-{% endif %}
-
-<!--div class="row">
-    <div class="col-md-{{tablesize}}"> <div id="no-more-tables">
-
-            <table class="table table-bordered table-hover cf">
-                <thead class="cf">
-                    <tr class="success">
-                        <th >Área</th>
-{% for bim in bimestres %}
-<th >
-    {{bim}}
-</th>
-{% endfor %}
-</tr>
-</thead>
-<tbody>
-{% for key,notas in notastudent %}
-    <tr>
-        <td data-title="Asignatura">
-            <small><p class="text-blue"><small>{{ key }}</small></p></small>
-        </td>
-    {% for k,nota in notas %}
-        <td data-title="{{ k }}. Bimestre" align=''>
-            <small>{{nota}}</small>
-        </td>
-    {% endfor %}
-</tr>
-{% endfor %}
-
-</tbody>
-</table>
-
-</div>
-</div>
-
-{% if level != 11%}
-    <small>
-        <div class="col-md-5"> <div id="no-more-tables">
-
-                <table class="table table-bordered table-hover cf">
-                    <thead class="cf">
-                        <tr class="success">
-
-                        </tr>
-                    </thead>
-                    <tbody>
-    {% for key,notacualitativa in objNotaCualitativa %}
-        <tr class="warning">
-            <td data-title="Asignatura">
-                <small><p class="text-blue">{{ notacualitativa.notaTipo }}.  Bim</p></small>
-            </td>
-
-        </tr>
-        <tr>
-            <td data-title="Asignatura">
-                <small><p class="text-blue">{{ notacualitativa.notaCualitativa }}</p></small>
-            </td>
-
-        </tr>
-    {% endfor %}
-
-</tbody>
-</table>
-
-</div>
-</div>
-</small>
-{%endif%}
-</div-->
