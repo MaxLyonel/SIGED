@@ -74,7 +74,7 @@ class WfTramiteController extends Controller
         //dump($id);die;
         $this->session = $request->getSession();
         //dump($this->session);die;
-        $usuario = $this->session->get('userId');
+        $idUsuario = $this->session->get('userId');
         $idlugarusuario = $this->session->get('roluserlugarid');
         $rol = $this->session->get('roluser');
         //validation if the user is logged
@@ -91,7 +91,7 @@ class WfTramiteController extends Controller
                 ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'fp.id = wfufp.flujoProceso')
                 ->where('fp.orden=1')
                 ->andWhere('fp.flujoTipo='.$id)
-                ->andWhere('wfufp.usuario='.$usuario)
+                ->andWhere('wfufp.usuario='.$idUsuario)
                 ->andWhere('wfufp.esactivo=true')
                 ->andWhere('wfufp.lugarTipoId='.$idlugarusuario)
                 ->andWhere('fp.rolTipo='.$rol)
@@ -108,7 +108,7 @@ class WfTramiteController extends Controller
         }else{
             if($rol == $flujoproceso[0]->getRolTipo()->getId()){
                 $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
-                $query->bindValue(':user_id', $usuario->getId());
+                $query->bindValue(':user_id', $idUsuario);
                 $query->bindValue(':sie', $this->session->get('ie_id'));
                 $query->bindValue(':rolId', $rol);
                 $query->execute();
