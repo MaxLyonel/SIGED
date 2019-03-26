@@ -219,11 +219,16 @@ class NoteConsultationParentsController extends Controller {
             $notasArray[$key] = json_decode($value['sp_genera_notas_estudiante_cuan_cual'], true);
         }
 
+        $sufijo = '_cuant';
+        if($inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId() == 11){
+            $sufijo = '_cual';
+        }
+
         $indicesArray = array();
         foreach ($cabeceraArray as $key => $value) {
-            $indicesArray[$key] = strtolower($value->getNotaAbrev().'_cuant');
+
+            $indicesArray[$key] = strtolower($value->getNotaAbrev().$sufijo);
         }
-        // dump($indicesArray);dump($notasArray);die;
 
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($estudianteid);
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);
