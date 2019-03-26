@@ -96,7 +96,6 @@ class GestionMenuController extends Controller {
     }
 
     public function administraSistemacreateAction(Request $request){
-
         $form = $request->get('form');
         $sistemanom               = $form['sistema'];
         $observaciones           = $form['observaciones'];
@@ -108,9 +107,7 @@ class GestionMenuController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $sistema=new SistemaTipo();
         $em->getConnection()->prepare("select * from sp_reinicia_secuencia('sistema_tipo');")->execute();
-
         $tamaño=strlen($abreviatura);
-
         if($tamaño > 5){
             $mensaje = 'La Abreviatura: ' . $sistema->getAbreviatura() . 'solo debe contener como máximo 5 letras';
             $request->getSession()
@@ -129,22 +126,17 @@ class GestionMenuController extends Controller {
             $request->getSession()
                 ->getFlashBag()
                 ->add('exito', $mensaje);
-
         }
         $query = $em->getConnection()->prepare('SELECT sit.id,sistema,abreviatura,bundle,url,obs
                                                 FROM sistema_tipo sit 
                                                 ORDER BY 2');
         $query->execute();
         $listasistema = $query->fetchAll();
-
         return $this->render('SieAppWebBundle:GestionMenu:listaSistemas.html.twig',array('listasistema'=>$listasistema));
-
     }
-
 
     public function administraSistemaeditAction(Request $request){
         $id_usuario = $this->session->get('userId');
-
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
@@ -159,7 +151,6 @@ class GestionMenuController extends Controller {
         $abr            =strtoupper($abreviatura);
         $nomsistema     =strtoupper($nomsis);
         $form = $this->createFormBuilder()
-
             ->add('sistema', 'text', array( 'data' =>$nomsistema , 'attr' => array('class' => 'form-control','enabled' => true)))
             ->add('bundle', 'text', array( 'data' =>$bundle , 'attr' => array('class' => 'form-control','enabled' => true)))
             ->add('url', 'text', array( 'data' =>$url , 'attr' => array('class' => 'form-control','enabled' => true)))
@@ -168,11 +159,9 @@ class GestionMenuController extends Controller {
             ->add('idsistema', 'hidden', array(  'data' =>$idsistema , 'attr' => array('class' => 'form-control','enabled' => true)))
             ->add('guardar', 'button', array('label'=> 'Guardar Cambios', 'attr'=>array('class'=>'btn btn-primary ','onclick'=>'guardarSistema()')))
             ->getForm();
-
         return $this->render('SieAppWebBundle:GestionMenu:editarSistema.html.twig',array(
             'form'=>$form->createView(),'sistema'=>$sistema
         ));
-
     }
 
     public function  administraSistemaupdateAction(Request $request){
@@ -185,17 +174,12 @@ class GestionMenuController extends Controller {
         $url                    = $form['url'];
         $em = $this->getDoctrine()->getManager();
         $sistematipo  = $em->getRepository('SieAppWebBundle:SistemaTipo')->find($idsistema);
-
-
         $tamaño=strlen($abre);
-
         if($tamaño > 5){
-
             $mensaje = 'La Abreviatura: ' . $abre . 'solo debe contener como máximo 5 letras';
             $request->getSession()
                 ->getFlashBag()
                 ->add('error', $mensaje);
-
         }
         else{
             $abre                     =strtoupper($abre);
@@ -207,12 +191,10 @@ class GestionMenuController extends Controller {
             $sistematipo->setUrl($url);
             $em->persist($sistematipo);
             $em->flush();
-
             $mensaje = 'El Sistema ' . $sistematipo->getSistema() . ' Fue Actualizada con éxito';
             $request->getSession()
                 ->getFlashBag()
                 ->add('exito', $mensaje);
-
         }
         $query = $em->getConnection()->prepare('SELECT sit.id,sistema,abreviatura,bundle,url,obs
                                                 FROM sistema_tipo sit 
@@ -221,31 +203,20 @@ class GestionMenuController extends Controller {
         $query->execute();
         $listasistema = $query->fetchAll();
         return $this->render('SieAppWebBundle:GestionMenu:listaSistemas.html.twig',array('listasistema'=>$listasistema));
-
     }
 
     public function administraSistemadeleteAction(Request $request){
-
-
         $idsistema= $request->get('idSistema');
-        //dump($idsistema);die;
         $em=$this->getDoctrine()->getManager();
         $sistema=$em->getRepository('SieAppWebBundle:SistemaTipo')->find($idsistema);
-
-
-        $query = $em->getConnection()->prepare("SELECT COUNT(*) FROM sistema_rol WHERE sistema_rol.sistema_tipo_id = $idsistema ");
+        $query = $em->getConnection()->prepare("SELECT COUNT(*) FROM sistema_rol WHERE sistema_rol.sistema_tipo_id = $idsistema");
         $query->execute();
         $sistemaasignadorol = $query->fetch();
         $query = $em->getConnection()->prepare("SELECT COUNT(*) FROM menu_sistema WHERE menu_sistema.sistema_tipo_id=$idsistema");
         $query->execute();
         $sistemaasignadomenutipo = $query->fetch();
-
-        //dump($sistemaasignadorol);dump($sistemaasignadomenutipo);die;
-
         if($sistemaasignadorol['count'] > 0|| $sistemaasignadomenutipo['count']>0){
-
             $mensaje = 'El Sistema ' . $sistema->getSistema() . '  NO se puede eliminar por que se encuentra asignado a un Menú ';
-
             $request->getSession()
                 ->getFlashBag()
                 ->add('error', $mensaje);
@@ -254,11 +225,9 @@ class GestionMenuController extends Controller {
             $em->remove($sistema);
             $em->flush();
             $mensaje = 'El Sistema ' . $sistema->getSistema() . ' Fue Eliminado con Éxito';
-
             $request->getSession()
                 ->getFlashBag()
                 ->add('exito', $mensaje);
-
         }
         $query = $em->getConnection()->prepare('SELECT sit.id,sistema,abreviatura,bundle,url,obs
                                                 FROM sistema_tipo sit 
@@ -267,8 +236,6 @@ class GestionMenuController extends Controller {
         $query->execute();
         $listasistema = $query->fetchAll();
         return $this->render('SieAppWebBundle:GestionMenu:listaSistemas.html.twig',array('listasistema'=>$listasistema));
-        //return $this->redirectToRoute('gestionmenu_administra_sistema');
-
     }
 
     // Administracion de Menús
@@ -284,7 +251,6 @@ class GestionMenuController extends Controller {
             $icono[$listaicono[$i]['menu_nivel_tipo']] = $listaicono[$i]['menu_nivel_tipo'];
         }
         $form = $this->createFormBuilder()
-            // ->setAction($this->generateUrl('gestionmenuprincipal_createmenuprincipal'))
             ->add('nombre', 'text', array( 'attr' => array('class' => 'form-control')))
             ->add('icono', 'text', array('attr' => array('class' => 'form-horizontal icp icp-auto','autocomplete'=>'off')))
             ->add('guardar', 'button', array('label'=> 'Guardar Menú', 'attr'=>array('class'=>'btn btn-primary','onclick'=>'guardarMenu()')))
@@ -320,7 +286,6 @@ class GestionMenuController extends Controller {
                 ->add('exito', $mensaje);
         }
         else{
-
             $mensaje = 'El Nombre de : '.$detallemenu.' ya se Encuentra Registrado. Elija otro nombre para el Menú Principal';
             $request->getSession()
                 ->getFlashBag()
@@ -335,7 +300,6 @@ class GestionMenuController extends Controller {
         return $this->render('SieAppWebBundle:GestionMenu:listaMenusprincipales.html.twig', array('menu' => $menu));
     }
     public function updateMenuAction(Request $request){
-
         $em = $this->getDoctrine()->getManager();
         $id_menu= $request->get('id_menu');
         $menutipo   = $em->getRepository('SieAppWebBundle:MenuTipo')->find($id_menu);
@@ -349,7 +313,6 @@ class GestionMenuController extends Controller {
         for ($i = 0; $i < count($listaicono); $i++) {
             $iconoArray[$listaicono[$i]['menu_nivel_tipo']] = $listaicono[$i]['menu_nivel_tipo'];
         }
-
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl('gestionmenu_editmenu'))
             ->add('detalle_menu', 'text', array( 'required' => true, 'data' =>$detalle_menu , 'attr' => array('class' => 'form-control','enabled' => true)))
@@ -357,12 +320,9 @@ class GestionMenuController extends Controller {
             ->add('id_menu', 'hidden', array( 'data'=>$id_menu))
             ->add('guardar', 'submit', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary', 'disbled' => true)))
             ->getForm();
-
         return $this->render('SieAppWebBundle:GestionMenu:editarMenu.html.twig',array('form'=>$form->createView(),'menu'=>$menutipo ));
-
     }
     public function editmenuAction(Request $request){
-
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
         $id_menu        =   $form['id_menu'];
@@ -384,7 +344,6 @@ class GestionMenuController extends Controller {
                                                   ORDER BY 1');
         $query->execute();
         $menu= $query->fetchAll();
-
         return $this->redirectToRoute('gestionmenu', array('menu'=>$menu));
     }
     public function eliminamenuAction(Request $request){
@@ -409,7 +368,6 @@ class GestionMenuController extends Controller {
                 ->getFlashBag()
                 ->add('exito', $mensaje);
         }
-
         $query = $em->getConnection()->prepare('SELECT mt.id, mt.detalle_menu,mt.ruta,mt.icono, mt.menu_nivel_tipo_id  
                                               from menu_tipo mt 
                                               where mt.menu_nivel_tipo_id = 1
@@ -418,8 +376,6 @@ class GestionMenuController extends Controller {
         $menu= $query->fetchAll();
         return $this->render('SieAppWebBundle:GestionMenu:listaMenusprincipales.html.twig', array('menu' => $menu,));
     }
-
-
     //Administracion de Sub Menus
 
     public function submenusAction(Request $request){
@@ -431,35 +387,30 @@ class GestionMenuController extends Controller {
 					    ORDER BY mt.orden ASC");
         $query->execute();
         $menu = $query->fetchAll();
-
         $query = $em->getConnection()->prepare("SELECT mt.id,mt.detalle_menu,mt.icono,mt.ruta,mt.orden,mt.obs,mt.menu_nivel_tipo_id 
                         FROM menu_tipo mt  WHERE mt.id = ".$idmenu." 
 					    ORDER BY mt.orden ASC");
         $query->execute();
         $menuanterior = $query->fetch();
-
         return $this->render('SieAppWebBundle:GestionMenu:subMenus.html.twig', array(
             'menu' => $menu,'idmenu'=>$idmenu,'idnivel'=>$idnivel,'menuanterior'=>$menuanterior
         ));
     }
     public function nuevosubmenuAction(Request $request){
-        //dump($request);die;
         $idmenu= $request->get('idmenu');
         $idnivel= $request->get('idnivel');
-
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT max(menu_tipo.orden) from menu_tipo WHERE menu_tipo.menu_tipo_id =$idmenu ");
         $query->execute();
         $orden_maximo = $query->fetch();
         $orden=($orden_maximo['max']+1);
-
         $query = $em->getConnection()->prepare("SELECT detalle_menu,ruta from menu_tipo WHERE menu_tipo.id =$idmenu ");
         $query->execute();
         $menuanterior = $query->fetch();
         $nombremenu=$menuanterior['detalle_menu'];
         $rutamenuanterior=$menuanterior['ruta'];
         $query = $em->getConnection()->prepare("SELECT menu_nivel_tipo FROM menu_nivel_tipo 
-                                                WHERE menu_nivel_tipo.\"id\">=100
+                                                WHERE menu_nivel_tipo.id >= 100
                                                 ORDER BY 1");
         $query->execute();
         $listaicono= $query->fetchAll();
@@ -467,10 +418,7 @@ class GestionMenuController extends Controller {
         for ($i = 0; $i < count($listaicono); $i++) {
             $icono[$listaicono[$i]['menu_nivel_tipo']] = $listaicono[$i]['menu_nivel_tipo'];
         }
-
         $form = $this->createFormBuilder()
-
-            // ->setAction($this->generateUrl('gestionmenuprincipal_createsubmenu'))
             ->add('nombre', 'text', array( 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
             ->add('ruta', 'text', array( 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
             ->add('icono', 'text', array('attr' => array('class' => 'form-horizontal icp icp-auto','autocomplete'=>'off')))
@@ -480,12 +428,9 @@ class GestionMenuController extends Controller {
             ->add('idnivel', 'hidden', array( 'data'=>$idnivel))
             ->add('guardar', 'button', array('label'=> 'Guardar Sub Menú', 'attr'=>array('class'=>'btn btn-primary','ata-placement'=>'top','onclick'=>'guardarsubMenu()')))
             ->getForm();
-
         return $this->render('SieAppWebBundle:GestionMenu:nuevoSubmenu.html.twig',array(
             'form'=>$form->createView(),'nombremenu'=>$nombremenu
         ));
-
-
     }
     public function createSubMenuAction(Request $request){
         //dump($request);die;
@@ -501,13 +446,9 @@ class GestionMenuController extends Controller {
         $query->execute();
         $cantidad= $query->fetch();
         $cant=(int)$cantidad['count'];
-
         if($cant==0){
-            // dump("canti es 0");die;
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('menu_tipo');")->execute();
             $menutipo = new MenuTipo();
-            // $idmenu=(int)$form['idmenu'];
-
             $menutipoid = $em->getRepository('SieAppWebBundle:MenuTipo')->find($form['idmenu']);
             $niveltipo = $em->getRepository('SieAppWebBundle:MenuNivelTipo')->find($form['idnivel']+1);
             $menutipo ->setDetalleMenu($form['nombre']);
@@ -520,7 +461,6 @@ class GestionMenuController extends Controller {
             $em->persist($menutipo);
             $em->flush();
         }else{
-
             $mensaje = 'El Nombre del sub Menú : '.$nombresubmenu.' ya se Encuentra Registrado. Elija otro Nombre para el Sub Menú';
             $request->getSession()
                 ->getFlashBag()
@@ -536,7 +476,6 @@ class GestionMenuController extends Controller {
 					    ");
         $query->execute();
         $menuanterior = $query->fetch();
-
         return $this->render('SieAppWebBundle:GestionMenu:listaSubMenusBase.html.twig', array(
             'menu' => $menu,'idmenu'=>$idmenu,'idnivel'=>$nivel,'menuanterior'=>$menuanterior
         ));
@@ -548,24 +487,19 @@ class GestionMenuController extends Controller {
         $idmenu_sub             = $request->get('idmenu_sub');
         $idnivel                = $request->get('idnivel');
 
-
         $menutipo   = $em->getRepository('SieAppWebBundle:MenuTipo')->find($idmenu_sub);
         $detalle_menu   =$menutipo->getDetalleMenu();
         $icono          =$menutipo->getIcono();
         $ruta           =$menutipo->getRuta();
         $ordenant       =$menutipo->getOrden();
         $obs            =$menutipo->getObs();
-
-
         $query = $em->getConnection()->prepare("SELECT menu_tipo.id,menu_tipo.orden from menu_tipo WHERE menu_tipo.menu_tipo_id =$id_menuprincipal ORDER BY 1");
         $query->execute();
         $orden= $query->fetchAll();
-
         $ordenArray = array();
         for ($i = 0; $i < count($orden); $i++) {
             $ordenArray[$orden[$i]['orden']] = $orden[$i]['orden'];
         }
-        //dump($ordenArray);die;
 
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl('gestionmenu_editsubmenu'))
@@ -579,22 +513,17 @@ class GestionMenuController extends Controller {
             ->add('idnivel', 'hidden', array( 'data'=>$idnivel))
             ->add('guardar', 'submit', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary')))
             ->getForm();
-
         return $this->render('SieAppWebBundle:GestionMenu:editarSubmenu.html.twig',array('form'=>$form->createView(),'menutipo'=>$menutipo ));
-
     }
     public function editsubmenuAction(Request $request){
-
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
         $id_menu        =   $form['id_menu'];
         $id_menup       =   $form['id_menup'];
         $idnivel        =   $form['idnivel'];
-
         $detalle_menu   =   $form['detalle_menu'];
         $icono          =   $form['icono'];
         $ruta           =   $form['ruta'];
-        //$orden          =   $form['orden'];
         $obs            =   $form['obs'];
         $menutipo   = $em->getRepository('SieAppWebBundle:MenuTipo')->find($id_menu);
         $menutipo->setDetalleMenu($detalle_menu);
@@ -604,20 +533,17 @@ class GestionMenuController extends Controller {
         $menutipo->setObs($obs);
         $em->persist($menutipo);
         $em->flush();
-
         $mensaje = 'Sub Menú modificado correctamente';
         $request->getSession()
             ->getFlashBag()
             ->add('exito', $mensaje);
         return $this->redirectToRoute('gestionmenu_submenus',array('id'=>$id_menup,'nivel'=>$idnivel));
-
     }
     public function eliminasubmenuAction(Request $request){
         //dump($request);die;
         $id=$request->get('id'); //menude la tabla
         $idnivel=$request->get('nivel');//nivel de la tabla
         $idmenuprincipal=$request->get('idmenu');//padre
-
         $em = $this->getDoctrine()->getManager();
         $submenu=$em->getRepository('SieAppWebBundle:MenuTipo')->find($id);
         $nom = $submenu->getDetalleMenu();
@@ -625,11 +551,9 @@ class GestionMenuController extends Controller {
         $query = $em->getConnection()->prepare("SELECT  COUNT (*) from menu_tipo where menu_tipo.menu_tipo_id= $id");
         $query->execute();
         $submenuhijos = $query->fetch();
-
         $query = $em->getConnection()->prepare("SELECT COUNT (*) from menu_sistema where menu_sistema.menu_tipo_id =  $id");
         $query->execute();
         $submenuasigando = $query->fetch();
-
         if ($submenuhijos['count']>0||$submenuasigando['count']>0){
             $mensaje = 'El Sub Menú: ' . $nom  . ' Tiene sub menús o ya se encuentra asignado a un sistema';
             $request->getSession()
@@ -637,15 +561,12 @@ class GestionMenuController extends Controller {
                 ->add('error', $mensaje);
         }
         else{
-
             $em->remove($submenu);
             $em->flush();
-
             $mensaje = 'El Sub Menú: ' . $nom  . ' Fue eliminado con éxito';
             $request->getSession()
                 ->getFlashBag()
                 ->add('exito', $mensaje);
-
         }
         $query = $em->getConnection()->prepare("SELECT mt.id,mt.detalle_menu,mt.icono,mt.ruta,mt.orden,mt.obs,mt.menu_nivel_tipo_id 
                         from menu_tipo mt  where mt.id = ".$idmenuprincipal." 
@@ -661,7 +582,6 @@ class GestionMenuController extends Controller {
             'menu' => $menu,'idmenu'=>$idmenuprincipal,'idnivel'=>$idnivel,'menuanterior'=>$menuanterior
         ));
     }
-
 
     //MODULO ASIGNACION ROL-SISTEMA
 
@@ -1653,8 +1573,7 @@ ORDER BY 2,3,4");
      *Funcion para generar los menús en los demás sistemas
      */
 
-    public function generamenuSistemaAction($rol_tipo_id, $idsistema, $userId){
-
+    public function generamenuSistemaAction($rol_tipo_id, $idsistema, $userId){//dump($rol_tipo_id, $idsistema, $userId);die;
         /*Generacion de menús para los demás sistemas*/
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT mt.id,sti.sistema, rtip.rol, ms.detalle_menu,mt.ruta,mt.icono,mt.id,mt.menu_tipo_id,msr.esactivo,mt.menu_nivel_tipo_id
@@ -1667,7 +1586,7 @@ ORDER BY 2,3,4");
                                                 WHERE sti.id = $idsistema  and rtip.id  = $rol_tipo_id AND msr.esactivo = TRUE
                                                 ORDER BY 7,8");
         $query->execute();
-        $menu_arboles = $query->fetchAll();
+        $menu_arboles = $query->fetchAll();//dump($menu_arboles);die;
         $query = $em->getConnection()->prepare("SELECT TRIM(usuario_rol.sub_sistema)as sub_sistema
                                                 FROM usuario_rol
                                                 WHERE  usuario_rol.rol_tipo_id=$rol_tipo_id
@@ -1703,116 +1622,6 @@ ORDER BY 2,3,4");
         else{
             return new Response('');
         }
-
-       /* $em = $this->getDoctrine()->getManager();
-        // Adecuación a los Sistemas de Certificacion y diplomas
-        switch ($idsistema) {
-            case 3:
-            case 5:
-
-            $query = $em->getConnection()->prepare("SELECT  DISTINCT TRIM(usuario_rol.sub_sistema)as sub_sistema
-                                                FROM usuario_rol
-                                                WHERE  usuario_rol.rol_tipo_id in (SELECT usuario_rol.rol_tipo_id from usuario_rol WHERE usuario_rol.usuario_id = $userId)
-                                                AND usuario_rol.usuario_id=$userId");
-            $query->execute();
-            $subsistemas = $query->fetch();
-            $cadena=$subsistemas['sub_sistema'];
-            $sistemas = explode(",", $cadena);
-            $query = $em->getConnection()->prepare("SELECT TRIM(sistema_tipo.abreviatura) AS abreviatura from sistema_tipo WHERE sistema_tipo.\"id\"=$idsistema");
-            $query->execute();
-            $abreviatura = $query->fetch();
-            for ($i = 0; $i < count($sistemas); $i++) {
-                if($sistemas[$i] == $abreviatura['abreviatura'] OR  $sistemas[$i]=='*' OR $rol_tipo_id==8)
-                { $sw=1; break; }
-                else{$sw=0;
-                }
-            }
-            if($sw==1)
-            {
-                $query = $em->getConnection()->prepare("SELECT DISTINCT sti.sistema,  ms.detalle_menu,mt.ruta,mt.icono,mt.id,mt.menu_tipo_id,mt.menu_nivel_tipo_id
-                                                FROM menu_sistema_rol  msr 
-                                                INNER JOIN sistema_rol sr ON msr.sistema_rol_id = sr.id
-                                                INNER JOIN menu_sistema ms ON msr.menu_sistema_id=ms.id
-                                                INNER JOIN menu_tipo mt ON ms.menu_tipo_id=mt.id
-                                                INNER JOIN sistema_tipo sti ON sti.id = ms.sistema_tipo_id
-                                                INNER JOIN rol_tipo rtip ON rtip.id =sr.rol_tipo_id   
-                                                WHERE sti.id = $idsistema  and rtip.id IN (SELECT usuario_rol.rol_tipo_id from usuario_rol WHERE usuario_rol.usuario_id = $userId) AND msr.esactivo = TRUE
-                                                ORDER BY 1");
-                $query->execute();
-                $menu_arboles = $query->fetchAll();
-
-                if ($idsistema==5 or $idsistema==3 or $idsistema==1 ){
-                    return $this->render(
-                        'SieAppWebBundle:GestionMenu:list_menu_siged.html.twig', array('menu_arboles' => $menu_arboles, 'rol_tipo_id' => $rol_tipo_id, 'sistema' => $idsistema)
-                    );
-                }else{
-                    return $this->render(
-                        'SieAppWebBundle:GestionMenu:list_menu.html.twig', array('menu_arboles' => $menu_arboles, 'rol_tipo_id' => $rol_tipo_id, 'sistema' => $idsistema)
-                    );
-                }
-
-            }
-             else{
-                 return new Response('');
-             }
-                break;
-            default:
-
-                //Generacion de menús para los demás sistemas
-                $query = $em->getConnection()->prepare("SELECT mt.id,sti.sistema, rtip.rol, ms.detalle_menu,mt.ruta,mt.icono,mt.id,mt.menu_tipo_id,msr.esactivo,mt.menu_nivel_tipo_id
-                                                FROM menu_sistema_rol  msr 
-                                                INNER JOIN sistema_rol sr ON msr.sistema_rol_id = sr.id
-                                                INNER JOIN menu_sistema ms ON msr.menu_sistema_id=ms.id
-                                                INNER JOIN menu_tipo mt ON ms.menu_tipo_id=mt.id
-                                                INNER JOIN sistema_tipo sti ON sti.id = ms.sistema_tipo_id
-                                                INNER JOIN rol_tipo rtip ON rtip.id =sr.rol_tipo_id   
-                                                WHERE sti.id = $idsistema  and rtip.id  = $rol_tipo_id AND msr.esactivo = TRUE
-                                                ORDER BY 7,8");
-
-                $query->execute();
-                $menu_arboles = $query->fetchAll();
-                //dump($menu_arboles);die;
-                $query = $em->getConnection()->prepare("SELECT TRIM(usuario_rol.sub_sistema)as sub_sistema
-                                                FROM usuario_rol
-                                                WHERE  usuario_rol.rol_tipo_id=$rol_tipo_id
-                                                AND usuario_rol.usuario_id=$userId");
-                $query->execute();
-                $subsistemas = $query->fetch();
-
-                $cadena=$subsistemas['sub_sistema'];
-                $sistemas = explode(",", $cadena);
-                //dump($sistemas);die;
-
-                $query = $em->getConnection()->prepare("SELECT TRIM(sistema_tipo.abreviatura) AS abreviatura from sistema_tipo WHERE sistema_tipo.id=$idsistema");
-                $query->execute();
-                $abreviatura = $query->fetch();
-                //dump($abreviatura);die;
-                for ($i = 0; $i < count($sistemas); $i++) {
-                    if($sistemas[$i] == $abreviatura['abreviatura'] OR  $sistemas[$i]=='*' OR $rol_tipo_id==8)
-                    { $sw=1; break; }
-                    else{$sw=0;
-                    }
-                }
-                //dump($sw);die;
-                if($sw==1  )
-                {
-                    // Adecuación de menus Para diferentes Plantillas
-                    if ($idsistema==1){
-                        return $this->render(
-                            'SieAppWebBundle:GestionMenu:list_menu_siged.html.twig', array('menu_arboles' => $menu_arboles, 'rol_tipo_id' => $rol_tipo_id, 'sistema' => $idsistema)
-                        );
-                    }else{
-                       // dump($menu_arboles);die;
-                        return $this->render(
-                            'SieAppWebBundle:GestionMenu:list_menu.html.twig', array('menu_arboles' => $menu_arboles, 'rol_tipo_id' => $rol_tipo_id, 'sistema' => $idsistema)
-                        );
-                    }
-                }
-                else{
-                    return new Response('');
-                }
-        }*/
-
     }
 //LISTA DE MENUS X SISTEMA
     public function listasistemamenurolAction(Request $request){
@@ -1852,12 +1661,8 @@ ORDER BY 2,3,4");
                                                 ORDER BY 3");
         $query->execute();
         $listaSistemamenurol = $query->fetchAll();
-        //dump($listaSistemamenurol);die;
-        //return new Response("eeee");
         return $this->render(
             'SieAppWebBundle:GestionMenu:generaListaSistemamenuRol.html.twig',array( 'listaSistemamenurol' => $listaSistemamenurol,'id_sistema'=>$idsistema));
-
-
     }
 
 
