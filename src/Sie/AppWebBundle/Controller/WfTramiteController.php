@@ -108,7 +108,7 @@ class WfTramiteController extends Controller
         }else{
             if($rol == $flujoproceso[0]->getRolTipo()->getId()){
                 $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
-                $query->bindValue(':user_id', $usuario);
+                $query->bindValue(':user_id', $usuario->getId());
                 $query->bindValue(':sie', $this->session->get('ie_id'));
                 $query->bindValue(':rolId', $rol);
                 $query->execute();

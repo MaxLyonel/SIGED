@@ -3,6 +3,8 @@
 namespace Sie\AppWebBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\DBAL\Types\Type;
+Type::overrideType('datetime', 'Doctrine\DBAL\Types\VarDateTimeType');
 
 /**
  * InstitucioneducativaHumanisticoTecnicoRepository
