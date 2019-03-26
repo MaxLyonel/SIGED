@@ -78,7 +78,7 @@ class WfTramiteController extends Controller
         $idlugarusuario = $this->session->get('roluserlugarid');
         $rol = $this->session->get('roluser');
         //validation if the user is logged
-        if (!isset($usuario)) {
+        if (!isset($idUusuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
 
