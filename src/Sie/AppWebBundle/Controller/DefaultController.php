@@ -210,7 +210,7 @@ class DefaultController extends Controller {
             case '172.20.196.9:8010':
             case '172.20.0.53:8010':
                 $sysname = 'ESPECIAL';
-                $sysporlet = 'red';
+                $sysporlet = '#F44336';//red
                 $sysbutton = true;
                 $layout = 'layoutEspecialSie.html.twig';
                 $this->session->set('pathSystem', "SieEspecialBundle");

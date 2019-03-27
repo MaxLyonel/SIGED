@@ -31,10 +31,16 @@
                     </div>
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="estudiante">Estudiante</label>
-                                    <input type="text" class="form-control" id="estudiante" name="estudiante" value="{{ estudiante }}" readonly>
+                                    <label for="rude">Código RUDE</label>
+                                    <input type="text" class="form-control" id="rude" name="rude" value="{{ rude }}" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="estudiante">Nombre del Estudiante</label>
+                                    <input type="text" class="form-control" id="estudiante" name="estudiante" value="{{ estudiante }}" disabled>
                                 </div>
                             </div>
                         </div>
@@ -42,7 +48,7 @@
                         <hr>
                         <div class="row">
                             <form id="modifica" action="" autocomplete="off">
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-sm-6">
                                     <input type="hidden" id="tramite_id" name="tramite_id" value="{{ tramite_id }}">
                                     <div class="form-group">
                                         <label for="es_talento">¿Es Talento?</label>
@@ -69,7 +75,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-sm-6">
                                     <div class="form-group">
                                         <label for="nro_informe">Número de Informe</label>
                                         <input type="text" class="form-control" id="nro_informe" name="nro_informe" required>
@@ -79,7 +85,7 @@
                                         <input type="file" class="form-control" id="informe" name="informe" accept=".pdf" required>
                                     </div>
                                 </div>
-                                <div class="col-md-12 text-center">
+                                <div class="col-md-12 col-sm-12 text-center">
                                     <button type="submit" class="btn btn-primary" id="actualiza">Guardar</button>
                                 </div>
                             </form>

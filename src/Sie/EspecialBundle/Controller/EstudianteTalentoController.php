@@ -80,7 +80,7 @@ class EstudianteTalentoController extends Controller {
 
     public function newAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
-        $flujotipo_id = isset($_GET['id']) == false ? 10 : $_GET['id'];
+        $flujotipo_id = isset($_GET['id']) == false ? 10 : $_GET['id'];//$request->get('id');
         $ieducativa_result = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->getSession()->get('ie_id'));
         $centro_inscripcion = $ieducativa_result == null ? '' : $ieducativa_result->getId();//dump($ieducativa_result, $ieducativa_result->getInstitucioneducativa());die;
         $centro = $ieducativa_result == null ? '' : $ieducativa_result->getInstitucioneducativa();
@@ -204,7 +204,8 @@ class EstudianteTalentoController extends Controller {
         $datos = json_decode($resultDatos->getdatos());
         $restudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($datos->estudiante_id);
         $estudiante = $restudiante->getNombre().' '.$restudiante->getPaterno().' '.$restudiante->getMaterno();
-        return $this->render('SieEspecialBundle:EstudianteTalento:process.html.twig', array('tramite_id' => $tramite_id, 'estudiante' => $estudiante));
+        $rude = $restudiante->getCodigoRude();
+        return $this->render('SieEspecialBundle:EstudianteTalento:process.html.twig', array('tramite_id' => $tramite_id, 'rude' => $rude, 'estudiante' => $estudiante));
     }
 
     public function updateAction(Request $request) {
@@ -213,7 +214,7 @@ class EstudianteTalentoController extends Controller {
 
         $documento = $request->files->get('informe');
         if(!empty($documento)){
-            $destination_path = 'uploads/talento/';//Verificar la ruta
+            $destination_path = 'uploads/archivos/flujos/'.$request->getSession()->get('ie_id').'/talento/';
             $docpdf = date('YmdHis').'.'.$documento->getClientOriginalExtension();
             $documento->move($destination_path, $docpdf);
         }else{
@@ -264,7 +265,7 @@ class EstudianteTalentoController extends Controller {
 
     public function checkAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
-        $tramite_id = $_GET['id'];
+        $tramite_id = $request->get('id');// $_GET['id'];
 
         $resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
             ->select('wfd')
@@ -277,12 +278,14 @@ class EstudianteTalentoController extends Controller {
         $datos0 = json_decode($resultDatos[0]->getdatos());
         $restudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($datos0->estudiante_id);
         $estudiante = $restudiante->getNombre().' '.$restudiante->getPaterno().' '.$restudiante->getMaterno();
+        $rude = $restudiante->getCodigoRude();
+        $institucion = $datos0->centro_inscripcion;
 
         $datos1 = json_decode($resultDatos[1]->getdatos());
         $es_talento = $datos1->es_talento;
         $tipo_talento = $datos1->tipo_talento;
         $documento = $datos1->informe;
-        return $this->render('SieEspecialBundle:EstudianteTalento:confirm.html.twig', array('tramite_id' => $tramite_id, 'estudiante' => $estudiante, 'es_talento' => $es_talento, 'tipo_talento' => $tipo_talento, 'documento' => $documento));
+        return $this->render('SieEspecialBundle:EstudianteTalento:confirm.html.twig', array('tramite_id' => $tramite_id, 'rude' => $rude, 'estudiante' => $estudiante, 'es_talento' => $es_talento, 'tipo_talento' => $tipo_talento, 'institucion' => $institucion, 'documento' => $documento));
     }
 
     public function confirmAction(Request $request) {

@@ -64,7 +64,7 @@
                                         <div class="col-md-8">
                                             <div class="form-group">
                                                 <label for="cedula">Cédula Identidad</label>
-                                                <input type="text" class="form-control noedit" id="cedula" name="cedula" required>
+                                                <input type="text" class="form-control noedit" id="cedula" name="cedula">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -160,13 +160,13 @@
                             $("#estudiante_id").val(data.estudiante.estudiante_id);
                             $("#estudiante_ins_id").val(data.estudiante.estudiante_ins_id);
                         } else if (data.msg == 'nocurso') {
-                            mesage('warning', 'Notificación', 'Estudiante no está inscrito en la gestión actual.');
+                            mesage('warning', 'Notificación', 'Estudiante no está inscrito en la gestión actual.', true);
                         } else if (data.msg == 'noins') {
-                            mesage('warning', 'Notificación', 'Estudiante no está inscrito.');
+                            mesage('warning', 'Notificación', 'Estudiante no está inscrito.', true);
                         } else if (data.msg == 'noest') {
-                            mesage('warning', 'Notificación', 'El estudiante no existe.');
+                            mesage('warning', 'Notificación', 'El estudiante no existe.', true);
                         } else if (data.msg == 'existe') {
-                            mesage('warning', 'Notificación', 'El estudiante ya solicitó con anterioridad.');
+                            mesage('warning', 'Notificación', 'El estudiante ya solicitó con anterioridad.', false);
                         }
                         $("#buscar").attr('disabled', false);
                     },
@@ -175,15 +175,17 @@
                     }
                 });
             } else {
-                mesage('info', 'Alerta', 'Ingrese código RUDE del estudiante');
+                mesage('info', 'Alerta', 'Ingrese código RUDE del estudiante', false);
             }
         }
 
-        function mesage(tipo, titulo, msg) {
+        function mesage(tipo, titulo, msg, estado) {
             $("#carga").append('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
                 '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
                 '<strong>'+ titulo +'</strong> '+ msg +' </div>');
-            setTimeout(function () { $("#carga").empty(); }, 3500);
+            if (estado == true) {
+                setTimeout(function () { $("#carga").empty(); }, 3500);
+            }
         }
 
         function clearInput() {

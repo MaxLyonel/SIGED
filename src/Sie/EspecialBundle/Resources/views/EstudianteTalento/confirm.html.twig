@@ -33,31 +33,37 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="estudiante">Estudiante</label>
-                                    <input type="text" class="form-control" id="estudiante" value="{{ estudiante }}" readonly>
+                                    <label for="rude">Código RUDE</label>
+                                    <input type="text" class="form-control" id="rude" value="{{ rude }}" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="estudiante">Nombre del Estudiante</label>
+                                    <input type="text" class="form-control" id="estudiante" value="{{ estudiante }}" disabled>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
                                 <div class="form-group">
                                     <label for="es_talento">¿Es Talento?</label>
-                                    <input type="text" class="form-control" id="es_talento" value="{{ es_talento }}" readonly>
+                                    <input type="text" class="form-control" id="es_talento" value="{{ es_talento }}" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-xs-6">
                                 <div class="form-group">
                                     <label for="tipo_talento">Tipo de Talento</label>
-                                    <input type="text" class="form-control" id="tipo_talento" value="{{ tipo_talento }}" readonly>
+                                    <input type="text" class="form-control" id="tipo_talento" value="{{ tipo_talento }}" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12 text-center">
-                                <h4>Documento: <a href="{{asset('uploads/talento/'~ documento )}}" target="_blank">Informe Psicopedagógico</a></h4>
+                                <h4>Documento: <a href="{{asset('uploads/archivos/flujos/'~institucion~'/talento/'~ documento )}}" target="_blank">Informe Psicopedagógico</a></h4>
                             </div>
                         </div>
                         <div id="carga"></div>
                         <hr>
-                        <div class="row">
+                        <div class="row" id="myform">
                             <form id="confirmar" action="" autocomplete="off">
                                 <input type="hidden" id="tramite_id" value="{{ tramite_id }}">
                                 <div class="col-md-12 text-center">
@@ -69,7 +75,7 @@
                                             <option value="NO">No</option>
                                         </select>
                                     </div>#}
-                                    <h3>¿Está segura(o) de confirmar la conclusión del trámite?</h3>
+                                    <h4>¿Está seguro(a) de confirmar la conclusión del trámite?</h4>
                                 </div>
                                 <div class="col-md-12 text-center">
                                     <button type="submit" class="btn btn-primary" id="confirma">Confirmar</button>
@@ -107,6 +113,7 @@
                 beforeSend: function () {
                     $("#carga").empty();
                     $("#carga").append('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
+                    $("#myform").css('display', 'none');
                 },
                 success: function (data) {
                     $("#confirma").attr('disabled', false);
@@ -116,10 +123,12 @@
                         location.href = "{{ path('wf_tramite_recibido') }}";
                     } else {
                         mesage('warning', 'Notificación', data.msg);
+                        $("#myform").css('display', 'block');
                     }
                 },
                 error: function (error) {
                     $("#carga").empty();
+                    $("#myform").css('display', 'block');
                     $("#confirma").attr('disabled', false);
                 }
             });
