@@ -8566,7 +8566,7 @@ join lugar_tipo lt on ur.lugar_tipo_id=lt.id
 where (ur.rol_tipo_id=21 or ur.rol_tipo_id=29) and u.esactivo and ur.esactivo $where
 order by rt.id,lt.lugar
                 ";
-                echo $query;die;
+                
     $stmt = $db->prepare($query);
     $params = array();
     $stmt->execute($params);
