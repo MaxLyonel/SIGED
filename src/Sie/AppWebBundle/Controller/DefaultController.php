@@ -87,6 +87,7 @@ class DefaultController extends Controller {
             case '172.20.196.9:8016':
             case 'www.herramientaalternativa.local':
             case 'alternativa.sie.gob.bo':
+            case 'localhost:8081':
                 $sysname = 'Herramienta Alternativa';
                 $sysporlet = 'blue';
                 $sysbutton = true;
@@ -469,6 +470,13 @@ class DefaultController extends Controller {
             $user = $this->container->get('security.context')->getToken()->getUser();
             //dump($user);die();
             if ( $user and is_object($user) ) {//USUARIO Y CONTRASEÑA CORRECTAS
+
+                // VERIFICAMOS SI EL USUARIO ES DE ALTERNATIVA Y ES UN CENTRO
+                if($request->server->get('HTTP_HOST') == 'alternativa.sie.gob.bo' and $user->getUsername() != '4747180'){
+                    $this->session->getFlashBag()->add('error', 'El sistema esta temporalmente fuera de servicio, por mantenimiento.');
+                    return $this->redirectToRoute('login');
+                }
+
                 //*******SE VERIFICA SI SE TRATA DE RESETEO DE CONTRASEÑA
                 $this->session->set('userId', $user->getId());
                 
@@ -749,6 +757,7 @@ class DefaultController extends Controller {
                                     'institucioneducativaTipo'=>2
                                         ));
                                     if($objInstitucioneducativaAlt && $rolselected[0]['sie']!='80730796'){
+
                                         $sesion->set('directorAlternativa', true);
                                     }
 
