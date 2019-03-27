@@ -989,7 +989,7 @@ class SolicitudBTHController extends Controller {
 
             //move the file emp to the directory temp
             $file = $oFile->move($dirtmp, $originalName);*/
-            $destination_path = 'uploads/archivos/flujos/'.$request->get('institucionid');
+            $destination_path = 'uploads/archivos/flujos/'.$request->get('institucionid').'/bth/';
             $imagen = date('YmdHis').'.'.$documento->getClientOriginalExtension();
             $documento->move($destination_path, $imagen);
         }else{
@@ -1333,7 +1333,7 @@ class SolicitudBTHController extends Controller {
     public function guardasolicitudDepartamentalAction(Request $request){//dump($request);die;
         $documento = $request->files->get('docpdf');
         if(!empty($documento)){
-            $destination_path = 'uploads/archivos/flujos/'.$request->get('institucionid');
+            $destination_path = 'uploads/archivos/flujos/'.$request->get('institucionid').'/bth/';
             $imagen = date('YmdHis').'.'.$documento->getClientOriginalExtension();
             $documento->move($destination_path, $imagen);
         }else{
