@@ -74,11 +74,11 @@ class WfTramiteController extends Controller
         //dump($id);die;
         $this->session = $request->getSession();
         //dump($this->session);die;
-        $usuario = $this->session->get('userId');
+        $idUsuario = $this->session->get('userId');
         $idlugarusuario = $this->session->get('roluserlugarid');
         $rol = $this->session->get('roluser');
         //validation if the user is logged
-        if (!isset($usuario)) {
+        if (!isset($idUsuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
 
@@ -91,7 +91,7 @@ class WfTramiteController extends Controller
                 ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'fp.id = wfufp.flujoProceso')
                 ->where('fp.orden=1')
                 ->andWhere('fp.flujoTipo='.$id)
-                ->andWhere('wfufp.usuario='.$usuario)
+                ->andWhere('wfufp.usuario='.$idUsuario)
                 ->andWhere('wfufp.esactivo=true')
                 ->andWhere('wfufp.lugarTipoId='.$idlugarusuario)
                 ->andWhere('fp.rolTipo='.$rol)
@@ -108,7 +108,7 @@ class WfTramiteController extends Controller
         }else{
             if($rol == $flujoproceso[0]->getRolTipo()->getId()){
                 $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
-                $query->bindValue(':user_id', $usuario->getId());
+                $query->bindValue(':user_id', $idUsuario);
                 $query->bindValue(':sie', $this->session->get('ie_id'));
                 $query->bindValue(':rolId', $rol);
                 $query->execute();
@@ -467,8 +467,9 @@ class WfTramiteController extends Controller
                     $uDestinatario = $this->obtieneUsuarioDestinatario($tarea,$tarea_sig_id,$id_tabla,$tabla,$tramite);
                     if($uDestinatario == false){
                         $em->getConnection()->rollback();
-                        $this->get('session')->getFlashBag()->add('error', '¡Error, no existe usuario destinatario registrado.!');
-                        return $this->redirectToRoute('wf_tramite_recibido');
+                        $mensaje['dato'] = false;
+                        $mensaje['msg'] = '¡Error, no existe usuario destinatario registrado.!';
+                        return $mensaje;
                     }else{
                         $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
                     }
@@ -625,7 +626,6 @@ class WfTramiteController extends Controller
                     join usuario u on m.persona_id=u.persona_id
                     where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=".(new \DateTime())->format('Y')." and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
                     //where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=2018 and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
-
                     $query->execute();
                     $uDestinatario = $query->fetchAll();
                     //dump($uDestinatario);die;
