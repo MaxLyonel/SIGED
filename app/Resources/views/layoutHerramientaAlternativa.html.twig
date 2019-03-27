@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
 <!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
-<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+<!--[if !IE]><!--> <html lang="es"> <!--<![endif]-->
 
     <!-- START @HEAD -->
     {% block stylesheets %}
@@ -11,7 +11,7 @@
             <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
             <meta name="description" content="Blankon is a theme fullpack admin template powered by Twitter bootstrap 3 front-end framework. Included are multiple example pages, elements styles, and javascript widgets to get your project started.">
             <meta name="keywords" content="Educación alternativa  ">
-            <meta name="author" content="Djava UI">
+            <meta name="author" content="SIE">
             <title>SIGED | Herramienta Acadamica Alternativa</title>
             <!--/ END META SECTION -->
 
@@ -34,7 +34,7 @@
             {#<link href="{{asset('webherramienta/assets/global/plugins/bower_components/animate.css/animate.min.css')}}" rel="stylesheet">#}
             {#<link href="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.css')}}" rel="stylesheet">#}
             {#<link href="{{asset('webherramienta/assets/global/plugins/bower_components/jasny-bootstrap-fileinput/css/jasny-bootstrap-fileinput.min.css')}}" rel="stylesheet">#}
-            {#<link href="{{asset('webherramienta/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.min.css')}}" rel="stylesheet">#}
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.min.css')}}" rel="stylesheet">
             {#<link href="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">#}
             <link href="{{asset('juegos/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.css')}}" rel="stylesheet">
@@ -74,7 +74,6 @@
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/html5shiv/dist/html5shiv.min.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/respond-minmax/dest/respond.min.js')}}"></script>
             <![endif]-->
-            <script src="{{asset('js/plugins/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
             <!--/ END IE SUPPORT -->
             <!-- <link rel="stylesheet" type="text/css" href="CSS.css"> -->
             <link href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
@@ -374,7 +373,13 @@
                             <li class="dropdown navbar-profile">
                                 <a href="form-element.html#" class="dropdown-toggle" data-toggle="dropdown">
                                     <span class="meta">
-                                        <span class="avatar"><img src="/uploads/personasfotos/{{app.session.get('userfoto')}}" class="img-circle" alt="IMG"></span>
+                                        <span class="avatar">
+                                            {% if app.session.get('userfoto') is not null %}
+                                                <img src="{{asset('uploads/personasfotos/' ~ app.session.get('userfoto'))}}" class="img-circle" alt="IMG">
+                                            {% else %}
+                                                <img src="{{asset('img/photo.png')}}" class="img-circle" alt="IMG">
+                                            {% endif %}
+                                        </span>
                                         <span class="text hidden-xs hidden-sm text-muted">{{app.session.get('name')}}</span>
                                         <span class="caret"></span>
                                     </span>
@@ -421,7 +426,12 @@
                     <div class="media">
                         <a class="pull-left has-notif avatar" {#href="page-profile.html"#}>
                             {#<img src="{{asset('webherramienta/img/avatar/50/1.png')}}" alt="admin">#}
-                            <img class="img-circle" src ="/uploads/personasfotos/{{app.session.get('userfoto')}}" height="150" width="150" >
+                            {# <img class="img-circle" src ="/uploads/personasfotos/{{app.session.get('userfoto')}}" height="150" width="150" > #}
+                            {% if app.session.get('userfoto') is not null %}
+                                <img src="{{asset('uploads/personasfotos/' ~ app.session.get('userfoto'))}}" class="img-circle" alt="IMG" height="150" width="150">
+                            {% else %}
+                                <img src="{{asset('img/photo.png')}}" class="img-circle" alt="IMG" height="150" width="150">
+                            {% endif %}
                             <i class="online"></i>
                         </a>
                         <div class="media-body">
@@ -724,15 +734,15 @@
             <!-- START @PAGE CONTENT -->
             <section id="page-content">
                 <div class="header-content" style="background-color: #6d7b61;">
-                    <h2><i class="fa fa-university"></i> {{app.session.get('ie_nombre')}} 
-                        <span> {{app.session.get('ie_id')}}  {{app.session.get('ie_gestion')}}  {{app.session.get('ie_per_nom')}}
+                    <h2 style="color: #EEEEEE; font-weight:bold"><i class="fa fa-university"></i> {{app.session.get('ie_nombre')}} 
+                        <span style="color: #EEEEEE"> {{app.session.get('ie_id')}}  {{app.session.get('ie_gestion')}}  {{app.session.get('ie_per_nom')}}
                             {#{% if (app.session.get('ie_per_estado') != '0') %}#}
                                 : <i class="fa fa-wrench"></i> {{app.session.get('ie_operativo')}}
                             {#{% endif %}                            #}
                         </span>
                     </h2>
                     <div class="breadcrumb-wrapper hidden-xs">
-                        <span class="label">Sub Centro:</span>
+                        <span class="label" style="color: #EEEEEE">Sub Centro:</span>
                         <ol class="breadcrumb">
                             <li>
                                 <a href="">{{app.session.get('ie_subcea')}}</a>
@@ -1255,7 +1265,7 @@
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/horizontal-chart/build/js/jquery.horizBarChart.min.js')}}"></script>#}
             
 
-            
+            <script src="{{asset('js/plugins/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
             
             <!--/ END PAGE LEVEL PLUGINS -->
             
