@@ -8553,8 +8553,9 @@ public function rudeal_guardarAction(Request $request){
             $rol_tipo_id = $p["rol_tipo_id"];
         }
         $where="";
-        if($rol_tipo_id==21)$where="and upper(lt.lugar)='$lugar_usuario'";
         $lugar_usuario=strtoupper($lugar_usuario);
+        if($rol_tipo_id==21)$where="and upper(lt.lugar)='$lugar_usuario'";
+        
          $query = "
          SELECT p.paterno,p.materno,p.nombre,p.carnet,p.complemento,rt.rol,rt.id as rol_id,upper(lt.lugar) as lugar,u.esactivo,ur.esactivo
 from usuario u
@@ -8565,6 +8566,7 @@ join lugar_tipo lt on ur.lugar_tipo_id=lt.id
 where (ur.rol_tipo_id=21 or ur.rol_tipo_id=29) and u.esactivo and ur.esactivo $where
 order by rt.id,lt.lugar
                 ";
+                echo $query;die;
     $stmt = $db->prepare($query);
     $params = array();
     $stmt->execute($params);
