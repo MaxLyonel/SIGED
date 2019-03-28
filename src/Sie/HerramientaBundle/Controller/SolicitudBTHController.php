@@ -153,9 +153,11 @@ class SolicitudBTHController extends Controller {
             ->where('mins.institucioneducativa = :idInstitucion')
             ->andWhere('mins.gestionTipo = :gestion')
             ->andWhere('mins.cargoTipo = :cargo')
+            ->andWhere('mins.esVigenteAdministrativo = :esvigente')
             ->setParameter('idInstitucion', $institucion)
             ->setParameter('gestion', $gestion)
-            ->setParameter('cargo', '1')
+            ->setParameter('cargo', array(1,12))
+            ->setParameter('esvigente', true)
             ->setMaxResults(1)
             ->getQuery();
 
@@ -287,9 +289,11 @@ class SolicitudBTHController extends Controller {
                 ->where('mins.institucioneducativa = :idInstitucion')
                 ->andWhere('mins.gestionTipo = :gestion')
                 ->andWhere('mins.cargoTipo = :cargo')
+                ->andWhere('mins.esVigenteAdministrativo = :esvigente')
                 ->setParameter('idInstitucion', $institucion)
                 ->setParameter('gestion', $gestion)
-                ->setParameter('cargo', '1')
+                ->setParameter('cargo', array(1,12))
+                ->setParameter('esvigente', true)
                 ->setMaxResults(1)
                 ->getQuery();
             $director = $query->getOneOrNullResult();
@@ -401,9 +405,25 @@ class SolicitudBTHController extends Controller {
                 if($es_plena==0 or $cantidad_especialidades==0 or $grado_id==4){ // si la ue se  encuentra registrada en la tabla de institucioneducativa_humanistico_tecnico.  si la ue es bth para cualquier gestion
 
                     $id_rol         = $this->session->get('roluser');
-                    $id_usuario     = $this->session->get('userId');
+                    //$id_usuario     = $this->session->get('userId');
                     $id_Institucion = $request->get('institucionid');
                     $id_distrito    = $request->get('id_distrito');
+                    /***
+                     * Adecuacion para obtener el usuario del director.
+                     */
+                    $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id_Institucion);
+                    $query = $em->getConnection()->prepare("select u.* from maestro_inscripcion m
+                    join usuario u on m.persona_id=u.persona_id
+                    where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=2018 and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
+                    /*where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=".(new \DateTime())->format('Y')." and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");*/
+                    $query->execute();
+                    $uDestinatario = $query->fetchAll();
+                    if($uDestinatario){
+                        $id_usuario = $uDestinatario[0]['id'];
+                    }else{
+                        return false;
+                    }
+                   // dump($uid);die;
                     /**
                      * Obtenemos el flujo_proceso y obtenemos la tarea
                      */
@@ -453,7 +473,7 @@ class SolicitudBTHController extends Controller {
                     $cantidad_especialidades = $especialidades[0]['cantidad_especialidades'];
                     if ($cantidad_especialidades > 0){
                         $id_rol = $this->session->get('roluser');
-                        $id_usuario = $this->session->get('userId');
+                       // $id_usuario = $this->session->get('userId');
                         $id_Institucion = $request->get('institucionid');
                         $id_distrito = $request->get('id_distrito');
                         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $flujotipo , 'orden' => 1));
@@ -464,6 +484,21 @@ class SolicitudBTHController extends Controller {
                         $wfTramiteController = new WfTramiteController();
                         $wfTramiteController->setContainer($this->container);
                         $datos = ($request->get('ipt')); //dump ($datos);DIE;
+                        /***
+                         * Adecuacion para obtener el usuario del director.
+                         */
+                        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id_Institucion);
+                        $query = $em->getConnection()->prepare("select u.* from maestro_inscripcion m
+                        join usuario u on m.persona_id=u.persona_id
+                        where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=2018 and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
+                        /*where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=".(new \DateTime())->format('Y')." and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");*/
+                        $query->execute();
+                        $uDestinatario = $query->fetchAll();
+                        if($uDestinatario){
+                            $id_usuario = $uDestinatario[0]['id'];
+                        }else{
+                            return false;
+                        }
                         if ($sw == 0) {//primer envio de solicitud como ratificacion
                             $mensaje = $wfTramiteController->guardarTramiteNuevo($id_usuario, $id_rol, $flujotipo, $tarea, $tabla, $id_Institucion, '', $id_tipoTramite, '', $idTramite, $datos, '', $id_distrito);
                         } else {// se hizo la devolucion de tramite de ratificacion por el distrital
@@ -629,9 +664,11 @@ class SolicitudBTHController extends Controller {
             ->where('mins.institucioneducativa = :idInstitucion')
             ->andWhere('mins.gestionTipo = :gestion')
             ->andWhere('mins.cargoTipo = :cargo')
+            ->andWhere('mins.esVigenteAdministrativo = :esvigente')
             ->setParameter('idInstitucion', $institucion)
             ->setParameter('gestion', $gestion)
-            ->setParameter('cargo', '1')
+            ->setParameter('cargo', array(1,12))
+            ->setParameter('esvigente', true)
             ->setMaxResults(1)
             ->getQuery();
         $director = $query->getOneOrNullResult();
@@ -934,9 +971,11 @@ class SolicitudBTHController extends Controller {
             ->where('mins.institucioneducativa = :idInstitucion')
             ->andWhere('mins.gestionTipo = :gestion')
             ->andWhere('mins.cargoTipo = :cargo')
+            ->andWhere('mins.esVigenteAdministrativo = :esvigente')
             ->setParameter('idInstitucion', $institucion)
             ->setParameter('gestion', $gestion)
-            ->setParameter('cargo', '1')
+            ->setParameter('cargo', array(1,12))
+            ->setParameter('esvigente', true)
             ->setMaxResults(1)
             ->getQuery();
         $director = $query->getOneOrNullResult();
@@ -1140,9 +1179,11 @@ class SolicitudBTHController extends Controller {
             ->where('mins.institucioneducativa = :idInstitucion')
             ->andWhere('mins.gestionTipo = :gestion')
             ->andWhere('mins.cargoTipo = :cargo')
+            ->andWhere('mins.esVigenteAdministrativo = :esvigente')
             ->setParameter('idInstitucion', $institucion)
             ->setParameter('gestion', $gestion)
-            ->setParameter('cargo', '1')
+            ->setParameter('cargo', array(1,12))
+            ->setParameter('esvigente', true)
             ->setMaxResults(1)
             ->getQuery();
         $director = $query->getOneOrNullResult();
@@ -1287,9 +1328,11 @@ class SolicitudBTHController extends Controller {
             ->where('mins.institucioneducativa = :idInstitucion')
             ->andWhere('mins.gestionTipo = :gestion')
             ->andWhere('mins.cargoTipo = :cargo')
+            ->andWhere('mins.esVigenteAdministrativo = :esvigente')
             ->setParameter('idInstitucion', $institucion)
             ->setParameter('gestion', $gestion)
-            ->setParameter('cargo', '1')
+            ->setParameter('cargo', array(1,12))
+            ->setParameter('esvigente', true)
             ->setMaxResults(1)
             ->getQuery();
         $director = $query->getOneOrNullResult();
