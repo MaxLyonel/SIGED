@@ -1,0 +1,3 @@
+sie_juegos_estadistica_fase_lugar:
+    path:    /fase/lugar/{fase}
+    defaults: { _controller: SieJuegosBundle:Estadistica:faseLugar }

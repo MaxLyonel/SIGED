@@ -1,0 +1,112 @@
+{% extends 'layoutPnp.html.twig' %}
+
+{% block body -%}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-eye animated flip"></i>USUARIOS <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-eye"></i>
+                    <a href="#">
+                    Curso
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Reporte Usuarios</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('notice') %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Bien!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('error') %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>¡Advertencia!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+
+
+    
+            <!-- Website Stats  Widget -->
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-xs-12 col-lg-12">
+                <div class="panel panel-icon panel-primary">
+                    <div class="panel-heading">
+                        Usuarios
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+                                <table id="tablaTotales" class="display" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Departamento</th>
+                                            <th>Paterno</th>
+                                            <th>Materno</th>
+                                            <th>Nombre</th>
+                                            <th>CI</th>
+                                            <th>Complemento</th>
+                                            <th>Rol</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for fila in filas %}
+                                        <tr>
+                                            <td>{{ fila.lugar }}</td>
+                                            <td>{{ fila.paterno }}</td>
+                                            <td>{{ fila.materno }}</td>
+                                            <td>{{ fila.nombre }}</td>
+                                            <td>{{ fila.carnet }}</td>
+                                            <td>{{ fila.complemento }}</td>
+                                            <td>{{ fila.rol }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+    var espanol = {"sProcessing": "Procesando...",
+                     "sLengthMenu": "Mostrar _MENU_ registros",
+                     "sZeroRecords": "No se encontraron resultados",
+                     "sInfo": "Mostrando desde _START_ hasta _END_ de _TOTAL_ registros",
+                     "sInfoEmpty": "No existen registros",
+                     "sInfoFiltered": "(filtrado de un total de _MAX_ líneas)",
+                     "sInfoPostFix": "",
+                     "sSearch": "Buscar:",
+                     "sUrl": "",
+                     "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                     },
+                     "buttons":{
+                        "copy": "Copiar",
+                        "print":"Imprimir"
+                     }
+                    };
+
+    var currentLang = espanol; 
+     $(document).ready(function() {
+     var dtable = $('#tablaTotales').dataTable( {"oLanguage": espanol,"lengthMenu": [ [10, 50, 100, 1000, -1], [10, 50, 100, 1000, "Todos"] ]} );
+ });
+     </script>
+        
+{% endblock %}

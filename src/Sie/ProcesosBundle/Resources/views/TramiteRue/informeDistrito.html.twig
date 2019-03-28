@@ -54,7 +54,7 @@
                                     <thead>
                                         <tr>
                                             <th class="text-center border-right" WIDTH="50">No. Tramite</th>
-                                            <th>Unidad Educativa</th>
+                                            <th>Cod. RUE</th>
                                             <th>Tipo de Trámite</th>
                                             <th>Fecha de Trámite</th>
                                             <th>Observación</th>
@@ -66,7 +66,7 @@
                                     <tfoot>
                                         <tr>
                                             <th class="text-center border-right">No. Tramite</th>
-                                            <th>Unidad Educativa</th>
+                                            <th>Cod. RUE</th>
                                             <th>Tipo de Trámite</th>
                                             <th>Fecha de Trámite</th>
                                             <th>Observación</th>
@@ -79,22 +79,25 @@
                                     {% for tramite in tramites %}
                                         <tr>
                                             <td>{{ tramite.id }}</a></td>
-                                            <td>{{ tramite.institucioneducativa }}</td>
+                                            <td>{{ tramite.cod_sie }}</td>
                                             <td>{{ tramite.tramite_tipo }}</td>
                                             <td>{{ tramite.fecha_registro }}</a></td>
                                             <td>{{ tramite.obs }}</a></td>
                                             <td>{{ tramite.nombre }}</td>
                                             <td>{{ tramite.estado }}</td>
                                             <td>
-                                                <a href="{{path('tramite_rue_informe_distrito_nuevo', { 'id': tramite.id })}}" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" title="Informe">
+                                                {#<a href="{{path('tramite_rue_informe_distrito_nuevo', { 'id': tramite.id })}}" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" title="Enviar Informe">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>#}
+                                                <a class="btn btn-success btn-xs" data-toggle="modal" data-target="#modal" data-placement="top" title="Enviar Informe" onclick="informe({{tramite.id}})">
                                                     <i class="fa fa-eye"></i>
                                                 </a>
-                                                <a href="#" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Editar">
+                                                {#<a href="#" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Editar">
                                                     <i class="fa fa-pencil"></i>
                                                 </a>
                                                 <a href="#" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="return confirm('¿Esta suguro de eliminar?')">
                                                     <i class="fa fa-times"></i>
-                                                </a>
+                                                </a>#}
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -105,8 +108,9 @@
                 </div>
             </div>
         </div>
-
     </div>
+    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+    </div><!-- /.modal -->  
 {% endblock %}
  {% block javascripts %}
     {{ parent() }} 
@@ -161,6 +165,31 @@
                     }
                 } );
             } );
-        };     
+        }; 
+        function informe(id){
+            //confirm('¿Esta suguro de eliminar?');
+            //alert(id);
+            formData = {id: id};
+            $.ajax({
+                type: 'GET',
+                url: "{{path('tramite_rue_informe_distrito_nuevo')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#modal').empty();
+                    $('#modal').append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    if(data.mensaje){
+                        $('#modal').modal('hide');
+                        $('#msgp').append('<div class="alert alert-danger">'+
+                            '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+ data.mensaje +'</div>')
+                    }else{
+                        $('#modal').empty();
+                        $('#modal').append(data);
+                    }
+                    
+                },
+            });
+        }   
     </script>
     {% endblock %}

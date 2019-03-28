@@ -1,0 +1,54 @@
+Sie\AppWebBundle\Entity\JdpFaseRegla:
+    type: entity
+    table: jdp_fase_regla
+    indexes:
+        IDX_2EF086366DD9B3B9:
+            columns:
+                - nivel_tipo_id
+        IDX_2EF086369E27EC77:
+            columns:
+                - fase_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        activo:
+            type: boolean
+            nullable: true
+            comment: ''
+        fechaIni:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_ini
+        fechaFin:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_fin
+    manyToOne:
+        nivelTipo:
+            targetEntity: NivelTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nivel_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        faseTipo:
+            targetEntity: JdpFaseTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                fase_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

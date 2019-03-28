@@ -1,0 +1,21 @@
+students_inscriptions_seguimiento_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:StudentsInscriptionSeguimiento:index }
+    
+students_inscriptions_seguimiento_upfile_web:
+    path:    /upfile
+    defaults: { _controller: SieRegularBundle:StudentsInscriptionSeguimiento:upfile }
+
+students_inscriptions_seguimiento_checkit_web:
+    path:    /thinkit
+    defaults: { _controller: SieRegularBundle:StudentsInscriptionSeguimiento:greeting }
+    
+students_inscriptions_seguimiento_find:
+    path:    /find
+    defaults: { _controller: SieRegularBundle:StudentsInscriptionSeguimiento:find }
+
+students_inscriptions_seguimiento_openhistoric:
+    path:     /openhistoric/{sie}/{gestion}/{nivel}/{grado}/{paralelo}/{turno}
+    defaults: { _controller: "SieRegularBundle:StudentsInscriptionSeguimiento:openhistoric" }
+    options:
+         expose: true    

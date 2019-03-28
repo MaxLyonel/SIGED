@@ -2572,7 +2572,6 @@ order by t2.fecha_inicio";
          //Conocer el departamento del usuario para que solo pueda eliminar de su departamento
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
-
         $userId = $this->session->get('userId');
          $query = "
                SELECT lt.lugar as lugar
@@ -2836,7 +2835,7 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
         foreach ($po as $p) {
             $lugar_usuario = $p["lugar"];
         }
-    
+        
         $lugar_usuario=strtoupper($lugar_usuario);
          switch ($lugar_usuario) {
             case 'CHUQUISACA': $id_curso_ver=80480300; break;
@@ -2880,7 +2879,14 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
                 foreach ($result as $results) {
                     $institucioneducativa_curso_oferta_maestro_id[]=$results->getId();
                 }
-
+                if(!$institucioneducativa_curso_oferta_maestro_id){
+                     //id de la tabla institucioneducativa_curso_oferta_maestro
+                    $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findBy(array('institucioneducativaCursoOferta' => $institucioneducativa_curso_oferta_id )); 
+                    $institucioneducativa_curso_oferta_maestro_id = array();
+                    foreach ($result as $results) {
+                        $institucioneducativa_curso_oferta_maestro_id[]=$results->getId();
+                    }
+                }
                 ////////////////////NUEVO
                 //id de la tabla institucioneducativa_curso_datos
                 $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($institucioneducativa_curso_id);
@@ -7772,9 +7778,9 @@ public function listar_depAction($val){
     $contador=0;
     $query = "
            SELECT 
-lt3.lugar as depto,lt1.lugar as  municipio,ic.id as id_curso,
+lt3.lugar as depto,lt1.lugar as  municipio,icd.localidad,ic.id as id_curso,
 coalesce(p.nombre||' '||p.paterno||' '||p.materno) as facilitador,
-p.carnet,ic.ciclo_tipo_id as bloque, ic.grado_tipo_id as parte,
+p.carnet,p.complemento,ic.ciclo_tipo_id as bloque, ic.grado_tipo_id as parte,
 count(*) as insc,
 SUM(CASE WHEN ei.estadomatricula_tipo_id=62
             THEN 1
@@ -7790,7 +7796,7 @@ join lugar_tipo lt1 on lt1.id=icd.lugar_tipo_id_seccion
 join lugar_tipo lt2 on lt2.id=lt1.lugar_tipo_id
 join lugar_tipo lt3 on lt3.id=lt2.lugar_tipo_id
 where ic.institucioneducativa_id=$val 
-GROUP BY lt3.lugar,lt1.lugar,ic.id,
+GROUP BY lt3.lugar,lt1.lugar,ic.id,icd.localidad,p.complemento,
 coalesce(p.nombre||' '||p.paterno||' '||p.materno),
 p.carnet,ic.ciclo_tipo_id, ic.grado_tipo_id,ic.fecha_inicio,ic.fecha_fin
 ORDER BY carnet,bloque,parte,fecha_inicio,municipio
@@ -7806,9 +7812,11 @@ ORDER BY carnet,bloque,parte,fecha_inicio,municipio
         $datos_filas["num"] = $contador;
         $datos_filas["depto"] = $p["depto"];
         $datos_filas["municipio"] = $p["municipio"];
+        $datos_filas["localidad"] = $p["localidad"];
         $datos_filas["id_curso"] = $p["id_curso"];
         $datos_filas["facilitador"] = $p["facilitador"];
         $datos_filas["carnet"] = $p["carnet"];
+        $datos_filas["complemento"] = $p["complemento"];
         $datos_filas["bloque"] = $p["bloque"];
         $datos_filas["parte"] = $p["parte"];
         $datos_filas["insc"] = $p["insc"];
@@ -8524,7 +8532,61 @@ public function rudeal_guardarAction(Request $request){
         }
     }
 }
+    public function reporte_usuariosAction(){
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
 
+        $userId = $this->session->get('userId');
+        $query = "
+               SELECT lt.lugar as lugar,ur.rol_tipo_id
+               FROM lugar_tipo lt,
+               usuario_rol ur 
+               WHERE ur.lugar_tipo_id=lt.id and ur.esactivo=true and ur.usuario_id=$userId";
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $filas = array();
+        $datos_filas = array();
+        foreach ($po as $p) {
+            $lugar_usuario = $p["lugar"];
+            $rol_tipo_id = $p["rol_tipo_id"];
+        }
+        $where="";
+        $lugar_usuario=strtoupper($lugar_usuario);
+        if($rol_tipo_id==21)$where="and upper(lt.lugar)='$lugar_usuario'";
+        
+         $query = "
+         SELECT p.paterno,p.materno,p.nombre,p.carnet,p.complemento,rt.rol,rt.id as rol_id,upper(lt.lugar) as lugar,u.esactivo,ur.esactivo
+from usuario u
+join usuario_rol ur on ur.usuario_id=u.id
+join persona p on u.persona_id=p.id
+join rol_tipo rt on ur.rol_tipo_id=rt.id
+join lugar_tipo lt on ur.lugar_tipo_id=lt.id
+where (ur.rol_tipo_id=21 or ur.rol_tipo_id=29) and u.esactivo and ur.esactivo $where
+order by rt.id,lt.lugar
+                ";
+                
+    $stmt = $db->prepare($query);
+    $params = array();
+    $stmt->execute($params);
+    $po = $stmt->fetchAll();
+    $filas = array();
+    $datos_filas = array();
+    foreach ($po as $p){
+        $datos_filas["lugar"] = $p["lugar"];
+        $datos_filas["paterno"] = $p["paterno"];
+        $datos_filas["materno"] = $p["materno"];
+        $datos_filas["nombre"] = $p["nombre"];
+        $datos_filas["carnet"] = $p["carnet"];
+        $datos_filas["complemento"] = $p["complemento"];
+        if($p["rol_id"]==21)$datos_filas["rol"] = "Informático";else $datos_filas["rol"] = "Pedagogo";
+        $filas[] = $datos_filas;
+    }   
+
+        return $this->render('SiePnpBundle:Default:reporte_usuarios.html.twig',array(
+        'filas'=>$filas));
+}
 /////////////////////////////////busquedas//////////////////////
 // buscar datos estudiantes
     public function retornar_estudianteAction($where){

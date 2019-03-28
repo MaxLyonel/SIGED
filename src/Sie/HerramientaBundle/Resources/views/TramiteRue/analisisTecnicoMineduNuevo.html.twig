@@ -1,0 +1,629 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> TRAMITE RUE Nro. {{ idtramite }}: <span>ANÁLISIS TÉCNICO-MINISTERIO DE EDUCACIÓN</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Trámite</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel">
+                    <div class="row">
+                        <div class="col-md-12">                    
+                        {% if app.session.flashBag.has('exito') %}
+                            <div class="alert alert-success">
+                                {% for msg in app.session.flashBag.get('exito') %}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    {{ msg }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        {% if app.session.flashBag.has('error') %}
+                            <div class="alert alert-danger">
+                                {% for msg in app.session.flashBag.get('error') %}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    {{ msg }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title">ANÁLISIS TÉCNICO LEGAL</h3>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div class="panel-group">
+                                        <div class="panel">
+                                            <div class="panel-heading">
+                                                <div class="pull-left">
+                                                    <a data-toggle="collapse" href="#collapse1"><h4 class="panel-title text-lilac"><i class="fa fa-eye"></i>Ver formularios anteriores</h4></a>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div id="collapse1" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    {% include 'SieHerramientaBundle:TramiteRue:historico.html.twig' with {'datos': datos} %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+			                    </div><!-- /.panel-body -->
+                            </div><!-- /.panel-primary -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">                    
+                            {{ form_start(form,{ 'attr': {'role': 'form','onsubmit':'return validacion()'}}) }}
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title">VERIFICAR TRÁMITE</h3>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="form-group  col-md-12">
+                                            <div class="col-md-3"><strong>TRÁMITE PROCEDENTE:</strong></div>
+                                            <div class="col-md-9">
+                                                {% for b in form.varevaluacion %}
+                                                    <div class="col-md-3 rdio rdio-primary circle">
+                                                        {{ form_widget(b) }}
+                                                        {{ form_label(b) }}
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-12" id="obs" style="display:none">
+                                            <div class="col-md-3">
+								                {{ form_label(form.observacion) }}
+                                            </div>
+                                            <div class="col-md-9">
+	    							            {{ form_widget(form.observacion) }}
+                                            </div>
+			    				        </div>
+                                    </div>
+    			                </div><!-- /.panel-body -->
+                            </div><!-- /.panel-primary -->
+                        </div>
+                    </div>
+                    <div class="row" id="registro" style="display:none">   
+                        <div class="col-md-12">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title">REGISTRAR TRÁMITE DE LA UNIDAD/CENTRO EDUCATIVO</h3>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <div class="pull-left">
+                                                <h5 class="panel-title">1. IDENTIFIACIÓN</h5>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                {% if tramite.institucioneducativa %}
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-3">
+                                                            {{ form_label(form.idrue) }}
+                                                        </div>
+                                                        <div class="col-md-9">
+                                                            {{ form_widget(form.idrue) }}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                <div class="form-group  col-md-12">
+                                                    <div class="col-md-3">
+                                                        {{ form_label(form.institucioneducativa) }}
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        {{ form_widget(form.institucioneducativa) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group  col-md-6">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.resolucion) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.resolucion) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group  col-md-6">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.fecharesolucion) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.fecharesolucion) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <div class="col-md-6">
+        	    		                                {{ form_label(form.dependencia) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.dependencia) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <div class="col-md-6">
+        	    		                                {{ form_label(form.tipoeducacion) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.tipoeducacion) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <div class="col-md-6">
+        	    		                                {{ form_label(form.convenioTipo) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.convenioTipo) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <div class="col-md-6">
+        	    		                                {{ form_label(form.estadoTipo) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.estadoTipo) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <div class="col-md-6">
+        	    		                                {{ form_label(form.desUeAntes) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.desUeAntes) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <div class="col-md-6">
+        	    		                                {{ form_label(form.observacion1) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.observacion1) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+    			                        </div><!-- /.panel-body -->
+                                    </div><!-- /.panel-primary -->
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <div class="pull-left">
+                                                <h5 class="panel-title">2. LOCALIZACIÓN DEL EDIFICIO ESCOLAR</h5>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-3">  
+                                                            {{ form_label(form.lejurisdiccion) }}
+                                                        </div>
+                                                        <div class="col-md-9">
+                                                            {{ form_widget(form.lejurisdiccion,{'attr':{'onblur':'buscarEdificioEscolar(this.value)'} }) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-3">
+        	    		                                    {{ form_label(form.departamento) }}
+                                                        </div>
+                                                        <div class="col-md-9">
+                                                            {{ form_widget(form.departamento,{'attr':{'onchange':'provincia(this.value)'}}) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-3">
+                                                            {{ form_label(form.provincia) }}
+                                                        </div>
+                                                        <div class="col-md-9">
+                                                            {{ form_widget(form.provincia,{'attr':{'onchange':'municipio(this.value)'}}) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-3">
+                                                            {{ form_label(form.municipio) }}
+                                                        </div>
+                                                        <div class="col-md-9">
+                                                            {{ form_widget(form.municipio,{'attr':{'onchange':'canton(this.value)'}}) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-3">
+                                                            {{ form_label(form.canton) }}
+                                                        </div>
+                                                        <div class="col-md-9">
+                                                            {{ form_widget(form.canton,{'attr':{'onchange':'localidad(this.value)'}}) }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-3">
+                                                            {{ form_label(form.localidad) }}
+                                                        </div>
+                                                        <div class="col-md-9">
+                                                            {{ form_widget(form.localidad) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-3">
+                                                            {{ form_label(form.zona) }}
+                                                        </div>
+                                                        <div class="col-md-9">
+                                                            {{ form_widget(form.zona) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-3">
+                                                            {{ form_label(form.direccion) }}
+                                                        </div>
+                                                        <div class="col-md-9">
+                                                            {{ form_widget(form.direccion) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-3">
+                                                            {{ form_label(form.distrito) }}
+                                                        </div>
+                                                        <div class="col-md-9">
+                                                            {{ form_widget(form.distrito) }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                                
+                                            </div>
+    			                        </div><!-- /.panel-body -->
+                                    </div><!-- /.panel-primary -->
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <div class="pull-left">
+                                                <h5 class="panel-title">3. NIVELES / ÁREAS DE ATENCIÓN</h5>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <div class="col-md-12"><strong>NIVELES AUTORIZADOS:</strong></div>
+                                                        <div class="form-group col-md-6">
+                                                        {% for a in form.niveltipo %}
+                                                            <div class="col-md-12 ckbox ckbox-primary">
+                                                                {% if a.vars.value in niveltipo %}
+                                                                    {{ form_widget(a,{'attr':{'checked':'checked','class':'niveltipo'}}) }}    
+                                                                {% else %}
+                                                                    {{ form_widget(a,{'attr':{'class':'niveltipo'}}) }}
+                                                                {% endif %}
+                                                                {{ form_label(a) }}
+                                                            </div>
+                                                        {% endfor %} 
+                                                    </div>
+					                            </div>
+                                                {% if tipoeducacion == 4 %}
+                                                    <div class="form-group col-md-6">
+                                                        <div class="col-md-12"><strong>ÁREAS AUTORIZADAS:</strong></div>
+						                                    {% for a in form.areaEspecialTipo %}
+                                                                <div class="col-md-12  ckbox ckbox-primary">
+                                                                    {% if a.vars.value in areaespecial %}
+                                                                        {{ form_widget(a,{'attr':{'checked':'checked','class':'areatipo'}}) }}    
+                                                                    {% else %}
+                                                                        {{ form_widget(a,{'attr':{'class':'areatipo'}}) }}
+                                                                    {% endif %}
+                                                                    {{ form_label(a) }}
+                                                                </div>
+                                                            {% endfor %}   
+		    			                                </div>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+    	    		                    </div><!-- /.panel-body -->
+                                    </div><!-- /.panel-primary -->
+                                    </div><!-- /.row -->
+        			            </div><!-- /.panel-body -->
+                            </div><!-- /.panel-primary -->
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="form-group col-md-12">
+                            {{ form_widget(form.guardar, {'attr':{'class':'btn btn-primary'} }) }}
+                            <a href="{{path('wf_tramite_recibido')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
+					    </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div><!-- /.panel -->
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
+ {% block javascripts %}
+    {{ parent() }} 
+    <script>
+        $('#form_varevaluacion_0').click(function(){
+           //alert('entra');
+            if ($("#form_varevaluacion_0").is(':checked')){
+                $('#registro').show();
+                $('#obs').hide();
+                $('#form_observacion').val('');
+                $('#form_observacion').attr('required',false);
+            }
+        });
+        $('#form_varevaluacion_1').click(function(){
+           //alert('entra');
+            if ($("#form_varevaluacion_1").is(':checked')){
+                $('#registro').hide();
+                $('#obs').show();
+                $('#form_observacion').val('');
+                $('#form_observacion').attr('required',true);
+            }
+        });
+        function buscarEdificioEscolar(idLe) {
+            //alert(idLe);
+            var formData = {idLe:idLe};
+            $.ajax({
+                type: 'get',
+                url: "{{path('tramite_rue_buscar_edificio')}}",
+                data: formData,
+                beforeSend: function () {
+                    $("#form_departamento").empty();
+                    $("#form_provincia").empty();
+                    $("#form_municipio").empty();
+                    $("#form_canton").empty();
+                    $("#form_localidad").empty();
+                    $("#form_distrito").empty();
+                    $("#form_zona").empty();
+                    $("#form_direccion").empty();
+                    $("#form_departamento").append('<option value="">Buscando...</option>');
+                    $("#form_provincia").append('<option value="">Buscando...</option>');
+                    $("#form_municipio").append('<option value="">Buscando...</option>');
+                    $("#form_canton").append('<option value="">Buscando...</option>');
+                    $("#form_localidad").append('<option value="">Buscando...</option>');
+                    $("#form_distrito").append('<option value="">Buscando...</option>');
+                },
+                success: function (data) {
+                    if(data.msg){
+                        //$("#msgLe").append('hola');
+                        $("#form_departamento").empty();
+                        $("#form_departamento").append('<option value="">Seleccione...</option>');
+                        $("#form_lejurisdiccion").val('');
+                        $("#form_provincia").empty();
+                        $("#form_municipio").empty();
+                        $("#form_canton").empty();
+                        $("#form_localidad").empty();
+                        $("#form_distrito").empty();
+                        $("#form_zona").val('');
+                        $("#form_direccion").val('');
+                        $.each(data.departamento, function (i, value) {
+                            $("#form_departamento").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        alert(data.msg);
+                    }else{
+                        $.each(data.departamento, function (i, value) {
+                            $("#form_departamento").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        $.each(data.provincia, function (i, value) {
+                            $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        $.each(data.municipio, function (i, value) {
+                            $("#form_municipio").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        $.each(data.canton, function (i, value) {
+                            $("#form_canton").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        $.each(data.localidad, function (i, value) {
+                            $("#form_localidad").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        $.each(data.distrito, function (i, value) {
+                            $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        $("#form_departamento").val(data.iddepartamento);
+                        $("#form_provincia").val(data.idprovincia);
+                        $("#form_municipio").val(data.idmunicipio);
+                        $("#form_canton").val(data.idcanton);
+                        $("#form_localidad").val(data.idlocalidad);
+                        $("#form_distrito").val(data.iddistrito);
+                        $("#form_zona").val(data.zona);
+                        $("#form_direccion").val(data.direccion);
+                        if (data.comparteLe){
+                            $("#comparte").empty();
+                            $.each(data.comparteLe, function (i, value) {
+                                $("#comparte").append('<div class="col-md-3">'+ i + '</div><div class="col-md-9">'+ value + '</div>');
+                            });
+                        }
+                    }
+                }   
+            });
+        }
+
+    function provincia(d) {
+            //alert(d);
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('tramite_rue_le_buscar_provincias', {'idDepartamento': d}),
+            beforeSend: function () {
+                $("#form_provincia").empty();
+                $("#form_municipio").empty();
+                $("#form_canton").empty();
+                $("#form_localidad").empty();
+                $("#form_distrito").empty();
+                $("#form_provincia").append('<option value="">Buscando...</option>');
+                $("#form_municipio").append('<option value="">Buscando...</option>');
+                $("#form_canton").append('<option value="">Buscando...</option>');
+                $("#form_localidad").append('<option value="">Buscando...</option>');
+                $("#form_distrito").append('<option value="">Buscando...</option>');
+                $("#form_zona").val('');
+                $("#form_direccion").val('');
+            },
+            success: function (data) {
+                $("#form_provincia").empty();
+                $("#form_municipio").empty();
+                $("#form_canton").empty();
+                $("#form_localidad").empty();
+                $("#form_distrito").empty();
+                $("#form_provincia").append('<option value="">Seleccionar...</option>');
+                $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                $("#form_canton").append('<option value="">Seleccionar...</option>');
+                $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                $("#form_distrito").append('<option value="">Seleccionar...</option>');
+                $.each(data.provincia, function (i, value) {
+                    $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                });
+                $.each(data.distrito, function (i, value) {
+                    $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
+                });
+            }
+        });
+    }
+
+    function municipio(p) {
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('tramite_rue_le_buscar_municipios', {'idProvincia': p}),
+            beforeSend: function () {
+                $("#form_municipio").empty();
+                $("#form_canton").empty();
+                $("#form_localidad").empty();
+                $("#form_municipio").append('<option value="">Buscando...</option>');
+                $("#form_canton").append('<option value="">Buscando...</option>');
+                $("#form_localidad").append('<option value="">Buscando...</option>');
+            },
+            success: function (data) {
+                $("#form_municipio").empty();
+                $("#form_canton").empty();
+                $("#form_localidad").empty();
+                $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                $("#form_canton").append('<option value="">Seleccionar...</option>');
+                $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                $.each(data.municipio, function (i, value) {
+                    $("#form_municipio").append('<option value="' + i + '">' + value + '</option>');
+                });
+            }
+        });
+    }
+
+    function canton(m) {
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('tramite_rue_le_buscar_cantones', {'idMunicipio': m}),
+            beforeSend: function () {
+                $("#form_canton").empty();
+                $("#form_localidad").empty();
+                $("#form_canton").append('<option value="">Buscando...</option>');
+                $("#form_localidad").append('<option value="">Buscando...</option>');
+            },
+            success: function (data) {
+                $("#form_canton").empty();
+                $("#form_localidad").empty();
+                $("#form_canton").append('<option value="">Seleccionar...</option>');
+                $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                $.each(data.canton, function (i, value) {
+                    $("#form_canton").append('<option value="' + i + '">' + value + '</option>');
+                });
+
+            }
+        });
+    }
+
+    function localidad(c) {
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('tramite_rue_le_buscar_localidades', {'idCanton': c}),
+            beforeSend: function () {
+                $("#form_localidad").empty();
+                $("#form_localidad").append('<option value="">Buscando...</option>');
+            },
+            success: function (data) {
+                $("#form_localidad").empty();
+                $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                $.each(data.localidad, function (i, value) {
+                    $("#form_localidad").append('<option value="' + i + '">' + value + '</option>');
+                });
+                $("#form_localidad").selectpicker('refresh');
+            }
+        });
+    }
+    $(function(){
+        $(".validar").keydown(function(event){
+            if((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !==190  && event.keyCode !==110 && event.keyCode !==8 && event.keyCode !==9  ){
+                return false;
+            }
+        });
+    }); 
+
+    function validacion(){
+        if ($("#form_varevaluacion_0").is(':checked')){
+            if('{{tramite.institucioneducativa}}' && $('#form_idrue').val()==""){
+                alert('Debe ingresar el código RUE de la unidad educativa');
+                return false;
+            }else if($('#form_resolucion').val()==''){
+                alert('Debe ingresar el número de resolución');
+                return false;
+            }else if($('#form_fecharesolucion').val()==''){
+                alert('Debe ingresar la fecha de resolución');
+                return false;
+            }else if($('#form_institucioneducativa').val()==''){
+                alert('Debe ingresar el nombre de la unidad educativa');
+                return false;
+            }else if($('#form_departamento').val()==''){
+                alert('Debe seleccionar el departamento');
+                return false;
+            }else if($('#form_provincia').val()==''){
+                alert('Debe seleccionar la provincia');
+                return false;
+            }else if($('#form_municipio').val()==''){
+                alert('Debe seleccionar el municipio');
+                return false;
+            }else if($('#form_canton').val()==''){
+                alert('Debe seleccionar el cantón');
+                return false;
+            }else if($('#form_localidad').val()==''){
+                alert('Debe seleccionar la localidad');
+                return false;
+            }else if($('#form_distrito').val()==''){
+                alert('Debe seleccionar el distrito');
+                return false;
+            }else if($('#form_zona').val()==''){
+                alert('Debe ingrasar la zona de la unidad educativa');
+                return false;
+            }else if($('#form_direccion').val()==''){
+                alert('Debe ingrasar la dirección de la unidad educativa');
+                return false;
+            }else if($('#form_dependencia').val()==''){
+                alert('Debe seleccionar el tipo de dependencia de la Unidda Educativa');
+                return false;
+            }else if($('#form_tipoeducacion').val()==''){
+                alert('Debe seleccionar el tipo de educación de la Unidda Educativa');
+                return false;
+            }else if(!$(".niveltipo").is(":checked")){
+                    alert('Debe seleccionar los niveles autorizados de la Unidad Educativa');
+                return false;
+            }
+            return true;
+        }else{
+            return true;
+        }
+    }
+    </script>   
+    {% endblock %}

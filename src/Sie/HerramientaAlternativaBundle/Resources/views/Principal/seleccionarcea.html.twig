@@ -65,7 +65,7 @@
                                     {{ form_label(form.codsie)}}
                                 </div>
                                 <div class="col-md-7">
-                                    {{form_widget(form.codsie,{'attr':{'onchange':'gestion(this.value)'}}) }}
+                                    {{form_widget(form.codsie,{'attr':{'onkeyup':'gestion(this.value)'}}) }}
                                 </div>
                             </div>
                             <div class="form-group col-md-2">
@@ -199,31 +199,42 @@
         };
         function gestion(id_cea)
         {
-            //alert(id_cea);
-            var formData = {id_cea: id_cea};
-            $.ajax({
-                type: 'get',
-                url: "{{path('herramientalt_ceducativa_lista_gestion')}}",
-                data: formData,
-                beforeSend: function () {
-                    $("#form_gestion").empty();
-                    $("#form_gestion").append('<option value="">Buscando...</option>');
-                    $("#form_subcea").empty();
-                    $("#form_subcea").append('<option value="">Buscando...</option>');
-                },
-                success: function (data) {
-                    $("#form_gestion").empty();
-                    $("#form_gestion").append('<option value="">Todos</option>');
-                    $("#form_subcea").empty();
-                    $("#form_subcea").append('<option value="">Todos</option>');
-                    $.each(data.gestion, function (i, value) {
-                        $("#form_gestion").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                    $.each(data.subcea, function (i, value) {
-                        $("#form_subcea").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                }
-            });
+            var codigo = $('#form_codsie').val();
+            if(codigo.length >= 8){
+                //alert(id_cea);
+                var formData = {id_cea: id_cea};
+                $.ajax({
+                    type: 'get',
+                    url: "{{path('herramientalt_ceducativa_lista_gestion')}}",
+                    data: formData,
+                    beforeSend: function () {
+                        $("#form_gestion").empty();
+                        $("#form_gestion").append('<option value="">Buscando...</option>');
+                        $("#form_subcea").empty();
+                        $("#form_subcea").append('<option value="">Buscando...</option>');
+                    },
+                    success: function (data) {
+                        $("#form_gestion").empty();
+                        $("#form_gestion").append('<option value="">Todos</option>');
+                        $("#form_subcea").empty();
+                        $("#form_subcea").append('<option value="">Todos</option>');
+                        $.each(data.gestion, function (i, value) {
+                            $("#form_gestion").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        $.each(data.subcea, function (i, value) {
+                            $("#form_subcea").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
+                });
+                $('#form_buscar').removeAttr('disabled');
+            }else{
+                $("#form_gestion").empty();
+                $("#form_gestion").append('<option value="">Todas</option>');
+                $("#form_subcea").empty();
+                $("#form_subcea").append('<option value="">Todas</option>');
+
+                $('#form_buscar').attr('disabled','disabled');
+            }
         }
 
         function subcea(gestion)

@@ -1,0 +1,36 @@
+<div class="table-responsive">
+    <table class="table table-bordered table-striped table-primary" id="dt_nnats">
+        <thead>
+        <tr>
+            <th style="min-width: 10px">Nro.</th>
+            <th>Departamento</th>
+            <th>Distrito</th>
+            <th>Código SIE</th>
+            <th>Institucion Educativa</th>
+            <th>Estudiantes</th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <th style="min-width: 10px">Nro.</th>
+            <th>Departamento</th>
+            <th>Distrito</th>
+            <th>Código SIE</th>
+            <th>Institucion Educativa</th>
+            <th>Estudiantes</th>
+        </tr>
+        </tfoot>
+        <tbody id = "tbodypaso">
+        {% for data in data %}
+            <tr>
+                <td class="text-center border-right" style="min-width: 10px">{{ loop.index }}</td>
+                <td>{{data.des_dep}}</td>
+                <td>{{data.des_dis}}</td>
+                <td>{{data.cod_ue_id}}</td>
+                <td>{{data.desc_ue}}</td>
+                <td>{{data.estudiante}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

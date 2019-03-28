@@ -94,7 +94,7 @@
                         </div>
                         <div class="panel-body">
                             {% if (totales) %}
-                            <input type="text" name="roluser" id="roluser" value="{{ roluser}}">
+                            <input type="hidden" name="roluser" id="roluser" value="{{ roluser}}">
                             <button class="btn btn-xs btn-danger rounded glyphicon glyphicon-copy" id="copy-button" data-clipboard-target="#tablaTotales"> Copiar Lista</button>
                                 <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
                                     <table id="tablaTotales" class="display" cellspacing="0" width="100%">
@@ -159,7 +159,7 @@
                     </div>
                 </div>
             {% else %}
-                {% if ('8' == app.session.get('roluser')) %}
+                {% if ('8' == app.session.get('roluser')) or ('21' == app.session.get('roluser')) %}
                     <div class="panel panel-icon panel-primary">
                         <div class="panel-heading">
                             Reporte de cursos
