@@ -152,7 +152,7 @@ class SolicitudBTHController extends Controller {
             ->innerJoin('SieAppWebBundle:Persona', 'per', 'WITH', 'mins.persona = per.id')
             ->where('mins.institucioneducativa = :idInstitucion')
             ->andWhere('mins.gestionTipo = :gestion')
-            ->andWhere('mins.cargoTipo = :cargo')
+            ->andWhere('mins.cargoTipo IN (:cargo)')
             ->andWhere('mins.esVigenteAdministrativo = :esvigente')
             ->setParameter('idInstitucion', $institucion)
             ->setParameter('gestion', $gestion)
@@ -288,7 +288,7 @@ class SolicitudBTHController extends Controller {
                 ->innerJoin('SieAppWebBundle:Persona', 'per', 'WITH', 'mins.persona = per.id')
                 ->where('mins.institucioneducativa = :idInstitucion')
                 ->andWhere('mins.gestionTipo = :gestion')
-                ->andWhere('mins.cargoTipo = :cargo')
+                ->andWhere('mins.cargoTipo IN (:cargo)')
                 ->andWhere('mins.esVigenteAdministrativo = :esvigente')
                 ->setParameter('idInstitucion', $institucion)
                 ->setParameter('gestion', $gestion)
@@ -410,12 +410,12 @@ class SolicitudBTHController extends Controller {
                     $id_distrito    = $request->get('id_distrito');
                     /***
                      * Adecuacion para obtener el usuario del director.
+                     * 2018-  where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=2018 and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
                      */
                     $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id_Institucion);
                     $query = $em->getConnection()->prepare("select u.* from maestro_inscripcion m
                     join usuario u on m.persona_id=u.persona_id
-                    where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=2018 and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
-                    /*where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=".(new \DateTime())->format('Y')." and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");*/
+                    where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=".(new \DateTime())->format('Y')." and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
                     $query->execute();
                     $uDestinatario = $query->fetchAll();
                     if($uDestinatario){
@@ -486,12 +486,12 @@ class SolicitudBTHController extends Controller {
                         $datos = ($request->get('ipt')); //dump ($datos);DIE;
                         /***
                          * Adecuacion para obtener el usuario del director.
-                         */
+                         * 2018 ---> where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=2018 and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
+                        */
                         $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id_Institucion);
                         $query = $em->getConnection()->prepare("select u.* from maestro_inscripcion m
                         join usuario u on m.persona_id=u.persona_id
-                        where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=2018 and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
-                        /*where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=".(new \DateTime())->format('Y')." and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");*/
+                        where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=".(new \DateTime())->format('Y')." and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
                         $query->execute();
                         $uDestinatario = $query->fetchAll();
                         if($uDestinatario){
