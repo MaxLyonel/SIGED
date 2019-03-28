@@ -472,7 +472,7 @@ class DefaultController extends Controller {
             if ( $user and is_object($user) ) {//USUARIO Y CONTRASEÑA CORRECTAS
 
                 // VERIFICAMOS SI EL USUARIO ES DE ALTERNATIVA Y ES UN CENTRO
-                if($request->server->get('HTTP_HOST') == 'alternativa.sie.gob.bo' and $user->getUsername() != '4747180'){
+                if($request->server->get('HTTP_HOST') == 'alternativa.sie.gob.bo' and ($user->getUsername() != '4747180' or $user->getUsername() != '466334' )){
                     $this->session->getFlashBag()->add('errorusuario', 'El sistema esta temporalmente fuera de servicio, por mantenimiento. Disculpe las molestias.');
                     return $this->redirectToRoute('login');
                 }
