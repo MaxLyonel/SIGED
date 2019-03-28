@@ -287,7 +287,7 @@ class DefaultController extends Controller {
                 $sysbutton = true;
                 $layout = 'layoutProcesos.html.twig';
                 $this->session->set('pathSystem', "SieProcesosBundle");
-                break;
+                break;                
             case 'pnp.sie.gob.bo':
                 $sysname = 'PNP';
                 $sysporlet = 'blue';
@@ -472,7 +472,8 @@ class DefaultController extends Controller {
             if ( $user and is_object($user) ) {//USUARIO Y CONTRASEÑA CORRECTAS
 
                 // VERIFICAMOS SI EL USUARIO ES DE ALTERNATIVA Y ES UN CENTRO
-                if($request->server->get('HTTP_HOST') == 'alternativa.sie.gob.bo' and ($user->getUsername() != '4747180' or $user->getUsername() != '466334' )){
+                $arrauuseralt = array(4747180,466334);
+                if($request->server->get('HTTP_HOST') == 'alternativa.sie.gob.bo' and !(in_array($user->getUsername(),$arrauuseralt) )){
                     $this->session->getFlashBag()->add('errorusuario', 'El sistema esta temporalmente fuera de servicio, por mantenimiento. Disculpe las molestias.');
                     return $this->redirectToRoute('login');
                 }
