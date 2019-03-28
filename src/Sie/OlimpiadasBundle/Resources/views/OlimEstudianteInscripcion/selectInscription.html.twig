@@ -163,7 +163,6 @@
         {% block javascripts%}
         {{parent()}}
         <script type="text/javascript" charset="utf-8" >
-            $(".js-example-basic-multiple").select2();
             var getCategory = function(idmateria){
                 
                 $.ajax({
@@ -443,8 +442,9 @@
                 olimtutorid = $('#form_olimtutorid').val();
                 jsonData = $('#form_jsonData').val();
                 
-                if(turnoId.length > 3){
-                    alert('¡Debe seleccionar como máximo tres (3) paralelos!');
+                if(paraleloId.length > 3){
+                    $("#getStudentsId").empty();
+                    $("#getStudentsId").append('<div class="alert alert-danger"><i class="fa fa-fw fa-warning"></i><strong>¡Atención!</strong> Debe seleccionar como máximo tres (3) paralelos.</div>');
                     return false;
                 } else {
                     $.ajax({
