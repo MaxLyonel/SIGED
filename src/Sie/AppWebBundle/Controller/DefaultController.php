@@ -87,6 +87,7 @@ class DefaultController extends Controller {
             case '172.20.196.9:8016':
             case 'www.herramientaalternativa.local':
             case 'alternativa.sie.gob.bo':
+            case 'localhost:8081':
                 $sysname = 'Herramienta Alternativa';
                 $sysporlet = 'blue';
                 $sysbutton = true;
@@ -281,19 +282,12 @@ class DefaultController extends Controller {
                 //$sysbutton = true;
                 //$layout = 'layoutHerramientaAlternativa.html.twig';
                 //$this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
-                /*$sysname = 'Procesos';
+                $sysname = 'Procesos';
                 $sysporlet = 'blue';
                 $sysbutton = true;
                 $layout = 'layoutProcesos.html.twig';
                 $this->session->set('pathSystem', "SieProcesosBundle");
-                break;*/
-                $sysname = 'REGULAR';
-                $sysporlet = 'blue';
-                $sysbutton = true;
-                $layout = 'layoutRegular.html.twig';
-                $this->session->set('pathSystem', "SieRegularBundle");
-                $this->session->set('sistemaid', 1);
-                break;
+                break;                
             case 'pnp.sie.gob.bo':
                 $sysname = 'PNP';
                 $sysporlet = 'blue';
@@ -476,6 +470,14 @@ class DefaultController extends Controller {
             $user = $this->container->get('security.context')->getToken()->getUser();
             //dump($user);die();
             if ( $user and is_object($user) ) {//USUARIO Y CONTRASEÑA CORRECTAS
+
+                // VERIFICAMOS SI EL USUARIO ES DE ALTERNATIVA Y ES UN CENTRO
+                $arrauuseralt = array(4747180,466334,3063920);
+                if($request->server->get('HTTP_HOST') == 'alternativa.sie.gob.bo' and !(in_array($user->getUsername(),$arrauuseralt) )){
+                    $this->session->getFlashBag()->add('errorusuario', 'El sistema esta temporalmente fuera de servicio, por mantenimiento. Disculpe las molestias.');
+                    return $this->redirectToRoute('login');
+                }
+
                 //*******SE VERIFICA SI SE TRATA DE RESETEO DE CONTRASEÑA
                 $this->session->set('userId', $user->getId());
                 
@@ -756,6 +758,7 @@ class DefaultController extends Controller {
                                     'institucioneducativaTipo'=>2
                                         ));
                                     if($objInstitucioneducativaAlt && $rolselected[0]['sie']!='80730796'){
+
                                         $sesion->set('directorAlternativa', true);
                                     }
 

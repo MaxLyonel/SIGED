@@ -103,7 +103,7 @@ class RemoveInscriptionController extends Controller {
         $em->getConnection()->beginTransaction();
         try {
 
-            $objJuegos = $em->getRepository('SieAppWebBundle:EstudianteInscripcionJuegos')->findOneBy(array('estudianteInscripcion' => $eiid));
+            $objJuegos = $em->getRepository('SieAppWebBundle:JdpEstudianteInscripcionJuegos')->findOneBy(array('estudianteInscripcion' => $eiid));
             if ($objJuegos) {
                 $message = "No se puede eliminar por que el estudiante esta registrado en el sistema de Juegos Plurinacionales";
                 $this->addFlash('warningremoveins', $message);
@@ -226,6 +226,7 @@ class RemoveInscriptionController extends Controller {
 
            //paso 7 borrando apoderados
             $objEstudianteInscripcionSocioeconomicoRegular = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegular')->findOneBy(array('estudianteInscripcion' => $eiid ));
+
             if($objEstudianteInscripcionSocioeconomicoRegular){
               $objEstudianteInscripcionSocioeconomicoRegNacion = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegNacion')->findBy(array(
                 'estudianteInscripcionSocioeconomicoRegular' => $objEstudianteInscripcionSocioeconomicoRegular->getId()
@@ -291,6 +292,14 @@ class RemoveInscriptionController extends Controller {
 
             //step 6 copy data to control table and remove teh inscription
             $objStudentInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($eiid);
+
+            //verificamos si esta en la tabla de olim_estudiante_inscripcion
+            $objolim_estudiante_inscripcion = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findBy(array('estudianteInscripcion' => $eiid ));
+            if ($objolim_estudiante_inscripcion) {
+                $message = "No se puede eliminar por que el estudiante esta registrado en el sistema de Olimpiadas";
+                $this->addFlash('warningremoveins', $message);
+                return $this->redirectToRoute('remove_inscription_sie_index');
+            }
 
             $studentInscription = new EstudianteInscripcionEliminados();
             $studentInscription->setEstudianteInscripcionId($objStudentInscription->getId());

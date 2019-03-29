@@ -17,6 +17,9 @@ use Sie\AppWebBundle\Entity\EstudianteNotaCualitativa;
 use Sie\AppWebBundle\Entity\EstudianteNotaSolicitud;
 use Sie\AppWebBundle\Entity\EstudianteNotaSolicitudDetalle;
 
+use Doctrine\DBAL\Types\Type;
+Type::overrideType('datetime', 'Doctrine\DBAL\Types\VarDateTimeType');
+
 /**
  * EstudianteInscripcion controller.
  *
