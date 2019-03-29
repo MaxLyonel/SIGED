@@ -296,7 +296,7 @@ class CreacionCursosEspecialController extends Controller {
                     ->add('idInstitucion','hidden',array('data'=>$request->get('idInstitucion')))
                     ->add('idGestion','hidden',array('data'=>$request->get('idGestion')))
                     ->add('turno','choice',array('label'=>'Turno','choices'=>$turnos,'attr'=>array('class'=>'form-control')))
-                    ->add('area', 'choice',array('label'=>'Área','choices'=>$areas , 'empty_value' => 'Seleccionar', 'required' => true, 'attr' => array('class' => 'form-control')))
+                    ->add('area', 'choice',array('label'=>'Subárea','choices'=>$areas , 'empty_value' => 'Seleccionar', 'required' => true, 'attr' => array('class' => 'form-control')))
                     ->add('nivel','choice',array('label'=>'Nivel','empty_value'=>'Seleccionar','attr'=>array('class'=>'form-control')))
                     ->add('grado','choice',array('label'=>'Grado','empty_value'=>'Seleccionar','attr'=>array('class'=>'form-control')))
                     ->add('programa','choice',array('label'=>'Programa','empty_value'=>'Seleccionar','attr'=>array('class'=>'form-control')))
@@ -387,11 +387,11 @@ class CreacionCursosEspecialController extends Controller {
                 /* Asignacion de Modalidad de Atencion
                 DIRECTA = 1
                 INDIRECTA = 2
-                LUGAR = 1 EDUCACION EN CASA
+                LUGAR = EDUCACION EN CASA
                 */
                 $lugar = "";
                 if (isset($form['educacionCasa']) && $form['educacionCasa'] == 1){
-                    $modalidad = 2;
+                    $modalidad = 1;
                     $lugar="EDUCACION EN CASA";
                 }elseif($form['area'] == 1 && $form['programa'] == 13){
                     $modalidad = 2;

@@ -1,4 +1,5 @@
 {% if areasNivel is not empty %}
+
 <div id="wizard">
     <ol>
         <li>Seleccionar Áreas</li>
@@ -16,8 +17,10 @@
             <thead class="cf"> 
                 <tr>
                     <th></th>
-                    <th>Campo</th>
-                    <th>Código</th>
+                    {% if esvisual == false %}
+                        <th>Campo</th>
+                        <th>Código</th>
+                     {% endif %}
                     <th>Área</th>            
                 </tr>
             </thead>
@@ -31,8 +34,10 @@
                                 </label>
                             </div>
                         </td>
-                        <td data-title="Campo">{{areas.campo}}</td>
-                        <td data-title="Código">{{areas.codigo}}</td>
+                        {% if esvisual == false %}
+                            <td data-title="Campo">{{areas.campo}}</td>
+                            <td data-title="Código">{{areas.codigo}}</td>
+                        {% endif %}
                         <td data-title='Área'>{{areas.asignatura}}</td>
                     </tr>
                 {% endfor %}

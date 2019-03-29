@@ -82,7 +82,8 @@
                                         <div class="help-block with-errors"></div>
                                     </div>
                                     <div class="form-group col-lg-6 col-md-12">
-                                        {{form_label(form.paralelo)}}
+                                        <label for="form_paralelo" class="required" id="idparalelo">Paralelo</label>
+                                        {# {{form_label(form.paralelo)}} #}
                                         {{form_widget(form.paralelo) }}
                                         <div class="help-block with-errors"></div>
                                     </div>
@@ -148,6 +149,12 @@
             }else{
                 $("#form_educacionCasa").prop('checked', false);
             }
+            if(area == 2){
+                $('#idparalelo').text("Grupo");
+            }else{
+                $('#idparalelo').text("Paralelo");
+            }
+            
             $.ajax({
                 type: 'get',
                 url: Routing.generate('listar_niveles_especial', {'area':area}),
@@ -189,6 +196,11 @@
                 $("#divservicio").hide();
             }else{
                 $("#divservicio").show();
+            }
+            if(nivel == 410 || nivel == 411 || area == 2){
+                $('#idparalelo').text("Grupo");
+            }else{
+                $('#idparalelo').text("Paralelo");
             }
 
             $.ajax({

@@ -476,6 +476,12 @@ class AreasController extends Controller {
              */
             $institucionCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($idCurso);
             $institucionCursoEspecial = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->findOneBy(array('institucioneducativaCurso' => $institucionCurso));
+            $idarea = $institucionCursoEspecial->getEspecialAreaTipo()->getId();
+            if($idarea == 2){
+                $esvisual = true;
+            }else{
+                $esvisual = false;
+            }
             //dump($institucionCursoEspecial);die;
             $grado = $institucionCurso->getGradoTipo()->getId();
             $asignaturas = null;
@@ -752,7 +758,7 @@ class AreasController extends Controller {
                            ->getQuery()
                            ->getResult();
             $em->getConnection()->commit();
-            return $this->render('SieEspecialBundle:Areas:listaAreas.html.twig', array('areasNivel' => $areasArray, 'maestros' => $maestros));
+            return $this->render('SieEspecialBundle:Areas:listaAreas.html.twig', array('areasNivel' => $areasArray, 'maestros' => $maestros,'esvisual'=>$esvisual));
         } catch (Exception $ex) {
             //$em->getConnection()->rollback();
         }
@@ -767,6 +773,13 @@ class AreasController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             $form = $request->get('form');
+            //dump($form);die;
+            if($form['idArea'] == 2){
+                $esvisual = true;
+            }else{
+                $esvisual = false;
+            }
+            
             if ($form['nivel'] != 10) {
                 $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($form['paralelo']);
                 if ($curso) {
@@ -816,6 +829,7 @@ class AreasController extends Controller {
                             'areasCurso' => $areasCurso,
                             'curso' => $curso,
                             'mensaje' => $mensaje,
+                            'esvisual' => $esvisual,
                             'form' => $this->createFormToBuild($form['idInstitucion'], $form['idGestion'], '4')->createView()
                 ));
             } else {
@@ -842,7 +856,7 @@ class AreasController extends Controller {
      */
     public function lista_areas_curso_adicionar_eliminarAction(Request $request) {
         try {
-            //dump($request);die;
+            
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             $this->session = new Session;
@@ -854,10 +868,24 @@ class AreasController extends Controller {
                 $em->persist($curso);
                 $em->flush();
             }
+
+            /*
+             * obtenemos id de area especial
+             */
+            $cursoEspecial = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->findOneBy(array('institucioneducativaCurso'=>$idCurso));
+            $idEspecialArea = $cursoEspecial->getEspecialAreaTipo()->getId();
+            
+            if($idEspecialArea == 2){
+                $esvisual = true;
+            }else{
+                $esvisual = false;
+            }
+            
             /*
              * Areas a registrar nuevos
              */
             $areas = $request->get('areas');//
+            //dump($areas);die;
             /*
              * Areas registradas anteriormente
              */
@@ -998,7 +1026,12 @@ class AreasController extends Controller {
             $areasCurso = $array;
 
             $em->getConnection()->commit();
-            return $this->render('SieEspecialBundle:Areas:listaAreasCurso.html.twig', array('areasCurso' => $areasCurso, 'curso' => $curso, 'mensaje' => '','form' => $this->createFormToBuild($this->session->get('idInstitucion'), $this->session->get('idGestion'), '4')->createView()));
+            return $this->render('SieEspecialBundle:Areas:listaAreasCurso.html.twig', array(
+                    'areasCurso'    => $areasCurso, 
+                    'curso'         => $curso, 
+                    'mensaje'       => '',
+                    'esvisual'      => $esvisual,
+                    'form'          => $this->createFormToBuild($this->session->get('idInstitucion'), $this->session->get('idGestion'), '4')->createView()));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
         }
@@ -1014,6 +1047,13 @@ class AreasController extends Controller {
         try {
             $cursoOferta = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($idCursoOferta);
             $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($cursoOferta->getInsitucioneducativaCurso()->getId());
+            $cursoEspecial = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->findOneBy(array('institucioneducativaCurso'=>$curso->getId()));
+            $idEspecialArea = $cursoEspecial->getEspecialAreaTipo()->getId();
+            if($idEspecialArea == 2){
+                $esvisual = true;
+            }else{
+                $esvisual = false;
+            }
             /**
              * Si existe el curso y el curso oferta entonces eliminamos el curso oferta
              */
@@ -1119,7 +1159,12 @@ class AreasController extends Controller {
                 $areasCurso = $array;
 
             $em->getConnection()->commit();
-            return $this->render('SieEspecialBundle:Areas:listaAreasCurso.html.twig', array('areasCurso' => $areasCurso, 'curso' => $curso, 'mensaje' => $mensaje,'form' => $this->createFormToBuild($this->session->get('idInstitucion'), $this->session->get('idGestion'), '4')->createView()));
+            return $this->render('SieEspecialBundle:Areas:listaAreasCurso.html.twig', array(
+                'areasCurso'    => $areasCurso, 
+                'curso'         => $curso, 
+                'mensaje'       => $mensaje,
+                'esvisual'      => $esvisual,
+                'form'          => $this->createFormToBuild($this->session->get('idInstitucion'), $this->session->get('idGestion'), '4')->createView()));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
         }
