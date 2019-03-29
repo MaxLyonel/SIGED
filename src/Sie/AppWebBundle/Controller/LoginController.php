@@ -42,7 +42,7 @@ class LoginController extends Controller {
 
         //****************
         //****SE GENERAN LOS MENUS PARA EL SIGEN EN BASE AL ID DEL ROL DEL USUARIO
-       /* $query = $em->getConnection()->prepare('SELECT get_objeto_menu (:rol_id::INT)');
+        $query = $em->getConnection()->prepare('SELECT get_objeto_menu (:rol_id::INT)');
         $query->bindValue(':rol_id', $rolUserId);
         $query->execute();
         $aMenuUser = $query->fetchAll(); 
@@ -87,7 +87,7 @@ class LoginController extends Controller {
             //set some values fot the view template
             //$sesion->set('aMenuOption', $aBuildMenu);
             $sesion->set('aMenu', $optionMenu);
-        } */
+        }
         //****FIN SE GENERAN LOS MENUS PARA EL SIGED EN BASE AL ID DEL ROL DEL USUARIO
         //****************
         
