@@ -261,10 +261,10 @@
                         {% endfor %}#}
                         {#{{ render(controller('SieAppWebBundle:GestionMenu:generamenuGuadalupe',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  app.session.get('sistemaid') ,'userId':app.session.get('userId')  })) }}#}
                         {{ render(controller('SieAppWebBundle:GestionMenu:generamenuSistema',{ 'rol_tipo_id':  app.session.get('roluser') ,'idsistema':  app.session.get('sistemaid') ,'userId':app.session.get('userId')  })) }}
-                        {% if app.session.get('userId') == '13794833' %}
+                        {% if app.session.get('userId') == '13794833' or app.session.get('userId') == '13833122' %}
                         <li class="panel">
                             <a href="{{path('sie_gestion_menu_principal')}}">
-                                <i class="fa fa-gear"></i> Gestión de Menúsaa
+                                <i class="fa fa-gear"></i> Gestión de Menús
                             </a>
                         </li>
                         {% endif %}
