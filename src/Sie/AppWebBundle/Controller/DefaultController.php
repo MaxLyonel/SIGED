@@ -472,11 +472,11 @@ class DefaultController extends Controller {
             if ( $user and is_object($user) ) {//USUARIO Y CONTRASEÑA CORRECTAS
 
                 // VERIFICAMOS SI EL USUARIO ES DE ALTERNATIVA Y ES UN CENTRO
-                $arrauuseralt = array(4747180,466334,3063920);
+                /*$arrauuseralt = array(4747180,466334,3063920);
                 if($request->server->get('HTTP_HOST') == 'alternativa.sie.gob.bo' and !(in_array($user->getUsername(),$arrauuseralt) )){
                     $this->session->getFlashBag()->add('errorusuario', 'El sistema esta temporalmente fuera de servicio, por mantenimiento. Disculpe las molestias.');
                     return $this->redirectToRoute('login');
-                }
+                }*/
 
                 //*******SE VERIFICA SI SE TRATA DE RESETEO DE CONTRASEÑA
                 $this->session->set('userId', $user->getId());
