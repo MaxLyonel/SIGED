@@ -270,6 +270,7 @@ class DefaultController extends Controller {
                 $sysbutton = true;
                 $layout = 'layoutOlimpiadas.html.twig';
                 $this->session->set('pathSystem', "SieOlimpiadasBundle");
+                $this->session->set('sistemaid', 13);
                 break;
             default :
                 // $sysname = 'REGULAR';
@@ -308,6 +309,7 @@ class DefaultController extends Controller {
                 $sysbutton = true;
                 $layout = 'layoutRegular.html.twig';
                 $this->session->set('pathSystem', "SieRegularBundle");
+                $this->session->set('sistemaid', 1);
                 break;
             case 'herramientalt.local':
                 $sysname = 'Herramienta Alternativa';
