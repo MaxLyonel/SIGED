@@ -1358,8 +1358,51 @@ class Funciones {
         } catch (Exception $e) {  
           echo 'Excepción capturada: ', $ex->getMessage(), "\n";
         }
-    }    
+    }
+    public function controlaccesomenusgeneral($sistemaid, $rolid, $usuarioid, $rutamenu){
+        switch ($sistemaid) {
+            case 3:
+            case 5:
+                $query = $this->em->getConnection()->prepare("
+                SELECT msr.esactivo
+                FROM menu_sistema_rol  msr 
+                INNER JOIN sistema_rol sr ON msr.sistema_rol_id = sr.id
+                INNER JOIN menu_sistema ms ON msr.menu_sistema_id=ms.id
+                INNER JOIN menu_tipo mt ON ms.menu_tipo_id=mt.id
+                INNER JOIN sistema_tipo sti ON sti.id = ms.sistema_tipo_id
+                INNER JOIN rol_tipo rtip ON rtip.id =sr.rol_tipo_id   
+                INNER JOIN usuario_rol ur ON ur.rol_tipo_id = rtip.id  
+                WHERE sti.id = ".$sistemaid."and rtip.id IN (SELECT usuario_rol.rol_tipo_id from usuario_rol WHERE usuario_rol.usuario_id = $usuarioid) AND mt.ruta='".$rutamenu."' and ur.usuario_id=".$usuarioid);
+                $query->execute();
+                $respuesta = $query->fetchAll();
+                return $respuesta[0]['esactivo'];
+                break;
+            default:
+                $query = $this->em->getConnection()->prepare("
+                SELECT msr.esactivo
+                FROM menu_sistema_rol  msr 
+                INNER JOIN sistema_rol sr ON msr.sistema_rol_id = sr.id
+                INNER JOIN menu_sistema ms ON msr.menu_sistema_id=ms.id
+                INNER JOIN menu_tipo mt ON ms.menu_tipo_id=mt.id
+                INNER JOIN sistema_tipo sti ON sti.id = ms.sistema_tipo_id
+                INNER JOIN rol_tipo rtip ON rtip.id =sr.rol_tipo_id   
+                INNER JOIN usuario_rol ur ON ur.rol_tipo_id = rtip.id  
+                WHERE sti.id = ".$sistemaid." and rtip.id=".$rolid." AND mt.ruta='".$rutamenu."' and ur.usuario_id=".$usuarioid);
+                $query->execute();
+                $respuesta = $query->fetchAll();
+                return $respuesta[0]['esactivo'];
+        }
+    }
+    public function controlaccesomenus($sistemaid, $rolid, $usuarioid, $rutamenu){
+        $query = $this->em->getConnection()->prepare("select * from get_objeto_menu_usuario_path($usuarioid::INT,'$sistemaid'::VARCHAR,'$rolid'::varchar, '$rutamenu'::VARCHAR) as v");
+        $query->execute();
+        $menu = $query->fetchAll();
 
-
+        if (count($menu)>0){
+            return $menu[0]['esactivo'];
+        } else {
+            return false;
+        }
+    }
 
 }
