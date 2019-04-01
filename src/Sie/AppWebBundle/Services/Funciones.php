@@ -126,10 +126,10 @@ class Funciones {
 
     public function setLogTransaccion($key,$tabla,$tipoTransaccion,$observacion,$valorNuevo,$valorAnt,$sistema,$archivo){
         //try {
-            $serializer = SerializerBuilder::create()->build();
-            $valorAnt = $serializer->serialize($valorAnt, 'json');
-            $serializer2 = SerializerBuilder::create()->build();
-            $valorNuevo = $serializer2->serialize($valorNuevo, 'json');
+            // $serializer = SerializerBuilder::create()->build();
+            $valorAnt = '';//$serializer->serialize($valorAnt, 'json');
+            // $serializer2 = SerializerBuilder::create()->build();
+            $valorNuevo = '';//$serializer2->serialize($valorNuevo, 'json');
 
             $newLogTransaccion = new LogTransaccion();
             $newLogTransaccion->setKey($key);
