@@ -140,7 +140,7 @@ sie_herramienta_aca_multigrado:
 
 sie_herramienta_solicitud_bth:
     resource: "@SieHerramientaBundle/Resources/config/routing/solicitudBTH.yml"
-    prefix:   /sie/solicitudbth
+    prefix:   /sie/tramite/solicitudbth
 
 
 #sie_herramienta_wf_tramite:
