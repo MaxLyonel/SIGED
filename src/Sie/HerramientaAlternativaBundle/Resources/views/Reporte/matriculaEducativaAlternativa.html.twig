@@ -631,6 +631,17 @@
 {% block javascripts %}
     {{parent()}}
     <script>
+
+        $(function() {
+            $('#listaesp').change(function() {
+                var value= $(this).val();
+                $("#idesp").val(value);
+                $("#idespx").val(value);
+                var  a=$("#idesp").val();
+                //alert(a);
+            })
+        });
+
         $(document).ready(function() {
 
             Highcharts.setOptions({
@@ -720,16 +731,6 @@
         </script>
     {% endif %}
     <script>
-
-        $(function() {
-            $('#listaesp').change(function() {
-                var value= $(this).val();
-                $("#idesp").val(value);
-                $("#idespx").val(value);
-                var  a=$("#idesp").val();
-              //  alert(a);
-            })
-        });
 
         function cargaSie(){
             var sie = $('#sie').val();
