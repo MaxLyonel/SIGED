@@ -645,7 +645,8 @@
                                 <h4 class="page-header">VII. FINALIZAR REGISTRO RUDEAL</h4>
                                 <div class="ml-10">
                                     <div class="row">
-                                        <div class="col-md-8">
+                                        <div class="col-md-7">
+                                            
                                             <form id="formLugar" onsubmit="saveFormLugar(); return false;" method="post">
                                                 <div class="form-group row">
                                                     <label class="col-md-6">Lugar de registro</label>
@@ -668,8 +669,11 @@
                                                 {{ form_widget(formLugar) }}
                                             </form>
                                         </div>
-                                        <div id="btnImprimir" class="col-md-4" {% if rude.registroFinalizado < 5 %} style="display:none" {% endif %}>
+                                        <div id="btnImprimir" class="col-md-5" {% if rude.registroFinalizado < 5 %} style="display:none" {% endif %}>
                                             <div class="block-print">
+                                                <div class="alert alert-success" id="msgFinalizado" style="display:none">
+                                                    <i class="fa fa-check"></i> Registro finalizado correctamente.
+                                                </div>
                                                 <p>Imprimir Formulario RUDEAL</p>
                                                 <a class="btn btn-info" style="padding:20px" href="{{path('herramienta_alter_reporte_socioeconomico', {'inscripcionId':inscripcion.id, 'rude': inscripcion.estudiante.codigoRude} )}}">
                                                     <i class="fa fa-print" style="font-size:40px" ></i>
@@ -1473,6 +1477,7 @@
             success: function(data){
                 
                 $('#btnImprimir').css('display','block');
+                $('#msgFinalizado').css('display','block');
                 
             },
             error: function(){

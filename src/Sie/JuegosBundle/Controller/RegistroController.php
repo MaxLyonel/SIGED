@@ -90,7 +90,7 @@ class RegistroController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
-        //$gestionActual = 2018;
+        // $gestionActual = 2018;
         $sesion = $request->getSession();
         $id_usuario = $this->session->get('userId');
         $id_rol = $this->session->get('roluser');
@@ -156,7 +156,7 @@ class RegistroController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
-        //$gestionActual = 2018;
+        // $gestionActual = 2018;
         $response = new JsonResponse();
         try {
             return $response->setData(array(
@@ -201,7 +201,7 @@ class RegistroController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
-        //$gestionActual = 2018;
+        // $gestionActual = 2018;
         $response = new JsonResponse();
         try {
             return $response->setData(array(
@@ -266,7 +266,7 @@ class RegistroController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
-        //$gestionActual = 2018;
+        // $gestionActual = 2018;
         $response = new JsonResponse();
         try {
             return $response->setData(array(
@@ -309,7 +309,7 @@ class RegistroController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
-        //$gestionActual = 2018;
+        // $gestionActual = 2018;
         $response = new JsonResponse();
         try {
             return $response->setData(array(
@@ -361,7 +361,7 @@ class RegistroController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
-        //$gestionActual = 2018;
+        // $gestionActual = 2018;
         $sesion = $request->getSession();
         $id_usuario = $this->session->get('userId');
 
@@ -375,10 +375,11 @@ class RegistroController extends Controller {
         $gradoId = $_POST['grado'];
         $generoId = $_POST['genero'];
 
+        $faseId = 1;     
         //get db connexion
         $em = $this->getDoctrine()->getManager();
         $objStudents = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getListStudentPerNivelGradoGenero($sie, $gestionActual, $nivelId, $gradoId, $generoId);
-        
+
         $exist = true;
         $aData = array();
         //check if the data exist
@@ -477,7 +478,7 @@ class RegistroController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
-        //$gestionActual = 2018;
+        // $gestionActual = 2018;
         $sesion = $request->getSession();
         $id_usuario = $this->session->get('userId');
 
@@ -562,7 +563,7 @@ class RegistroController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
-        //$gestionActual = 2018;
+        // $gestionActual = 2018;
         $sesion = $request->getSession();
         $id_usuario = $this->session->get('userId');
 
@@ -575,6 +576,16 @@ class RegistroController extends Controller {
         $pruebaId = $_POST['prueba'];
         $deportistas = $_POST['deportistas'];
         $nivelId = $_POST['nivel'];
+        $faseId = 1;
+
+        $response = new JsonResponse();
+
+        $faseActivo = $this->getFaseActivo($faseId, $nivelId, $fechaActual);
+        if (!$faseActivo) {
+            return $response->setData(array(
+                'msg_incorrecto' => 'Inscripción cerrada'
+            ));
+        }
         
         $entityTipoDisciplinaPrueba = $this->verificaTipoDisciplinaPrueba($pruebaId);
 
@@ -592,7 +603,6 @@ class RegistroController extends Controller {
         }
         
         //$posicionId = $_POST['posicion'];
-        $faseId = 1;
         $posicionId = null;
 
         $msgEstudiantesRegistrados = '';
@@ -619,8 +629,6 @@ class RegistroController extends Controller {
         //         'registrados' => array(), 'msg_correcto' => '', 'msg_incorrecto' => 'Las inscripciones para el Nivel Secundaria concluyeron'
         //     ));
         // }
-
-        $response = new JsonResponse();
 
         $reglaController = new reglaController();
         $reglaController->setContainer($this->container);
@@ -951,7 +959,7 @@ class RegistroController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
-        //$gestionActual = 2018;
+        // $gestionActual = 2018;
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         $respuesta = array();
@@ -1254,7 +1262,7 @@ class RegistroController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
-        //$gestionActual = 2018;
+        // $gestionActual = 2018;
         $fase = 1;
 
         $sesion = $request->getSession();
@@ -1750,7 +1758,7 @@ class RegistroController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
-        //$gestionActual = 2018;
+        // $gestionActual = 2018;
         $em = $this->getDoctrine()->getManager();
 
         $sie = $request->get('sie');
@@ -1770,7 +1778,7 @@ class RegistroController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
-        //$gestionActual = 2018;
+        // $gestionActual = 2018;
         $em = $this->getDoctrine()->getManager();
         $respuesta = array();
 
@@ -1943,6 +1951,36 @@ class RegistroController extends Controller {
             return $entity[0]['id']; 
         } else {
             return 0; 
+        }               
+    }
+    
+
+    /**
+     * busca el maximo id equipo creado
+     * @param type $nivelId
+     * @param type $generoId
+     * return list of pruebas
+     */
+    public function getFaseActivo($faseId, $nivelId, $fechaActual) {
+        $em = $this->getDoctrine()->getManager();
+        $entity= $this->getDoctrine()->getRepository('SieAppWebBundle:JdpFaseRegla');
+        $query = $entity->createQueryBuilder('fr')
+            ->where('fr.faseTipo = :faseId')
+            ->andWhere('fr.nivelTipo = :nivelId')
+            ->setParameter('faseId', $faseId)
+            ->setParameter('nivelId', $nivelId)
+            ->getQuery();
+        $entity = $query->getResult();
+        if (count($entity) > 0){
+            $fecha_ini = $entity[0]->getFechaIni();
+            $fecha_fin = $entity[0]->getFechaFin();
+            if($fechaActual >= $fecha_ini and $fechaActual <= $fecha_fin){
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false; 
         }               
     }
 }

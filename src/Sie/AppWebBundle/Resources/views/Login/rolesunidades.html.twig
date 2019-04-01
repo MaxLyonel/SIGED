@@ -11,18 +11,15 @@
 
         <!-- GLOBAL STYLES -->
         <link href="{{asset('css/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
-        <link href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel="stylesheet" type="text/css">
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel="stylesheet" type="text/css">
-        <link href="{{asset('icons/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
-
+        
         <!-- PAGE LEVEL PLUGIN STYLES -->
 
         <!-- THEME STYLES -->
         <link href="{{asset('css/style.css')}}" rel="stylesheet">
-        <link href="{{asset('css/plugins.css')}}" rel="stylesheet">
+        
 
         <!-- THEME DEMO STYLES -->
-        <link href="{{asset('css/demo.css')}}" rel="stylesheet">
+        
 
         <!--[if lt IE 9]>
         <script src="{{asset('js/html5shiv.js')}}"></script>
@@ -115,36 +112,38 @@
 
                                 <div id="formControls" class="panel-collapse collapse in">
                                     <div class="portlet-body">
-                                        <table class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>Rol</th>
-                                                    <th>Nivel</th>                                            
-                                                    <th>Lugar</th>
-                                                    <th>Cod. Sie.</th>
-                                                    <th>Institución Educativa</th>                                            
-                                                    <th>Sub sistema</th>
-                                                    <th></th>                                            
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for ue in roles %}
+                                        <div id="no-more-tables">
+                                            <table class="table table-hover">
+                                                <thead>
                                                     <tr>
-                                                        <td>{{ ue.rol }}</td>
-                                                        <td>{{ ue.nivel }}</td>
-                                                        <td>{{ ue.lugar }}</td>
-                                                        <td>{{ ue.sie }}</td>
-                                                        <td>{{ ue.institucioneducativa }}</td>
-                                                        <td>{{ ue.orgcurricula }}</td>
-                                                        <td class="text-center"> 
-                                                            <a href="{{ path('login_rol_select', {'key': ue.key }) }}" class="btn btn-success btn-xs" data-original-title="Ver" data-placement="top" data-toggle="tooltip" href="#">
-                                                                <i class="fa fa-sign-in"> Registrar mi ingreso -></i>
-                                                            </a>                                                                                                        
-                                                        </td> 
-                                                    </tr>                                                
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
+                                                        <th>Rol</th>
+                                                        <th>Nivel</th>                                            
+                                                        <th>Lugar</th>
+                                                        <th>Cod. Sie.</th>
+                                                        <th>Institución Educativa</th>                                            
+                                                        <th>Sub sistema</th>
+                                                        <th></th>                                            
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for ue in roles %}
+                                                        <tr>
+                                                            <td>{{ ue.rol }}</td>
+                                                            <td>{{ ue.nivel }}</td>
+                                                            <td>{{ ue.lugar }}</td>
+                                                            <td>{{ ue.sie }}</td>
+                                                            <td>{{ ue.institucioneducativa }}</td>
+                                                            <td>{{ ue.orgcurricula }}</td>
+                                                            <td class="text-center"> 
+                                                                <a href="{{ path('login_rol_select', {'key': ue.key }) }}" class="btn btn-success btn-xs" data-original-title="Ver" data-placement="top" data-toggle="tooltip" href="#">
+                                                                    <i class="fa fa-sign-in"> Registrar mi ingreso -></i>
+                                                                </a>                                                                                                        
+                                                            </td> 
+                                                        </tr>                                                
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                         <form action="{{path('logout')}}" method="post">
                                             <button type="submit" class="btn btn-primary"><i class="fa fa-gear"></i> Salir del SIGED.</button>
                                         </form>
@@ -161,10 +160,7 @@
         <!-- GLOBAL SCRIPTS -->
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script src="{{asset('js/plugins/bootstrap/bootstrap.min.js')}}"></script>
-        <script src="{{asset('js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>        
-        <script src="{{asset('js/plugins/hisrc/hisrc.js')}}"></script>
-        <script src="{{asset('js/flex.js')}}"></script>        
-        <script src="{{asset('validator/js/validator.js')}}"></script>
+        
         <script>
             //CAMBIA NOMBRE DE USUARIO AL CARNET
                 function usernameUpdate(usuarioid){

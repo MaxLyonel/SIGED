@@ -26,7 +26,14 @@
                 <div class="inner-all">
                     <ul class="list-unstyled">
                         <li class="text-center">
-                            <img data-no-retina class="img-circle img-bordered-primary" height="150" width="150" src="/uploads/personasfotos/{{app.session.get('userfoto')}}" alt="{{app.session.get('name')}} {{app.session.get('lastname')}}">
+                            
+                            {% if app.session.get('userfoto') is not null %}
+                                <img src="{{asset('uploads/personasfotos/' ~ app.session.get('userfoto'))}}" class="img-circle img-bordered-primary" alt="{{app.session.get('name')}} {{app.session.get('lastname')}}" height="150" width="150">
+                            {% else %}
+                                <img src="{{asset('img/photo.png')}}" class="img-circle img-bordered-primary" alt="{{app.session.get('name')}} {{app.session.get('lastname')}}" height="150" width="150">
+                                
+                            {% endif %}
+
                         </li>
                         <li class="text-center">
                             <h4 class="text-capitalize">{{app.session.get('name')}} {{app.session.get('lastname')}}</h4>
@@ -71,7 +78,7 @@
                     <a href="{{path('herramienta_alter_galeria_fotos_centro')}}" class="btn btn-lilac" ><i class="fa fa-fw fa-photo"></i> <span>Galeria de Fotos</span></a>
                     <a href="{{path('herramienta_alter_galeria_fotos_centro_editar_foto')}}" class="btn btn-warning" ><i class="fa fa-pencil"></i> <span>Editar Fotos</span></a>
                 </div>
-                <img data-no-retina height="50" width="150" src="/uploads/institutoseducativos/{{app.session.get('ie_id')}}_Fondo" class="img-responsive full-width" alt="                ">
+                {# <img data-no-retina height="50" width="150" src="/uploads/institutoseducativos/{{app.session.get('ie_id')}}_Fondo" class="img-responsive full-width" alt="                "> #}
                 {% endif %}
                 {#<ul class="list no-padding hidden-sm hidden-xs cover-menu">                                        
                     {% if app.session.get('ie_id') != -1 %}
