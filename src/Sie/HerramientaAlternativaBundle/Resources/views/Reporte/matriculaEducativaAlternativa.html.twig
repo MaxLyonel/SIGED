@@ -630,6 +630,10 @@
 
 {% block javascripts %}
     {{parent()}}
+    <script src="{{ asset('js/highcharts/highcharts.js')}}"></script>
+    <script src="{{ asset('js/highcharts/funnel.js')}}"></script>
+    <script src="{{ asset('js/highcharts/highcharts-3d.js')}}"></script>
+    <script src="{{ asset('js/highcharts/exporting.js')}}"></script>
     <script>
 
         $(function() {
