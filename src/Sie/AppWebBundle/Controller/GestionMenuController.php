@@ -1699,11 +1699,10 @@ ORDER BY 2,3,4");
             ->getForm();
         //return $this->render('SieAppWebBundle:GestionMenu:asignacionRolSistema.html.twig',array( 'form' => $form->createView()));
 
-
         return $this->render(
             'SieAppWebBundle:GestionMenu:listaSistemasMenusRoles.html.twig',array( 'form' => $form->createView()));
-        return $this->render(
-            'SieAppWebBundle:GestionMenu:reportesMenus.html.twig');
+        /*return $this->render(
+            'SieAppWebBundle:GestionMenu:reportesMenus.html.twig');*/
     }
 
         public function cambiaestadolistasistemamenurolAction(Request $request){

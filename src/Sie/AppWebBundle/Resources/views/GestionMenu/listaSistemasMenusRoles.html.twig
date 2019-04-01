@@ -45,9 +45,6 @@
 {% block javascripts %}
     {{parent()}}
     <script>
-        /*$( document ).ready(function() {
-            cargatablas();
-        });*/
         function cargarListaSistemaMenuRol () {
             var id_sistema = $('#form_sistema').val();
             var formData = {
@@ -62,12 +59,8 @@
                 },
                 success: function (data) {
                     $("#listam").empty();
-                    /*$("#tablalista").append( {#{% include 'SieAppWebBundle:GestionMenu:generaListaSistemamenuRol.html.twig' with {'listaSistemamenurol': data} %}#});*/
                     $("#listam").append(data);
                     cargatablas();
-//                    $( document ).ready(function() {
-//                        cargatablas();
-//                    });
                 }
             });
         }
@@ -100,15 +93,15 @@
                             success: function (data) {
                                 //console.log(data);
                                 if (data=='no'){
-                                    /*swal("Se eliminó correctamente la asignación");
-                                    location.reload();*/
                                     swal("Notificación", "El menú no puede ser eliminado mientras tenga submenú.", "warning");
                                 }else {
                                     $("#listam").empty();
                                     $("#listam").append(data);
+                                    $( document ).ready(function() {
+                                        cargatablas();
+                                    });
                                 }
                             },
-
                             complete: function () {
                                 swal.stopLoading();
                                 swal.close();

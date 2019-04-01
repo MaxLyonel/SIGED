@@ -1,7 +1,5 @@
 {% extends 'layoutGestmenu.html.twig' %}
 {% block contentoption %}
-
-
     <div class="header-content">
         <h2><i class="fa fa-pencil"></i> <strong>Generar Reportes Para Menús</strong>  <span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
@@ -18,10 +16,8 @@
         </div><!-- /.breadcrumb-wrapper -->
     </div><!-- /.header-content -->
     <!--/ End page header -->
-
     <div class="panel-heading">
         <div class="pull-left" >
-
         </div>
         <div class="pull-right">
             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo">
@@ -46,7 +42,6 @@
             {% endfor %}
         </div>
     {% endif %}
-
 <div class="body-content animated fadeIn">
     <div class="row">
         <div class="col-md-12">
@@ -58,23 +53,19 @@
     <br>
     <div class="row">
         <div class="container-fluid">
-
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h5><strong>Asignar</strong></h5>
                 </div>
                 <div class="panel-body">
                   {{form_start(form,{'attr':{'id':'formMenuRol','class':'form-horizontal form-group has-primary'} })}}
-
                     <div class="row">
                         <div class="col-md-4">
                              <h5><strong>Sistema</strong></h5>
                         </div>
-
                         <div class="col-md-4">
                             <h5><strong>Rol</strong></h5>
                         </div>
-
                     </div>
                     <div class="row">
                         <div class="col-md-4">
@@ -84,39 +75,22 @@
                             {{form_widget(form.rol)}}
                         </div>
                     </div>
-
                     <br>
                     <div class="row">
                         <div class="col-md-4">{{ form_widget(form.guardar) }}
                         </div>
 
                     </div>
-
-
                      {{form_end(form)}}
-
                 </div>
-
             </div>
-
         </div>
-
-
     </div>
 </div>
-
-
-
-
-
-
 {% endblock %}
 {% block javascripts%}
-
 {{ parent() }}
 <script>
-
-
     function cargarSistemaRol() {
         var id_sistema = $('#form_sistema').val();
         var formData = {id_sistema:id_sistema};
@@ -132,7 +106,6 @@
             success: function (data) {
                $("#form_rol").empty();
                 $("#form_rol").append('<option value="">Seleccionar...</option>');
-
                 $.each(data.roles, function (i, value) {
                     $("#form_rol").append('<option value="' + i + '">' + value + '</option>');
                 });
