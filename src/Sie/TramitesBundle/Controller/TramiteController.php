@@ -1721,7 +1721,7 @@ class TramiteController extends Controller {
           then
             case
             when (gestion_tipo_id::double precision > 2015) then (n4 is null or n4 = 0)
-            else (n1 is null or n1 = 0 or n2 is null or n2 = 0 or n3 is null or n3 = 0 or n4 is null or n4 = 0)
+            else (n4 is null or n4 = 0) -- (n1 is null or n1 = 0 or n2 is null or n2 = 0 or n3 is null or n3 = 0 or n4 is null or n4 = 0)
             end
           else
             false
