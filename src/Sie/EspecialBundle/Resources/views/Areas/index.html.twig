@@ -389,7 +389,8 @@
                     if (lugar==null || lugar=='') {
                         $('#lugar').val('');
                         $('#modalidadCasa').css('display', 'none');
-                    } else if(lugar.trim() == "EDUCACION EN CASA" || lugar.trim() == "EDUCACIÓN EN CASA"){
+                    //} else if(lugar.trim() == "EDUCACION EN CASA" || lugar.trim() == "EDUCACIÓN EN CASA"){
+                    } else if(lugar.indexOf("EDUCACION EN CASA") != -1 || lugar.indexOf("EDUCACIÓN EN CASA") != -1){
                         $('#lugar').val(lugar);
                         $('#modalidadCasa').css('display', 'block');
                     }

@@ -304,6 +304,7 @@ class CreacionCursosEspecialController extends Controller {
                     ->add('tecnica','choice',array('label'=>'Técnica','choices'=>$tecnicas,'data'=> $tecnica,'attr'=>array('class'=>'form-control')))
                     ->add('nivelTecnico','choice',array('label'=>'Nivel de Formación Técnica','choices'=>$nivelesTecnicoArray,'data'=> $nivelTecnico,'attr'=>array('class'=>'form-control')))
                     ->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'attr'=>array('class'=>'form-control')))
+                    ->add('multiple','choice',array('label'=>'Multiple','choices'=>array('Auditiva/Multiple'=>'Auditiva/Multiple','Visual/Multiple'=>'Visual/Multiple','Otro'=>'Otro'),'multiple' => false,'expanded' => true,'attr'=>array('class'=>'form-control')))
                     ->add('educacionCasa', CheckboxType::class, array('label'=>'Educación en Casa','required' => false))
                     ->add('guardar','submit',array('label'=>'Crear Curso','attr'=>array('class'=>'btn btn-primary')))
                     ->getForm();
@@ -392,7 +393,12 @@ class CreacionCursosEspecialController extends Controller {
                 $lugar = "";
                 if (isset($form['educacionCasa']) && $form['educacionCasa'] == 1){
                     $modalidad = 1;
-                    $lugar="EDUCACION EN CASA";
+                    if(isset($form['multiple']) && $form['multiple'] != 'Otro'){
+                        $lugar="EDUCACION EN CASA" . '-' . $form['multiple'];
+                    }else {
+                        $lugar="EDUCACION EN CASA";
+                    }
+                    
                 }elseif($form['area'] == 1 && $form['programa'] == 13){
                     $modalidad = 2;
                 }elseif($form['area'] == 2 && $form['programa'] == 10){
@@ -402,6 +408,12 @@ class CreacionCursosEspecialController extends Controller {
                 }else{
                     $modalidad = 1;
                 }
+                if (isset($form['multiple']) && $form['area'] == 5 && !isset($form['educacionCasa'])){
+                    if($form['multiple'] != 'Otro'){
+                        $lugar=$form['multiple'];
+                    }
+                }
+                //dump($lugar);die;
                 // Si no existe el curso
             	// curso generico SIE
             	$nuevo_curso_sie = new InstitucioneducativaCurso();
@@ -722,9 +734,10 @@ class CreacionCursosEspecialController extends Controller {
             $query = $em->createQuery(
                 'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
                                 WHERE p.id IN (:id) order by p.programa'
-                )->setParameter('id',array(17));
+                )->setParameter('id',array(18));
         }else {
     		$query = $em->createQuery(
+                
     				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
                                     WHERE p.id = (:id)'
     				)->setParameter('id',99);

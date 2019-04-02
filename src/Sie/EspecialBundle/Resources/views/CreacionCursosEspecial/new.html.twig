@@ -47,7 +47,7 @@
                 <div class="panel-collapse collapse in" id="panelnuevocurso">
                     <div class="panel-body">
                         <div class="panel-body">
-                            {{form_start(form)}}
+                            {{form_start(form, { 'attr':{'onsubmit':'return validacion()'}  })}}
                                 <div class="row">
                                     <div class="form-group col-lg-6 col-md-12">
                                         {{form_label(form.area)}}
@@ -59,18 +59,28 @@
                                         {{form_widget(form.turno) }}
                                         <div class="help-block with-errors"></div>
                                     </div>
-                                     <div class="form-group col-lg-6 col-md-12">
+                                    <div class="form-group col-lg-6 col-md-12" id="divMultiple" style="display:none">
+                                        {% for a in form.multiple %}
+                                            <div class="col-md-3 rdio rdio-primary circle">
+                                                {{ form_widget(a,{ 'attr':{'class':'multiple'}  }) }}
+                                                {{ form_label(a) }}
+                                            </div>
+                                        {% endfor %}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="row"> 
+                                    <div class="form-group col-lg-6 col-md-12">
                                         {{form_label(form.nivel)}}
                                         {{form_widget(form.nivel,{ 'attr':{'onchange':'listarGrados()'}  }) }}
                                         <div class="help-block with-errors"></div>
                                     </div>
-                                     <div class="form-group col-lg-6 col-md-12" id="divservicio">
+                                    <div class="form-group col-lg-6 col-md-12" id="divservicio">
                                         {{form_label(form.servicio)}}
                                         {{form_widget(form.servicio,{ 'attr':{'onchange':'listarProgramas()'}  }) }}
                                         <div class="help-block with-errors"></div>
                                     </div>
-                                </div>
-                                <div class="row"> 
                                     <div class="form-group col-lg-6 col-md-12" id= "divgrado">
                                         {{form_label(form.grado)}}
                                         {{form_widget(form.grado,{ 'attr':{'onchange':'listarServicios()'}  }) }}
@@ -139,7 +149,7 @@
             }
             $("#divservicio").show();
             $("#divprograma").show();
-            if(area == 1 || area== 2 || area== 3 || area == 4 || area== 5){
+            if(area== 3 || area == 4 || area== 5){
                 $("#divEc").show();
             }else{
                 $("#divEc").hide();
@@ -153,6 +163,13 @@
                 $('#idparalelo').text("Grupo");
             }else{
                 $('#idparalelo').text("Paralelo");
+            }
+            if(area == 5){
+                $("#divMultiple").show();
+                $(".multiple").attr('required', true);
+            }else{
+                $("#divMultiple").hide();
+                $(".multiple").removeAttr('required');
             }
             
             $.ajax({
@@ -282,6 +299,20 @@
                     });
                 }
             });
+        }
+
+        function validacion(){
+            var area  = $('#form_area').val();
+            if((area == 3 || area == 4 || area == 5) && $("#form_educacionCasa").is(':checked')){
+                msg = "Está seguro de guardar los datos.\n Tome nota que el curso será creado para: .\n EDUCACIÓN EN CASA";
+            }else{
+                msg = 'Está seguro de guardar los datos.';
+            }
+            if(confirm(msg)){
+                return true;
+            } else {
+                return false;
+            }
         }
         
     </script>
