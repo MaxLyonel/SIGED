@@ -851,6 +851,11 @@
                     beforeSend: function () {
                     },
                     success: function (data) {
+                        if(data.msg_incorrecto){
+                            if(data.msg_incorrecto != ''){
+                                $("#listaParticipante").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> '+data.msg_incorrecto+'</div>');
+                            }
+                        }
                         var elemento = document.getElementById('list' + es);
                         if(data.registro[0]){
                             elemento.remove();
