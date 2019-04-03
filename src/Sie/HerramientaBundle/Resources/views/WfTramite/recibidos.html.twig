@@ -118,7 +118,18 @@
                                             <td><span class={% if entity.id_estado == 3 %}"label label-warning"{% elseif entity.id_estado == 4 %}"label label-danger" {% else %} "label label-success"{% endif %}>{{ entity.tramite_estado }}</span></td>
                                             <td>{{ entity.fecha_estado|date('d-m-Y') }}</td>
                                             <td>{{ entity.plazo }}</td>
-                                            <td class="text-danger">{{ entity.fecha_vencimiento ? entity.fecha_vencimiento|date('d-m-Y'):"" }}</td>
+                                            {% if entity.fecha_vencimiento  %}
+                                                {% if "now"|date('Y-m-d') == entity.fecha_vencimiento %}
+                                                    <td class="text-warning">{{ entity.fecha_vencimiento|date('d-m-Y') }}</td>
+                                                {% elseif "now"|date('Y-m-d') > entity.fecha_vencimiento %}
+                                                    <td class="text-danger">{{ entity.fecha_vencimiento|date('d-m-Y') }}</td>
+                                                {% else %}
+                                                    <td class="text-success">{{ entity.fecha_vencimiento|date('d-m-Y') }}</td>
+                                                {% endif %}
+                                            {% else %}
+                                                <td></td>
+                                            {% endif %}
+                                            {# <td class="text-danger">{{ entity.fecha_vencimiento ? entity.fecha_vencimiento|date('d-m-Y'):"" }}</td> #}
                                             <td>{{ entity.nombre }}</td>
                                             <td class="text-center">
                                                 <a class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal" data-placement="top" title="Ver Detalle" onclick="detalle({{entity.id}},{{entity.idflujo}})">
