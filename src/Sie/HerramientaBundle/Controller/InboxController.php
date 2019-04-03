@@ -20,6 +20,9 @@ use Symfony\Component\Security\Core\User\User;
 use Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnico;
 
 
+use Doctrine\DBAL\Types\Type;
+Type::overrideType('datetime', 'Doctrine\DBAL\Types\VarDateTimeType');
+
 /**
  * EstudianteInscripcion controller.
  *
