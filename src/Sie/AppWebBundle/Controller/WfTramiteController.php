@@ -74,11 +74,11 @@ class WfTramiteController extends Controller
         //dump($id);die;
         $this->session = $request->getSession();
         //dump($this->session);die;
-        $usuario = $this->session->get('userId');
+        $idUsuario = $this->session->get('userId');
         $idlugarusuario = $this->session->get('roluserlugarid');
         $rol = $this->session->get('roluser');
         //validation if the user is logged
-        if (!isset($usuario)) {
+        if (!isset($idUsuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
 
@@ -91,7 +91,7 @@ class WfTramiteController extends Controller
                 ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'fp.id = wfufp.flujoProceso')
                 ->where('fp.orden=1')
                 ->andWhere('fp.flujoTipo='.$id)
-                ->andWhere('wfufp.usuario='.$usuario)
+                ->andWhere('wfufp.usuario='.$idUsuario)
                 ->andWhere('wfufp.esactivo=true')
                 ->andWhere('wfufp.lugarTipoId='.$idlugarusuario)
                 ->andWhere('fp.rolTipo='.$rol)
@@ -107,13 +107,25 @@ class WfTramiteController extends Controller
             }    
         }else{
             if($rol == $flujoproceso[0]->getRolTipo()->getId()){
-                return $this->redirectToRoute($flujoproceso[0]->getRutaFormulario(),array('id'=>$id));    
+                $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
+                $query->bindValue(':user_id', $idUsuario);
+                $query->bindValue(':sie', $this->session->get('ie_id'));
+                $query->bindValue(':rolId', $rol);
+                $query->execute();
+                $aTuicion = $query->fetchAll();
+                if ($aTuicion[0]['get_ue_tuicion']) {
+                    return $this->redirectToRoute($flujoproceso[0]->getRutaFormulario(),array('id'=>$id));  
+                }else{
+                    $request->getSession()
+                            ->getFlashBag()
+                            ->add('error', "No tiene tuición para iniciar un nuevo tramite: ". $flujoproceso[0]->getFlujoTipo()->getFlujo());
+                    return $this->redirectToRoute('wf_tramite_index');    
+                }        
             }else{
                 $request->getSession()
-
-                    ->getFlashBag()
-                    ->add('error', "No tiene tuición para iniciar un nuevo tramite: ". $flujoproceso[0]->getFlujoTipo()->getFlujo());
-                    return $this->redirectToRoute('wf_tramite_index');    
+                        ->getFlashBag()
+                        ->add('error', "No tiene tuición para iniciar un nuevo tramite: ". $flujoproceso[0]->getFlujoTipo()->getFlujo());
+                return $this->redirectToRoute('wf_tramite_index');    
             }
         }
     }
@@ -455,8 +467,9 @@ class WfTramiteController extends Controller
                     $uDestinatario = $this->obtieneUsuarioDestinatario($tarea,$tarea_sig_id,$id_tabla,$tabla,$tramite);
                     if($uDestinatario == false){
                         $em->getConnection()->rollback();
-                        $this->get('session')->getFlashBag()->add('error', '¡Error, no existe usuario destinatario registrado.!');
-                        return $this->redirectToRoute('wf_tramite_recibido');
+                        $mensaje['dato'] = false;
+                        $mensaje['msg'] = '¡Error, no existe usuario destinatario registrado.!';
+                        return $mensaje;
                     }else{
                         $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
                     }
@@ -611,9 +624,8 @@ class WfTramiteController extends Controller
                 if($flujoprocesoSiguiente->getRolTipo()->getId() == 9){  // si es director
                     $query = $em->getConnection()->prepare("select u.* from maestro_inscripcion m
                     join usuario u on m.persona_id=u.persona_id
-                    where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=2018 and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
-                    //where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=".(new \DateTime())->format('Y')." and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
-
+                    where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=".(new \DateTime())->format('Y')." and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
+                    //where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=2018 and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
                     $query->execute();
                     $uDestinatario = $query->fetchAll();
                     //dump($uDestinatario);die;
@@ -773,7 +785,7 @@ class WfTramiteController extends Controller
         
         $em = $this->getDoctrine()->getManager();
         
-        $query = $em->getConnection()->prepare("select t.id,ft.id as idflujo,ft.flujo,tt.tramite_tipo,t.fecha_fin,t.fecha_registro,t.fecha_fin-t.fecha_registro as duracion,case when ie.id is not null then 'Institucion Educativa: '||ie.institucioneducativa when ei.id is not null then 'Estudiante: '||e.nombre||' '||e.paterno||' '||e.materno when mi.id is not null then 'Maestro: '||p.nombre||' '||p.paterno||' '||p.materno when ai.id is not null then 'Apoderado: '||pa.nombre||' '||pa.paterno||' '||pa.materno end as nombre,'CONCLUIDO' as estado
+        $query = $em->getConnection()->prepare("select t.id,ft.id as idflujo,ft.flujo,tt.tramite_tipo,t.fecha_fin,t.fecha_registro,t.fecha_fin-t.fecha_registro as duracion,case when (ie.id is not null) then 'SIE:'||ie.id when (ie.id is null and ft.id=6) then 'SIE:' when ei.id is not null then 'RUDE: '|| e.codigo_rude when mi.id is not null then 'CI: '||p.carnet when ai.id is not null then 'CI: '||pa.carnet end as codigo_tabla,case when ie.id is not null then 'Institucion Educativa: '||ie.institucioneducativa when ei.id is not null then 'Estudiante: '||e.nombre||' '||e.paterno||' '||e.materno when mi.id is not null then 'Maestro: '||p.nombre||' '||p.paterno||' '||p.materno when ai.id is not null then 'Apoderado: '||pa.nombre||' '||pa.paterno||' '||pa.materno end as nombre,'CONCLUIDO' as estado
         from tramite t
         join tramite_tipo tt on t.tramite_tipo=tt.id
         join flujo_tipo ft on t.flujo_tipo_id = ft.id

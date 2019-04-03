@@ -6,20 +6,43 @@
 {% endblock %}
 {% block contentoption %}
     <!-- Start page header -->
-    <div class="header-content">
+    <div class="header-content" style="margin-bottom: 10px;">
         <h2><i class="fa fa-th-large"></i>Certificaciones<span>Subsistema de Educación Alternativa</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <!--<span class="label">Info.:</span>-->
             <ol class="breadcrumb">
-                <li class="active">Gestión: {{gestion}}</li>
-                <!--<li><i class="fa fa-ellipsis-v" aria-hidden="true"></i></li>-->
+                <li class="active">
+                    <div class="btn-green date-picker">
+                        {% if infoGestion is defined  %}
+                            {% if infoEntidad[0] is defined  %}
+                                {% set codigo = infoEntidad[0]['codigo'] %}  
+                                {% set nivelActual = infoEntidad[0]['nivel_actual'] %}                                 
+                            {% else %}                
+                                {% set codigo = 0 %}  
+                                {% set nivelActual = 1 %}  
+                            {% endif %}
+                            <form name="form" role="form" action="{{ path('tramite_estadistica_certificado_tecnico_emitido') }}" action="" method="POST" >
+                                <input type="hidden" name="codigo" id="codigo" value="{{codigo|base64_encode }}" />
+                                <input type="hidden" name="nivel" id="nivel" value="{{nivelActual|base64_encode}}" />
+                                <select class="btn-dpl" name="gestion" name="id" onchange="this.form.submit();">
+                                    {% for ges in infoGestion %}
+                                        {% if ges.id == gestion %}
+                                            <option value="{{ ges.id }}" selected>{{ ges.id }}</option>
+                                        {% else %}
+                                            <option value="{{ ges.id }}">{{ ges.id }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </form>
+                        {% endif %}
+                    </div>
+                </li>
             </ol>
         </div>
     </div><!-- /.header-content -->
     <!--/ End page header -->
 
     <!-- Start body content -->
-    <div class="body-content animated fadeIn">
         {% if infoEntidad is defined  %}
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -36,7 +59,7 @@
             </div><!-- /.row -->
 
             <div class="row">
-                <div class="col-lg-12">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="page-content">
                         {% for type, flashMessage in app.session.flashbag.all() %}
                             <div class="alert alert-{{ type }} alert-dismissible" role="alert">
@@ -55,9 +78,7 @@
         {% endif %}
         <div class="row">
             {% if infoSubEntidad is defined %}
-                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-
-                    
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">                    
                         <div class="panel">
                             <div class="panel-body">
                                 <div class="row media">
@@ -65,17 +86,19 @@
                                         Estadística General
                                     </div>    
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                        <form name="formEstadisticaCertificacionTecnica" id="formEstadisticaCertificacionTecnica" role="form" action="{{ path('tramite_estadistica_certificado_tecnico_emitido_descarga_general') }}" method="POST">  
-                                            <input type="hidden" name="gestion" value="{{ gestion }}" />
-                                            <input type="hidden" name="codigo" value="{{ infoEntidad[0]['codigo']|base64_encode }}" />  
-                                            <input type="hidden" name="nivel" value="{{ infoEntidad[0]['nivel_actual'] }}" />  
-                                            <button name="botonPdf" id="botonPdf" title="Descargar en formato PDF" class="btn btn-googleplus">
-                                                <i class="fa fa-file-pdf-o"></i>
-                                            </button>
-                                            <button name="botonXlsx" id="botonXlsx" title="Descargar en formato EXCEL" class="btn btn-success">
-                                                <i class="fa fa-file-excel-o"></i>
-                                            </button>
-                                        </form>    
+                                        {% if infoEntidad[0] is defined %}
+                                            <form name="formEstadisticaCertificacionTecnica" id="formEstadisticaCertificacionTecnica" role="form" action="{{ path('tramite_estadistica_certificado_tecnico_emitido_descarga_general') }}" method="POST">  
+                                                <input type="hidden" name="gestion" value="{{ gestion }}" />
+                                                <input type="hidden" name="codigo" value="{{ infoEntidad[0]['codigo']|base64_encode }}" />  
+                                                <input type="hidden" name="nivel" value="{{ infoEntidad[0]['nivel_actual'] }}" />  
+                                                <button name="botonPdf" id="botonPdf" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                                    <i class="fa fa-file-pdf-o"></i>
+                                                </button>
+                                                <button name="botonXlsx" id="botonXlsx" title="Descargar en formato EXCEL" class="btn btn-success">
+                                                    <i class="fa fa-file-excel-o"></i>
+                                                </button>
+                                            </form>
+                                        {% endif %}   
                                     </div>   
                                 </div>
                                 <div class="row media">
@@ -83,17 +106,19 @@
                                             Estadística por Especialidad
                                     </div>    
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                        <form name="formEstadisticaCertificacionTecnicaEspecialidad" id="formEstadisticaCertificacionTecnicaEspecialidad" role="form" action="{{ path('tramite_estadistica_certificado_tecnico_emitido_descarga_especialidad') }}" method="POST">  
-                                            <input type="hidden" name="gestion" value="{{ gestion }}" />
-                                            <input type="hidden" name="codigo" value="{{ infoEntidad[0]['codigo']|base64_encode }}" />  
-                                            <input type="hidden" name="nivel" value="{{ infoEntidad[0]['nivel_actual'] }}" />  
-                                            <button name="botonPdf" id="botonPdf" title="Descargar en formato PDF" class="btn btn-googleplus">
-                                                <i class="fa fa-file-pdf-o"></i>
-                                            </button>
-                                            <button name="botonXlsx" id="botonXlsx" title="Descargar en formato EXCEL" class="btn btn-success">
-                                                <i class="fa fa-file-excel-o"></i>
-                                            </button>
-                                        </form>    
+                                        {% if infoEntidad[0] is defined %}
+                                            <form name="formEstadisticaCertificacionTecnicaEspecialidad" id="formEstadisticaCertificacionTecnicaEspecialidad" role="form" action="{{ path('tramite_estadistica_certificado_tecnico_emitido_descarga_especialidad') }}" method="POST">  
+                                                <input type="hidden" name="gestion" value="{{ gestion }}" />
+                                                <input type="hidden" name="codigo" value="{{ infoEntidad[0]['codigo']|base64_encode }}" />  
+                                                <input type="hidden" name="nivel" value="{{ infoEntidad[0]['nivel_actual'] }}" />  
+                                                <button name="botonPdf" id="botonPdf" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                                    <i class="fa fa-file-pdf-o"></i>
+                                                </button>
+                                                <button name="botonXlsx" id="botonXlsx" title="Descargar en formato EXCEL" class="btn btn-success">
+                                                    <i class="fa fa-file-excel-o"></i>
+                                                </button>
+                                            </form>  
+                                        {% endif %}  
                                     </div>   
                                 </div>                                 
                             </div>
@@ -109,6 +134,9 @@
                             {% for data in infoSubEntidad %}
                                 {% set cantidad = data.cantidad %}  
                                 {% set total = data.total_general %} 
+                                {% if total == 0 %}
+                                    {% set total = 1 %}
+                                {% endif %}
                                 {% set porcentaje = (cantidad * 100)/(total)%} 
                                 {% set id = data.codigo %}
                                 {% set nombre = data.nombre %}  
@@ -302,7 +330,6 @@
                 </div>
             </div> 
         </div>
-    </div>
     <!--/ END ADDITIONAL ELEMENT -->
 {% endblock %}
 {% block javascripts %}

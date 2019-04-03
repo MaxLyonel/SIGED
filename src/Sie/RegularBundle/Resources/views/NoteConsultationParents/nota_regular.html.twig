@@ -35,7 +35,11 @@
         {% set cont = cont + 1 %}
         <tr>
             <td>
-                <h6 class="text-primary">Bimestre {{cont}}:</h6>
+                {% if inscripcion.institucioneducativaCurso.nivelTipo.id == 11 %}
+                    <h6 class="text-primary">Informe final:</h6>
+                {% else %}
+                    <h6 class="text-primary">Bimestre {{cont}}:</h6>
+                {% endif %}
                 {{cuali.notaCualitativa}}
             </td>
         </tr>

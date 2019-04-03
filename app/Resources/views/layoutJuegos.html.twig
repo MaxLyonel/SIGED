@@ -306,6 +306,7 @@
                                     <span class="arrow"></span>
                                 </a>
                                 <ul>
+                                    <li><a href="{{ path('sie_juegos_estadistica_fase_lugar',{'fase':'1'}) }}">Fase Previa</a></li>    
                                     {% if app.session.get('roluser') == 10 %}
                                         <li><a href="{{ path('sie_juegos_clasificacion_lista_deportistas_inscritos_fase',{'fase':1,'usuario':app.session.get('userId')}) }}">Estadística Primera Fase</a></li>
                                     {% endif %}
@@ -455,7 +456,7 @@
             <script src="{{asset('juegos/assets/global/plugins/bower_components/jquery-nicescroll/jquery.nicescroll.min.js')}}"></script>
             <script src="{{asset('juegos/assets/global/plugins/bower_components/jquery.sparkline.min/index.js')}}"></script>
             <script src="{{asset('juegos/assets/global/plugins/bower_components/jquery-easing-original/jquery.easing.1.3.min.js')}}"></script>
-            <script src="{{asset('juegos/assets/global/plugins/bower_components/ionsound/js/ion.sound.min.js')}}"></script>
+            <!-- <script src="{{asset('juegos/assets/global/plugins/bower_components/ionsound/js/ion.sound.min.js')}}"></script> -->
             <script src="{{asset('juegos/assets/global/plugins/bower_components/bootbox/bootbox.js')}}"></script>
             <script src="{{asset('juegos/assets/global/plugins/bower_components/retina.js/dist/retina.min.js')}}"></script>
             <!--/ END CORE PLUGINS -->

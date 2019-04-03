@@ -59,6 +59,7 @@ class EstadisticaCertificacionTecnicaController extends Controller {
         $entityCertTecAltLista = $this->certificadoTecnicoAlternativaLista($nivelArea, $codigoArea, $gestionActual);
 
         $entityCertTecAltEstadistica = $this->certificadoTecnicoAlternativaEstadistica($nivelArea, $codigoArea, $gestionActual);
+        //dump($nivelArea);dump($codigoArea);dump($gestionActual);die;
 
         if(count($entityCertTecAltLista)>0 and isset($entityCertTecAltLista)){
             $totalgeneral = 0;
@@ -112,6 +113,7 @@ class EstadisticaCertificacionTecnicaController extends Controller {
         }
 
         //dump($nivelArea);dump($codigoArea);dump($gestionActual);dump($entityCertTecAltEstadistica);die;
+        //dump($entityCertTecAltLista);dump($entityCertTecAltEstadistica);die;
 
         if(count($entityCertTecAltLista)>0 and isset($entityCertTecAltLista)){
             return $this->render($this->session->get('pathSystem') . ':Estadistica:certificacionTecnicaAlternativa.html.twig', array(
@@ -125,6 +127,7 @@ class EstadisticaCertificacionTecnicaController extends Controller {
                 'datoGraficoGenero2'=>$chartGenero2,
                 'datoGraficoDependencia2'=>$chartDependencia2,
                 'fechaEstadistica'=>$fechaActual,
+                'infoGestion'=>$entityGestion,
             ));
         } else {
             return $this->render($this->session->get('pathSystem') . ':Estadistica:certificacionTecnicaAlternativa.html.twig', array(
@@ -137,6 +140,7 @@ class EstadisticaCertificacionTecnicaController extends Controller {
                 'datoGraficoGenero2'=>$chartGenero2,
                 'datoGraficoDependencia2'=>$chartDependencia2,
                 'fechaEstadistica'=>$fechaActual,
+                'infoGestion'=>$entityGestion,
             ));
         }
 

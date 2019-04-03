@@ -173,7 +173,7 @@ class InscriptionDgController extends Controller {
       $em = $this->getDoctrine()->getManager();
 
       $aCarreras = array();
-      // if ($aTuicion[0]['get_ue_tuicion']) {
+      
       //get the IE
       $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id);
       $nombreIE = ($institucion) ? $institucion->getInstitucioneducativa() : "";

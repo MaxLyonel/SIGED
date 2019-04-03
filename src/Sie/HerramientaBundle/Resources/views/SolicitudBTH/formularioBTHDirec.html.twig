@@ -215,7 +215,7 @@
                                                 <div class="col-md-3">
                                                 </div>
                                                 <div class="col-md-5">
-                                                    {% if (tipoTramite == 45)  %} {#tramite Nuevo#}
+                                                    {% if (tramite_tipo == 'Registro Nuevo')  %} {#tramite Nuevo#}
                                                         <select  id="select_especialidade" name="select_especialidade[]" class="chosen-select" multiple="" tabindex="-1" style="display: none;">
                                                             {% for especialidad in especialidadlista %}
                                                                 <option value="{{ especialidad.id }}">{{ especialidad.especialidad }}</option>
@@ -244,7 +244,7 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <strong>Documento adjunto</strong><br>
-                                                    <a  class="btn btn-lilac btn-xs btn-stroke" href="{{asset('uploads/archivos/'~ documento )}}" target="_blank">
+                                                    <a  class="btn btn-lilac btn-xs btn-stroke" href="{{asset('uploads/archivos/flujos/'~institucion.id~'/'~'bth/'~ documento )}}" target="_blank">
                                                         <i class="fa fa-file-pdf-o fa-2x" >  </i>   Informe Enviado por la Dirección Distrital
                                                     </a>
                                                 </div>
@@ -322,8 +322,7 @@
                     })
                         .then(function(willDelete)  {
                             if (willDelete) {
-                                var institucionid={{ institucion.id }}
-                                var tipoTramite={{ tipoTramite }}
+                                var institucionid={{ institucion.id }};
                                 var ip = [];
                                 if($('#informe:checked').val())
                                     ip.push({ informe : 1});
@@ -333,14 +332,13 @@
                                     ip.push({select_especialidad : $('#select_especialidade').val()});
                                 else
                                 {swal("Debe seleccionar al menos una especialidad."); return false;}
-
                                 var obstxt=$('#obstxt').val();
                                 var ipt=JSON.stringify(ip);
                                 var imagen = '{{ asset("img/loading96.gif") }}';
                                 $.ajax({
                                     type: 'post',
                                     url: "{{ path('solicitud_bth_enviosolicitud') }}",
-                                    data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},idsolicitud:idsolicitud,tipoTramite:{{ tramite_tipo }},idflujotipo:{{ flujotipo }},sw:1 },
+                                    data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},idsolicitud:idsolicitud,solicitud:tramite_tipo,idflujotipo:{{ flujotipo }},sw:1 },
                                     dataType : 'json',
                                     beforeSend: function () {
                                         swal({
@@ -351,12 +349,12 @@
                                         });
                                     },
                                     success: function (data) {
-                                        console.log(data);
-                                        if (data==1 ){
+                                        //console.log(data);
+                                        if (data.estado ==1 ){
                                             swal("Su formulario se ha enviado con éxito, con Nro. Trámite: " + {{ id_tramite}} );
-                                            location.href = "{{ path('wf_tramite_index') }}";
+                                            location.href = "{{ path('wf_tramite_recibido') }}";
                                         }
-                                        else if(data==2 ){
+                                        else if(data.estado ==2 ){
                                             swal("Debe iniciar su trámite como 'Ratificacion'");
                                         }else {
                                             swal('Su formulario no se envío correctamente');
@@ -369,7 +367,6 @@
                                 });
                             }
                         });
-
                     break;
                 case 'Ratificación': //Ratificacion
                     swal({
@@ -394,52 +391,6 @@
                                     especialidades_id.push(this.value);
                                 });
                                 ip.push({"select_especialidad" : especialidades_id});
-                                /*if($('#lista_select_especialidad').val()){
-                                    var verificar1 = false, verificar2 = false;
-                                    var caso1 = false, caso2 = false;
-                                    $("#lista_select_especialidad").find("option").each(function(index, opc){
-                                        if ($(this).is('[disabled=disabled]')) {
-                                            especialidades_id.push(this.value);
-                                        }
-                                        if (this.value == 41 || this.value == 42) {
-                                            verificar1 = true;
-                                        }
-                                        if (this.value == 64 | this.value == 65) {
-                                            verificar2 = true;
-                                        }
-                                    });
-                                    var seleccionado = $('#lista_select_especialidad').val();
-                                    if (verificar1) {
-                                        for (var i in seleccionado) {
-                                            if (seleccionado[i] == 41 || seleccionado[i] == 42) {
-                                                especialidades_id.push(seleccionado[i]);
-                                                caso1 = true;
-                                            }
-                                        }
-                                        if (!caso1) {
-                                            swal("Usted ya se declaro como BTH en esta gestion  o  \n" +
-                                                "Debe seleccionar al menos una especialidad entre TEXTILES y CONFECCIONES o TEJIDOS y TELARES.");
-                                            return false;
-                                        }
-                                    }
-                                    if (verificar2) {
-                                        for (var i in seleccionado) {
-                                            if (seleccionado[i] == 64 || seleccionado[i] == 65) {
-                                                especialidades_id.push(seleccionado[i]);
-                                                caso2 = true;
-                                            }
-                                        }
-                                        if (!caso2) {
-                                            swal("Usted ya se declaro como BTH en esta gestion  o  \n" +
-                                                "Debe seleccionar al menos una especialidad entre CARPINTERIA EN MADERA  o CARPINTERIA METALICA ");
-                                            return false;
-                                        }
-                                    }
-                                    ip.push({"select_especialidad" : especialidades_id});
-                                } else {
-                                    swal("Debe seleccionar al menos una especialidad.");
-                                    return false;
-                                }*/
 
                                 var obstxt=$('#obstxt').val();
                                 var ipt=JSON.stringify(ip);
@@ -461,7 +412,7 @@
                                         console.log(data);
                                         if (data.estado==1){
                                             swal("Su formulario se ha enviado con éxito, con Nro. de Trámite:"+{{ id_tramite}} );
-                                            location.href = "{{ path('wf_tramite_index') }}";
+                                            location.href = "{{ path('wf_tramite_recibido') }}";
                                         }
                                         else if(data.estado==3 ){
                                             swal("Debe iniciar su trámite como 'Registro Nuevo'");
@@ -477,14 +428,9 @@
                             }
                         });
                     break;
-
                 default:
-                    break;
+                break;
             }
-
-
         }
-
     </script>
-
 {% endblock %}

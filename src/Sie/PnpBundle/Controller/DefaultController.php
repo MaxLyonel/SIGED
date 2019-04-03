@@ -2051,7 +2051,10 @@ class DefaultController extends Controller
         }
         //recoger si esactivo
         $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id);
+        if($result)
             $esactivo=$result->getEsactivo();
+        else 
+            $esactivo=0;
 
         if($esactivo==1)$esactivo=1;else $esactivo=0;
         $arch = 'PNP_CONSOLIDADO_' . $id . '_' . date('Ymd') . '.pdf';
@@ -4471,7 +4474,6 @@ ciclo_tipo_id, grado_tipo_id
         $ci = substr($ci, 0, -2);
         $reconocimiento_saberes=0;//si tiene reconocimiento de saberes 0 no 1 si
         $em = $this->getDoctrine()->getManager();
-        //$em = $this->getDoctrine()->getEntityManager();
         $db = $em->getConnection();
         $po = array();
         $userId = $this->session->get('userId');   
@@ -7131,7 +7133,7 @@ public function crear_curso_automaticoAction(Request $request){
                             $params = array();
                             $stmt->execute($params);
                             $po = $stmt->fetchAll();
-                            $filas = array();
+                            $idioma_frecuencia = array();
                             $datos_filas = array();
                             foreach ($po as $p) {
                                 $datos_filas["id"] = $p["id"];
@@ -7260,20 +7262,20 @@ public function crear_curso_automaticoAction(Request $request){
                             $em->persist($newrudeidioma);
                             $em->flush();
                             //IDIOMA FRECUENCIA 
-                            if($idioma_frecuencia){
-                                foreach ($idioma_frecuencia as $p) {
-                                    $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_idioma');");
-                                    $query->execute();
-                                    $newrudeidioma = new RudeIdioma();
-                                    $newrudeidioma->setRude($newrude);
-                                    $newrudeidioma->setHablaTipo($em->getRepository('SieAppWebBundle:HablaTipo')->findOneById(2));//2 FRECUENCIA
-                                    $newrudeidioma->setIdiomaTipo($em->getRepository('SieAppWebBundle:IdiomaTipo')->findOneById($p["id"]));
-                                    $newrudeidioma->setFechaRegistro(new \DateTime('now'));
-                                    $newrudeidioma->setFechaModificacion(new \DateTime('now'));
-                                    $em->persist($newrudeidioma);
-                                    $em->flush();
-                                }
+                            
+                            foreach ($idioma_frecuencia as $p) {
+                                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_idioma');");
+                                $query->execute();
+                                $newrudeidioma = new RudeIdioma();
+                                $newrudeidioma->setRude($newrude);
+                                $newrudeidioma->setHablaTipo($em->getRepository('SieAppWebBundle:HablaTipo')->findOneById(2));//2 FRECUENCIA
+                                $newrudeidioma->setIdiomaTipo($em->getRepository('SieAppWebBundle:IdiomaTipo')->findOneById($p["id"]));
+                                $newrudeidioma->setFechaRegistro(new \DateTime('now'));
+                                $newrudeidioma->setFechaModificacion(new \DateTime('now'));
+                                $em->persist($newrudeidioma);
+                                $em->flush();
                             }
+                            
                             //SALUD 
                             if($centrosalud){
                                 foreach ($centrosalud as $p) {
@@ -8411,10 +8413,11 @@ public function rudeal_guardarAction(Request $request){
             if($rude_id!=0){
                 //eliminamos todos los campos
                 $result=$em->getRepository('SieAppWebBundle:RudeCentroSalud')->findByrude($rude_id);
-                foreach ($result as $results) {
-                    $em->remove($results);
-                    $em->flush();
-                }
+                if($result)
+                    foreach ($result as $results) {
+                        $em->remove($results);
+                        $em->flush();
+                    }
             }
             foreach ($centrosalud as $p) {
                 $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_centro_salud');");
@@ -8532,7 +8535,61 @@ public function rudeal_guardarAction(Request $request){
         }
     }
 }
+    public function reporte_usuariosAction(){
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
 
+        $userId = $this->session->get('userId');
+        $query = "
+               SELECT lt.lugar as lugar,ur.rol_tipo_id
+               FROM lugar_tipo lt,
+               usuario_rol ur 
+               WHERE ur.lugar_tipo_id=lt.id and ur.esactivo=true and ur.usuario_id=$userId";
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $filas = array();
+        $datos_filas = array();
+        foreach ($po as $p) {
+            $lugar_usuario = $p["lugar"];
+            $rol_tipo_id = $p["rol_tipo_id"];
+        }
+        $where="";
+        $lugar_usuario=strtoupper($lugar_usuario);
+        if($rol_tipo_id==21)$where="and upper(lt.lugar)='$lugar_usuario'";
+        
+         $query = "
+         SELECT p.paterno,p.materno,p.nombre,p.carnet,p.complemento,rt.rol,rt.id as rol_id,upper(lt.lugar) as lugar,u.esactivo,ur.esactivo
+from usuario u
+join usuario_rol ur on ur.usuario_id=u.id
+join persona p on u.persona_id=p.id
+join rol_tipo rt on ur.rol_tipo_id=rt.id
+join lugar_tipo lt on ur.lugar_tipo_id=lt.id
+where (ur.rol_tipo_id=21 or ur.rol_tipo_id=29) and u.esactivo and ur.esactivo $where
+order by rt.id,lt.lugar
+                ";
+                
+    $stmt = $db->prepare($query);
+    $params = array();
+    $stmt->execute($params);
+    $po = $stmt->fetchAll();
+    $filas = array();
+    $datos_filas = array();
+    foreach ($po as $p){
+        $datos_filas["lugar"] = $p["lugar"];
+        $datos_filas["paterno"] = $p["paterno"];
+        $datos_filas["materno"] = $p["materno"];
+        $datos_filas["nombre"] = $p["nombre"];
+        $datos_filas["carnet"] = $p["carnet"];
+        $datos_filas["complemento"] = $p["complemento"];
+        if($p["rol_id"]==21)$datos_filas["rol"] = "Informático";else $datos_filas["rol"] = "Pedagogo";
+        $filas[] = $datos_filas;
+    }   
+
+        return $this->render('SiePnpBundle:Default:reporte_usuarios.html.twig',array(
+        'filas'=>$filas));
+}
 /////////////////////////////////busquedas//////////////////////
 // buscar datos estudiantes
     public function retornar_estudianteAction($where){
