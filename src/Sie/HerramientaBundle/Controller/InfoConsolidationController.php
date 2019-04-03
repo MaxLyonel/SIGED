@@ -18,6 +18,11 @@ use Sie\AppWebBundle\Entity\RegistroConsolidacion;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\User;
 
+
+
+use Doctrine\DBAL\Types\Type;
+Type::overrideType('datetime', 'Doctrine\DBAL\Types\VarDateTimeType');
+
 /**
  * InfoConsolidationController controller.
  *
