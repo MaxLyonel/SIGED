@@ -416,6 +416,7 @@ class SolicitudBTHController extends Controller {
                     $query = $em->getConnection()->prepare("select u.* from maestro_inscripcion m
                     join usuario u on m.persona_id=u.persona_id
                     where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=".(new \DateTime())->format('Y')." and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
+                    //where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=2018 and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
                     $query->execute();
                     $uDestinatario = $query->fetchAll();
                     if($uDestinatario){
@@ -963,7 +964,7 @@ class SolicitudBTHController extends Controller {
         //$maestros = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion, 'cargoTipo' => 0));
         //dump ($maestros);die;
            //no hay maestros inscritos para la gestion 2019
-
+         //$gestion=2018;
         $repository = $em->getRepository('SieAppWebBundle:MaestroInscripcion');
         $query = $repository->createQueryBuilder('mins')
             ->select('per.carnet, per.paterno, per.materno, per.nombre')
@@ -1171,7 +1172,7 @@ class SolicitudBTHController extends Controller {
          */
         $maestros = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion, 'cargoTipo' => 0));
         //no hay maestros inscritos para la gestion 2019
-        //$gestion = 2018;
+        //$gestion = 2018; //borrar
         $repository = $em->getRepository('SieAppWebBundle:MaestroInscripcion');
         $query = $repository->createQueryBuilder('mins')
             ->select('per.carnet, per.paterno, per.materno, per.nombre')
@@ -1320,7 +1321,7 @@ class SolicitudBTHController extends Controller {
          */
         $maestros = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion, 'cargoTipo' => 0));
         //no hay maestros inscritos para la gestion 2019
-       // $gestion = 2018;
+        //$gestion = 2018; //borrar
         $repository = $em->getRepository('SieAppWebBundle:MaestroInscripcion');
         $query = $repository->createQueryBuilder('mins')
             ->select('per.carnet, per.paterno, per.materno, per.nombre')
@@ -1480,7 +1481,7 @@ class SolicitudBTHController extends Controller {
                     $entity->setInstitucioneducativa($datosUe['institucioneducativa']);
                     $entity->setEsimpreso(false);
                     $entity->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find($grado_tipo_id));//3
-                    $entity->setFechaCreacion(new \DateTime($infoUE['fecha_tramite']));
+                    $entity->setFechaCreacion(new \DateTime(date('Y-m-d H:i:s')));
                     $entity->setInstitucioneducativaHumanisticoTecnicoTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnicoTipo')->find($estado_grado_tipo));//7
                     $em->persist($entity);
                     $em->flush();
@@ -1494,7 +1495,7 @@ class SolicitudBTHController extends Controller {
                         $entity->setInstitucioneducativa($ue);
                         $entity->setEspecialidadTecnicoHumanisticoTipo($espe);
                         $entity->setGestionTipo($gestiontipo);
-                        $entity->setFechaRegistro(new \DateTime($infoUE['fecha_tramite']) );
+                        $entity->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));
                         $em->persist($entity);
                         $em->flush();
                     }
@@ -1551,7 +1552,7 @@ class SolicitudBTHController extends Controller {
                         $entity->setInstitucioneducativa($datosUe['institucioneducativa']);
                         $entity->setEsimpreso(false);
                         $entity->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find($grado_tipo_id));
-                        $entity->setFechaCreacion(new \DateTime($infoUE['fecha_tramite']));
+                        $entity->setFechaCreacion(new \DateTime(date('Y-m-d H:i:s')));
                         $entity->setInstitucioneducativaHumanisticoTecnicoTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnicoTipo')->find($estado_grado_tipo));
                         $em->persist($entity);
                         $em->flush();
@@ -1566,7 +1567,7 @@ class SolicitudBTHController extends Controller {
                             $entity->setInstitucioneducativa($ue);
                             $entity->setEspecialidadTecnicoHumanisticoTipo($espe);
                             $entity->setGestionTipo($gestiontipo);
-                            $entity->setFechaRegistro(new \DateTime($infoUE['fecha_tramite']));
+                            $entity->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')));
                             $em->persist($entity);
                             $em->flush();
                         }
@@ -1590,7 +1591,7 @@ class SolicitudBTHController extends Controller {
                             $entity->setInstitucioneducativa($ue);
                             $entity->setEspecialidadTecnicoHumanisticoTipo($espe);
                             $entity->setGestionTipo($gestiontipo);
-                            $entity->setFechaRegistro(new \DateTime($infoUE['fecha_tramite']) );
+                            $entity->setFechaRegistro(new \DateTime(date('Y-m-d H:i:s')) );
                             $em->persist($entity);
                             $em->flush();
                         }
