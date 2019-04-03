@@ -8413,10 +8413,11 @@ public function rudeal_guardarAction(Request $request){
             if($rude_id!=0){
                 //eliminamos todos los campos
                 $result=$em->getRepository('SieAppWebBundle:RudeCentroSalud')->findByrude($rude_id);
-                foreach ($result as $results) {
-                    $em->remove($results);
-                    $em->flush();
-                }
+                if($result)
+                    foreach ($result as $results) {
+                        $em->remove($results);
+                        $em->flush();
+                    }
             }
             foreach ($centrosalud as $p) {
                 $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_centro_salud');");
