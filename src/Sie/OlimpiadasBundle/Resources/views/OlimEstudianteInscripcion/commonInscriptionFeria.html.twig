@@ -33,10 +33,11 @@
             </div>
             <div class="row">
                 <div class="col-md-3">
-                    PARALELO:
+                    PARALELO<br /><span class="text-primary"><strong>Seleccione entre 1 a 3 paralelos</span></strong>:
                     {{form_widget(form.paralelo, {'attr': {'class':'form-control js-example-basic-multiple'} } )}}
                 </div>
                 <div class="col-md-3">
+                    <br />
                     <br />
                     {{form_widget(form.buscar, {'attr': {'class':'btn btn-success', 'onclick':'getStudentsFeria()'} } )}}
                 </div>
@@ -80,10 +81,16 @@
         </div>
     </div>
     {% endif %}      
-    <script type="text/javascript" charset="utf-8" >
+    <script>
         $().ready(function() {
             $(".js-example-basic-multiple").select2({
-                placeholder: 'Seleccionar...'
+                placeholder: 'Seleccionar...',
+                allowClear: true,
+                language: {
+                    noResults: function(){
+                        return 'Debe seleccionar el nivel, grado y turno.';
+                    }
+                }
             });
         });
     </script>
