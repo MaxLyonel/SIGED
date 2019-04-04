@@ -79,7 +79,11 @@ class InfoNotasController extends Controller {
                         if($notas['tipoNota'] == 'Trimestre'){
                             $template = 'especialCualitativoTrimestral';
                         }else{
-                            $template = 'especialCualitativo';
+                            if($gestion < 2019){
+                                $template = 'especialCualitativo';
+                            }else{
+                                $template = 'especialCualitativo1';
+                            }
                         }
                         $actualizarMatricula = false;
                         if($operativo >= 4 or $gestion < $gestionActual){
