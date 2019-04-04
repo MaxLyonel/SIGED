@@ -261,6 +261,15 @@
                     beforeSend: function () {
                         $("#form_grado").empty();
                         $("#form_paralelo").empty();
+                        $(".js-example-basic-multiple").select2({
+                          placeholder: 'Seleccionar...',
+                          allowClear: true,
+                          language: {
+                              noResults: function(){
+                                  return 'Debe seleccionar el nivel, grado y turno.';
+                              }
+                          }
+                        });
                         $("#form_turno").empty();
                         $("#getStudentsId").empty();
                     },
@@ -321,15 +330,33 @@
                     url: Routing.generate('oliminscriptions_getParaleloFeria'),
                     data: {'turnoId': turnoId, 'gradoId': gradoId, 'materiaId': materiaId, 'categoryId': categoryId, 'nivelId':nivelId, 'sie':sie, 'gestion':gestion},
                     beforeSend: function () {
-                        $("#form_paralelo").empty();
-                        $("#getStudentsId").empty();
+                      $("#form_paralelo").empty();
+                      $(".js-example-basic-multiple").select2({
+                        placeholder: 'Seleccionar...',
+                        allowClear: true,
+                        language: {
+                            noResults: function(){
+                                return 'Debe seleccionar el nivel, grado y turno.';
+                            }
+                        }
+                      });
+                      $("#getStudentsId").empty();
                     },
                     success: function (data) {
-                        $("#form_paralelo").empty();
-                        
-                        $.each(data.aparalelos, function (i, value) {
-                            $("#form_paralelo").append('<option value="' + i + '">' + value + '</option>');
-                        });
+                      $("#form_paralelo").empty();
+                      $(".js-example-basic-multiple").select2({
+                        placeholder: 'Seleccionar...',
+                        allowClear: true,
+                        language: {
+                            noResults: function(){
+                                return 'Debe seleccionar el nivel, grado y turno.';
+                            }
+                        }
+                      });
+                      
+                      $.each(data.aparalelos, function (i, value) {
+                          $("#form_paralelo").append('<option value="' + i + '">' + value + '</option>');
+                      });
                     }
                 });
                 
@@ -378,6 +405,15 @@
                     beforeSend: function () {
                         $("#form_turno").empty();
                         $("#form_paralelo").empty();
+                        $(".js-example-basic-multiple").select2({
+                          placeholder: 'Seleccionar...',
+                          allowClear: true,
+                          language: {
+                              noResults: function(){
+                                  return 'Debe seleccionar el nivel, grado y turno.';
+                              }
+                          }
+                        });
                         $("#getStudentsId").empty();
                     },
                     success: function (data) {
