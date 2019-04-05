@@ -24,41 +24,43 @@
                         </tr>
                     </table>
                     <br>
-                    {% if areas.tipoUE != 2 and areas.vista != 0 %}
-                        <div class="btn-group" style="width:650px; float:right;">
-                            <button type="button" class="btn btn-wordpress dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="float:right">
-                                Agregar Área <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-right animated flipInX" role="menu">
-                                {% if areas.faltantes|length > 0 %}
-                                    {% for a in areas.faltantes %}
-                                        <li><button onclick="newArea({{a.id}},{{areas.idCurso}})" class="btn-link">{{a.id}} - {{a.asignatura}}</button></li>
-                                    {% endfor %}
-                                {% else %}
-                                    <li style="margin:5px;"><span class="text-warning">No hay asignaturas disponibles</span></li>
-                                {% endif %}
-                            </ul>
-                        </div>
-                    {% else %}
-                        {% if areas.tipoUE == 2 and areas.vista != 0 %}
+                    {% if app.session.get('acceso_total') %}  
+                        {% if areas.tipoUE != 2 and areas.vista != 0 %}
                             <div class="btn-group" style="width:650px; float:right;">
-                                <button type="button" class="btn btn-wordpress" onclick="verMateriaTecnica('materiasTecnicas')" style="float:right">
-                                    Agregar Áreas Técnicas<span class="caret"></span>
+                                <button type="button" class="btn btn-wordpress dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="float:right">
+                                    Agregar Área <span class="caret"></span>
                                 </button>
-                                <div id="materiasTecnicas" style="display:none; padding:10px; width:500px; position:absolute; background:#FFFFFF; border:2px solid #EEEEEE; right:10px; top:35px; z-index:3" class="animated flipInX row">
+                                <ul class="dropdown-menu dropdown-menu-right animated flipInX" role="menu">
                                     {% if areas.faltantes|length > 0 %}
-                                        <select id="materiaTecnica" class="chosen-select col-lg-10">
-                                            <option value="">Seleccionar...</option>
-                                            {% for at in areas.faltantes %}
-                                                <option value="{{at.id}}">{{at.asignatura}}</option>
-                                            {% endfor %}
-                                        </select>
-                                        <button onclick="enviarMateriaTecnica({{areas.idCurso}})" class="btn btn-teal">Agregar</button>
+                                        {% for a in areas.faltantes %}
+                                            <li><button onclick="newArea({{a.id}},{{areas.idCurso}})" class="btn-link">{{a.id}} - {{a.asignatura}}</button></li>
+                                        {% endfor %}
                                     {% else %}
                                         <li style="margin:5px;"><span class="text-warning">No hay asignaturas disponibles</span></li>
                                     {% endif %}
-                                </div>
+                                </ul>
                             </div>
+                        {% else %}
+                            {% if areas.tipoUE == 2 and areas.vista != 0 %}
+                                <div class="btn-group" style="width:650px; float:right;">
+                                    <button type="button" class="btn btn-wordpress" onclick="verMateriaTecnica('materiasTecnicas')" style="float:right">
+                                        Agregar Áreas Técnicas<span class="caret"></span>
+                                    </button>
+                                    <div id="materiasTecnicas" style="display:none; padding:10px; width:500px; position:absolute; background:#FFFFFF; border:2px solid #EEEEEE; right:10px; top:35px; z-index:3" class="animated flipInX row">
+                                        {% if areas.faltantes|length > 0 %}
+                                            <select id="materiaTecnica" class="chosen-select col-lg-10">
+                                                <option value="">Seleccionar...</option>
+                                                {% for at in areas.faltantes %}
+                                                    <option value="{{at.id}}">{{at.asignatura}}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <button onclick="enviarMateriaTecnica({{areas.idCurso}})" class="btn btn-teal">Agregar</button>
+                                        {% else %}
+                                            <li style="margin:5px;"><span class="text-warning">No hay asignaturas disponibles</span></li>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
                         {% endif %}
                     {% endif %}
                     <br>
@@ -77,9 +79,11 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-            {% if areas is not null %}
-                {% if operativo != 5 %}
-                    <button type="button" class="btn btn-theme" data-dismiss="modal">Guardar Cambios</button>
+            {% if app.session.get('acceso_total') %}  
+                {% if areas is not null %}
+                    {% if operativo != 5 %}
+                        <button type="button" class="btn btn-theme" data-dismiss="modal">Guardar Cambios</button>
+                    {% endif %}
                 {% endif %}
             {% endif %}
         </div>

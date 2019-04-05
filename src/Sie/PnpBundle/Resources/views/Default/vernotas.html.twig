@@ -22,7 +22,7 @@
                             <td>Matemáticas</td>
                             {% for nota in notas %}
                                 {% if nota.asignatura == 'MATEMATICAS' %}
-                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                    <td align="center">{{ nota.nota_cuantitativa|round }}</td>
                                 {% endif %}  
                             {% endfor %}
                         </tr>
@@ -31,7 +31,7 @@
                             <td>Lengua Castellano</td>
                             {% for nota in notas %}
                                 {% if nota.asignatura == 'LENGUA CASTELLANO' %}
-                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                    <td align="center">{{ nota.nota_cuantitativa|round }}</td>
                                 {% endif %}    
                             {% endfor %}
                         </tr>
@@ -40,7 +40,7 @@
                             <td>Lenguas Originarias</td>
                             {% for nota in notas %}
                                 {% if nota.asignatura == 'LENGUAS ORIGINARIAS' %}
-                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                    <td align="center">{{ nota.nota_cuantitativa|round }}</td>
                                 {% endif %}    
                             {% endfor %}
                         </tr>
@@ -49,7 +49,7 @@
                             <td>Ciencias Naturales</td>
                             {% for nota in notas %}
                                 {% if nota.asignatura == 'CIENCIAS NATURALES' %}
-                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                    <td align="center">{{ nota.nota_cuantitativa|round }}</td>
                                 {% endif %}   
                             {% endfor %}
                         </tr> 
@@ -59,7 +59,7 @@
                             <td><strong>Promedio Final</strong></td>
                             {% for nota in notas %}
                                 {% if nota.asignatura == 'PROMEDIO FINAL' %}
-                                    <td align="center"><strong>{{ nota.nota_cuantitativa }}</strong></td>
+                                    <td align="center"><strong>{{ nota.nota_cuantitativa|round }}</strong></td>
                                 {% endif %}   
                             {% endfor %}
                         </tr> 
@@ -72,7 +72,7 @@
                             <td>Matemáticas</td>
                             {% for nota in notas %}
                                 {% if nota.asignatura == 'MATEMATICAS' %}
-                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                    <td align="center">{{ nota.nota_cuantitativa|round }}</td>
                                 {% endif %}    
                             {% endfor %}
                         </tr>
@@ -81,7 +81,7 @@
                             <td>Castellano</td>
                             {% for nota in notas %}
                                 {% if nota.asignatura == 'CASTELLANO' %}
-                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                    <td align="center">{{ nota.nota_cuantitativa|round }}</td>
                                 {% endif %}    
                             {% endfor %}
                         </tr>
@@ -90,7 +90,7 @@
                             <td>Lenguas Originarias</td>
                             {% for nota in notas %}
                                 {% if nota.asignatura == 'LENGUAS ORIGINARIAS' %}
-                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                    <td align="center">{{ nota.nota_cuantitativa|round }}</td>
                                 {% endif %}    
                             {% endfor %}
                         </tr>
@@ -99,7 +99,7 @@
                             <td>Geografía</td>
                             {% for nota in notas %}
                                 {% if nota.asignatura == 'GEOGRAFIA' %}
-                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                    <td align="center">{{ nota.nota_cuantitativa|round }}</td>
                                 {% endif %}    
                             {% endfor %}
                         </tr>
@@ -108,7 +108,7 @@
                             <td>Historia</td>
                             {% for nota in notas %}
                                 {% if nota.asignatura == 'HISTORIA' %}
-                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                    <td align="center">{{ nota.nota_cuantitativa|round }}</td>
                                 {% endif %}    
                             {% endfor %}
                         </tr>
@@ -117,7 +117,7 @@
                             <td>Ciencias Naturales</td>
                             {% for nota in notas %}
                                 {% if nota.asignatura == 'CIENCIAS NATURALES' %}
-                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                    <td align="center">{{ nota.nota_cuantitativa|round }}</td>
                                 {% endif %}    
                             {% endfor %}
                         </tr>
@@ -127,7 +127,7 @@
                             <td><strong>Promedio Final</strong></td>
                             {% for nota in notas %}
                                 {% if nota.asignatura == 'PROMEDIO FINAL' %}
-                                    <td align="center"><strong>{{ nota.nota_cuantitativa }}</strong></td>
+                                    <td align="center"><strong>{{ nota.nota_cuantitativa|round }}</strong></td>
                                 {% endif %}    
                             {% endfor %}
                         </tr>
@@ -140,7 +140,7 @@
                             <td>Matemáticas</td>
                             {% for nota in notas %}
                                 {% if nota.asignatura == 'MATEMATICAS' %}
-                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                    <td align="center">{{ nota.nota_cuantitativa|round }}</td>
                                 {% endif %}    
                             {% endfor %}
                         </tr>
@@ -149,7 +149,7 @@
                             <td>Castellano</td>
                             {% for nota in notas %}
                                 {% if nota.asignatura == 'CASTELLANO' %}
-                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                    <td align="center">{{ nota.nota_cuantitativa|round }}</td>
                                 {% endif %}    
                             {% endfor %}
                         </tr>
@@ -158,7 +158,7 @@
                             <td>Lenguas Originarias</td>
                             {% for nota in notas %}
                                 {% if nota.asignatura == 'LENGUAS ORIGINARIAS' %}
-                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                    <td align="center">{{ nota.nota_cuantitativa|round }}</td>
                                 {% endif %}    
                             {% endfor %}
                         </tr>
@@ -167,7 +167,7 @@
                             <td>Geografía</td>
                             {% for nota in notas %}
                                 {% if nota.asignatura == 'GEOGRAFIA' %}
-                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                    <td align="center">{{ nota.nota_cuantitativa|round }}</td>
                                 {% endif %}    
                             {% endfor %}
                         </tr>
@@ -176,7 +176,7 @@
                             <td>Historia</td>
                             {% for nota in notas %}
                                 {% if nota.asignatura == 'HISTORIA' %}
-                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                    <td align="center">{{ nota.nota_cuantitativa|round }}</td>
                                 {% endif %}    
                             {% endfor %}
                         </tr>
@@ -186,7 +186,7 @@
                             <td><strong>Promedio Final</strong></td>
                             {% for nota in notas %}
                                 {% if nota.asignatura == 'PROMEDIO FINAL' %}
-                                    <td align="center"><strong>{{ nota.nota_cuantitativa }}</strong></td>
+                                    <td align="center"><strong>{{ nota.nota_cuantitativa|round }}</strong></td>
                                 {% endif %}    
                             {% endfor %}
                         </tr>
@@ -199,7 +199,7 @@
                             <td>Matemáticas</td>
                             {% for nota in notas %}
                                 {% if nota.asignatura == 'MATEMATICAS' %}
-                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                    <td align="center">{{ nota.nota_cuantitativa|round }}</td>
                                 {% endif %}    
                             {% endfor %}
                         </tr>
@@ -208,7 +208,7 @@
                             <td>Lengua Castellano</td>
                             {% for nota in notas %}
                                 {% if nota.asignatura == 'LENGUA CASTELLANO' %}
-                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                    <td align="center">{{ nota.nota_cuantitativa|round }}</td>
                                 {% endif %}    
                             {% endfor %}
                         </tr>
@@ -217,7 +217,7 @@
                             <td>Lenguas Originarias</td>
                             {% for nota in notas %}
                                 {% if nota.asignatura == 'LENGUAS ORIGINARIAS' %}
-                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                    <td align="center">{{ nota.nota_cuantitativa|round }}</td>
                                 {% endif %}    
                             {% endfor %}
                         </tr>
@@ -227,7 +227,7 @@
                             <td><strong>Promedio Final</strong></td>
                             {% for nota in notas %}
                                 {% if nota.asignatura == 'PROMEDIO FINAL' %}
-                                    <td align="center"><strong>{{ nota.nota_cuantitativa }}</strong></td>
+                                    <td align="center"><strong>{{ nota.nota_cuantitativa|round }}</strong></td>
                                 {% endif %}    
                             {% endfor %}
                         </tr>

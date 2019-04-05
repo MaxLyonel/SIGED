@@ -19,6 +19,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\User;
 use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoLog;
 
+
+use Doctrine\DBAL\Types\Type;
+Type::overrideType('datetime', 'Doctrine\DBAL\Types\VarDateTimeType');
+
 /**
  * EstudianteInscripcion controller.
  *
@@ -58,8 +62,8 @@ class InfoEstudianteController extends Controller {
         //find the levels from UE
         //levels gestion -1
         //$objLevelsOld = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getNivelBySieAndGestion($form['sie'], $form['gestion']);
-        $objUeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getInfoUeducativaBySieGestion($form['sie'], $form['gestion']);
 
+        $objUeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getInfoUeducativaBySieGestion($form['sie'], $form['gestion']);
         $exist = true;
         $tieneSextoSec = false;
         $aInfoUnidadEductiva = array();
@@ -559,6 +563,7 @@ class InfoEstudianteController extends Controller {
         $paralelo = $aInfoUeducativa['ueducativaInfoId']['paraleloId'];
         $gradoname = $aInfoUeducativa['ueducativaInfo']['grado'];
         $paraleloname = $aInfoUeducativa['ueducativaInfo']['paralelo'];
+        $nivelname = $aInfoUeducativa['ueducativaInfo']['nivel'];
         //get db connexion
         $em = $this->getDoctrine()->getManager();
 
@@ -672,34 +677,33 @@ class InfoEstudianteController extends Controller {
                 }
             }
 
-
             /*
              * GESTIONES PASADAS
              */
             if($gestion < $this->session->get('currentyear')){
                 // Para unidades educativas en gestiones pasadas
-                if(in_array($tipoUE['id'], array(1,2,3,4,5)) and $gestion > 2014 and $gestion < $this->session->get('currentyear') and $operativo >= 4){
+                if(in_array($tipoUE['id'], array(1,2,3,4,5,6,7)) and $gestion > 2014 and $gestion < $this->session->get('currentyear') and $operativo >= 4){
                     $imprimirLibreta = true;
                 }
-
                 // PAra ues tecnicas tecnologicas
                 if(in_array($tipoUE['id'], array(2)) and $gestion >= 2011){
                     $imprimirLibreta = true;
                 }
 
-                // Caso especial de la unidad educativa AMERINST
-                if($sie == '80730460' and $gestion <= 2015){
-                    $imprimirLibreta = false;
-                    if($gestion == 2014 and $nivel == 13 and $grado >= 4 and $paralelo >= 6){
-                        $imprimirLibreta = true;
-                    }
-                    if($gestion == 2015 and $nivel == 13 and $grado >= 5 and $paralelo >= 6){
-                        $imprimirLibreta = true;
-                    }
-                    if($gestion >= 2009 and $gestion <= 2013){
-                        $imprimirLibreta = true;
-                    }
-                }
+                // // Caso especial de la unidad educativa AMERINST
+                // YA SE TIENEN LAS MISMAS VALIDACIONES EN LA FUNCION DE IMPRESION DE LIBRETA
+                // if($sie == '80730460' and $gestion <= 2015){
+                //     $imprimirLibreta = false;
+                //     if($gestion == 2014 and $nivel == 13 and $grado >= 4 and $paralelo >= 6){
+                //         $imprimirLibreta = true;
+                //     }
+                //     if($gestion == 2015 and $nivel == 13 and $grado >= 5 and $paralelo >= 6){
+                //         $imprimirLibreta = true;
+                //     }
+                //     if($gestion >= 2009 and $gestion <= 2013){
+                //         $imprimirLibreta = true;
+                //     }
+                // }
             }
         }else{
             if($gestion > 2014 and $operativo >= 4){
@@ -763,7 +767,7 @@ class InfoEstudianteController extends Controller {
                     'aData' => $aData,
                     'gradoname' => $gradoname,
                     'paraleloname' => $paraleloname,
-                    // 'nivelname' => $nivelname,
+                    'nivelname' => $nivelname,
                     'form' => $this->createFormStudentInscription($infoUe)->createView(),
                     'infoUe' => $infoUe,
                     'exist' => $exist,
@@ -791,6 +795,7 @@ class InfoEstudianteController extends Controller {
         //this is a switch to find the courses
         $sw = 1;
         //loof for the courses of student
+        $ind = 0;
         while (($acourses = current($cursos)) !== FALSE && $sw) {
             if (current($cursos) == $nivel . '-' . $ciclo . '-' . $grado) {
                 $ind = key($cursos);
@@ -811,6 +816,7 @@ class InfoEstudianteController extends Controller {
         //this is a switch to find the courses
         $sw = 1;
         //loof for the courses of student
+        $ind = 0;
         while (( $acourses = current($cursos)) !== FALSE && $sw) {
             if (current($cursos) == $nivel . '-' . $ciclo . '-' . $grado) {
                 $ind = key($cursos);
