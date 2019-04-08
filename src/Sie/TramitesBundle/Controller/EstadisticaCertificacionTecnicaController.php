@@ -627,10 +627,10 @@ class EstadisticaCertificacionTecnicaController extends Controller {
             $nivelArea = 0;
         }
 
-        //dump($nivelArea);dump($codigoArea);dump($gestion);die;
+        // dump($nivelArea);dump($codigoArea);dump($gestion);die;
 
         $em = $this->getDoctrine()->getManager();
-        $formato = '.pdf';
+        $formato = 'pdf';
         $contentType = 'application/pdf';
         $rptdesign = 'alt_est_CertificadoTecnico_Emitido_Nacional_v1_rcm.rptdesign&__format='.$formato.'&codigo='.$codigoArea.'&gestion='.$gestion;
 
@@ -660,7 +660,7 @@ class EstadisticaCertificacionTecnicaController extends Controller {
         if ($nivelArea == 3){
             $rptdesign = 'alt_est_CertificadoTecnico_Emitido_Distrital_v1_rcm.rptdesign&__format='.$formato.'&codigo='.$codigoArea.'&gestion='.$gestion;
         }
-
+        
         $arch = 'certTec_'.$codigoArea.'_'.$gestion.'_'.date('YmdHis').'.'.$formato;
         $response = new Response();
         $response->headers->set('Content-type', $contentType);
@@ -701,7 +701,7 @@ class EstadisticaCertificacionTecnicaController extends Controller {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $formato = '.pdf';
+        $formato = 'pdf';
         $contentType = 'application/pdf';
         $rptdesign = 'alt_est_CertificadoTecnico_Emitido_Especialidad_Nacional_v1_rcm.rptdesign&__format='.$formato.'&codigo='.$codigoArea.'&gestion='.$gestion;
 

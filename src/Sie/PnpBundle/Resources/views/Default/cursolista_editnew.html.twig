@@ -322,7 +322,7 @@
                                 <thead>
                                     <tr>
                                         <th>Codigo Rude</th>
-                                        {% if plan == 2 %}<th>Rudeal</th>{% endif %}
+                                        {% if plan == 2 and esactivo == 0 %}<th>Rudeal</th>{% endif %}
                                         <th>Opciones</th>
                                         <th>Carnet Identidad</th>
                                         <th>Paterno</th>
@@ -343,19 +343,22 @@
                                 {% for estudiante in estudiantes %}
                                     <tr>
                                         <td>{{ estudiante.codigo_rude }}</td>
-                                        {% if plan == 2 %}
-                                            <td>
-                                                {% if esactivo == 1 %}
-                                                    {#}Rudeal
+                                        {% if plan == 2  %}
+                                            {% if esactivo == 1 %}
+                                                {#}Rudeal
+                                                <td>
                                                     {% if estudiante.rude_id != "" %}
                                                         <a role="button" class="btn btn-xs btn-primary rounded glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_rudeal', { 'id_enc': estudiante.rude_id_enc }) }}" title="Imprimir Rudeal"></a>
-                                                    {% endif %}{#}
+                                                    {% endif %}
+                                                </td>{#}
                                                 {% else %}  
-                                                    {#}Rudeal
-                                                    {% if estudiante.rude_id != "" %}
-                                                        <a role="button" class="btn btn-xs btn-primary rounded glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_rudeal', { 'id_enc': estudiante.rude_id_enc }) }}" title="Imprimir Rudeal"></a>
-                                                    {% endif %}{#}
-                                                    <a href="#" role="button" onclick="SeeRudeal('{{estudiante.inscripcion_id}}',{{ datos.id }})" class="btn btn-xs rounded btn-success glyphicon glyphicon-edit" title="Editar Rudeal"></a>
+                                                    <td>
+                                                        {#}Rudeal
+                                                        {% if estudiante.rude_id != "" %}
+                                                            <a role="button" class="btn btn-xs btn-primary rounded glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_rudeal', { 'id_enc': estudiante.rude_id_enc }) }}" title="Imprimir Rudeal"></a>
+                                                        {% endif %}{#}
+                                                        <a href="#" role="button" onclick="SeeRudeal('{{estudiante.inscripcion_id}}',{{ datos.id }})" class="btn btn-xs rounded btn-success glyphicon glyphicon-edit" title="Editar Rudeal"></a>
+                                                    </td>
                                                 {% endif %}    
                                             </td>
                                         {% endif %}
