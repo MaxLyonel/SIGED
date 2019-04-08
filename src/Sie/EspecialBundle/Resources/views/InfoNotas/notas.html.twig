@@ -1,7 +1,7 @@
 {% set onlyview = app.session.get('onlyview') %}
 {% if notas is defined %}
-	<div class="modal-dialog modal-lg">
-	    <div class="modal-content" style="width:900px; margin-left:-100px">
+	<div class="modal-dialog modal-lg" {% if (notas.gestion > 2018 and discapacidad == 2) %} style="width:80%;" {% endif %}>
+	    <div class="modal-content" {% if ((notas.gestion < 2019 and discapacidad == 2) or discapacidad != 2) %} style="width:900px; margin-left:-100px" {% endif %}>
 	    	<form action="" id="formNotasEspecial" onsubmit="registrarNotasEspecial(); return false">
 
 	 		<input type="hidden" name="actualizar" value="{{actualizar}}">
@@ -42,7 +42,8 @@
 					        </tr>
 					    </table>
 						<h5>Notas <small style="float:right;color:#4D8595">Operativo Actual-{{notas.operativo}}</small></h5>
-					    {% include 'SieAppWebBundle:Services/Notas:'~ template ~'.html.twig' with {'notas':notas, 'vista':vista} %}
+					    {# {% include 'SieAppWebBundle:Services/Notas:'~ template ~'.html.twig' with {'notas':notas, 'vista':vista} %} #}
+						{% include 'SieAppWebBundle:Services/Notas:'~ template ~'.html.twig' with { 'notas':notas, 'vista':vista, 'discapacidad':discapacidad } %}
 
 						{% if (operativo >= 4 and notas.estadoMatricula in notas.estadosPermitidos and notas.cuantitativas|length > 0 and actualizar == false) or (notas.gestion < notas.gestionActual and notas.tipoNota == 'Trimestral' and discapacidad != 1) or (notas.gestion < notas.gestionActual and discapacidad == 1 and notas.nivel in [1,11,403]) and notas.cuantitativas|length > 0 %}
 							<table class="table table-condensed table-bordered" style="background:#8AE5B6">

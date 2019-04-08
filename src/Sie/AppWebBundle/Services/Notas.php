@@ -44,23 +44,26 @@ class Notas{
         return $this->estadosActualizables;
     }
 
-    public function getTipoNota($sie,$gestion,$nivel,$grado){
+    public function getTipoNota($sie,$gestion,$nivel,$grado,$discapacidad){
         /*if(($gestion <= 2012) or ($gestion == 2013 and $grado > 1 and !in_array($nivel, array(1,11,403))) or ($gestion == 2013 and $grado == (1 or 2 ) and in_array($nivel, array(1,11,403))) or (in_array($nivel, array(401,402)) and $gestion <= 2013 and $grado > 1)){
             $tipoNota = 'Trimestre';
         }else{
             $tipoNota = 'Bimestre';
         }*/
-
-        if($gestion <= 2012){
-            $tipoNota = 'Trimestre';
+        if($gestion>2018 and $discapacidad == 2){
+            $tipoNota = 'Etapa';
         }else{
-            if($gestion >= 2014){
-                $tipoNota = 'Bimestre';
+            if($gestion <= 2012){
+                $tipoNota = 'Trimestre';
             }else{
-                if($grado == 1 and !in_array($nivel, array(1,11,403))){
+                if($gestion >= 2014){
                     $tipoNota = 'Bimestre';
                 }else{
-                    $tipoNota = 'Trimestre';
+                    if($grado == 1 and !in_array($nivel, array(1,11,403))){
+                        $tipoNota = 'Bimestre';
+                    }else{
+                        $tipoNota = 'Trimestre';
+                    }
                 }
             }
         }
@@ -1224,12 +1227,13 @@ class Notas{
 
     public function especial_cualitativo($idInscripcion,$operativo){
         try {
+            //dump($idInscripcion);die;
             $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
             $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
             $nivel = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
             $grado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+            $discapacidad = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->findOneBY(array('institucioneducativaCurso'=>$inscripcion->getInstitucioneducativaCurso()->getId()))->getEspecialAreaTipo()->getId();
             $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
-
             $gestionActual = $this->session->get('currentyear');
 
             vuelve:
@@ -1281,9 +1285,10 @@ class Notas{
             $notasArray = array();
             $cont = 0;
 
-            $tipoNota = $this->getTipoNota($sie,$gestion,$nivel,$grado);
+            $tipoNota = $this->getTipoNota($sie,$gestion,$nivel,$grado,$discapacidad);
 
-            if($tipoNota == 'Bimestre'){
+            // if($tipoNota == 'Bimestre'){
+            if($tipoNota == 'Bimestre' or $tipoNota == 'Etapa' ){
                 switch ($operativo) {
                     case 0:
                         $inicio = 1;
@@ -1306,6 +1311,7 @@ class Notas{
                 $inicio = 6;
                 $fin = 8;
             }
+            $fechaEtapasArray = array();
 
             foreach ($asignaturas as $a) {
                 $notasArray[$cont] = array('areaId'=>$a['id'],'area'=>$a['area'],'idAsignatura'=>$a['asignaturaId'],'asignatura'=>$a['asignatura']);
@@ -1322,7 +1328,7 @@ class Notas{
                                     ->setParameter('estAsigId',$a['estAsigId'])
                                     ->getQuery()
                                     ->getResult();
-
+                //dump($asignaturasNotas);die;
                 for($i=$inicio;$i<=$fin;$i++){
                     $existe = 'no';
                     foreach ($asignaturasNotas as $an) {
@@ -1343,13 +1349,29 @@ class Notas{
                             $valorNota = $an['notaCualitativa'];
                         }
                         if($i == $an['idNotaTipo']){
-                            $notasArray[$cont]['notas'][] =   array(
-                                                    'id'=>$cont."-".$i,
-                                                    'idEstudianteNota'=>$an['idNota'],
-                                                    'nota'=>$valorNota,
-                                                    'idNotaTipo'=>$an['idNotaTipo'],
-                                                    'idEstudianteAsignatura'=>$an['idEstudianteAsignatura']
-                                                );
+                            if($gestion > 2018 and $discapacidad == 2){
+                                $notasArray[$cont]['notas'][] =   array(
+                                    'id'=>$cont."-".$i,
+                                    'idEstudianteNota'=>$an['idNota'],
+                                    'nota'=>json_decode($valorNota,true),
+                                    'idNotaTipo'=>$an['idNotaTipo'],
+                                    'idEstudianteAsignatura'=>$an['idEstudianteAsignatura']
+                                );
+                                //dump(json_decode($valorNota,true)['fecha_fin']);die;
+                                
+                                $fechaEtapasArray[$i] = array('fechainicio'=>json_decode($valorNota,true)['fechainicio'],
+                                                                'fechafin'=>json_decode($valorNota,true)['fechafin']
+                                );
+                            }else{
+                                $notasArray[$cont]['notas'][] =   array(
+                                    'id'=>$cont."-".$i,
+                                    'idEstudianteNota'=>$an['idNota'],
+                                    'nota'=>$valorNota,
+                                    'idNotaTipo'=>$an['idNotaTipo'],
+                                    'idEstudianteAsignatura'=>$an['idEstudianteAsignatura']
+                                );
+                            }
+                            
                             $existe = 'si';
                             break;
                         }
@@ -1399,6 +1421,7 @@ class Notas{
             }
             $areas = array();
             $areas = $notasArray;
+            //dump($areas);die;
 
             //notas cualitativas
             $arrayCualitativas = array();
@@ -1461,24 +1484,35 @@ class Notas{
             $estadosPermitidos = array(0,4,5,70,71,72,73,47);
 
 			// Tipos de notas
-			$tiposNotas = $this->em->getRepository('SieAppWebBundle:NotaEspecialTipo')->findAll();
+            if ($discapacidad == 2 and $gestion > 2018){
+                $tiposNotas = $this->em->getRepository('SieAppWebBundle:NotaEspecialTipo')->findById(array(1,2,3,5));    
+                $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(78,79,80));  
+            }else{
+                $tiposNotas = $this->em->getRepository('SieAppWebBundle:NotaEspecialTipo')->findById(array(1,2,3,4));
+                $estadosFinales = "";
+            }
+            
 			$tiposNotasArray = array();
 			foreach ($tiposNotas as $tn) {
 				$tiposNotasArray[] = array('id'=>$tn->getId(),'nota'=>$tn->getNota(),'descripcion'=>$tn->getDescripcion());
-			}
+            }
+            
+            //dump($areas);die;
 
             return array(
-                'cuantitativas'=>$areas,
-                'cualitativas'=>$arrayCualitativas,
-                'operativo'=>$operativo,
-                'nivel'=>$nivel,
-                'estadoMatricula'=>$inscripcion->getEstadomatriculaTipo()->getId(),
-                'gestionActual'=>$this->session->get('currentyear'),
-                'idInscripcion'=>$idInscripcion,
-                'gestion'=>$gestion,
-                'tipoNota'=>$tipoNota,
-                'estadosPermitidos'=>$estadosPermitidos,
-				'tiposNotas'=>$tiposNotasArray
+                'cuantitativas'     =>$areas,
+                'cualitativas'      =>$arrayCualitativas,
+                'operativo'         =>$operativo,
+                'nivel'             =>$nivel,
+                'estadoMatricula'   =>$inscripcion->getEstadomatriculaTipo()->getId(),
+                'gestionActual'     =>$this->session->get('currentyear'),
+                'idInscripcion'     =>$idInscripcion,
+                'gestion'           =>$gestion,
+                'tipoNota'          =>$tipoNota,
+                'estadosPermitidos' =>$estadosPermitidos,
+                'tiposNotas'        =>$tiposNotasArray,
+                'estadosFinales'    =>$estadosFinales,
+                'fechaEtapas'       =>$fechaEtapasArray
             );
 
         } catch (Exception $e) {
@@ -1495,12 +1529,30 @@ class Notas{
         }
         
         try {
+            //  dump($request);die;
             $this->em->getConnection()->beginTransaction();
             // DAtos de las notas cuantitativas
             $idEstudianteNota = $request->get('idEstudianteNota');
             $idNotaTipo = $request->get('idNotaTipo');
             $idEstudianteAsignatura = $request->get('idEstudianteAsignatura');
-            $notas = $request->get('nota');
+            $gestion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($request->get('idInscripcion'))->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+            if($gestion > 2018 and $discapacidad == 2){
+                $fechaInicio = $request->get('fechaInicio');
+                $fechaFin = $request->get('fechaFin');
+                $contenidos = $request->get('contenidos');
+                $resultados = $request->get('resultados');
+                $indicador = $request->get('indicador');
+                $estado = $request->get('estado');
+                $cont = 0;
+                foreach ($contenidos as $i => $c){
+                    $datosNotas[] = array('contenidos'=>$c,'resultados'=>$resultados[$i],'idIndicador'=>$indicador[$i],'idEstado'=>$estado[$i],'fechainicio'=>$fechaInicio[$idNotaTipo[$i]-1],'fechafin'=>$fechaFin[$idNotaTipo[$i]-1]);
+                }
+                //dump($datosNotas);die;
+                $notas = $datosNotas;
+            }else{
+                $notas = $request->get('nota');
+            }
+            
 
             // Datos de las notas cualitativas
             $idEstudianteNotaCualitativa = $request->get('idEstudianteNotaCualitativa');
@@ -1516,10 +1568,9 @@ class Notas{
             $tipo = $request->get('tipoNota');
             $nivel = $request->get('nivel');
             $idInscripcion = $request->get('idInscripcion');
-
             $nivelesCualitativos = array(1,11,401,402,403,411);
 
-            if($tipo == 'Bimestre'){
+            if($tipo == 'Bimestre' or $tipo == 'Etapa'){
                 // Registro y/o modificacion de notas
                 for($i=0;$i<count($idEstudianteNota);$i++) {
                     if($idEstudianteNota[$i] == 'nuevo'){
@@ -1530,7 +1581,11 @@ class Notas{
                             $newNota->setEstudianteAsignatura($this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($idEstudianteAsignatura[$i]));
                             if($nivel == 401 or $nivel == 402 or $nivel == 403 or $nivel == 411){
                                 $newNota->setNotaCuantitativa(0);
-                                $newNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
+                                if($gestion > 2018 and $discapacidad == 2){
+                                    $newNota->setNotaCualitativa(json_encode($notas[$i]));
+                                }else{
+                                    $newNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
+                                }
                             }else{
                                 $newNota->setNotaCuantitativa($notas[$i]);
                                 $newNota->setNotaCualitativa('');
@@ -1561,7 +1616,11 @@ class Notas{
                         $regAnterior = clone $updateNota;
                         if($updateNota){
                             if($nivel == 401 or $nivel == 402 or $nivel == 403 or $nivel == 411){
-                                $updateNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
+                                if($gestion > 2018 and $discapacidad == 2){
+                                    $updateNota->setNotaCualitativa(json_encode($notas[$i]));
+                                }else{
+                                    $updateNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
+                                }
                             }else{
                                 $updateNota->setNotaCuantitativa($notas[$i]);
                             }
@@ -1586,7 +1645,7 @@ class Notas{
                     }
                 }
 
-                // Registro de notas cualitativas de incial primaria yo secundaria
+                // Registro de notas cualitativas de incial primaria y/o secundaria
                 for($j=0;$j<count($idEstudianteNotaCualitativa);$j++){
                     if($idEstudianteNotaCualitativa[$j] == 'nuevo'){
                         if($notaCualitativa[$j] != ""){

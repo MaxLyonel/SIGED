@@ -4,166 +4,222 @@
 	vista = 1  // Se podran modificar las notas dirferentes a cero y vacio
 	vista = 2  // Se podra modificar todo
 #}
+{# {{dump(notas)}} #}
 <input type="hidden" name="tipoNota" value="{{notas.tipoNota}}">
 <input type="hidden" name="nivel" value="{{notas.nivel}}">
 <input type="hidden" name="idInscripcion" value="{{notas.idInscripcion}}">
 <div class="row">
-<div class="col-lg-12">
-{% if notas.cuantitativas|length > 0 %}
-<table class="table table-bordered cf" style="backgroud:#FFFFFF">
-    <thead class="cf">
-        <tr>
-            <th>
-                Asignatura
-            </th>
-            {% if notas.operativo > 0 %}
-                {% for i in 1..notas.operativo %}
-                    {% if i < 5  %}
-                        <th>{{ i }} Bimestre</th>
-                    {% else %}
-                        {% if notas.nivel != 11 %}
-                            <th>Promedio</th>
-                        {% endif %}
-                    {% endif %}
-
-                {% endfor %}
-            {% else %}
-                <th>Notas Cuantitativas</th>
-            {% endif %}
-        </tr>
-    </thead>
-    <tbody>
-        {% set cont = 0 %}
-        {% for a in notas.cuantitativas %}
-            <tr>
-                <td data-title="Asignatura">
-                    {{a.asignatura}}
-                </td>
-                {% if a.notas is defined and a.notas|length > 0 %}
-                {% for n in a.notas %}
-                    {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
-                        {% if n.nota == "" or n.nota not in [1,2,3,4] or vista == 2 %}
-                            <td data-title="{{n.idNotaTipo}} Bimestre">
-                                <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
-                                <input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
-                                <input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
-                                <table class="table table-bordered">
-                                    <tr>
-                                        <td>Contenidos Programados</td>
-                                        <td><input type="text" name="a" value="{{n.idEstudianteNota}}"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Resultados Alcanzados</td>
-                                        <td><input type="text" name="b" value="{{n.idEstudianteNota}}"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Indicador Alcanzado</td>
-                                        <td>
-                                            <select class="" name="nota[]" id="" required>
-                                                <option value="">Seleccionar....</option>
-                                                {% for tn in notas.tiposNotas %}
-                                                    <option value="{{tn.id}}" {% if tn.id == n.nota %} selected {% endif %} title="{{ tn.descripcion }}">{{tn.nota}}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Estado Final</td>
-                                        <td><input type="text" name="c" value="{{n.idEstudianteNota}}"></td>
-                                    </tr>
-                                </table>
-                                {#<textarea class="notaCualitativa" name="nota[]" id="{{n.id}}" onkeypress="" pattern="[0-9A-Z]{1,200}" required autocomplete="off" style="text-transform: uppercase; width:165px" rows="6" minlength="3" maxlength="400">{{n.nota}}</textarea>#}
-                            </td>
+    <div class="col-lg-12">
+        {% if notas.cuantitativas|length > 0 %}
+            <table class="table table-bordered cf" style="backgroud:#FFFFFF">
+                <thead class="cf">
+                    <tr>
+                        <th>
+                            Asignatura
+                        </th>
+                        {% if notas.operativo > 0 %}
+                            {% for i in 1..notas.operativo %}
+                                {% if i < 5  %}
+                                    <th>{{ i }} {% if notas.gestion > 2018 and discapacidad == 2  %}° Etapa {% else %} Bimestre {% endif %} </br>
+                                        Del:<input type="text" name="fechaInicio[]" value={% if notas.fechaEtapas and notas.fechaEtapas[i] is defined  %} "{{notas.fechaEtapas[i].fechainicio}}" {% else %} "" {% endif %} required class="form-control"></br>
+                                        Al :<input type="text" name="fechaFin[]" value={% if notas.fechaEtapas and notas.fechaEtapas[i] is defined %} "{{notas.fechaEtapas[i].fechafin}}" {% else %} "" {% endif %} required class="form-control">
+                                    </th>
+                                {% else %}
+                                    {% if notas.nivel != 11 %}
+                                        <th>Promedio</th>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
                         {% else %}
-                            <td data-title="{{n.idNotaTipo}} Bimestre">
-                                {#
-                                <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
-                                <input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
-                                <input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
-                                #}
-                                <select class="" name="" id="" disabled>
-                                    <option value="">Seleccionar....</option>
-                                    {% for tn in notas.tiposNotas %}
-                                        <option value="{{tn.id}}" {% if tn.id == n.nota %} selected {% endif %} title="{{ tn.descripcion }}">{{tn.nota}}</option>
-                                    {% endfor %}
-                                </select>
-
-                                {#<textarea class="" name="nota[]" id="{{n.id}}" onkeyup="this.focus();" pattern="[0-9A-Z]{1,200}" required autocomplete="off" style="text-transform: uppercase; width:160px; background:#EFEFEF; border-color:#E2E2E2" rows="6" minlength="3" maxlength="400" readonly="readonly">{{n.nota}}</textarea>#}
-
-                            </td>
+                            <th>Notas Cuantitativas</th>
                         {% endif %}
-                    {% else %}
-                        <td data-title="{{n.idNotaTipo}} Bimestre">
-                            <select class="" name="" id="" disabled>
-                                <option value="">Seleccionar....</option>
-                                {% for tn in notas.tiposNotas %}
-                                    <option value="{{tn.id}}" {% if tn.id == n.nota %} selected {% endif %} title="{{ tn.descripcion }}">{{tn.nota}}</option>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set cont = 0 %}
+                    {% for a in notas.cuantitativas %}
+                        <tr>
+                            <td data-title="Asignatura">
+                                {{a.asignatura}}
+                            </td>
+                            {% if a.notas is defined and a.notas|length > 0 %}
+                                {% for n in a.notas %}
+                                    {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
+                                        {% if n.nota == "" or n.nota.idIndicador not in [1,2,3,5] or vista == 2 %}
+                                            <td data-title={% if notas.gestion > 2018 and discapacidad == 2  %} "{{n.idNotaTipo}}° Etapa" {% else %} "{{n.idNotaTipo}} Bimestre" {% endif %}>
+                                                <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
+                                                <input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
+                                                <input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
+                                                <table class="table table-bordered">
+                                                    <tr>
+                                                        <td>Contenidos Programados</td>
+                                                        <td><textarea name="contenidos[]" value="" class="form-control"></textarea></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Resultados Alcanzados</td>
+                                                        <td><textarea name="resultados[]" value="" class="form-control"></textarea></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Indicador Alcanzado</td>
+                                                        <td>
+                                                            <select class="form-control" name="indicador[]" id="" required>
+                                                                <option value="">Seleccionar....</option>
+                                                                {% for tn in notas.tiposNotas %}
+                                                                    <option value="{{tn.id}}" {% if tn.id == n.nota %} selected {% endif %} title="{{ tn.descripcion }}">{{tn.nota}}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Estado Final</td>
+                                                        <td>
+                                                            <select class="form-control" name="estado[]" id="" required>
+                                                                <option value="">Seleccionar....</option>
+                                                                {% for ef in notas.estadosFinales %}
+                                                                    <option value="{{ef.id}}" {% if ef.id == n.nota %} selected {% endif %}>{{ef.estadomatricula}}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                {#<textarea class="notaCualitativa" name="nota[]" id="{{n.id}}" onkeypress="" pattern="[0-9A-Z]{1,200}" required autocomplete="off" style="text-transform: uppercase; width:165px" rows="6" minlength="3" maxlength="400">{{n.nota}}</textarea>#}
+                                            </td>
+                                        {% else %}
+                                            {# <td data-title="{{n.idNotaTipo}} Bimestre"> #}
+                                            <td data-title={% if notas.gestion > 2018 and discapacidad == 2  %} "{{n.idNotaTipo}}° Etapa" {% else %} "{{n.idNotaTipo}} Bimestre" {% endif %}>
+                                                {#
+                                                <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
+                                                <input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
+                                                <input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
+                                                #}
+                                                <table class="table table-bordered">
+                                                    <tr>
+                                                        <td>Contenidos Programados</td>
+                                                        <td><input type="textarea" name="contenidos[]" value="{{n.nota.contenidos}}" disabled></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Resultados Alcanzados</td>
+                                                        <td><input type="textarea" name="resultados[]" value="{{n.nota.resultados}}" disabled></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Indicador Alcanzado</td>
+                                                        <td>
+                                                            <select class="" name="indicador[]" id="" disabled>
+                                                                <option value="">Seleccionar....</option>
+                                                                {% for tn in notas.tiposNotas %}
+                                                                    <option value="{{tn.id}}" {% if tn.id == n.nota.idIndicador %} selected {% endif %} title="{{ tn.descripcion }}">{{tn.nota}}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Estado Final</td>
+                                                        <td>
+                                                            <select class="" name="estado[]" id="" disabled>
+                                                                <option value="">Seleccionar....</option>
+                                                                {% for ef in notas.estadosFinales %}
+                                                                    <option value="{{ef.id}}" {% if ef.id == n.nota.idEstado %} selected {% endif %}>{{ef.estadomatricula}}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                {#<textarea class="" name="nota[]" id="{{n.id}}" onkeyup="this.focus();" pattern="[0-9A-Z]{1,200}" required autocomplete="off" style="text-transform: uppercase; width:160px; background:#EFEFEF; border-color:#E2E2E2" rows="6" minlength="3" maxlength="400" readonly="readonly">{{n.nota}}</textarea>#}
+                                            </td>
+                                        {% endif %}
+                                    {% else %}
+                                    {# {{dump(notas)}} #}
+                                        {# <td data-title="{{n.idNotaTipo}} Bimestre"> #}
+                                        <td data-title={% if notas.gestion > 2018 and discapacidad == 2  %} "{{n.idNotaTipo}}° Etapa" {% else %} "{{n.idNotaTipo}} Bimestre" {% endif %}>
+                                        <table class="table table-bordered">
+                                                    <tr>
+                                                        <td>Contenidos Programados</td>
+                                                        <td><input type="textarea" name="contenidos[]" value="" disabled></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Resultados Alcanzados</td>
+                                                        <td><input type="textarea" name="resultados[]" value="" disabled></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Indicador Alcanzado</td>
+                                                        <td>
+                                                            <select class="" name="indicador[]" id="" disabled>
+                                                                <option value="">Seleccionar....</option>
+                                                                {% for tn in notas.tiposNotas %}
+                                                                    <option value="{{tn.id}}" {% if tn.id == n.nota.idIndicador %} selected {% endif %} title="{{ tn.descripcion }}">{{tn.nota}}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Estado Final</td>
+                                                        <td>
+                                                            <select class="" name="estado[]" id="" disabled>
+                                                                <option value="">Seleccionar....</option>
+                                                                {% for ef in notas.estadosFinales %}
+                                                                    <option value="{{ef.id}}" {% if ef.id == n.nota.idEstado %} selected {% endif %}>{{ef.estadomatricula}}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            {#<textarea id="{{n.id}}" class="" style="text-transform: uppercase; width:160px; background:#EFEFEF; border-color:#E2E2E2" rows="6" minlength="3" maxlength="400" disabled="disabled">{{n.nota}}</textarea>#}
+                                        </td>
+                                    {% endif %}
                                 {% endfor %}
-                            </select>
-
-                            {#<textarea id="{{n.id}}" class="" style="text-transform: uppercase; width:160px; background:#EFEFEF; border-color:#E2E2E2" rows="6" minlength="3" maxlength="400" disabled="disabled">{{n.nota}}</textarea>#}
-
-                        </td>
-                    {% endif %}
-
-                {% endfor %}
-
-                {% else %}
-                    <td>
-                        <em><spam style="color:#9DB2B9">No hay notas</spam></em>
-                    </td>
-                {% endif %}
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% else %}
-    <div class="alert alert-warning">
-        <i class="fa fa-warning"></i> El curso no tiene materias registradas, debe registrar las materias del curso para poder realizar el registro de notas.
+                            {% else %}
+                                <td>
+                                    <em><spam style="color:#9DB2B9">No hay notas</spam></em>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="alert alert-warning">
+                <i class="fa fa-warning"></i> El curso no tiene materias registradas, debe registrar las materias del curso para poder realizar el registro de notas.
+            </div>
+        {% endif %}
     </div>
-{% endif %}
-</div>
-
-
-<div class="col-lg-12">
-{% if notas.cuantitativas|length > 0 %}
-<table class="table">
-    {% if notas.cualitativas|length > 0 and notas.operativo >= 4 %}
-        {% for c in notas.cualitativas %}
-            <tr><td style="padding:0px; margin:0px">
-            {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
-                {% if (c.notaCualitativa == "") or (vista == 2) %}
-                    <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
-                    <input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
-                    <p><b>Informe anual del proceso educativo</b></p>
-                    <p class="text-justify">
-                        <textarea class="form-control jnumbersletters notaCualitativa" name="notaCualitativa[]" rows="5" cols="30" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" minlength="16">{{c.notaCualitativa}}</textarea>
-                    </p>
+    <div class="col-lg-12">
+        {% if notas.cuantitativas|length > 0 %}
+            <table class="table">
+                {% if notas.cualitativas|length > 0 and notas.operativo >= 4 %}
+                    {% for c in notas.cualitativas %}
+                        <tr>
+                            <td style="padding:0px; margin:0px">
+                                {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
+                                    {% if (c.notaCualitativa == "") or (vista == 2) %}
+                                        <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
+                                        <input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
+                                        <p><b>Informe anual del proceso educativo</b></p>
+                                        <p class="text-justify">
+                                            <textarea class="form-control jnumbersletters notaCualitativa" name="notaCualitativa[]" rows="5" cols="30" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" minlength="16">{{c.notaCualitativa}}</textarea>
+                                        </p>
+                                    {% else %}
+                                        <p><b>Informe anual del proceso educativo</b></p>
+                                        <p class="text-justify">
+                                            <textarea class="form-control jnumbersletters" rows="5" cols="30" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" disabled="disabled">{{c.notaCualitativa}}</textarea>
+                                        </p>
+                                    {% endif %}
+                                {% else %}
+                                    <p><b>Informe anual del proceso educativo</b></p>
+                                    <p class="text-justify">
+                                        <textarea class="form-control jnumbersletters" rows="5" cols="30" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" disabled="disabled">{{c.notaCualitativa}}</textarea>
+                                    </p>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
                 {% else %}
-                    <p><b>Informe anual del proceso educativo</b></p>
-                    <p class="text-justify">
-                        <textarea class="form-control jnumbersletters" rows="5" cols="30" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" disabled="disabled">{{c.notaCualitativa}}</textarea>
-                    </p>
                 {% endif %}
-            {% else %}
-                <p><b>Informe anual del proceso educativo</b></p>
-                <p class="text-justify">
-                    <textarea class="form-control jnumbersletters" rows="5" cols="30" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" disabled="disabled">{{c.notaCualitativa}}</textarea>
-                </p>
-            {% endif %}
-            </td></tr>
-        {% endfor %}
-    {% else %}
-
-    {% endif %}
-</table>
-{% endif %}
-</div>
+            </table>
+        {% endif %}
+    </div>
 </div>
 
 <script>
-
-
     var validarEnvioNotas = function(){
         var enviar = true;
         var mensaje = "";
