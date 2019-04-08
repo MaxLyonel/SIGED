@@ -544,17 +544,27 @@ class AreasController extends Controller {
         $ieco = $request->get('ieco');
         $idmi = $request->get('idmi');
         $idnt = $request->get('idnt');
-        $horas = $request->get('horas');
-
+        // $horas = $request->get('horas');
+        
         $em = $this->getDoctrine()->getManager();
-        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta_maestro');")->execute();
+        // $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta_maestro');")->execute();
         for($i=0;$i<count($iecom);$i++){
-            if($horas[$i] == ''){
-                $horasNum = 0;
-            }else{
-                $horasNum = $horas[$i];
-            }
+            $horasNum = 0;
             if($iecom[$i] == 'nuevo' and $idmi[$i] != ''){
+                // $query = $em->getConnection()->prepare('
+                //     INSERT INTO institucioneducativa_curso_oferta_maestro(id,horas_mes,fecha_registro,es_vigente_maestro,maestro_inscripcion_id,nota_tipo_id,institucioneducativa_curso_oferta_id)
+                //     VALUES(:id,:horas_mes, :fecha_registro, :es_vigente_maestro, :maestro_inscripcion_id, :nota_tipo_id, :institucioneducativa_curso_oferta_id)
+                // ');
+                
+                // $query->bindValue(':id', intval('(select max(id) from institucioneducativa_curso_oferta_maestro) + 1'));
+                // $query->bindValue(':horas_mes', $horasNum);
+                // $query->bindValue(':fecha_registro', date('Y-m-d'));
+                // $query->bindValue(':es_vigente_maestro', true);
+                // $query->bindValue(':maestro_inscripcion_id', $em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($idmi[$i])->getId());
+                // $query->bindValue(':nota_tipo_id', $em->getRepository('SieAppWebBundle:NotaTipo')->find($idnt[$i])->getId());
+                // $query->bindValue(':institucioneducativa_curso_oferta_id', $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($ieco[$i])->getId());
+                // $query->execute();
+
                 $newCOM = new InstitucioneducativaCursoOfertaMaestro();
                 $newCOM->setInstitucioneducativaCursoOferta($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($ieco[$i]));
                 $newCOM->setMaestroInscripcion($em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($idmi[$i]));

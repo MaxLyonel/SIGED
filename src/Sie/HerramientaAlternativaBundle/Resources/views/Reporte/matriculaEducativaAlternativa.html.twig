@@ -630,7 +630,22 @@
 
 {% block javascripts %}
     {{parent()}}
+    <script src="{{ asset('js/highcharts/highcharts.js')}}"></script>
+    <script src="{{ asset('js/highcharts/funnel.js')}}"></script>
+    <script src="{{ asset('js/highcharts/highcharts-3d.js')}}"></script>
+    <script src="{{ asset('js/highcharts/exporting.js')}}"></script>
     <script>
+
+        $(function() {
+            $('#listaesp').change(function() {
+                var value= $(this).val();
+                $("#idesp").val(value);
+                $("#idespx").val(value);
+                var  a=$("#idesp").val();
+                //alert(a);
+            })
+        });
+
         $(document).ready(function() {
 
             Highcharts.setOptions({
@@ -720,16 +735,6 @@
         </script>
     {% endif %}
     <script>
-
-        $(function() {
-            $('#listaesp').change(function() {
-                var value= $(this).val();
-                $("#idesp").val(value);
-                $("#idespx").val(value);
-                var  a=$("#idesp").val();
-              //  alert(a);
-            })
-        });
 
         function cargaSie(){
             var sie = $('#sie').val();

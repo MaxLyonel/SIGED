@@ -120,7 +120,7 @@
                             <div class="row">
                               <div class="col-md-6">
                                   {{form_label(formInscription.paralelo)}}
-                                  {{form_widget(formInscription.paralelo,{'attr':{'onchange':'getTurno(this.value)','onmousedown':'getTurno(this.value)' } } )}}
+                                  {{form_widget(formInscription.paralelo,{'attr':{'onchange':'getTurno(this.value)','onchange':'getTurno(this.value)' } } )}}
                               </div>
                               <div class="col-md-6">
                                   {{form_label(formInscription.turno)}}
@@ -140,7 +140,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     {{form_label(formInscription.observacionOmitido)}}
-                                    {{form_widget(formInscription.observacionOmitido, {'attr':{'required':'true','onkeyUp':'observacionOmitido(this.value)'}  } )}}
+                                    {{form_widget(formInscription.observacionOmitido )}}
                                 </div>
                             </div>
                           {{form_widget(formInscription.save, {'attr':{'class':'btn btn-primary'} }) }}

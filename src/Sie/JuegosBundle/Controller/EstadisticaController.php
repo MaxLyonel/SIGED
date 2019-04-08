@@ -68,11 +68,15 @@ class EstadisticaController extends Controller {
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        //dump($codigoEntidad);die;
         switch ($nivelEntidad) {
             case 1: //nacional
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_est_general_seguimiento_nacional_v1_rcm.rptdesign&__format=pdf&codigo='.$codigoEntidad.'&gestion='.$gestionActual.'&fase='.$fase));
                 break;
             case 2: //departamental
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_est_general_seguimiento_departamental_v1_rcm.rptdesign&__format=pdf&codigo='.$codigoEntidad.'&gestion='.$gestionActual.'&fase='.$fase));
+                break;
+            case 6: //departamental
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_est_general_seguimiento_departamental_v1_rcm.rptdesign&__format=pdf&codigo='.$codigoEntidad.'&gestion='.$gestionActual.'&fase='.$fase));
                 break;
             case 7: //distrital

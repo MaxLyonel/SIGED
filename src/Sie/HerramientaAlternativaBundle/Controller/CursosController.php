@@ -752,10 +752,17 @@ class CursosController extends Controller {
                     $em->flush();
                 }
 
-
-                
-                
-                
+                // save log info
+                 $this->get('funciones')->setLogTransaccion(
+                     $arrInfoStudent['eInsId'],
+                     'estudiante_inscripcion',
+                     'D',
+                     '',
+                     '',
+                     '',
+                     'ALTERNATIVA',
+                     json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                 );
 
                 //everythinng ok
                 $em->getConnection()->commit();

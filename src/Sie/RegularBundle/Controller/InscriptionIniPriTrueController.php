@@ -405,7 +405,6 @@ class InscriptionIniPriTrueController extends Controller {
            $query->execute();
            $ue_procedencia = $query->fetch();
 
-           $em->getRepository('SieAppWebBundle:ObservacionInscripcionTipo')->find(6);
           // $obsId=($em->getRepository('SieAppWebBundle:ObservacionInscripcionTipo')->find(6))->getId();
          //inscriptions
          $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion');");
@@ -439,7 +438,7 @@ class InscriptionIniPriTrueController extends Controller {
              'estudiante_inscripcion',
              'C',
              '',
-             $studentInscription,
+             '',
              '',
              'SIGED',
              json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))

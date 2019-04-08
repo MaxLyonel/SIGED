@@ -251,6 +251,17 @@ class StudentsInscriptionsController extends Controller {
           $em->persist($estudianteInscripcionAlternativaExcepcionalObjNew);
           $em->flush();
         }
+        // save log info
+        $this->get('funciones')->setLogTransaccion(
+             $studentInscription->getId(),
+             'estudiante_inscripcion',
+             'C',
+             '',
+             '',
+             '',
+             'ALTERNATIVA',
+             json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+         );
         // check if the course is PRIMARIA
          //  if( $aInfoUeducativa['ueducativaInfoId']['sfatCodigo'] == 15 &&
          //    $aInfoUeducativa['ueducativaInfoId']['setId'] == 13 &&
