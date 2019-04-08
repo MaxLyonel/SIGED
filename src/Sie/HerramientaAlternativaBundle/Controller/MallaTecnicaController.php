@@ -250,7 +250,13 @@ select idsae,idacr
         $params = array();
         $final->execute($params);
         $mallafinal = $final->fetchAll();
-        //  dump($mallafinal);die();
+
+//        dump($aInfoUeducativa['ueducativaInfoId']['especialidad_id']);
+//        dump($this->session->get('ie_gestion'));
+//        dump($this->session->get('ie_id'));
+//        dump($this->session->get('ie_per_cod'));
+//        dump($this->session->get('ie_subcea'));
+//        die();
 
         if ($po||$mallafinal){
             $exist = true;
@@ -356,7 +362,7 @@ select idsae,idacr
         $sieat->execute($params);
         $periodos = $sieat->fetchAll();
 
-//        dump($query);
+      //  dump($periodos);die;
 //        die;
 
 
@@ -413,6 +419,7 @@ select idsae,idacr
                         and b.codigo = ".$aInfoUeducativa['ueducativaInfoId']['especialidad_cod']." 
                         and ((d.codigo = 1) or (d.codigo = 2) or (d.codigo = 3)) 
                         and w.turno_tipo_id = ".$aInfoUeducativa['ueducativaInfoId']['superior_turno_tipo_id']."
+                         and l.esvigente =false
                           group by k.id,d.codigo, k.horas_modulo) aa";
         $sieat = $db->prepare($query);
         $params = array();
@@ -512,11 +519,12 @@ select idsae,idacr
                         order by d.codigo
                    ";
         $sieat = $db->prepare($query);
+
         $params = array();
         $sieat->execute($params);
         $periodos = $sieat->fetchAll();
 
-//        dump($periodos);
+        //dump($sieat);die;
 //        die;
         
         
@@ -569,7 +577,9 @@ select idsae,idacr
                         and a.codigo = ".$aInfoUeducativa['ueducativaInfoId']['facultad_area_cod']." 
                         and b.codigo = ".$aInfoUeducativa['ueducativaInfoId']['especialidad_cod']." 
                         and ((d.codigo = 1) or (d.codigo = 2) or (d.codigo = 3)) 
+                        and l.esvigente =false
                         and e.superior_turno_tipo_id = ".$aInfoUeducativa['ueducativaInfoId']['superior_turno_tipo_id'];
+
         $sieat = $db->prepare($query);
         $params = array();
         $sieat->execute($params);
@@ -1439,7 +1449,7 @@ select idsae,idacr
 
     public function showModuloDeleteAction(Request $request)
     {  $em = $this->getDoctrine()->getManager();
-        //dump($request);die;
+       // dump($request);die;
         $idmodulo = $request->get('idmodulo');
         $idspm = $request->get('idspm');
         $modulo = $request->get('modulo');
@@ -1447,24 +1457,21 @@ select idsae,idacr
         $idesp = $request->get('idesp');
 
 
-
-//        dump($idspm);die;
+        $em->getConnection()->beginTransaction();
+     //   dump($idspm);die;
         try{
-
-            $em->getConnection()->beginTransaction();
-
-            $supmodper = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($idspm);
-            //dump($supmodper);die;
+            $supmodper = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->findOneBy(array('id' => $idspm));
             $em->remove($supmodper);
-            $em->flush();
+            $supmodtipo = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->findOneBy(array('superiorModuloTipo' => $idmodulo));
+                if(count($supmodtipo)<=0)
+                {
+                    $supmodtipo = $em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->findOneBy(array('id' => $idmodulo));
+                    $em->remove($supmodtipo);
+                }
 
-            $supmodtipo = $em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find($idmodulo);
-            $em->remove($supmodtipo);
             $em->flush();
-
             $em->getConnection()->commit();
             $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron eliminados correctamente.');
-           // dump($em);die;
 
             $db = $em->getConnection();
 
@@ -1487,13 +1494,11 @@ from superior_acreditacion_especialidad sae
 							order by sat.id asc, sae.id, sest.id  ,sia.id desc
 
     ";
-//        print_r($query);
-//        die;
+
             $mallanivel = $db->prepare($query);
             $params = array();
             $mallanivel->execute($params);
             $mallaniv = $mallanivel->fetchAll();
-         //  dump($mallaniv);die;
 
 
             $db = $em->getConnection();
@@ -1521,14 +1526,12 @@ group by  idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,id
 
         
     ";
-//        print_r($query);
-//        die;
+
             $especialidadnivel = $db->prepare($query);
             $params = array();
             $especialidadnivel->execute($params);
             $po = $especialidadnivel->fetchAll();
 
-               //  dump($po);die();
             if ($po){
                 $exist = true;
             }
@@ -1599,6 +1602,7 @@ select idsae,idacr
         }
         catch(Exception $ex)
         {
+
             $em->getConnection()->rollback();
             $this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron eliminados, Asegurese de que el modulo no se esta utilizando.');
             return $this->redirect($this->generateUrl('herramienta_alter_malla_tecnica_index'));
