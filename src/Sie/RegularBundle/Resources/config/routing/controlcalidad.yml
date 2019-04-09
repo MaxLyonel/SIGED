@@ -47,3 +47,7 @@ ccalidad_omitir_historico:
     defaults: { _controller: "SieRegularBundle:ControlCalidad:omitirHistorico" }
     options:
          expose: true
+
+ccalidad_ratificar_edad:
+    path:     /ratificarEdad
+    defaults: { _controller: "SieRegularBundle:ControlCalidad:ratificarEdad" }

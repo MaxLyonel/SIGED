@@ -378,6 +378,103 @@ class ControlCalidadController extends Controller {
         return $this->redirect($this->generateUrl('ccalidad_list', array('id' => $vreglaentidad->getId(), 'gestion' => $gestion)));
     }
 
+    public function ratificarEdadAction(Request $request) {
+
+        $defaultController = new DefaultCont();
+        $defaultController->setContainer($this->container);
+        $gestion = $this->session->get('idGestionCalidad');
+
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+
+        try {
+            $form = $request->get('form');
+
+            // Antes
+            $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneById($form['idDetalle']);
+            $vregla = $em->getRepository('SieAppWebBundle:ValidacionReglaTipo')->findOneById($vproceso->getValidacionReglaTipo());
+            $vreglaentidad = $em->getRepository('SieAppWebBundle:ValidacionReglaEntidadTipo')->findOneById($vregla->getValidacionReglaEntidadTipo());
+
+            $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneByCodigoRude($vproceso->getLlave());
+
+            if($estudiante->getCarnetIdentidad()){
+                $resultadoEdadEstudiante = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($estudiante->getCarnetIdentidad(),array('fecha_nacimiento'=>$estudiante->getFechaNacimiento()->format('d-m-Y')),'prod','academico');
+
+                $mensaje = "Se realizó el proceso satisfactoriamente. Los datos de la/el estudiante se validaron correctamente con SEGIP.";
+
+                $arrayRegistro = null;
+
+                $arrayRegistro['id'] = $vproceso->getId();
+                $arrayRegistro['fecha_proceso'] = $vproceso->getFechaProceso();
+                $arrayRegistro['validacion_regla_tipo_id'] = $vproceso->getValidacionReglaTipo()->getId();
+                $arrayRegistro['llave'] = $vproceso->getLlave();
+                $arrayRegistro['gestion_tipo_id'] = $vproceso->getGestionTipoId();
+                $arrayRegistro['periodo_tipo_id'] = $vproceso->getPeriodoTipoId();
+                $arrayRegistro['es_activo'] = $vproceso->getEsActivo();
+                $arrayRegistro['obs'] = $vproceso->getObs();
+                $arrayRegistro['institucioneducativa_id'] = $vproceso->getInstitucioneducativaId();
+                $arrayRegistro['lugar_tipo_id_distrito'] = $vproceso->getLugarTipoIdDistrito();
+                $arrayRegistro['solucion_tipo_id'] = $vproceso->getSolucionTipoId();
+                $arrayRegistro['omitido'] = $vproceso->getOmitido();
+
+                $antes = json_encode($arrayRegistro);
+
+                // despues
+                $arrayRegistro = null;
+
+                $vproceso->setEsActivo(true);//1 - $vproceso->getEsActivo()
+                $vproceso->setOmitido(1);
+
+
+                $em->persist($vproceso);
+                $em->flush();
+                $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneById($form['idDetalle']);
+
+                $arrayRegistro['id'] = $vproceso->getId();
+                $arrayRegistro['fecha_proceso'] = $vproceso->getFechaProceso();
+                $arrayRegistro['validacion_regla_tipo_id'] = $vproceso->getValidacionReglaTipo()->getId();
+                $arrayRegistro['llave'] = $vproceso->getLlave();
+                $arrayRegistro['gestion_tipo_id'] = $vproceso->getGestionTipoId();
+                $arrayRegistro['periodo_tipo_id'] = $vproceso->getPeriodoTipoId();
+                $arrayRegistro['es_activo'] = $vproceso->getEsActivo();
+                $arrayRegistro['obs'] = $vproceso->getObs();
+                $arrayRegistro['institucioneducativa_id'] = $vproceso->getInstitucioneducativaId();
+                $arrayRegistro['lugar_tipo_id_distrito'] = $vproceso->getLugarTipoIdDistrito();
+                $arrayRegistro['solucion_tipo_id'] = $vproceso->getSolucionTipoId();
+                $arrayRegistro['omitido'] = $vproceso->getOmitido();
+
+                $despues = json_encode($arrayRegistro);
+
+                // registro del log
+                $resp = $defaultController->setLogTransaccion(
+                  $vproceso->getId(),
+                  'validacion_proceso',
+                  'U',
+                  json_encode(array('browser' => $_SERVER['HTTP_USER_AGENT'],'ip'=>$_SERVER['REMOTE_ADDR'])),
+                  $this->session->get('userId'),
+                  '',
+                  $despues,
+                  $antes,
+                  'SIGED',
+                  json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                );
+
+                $em->getConnection()->commit();
+            } else {
+                $mensaje = "La/el estudiante no cuenta con carnet de identidad para realizar la verificación con SEGIP.";
+            }
+
+            $this->addFlash('success', $mensaje);
+
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+            $mensaje = "No se pudo realizar el proceso.";
+            $this->addFlash('warning', $mensaje);
+        }
+
+        return $this->redirect($this->generateUrl('ccalidad_list', array('id' => $vreglaentidad->getId(), 'gestion' => $gestion)));
+    }
+
     public function verificarAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
