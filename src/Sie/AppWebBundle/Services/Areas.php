@@ -99,11 +99,14 @@ class Areas {
         $matsecg2018 = array(1031,1032,1033,1034,1035,1036,1037,1040,1043,1044,1051,1052,1053);
 
         /**
-         * Para gestion 2018 en adelante
+         * Para gestion 2019 en adelante
          */
         $matsece2019 = array(1031,1032,1033,1034,1035,1036,1037,1040,1041,1042,1043,1044);
         $matsecf2019 = array(1031,1032,1033,1034,1035,1036,1037,1040,1041,1042,1043,1044);
         $matsecg2019 = array(1031,1032,1033,1034,1035,1036,1037,1040,1041,1042,1043,1044);
+        // Plenas
+        $matsecf2019plena = array(1031,1032,1033,1034,1035,1036,1037,1038,1040,1041,1042,1043,1044);
+        $matsecg2019plena = array(1031,1032,1033,1034,1035,1036,1037,1039,1040,1041,1042,1043,1044);
 
         $idsAsignaturas = array();
         switch ($gestion) {
@@ -240,6 +243,9 @@ class Areas {
                                     }
                                     if($gestion == 2019){
                                         $idsAsignaturas = $matsece2019;
+                                        if($tipoUEId == 1){
+                                            $idsAsignaturas = $matsecf2019plena;
+                                        }
                                     }
                                 }
                                 break;
@@ -255,7 +261,7 @@ class Areas {
                                             $idsAsignaturas = $matsecf2018;
                                         }
                                         if($gestion == 2019){
-                                            $idsAsignaturas = $matsecf2019;
+                                            $idsAsignaturas = $matsecg2019plena;
                                         }
                                     }else{
                                         $idsAsignaturas = $matsecg;
