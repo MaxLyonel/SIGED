@@ -331,12 +331,19 @@ class ChangestadoqaController extends Controller {
 
             }
             // dump($arrDataInfo);die;
-            $objJuegos = $em->getRepository('SieAppWebBundle:EstudianteInscripcionJuegos')->findOneBy(array('estudianteInscripcion' => $arrDataInfo['estInsId']));
+            $objJuegos = $em->getRepository('SieAppWebBundle:JdpEstudianteInscripcionJuegos')->findOneBy(array('estudianteInscripcion' => $arrDataInfo['estInsId']));
             if ($objJuegos) {
                 $message = "No se puede eliminar por que el estudiante esta registrado en el sistema de Juegos Plurinacionales";
                 $this->addFlash('okchange', $message);
                 return new JsonResponse(array('message'=>$message, 'gestionSelected'=>$gestionSelected, 'typeMessage'=>0));
             }
+              //verificamos si esta en la tabla de olim_estudiante_inscripcion
+              $objolim_estudiante_inscripcion = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findBy(array('estudianteInscripcion' => $arrDataInfo['estInsId']));
+              if ($objolim_estudiante_inscripcion) {
+                  $message = "No se puede eliminar por que el estudiante esta registrado en el sistema de Olimpiadas";
+                  $this->addFlash('warningremoveins', $message);
+                  return $this->redirectToRoute('remove_inscription_sie_index');
+              }
               //find the estudent's inscription to do the change
               $inscriptionStudentOBs = $em->getRepository('SieAppWebBundle:EstudianteInscripcionObservacion')->findBy(array('estudianteInscripcion' => $arrDataInfo['estInsId']));
               foreach ($inscriptionStudentOBs as $key => $value) {
@@ -374,6 +381,7 @@ class ChangestadoqaController extends Controller {
                   $em->flush();
                 //}
               }
+
 
               //update the validation process table
               $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneById($idProceso);
