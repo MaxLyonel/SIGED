@@ -73,7 +73,6 @@
                             </td>
                             {% if a.notas is defined and a.notas|length > 0 %}
                                 {% for n in a.notas %}
-                                    {# {{dump(n.nota)}} #}
                                     {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
                                         {% if n.nota == "" or n.nota.idIndicador not in [1,2,3,5] or vista == 2 %}
                                             <td data-title={% if notas.gestion > 2018 and discapacidad == 2  %} "{{n.idNotaTipo}}° Etapa" {% else %} "{{n.idNotaTipo}} Bimestre" {% endif %}>
@@ -84,11 +83,11 @@
                                                     
                                                     <tr>
                                                         <td style = "border-top-style: none;">Contenidos Programados</td>
-                                                        <td style = "border-top-style: none;"><textarea name="contenidos[]" class="form-control" required>{% if n.nota %} {{n.nota.contenidos}} {% endif %} </textarea></td>
+                                                        <td style = "border-top-style: none;"><textarea name="contenidos[]" class="form-control" required style="text-transform:uppercase;">{% if n.nota %} {{n.nota.contenidos}} {% endif %} </textarea></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Resultados Alcanzados</td>
-                                                        <td><textarea name="resultados[]" class="form-control" required>{% if n.nota %}{{n.nota.resultados}} {% endif %}</textarea></td>
+                                                        <td><textarea name="resultados[]" class="form-control" required style="text-transform:uppercase;">{% if n.nota %}{{n.nota.resultados}} {% endif %}</textarea></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Indicador Alcanzado</td>
@@ -256,6 +255,7 @@
     });
     
     $(".fecha").datepicker({ autoclose: true, todayHighlight: true, defaultDate: "+1w", minDate: 0 });
+    
 
     var validarEnvioNotas = function(){
         var enviar = true;
