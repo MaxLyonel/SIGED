@@ -468,7 +468,7 @@
                                 40730422,40730434,40730470,40730479,40730518,40730521,40730546,40730550,40730560,40730563,
                                 40730567,40730590,40730592,40730614,40730620,40730621,70620075
                                 ] %}
-                    {% if (app.session.get('roluser') == 9 and app.session.get('ie_id') in ie ) or (app.session.get('roluser') == 10 and app.session.get('roluserlugarid') == 31459) or (app.session.get('roluser') == 40 and app.session.get('roluserlugarid') == 31354) %}
+                    {# {% if (app.session.get('roluser') == 9 and app.session.get('ie_id') in ie ) or (app.session.get('roluser') == 10 and app.session.get('roluserlugarid') == 31459) or (app.session.get('roluser') == 40 and app.session.get('roluserlugarid') == 31354) %} #}
                     <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
@@ -491,7 +491,7 @@
                             <li><a href="{{ path('wf_tramite_seguimiento')}}">Seguimiento</a></li>
                         </ul>
                     </li>
-                    {% endif %}
+                    {# {% endif %} #}
                     {% if app.session.get('roluser') == 8  or app.session.get('roluser') == 20  %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
