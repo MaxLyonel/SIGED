@@ -338,7 +338,7 @@ class ChangestadoqaController extends Controller {
                 return new JsonResponse(array('message'=>$message, 'gestionSelected'=>$gestionSelected, 'typeMessage'=>0));
             }
               //verificamos si esta en la tabla de olim_estudiante_inscripcion
-              $objolim_estudiante_inscripcion = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findBy(array('estudianteInscripcion' => $eiid ));
+              $objolim_estudiante_inscripcion = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findBy(array('estudianteInscripcion' => $arrDataInfo['estInsId']));
               if ($objolim_estudiante_inscripcion) {
                   $message = "No se puede eliminar por que el estudiante esta registrado en el sistema de Olimpiadas";
                   $this->addFlash('warningremoveins', $message);
