@@ -119,7 +119,7 @@
             $('#historyInscriptions').modal('show');
             $.ajax({
                 type: 'get',
-                url: Routing.generate('sie_pnp_buscar_historial_estudiante_result_list', {'idStudent': idStudent}),
+                url: Routing.generate('sie_pnp_buscar_historial_estudiante_result_list_por_nombre', {'idStudent': idStudent}),
                 beforeSend: function () {
                     $("#idHistory").empty();
                     $("#idHistory").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
