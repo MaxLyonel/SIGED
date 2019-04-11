@@ -484,7 +484,7 @@ class EstudianteRudealController extends Controller {
 
             // EDUCACION DIVERSA
             $rudeEducacionDiversa = $em->getRepository('SieAppWebBundle:RudeEducacionDiversa')->find($form['diversaId']);
-            $rudeEducacionDiversa->setEducacionDiversaTipo($em->getRepository('SieAppWebBundle:EducacionDiversaTipo')->find($form['diversa']));
+            $rudeEducacionDiversa->setEducacionDiversaTipo($em->getRepository('SieAppWebBundle:EducacionDiversaTipo')->find(($form['diversa'] == null)?1:$form['diversa']));
 
             if($form['diversa'] == 2){            
                 $rudeEducacionDiversa->setUnidadMilitarTipo($em->getRepository('SieAppWebBundle:UnidadMilitarTipo')->find($request->get('unidadMilitar')));
