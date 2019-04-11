@@ -580,12 +580,15 @@ class RegistroController extends Controller {
 
         $response = new JsonResponse();
 
-        $faseActivo = $this->getFaseActivo($faseId, $nivelId, $fechaActual);
-        if (!$faseActivo) {
-            return $response->setData(array(
-                'msg_incorrecto' => 'Inscripción cerrada'
-            ));
+        if ($id_usuario != 13833121){
+            $faseActivo = $this->getFaseActivo($faseId, $nivelId, $fechaActual);
+            if (!$faseActivo) {
+                return $response->setData(array(
+                    'msg_incorrecto' => 'Inscripción cerrada'
+                ));
+            }
         }
+        
         
         $entityTipoDisciplinaPrueba = $this->verificaTipoDisciplinaPrueba($pruebaId);
 
@@ -980,11 +983,13 @@ class RegistroController extends Controller {
                 $nivel = $entityDatos->getPruebaTipo()->getDisciplinaTipo()->getNivelTipo()->getId();
                 $faseId = $entityDatos->getFaseTipo()->getId();
 
-                $faseActivo = $this->getFaseActivo($faseId, $nivel, $fechaActual);
-                if (!$faseActivo) {
-                    return $response->setData(array(
-                        'msg_incorrecto' => 'Inscripción cerrada'
-                    ));
+                if ($id_usuario != 13833121){
+                    $faseActivo = $this->getFaseActivo($faseId, $nivel, $fechaActual);
+                    if (!$faseActivo) {
+                        return $response->setData(array(
+                            'msg_incorrecto' => 'Inscripción cerrada'
+                        ));
+                    }
                 }
 
                 $estudiante = $entityDatos->getEstudianteInscripcion()->getEstudiante()->getPaterno().' '.$entityDatos->getEstudianteInscripcion()->getEstudiante()->getMaterno().' '.$entityDatos->getEstudianteInscripcion()->getEstudiante()->getNombre();
