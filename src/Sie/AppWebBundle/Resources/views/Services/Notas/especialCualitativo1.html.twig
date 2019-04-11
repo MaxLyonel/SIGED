@@ -44,13 +44,13 @@
                                             <div class="row">
                                                 <label for="fechainicio" class="col-sm-1">Del:</label>
                                                 <div class="col-sm-6">
-                                                    <input type="text" id="fechainicio" placeholder="dia-mes-año" class="form-control noedit fecha" name="fechaInicio[]" value={% if notas.fechaEtapas and notas.fechaEtapas[i] is defined  %} "{{notas.fechaEtapas[i].fechainicio}}" disabled {% else %} "" {% endif %} data-date-format="dd-mm-yyyy" autocomplete="off" required ></br>
+                                                    <input type="text" id="fechainicio" placeholder="dia-mes-año" class="form-control noedit fecha" name="fechaInicio[{{i}}]" value={% if notas.fechaEtapas and notas.fechaEtapas[i] is defined  %} "{{notas.fechaEtapas[i].fechainicio}}" disabled {% else %} "" {% endif %} data-date-format="dd-mm-yyyy" autocomplete="off" required ></br>
                                                 </div>
                                             </div>    
                                             <div class="row">
                                                 <label for="fechafin" class="col-sm-1">Al:</label>
                                                 <div class="col-sm-6">
-                                                    <input type="text" id="fechafin" placeholder="dia-mes-año" class="form-control noedit fecha" name="fechaFin[]" value={% if notas.fechaEtapas and notas.fechaEtapas[i] is defined %} "{{notas.fechaEtapas[i].fechafin}}" disabled {% else %} "" {% endif %} data-date-format="dd-mm-yyyy" autocomplete="off" required >
+                                                    <input type="text" id="fechafin" placeholder="dia-mes-año" class="form-control noedit fecha" name="fechaFin[{{i}}]" value={% if notas.fechaEtapas and notas.fechaEtapas[i] is defined %} "{{notas.fechaEtapas[i].fechafin}}" disabled {% else %} "" {% endif %} data-date-format="dd-mm-yyyy" autocomplete="off" required >
                                                 </div>
                                             </div> 
                                         </td>
@@ -129,7 +129,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td>Resultados Alcanzados:</td>
-                                                        <td><textarea class="form-control" name="resultados[]" disabled>{{n.nota.resultados}}</textarea></td>
+                                                        <td><textarea class="form-control" name="" disabled>{{n.nota.resultados}}</textarea></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Indicador Alcanzado:</td>
@@ -168,7 +168,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>Resultados Alcanzados</td>
-                                                    <td><textarea class="form-control" name="resultados[]" disabled>{{n.nota.resultados}}</textarea></td>
+                                                    <td><textarea class="form-control" name="" disabled>{{n.nota.resultados}}</textarea></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Indicador Alcanzado</td>

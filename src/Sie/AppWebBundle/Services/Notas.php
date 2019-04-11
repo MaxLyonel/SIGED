@@ -1543,9 +1543,8 @@ class Notas{
                 $resultados = $request->get('resultados');
                 $indicador = $request->get('indicador');
                 $estado = $request->get('estado');
-                $cont = 0;
                 foreach ($contenidos as $i => $c){
-                    $datosNotas[] = array('contenidos'=>$c,'resultados'=>$resultados[$i],'idIndicador'=>$indicador[$i],'idEstado'=>$estado[$i],'fechainicio'=>$fechaInicio[$idNotaTipo[$i]-1],'fechafin'=>$fechaFin[$idNotaTipo[$i]-1]);
+                    $datosNotas[] = array('contenidos'=>mb_strtoupper($c,'utf-8'),'resultados'=>mb_strtoupper($resultados[$i],'utf-8'),'idIndicador'=>$indicador[$i],'idEstado'=>$estado[$i],'fechainicio'=>$fechaInicio[$idNotaTipo[$i]],'fechafin'=>$fechaFin[$idNotaTipo[$i]]);
                 }
                 //dump($datosNotas);die;
                 $notas = $datosNotas;
