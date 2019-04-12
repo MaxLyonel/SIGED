@@ -76,16 +76,23 @@ class Notas{
 	public function regular($idInscripcion,$operativo){
         try {
             $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
-
             $nivel = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
             $grado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
             $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
             $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
 
+            $cursoEspecial = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->findOneBy(array('institucioneducativaCurso'=>$inscripcion->getInstitucioneducativaCurso()->getId()));
+            if($cursoEspecial){
+                $discapacidad = $cursoEspecial->getEspecialAreaTipo()->getId();
+                $tipoNota = $this->getTipoNota($sie,$gestion,$nivel,$grado,$discapacidad);
+            }else{
+                $tipoNota = $this->getTipoNota($sie,$gestion,$nivel,$grado,'');    
+            }
+            
             // Cantidad de notas faltantes
             $cantidadFaltantes = 0;
 
-            $tipoNota = $this->getTipoNota($sie,$gestion,$nivel,$grado);
+            //$tipoNota = $this->getTipoNota($sie,$gestion,$nivel,$grado);
 
             if($tipoNota == 'Trimestre'){
 
@@ -926,7 +933,7 @@ class Notas{
                 $tipo = 'b';
             }*/
 
-            $tipo = $this->getTipoNota($sie,$gestion,$nivel,$grado);
+            $tipo = $this->getTipoNota($sie,$gestion,$nivel,$grado,'');
 
             if($nivel == 11 or $nivel == 1 or $nivel == 403){
 

@@ -60,10 +60,10 @@
 
                     <table class="table table-bordered table-hover cf">
                         <tr>
-
                         <input type="hidden" id="formdata_data" name="formdata[data]" value="{{aData}}">
                         <td align="center" class="warning" colspan="3">Estudiantes Inscritos</br>
-                            {{gradoname}} - {{paraleloname}}
+                            {{ueducativaInfo.turno}} - {{ueducativaInfo.areaEspecial}} - {{ueducativaInfo.nivel}} - {{ueducativaInfo.grado}} / {{ueducativaInfo.programa}} - {{ueducativaInfo.paralelo}}
+                            {% if ueducativaInfo.iecLugar %} </br> {{ueducativaInfo.iecLugar}} {% endif %}
                         </td>
                         <td>Opciones</td>
 
