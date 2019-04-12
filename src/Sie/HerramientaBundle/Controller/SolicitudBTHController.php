@@ -707,6 +707,7 @@ class SolicitudBTHController extends Controller {
         $documento= $datos[4];
       ///obtenemos la lista de las especialidades de la unidad educativa
         $institucion_id = $infoUE['institucioneducativa_id'];///revisar
+        /// completar
         $query = $em->getConnection()->prepare("SELECT espt.id, espt.especialidad,ieth.gestion_tipo_id
                                                 FROM institucioneducativa_especialidad_tecnico_humanistico ieth
                                                 INNER JOIN especialidad_tecnico_humanistico_tipo espt ON   ieth.especialidad_tecnico_humanistico_tipo_id =  espt.id
@@ -1443,7 +1444,7 @@ class SolicitudBTHController extends Controller {
 
             if ($evaluacion=='SI') {   //dump($tarea1);die;
                 $mensaje = $wfTramiteController->guardarTramiteRecibido($id_usuario, $tarea1,$idtramite);
-                $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea1,$tabla,$institucionid,'','',$idtramite,$datos,'',$id_distrito);
+                $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea1,$tabla,$institucionid,$obs,'',$idtramite,$datos,'',$id_distrito);
                 //dump($mensaje);die;
                 /////volcado a la base de datoa
                 /*Recuperamos los datos del tramite*/
@@ -1719,7 +1720,7 @@ class SolicitudBTHController extends Controller {
                 $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 6));
                 $tarea2   = $flujoproceso->getId();//6 realiza observacion
                 $mensaje = $wfTramiteController->guardarTramiteRecibido($id_usuario, $tarea2,$idtramite);
-                $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea2,$tabla,$institucionid,'',$evaluacion2,$idtramite,$datos,'',$id_distrito);
+                $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea2,$tabla,$institucionid,$obs,$evaluacion2,$idtramite,$datos,'',$id_distrito);
             }
             $res = 1;
         }
