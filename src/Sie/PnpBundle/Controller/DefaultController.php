@@ -4411,6 +4411,7 @@ ciclo_tipo_id, grado_tipo_id
             $datos_filasdos["id"] = $p["id"];
             $id_archivo=$p["id"];
             $datos_filasdos["institucioneducativa_id"] = $p["institucioneducativa_id"];
+            $datos_filasdos["id_enc"] = $this->encriptar($p["id"]);
             $datos_filasdos["gestion_tipo_id"] = $p["gestion_tipo_id"];
             $datos_filasdos["ciclo_tipo_id"] = $p["ciclo_tipo_id"];
             $datos_filasdos["grado_tipo_id"] = $p["grado_tipo_id"];
@@ -6512,7 +6513,6 @@ public function verificar_formAction($id_curso){
     public function buscar_historial_estudiante_resultAction(Request $request) {
         $sesion = $request->getSession();
         $form = $request->get('form');
-
         $repository = $this->getDoctrine()->getRepository('SieAppWebBundle:Estudiante');
 
         $query = $repository->createQueryBuilder('e')
@@ -6538,9 +6538,8 @@ public function verificar_formAction($id_curso){
         return $this->render('SiePnpBundle:Default:resultstudent.html.twig',array('entities'=>$entities));
     }
 
-    public function buscar_historial_estudiante_result_listAction(Request $request, $idStudent) {
+    public function buscar_historial_estudiante_result_list_por_nombreAction(Request $request, $idStudent) {
         $em = $this->getDoctrine()->getManager();
-
         $student = $em->getRepository('SieAppWebBundle:Estudiante')->find($idStudent);
        
         $rec_sab = $this->getDoctrine()->getRepository('SieAppWebBundle:PnpReconocimientoSaberes')->findOneBy(array(
@@ -6551,7 +6550,7 @@ public function verificar_formAction($id_curso){
 
         //$objInscriptions = $em->getRepository('SieAppWebBundle:Estudiante')->getHistoryInscription($idStudent);
         $db = $em->getConnection();
-        $query = "select gt.gestion as gestion,i.id as sie,i.institucioneducativa,n.nivel,g.grado,
+        $query = "SELECT gt.gestion as gestion,i.id as sie,i.institucioneducativa,n.nivel,g.grado,
                 p.paralelo,t.turno,m.estadomatricula,iec.ciclo_tipo_id as bloque,iec.grado_tipo_id as parte,ei.id as estudiante_inscripcion_id,iec.id as institucioneducativa_curso_id
                 from institucioneducativa i,institucioneducativa_curso iec, estudiante e, estudiante_inscripcion ei, gestion_tipo gt,nivel_tipo n,grado_tipo g,paralelo_tipo p,turno_tipo t,estadomatricula_tipo m
             where i.id=iec.institucioneducativa_id and ei.institucioneducativa_curso_id=iec.id and 
@@ -6572,13 +6571,14 @@ public function verificar_formAction($id_curso){
             $datos_filas["sie"] = $p["sie"];
             $datos_filas["institucioneducativa"] = $p["institucioneducativa"];
             $datos_filas["nivel"] = $p["nivel"];
-            $datos_filas["grado"] = $p["grado   "];
+            $datos_filas["grado"] = $p["grado"];
             $datos_filas["paralelo"] = $p["paralelo"];
             $datos_filas["turno"] = $p["turno"];
             $datos_filas["estadoMatricula"] = $p["estadomatricula"];
             $datos_filas["bloque"] = $p["bloque"];
             $datos_filas["parte"] = $p["parte"];
             $datos_filas["institucioneducativa_curso_id"] = $p["institucioneducativa_curso_id"];
+            $datos_filas["id_enc"] = $this->encriptar($p["institucioneducativa_curso_id"]);
             $objInscriptions[] = $datos_filas;
         } 
 

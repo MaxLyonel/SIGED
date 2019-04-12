@@ -317,6 +317,7 @@
                     </div>
                     <div class="panel-body">
                     <button class="btn btn-xs btn-danger rounded glyphicon glyphicon-copy" id="copy-button" data-clipboard-target="#tablaListadoPersonas"> Copiar Lista</button>
+                    <a role="button" class="btn rounded btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id_enc': datos.id_enc~"|"~datos.ciclo_tipo_id~"|"~datos.grado_tipo_id}) }}" title="Impimir Consolidado">{% if plan == 1 %}&nbsp;Rup-4{% else %}&nbsp;Centralizador{% endif %}</a>
                         <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
                             <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
                                 <thead>
