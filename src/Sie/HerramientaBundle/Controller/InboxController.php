@@ -307,9 +307,11 @@ class InboxController extends Controller {
             ->where('ie.id = :idInstitucion')
             ->andWhere('fp.id = :flujoP')
             ->andWhere('fp.proceso = :proceso')
+            ->andWhere('t.gestionId = :gestion')
             ->setParameter('idInstitucion', $this->unidadEducativa)
             ->setParameter('flujoP', 13)
             ->setParameter('proceso', 11)
+            ->setParameter('gestion', $arrSieInfo[0]['gestion'])
             ->orderBy('t.gestionId')
             ->getQuery();
 
