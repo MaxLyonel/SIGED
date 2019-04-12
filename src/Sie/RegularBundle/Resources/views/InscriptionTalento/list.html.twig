@@ -1,0 +1,207 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption%}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Inscripción Talento Extraordinario
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-home"></i>
+                        <a href="{{path('principal_web')}}">Inicio</a>
+                        <i class="fa fa-angle-right"></i>
+                    </li>
+                    <li class="active">Buscar</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                {% if rol != 9 %}
+                <div class="panel">
+                    <div class="panel-body">
+                        <form>
+                            <label for="sie" class="col-sm-2">Código SIE</label>
+                            <div class="form-group">
+                                <div class="col-sm-10">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="sie" placeholder="Ingrese código SIE y presione Enter o click en botón Buscar">
+                                        <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button type="button" id="buscar" class="btn btn-primary" style="pointer-events: all; cursor: pointer; margin-top: 5px" onclick="searchClick()">Buscar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-xs-12 col-lg-12">
+                            {% for flashMessage in app.session.flashbag.get('warningrezago') %}
+                                <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <strong>Warning!</strong> {{ flashMessage }}
+                                </div>
+                            {% endfor %}
+                            {% for flashMessage in app.session.flashbag.get('notitalento') %}
+                                <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <strong>Warning!</strong> {{ flashMessage }}
+                                </div>
+                            {% endfor %}
+                            {% for flashMessage in app.session.flashbag.get('goodtalento') %}
+                                <div class="alert alert-success alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <strong>Bien!</strong> {{ flashMessage }}
+                                </div>
+                            {% endfor %}
+                            <div id="carga"></div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover cf" id="tblte">
+                                    <thead class="cf">
+                                        <tr class="info">
+                                            <th class="text-center">Código Rude</th>
+                                            <th class="text-center">Paterno</th>
+                                            <th class="text-center">Materno</th>
+                                            <th class="text-center">Nombres</th>
+                                            <th class="text-center">Nivel</th>
+                                            <th class="text-center">Grado</th>
+                                            <th class="text-center">Paralelo</th>
+                                            <th class="text-center">Turno</th>
+                                            <th class="text-center">Est.&nbsp;Matrícula</th>
+                                            <th class="text-center">Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if estudiantes %}
+                                            {% for estudiante in estudiantes %}
+                                            <tr>
+                                                <td>{{estudiante.codigoRude}}</td>
+                                                <td>{{estudiante.paterno}}</td>
+                                                <td>{{estudiante.materno}}</td>
+                                                <td>{{estudiante.nombre}}</td>
+                                                <td class="text-center">{{estudiante.nivel}} </td>
+                                                <td class="text-center">{{estudiante.grado}}</td>
+                                                <td class="text-center">{{estudiante.paralelo}}</td>
+                                                <td class="text-center">{{estudiante.turno}} </td>
+                                                <td class="text-center">{{estudiante.estadoMatricula}}</td>
+                                                <td class="text-center">
+                                                    <button class="btn btn-success btn-xs" data-title="Inscribir" title="Inscribir" onclick="opcionInscribir('{{estudiante.codigoRude}}')">Inscribir</button>
+                                                </td>
+                                            </tr>
+                                            {% endfor%}
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="10" class="text-center">
+                                                    <span class="text-red">Realizar la busqueda, o no existem registros por el momento.</span>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form name="fins" method="POST" action="{{ path('inscription_talento_result') }}" target="_blank">
+                    <input type="hidden" name="codigoRude" id="codigoRude">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        // $(document).ready(function() {
+        // });
+        $('#sie').keypress(function (event) {
+            if (event.keyCode === 10 || event.keyCode === 13) {
+                event.preventDefault();
+                searchEstudiantes();
+            }
+        });
+        function searchClick() {
+            searchEstudiantes();
+        }
+        function searchEstudiantes() {
+            var sie = $('#sie').val();
+            if (sie != "") {
+                $("#buscar").attr('disabled', true);
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('inscription_talento_search_result'),
+                    data: {'sie': sie},
+                    beforeSend: function () {
+                        $("#carga").empty();
+                        $('#tblte tbody').html('');
+                        $("#carga").append('<div class="text-center">Buscando... <img src="{{asset('img/loading.gif')}}" /></div>');
+                    },
+                    success: function (data) {
+                        $("#carga").empty();
+                        if (data.msg == 'exito') {
+                            var fila = '';
+                            if (data.estudiantes.length > 0) {
+                                data.estudiantes.forEach(item => {
+                                    fila+="<tr>";
+                                    fila+="<td>"+item.codigoRude+"</td>";
+                                    fila+="<td>"+item.paterno+"</td>";
+                                    fila+="<td>"+item.materno+"</td>";
+                                    fila+="<td>"+item.nombre+"</td>";
+                                    fila+="<td class='text-center'>"+item.nivel+"</td>";
+                                    fila+="<td class='text-center'>"+item.grado+"</td>";
+                                    fila+="<td class='text-center'>"+item.paralelo+"</td>";
+                                    fila+="<td class='text-center'>"+item.turno+"</td>";
+                                    fila+="<td class='text-center'>"+item.estadoMatricula+"</td>";
+                                    fila+="<td class='text-center'><button class='btn btn-success btn-xs' data-title='Inscribir' title='Inscribir' onclick='opcionInscribir("+item.codigoRude+")'>Inscribir</button></td>";
+                                    fila+="</tr>";
+                                });
+                            } else {
+                                fila+="<tr>";
+                                fila+="<td colspan='10' class='text-center'><span class='text-red'>Realizar la busqueda, o no existem registros por el momento.</span></td>";
+                                fila+="</tr>";
+                            }
+                            $('#tblte tbody').html(fila);
+                        } else {
+                            mesage('warning', 'Notificación', 'Estudiantes no encontrados o no existe talento.', true);
+                        }
+                        $("#buscar").attr('disabled', false);
+                    },
+                    error: function (error) {
+                        $("#carga").empty();
+                        $("#buscar").attr('disabled', false);
+                    }
+                });
+            } else {
+                $("#carga").empty();
+                mesage('info', 'Alerta', 'Ingrese código SIE de la unidad educativa', false);
+                $('#sie').focus();
+            }
+        }
+
+        function mesage(tipo, titulo, msg, estado) {
+            $("#carga").append('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
+                '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                '<strong>'+ titulo +'</strong> '+ msg +' </div>');
+            if (estado == true) {
+                setTimeout(function () { $("#carga").empty(); }, 3500);
+            }
+        }
+
+        function opcionInscribir(sie) {
+            if (sie != null || sie != '') {
+                document.fins.codigoRude.value = sie;
+                document.fins.submit();
+            }
+        }
+    </script>
+{% endblock %}

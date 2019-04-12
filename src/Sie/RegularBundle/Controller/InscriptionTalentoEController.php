@@ -20,7 +20,7 @@ use Sie\AppWebBundle\Controller\DefaultController as DefaultCont;
  * Estudiante controller.
  *
  */
-class InscriptionTalentoController extends Controller {
+class InscriptionTalentoEController extends Controller {
 
     private $session;
     public $lugarNac;
@@ -34,6 +34,10 @@ class InscriptionTalentoController extends Controller {
      */
     public function __construct() {
         $this->session = new Session();
+        $id_usuario = $this->session->get('userId');
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
         $this->aCursos = $this->fillCursos();
     }
 
@@ -42,35 +46,50 @@ class InscriptionTalentoController extends Controller {
      *
      */
     public function indexAction() {
-        //die('krlos');
         $em = $this->getDoctrine()->getManager();
-
-        $id_usuario = $this->session->get('userId');
-        if (!isset($id_usuario)) {
-            return $this->redirect($this->generateUrl('login'));
+        $role = 9;
+        $role = $this->session->get('roluser');
+        if ($role==9) {
+            $estudiantes = $this->buscarEstudiante('80730497'); //$this->session->get('ie_id')
+        } else {
+            $estudiantes = array();
         }
-        return $this->render($this->session->get('pathSystem') . ':InscriptionTalento:index.html.twig', array(
-                    'form' => $this->createSearchForm()->createView(),
-        ));
+        return $this->render($this->session->get('pathSystem') . ':InscriptionTalento:list.html.twig', array('rol'=>$role, 'estudiantes'=>$estudiantes));
     }
 
-    /**
-     * Creates a form to search the users of student selected
-     *
-     * @param mixed $id The entity id
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createSearchForm() {
-        $estudiante = new Estudiante();
+    private function buscarEstudiante($codigo_sie) {
+        $em = $this->getDoctrine()->getManager();
+        $estudiantes = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->createQueryBuilder('ei')
+            ->select('est.codigoRude', 'est.paterno', 'est.materno', 'est.nombre', 'nt.nivel', 'gt.grado', 'pt.paralelo', 'tt.turno', 'emt.estadomatricula as estadoMatricula')
+            ->innerJoin('SieAppWebBundle:Estudiante', 'est', 'with', 'ei.estudiante = est.id')
+            ->innerJoin('SieAppWebBundle:EstudianteTalento', 'et', 'with', 'ei.estudiante = et.estudiante')
+            ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'with', 'ei.institucioneducativaCurso = iec.id')
+            ->innerJoin('SieAppWebBundle:NivelTipo', 'nt', 'with', 'iec.nivelTipo = nt.id')
+            ->innerJoin('SieAppWebBundle:GradoTipo', 'gt', 'with', 'iec.gradoTipo = gt.id')
+            ->innerJoin('SieAppWebBundle:ParaleloTipo', 'pt', 'with', 'iec.paraleloTipo = pt.id')
+            ->innerJoin('SieAppWebBundle:TurnoTipo', 'tt', 'with', 'iec.turnoTipo = tt.id')
+            ->innerJoin('SieAppWebBundle:EstadoMatriculaTipo', 'emt', 'with', 'ei.estadomatriculaTipo = emt.id')
+            ->where('iec.gestionTipo = :gestion')
+            ->andWhere('ei.estadomatriculaTipo=4')
+            ->andWhere('iec.institucioneducativa=:ie_id')
+            ->setParameter('gestion', $this->session->get('currentyear'))
+            ->setParameter('ie_id', $codigo_sie)//$this->session->get('ie_id')
+            ->orderBy("est.paterno")
+            ->getQuery()
+            ->getResult();
+        return ($estudiantes);
+    }
 
-        $form = $this->createFormBuilder()
-                ->setAction($this->generateUrl('inscription_talento_result'))
-                ->add('codigoRude', 'text', array('label' => 'Rude', 'invalid_message' => 'campo obligatorio', 'attr' => array('style' => 'text-transform:uppercase', 'maxlength' => 20, 'required' => true, 'class' => 'form-control')))
-                ->add('buscar', 'submit', array('label' => 'Buscar'))
-                //->add('public', 'checkbox', array('mapped'=>false,'label' => 'Show this entry publicly?', 'required' => false))
-                ->getForm();
-        return $form;
+    public function searchAction(Request $request) {
+        try {
+            $estudiantes = $this->buscarEstudiante($request->get('sie'));
+            $msg = 'exito';
+        } catch (Exception $ex) {
+            $msg = 'nodata';
+            $estudiantes = array();
+        }
+        $response = new JsonResponse();
+        return $response->setData(array('estudiantes' => $estudiantes, 'msg' => $msg));
     }
 
     /**
@@ -116,9 +135,8 @@ class InscriptionTalentoController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
-        $codigoRude = $form['codigoRude']==null? $request->get('codigoRude') : $form['codigoRude'];
 
-        $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $codigoRude));
+        $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude']));
         //verificamos si existe el estudiante y si es menor a 15
         if ($student) {
 
@@ -172,12 +190,12 @@ class InscriptionTalentoController extends Controller {
 
             //validate inscription to inicial
             if ($studentInscription[0]['nivel'] == 11) {
-                $message = 'No se puede realizar la inscripción, Estudiante ' . $codigoRude . ' en nivel Inicial.';
+                $message = 'No se puede realizar la inscripción, Estudiante ' . $form['codigoRude'] . ' en nivel Inicial.';
                 $this->addFlash('notitalento', $message);
                 return $this->redirectToRoute('inscription_talento_index');
             }
             // if ($studentInscription[0]['nivel'] == 12 && ($studentInscription[0]['grado']==1 || $studentInscription[0]['grado']==2)) {
-            //     $message = 'No se puede realizar la inscripción, Estudiante ' . $codigoRude . ' en nivel Primario con Grado '.$studentInscription[0]['grado'];
+            //     $message = 'No se puede realizar la inscripción, Estudiante ' . $form['codigoRude'] . ' en nivel Primario con Grado '.$studentInscription[0]['grado'];
             //     $this->addFlash('notitalento', $message);
             //     return $this->redirectToRoute('inscription_talento_index');
             // }
@@ -185,7 +203,7 @@ class InscriptionTalentoController extends Controller {
             $boolStudentCalification = $this->getStudentNotasValidation($studentInscription, $student->getId());
             //check if the student has calification
             // if(!$boolStudentCalification){
-            //   $message = 'Estudiante con rude: ' . $codigoRude . ' cuenta con calificaciones, no es posible realizar la operación ';
+            //   $message = 'Estudiante con rude: ' . $form['codigoRude'] . ' cuenta con calificaciones, no es posible realizar la operación ';
             //   $this->addFlash('notitalento', $message);
             //   return $this->redirectToRoute('inscription_talento_index');
             // }
@@ -215,7 +233,7 @@ class InscriptionTalentoController extends Controller {
             }
         } else {
             $this->session->getFlashBag()->add('notitalento', 'Estudiante no registrado');
-            return $this->redirectToRoute('inscription_talento_index');// Redireccionar al nuevo formulario de busqueda inscription_talento_list
+            return $this->redirectToRoute('inscription_talento_index');
         }
         //add students areas
         $studentAddAreasCurrent = $this->addAreasToStudent($studentInscription[0]['inscriptionId'], $studentInscription[0]['iecId']);
