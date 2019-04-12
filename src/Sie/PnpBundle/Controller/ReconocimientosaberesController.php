@@ -86,7 +86,7 @@ class ReconocimientosaberesController extends Controller
 
     public function reconocimiento_saberes_validarAction($opcion,$reconocimiento_saberes_id,Request $request){
         $em = $this->getDoctrine()->getManager();
-        //$em = $this->getDoctrine()->getEntityManager();
+        
         $db = $em->getConnection();
         if($opcion==1){//Validar
             try{
@@ -207,7 +207,7 @@ class ReconocimientosaberesController extends Controller
     public function buscar_estudianteAction($ci,$complemento,$rude,$opc,Request $request){
         //return $this->render('SiePnpBundle:Default:mostrarestudiante.html.twig', array('cant'=>$cant));
         $em = $this->getDoctrine()->getManager();
-        //$em = $this->getDoctrine()->getEntityManager();
+        
         $db = $em->getConnection();
         $po = array();
         $userId = $this->session->get('userId');   
@@ -331,7 +331,7 @@ class ReconocimientosaberesController extends Controller
     }
     public function reconocimiento_saberes_listarAction(){
         $em = $this->getDoctrine()->getManager();
-        //$em = $this->getDoctrine()->getEntityManager();
+        
         $db = $em->getConnection();
 
          $userId = $this->session->get('userId');    
@@ -680,7 +680,7 @@ GROUP BY depto
 // buscar datos estudiantes
     public function retornar_estudianteAction($ci,$where){
         $em = $this->getDoctrine()->getManager();
-        //$em = $this->getDoctrine()->getEntityManager();
+        
         $db = $em->getConnection();
         $query = "SELECT
                       estudiante.id as id,
@@ -716,7 +716,6 @@ GROUP BY depto
     // buscar datos persona
     public function retornar_personaAction($ci){
         $em = $this->getDoctrine()->getManager();
-        //$em = $this->getDoctrine()->getEntityManager();
         $db = $em->getConnection();
         $query = "SELECT
                   p.id,p.carnet as carnet_identidad,p.rda,p.paterno,p.materno,p.nombre,p.fecha_nacimiento,g.genero
@@ -734,7 +733,7 @@ GROUP BY depto
     //buscar archivos
      public function retornar_archivos_personaAction($persona_id,$ie){
         $em = $this->getDoctrine()->getManager();
-        //$em = $this->getDoctrine()->getEntityManager();
+        
         $db = $em->getConnection();
     $query = "
             select persona.carnet, persona.nombre, persona.paterno, persona.materno,
