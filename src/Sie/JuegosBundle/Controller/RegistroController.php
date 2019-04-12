@@ -962,6 +962,7 @@ class RegistroController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        $id_usuario = $this->session->get('userId');
         // $gestionActual = 2018;
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
@@ -983,7 +984,7 @@ class RegistroController extends Controller {
                 $nivel = $entityDatos->getPruebaTipo()->getDisciplinaTipo()->getNivelTipo()->getId();
                 $faseId = $entityDatos->getFaseTipo()->getId();
 
-                if ($id_usuario != 13833121 and $id_usuario != 13855318){
+                if ($id_usuario != 13833121){
                     $faseActivo = $this->getFaseActivo($faseId, $nivel, $fechaActual);
                     if (!$faseActivo) {
                         return $response->setData(array(
