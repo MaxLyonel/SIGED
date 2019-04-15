@@ -324,7 +324,7 @@
                                             <br>
                                             <div class="row" id="nota" style="display: none">
                                                 <div class="alert alert-danger">
-                                                    <strong>Nota.-</strong> Al cancelar el támite de la Unidad Educativa: {{ iedu.institucioneducativa }} <strong>NO</strong> esta autorizada para trabajar como BTH.
+                                                    <strong>Nota.-</strong> Al cancelar el támite de la Unidad Educativa: {{ iedu.institucioneducativa }} <strong>NO</strong>  se  autorizará para trabajar como BTH.
                                                 </div>
                                             </div>
                                             <div id="autoriza_bth" >
@@ -395,10 +395,10 @@
             var respuesta=$('input:radio[name=radiotypedep]:checked').val();
             var respuesta2=$('input:radio[name=radiotypedevolucion]:checked').val();
             if(respuesta == 'no' && respuesta2 == 'no' ){
-
                 var msj = '{{ id_tramite }}';
                 if(confirm('Al seleccionar la opción NO en ambas preguntas, el trámite será cancelado.¿Esta seguro de cancelar el tramite: '+ msj +'?')){
-                    return true;
+                    enviarSolicituDepartamentaldbth();
+                    //return true;
                 }else{
                     return false;
                 }
