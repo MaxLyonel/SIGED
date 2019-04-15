@@ -1,6 +1,6 @@
 {% set onlyview = app.session.get('onlyview') %}
 {% if notas is defined %}
-	<div class="modal-dialog modal-lg" {% if (notas.gestion > 2018 and discapacidad == 2) %} style="width:80%;" {% endif %}>
+	<div class="modal-dialog modal-lg" {% if (notas.gestion > 2018 and discapacidad == 2) %} style="width:80%; z-index:9999;" {% endif %}>
 	    <div class="modal-content" {% if ((notas.gestion < 2019 and discapacidad == 2) or discapacidad != 2) %} style="width:900px; margin-left:-100px" {% endif %}>
 	    	<form action="" id="formNotasEspecial" onsubmit="registrarNotasEspecial(); return false">
 

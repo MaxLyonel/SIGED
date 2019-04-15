@@ -1277,6 +1277,8 @@ class Notas{
                     $newEstAsig->setFechaRegistro(new \DateTime('now'));
                     $newEstAsig->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
                     $newEstAsig->setInstitucioneducativaCursoOferta($this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($co->getId()));
+              
+                  
                     $this->em->persist($newEstAsig);
                     $this->em->flush();
                     $nuevaArea = true;
@@ -1365,9 +1367,9 @@ class Notas{
                                     'idEstudianteAsignatura'=>$an['idEstudianteAsignatura']
                                 );
                                 //dump(json_decode($valorNota,true)['fecha_fin']);die;
-                                
-                                $fechaEtapasArray[$i] = array('fechainicio'=>json_decode($valorNota,true)['fechainicio'],
-                                                                'fechafin'=>json_decode($valorNota,true)['fechafin']
+                                $fechaEtapasArray[$i] = array('fechaEtapa'=>json_decode($valorNota,true)['fechaEtapa'],
+                                /* $fechaEtapasArray[$i] = array('fechainicio'=>json_decode($valorNota,true)['fechainicio'],
+                                                                'fechafin'=>json_decode($valorNota,true)['fechafin'] */
                                 );
                             }else{
                                 $notasArray[$cont]['notas'][] =   array(
@@ -1544,14 +1546,16 @@ class Notas{
             $idEstudianteAsignatura = $request->get('idEstudianteAsignatura');
             $gestion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($request->get('idInscripcion'))->getInstitucioneducativaCurso()->getGestionTipo()->getId();
             if($gestion > 2018 and $discapacidad == 2){
-                $fechaInicio = $request->get('fechaInicio');
-                $fechaFin = $request->get('fechaFin');
+                /* $fechaInicio = $request->get('fechaInicio');
+                $fechaFin = $request->get('fechaFin'); */
+                $fechaEtapas = $request->get('fechaEtapas');
                 $contenidos = $request->get('contenidos');
                 $resultados = $request->get('resultados');
                 $indicador = $request->get('indicador');
                 $estado = $request->get('estado');
                 foreach ($contenidos as $i => $c){
-                    $datosNotas[] = array('contenidos'=>mb_strtoupper($c,'utf-8'),'resultados'=>mb_strtoupper($resultados[$i],'utf-8'),'idIndicador'=>$indicador[$i],'idEstado'=>$estado[$i],'fechainicio'=>$fechaInicio[$idNotaTipo[$i]],'fechafin'=>$fechaFin[$idNotaTipo[$i]]);
+                    //$datosNotas[] = array('contenidos'=>mb_strtoupper($c,'utf-8'),'resultados'=>mb_strtoupper($resultados[$i],'utf-8'),'idIndicador'=>$indicador[$i],'idEstado'=>$estado[$i],'fechainicio'=>$fechaInicio[$idNotaTipo[$i]],'fechafin'=>$fechaFin[$idNotaTipo[$i]]);
+                    $datosNotas[] = array('contenidos'=>mb_strtoupper($c,'utf-8'),'resultados'=>mb_strtoupper($resultados[$i],'utf-8'),'idIndicador'=>$indicador[$i],'idEstado'=>$estado[$i],'fechaEtapa'=>$fechaEtapas[$idNotaTipo[$i]]);
                 }
                 //dump($datosNotas);die;
                 $notas = $datosNotas;
