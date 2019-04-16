@@ -1,0 +1,298 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %} 
+
+ <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-home animated flip"></i> Descargar Archivo SIE  <span> Busqueda</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home animated flip"></i>
+                    <a href="dashboard.html">Descargar Archivo SIE - Busqueda</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+<!-- the new -->
+<div class="body-content animated fadeIn">
+    <div class="row">
+        <div class="col-md-12">
+
+            {% for flashMessage in app.session.flashbag.get('noticeddjj') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('successddjj') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+       <div class="row">
+        <div class="col-md-12">
+            <strong>
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                <strong><i class='fa fa-file'></i></strong> Generación de Archivo SIE.<br>
+                <h4>El Equipo de Información Educativa comunica que para el reporte de inscripcines de inicio de gesti&oacute;n se debe utilizar  la Herramienta SIGED version 1.2.9.</h4>
+                <br />
+                </div>  
+            </strong>
+            
+        </div>
+    </div>
+
+      <div class="row">
+        <div class="col-xs-12 col-lg-12">
+            <div class="panel panel-icon panel-primary">
+                <div class="panel-heading">
+                    <i class="fa fa-search"></i>
+                </div>
+                <div class="panel-body">
+
+
+                    {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form",'class':'form'} } )}}
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="">{{form_label(form.sie)}}</label>
+                            {{form_widget(form.sie, { 'attr': {'onchange':'getGestion(this.value)','onkeyup':'getGestion(this.value)' }  }  )}}
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="">{{form_label(form.gestion)}}</label>
+                            {{form_widget(form.gestion, {'attr':{'onchange':'getBimestre(this.value)' } } )}}
+                        </div>
+                        <div class="col-md-3">
+                            <label for="">{{form_label(form.bimestre)}}</label>
+                            {{form_widget(form.bimestre)}}
+                        </div>
+                        <div class="col-md-3">
+                            <p></p>
+                            {{ form_widget(form.search) }}
+
+                        </div>
+                        {{form_end(form)}}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+     <div class="row">
+        <div class="col-md-12 ">
+            <div id="geneFile"></div>
+        </div>
+    </div>
+
+        <div class="modal modal-flex fade" id="modalsiefile" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+        <div class="modal-dialog higherWider">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="flexModalLabel">Generadon Archivo</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="idNotas">
+                        <p>
+                            Realizo cambios recientes que modifiquen el contenido de su archivo? 
+                        </p>
+                        <p>
+                            Si es asi para volver a generar el archivo presione en Generar, si no baje directamente del servidor con cancelar
+                        </p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="generar">Generar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="download">Bajar Existente</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<!-- the new end -->
+
+    
+
+ 
+
+    <!-- /.row -->
+
+  
+
+   
+
+
+
+
+
+
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+
+        var getBimestre = function (gestion) {
+            var sie = $('#form_sie').val();
+            //call the ajax function by krlos
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('download_file_sie_getbimestre', {'sie': sie, 'gestion': gestion}),
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    //$("#form_institucionEducativaName").val(data.nombre);
+                    $("#form_bimestre").empty();
+                    $("#form_bimestre").append('<option value="">Seleccionar...</option>');
+                    $.each(data.bimestre, function (i, value) {
+                        $("#form_bimestre").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+
+        }
+
+        function getGestion(id) {
+
+            if (id.length > 7) {
+                //call the ajax function by krlos
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('download_file_sie_getgestion', {'sie': id}),
+                    beforeSend: function () {
+
+                    },
+                    success: function (data) {
+                        //$("#form_institucionEducativaName").val(data.nombre);
+
+                        $("#form_gestion").empty();
+                        $("#form_gestion").append('<option value="">Seleccionar...</option>');
+                        $("#form_bimestre").empty();
+                        $("#form_bimestre").append('<option value="">Seleccionar...</option>');
+                        $.each(data.gestion, function (i, value) {
+                            $("#form_gestion").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
+                });
+            } else {
+
+                $("#form_gestion").empty();
+                $("#form_gestion").append('<option value="">Seleccionar...</option>');
+                $("#form_bimestre").empty();
+                $("#form_bimestre").append('<option value="">Seleccionar...</option>');
+            }
+        }
+
+
+
+        var generateFile = function () {
+            //get the values
+            sie = $('#form_sie').val();
+            if (sie.length < 7) {
+                alert("Necesita código SIE para generar el archivo");
+                return false;
+            }
+
+            gestion = si = $('#form_gestion').val();
+            bimestre = si = $('#form_bimestre').val();
+            if (gestion.length == 0) {
+                alert("Necesita seleccionar la Gestión");
+                return false;
+            }
+            if (bimestre.length == 0) {
+                alert("Necesita seleccionar el Bimestre");
+                return false;
+            }
+            //$('#modalsiefile').modal('show');
+            /*    
+             var genera;
+             confirmfile = confirm('Realizo cambios recientes que modifiquen el contenido de su archivo? \nSi es asi para volver a generar el archivo presione en OK')
+             if (confirmfile)
+             genera = 1;
+             else
+             genera = 0;
+             */
+            $.ajax({
+                type: 'post',
+                data: ({sie: sie, gestion: gestion, bimestre: bimestre}),
+                url: Routing.generate('download_file_sie_build'),
+                beforeSend: function () {
+                    $("#geneFile").empty();
+                    $("#geneFile").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+                },
+                success: function (data) {
+                    $("#geneFile").empty();
+                    $("#geneFile").append(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert('Error: ' + errorThrown);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+
+
+        var buildAgain = function () {
+            sie = $('#form_sie').val();
+            gestion = si = $('#form_gestion').val();
+            bimestre = si = $('#form_bimestre').val();
+
+            $.ajax({
+                type: 'post',
+                data: ({sie: sie, gestion: gestion, bimestre: bimestre}),
+                url: Routing.generate('download_file_sie_buildAgain'),
+                beforeSend: function () {
+                    $("#geneFile").empty();
+                    $("#geneFile").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#geneFile").empty();
+                    $("#geneFile").append(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert('Error: ' + errorThrown);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+
+
+
+        $('#myButton').on('click', function () {
+            var $btn = $(this).button('loading')
+            // business logic...
+            $btn.button('reset')
+        });
+
+    </script>
+{%endblock%}
+
