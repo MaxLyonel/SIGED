@@ -55,10 +55,10 @@ class InfoNotasController extends Controller {
             $vista = 1;
             $discapacidad = $cursoEspecial->getEspecialAreaTipo()->getId();
             $estadosMatricula = null;
-
             switch ($discapacidad) {
                 case 1: // Auditiva
-                        if($nivel != 405){
+                        //if($nivel != 405){
+                        if($nivel == 403 or $nivel == 404){
                             $notas = $this->get('notas')->regular($idInscripcion,$operativo);
                             if($notas['tipoNota'] == 'Trimestre'){
                                 $template = 'trimestral';
@@ -91,8 +91,10 @@ class InfoNotasController extends Controller {
                         }
                         break;
                 case 3: //Intelectual
+                case 5: //Multiple
                         switch ($nivel) {
                             case 401:
+                            case 402:
                                 if($grado <= 5){
                                     $notas = $this->get('notas')->especial_cualitativo($idInscripcion,$operativo);
                                     $template = 'especialCualitativo';
@@ -103,12 +105,17 @@ class InfoNotasController extends Controller {
                                     if($notas['tipoNota'] == 'Trimestre'){
                                         $template = 'especialCualitativoTrimestral';
                                     }else{
-                                        $template = 'especialCualitativo';
+                                        if($gestion < 2019){
+                                            $template = 'especialCualitativo';
+                                        }else{
+                                            $template = 'especialCualitativo1';
+                                        }
+                                        //$template = 'especialCualitativo';
                                     }
                                 }
                                 break;
                             
-                            case 402:
+                           /*  case 402:
                                 if($grado <= 3){
                                     $notas = $this->get('notas')->especial_cualitativo($idInscripcion,$operativo);
                                     $template = 'especialCualitativo';
@@ -122,13 +129,13 @@ class InfoNotasController extends Controller {
                                         $template = 'especialCualitativo';
                                     }
                                 }
-                                break;
+                                break; */
                         }
                         break;
                 case 4: // Fisico -motora
                         break;
-                case 5: //Multiple
-                        break;
+                /* case 5: //Multiple
+                        break; */
                 case 6: //Dificultades en el aprendizaje
                     $notas = $this->get('notas')->especial_cualitativo($idInscripcion,$operativo);
                     if($notas['tipoNota'] == 'Trimestre'){
@@ -145,12 +152,13 @@ class InfoNotasController extends Controller {
                         break;
                 case 8: // Sordeceguera
                         break;
+
                 case 9: // Problemas emocionales
                         break;
                 case 100: // Modalidad Indirecta
                         break;
             }
-
+            
             if($notas){
                 return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array('notas'=>$notas,'inscripcion'=>$inscripcion,'vista'=>$vista,'template'=>$template,'actualizar'=>$actualizarMatricula,'operativo'=>$operativo,'estadosMatricula'=>$estadosMatricula,'discapacidad'=>$discapacidad));
             }else{

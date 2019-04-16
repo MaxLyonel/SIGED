@@ -304,9 +304,9 @@
         function validacion(){
             var area  = $('#form_area').val();
             if((area == 3 || area == 4 || area == 5) && $("#form_educacionCasa").is(':checked')){
-                msg = "¿Está seguro de de crear un nuevo curso?\n Tome nota que el curso será creado para:\n -EDUCACIÓN EN CASA";
+                msg = "¿Está seguro/a de crear un nuevo curso?\n Tome nota que el curso será creado para:\n -EDUCACIÓN EN CASA";
             }else{
-                msg = '¿Está seguro de de crear un nuevo curso?';
+                msg = '¿Está seguro/a de crear un nuevo curso?';
             }
             
             if(confirm(msg)){
