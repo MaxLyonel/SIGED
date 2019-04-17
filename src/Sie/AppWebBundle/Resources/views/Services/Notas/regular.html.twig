@@ -12,158 +12,263 @@
 
 {% if notas.cuantitativas|length > 0 %}
 
-<div class="row">
-{% if notas.nivel in [1,11,403] or (notas.gestion >= 2019) %}
-    <div class="col-lg-12">
-{% else %}
-    <div class="col-lg-8">
-{% endif %}
-<table class="table table-bordered cf" style="backgroud:#FFFFFF">
-    <thead class="cf">
-        <tr>
-            <th>
-                Asignatura
-            </th>
-            {% if notas.operativo > 0 %}
-                {% for i in 1..notas.operativo %}
-                    {% if i < 5  %}
-                        <th>{{ i }} Bimestre</th>
-                    {% else %}
-                        {% if notas.nivel not in [1,11,403] %}
+    {% if notas.gestion == 2019 and notas.nivel == 11 %}
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-bordered cf" style="backgroud:#FFFFFF">
+                    <thead class="cf">
+                        <tr>
+                            <th>
+                                Asignatura
+                            </th>
+                            {% if notas.operativo > 0 %}
+                                {% for i in 1..notas.operativo %}
+                                    {% if i < 5  %}
+                                        <th>{{ i }} Bimestre</th>
+                                    {% else %}
+                                        {% if notas.nivel not in [1,11,403] %}
+                                            <th>Promedio</th>
+                                        {% endif %}
+                                    {% endif %}
+                                    
+                                {% endfor %}
+                                {% if notas.operativo == 4 and notas.nivel not in [1,11,403] %}
+                                    <th>Promedio</th>
+                                {% endif %}
+                            {% else %}
+                                <th>Notas Cuantitativas</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                {% for a in notas.cuantitativas %}
+                                    <p>
+                                        <strong>{{a.area | upper}}</strong>
+                                        {{ a.asignatura }}
+                                    </p>
+                                {% endfor %}
+                            </td>
+                            {% if notas.cualitativas|length > 0 %}
+                                {% for c in notas.cualitativas %}
+                                    {% if c.idNotaTipo != 18 %}
+                                        <td>
+                                            {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
+                                                {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
+                                                    {% if (c.notaCualitativa == "") or (vista == 2) or (c.idNotaTipo == notas.operativo and notas.gestion == notas.gestionActual) %}
+                                                        <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
+                                                        <input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
+                                                        <p class="text-justify">
+                                                            <textarea class="form-control jnumbersletters notaCualitativa" name="notaCualitativa[]" rows="20" cols="50" style="resize:vertical; max-height: 270px; text-transform:uppercase" maxlength="400" minlength="16">{{c.notaCualitativa}}</textarea>
+                                                        </p>
+                                                    {% else %}
+                                                        <p class="text-justify">
+                                                            <textarea class="form-control jnumbersletters" rows="20" cols="50" style="resize:vertical; max-height: 270px; text-transform:uppercase" maxlength="400" disabled="disabled">{{c.notaCualitativa}}</textarea>
+                                                        </p>
+                                                    {% endif %}
+                                                {% else %}
+                                                    <p class="text-justify">
+                                                        <textarea class="form-control jnumbersletters" rows="20" cols="50" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="400" disabled="disabled">{{c.notaCualitativa}}</textarea>
+                                                    </p>
+                                                {% endif %}
+                                            {% endif %}
+                                        </td>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <td><em><span style="color:#9DB2B9">No hay notas cualitativas</span></em></td>        
+                            {% endif %}
+                        </tr>
+                        {% if notas.operativo >= 4 %}
+                            {% for c in notas.cualitativas %}
+                                {% if c.idNotaTipo == 18 %}
+                                    <tr>
+                                        <td>Informe anual del proceso educativo:</td>
+                                        <td colspan="4">
+                                            {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
+                                                {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
+                                                    {% if (c.notaCualitativa == "") or (vista == 2) or (notas.operativo == 4 and notas.gestion == notas.gestionActual) %}
+                                                        <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
+                                                        <input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
+                                                        <p class="text-justify">
+                                                            <textarea class="form-control jnumbersletters notaCualitativa" name="notaCualitativa[]" rows="3" cols="50" style="resize:vertical; max-height: 270px; text-transform:uppercase" maxlength="400" minlength="16">{{c.notaCualitativa}}</textarea>
+                                                        </p>
+                                                    {% else %}
+                                                        <p class="text-justify">
+                                                            <textarea class="form-control jnumbersletters" rows="3" cols="50" style="resize:vertical; max-height: 270px; text-transform:uppercase" maxlength="400" disabled="disabled">{{c.notaCualitativa}}</textarea>
+                                                        </p>
+                                                    {% endif %}
+                                                {% else %}
+                                                    <p class="text-justify">
+                                                        <textarea class="form-control jnumbersletters" rows="3" cols="50" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="400" disabled="disabled">{{c.notaCualitativa}}</textarea>
+                                                    </p>
+                                                {% endif %}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <div class="row">
+        {% if notas.nivel in [1,11,403] or (notas.gestion >= 2019) %}
+            <div class="col-lg-12">
+        {% else %}
+            <div class="col-lg-8">
+        {% endif %}
+        <table class="table table-bordered cf" style="backgroud:#FFFFFF">
+            <thead class="cf">
+                <tr>
+                    <th>
+                        Asignatura
+                    </th>
+                    {% if notas.operativo > 0 %}
+                        {% for i in 1..notas.operativo %}
+                            {% if i < 5  %}
+                                <th>{{ i }} Bimestre</th>
+                            {% else %}
+                                {% if notas.nivel not in [1,11,403] %}
+                                    <th>Promedio</th>
+                                {% endif %}
+                            {% endif %}
+                            
+                        {% endfor %}
+                        {% if notas.operativo == 4 and notas.nivel not in [1,11,403] %}
                             <th>Promedio</th>
                         {% endif %}
-                    {% endif %}
-                    
-                {% endfor %}
-                {% if notas.operativo == 4 and notas.nivel not in [1,11,403] %}
-                    <th>Promedio</th>
-                {% endif %}
-            {% else %}
-                <th>Notas Cuantitativas</th>
-            {% endif %}
-        </tr>
-    </thead>
-    <tbody>
-        {% set cont = 0 %}
-        {% for a in notas.cuantitativas %}
-            <tr>
-                <td data-title="Asignatura">
-                    {% if a.idAsignatura == 1039 %}
-                        {% set asignaturaNombre = a.asignatura|split(':') %}
-                        {{asignaturaNombre[0]}} {% if asignaturaNombre[1]|length > 0 %} : <span style="color:#43C65E; font-weight:bold"> {{asignaturaNombre[1]|upper}} </span> {% endif %}
                     {% else %}
-                        {{ a.asignatura }}
+                        <th>Notas Cuantitativas</th>
                     {% endif %}
-                </td>
-                {% if a.notas is defined and a.notas|length > 0 %}
-                {% for n in a.notas %}
-                    {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
-                        {% if (n.idNotaTipo != 5 and ((notas.nivel in [1,11,403] and n.nota == "") or (notas.nivel not in [1,11,403] and n.nota == 0))) or (vista == 2 and n.idNotaTipo != 5) or (n.idNotaTipo != 5 and n.idNotaTipo == notas.operativo ) %} {# and notas.gestion == notas.gestionActual #}
-                            <td data-title="{{n.idNotaTipo}} Bimestre">
-                                <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
-                                <input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
-                                <input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
-                                {% if notas.nivel in [1,11,403] %}
-                                    <textarea class="notaCualitativa jnumbersletters" name="nota[]" id="{{n.id}}" onkeypress="" pattern="[0-9A-Z]{1,200}" required autocomplete="off" style="text-transform: uppercase; width:170px" rows="6" minlength="16" maxlength="400">{{n.nota}}</textarea>
-                                {% else %}
-                                    <input type="text" id="{{n.id}}" name="nota[]" value="{{n.nota}}" size="2" onkeypress="return validarNota(event,this.id,this.value)" onkeyup="promedio(this,'{{notas.idInscripcion}}_{{a.idAsignatura}}')" onblur="notaVacia(this,'{{notas.idInscripcion}}_{{a.idAsignatura}}')"  class="form-control input-sm nota {{notas.idInscripcion}}_{{a.idAsignatura}}" style="width:50px" maxlength="3" autocomplete="off">
-                                {% endif %}
-                            </td>
-                        {% else %}
-                            <td data-title="Promedio">
-                                <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
-                                <input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
-                                <input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
-                                {% if notas.nivel in [1,11,403] %}
-                                    <textarea class="jnumbersletters" name="nota[]" id="{{n.id}}" onkeyup="this.focus();" pattern="[0-9A-Z]{1,200}" required autocomplete="off" style="text-transform: uppercase; width:170px; background:#EFEFEF; border-color:#E2E2E2" rows="6" minlength="16" maxlength="400" readonly="readonly">{{n.nota}}</textarea>
-                                {% else %}
-                                    <input type="text" id="{{n.id}}" name="nota[]" value="{{n.nota}}" size="2" onkeypress="return validarNota(event,this.id,this.value)" onkeyup="notaVacia(this.id,this.value)" class="form-control input-sm {% if n.idNotaTipo == 5 and notas.operativo >= 4 %} p{{notas.idInscripcion}}_{{a.idAsignatura}} promedio {% else %} nota {{notas.idInscripcion}}_{{a.idAsignatura}} {% endif %}" style="width:50px" maxlength="3" autocomplete="off" readonly="readonly">
-                                {% endif %}
-                            </td>
-                        {% endif %}
-                    {% else %}
-                        <td data-title="{{n.idNotaTipo}} Bimestre">
-                        {% if notas.nivel in [1,11,403] %}
-                            <textarea id="{{n.id}}" class="jnumbersletters" style="text-transform: uppercase; width:170px; background:#EFEFEF; border-color:#E2E2E2" rows="6" minlength="16" maxlength="400" disabled="disabled">{{n.nota}}</textarea>
-                        {% else %}
-                            <input id="{{n.id}}" type="text" size="2" class="form-control input-sm" style="width:50px" maxlength="3" autocomplete="off" disabled="disabled" value="{{n.nota}}">
-                        {% endif %}
-                        </td>
-                    {% endif %}
-
-                {% endfor %} 5.4
-
-                {% else %}
-                    <td>
-                        <em><spam style="color:#9DB2B9">No hay notas</spam></em>
-                    </td>
-                {% endif %}
-            </tr>
-        {% endfor %}
-        
-        {# REGISTRO DE PROMEDIO ANUAL   #}
-
-        {% if notas.gestion >= 2019 and notas.cualitativas|length > 0 and notas.nivel != 11 and notas.tipoSubsistema != 4 %}
-            <tr>
-                <td align="center" colspan="5">PROMEDIO ANUAL</td>
-                {% for c in notas.cualitativas %}
-                    <td align="center">
-                            <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
-                            <input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
-                            <input type="text" name="notaCualitativa[]" size="2" style="width:50px" maxlength="3" autocomplete="off" readonly="readonly" value="{{c.notaCuantitativa}}" class="form-control input-sm p{{c.idNotaTipo}}">
-                    </td>
-                {% endfor %}
-            </tr>
-        {% endif %}
-
-    </tbody>
-</table>
-</div>
-
-{% if notas.nivel in [1,11,403] %}
-    <div class="col-lg-12">
-{% else %}
-    <div class="col-lg-4">
-{% endif %}
-
-{% if notas.gestion < 2019 or (notas.gestion >= 2019 and notas.nivel == 11) %}
-    <table class="table">
-        {% if notas.cualitativas|length > 0 %}
-            {% for c in notas.cualitativas %}
-                <tr><td style="padding:0px; margin:0px">
-                {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
-                    {% if (c.notaCualitativa == "") or (vista == 2) or (c.idNotaTipo == notas.operativo and notas.gestion == notas.gestionActual) or (notas.operativo == 4 and notas.nivel in [1,11,403]) %}
-                        <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
-                        <input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
-                        <p><b>{{c.notaTipo}}</b></p>
-                        <p class="text-justify">
-                            <textarea class="form-control jnumbersletters notaCualitativa" name="notaCualitativa[]" rows="5" cols="30" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" minlength="16">{{c.notaCualitativa}}</textarea>
-                        </p>
-                    {% else %}
-                        <p><b>{{c.notaTipo}}</b></p>
-                        <p class="text-justify">
-                            <textarea class="form-control jnumbersletters" rows="5" cols="30" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" disabled="disabled">{{c.notaCualitativa}}</textarea>
-                        </p>
-                    {% endif %}
-                {% else %}
-                    <p><b>{{c.notaTipo}}</b></p>
-                    <p class="text-justify">
-                        <textarea class="form-control jnumbersletters" rows="5" cols="30" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" disabled="disabled">{{c.notaCualitativa}}</textarea>
-                    </p>
-                {% endif %}
-                </td></tr>
-            {% endfor %}
-        {% else %}
-            <thead>
-                <tr><th>Notas cualitativas</th></tr>
+                </tr>
             </thead>
-            <tr><td><em><spam style="color:#9DB2B9">No hay notas cualitativas</spam></em></td></tr>
-        {% endif %}
-    </table>
+            <tbody>
+                {% set cont = 0 %}
+                {% for a in notas.cuantitativas %}
+                    <tr>
+                        <td data-title="Asignatura">
+                            {% if a.idAsignatura == 1039 %}
+                                {% set asignaturaNombre = a.asignatura|split(':') %}
+                                {{asignaturaNombre[0]}} {% if asignaturaNombre[1]|length > 0 %} : <span style="color:#43C65E; font-weight:bold"> {{asignaturaNombre[1]|upper}} </span> {% endif %}
+                            {% else %}
+                                {{ a.asignatura }}
+                            {% endif %}
+                        </td>
+                        {% if a.notas is defined and a.notas|length > 0 %}
+                        {% for n in a.notas %}
+                            {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
+                                {% if (n.idNotaTipo != 5 and ((notas.nivel in [1,11,403] and n.nota == "") or (notas.nivel not in [1,11,403] and n.nota == 0))) or (vista == 2 and n.idNotaTipo != 5) or (n.idNotaTipo != 5 and n.idNotaTipo == notas.operativo ) %} {# and notas.gestion == notas.gestionActual #}
+                                    <td data-title="{{n.idNotaTipo}} Bimestre">
+                                        <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
+                                        <input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
+                                        <input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
+                                        {% if notas.nivel in [1,11,403] %}
+                                            <textarea class="notaCualitativa jnumbersletters" name="nota[]" id="{{n.id}}" onkeypress="" pattern="[0-9A-Z]{1,200}" required autocomplete="off" style="text-transform: uppercase; width:170px" rows="6" minlength="16" maxlength="400">{{n.nota}}</textarea>
+                                        {% else %}
+                                            <input type="text" id="{{n.id}}" name="nota[]" value="{{n.nota}}" size="2" onkeypress="return validarNota(event,this.id,this.value)" onkeyup="promedio(this,'{{notas.idInscripcion}}_{{a.idAsignatura}}')" onblur="notaVacia(this,'{{notas.idInscripcion}}_{{a.idAsignatura}}')"  class="form-control input-sm nota {{notas.idInscripcion}}_{{a.idAsignatura}}" style="width:50px" maxlength="3" autocomplete="off">
+                                        {% endif %}
+                                    </td>
+                                {% else %}
+                                    <td data-title="Promedio">
+                                        <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
+                                        <input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
+                                        <input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
+                                        {% if notas.nivel in [1,11,403] %}
+                                            <textarea class="jnumbersletters" name="nota[]" id="{{n.id}}" onkeyup="this.focus();" pattern="[0-9A-Z]{1,200}" required autocomplete="off" style="text-transform: uppercase; width:170px; background:#EFEFEF; border-color:#E2E2E2" rows="6" minlength="16" maxlength="400" readonly="readonly">{{n.nota}}</textarea>
+                                        {% else %}
+                                            <input type="text" id="{{n.id}}" name="nota[]" value="{{n.nota}}" size="2" onkeypress="return validarNota(event,this.id,this.value)" onkeyup="notaVacia(this.id,this.value)" class="form-control input-sm {% if n.idNotaTipo == 5 and notas.operativo >= 4 %} p{{notas.idInscripcion}}_{{a.idAsignatura}} promedio {% else %} nota {{notas.idInscripcion}}_{{a.idAsignatura}} {% endif %}" style="width:50px" maxlength="3" autocomplete="off" readonly="readonly">
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                            {% else %}
+                                <td data-title="{{n.idNotaTipo}} Bimestre">
+                                {% if notas.nivel in [1,11,403] %}
+                                    <textarea id="{{n.id}}" class="jnumbersletters" style="text-transform: uppercase; width:170px; background:#EFEFEF; border-color:#E2E2E2" rows="6" minlength="16" maxlength="400" disabled="disabled">{{n.nota}}</textarea>
+                                {% else %}
+                                    <input id="{{n.id}}" type="text" size="2" class="form-control input-sm" style="width:50px" maxlength="3" autocomplete="off" disabled="disabled" value="{{n.nota}}">
+                                {% endif %}
+                                </td>
+                            {% endif %}
 
-{% endif %}
-</div>
-</div>
+                        {% endfor %}
+
+                        {% else %}
+                            <td>
+                                <em><spam style="color:#9DB2B9">No hay notas</spam></em>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                
+                {# REGISTRO DE PROMEDIO ANUAL   #}
+
+                {% if notas.gestion >= 2019 and notas.cualitativas|length > 0 and notas.nivel != 11 and notas.tipoSubsistema != 4 %}
+                    <tr>
+                        <td align="center" colspan="5">PROMEDIO ANUAL</td>
+                        {% for c in notas.cualitativas %}
+                            <td align="center">
+                                    <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
+                                    <input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
+                                    <input type="text" name="notaCualitativa[]" size="2" style="width:50px" maxlength="3" autocomplete="off" readonly="readonly" value="{{c.notaCuantitativa}}" class="form-control input-sm p{{c.idNotaTipo}}">
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endif %}
+
+            </tbody>
+        </table>
+        </div>
+
+        {% if notas.nivel in [1,11,403] %}
+            <div class="col-lg-12">
+        {% else %}
+            <div class="col-lg-4">
+        {% endif %}
+
+        {% if notas.gestion < 2019 or (notas.gestion >= 2019 and notas.nivel == 11) %}
+            <table class="table">
+                {% if notas.cualitativas|length > 0 %}
+                    {% for c in notas.cualitativas %}
+                        <tr><td style="padding:0px; margin:0px">
+                        {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
+                            {% if (c.notaCualitativa == "") or (vista == 2) or (c.idNotaTipo == notas.operativo and notas.gestion == notas.gestionActual) or (notas.operativo == 4 and notas.nivel in [1,11,403]) %}
+                                <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
+                                <input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
+                                <p><b>{{c.notaTipo}}</b></p>
+                                <p class="text-justify">
+                                    <textarea class="form-control jnumbersletters notaCualitativa" name="notaCualitativa[]" rows="5" cols="30" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" minlength="16">{{c.notaCualitativa}}</textarea>
+                                </p>
+                            {% else %}
+                                <p><b>{{c.notaTipo}}</b></p>
+                                <p class="text-justify">
+                                    <textarea class="form-control jnumbersletters" rows="5" cols="30" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" disabled="disabled">{{c.notaCualitativa}}</textarea>
+                                </p>
+                            {% endif %}
+                        {% else %}
+                            <p><b>{{c.notaTipo}}</b></p>
+                            <p class="text-justify">
+                                <textarea class="form-control jnumbersletters" rows="5" cols="30" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" disabled="disabled">{{c.notaCualitativa}}</textarea>
+                            </p>
+                        {% endif %}
+                        </td></tr>
+                    {% endfor %}
+                {% else %}
+                    <thead>
+                        <tr><th>Notas cualitativas</th></tr>
+                    </thead>
+                    <tr><td><em><spam style="color:#9DB2B9">No hay notas cualitativas</spam></em></td></tr>
+                {% endif %}
+            </table>
+
+        {% endif %}
+        </div>
+        </div>
+
+    {% endif %}
 
 {% else %}
     <div class="alert alert-warning">
