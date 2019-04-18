@@ -510,7 +510,7 @@ class ConsolidationSieController extends Controller {
                     $objUploadFileNew->setEstadoFile(1);
                     $objUploadFileNew->setGestion($aDataExtractFileUE[4]);
                     $objUploadFileNew->setDistrito($aDataExtractFileUE[38]);
-                    $objUploadFileNew->setPath($periodoDirToSave. '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 2]);
+                    $objUploadFileNew->setPath('/consolidacion_online/' .$periodoDirToSave. '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 2]);
                     $objUploadFileNew->setDateUpload(new \DateTime('now'));
                     $objUploadFileNew->setRemoteAddr($_SERVER['REMOTE_ADDR']);
                     $objUploadFileNew->setUserAgent($_SERVER['HTTP_USER_AGENT']);
