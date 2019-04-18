@@ -590,17 +590,9 @@ class HomologacionController extends Controller {
      */
     public function findIEAction($ges,$id) {
         $em = $this->getDoctrine()->getManager();
-        //get the tuicion
-        //select * from get_ue_tuicion(137746,82480002)
-        /*
-          $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT)');
-          $query->bindValue(':user_id', $this->session->get('userId'));
-          $query->bindValue(':sie', $id);
-          $query->execute();
-          $aTuicion = $query->fetchAll();
-         */
+        
         $aniveles = array();
-        // if ($aTuicion[0]['get_ue_tuicion']) {
+
         //get the IE
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id);
         $nombreIE = ($institucion) ? $institucion->getInstitucioneducativa() : "Unidad Educativa no existe";

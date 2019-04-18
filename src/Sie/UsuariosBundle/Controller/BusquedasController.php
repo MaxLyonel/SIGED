@@ -108,7 +108,7 @@ class BusquedasController extends Controller
                                 inner join lugar_tipo e on b.lugar_tipo_id = e.id                                                
                                 inner join lugar_nivel_tipo f on e.lugar_nivel_id = f.id
                                 inner join persona d on a.persona_id = d.id
-                        where d.id = '".$idperson."' and d.segip_id = 1
+                        where d.id = '".$idperson."'
                                 group by a.id, a.username, a.esactivo,			
                                 d.id, d.carnet, d.complemento, d.paterno, d.materno, d.nombre		
                         order by a.esactivo";
@@ -251,7 +251,7 @@ class BusquedasController extends Controller
                                     INNER JOIN public.rol_tipo
                                     ON usuario_rol.rol_tipo_id = rol_tipo.id
                             WHERE    
-                                (usuario.username = '".trim($data['username'])."') and persona.segip_id = 1
+                                (usuario.username = '".trim($data['username'])."')
                             GROUP BY
                             usuario.id, 
                             persona.id,
@@ -448,8 +448,7 @@ class BusquedasController extends Controller
               (usuario.id = '".$usuarioid."') and              
               (maestro_inscripcion.gestion_tipo_id = '2018') and
               (maestro_inscripcion.es_vigente_administrativo = true) and
-              ((cargo_tipo.id = '1') or (cargo_tipo.id = '12')) and
-              persona.segip_id = 1
+              ((cargo_tipo.id = '1') or (cargo_tipo.id = '12'))
             GROUP BY
               cargo_tipo.cargo, 
               usuario.id, 
@@ -506,9 +505,7 @@ class BusquedasController extends Controller
                             LEFT JOIN usuario z ON z.persona_id = k.id 
 
                     WHERE (institucioneducativa_curso.institucioneducativa_id = '".$this->session->get('ie_id')."') 
-                            and (institucioneducativa_curso.gestion_tipo_id = '2018') 
-                            and k.segip_id = 1
-
+                            and (institucioneducativa_curso.gestion_tipo_id = '2018')
                     GROUP BY 
                             z.id, z.username, z.esactivo,
                             k.id, k.carnet, k.nombre, k.paterno, k.materno,
@@ -540,4 +537,3 @@ class BusquedasController extends Controller
     }   
     
 }
-

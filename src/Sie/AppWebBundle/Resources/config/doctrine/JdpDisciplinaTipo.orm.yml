@@ -1,0 +1,72 @@
+Sie\AppWebBundle\Entity\JdpDisciplinaTipo:
+    type: entity
+    table: jdp_disciplina_tipo
+    indexes:
+        fk_disciplina_tipo_nivel_tipo1_:
+            columns:
+                - nivel_tipo_id
+        IDX_EBE65D047D5B9AF1:
+            columns:
+                - disciplina_participacion_tipo_id
+    uniqueConstraints:
+        disciplina_tipo_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        disciplina:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        estado:
+            type: boolean
+            nullable: true
+            comment: ''
+        cantidad:
+            type: string
+            nullable: true
+            length: 32
+            fixed: false
+            comment: ''
+        cantidadMaestro:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cantidad_maestro
+        cantidadPadre:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cantidad_padre
+    manyToOne:
+        nivelTipo:
+            targetEntity: NivelTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nivel_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        disciplinaParticipacionTipo:
+            targetEntity: JdpDisciplinaParticipacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                disciplina_participacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

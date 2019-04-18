@@ -1,0 +1,9 @@
+estudiante_trabaja_index:
+    path:     /index
+    defaults: { _controller: SieHerramientaBundle:EstudianteTrabaja:index }
+
+estudiante_trabaja_save:
+    path:     /save
+    defaults: { _controller: SieHerramientaBundle:EstudianteTrabaja:save }
+    options:
+        expose: true

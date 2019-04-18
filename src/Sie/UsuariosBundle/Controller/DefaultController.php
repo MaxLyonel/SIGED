@@ -606,7 +606,6 @@ class DefaultController extends Controller
         $em->getConnection()->beginTransaction();
         $data = $request->get('sie_usuarios_form');
         $response = new JsonResponse();
-        
 //        print_r($data['maestroinsid']);
 //        die('g');
         try {
@@ -629,7 +628,8 @@ class DefaultController extends Controller
                 $em->flush();
             }
             if ($data['accion'] === 'new'){
-                $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($data['idusuario']);
+                $persona = $this->getDoctrine()->getRepository('SieAppWebBundle:Persona')->find($data['idpersona']);
+                $usuario = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('persona'=>$data['idpersona']));
             }
 //            if ($data['accion'] === 'update'){    
 //                $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($data['idusuario']);

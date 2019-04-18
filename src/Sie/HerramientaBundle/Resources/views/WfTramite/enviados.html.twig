@@ -98,10 +98,10 @@
                                             <td>{{ entity.proceso_tipo }}</td>
                                             <td>{{ entity.obs }}</td>
                                             <td>{{ entity.tramite_estado }}</td>
-                                            <td>{{ entity.fecha_recepcion }}</td>
+                                            <td>{{ entity.fecha_recepcion|date('d-m-Y') }}</td>
                                             <td>{{ entity.plazo }}</td>
-                                            <td>{{ entity.fecha_envio }}</td>
-                                            <td class="text-danger">{{ entity.fecha_vencimiento }}</td>
+                                            <td>{{ entity.fecha_envio|date('d-m-Y') }}</td>
+                                            <td class="text-danger">{{ entity.fecha_vencimiento ? entity.fecha_vencimiento|date('d-m-Y'):"" }}</td>
                                             <td>{{ entity.nombre }}</td>
                                             <td>
                                                 {% if entity.ruta_reporte %} {#si tiene reporte #}

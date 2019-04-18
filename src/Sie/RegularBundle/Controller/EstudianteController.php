@@ -86,15 +86,42 @@ class EstudianteController extends Controller {
 
     public function historyAction(Request $request, $idStudent) {
         $em = $this->getDoctrine()->getManager();
+        $dataInscriptionR = array();
+        $dataInscriptionA = array();
+        $dataInscriptionE = array();
+        $dataInscriptionP = array();
 
         $student = $em->getRepository('SieAppWebBundle:Estudiante')->find($idStudent);
-        $objInscriptions = $em->getRepository('SieAppWebBundle:Estudiante')->getHistoryInscription($idStudent);
+        
+        $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $student->getCodigoRude() . "') order by gestion_tipo_id_raep desc, estudiante_inscripcion_id_raep desc;");
+        $query->execute();
+        $dataInscription = $query->fetchAll();
+
+        foreach ($dataInscription as $key => $inscription) {
+            switch ($inscription['institucioneducativa_tipo_id_raep']) {
+              case '1':
+                $dataInscriptionR[$key] = $inscription;
+                break;
+              case '2':
+                $dataInscriptionA[$key] = $inscription;
+                break;
+              case '4':
+                $dataInscriptionE[$key] = $inscription;
+                break;
+              case '5':
+                $dataInscriptionP[$key] = $inscription;
+                break;
+            }
+        }
 
         return $this->render($this->session->get('pathSystem') . ':Estudiante:resultHistory.html.twig', array(
                     'datastudent' => $student,
-                    'dataInscription' => $objInscriptions,
+                    'dataInscriptionR' => $dataInscriptionR,
+                    'dataInscriptionA' => $dataInscriptionA,
+                    'dataInscriptionE' => $dataInscriptionE,
+                    'dataInscriptionP' => $dataInscriptionP,
+                    'visible' => false
         ));
-        die;
     }
 
     public function historyaltAction(Request $request, $idStudent) {
@@ -114,7 +141,6 @@ class EstudianteController extends Controller {
                     'datastudent' => $student,
                     'dataInscription' => $dataInscription,
         ));
-        die;
     }
     
     public function newAction() {
@@ -178,8 +204,6 @@ class EstudianteController extends Controller {
                 return $this->redirect($this->generateUrl('estudiante_main_new'));
             }
 
-            echo "registrado";
-            die;
             //REgistro de estudiante
 
             $estudiante = new Estudiante();

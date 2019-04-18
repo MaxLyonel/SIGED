@@ -1605,6 +1605,7 @@ class TramiteController extends Controller {
                 WHERE
                 estudiante.id = ".$participanteId." and estudiante_inscripcion.estadomatricula_tipo_id in (4,5,55) and institucioneducativa_curso.nivel_tipo_id in (3,13)
                 AND case when institucioneducativa_curso.gestion_tipo_id > 2010 then institucioneducativa_curso.ciclo_tipo_id in (2,3) else true end
+                AND institucioneducativa_curso.gestion_tipo_id > 2010
             GROUP BY
                 estudiante.codigo_rude,
                 estudiante.carnet_identidad,
@@ -1629,6 +1630,7 @@ class TramiteController extends Controller {
             then (b1 is null or b1 = 0)
             when (((gestion_tipo_id > 2013) or (gestion_tipo_id > 2013 and grado_tipo_id = 1)) and gestion_tipo_id < date_part('year',current_date))
             then (b1 is null or b1 = 0 or b2 is null or b2 = 0 or b3 is null or b3 = 0 or b4 is null or b4 = 0 or b5 is null or b5 = 0)
+
             else (t1 is null or t1 = 0 or t2 is null or t2 = 0 or t3 is null or t3 = 0 or t4 is null or t4 = 0)
           end
           group by
@@ -1697,7 +1699,7 @@ class TramiteController extends Controller {
           then
             case
             when (gestion_tipo_id::double precision > 2015) then (n4 is null or n4 = 0)
-            else (n1 is null or n1 = 0 or n2 is null or n2 = 0 or n3 is null or n3 = 0 or n4 is null or n4 = 0)
+            else (n4 is null or n4 = 0) -- (n1 is null or n1 = 0 or n2 is null or n2 = 0 or n3 is null or n3 = 0 or n4 is null or n4 = 0)
             end
           else
             false
@@ -3293,7 +3295,8 @@ class TramiteController extends Controller {
                     ->add('gestion', 'entity', array('data' => '', 'attr' => array('class' => 'form-control'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                         'query_builder' => function(EntityRepository $er) {
                             return $er->createQueryBuilder('gt')
-                                    ->where('gt.id > 2008')
+                                    ->where('gt.id < 2017')
+                                    ->andwhere('gt.id > 2008')
                                     ->orderBy('gt.id', 'DESC');
                         },
                     ))
@@ -3470,8 +3473,7 @@ class TramiteController extends Controller {
                 ->add('gestion', 'entity', array('label' => 'Gestión Cartón', 'data' => $value2, 'attr' => array('class' => 'form-control'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                     'query_builder' => function(EntityRepository $er) {
                         return $er->createQueryBuilder('gt')
-                                ->where('gt.id < 2017')
-                                ->andWhere('gt.id > 2008')
+                                ->where('gt.id > 2008')
                                 ->orderBy('gt.id', 'DESC');
                     },
                 ))

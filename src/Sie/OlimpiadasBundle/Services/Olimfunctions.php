@@ -217,6 +217,32 @@ class Olimfunctions {
 
    }
 
+   /**
+    * [getStudentsToOlimpiadas description]
+    * @param  [type] $institucionEducativaCursoId [description]
+    * @return [type]                              [description]
+    */
+    public function getStudentsToOlimpiadasFeria($cursosArray){
+
+      $sql = "
+              
+              select ei.id as estinsid,e.codigo_rude, e.nombre, e.paterno, e.materno, e.carnet_identidad, e.complemento, e.fecha_nacimiento 
+              from institucioneducativa ie 
+              left join institucioneducativa_curso iec on ie.id = iec.institucioneducativa_id
+              left join estudiante_inscripcion ei on ei.institucioneducativa_curso_id = iec.id
+              left join estudiante e on ei.estudiante_id = e.id
+              where (e.pais_tipo_id = 1 or e.es_doble_nacionalidad = 't') and iec.id in (".$cursosArray.")
+              order by e.paterno, e.materno, e.nombre ASC
+          "
+              ;
+      
+      $query = $this->em->getConnection()->prepare($sql);
+      
+      $query->execute();
+      return $query->fetchAll();
+  
+     }
+
    public function getYearsOldsStudent($fecha_nacimiento, $fecha_control){
 
             $fecha_actual = $fecha_control;

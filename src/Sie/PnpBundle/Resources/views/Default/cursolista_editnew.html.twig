@@ -316,12 +316,14 @@
                         Lista de Participantes del Curso
                     </div>
                     <div class="panel-body">
+                    <button class="btn btn-xs btn-danger rounded glyphicon glyphicon-copy" id="copy-button" data-clipboard-target="#tablaListadoPersonas"> Copiar Lista</button>
+                    <a role="button" class="btn rounded btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id_enc': datos.id_enc~"|"~datos.ciclo_tipo_id~"|"~datos.grado_tipo_id}) }}" title="Impimir Consolidado">{% if plan == 1 %}&nbsp;Rup-4{% else %}&nbsp;Centralizador{% endif %}</a>
                         <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
                             <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
                                 <thead>
                                     <tr>
                                         <th>Codigo Rude</th>
-                                        {% if plan == 2 %}<th>Rudeal</th>{% endif %}
+                                        {% if plan == 2 and esactivo == 0 %}<th>Rudeal</th>{% endif %}
                                         <th>Opciones</th>
                                         <th>Carnet Identidad</th>
                                         <th>Paterno</th>
@@ -342,17 +344,22 @@
                                 {% for estudiante in estudiantes %}
                                     <tr>
                                         <td>{{ estudiante.codigo_rude }}</td>
-                                        {% if plan == 2 %}
-                                            <td>
-                                                {% if esactivo == 1 %}
+                                        {% if plan == 2  %}
+                                            {% if esactivo == 1 %}
+                                                {#}Rudeal
+                                                <td>
                                                     {% if estudiante.rude_id != "" %}
                                                         <a role="button" class="btn btn-xs btn-primary rounded glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_rudeal', { 'id_enc': estudiante.rude_id_enc }) }}" title="Imprimir Rudeal"></a>
                                                     {% endif %}
+                                                </td>{#}
                                                 {% else %}  
-                                                    {% if estudiante.rude_id != "" %}
-                                                        <a role="button" class="btn btn-xs btn-primary rounded glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_rudeal', { 'id_enc': estudiante.rude_id_enc }) }}" title="Imprimir Rudeal"></a>
-                                                    {% endif %}
-                                                    <a href="#" role="button" onclick="SeeRudeal('{{estudiante.inscripcion_id}}',{{ datos.id }})" class="btn btn-xs rounded btn-success glyphicon glyphicon-edit" title="Editar Rudeal"></a>
+                                                    <td>
+                                                        {#}Rudeal
+                                                        {% if estudiante.rude_id != "" %}
+                                                            <a role="button" class="btn btn-xs btn-primary rounded glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_rudeal', { 'id_enc': estudiante.rude_id_enc }) }}" title="Imprimir Rudeal"></a>
+                                                        {% endif %}{#}
+                                                        <a href="#" role="button" onclick="SeeRudeal('{{estudiante.inscripcion_id}}',{{ datos.id }})" class="btn btn-xs rounded btn-success glyphicon glyphicon-edit" title="Editar Rudeal"></a>
+                                                    </td>
                                                 {% endif %}    
                                             </td>
                                         {% endif %}
@@ -428,6 +435,12 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script>
+
+ (function(){
+    new Clipboard('#copy-button');
+})();
+</script>
     <script type="text/javascript">
     $(document).ready(function() {
         $("#fecha_nac").datepicker({

@@ -8,8 +8,6 @@ var BlankonFormAdvanced = function () {
         init: function () {
             BlankonFormAdvanced.bootstrapSwitch();
             BlankonFormAdvanced.inputMask();
-            BlankonFormAdvanced.bootstrapDatepicker();
-            BlankonFormAdvanced.bootstrapColorpicker();
             BlankonFormAdvanced.dropzone();
         },
 
@@ -29,96 +27,6 @@ var BlankonFormAdvanced = function () {
             if($('#input-mask').length){
                 $(":input").inputmask();
             }
-        },
-
-        // =========================================================================
-        // BOOTSTRAP DATEPICKER
-        // =========================================================================
-        bootstrapDatepicker: function () {
-            if($('#dp').length){
-                $('#dp1').datepicker({
-                    format: 'mm-dd-yyyy',
-                    todayBtn: 'linked'
-                });
-
-                $('#dp2').datepicker();
-                $('#btn2').click(function(e){
-                    e.stopPropagation();
-                    $('#dp2').datepicker('update', '03/17/12');
-                });
-
-                //inline
-                $('#dp3').datepicker({
-                    todayBtn: 'linked'
-                });
-
-                $('#btn3').click(function(){
-                    $('#dp3').datepicker('update', '15-05-1984');
-                });
-            }
-        },
-
-        // =========================================================================
-        // BOOTSTRAP COLORPICKER
-        // =========================================================================
-        bootstrapColorpicker: function () {
-            // With hex format
-            $('.colorpicker-1').colorpicker();
-
-            // As a component
-            $('.colorpicker-2').colorpicker();
-
-            // Transparent color support
-            $('.colorpicker-3').colorpicker();
-
-            // Horizonal mode
-            $('.colorpicker-4').colorpicker({
-                format: 'rgba', // force this format
-                horizontal: true
-            });
-
-            // Inline mode
-            $('.colorpicker-5').colorpicker();
-
-            // Bootstrap colors
-            $('.colorpicker-6').colorpicker({
-                colorSelectors: {
-                    'default': '#777777',
-                    'primary': '#337ab7',
-                    'success': '#5cb85c',
-                    'info': '#5bc0de',
-                    'warning': '#f0ad4e',
-                    'danger': '#d9534f'
-                }
-            });
-
-            // Custom widget size
-            $('.colorpicker-7').colorpicker({
-                customClass: 'colorpicker-2x',
-                sliders: {
-                    saturation: {
-                        maxLeft: 200,
-                        maxTop: 200
-                    },
-                    hue: {
-                        maxTop: 200
-                    },
-                    alpha: {
-                        maxTop: 200
-                    }
-                }
-            });
-
-            // Bootstrap Modal
-            $('.colorpicker-8').colorpicker();
-
-            // Using events
-            var bodyStyle = $('.body-content')[0].style;
-            $('.colorpicker-9').colorpicker({
-                color: bodyStyle.backgroundColor
-            }).on('changeColor', function(ev) {
-                bodyStyle.backgroundColor = ev.color.toHex();
-            });
         },
 
         // =========================================================================

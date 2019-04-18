@@ -1,0 +1,674 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+
+
+
+    <link href="{{asset('filefile/css/bootstrap-fileupload.min.css')}}" rel="stylesheet">
+    <link href="{{asset('filefile/css/bootstrap-fileupload.css')}}" rel="stylesheet">
+{% endblock %}
+
+
+
+{% block contentoption%}
+
+    <!-- begin PAGE TITLE AREA -->
+    <!-- Use this section for each page's title and breadcrumb layout. In this example a date range picker is included within the breadcrumb. -->
+
+
+
+  <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> Inscripción {{labelInscription.label}}  <span> Busqueda</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('inscription_extranjeros_index')}}">Inscripción {{labelInscription.label}} - Busqueda</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+  <!-- THE NEW -->
+  <div class="body-content animated fadeIn">
+      <div class="row">
+    {% for flashMessage in app.session.flashbag.get('newUser') %}
+        <div class="alert alert-success" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ flashMessage.mensaje }}<br>
+            <button class="btn-link" data-toggle="tooltip" data-placement="top" title="Descargar declaracion jurada"><img src="{{asset('assets/images/pdf.png')}}"> Declaración jurada</button>
+                {# flashMessage.nombre #}
+                {# flashMessage.usuario #}
+                {# flashMessage.password #}
+        </div>
+    {% endfor %}
+
+    {% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Warning!</strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('success') %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Bien!</strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+  </div>
+
+  <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-icon panel-primary">
+                <div class="panel-heading">
+                        <h4>Información Estudiante</h4>
+                    
+                </div>
+                <div id="pinfoestudiante" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <th class="text-center">Rude</th>
+                                        <th class="text-center">Nombre(s)</th>
+                                        <th class="text-center">Paterno</th>
+                                        <th class="text-center">Materno</th>
+                                        <th class="text-center">CI</th>
+                                        <th class="text-center">Complemento</th>
+                                        <th class="text-center">Género</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-title="Rude">{{datastudent.codigoRude}}</td>
+                                        <td data-title="Nombre">{{ datastudent.nombre|e }}</td>
+                                        <td data-title="Paterno">{{datastudent.paterno|e}}</td>
+                                        <td data-title="Materno">{{datastudent.materno|e}}</td>
+                                        <td data-title="CI">{{datastudent.carnetIdentidad}}</td>
+                                        <td data-title="Complemento">{{datastudent.complemento}}</td>
+                                        <td data-title="Genero">{{datastudent.generoTipo}} </td>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {%if currentInscription  | length >1 %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-icon panel-primary">
+                    <div class="panel-heading">
+                        
+                            <h4>Información Inscripción</h4>
+                        
+                    </div>
+                    <div id="pinformation" class="panel-collapse collapse in">
+                        <div class="panel-body">
+
+                            <div id="no-more-tables">
+                                <table class="table table-bordered table-hover cf">
+                                    <thead class="cf">
+                                        <tr class="info">
+                                            <th class="text-center">Gestión</th>
+                                            <th class="text-center">Sie</th>
+                                            <th class="text-center">Institución Educativa</th>
+                                            <th class="text-center">Nivel</th>
+                                            <th class="text-center">Grado</th>
+                                            <th class="text-center">Paralelo</th>
+                                            <th class="text-center">Turno</th>
+                                            <th class="text-center">Est. Matrícula</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for inscription in currentInscription%}
+                                            <tr>
+
+                                                <td data-title="Gestión">{{inscription.gestion}}</td>
+                                                <td data-title="Sie">{{inscription.sie}}</td>
+                                                <td data-title="Institución Educativa">{{inscription.institucioneducativa}}</td>
+                                                <td data-title="Nivel">{{inscription.nivel}} </td>
+                                                <td data-title="Grado">{{inscription.grado}}</td>
+                                                <td data-title="Paralelo">{{inscription.paralelo}}</td>
+                                                <td data-title="Turno">{{inscription.turno}} </td>
+                                                <td data-title="Est. Matricula">{{inscription.estadoMatricula}}</td>
+                                            </tr>
+                                        {% endfor%}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {%endif%}
+
+
+
+
+
+
+    <!--div class='row'>
+
+        <div class='col-md-8 col-md-offset-5'><div id="resultloading"></div></div>
+
+    </div-->
+
+    <!-- Modal -->
+
+
+
+
+
+
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="panel panel-icon panel-primary">
+                <div class="panel-heading">
+                        <h4>Nueva Inscripci&oacute;n</h4>
+                </div>
+                {{form_start(formExtranjeros, { 'attr':{'data-toggle':'validator','role':'form', 'class':'form', 'id':'formExtranjeroId'} } )}}
+                <div id="omitidos" class="panel-collapse collapse in">
+                    <div class="panel-body">
+
+
+
+                        {% if labelInscription.id == 19 %}
+
+                              <div class="row">
+                                <div class="col-md-6">
+                                    {{form_label(formExtranjeros.institucionEducativaDe)}}
+                                    {{form_widget(formExtranjeros.institucionEducativaDe )}}
+                                    <div class="help-block without-errors"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    {{form_label(formExtranjeros.cursoVencido)}}
+                                    {{form_widget(formExtranjeros.cursoVencido)}}
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-6">
+                                    {{form_label(formExtranjeros.pais)}}
+                                    {{form_widget(formExtranjeros.pais)}}
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="" style='display:none'>
+                                    {{form_label(formExtranjeros.imgInsExtranjero)}}
+                                    {{form_widget(formExtranjeros.imgInsExtranjero)}}
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-12">
+
+                                  <div class="fileupload fileupload-new" data-provides="fileupload">
+                                      <div class="input-append">
+                                          <form class="form" method ="POST"  enctype="multipart/form-data" action="{{path('consolidation_sie_upfile_web')}}">
+
+                                              <table class="table table-bordered table-hover cf" border=''>
+                                                  <tr>
+                                                      <td rowspan='1' align='center'>
+                                                          <h4 class='text-blue'> Seleccione archivo para subir:</h4>
+                                                          <p>Capacidad MÁXIMA del archivo a subir <b>1024 KB.</b>
+                                                          </br>
+                                                          Formatos PERMTIDOS del archivo: <b>PNG, JPG.</b>
+                                                          </p>
+                                                      </td>
+
+                                                      <td class='info'>                                                     
+
+                                                          <p class='text-green'>Subir última libreta extranjero</p>
+                                                          <i class='fa fa-hand-o-right'></i> <div class="uneditable-input span6">
+                                                              <i class="icon-file fileupload-exists"></i>
+                                                              <span class="fileupload-preview"></span>
+                                                          </div>
+                                                          <div class="form-group">
+                                                            <!-- <label for="exampleInputFile" class="control-label">Seleccionar Archivo</label> -->
+                                                            <input type="file" name="siefile" required="required"/>
+                                                            <p class="help-block"></p>
+                                                          </div>
+                                                          
+                                                          <!-- <span class="btn btn-file">
+                                                              <span class="fileupload-new text-danger" style="background-color:lightwhite;font-size: 130%; color: #cc0033"> Subir Imagen</span>
+                                                              <span class="fileupload-exists text-danger">Cambiar</span>
+                                                              <input type="file" name="siefile" required="required"/>
+                                                          </span> -->
+
+                                                      </td>
+                                                  </tr>
+                                              </table>
+
+                                      </div>
+                                  </div>
+
+
+                                </div>
+                              </div>
+
+                            </br>
+                            </br>
+
+                        {% endif %}
+
+
+                        {% if labelInscription.id == 100 %}
+                             
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="" style='display:none'>
+                                    {{form_label(formExtranjeros.imgInsExtranjero)}}
+                                    {{form_widget(formExtranjeros.imgInsExtranjero)}}
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-12">
+
+                                  <div class="fileupload fileupload-new" data-provides="fileupload">
+                                      <div class="input-append">
+                                          <form class="form" method ="POST"  enctype="multipart/form-data" action="{{path('consolidation_sie_upfile_web')}}">
+
+                                              <table class="table table-bordered table-hover cf" border=''>
+                                                  <tr>
+                                                      <td rowspan='1' align='center'>
+                                                          <h4 class='text-blue'> Seleccione archivo para subir:</h4>
+                                                          <p>Capacidad MÁXIMA del archivo a subir <b>1024 KB.</b>
+                                                          </br>
+                                                          Formatos PERMTIDOS del archivo: <b>PNG, JPG.</b>
+                                                          </p>
+                                                      </td>
+
+                                                      <td class='info'>
+                                                         <!--  <p class='text-green'>Subir última libreta extranjero</p>
+                                                          <i class='fa fa-hand-o-right'></i> <div class="uneditable-input span6">
+                                                              <i class="icon-file fileupload-exists"></i>
+                                                              <span class="fileupload-preview"></span>
+                                                          </div>
+                                                          <span class="btn btn-file">
+                                                              <span class="fileupload-new text-danger" style="background-color:lightwhite;font-size: 130%; color: #cc0033"> Subir Imagen</span>
+                                                              <span class="fileupload-exists text-danger">Cambiar</span>
+                                                              <input type="file" name="siefile" required="required"/>
+                                                          </span> -->
+
+                                                          <p class='text-green'>Subir última libreta extranjero</p>
+                                                          <i class='fa fa-hand-o-right'></i> <div class="uneditable-input span6">
+                                                              <i class="icon-file fileupload-exists"></i>
+                                                              <span class="fileupload-preview"></span>
+                                                          </div>
+                                                          <div class="form-group">
+                                                            <!-- <label for="exampleInputFile" class="control-label">Seleccionar Archivo</label> -->
+                                                            <input type="file" name="siefile" required="required"/>
+                                                            <p class="help-block"></p>
+                                                          </div>
+
+                                                      </td>
+                                                  </tr>
+                                              </table>
+
+                                      </div>
+                                  </div>
+
+
+                                </div>
+                              </div>
+
+                            </br>
+                            </br>
+
+                        {% endif %}
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{form_label(formExtranjeros.institucionEducativa)}}
+                                {{form_widget(formExtranjeros.institucionEducativa, {'attr':{'onkeyUp':'institucionEducativa(this.value)'}  } )}}
+                                <div class="help-block without-errors"></div>
+                            </div>
+                            <div class="col-md-6">
+                                {{form_label(formExtranjeros.institucionEducativaName)}}
+                                {{form_widget(formExtranjeros.institucionEducativaName)}}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                {{form_label(formExtranjeros.nivel)}}
+                                {{form_widget(formExtranjeros.nivel,{'attr':{'onchange':'getGrado(this.value)'} })}}
+                            </div>
+                            <div class="col-md-3">
+                                {{form_label(formExtranjeros.grado)}}
+                                {{form_widget(formExtranjeros.grado, {'attr':{'onchange':'getParalelo(this.value)' } } )}}
+                            </div>
+                            <div class="col-md-2">
+                                {{form_label(formExtranjeros.paralelo)}}
+                                {{form_widget(formExtranjeros.paralelo,{'attr':{'onchange':'getTurno(this.value)','onmousedown':'getTurno(this.value)' } } )}}
+                            </div>
+                            <div class="col-md-3">
+                                {{form_label(formExtranjeros.turno)}}
+                                {{form_widget(formExtranjeros.turno)}}
+                            </div>
+                        </div>
+                        </br>
+
+                        {#form_widget(formExtranjeros.save, {'attr':{'class':'btn btn-default'} }) #}
+                        <button class="btn btn-primary fileupload-exists" type="submit">Guardar </button>
+
+
+                    </div>
+                </div>
+{{form_end(formExtranjeros)}}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+          <div class="col-md-12">
+            <div id="answerInscription"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{{path('inscription_extranjeros_index')}}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver</a>
+        </div>
+    </div>
+    
+  </div>
+  <!-- THE NEW END -->
+
+  
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{asset('filefile/js/bootstrap-fileupload.js')}}"></script>
+    <script src="{{asset('filefile/js/bootstrap-fileupload.min.js')}}"></script>
+    <script>
+    $( "#formExtranjeroId" ).submit(function( event ) {
+      if(confirm('Esta seguro de realizar la Inscripción?')){
+
+      return true;
+      }else{
+      return false;
+      }
+
+    });
+    //call the ajax function by krlos
+     function institucionEducativa(id) {
+       gestion = $('#form_gestion').val();
+       optionInscription = $('#form_optionInscription').val();
+
+         if (id.length > 7) {
+
+             $.ajax({
+                 type: 'get',
+                 url: Routing.generate('inscription_extranjeros_findIE', {'id': id, 'gestion':gestion, 'optionInscription':optionInscription}),
+                 beforeSend: function () {
+                 },
+                 success: function (data) {
+                     $("#form_institucionEducativaName").val(data.nombre);
+
+                     $("#form_nivel").empty();
+                     $("#form_nivel").append('<option value="">Seleccionar</option>');
+                     $.each(data.aniveles, function (i, value) {
+                         $("#form_nivel").append('<option value="' + i + '">' + value + '</option>');
+                     });
+                     $("#form_grado").empty();
+                     $("#form_paralelo").empty();
+                     $("#form_turno").empty();
+                 }
+             });
+         } else {
+
+             //$("#form_institucionEducativaName").val(data.nombre);
+             $("#form_nivel").empty();
+             $("#form_grado").empty();
+             $("#form_paralelo").empty();
+             $("#form_turno").empty();
+
+
+         }
+
+     }
+
+     function getGrado(idnivel) {
+
+         sie = $('#form_institucionEducativa').val();
+         gestion = $('#form_gestion').val();
+         optionInscription = $('#form_optionInscription').val();
+         $.ajax({
+             type: 'get',
+             url: Routing.generate('inscription_extranjeros_findgrado', {'idnivel': idnivel, 'sie': sie, 'gestion':gestion, 'optionInscription':optionInscription}),
+             beforeSend: function () {
+             },
+             success: function (data) {
+                 $("#form_grado").empty();
+                 $("#form_grado").append('<option value="">Seleccionar</option>');
+                 $.each(data.agrados, function (i, value) {
+                     $("#form_grado").append('<option value="' + i + '">' + value + '</option>');
+                 });
+                 $("#form_paralelo").empty();
+                 $("#form_turno").empty();
+             }
+         });
+
+     }
+
+     function getParalelo(grado) {
+
+         sie = $('#form_institucionEducativa').val();
+         nivel = $('#form_nivel').val();
+         gestion = $('#form_gestion').val();
+         $.ajax({
+             type: 'get',
+             url: Routing.generate('inscription_extranjeros_findparalelo', {'grado': grado, 'sie': sie, 'nivel': nivel, 'gestion':gestion}),
+             beforeSend: function () {
+             },
+             success: function (data) {
+                 $("#form_paralelo").empty();
+                 $("#form_paralelo").append('<option value="">Seleccionar</option>');
+                 $.each(data.aparalelos, function (i, value) {
+                     $("#form_paralelo").append('<option value="' + i + '">' + value + '</option>');
+                 });
+             }
+         });
+
+     }
+
+     function getTurno(paralelo) {
+
+         sie = $('#form_institucionEducativa').val();
+         nivel = $('#form_nivel').val();
+         grado = $('#form_grado').val();
+         gestion = $('#form_gestion').val();
+         $.ajax({
+             type: 'get',
+             url: Routing.generate('inscription_extranjeros_findturno', {'paralelo': paralelo, 'sie': sie, 'nivel': nivel, 'grado': grado, 'gestion':gestion}),
+             beforeSend: function () {
+             },
+             success: function (data) {
+                 $("#form_turno").empty();
+                 $("#form_turno").append('<option value="">Seleccionar</option>');
+                 $.each(data.aturnos, function (i, value) {
+                     $("#form_turno").append('<option value="' + i + '">' + value + '</option>');
+                 });
+             }
+         });
+
+     }
+
+     var checkInscriptionExtranjero = function(){
+
+       var sie = $('#form_institucionEducativa').val();
+       var nivel = $('#form_nivel').val();
+       var grado = $('#form_grado').val();
+       var paralelo = $('#form_paralelo').val();
+       var turno = $('#form_turno').val();
+
+       if ($('#form_upfile').val() == '') {
+           alert('Debe seleccionar un archivo...');
+           return false;
+       }
+
+       if(sie.length > 0 && nivel.length > 0 && grado.length > 0 && paralelo.length > 0 && turno.length > 0){
+
+         formInscription = $('#formExtranjeroId').serialize();
+         $.ajax({
+           type: 'post',
+           data: formInscription,
+           url: Routing.generate('inscription_extranjeros_save'),
+           beforeSend: function(){
+             $('answerInscription').empty();
+             $('answerInscription').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+           },
+           success: function(data){
+             $('#answerInscription').empty();
+             $('#answerInscription').append(data);
+           },
+           statusCode: {
+               500: function () {
+
+               },
+               404: function () {
+
+               }
+           }
+
+
+         });
+         $('#form_save').attr("disabled", true);
+       }else{
+         alert('Necesita SIE, NIVEL, GRADO, PARALELO Y TURNO, para realizar la inscripción');
+         return false;
+       }
+     };
+
+     var saveNotasInscription = function (){
+         var enviar = true;
+         var mensaje = "";
+         $(".nota").each(function (index) {
+             if($(this).val() == 0 || $(this).val() == "" ){
+                 enviar = false;
+                 mensaje = "Las notas registradas no pueden estar vacias o estar en cero";
+             }
+         });
+
+         $(".cualitativas").each(function (index) {
+             if($(this).val().length < 15){
+                 enviar = false;
+                 if(mensaje == ""){
+                     mensaje = "Las notas cualitativas deben tener al menos 15 digitos";
+                 }
+             }
+         });
+         if(enviar == false){
+             alert(mensaje);
+         }
+         if(enviar == true){
+             formData = $('#formNotasInscription').serialize();
+             $.ajax({
+                type: 'post',
+                url: Routing.generate('inscription_ini_pri_rue_notasInscription'),
+                data: formData,
+                beforeSend: function () {
+                    $("#answerInscription").empty();
+                    $("#answerInscription").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#answerInscription").empty();
+                    $("#answerInscription").append(data);
+                    //location.reload(true);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+             });
+         }
+     };
+
+     function validarNota(e,id,nota){
+         var key = e || window.event;
+         var k = key.charCode || key.keyCode;
+         if ((k < 48 || k > 57) //NUmeros
+             && (k != 13) //ENTER
+             && (k != 8) //retroceso
+             && (k != 9) //tab
+         )
+         return false;
+     }
+
+     function validarNota1(id,nota){
+
+             var grado = $('#idGrado').val();
+             var gestion = $('#idGestion').val();
+             if(gestion < 2013){
+                 if(nota<0){$('#'+id).val(0);}
+                 if(nota>70){$('#'+id).val(70);}
+             }else{
+                 if(gestion == 2013){
+                     if(grado == 1){
+                         if(nota<0){$('#'+id).val(0);}
+                         if(nota>100){$('#'+id).val(100);}
+                     }else{
+                         if(nota<0){$('#'+id).val(0);}
+                         if(nota>70){$('#'+id).val(70);}
+                     }
+                 }else{
+                     if(nota<0){$('#'+id).val(0);}
+                     if(nota>100){$('#'+id).val(100);}
+                 }
+             }
+
+     }
+
+     function validarNotaCualitativa(e,id,nota){
+         var key = e || window.event;
+         var k = key.charCode || key.keyCode;
+         if ((k < 97 || k > 122)//letras minusculas
+             && (k < 65 || k > 90) //letras mayusculas
+             && (k < 48 || k > 57) //NUmeros
+             && (k != 13) //ENTER
+             && (k != 8) //retroceso
+             && (k != 9) //tab
+             && (k != 241) //ñ
+              && (k != 209) //Ñ
+              && (k != 32) //espacio
+              && (k != 225) //á
+              && (k != 233) //é
+              && (k != 237) //í
+              && (k != 243) //ó
+              && (k != 250) //ú
+              && (k != 193) //Á
+              && (k != 201) //É
+              && (k != 205) //Í
+              && (k != 211) //Ó
+              && (k != 218) //Ú
+              && (k != 44) //coma ,
+              && (k != 46) //punto .
+             )
+         return false;
+     }
+
+    </script>
+
+
+{% endblock %}

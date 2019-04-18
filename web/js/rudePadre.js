@@ -8,8 +8,8 @@ $("#pb_carnet").numeric("positiveInteger");
 $("#pb_carnet").attr("maxlength",'10');
 
 // aplicamos las mascaras para las fechas
-$("#p_fechaNacimiento").inputmask({ "alias": "dd-mm-yyyy" });
-$("#pb_fechaNacimiento").inputmask({ "alias": "dd-mm-yyyy" });
+$("#p_fechaNacimiento").inputmask({ "alias": "dd-mm-yyyy" ,'placeholder':'dd-mm-aaaa'});
+$("#pb_fechaNacimiento").inputmask({ "alias": "dd-mm-yyyy" ,'placeholder':'dd-mm-aaaa'});
 $("#pb_complemento").inputmask({mask: "9a"});
 
 // convertimos el complemento en mayusculas
@@ -43,6 +43,14 @@ var p_validarTienePadre = function(){
         $('#p_instruccion').attr('required','required');
         $('#p_parentesco').attr('required','required');
 
+        // Validamos si el usuario tiene carnet
+        var carnet = $('#p_carnet').val();
+        if(carnet.indexOf('SC') != -1){
+            $('#p_carnet').val('');
+            $('#p_carnet').removeAttr('required');
+            $('#p_expedido').attr('disabled','disabled');
+        }
+
     }else{
         $('#p_divPadre').css('display','none');
         $('#p_carnet').removeAttr('required');
@@ -60,6 +68,7 @@ var p_validarTienePadre = function(){
         $('#p_genero').val('');
         $('#p_correo').val('');
         $('#p_telefono').val('');
+        $('#p_celular').val('');
         $('#p_idioma').val('');
         $('#p_ocupacion').val(0);
         $('#p_instruccion').val(0);
@@ -115,8 +124,20 @@ $('#p_ocupacion').on('change',function(){
 // CAMBIAR ATRIBUTOS DE REQUERIDO
 $('#pb_sinCarnet').on('change', function(){
     if($(this).is(':checked')){
+        $('#pb_carnet').val('');
+        $('#pb_carnet').attr('disabled','disabled');
+        $('#pb_complemento').val('');
+        $('#pb_complemento').attr('disabled','disabled');
+
+        $('#pb_paterno').focus();
+
         $('#p_carnet').removeAttr('required');
     }else{
+        $('#pb_carnet').removeAttr('disabled');
+        $('#pb_complemento').removeAttr('disabled');
+        
+        $('#pb_carnet').focus();
+
         $('#p_carnet').attr('required','required');
     }
 });
@@ -138,7 +159,9 @@ var p_buscarPadre = function(){
     var p_anioActual = p_fechaActual.getFullYear();
 
     if(p_anio < 1900 || (p_anioActual - p_anio) < 15 || (p_anioActual - p_anio) > 100){
-        alert('La fecha de nacimiento no es válida, verfique e intentelo nuevamente.');
+        $('#p_mensaje').empty();
+        p_cambiarFondoMensaje(3);
+        $('#p_mensaje').append('La fecha de nacimiento no es válida, verfique e intentelo nuevamente.');
         return;
     }
     /////////
@@ -158,7 +181,14 @@ var p_buscarPadre = function(){
                 fecha_nacimiento: p_fechaNacimiento
             };
 
+            $('#p_expedido').attr('disabled','disabled');
+            $('#p_expedido').val('');
+
             p_cargarDatos(data);
+
+            $('#p_mensaje').empty();
+            p_cambiarFondoMensaje(2);
+            $('#p_mensaje').append('Datos cargados');
 
         }else{
             // $('#p_idPersona').val('nuevo');
@@ -179,7 +209,7 @@ var p_buscarPadre = function(){
                     $('#p_mensaje').append('Buscando...');
                 },
                 success: function(data){
-
+                    $('#p_expedido').removeAttr('disabled');
                     // Ponemos el id de la padre en nuevo
                     $('#p_idPersona').val('nuevo');
 
@@ -254,6 +284,7 @@ function p_borrarDatos(){
     $('#p_genero').val('');
     $('#p_correo').val('');
     $('#p_telefono').val('');
+    $('#p_celular').val('');
 }
 
 var p_cambiarFondoMensaje = function(opcion){
@@ -312,6 +343,7 @@ function saveFormPadre(){
         success: function(data){
 
             $('#p_id').val(data.id);
+            $('#p_idDatos').val(data.idDatos);
             $('#p_idPersona').val(data.idPersona);
 
             // Pasar a la siguiente pagina

@@ -2159,9 +2159,9 @@ class TramiteController extends Controller {
                     ->getQuery();
                 break;
         }
-
-        $lugar = $query->getResult()[0];
-
+        $lugar = $query->getResult();
+        $lugar = $lugar['0'];
+        //$lugar = $query->getResult()[0];
         $repository = $em->getRepository('SieAppWebBundle:Tramite');
         switch($usuario_rol){
             case 10://distrito

@@ -2,27 +2,24 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoEspecial:
     type: entity
     table: institucioneducativa_curso_especial
     indexes:
-        IDX_1568B052D2EA1892:
-            columns:
-                - especial_area_tipo_id
         IDX_1568B05294D2466B:
             columns:
                 - especial_tecnica_especialidad_tipo_id
-        IDX_1568B0529E4EDBFE:
-            columns:
-                - institucioneducativa_curso_id
         IDX_1568B052C1831C46:
             columns:
                 - especial_nivel_tecnico_tipo_id
-        IDX_1568B0521ED4B6D5:
+        IDX_1568B052D2EA1892:
             columns:
-                - especial_programa_tipo_id
+                - especial_area_tipo_id
         IDX_1568B052B4692AC1:
             columns:
                 - especial_servicio_tipo_id
-        IDX_1568B0523C15601F:
+        IDX_1568B0521ED4B6D5:
             columns:
-                - especial_modalidad_tipo_id
+                - especial_programa_tipo_id
+        IDX_1568B0529E4EDBFE:
+            columns:
+                - institucioneducativa_curso_id
     id:
         id:
             type: integer
@@ -33,15 +30,6 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoEspecial:
             generator:
                 strategy: SEQUENCE
     manyToOne:
-        especialAreaTipo:
-            targetEntity: EspecialAreaTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                especial_area_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
         especialTecnicaEspecialidadTipo:
             targetEntity: EspecialTecnicaEspecialidadTipo
             cascade: {  }
@@ -49,15 +37,6 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoEspecial:
             inversedBy: null
             joinColumns:
                 especial_tecnica_especialidad_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        institucioneducativaCurso:
-            targetEntity: InstitucioneducativaCurso
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                institucioneducativa_curso_id:
                     referencedColumnName: id
             orphanRemoval: false
         especialNivelTecnicoTipo:
@@ -69,13 +48,13 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoEspecial:
                 especial_nivel_tecnico_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
-        especialProgramaTipo:
-            targetEntity: EspecialProgramaTipo
+        especialAreaTipo:
+            targetEntity: EspecialAreaTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                especial_programa_tipo_id:
+                especial_area_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         especialServicioTipo:
@@ -87,13 +66,22 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoEspecial:
                 especial_servicio_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
-        especialModalidadTipo:
-            targetEntity: EspecialModalidadTipo
+        especialProgramaTipo:
+            targetEntity: EspecialProgramaTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                especial_modalidad_tipo_id:
+                especial_programa_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaCurso:
+            targetEntity: InstitucioneducativaCurso
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_curso_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

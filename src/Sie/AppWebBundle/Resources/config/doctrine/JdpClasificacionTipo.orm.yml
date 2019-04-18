@@ -1,0 +1,26 @@
+Sie\AppWebBundle\Entity\JdpClasificacionTipo:
+    type: entity
+    table: jdp_clasificacion_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        clasificacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

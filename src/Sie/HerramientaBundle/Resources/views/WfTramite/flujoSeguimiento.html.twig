@@ -2,7 +2,7 @@
 {% block stylesheets %}
 {{ parent() }}
     <style type="text/css">
-          {#.end-element { background-color :indianred; }#}
+          {# .end-element { background-color : red; } #}
     </style>
 {% endblock %}
 {% block contentoption %}
@@ -42,16 +42,15 @@
                     <div class="panel-body">
 						<div class="form-group">
                             {{ form_start(form,{ 'attr': {'id':'form_seguimiento'} } ) }}
-						    <label class="col-sm-2">Trámite:</label>
-                            <div class="col-sm-4">
-                                {{ form_widget(form.proceso, {'attr':{'class':'form-control'} }) }}
-                            </div>
-                            <label class="col-sm-2">Nro. de Trámite:</label>
-                            <div class="col-sm-4">
-                                {{ form_widget(form.tramite, {'attr':{'class':'form-control'} }) }}
-                            </div>
+    						    <label class="col-sm-2">Trámite:</label>
+                                <div class="col-sm-3">
+                                    {{ form_widget(form.proceso) }}
+                                </div>
+                                <label class="col-sm-2">Nro. de Trámite:</label>
+                                <div class="col-sm-3">
+                                    {{ form_widget(form.tramite) }}
+                                </div>
                             {{ form_end(form) }}
-                        
                         <div class="form-group">                        
                             <button id="buscar" class="btn btn-primary">Buscar</button>    
                         </div>
@@ -104,7 +103,7 @@
                       // 'x': 30,
                       // 'y': 50,
                       'line-width': 3,
-                      'maxWidth': 3,//ensures the flowcharts fits within a certian width
+                      'maxWidth': 5,//ensures the flowcharts fits within a certian width
                       'line-length': 20,
                       'text-margin': 10,
                       'font-size': 12,
@@ -130,8 +129,10 @@
                         }
                       },
                       'flowstate' : {
+                        'inicio' : { 'fill' : '#D7D7D7','font-color' : 'black', 'font-size' : 12},
                         'past' : { 'fill' : 'white','font-color' : 'black', 'font-size' : 12},
-                        'current' : {'fill' : '#FFFF99', 'font-color' : 'black', 'font-weight' : 'bold'},
+                        //'current' : {'fill' : '#FFFF99', 'font-color' : 'black', 'font-weight' : 'bold'},
+                        'current' : {'fill' : '#8BF3FE', 'font-color' : '#1B5583', 'font-weight' : 'bold'},
                         'future' : { 'fill' : '#FFFF99'},
                         'request' : { 'fill' : 'blue'},
                         'invalid': {'fill' : '#444444'},
@@ -141,6 +142,14 @@
                     });
                 },
             }); 
+        });
+        $(function(){
+            $(".validar").keydown(function(event){
+            //alert(event.keyCode);
+                if((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !==190  && event.keyCode !==110 && event.keyCode !==8 && event.keyCode !==9  ){
+                    return false;
+                }
+            });
         });
     </script>
 {% endblock %}

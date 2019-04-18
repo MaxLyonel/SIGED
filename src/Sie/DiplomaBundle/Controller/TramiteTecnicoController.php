@@ -590,18 +590,6 @@ class TramiteTecnicoController extends Controller {
             $depto = 1;
         }
 
-        $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :roluser::INT)');
-            $query->bindValue(':user_id', $id_usuario );
-            $query->bindValue(':sie', $ue);
-            $query->bindValue(':roluser', $identificador);
-            $query->execute();
-            $aTuicion = $query->fetchAll();
-
-
-        /*if (!$aTuicion[0]['get_ue_tuicion']) {
-            $this->session->getFlashBag()->set('danger',array('title' => 'Error','message' => 'No tiene tuición sobre la Unidad Educativa'));
-            return $this->redirectToRoute('sie_diploma_tramite_tecnico_impresion_formulario');
-        }*/
 
         $arch = $ue.'_'.$gestion.'_DIPLOMA_'.date('YmdHis').'.pdf';
         $response = new Response();

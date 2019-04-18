@@ -59,16 +59,23 @@ class OlimMateriaTipoController extends Controller
                 array('id'=>'ASC')
             );
             if(count($categorias)>0){
+                $subeArchivo = false;
                 foreach ($categorias as $ca) {
                     $array[$cont]['categorias'][] = array(
                         'id'=>$ca->getId(),
                         'categoria'=>$ca->getCategoria(),
                         'modalidad'=>$ca->getModalidadParticipacionTipo()->getModalidad()
                     );
+                    if($ca->getSiSubirDocumento()){
+                        $subeArchivo = true;
+                    }
                 }
+                $array[$cont]['subeArchivo'] = $subeArchivo;
             }else{
                 $array[$cont]['categorias'] = array();
+                $array[$cont]['subeArchivo'] = false;
             }
+
             $cont++;
         }
 

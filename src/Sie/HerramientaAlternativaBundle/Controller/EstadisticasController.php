@@ -310,7 +310,7 @@ class EstadisticasController extends Controller
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = $gestion;
-        $gestionProcesada = $this->buscaGestionVistaMaterializadaAlternativa();
+      // $gestionProcesada = $this->buscaGestionVistaMaterializadaAlternativa();
         //$gestionActual = 2016;
 
         $em = $this->getDoctrine()->getManager();
@@ -2591,57 +2591,57 @@ union all
      * @param Request $request
      * @return type
      */
-    public function buscaGestionVistaMaterializadaAlternativaInstitucionEducativa() {
-        /*
-         * Define la zona horaria y halla la fecha actual
-         */
-        date_default_timezone_set('America/La_Paz');
-        $fechaActual = new \DateTime(date('Y-m-d'));
-        $gestionActual = date_format($fechaActual,'Y');
-        //$gestionActual = 2016;
-
-        $em = $this->getDoctrine()->getManager();
-
-        $queryEntidad = $em->getConnection()->prepare("
-            select date_part('year', fecha_vista) as gestion from vm_instituciones_educativas limit 1
-        ");
-
-        $queryEntidad->execute();
-        $objEntidad = $queryEntidad->fetchAll();
-
-        if (count($objEntidad)>0){
-            return $objEntidad[0]['gestion'];
-        } else {
-            return 0;
-        }
-    }
-
-
-    public function buscaGestionVistaMaterializadaAlternativa() {
-        /*
-         * Define la zona horaria y halla la fecha actual
-         */
-        date_default_timezone_set('America/La_Paz');
-        $fechaActual = new \DateTime(date('Y-m-d'));
-        $gestionActual = date_format($fechaActual,'Y');
-        //$gestionActual = 2016;
-
-        $em = $this->getDoctrine()->getManager();
-
-        $queryEntidad = $em->getConnection()->prepare("
-            select cast(gestion as integer) as gestion
-            from vm_estudiantes_estadistica_regular limit 1
-        ");
-
-        $queryEntidad->execute();
-        $objEntidad = $queryEntidad->fetchAll();
-
-        if (count($objEntidad)>0){
-            return $objEntidad[0]['gestion'];
-        } else {
-            return 0;
-        }
-    }
+//    public function buscaGestionVistaMaterializadaAlternativaInstitucionEducativa() {
+//        /*
+//         * Define la zona horaria y halla la fecha actual
+//         */
+//        date_default_timezone_set('America/La_Paz');
+//        $fechaActual = new \DateTime(date('Y-m-d'));
+//        $gestionActual = date_format($fechaActual,'Y');
+//        //$gestionActual = 2016;
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $queryEntidad = $em->getConnection()->prepare("
+//            select date_part('year', fecha_vista) as gestion from vm_instituciones_educativas limit 1
+//        ");
+//
+//        $queryEntidad->execute();
+//        $objEntidad = $queryEntidad->fetchAll();
+//
+//        if (count($objEntidad)>0){
+//            return $objEntidad[0]['gestion'];
+//        } else {
+//            return 0;
+//        }
+//    }
+//
+//
+//    public function buscaGestionVistaMaterializadaAlternativa() {
+//        /*
+//         * Define la zona horaria y halla la fecha actual
+//         */
+//        date_default_timezone_set('America/La_Paz');
+//        $fechaActual = new \DateTime(date('Y-m-d'));
+//        $gestionActual = date_format($fechaActual,'Y');
+//        //$gestionActual = 2016;
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $queryEntidad = $em->getConnection()->prepare("
+//            select cast(gestion as integer) as gestion
+//            from vm_estudiantes_estadistica_regular limit 1
+//        ");
+//
+//        $queryEntidad->execute();
+//        $objEntidad = $queryEntidad->fetchAll();
+//
+//        if (count($objEntidad)>0){
+//            return $objEntidad[0]['gestion'];
+//        } else {
+//            return 0;
+//        }
+//    }
 
     public function reportesIndexAction(Request $request)
     {
@@ -2650,7 +2650,7 @@ union all
         $repository = $em->getRepository('SieAppWebBundle:GestionTipo');
         $query = $repository->createQueryBuilder('g')
             ->orderBy('g.id', 'DESC')
-            ->where('g.id < 2019 AND g.id > 2013')
+            ->where('g.id > 2013')
             ->getQuery();
         $gestiones = $query->getResult();
         $gestionesArray = array();

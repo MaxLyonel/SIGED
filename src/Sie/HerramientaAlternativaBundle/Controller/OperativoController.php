@@ -1068,4 +1068,227 @@ class OperativoController extends Controller {
         
         return $this->redirect($this->generateUrl('alternativa_operativo_regularizar'));
     }
+
+    public function operativoNuevoReaperturaAction(Request $request) {
+        //get the session's values
+        $this->session = $request->getSession();
+        $id_usuario = $this->session->get('userId');
+        //dump($gestion);die;
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        // Verificamos si no ha caducado la session
+        if (!$this->session->get('userId')) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        
+        return $this->render($this->session->get('pathSystem') . ':Operativo:nuevoReapertura.html.twig', array(
+            'form' => $this->operativoNuevoReaperturaForm()->createView(),
+        ));
+    }
+
+    public function operativoNuevoReaperturaForm()
+    {   
+        $idlugarusuario = $this->session->get('roluserlugarid');
+        $rolusuario = $this->session->get('roluser');
+        $this->gestion = date('Y');
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createFormBuilder()
+        ->setAction($this->generateUrl('alternativa_operativo_nuevo_reapertura_guardar'))
+        ->add('codsie','text',array('label'=>'Cod. SIE:', 'required'=>true, 'attr'=>array('maxlength' => '8','class'=>'form-control validar')))
+        ->add('operativo','entity',array('label'=>'Operativo:','required'=>true,'class'=>'SieAppWebBundle:OperativoTipo','query_builder'=>function(EntityRepository $o){
+            return $o->createQueryBuilder('o')->where("o.institucioneducativaTipo=2 and o.esvigente=true and o.id in (1,3)");},'property'=>'operaTivo','empty_value' => false,'attr'=>array('class'=>'form-control')))
+        ->add('fechainicio','text',array('label'=>'Fecha inicio: (dia-mes-año)','required'=>true,'data'=>date('d-m-Y'), 'attr'=>array('class'=>'form-control datepicker','placeholder'=>'dd-mm-AAAA','maxlength'=>10,'minlength'=>10,'autocomplete'=>'off')))
+        ->add('fechafin','text',array('label'=>'Fecha fin: (dia-mes-año)','required'=>true,'data'=>date('d-m-Y'), 'attr'=>array('class'=>'form-control datepicker','placeholder'=>'dd-mm-AAAA','maxlength'=>10,'minlength'=>10,'autocomplete'=>'off')))
+        ->add('habilitar', 'submit', array('label'=> 'Habilitar', 'attr'=>array('class'=>'form-control btn btn-success')))
+        ->getForm();
+        return $form;
+    }
+
+    public function operativoNuevoReaperturaGuardarAction(Request $request)
+    {
+        //dump($request);die;
+        //get the session's values
+        $this->session = $request->getSession();
+        $id_usuario = $this->session->get('userId');
+        $rol = $this->session->get('roluser');
+        $form = $request->get('form');
+        //dump($form);die;
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        // Verificamos si no ha caducado la session
+        if (!$this->session->get('userId')) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $gestion = date('Y');
+        $em = $this->getDoctrine()->getManager();
+        $codsie = $form['codsie'];
+        $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
+        $query->bindValue(':user_id', $id_usuario);
+        $query->bindValue(':sie', $codsie);
+        $query->bindValue(':rolId', $rol);
+        $query->execute();
+        $aTuicion = $query->fetchAll();        
+        //dump($aTuicion);die;
+        if ($aTuicion[0]['get_ue_tuicion']) {
+            switch($form['operativo']){
+                case 1: //INSCRIPCIONES PRIMER SEMESTRE
+                    $periodo = 2;
+                    break;
+                case 3: //INSCRIPCIONES SEGUNDO SEMESTRE
+                    $periodo = 3;
+                    break;
+            }
+            $sw = 2;
+
+            $query = $em->getConnection()->prepare("SELECT ". $gestion ." as gestion_tipo_id,0 as sucursal_tipo_id,'' as ies_id,ie.id,ie.institucioneducativa,dt.id as id_distrito,dt.distrito,dp.departamento,'' as periodo_tipo_id,'' as te_id,'' as tramite_estado
+                FROM institucioneducativa ie
+                LEFT JOIN institucioneducativa_sucursal ies ON ie.id=ies.institucioneducativa_id
+                JOIN jurisdiccion_geografica jg ON jg.id=ie.le_juridicciongeografica_id
+                JOIN distrito_tipo dt ON jg.distrito_tipo_id=dt.id
+                JOIN departamento_tipo dp ON dp.id=dt.departamento_tipo_id
+                WHERE ies.id IS NULL
+                AND ie.institucioneducativa_tipo_id=2
+                AND ie.estadoinstitucion_tipo_id = 10
+                AND ie.institucioneducativa_acreditacion_tipo_id=1
+                AND ie.fecha_creacion > '01-01-1900'
+                AND ie.id=" . $codsie);      
+            $query->execute();
+            $entity = $query->fetchAll();
+            //dump($entity);die;
+            if(!$entity){
+                $query = $em->getConnection()->prepare("SELECT ies.gestion_tipo_id,ies.sucursal_tipo_id,ies.id as ies_id,ie.id,ie.institucioneducativa,dt.id as id_distrito,dt.distrito,dp.departamento,ies.periodo_tipo_id,te.id as te_id,te.tramite_estado
+                    FROM institucioneducativa ie
+                    JOIN institucioneducativa_sucursal ies ON ie.id=ies.institucioneducativa_id
+                    LEFT JOIN institucioneducativa_sucursal_tramite iest ON ies.id=iest.institucioneducativa_sucursal_id
+                    JOIN jurisdiccion_geografica jg ON jg.id=ie.le_juridicciongeografica_id
+                    JOIN distrito_tipo dt ON jg.distrito_tipo_id=dt.id
+                    JOIN departamento_tipo dp ON dp.id=dt.departamento_tipo_id
+                    LEFT JOIN tramite_estado te ON iest.tramite_estado_id=te.id
+                    WHERE ies.institucioneducativa_id=". $codsie ."
+                    AND ie.institucioneducativa_tipo_id=2
+                    AND ie.estadoinstitucion_tipo_id = 10
+                    AND ie.institucioneducativa_acreditacion_tipo_id=1
+                    ORDER BY gestion_tipo_id DESC, periodo_tipo_id  DESC LIMIT 1");      
+                $query->execute();
+                $entity = $query->fetchAll();
+                //dump($entity[0]['periodo_tipo_id'] );die;
+                if($entity){
+                    if($periodo == 2){
+                        if($entity[0]['gestion_tipo_id'] == ($gestion - 1) and $entity[0]['periodo_tipo_id'] == 2){
+                            $sw = 1;
+                        }elseif($entity[0]['gestion_tipo_id'] < ($gestion - 1)){
+                            $sw = 1;
+                        }else{
+                            $sw = 2;
+                        }
+                    }
+                    if($periodo == 3){
+                        if($entity[0]['gestion_tipo_id'] == ($gestion - 1) and $entity[0]['periodo_tipo_id'] == 3){
+                            $sw = 1;
+                        }elseif($entity[0]['gestion_tipo_id'] < ($gestion - 1)){
+                            $sw = 1;
+                        }else{
+                            $sw = 2;
+                        }
+                    }
+                }
+            }else{
+                $sw = 0;
+            }
+            //dump($sw);die;
+            if($entity and ($sw == 0 or $sw == 1)){
+                
+                $ies[] = '{"ies":"'. $entity[0]['ies_id'] .'","ie":"'. $entity[0]['id'] .'","suc":"'. $entity[0]['sucursal_tipo_id'] .'","dis":"'. $entity[0]['id_distrito'] .'"}';
+                //dump($ies);die;
+                $fechainicio = (new \DateTime($form['fechainicio']))->format('Y-m-d');
+                $fechafin = (new \DateTime($form['fechafin']))->format('Y-m-d');
+                $em->getConnection()->beginTransaction();
+                //dump($entity);die;
+                try {
+                    $oc = $em->getRepository('SieAppWebBundle:OperativoControl')->createQueryBuilder('oc')
+                        ->select('oc')
+                        ->where('oc.operativoTipo = '.$form['operativo'])
+                        ->andWhere("oc.fechaInicio = '".$fechainicio."'")
+                        ->andWhere("oc.fechaFin = '".$fechafin."'")
+                        ->andWhere("oc.distritoTipo =" .$entity[0]['id_distrito']) 
+                        ->getQuery()
+                        ->getResult();
+                    //dump($oc);die;
+                    if($oc){
+                        $datos=json_decode($oc[0]->getObs(),true);
+                        //dump($datos);die;
+                        $obs = array_merge($datos,$ies);
+                        $obs = json_encode($obs);
+                        //dump($obs);die;
+                        $oc[0]->setObs($obs);
+                        $em->flush();
+                    }else{
+                        $obs = json_encode($ies);
+                        //registramos el operativo
+                        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('operativo_control');")->execute();
+                        $operativoControl = New OperativoControl();
+                        $operativoTipo = $em->getRepository('SieAppWebBundle:OperativoTipo')->find($form['operativo']);
+                        $distritoTipo = $em->getRepository('SieAppWebBundle:DistritoTipo')->find($entity[0]['id_distrito']);
+                        $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($id_usuario);
+                        $operativoControl->setOperativoTipo($operativoTipo);
+                        $operativoControl->setDistritoTipo($distritoTipo);
+                        $operativoControl->setUsuarioRegistro($usuario);
+                        $operativoControl->setFechaInicio(new \DateTime($fechainicio));
+                        $operativoControl->setFechaFin(new \DateTime($fechafin));
+                        $operativoControl->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
+                        $operativoControl->setObs($obs);
+                        $operativoControl->setFechaRegistro(new \DateTime('now'));
+                        $em->persist($operativoControl);
+                        $em->flush();
+                    }
+                    /**
+                     * CREACION DE LA SUCURSAL PARA CEAS NUEVAS O REAPERTURADAS
+                     */
+                    $query = $em->getConnection()->prepare('SELECT sp_genera_institucioneducativa_sucursal(:sie, :subcea, :gestion, :periodo)');
+                    $query->bindValue(':sie', $entity[0]['id']);
+                    $query->bindValue(':gestion', $gestion);
+                    $query->bindValue(':periodo', $periodo);
+                    $query->bindValue(':subcea', $entity[0]['sucursal_tipo_id']);
+                    $query->execute();
+                    $iesnew = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa'=>$entity[0]['id'],'sucursalTipo'=>0,'gestionTipo'=>$gestion,'periodoTipoId'=>$periodo));
+                    $iestnew = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalTramite')->findOneBy(array('institucioneducativaSucursal'=>$iesnew->getId()));
+                    if (!$iestnew){
+                        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_sucursal_tramite');")->execute();  
+                        $iest = new InstitucioneducativaSucursalTramite();
+                        $iest->setInstitucioneducativaSucursal($iesnew);            
+                        $iest->setPeriodoEstado($em->getRepository('SieAppWebBundle:PeriodoEstadoTipo')->find('1'));
+                        $iest->setTramiteEstado($em->getRepository('SieAppWebBundle:TramiteEstado')->find('11'));//Aceptación de apertura Inicio de Semestre
+                        $iest->setTramiteTipo($em->getRepository('SieAppWebBundle:TramiteTipo')->find('5'));
+                        $iest->setDistritoCod($entity[0]['id_distrito']);
+                        $iest->setFechainicio(new \DateTime('now'));
+                        $iest->setUsuarioIdInicio($this->session->get('userId'));
+                        $em->persist($iest);
+                        $em->flush();
+                    }
+                    $em->getConnection()->commit();
+                    $this->get('session')->getFlashBag()->add('exito', 'El CEA: '. $entity[0]['institucioneducativa'] . ' ,fué habilitado para el operativo.');
+                } catch (Exception $ex) {
+                    $em->getConnection()->rollback();
+                    $this->get('session')->getFlashBag()->add('error', 'Ocurrio un error, el CEA no fué habilitado para el operativo');
+                }
+            }else{
+                $this->get('session')->getFlashBag()->add('error', 'CEA no encontrado para este operativo.');    
+            }
+            
+        }else{
+            $this->get('session')->getFlashBag()->add('error', 'No tiene tuición sobre el Centro de Educación Alternativa.');    
+        }
+        
+        return $this->redirect($this->generateUrl('alternativa_operativo_nuevo_reapertura'));
+    }
+
 }

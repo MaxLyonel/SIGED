@@ -53,7 +53,6 @@ class ProcesoTipoController extends Controller
         $entity = new ProcesoTipo();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
-
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('proceso_tipo');")->execute();
@@ -61,6 +60,8 @@ class ProcesoTipoController extends Controller
             $query->execute();
             $tarea = $query->fetchAll();
             if(!$tarea){
+                $entity->setProcesoTipo(strtoupper($form->getData()->getProcesoTipo()));
+                $entity->setObs(strtoupper($form->getData()->getObs()));
                 $em->persist($entity);
                 $em->flush();
                 $mensaje = 'La tarea ' . $entity->getProcesoTipo() . ' se registró con éxito';
