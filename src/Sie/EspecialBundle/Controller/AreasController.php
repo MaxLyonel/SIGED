@@ -604,14 +604,14 @@ class AreasController extends Controller {
                                     break;
                                 case 13:
                                 case 17:
-                                    $asignaturas = $em->createQuery(
+                                /*     $asignaturas = $em->createQuery(
                                             'SELECT at
                                             FROM SieAppWebBundle:AsignaturaTipo at
                                             WHERE at.id IN (:ids)
                                             ORDER BY at.id ASC'
                                     )->setParameter('ids',array(496))
                                     ->getResult();
-                                    break;
+                                    break; */
                             }
                             break;
             	case 11:    $asignaturas = $em->createQuery(

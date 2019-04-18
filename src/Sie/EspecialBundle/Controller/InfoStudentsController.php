@@ -389,6 +389,7 @@ class InfoStudentsController extends Controller {
                   'itemsUe'=>$itemsUe,
                   'ciclo'=>$ciclo,
                   'operativo'=>$operativo,
+                  'ueducativaInfo'=> $aInfoUeducativa['ueducativaInfo']
                   // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
       ));
 
@@ -592,6 +593,7 @@ class InfoStudentsController extends Controller {
                   'itemsUe'=>$itemsUe,
                   'ciclo'=>$ciclo,
                   'operativo'=>$operativo,
+                  'ueducativaInfo'=> $aInfoUeducativa['ueducativaInfo']
                   // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
       ));
   }

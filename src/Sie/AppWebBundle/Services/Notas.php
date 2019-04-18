@@ -1277,6 +1277,8 @@ class Notas{
                     $newEstAsig->setFechaRegistro(new \DateTime('now'));
                     $newEstAsig->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
                     $newEstAsig->setInstitucioneducativaCursoOferta($this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($co->getId()));
+              
+                  
                     $this->em->persist($newEstAsig);
                     $this->em->flush();
                     $nuevaArea = true;
@@ -1356,7 +1358,7 @@ class Notas{
                             $valorNota = $an['notaCualitativa'];
                         }
                         if($i == $an['idNotaTipo']){
-                            if($gestion > 2018 and $discapacidad == 2){
+                            if($gestion > 2018 and ($discapacidad == 2 or $discapacidad == 3 or $discapacidad == 5)){
                                 $notasArray[$cont]['notas'][] =   array(
                                     'id'=>$cont."-".$i,
                                     'idEstudianteNota'=>$an['idNota'],
@@ -1365,10 +1367,11 @@ class Notas{
                                     'idEstudianteAsignatura'=>$an['idEstudianteAsignatura']
                                 );
                                 //dump(json_decode($valorNota,true)['fecha_fin']);die;
-                                
-                                $fechaEtapasArray[$i] = array('fechainicio'=>json_decode($valorNota,true)['fechainicio'],
-                                                                'fechafin'=>json_decode($valorNota,true)['fechafin']
-                                );
+                                if($discapacidad == 2){
+                                    $fechaEtapasArray[$i] = array('fechaEtapa'=>json_decode($valorNota,true)['fechaEtapa']);
+                                }
+                                /* $fechaEtapasArray[$i] = array('fechainicio'=>json_decode($valorNota,true)['fechainicio'],
+                                                                'fechafin'=>json_decode($valorNota,true)['fechafin']); */
                             }else{
                                 $notasArray[$cont]['notas'][] =   array(
                                     'id'=>$cont."-".$i,
@@ -1491,7 +1494,7 @@ class Notas{
             $estadosPermitidos = array(0,4,5,70,71,72,73,47);
 
 			// Tipos de notas
-            if ($discapacidad == 2 and $gestion > 2018){
+            if (($discapacidad == 2 or $discapacidad == 3 or $discapacidad == 5) and $gestion > 2018){
                 $tiposNotas = $this->em->getRepository('SieAppWebBundle:NotaEspecialTipo')->findById(array(1,2,3,5));    
                 $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(78,79,80));  
             }else{
@@ -1538,20 +1541,28 @@ class Notas{
         try {
             //  dump($request);die;
             $this->em->getConnection()->beginTransaction();
-            // DAtos de las notas cuantitativas
+            // Datos de las notas cuantitativas
             $idEstudianteNota = $request->get('idEstudianteNota');
             $idNotaTipo = $request->get('idNotaTipo');
             $idEstudianteAsignatura = $request->get('idEstudianteAsignatura');
             $gestion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($request->get('idInscripcion'))->getInstitucioneducativaCurso()->getGestionTipo()->getId();
-            if($gestion > 2018 and $discapacidad == 2){
-                $fechaInicio = $request->get('fechaInicio');
-                $fechaFin = $request->get('fechaFin');
+            if($gestion > 2018 and ($discapacidad == 2 or $discapacidad == 3 or $discapacidad == 5)){
+                /* $fechaInicio = $request->get('fechaInicio');
+                $fechaFin = $request->get('fechaFin'); */
+                if($discapacidad == 2 ){
+                    $fechaEtapas = $request->get('fechaEtapas');
+                }
                 $contenidos = $request->get('contenidos');
                 $resultados = $request->get('resultados');
                 $indicador = $request->get('indicador');
                 $estado = $request->get('estado');
                 foreach ($contenidos as $i => $c){
-                    $datosNotas[] = array('contenidos'=>mb_strtoupper($c,'utf-8'),'resultados'=>mb_strtoupper($resultados[$i],'utf-8'),'idIndicador'=>$indicador[$i],'idEstado'=>$estado[$i],'fechainicio'=>$fechaInicio[$idNotaTipo[$i]],'fechafin'=>$fechaFin[$idNotaTipo[$i]]);
+                    //$datosNotas[] = array('contenidos'=>mb_strtoupper($c,'utf-8'),'resultados'=>mb_strtoupper($resultados[$i],'utf-8'),'idIndicador'=>$indicador[$i],'idEstado'=>$estado[$i],'fechainicio'=>$fechaInicio[$idNotaTipo[$i]],'fechafin'=>$fechaFin[$idNotaTipo[$i]]);
+                    if($discapacidad == 2 ){
+                        $datosNotas[] = array('contenidos'=>mb_strtoupper($c,'utf-8'),'resultados'=>mb_strtoupper($resultados[$i],'utf-8'),'idIndicador'=>$indicador[$i],'idEstado'=>$estado[$i],'fechaEtapa'=>$fechaEtapas[$idNotaTipo[$i]]);
+                    }else{
+                        $datosNotas[] = array('contenidos'=>mb_strtoupper($c,'utf-8'),'resultados'=>mb_strtoupper($resultados[$i],'utf-8'),'idIndicador'=>$indicador[$i],'idEstado'=>$estado[$i]);
+                    }
                 }
                 //dump($datosNotas);die;
                 $notas = $datosNotas;
@@ -1587,7 +1598,7 @@ class Notas{
                             $newNota->setEstudianteAsignatura($this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($idEstudianteAsignatura[$i]));
                             if($nivel == 401 or $nivel == 402 or $nivel == 403 or $nivel == 411){
                                 $newNota->setNotaCuantitativa(0);
-                                if($gestion > 2018 and $discapacidad == 2){
+                                if($gestion > 2018 and ($discapacidad == 2 or $discapacidad == 3 or $discapacidad == 5)){
                                     $newNota->setNotaCualitativa(json_encode($notas[$i]));
                                 }else{
                                     $newNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
@@ -1622,7 +1633,7 @@ class Notas{
                         $regAnterior = clone $updateNota;
                         if($updateNota){
                             if($nivel == 401 or $nivel == 402 or $nivel == 403 or $nivel == 411){
-                                if($gestion > 2018 and $discapacidad == 2){
+                                if($gestion > 2018 and ($discapacidad == 2 or $discapacidad == 3 or $discapacidad == 5)){
                                     $updateNota->setNotaCualitativa(json_encode($notas[$i]));
                                 }else{
                                     $updateNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
