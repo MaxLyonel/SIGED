@@ -381,21 +381,6 @@
                     <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-globe"></i></span>
-                            <span class="text">Educación de personas jóvenes y adultos</span>
-                            <span class="arrow fa-angle-double-down"></span>
-                        </a>
-                        <ul>
-                            <li>
-                                <a href="{{path('reporte_adultos_index')}}">
-                                    <span class="text">Estadística Matrícula Educativa</span>
-                                    <span class="selected"></span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="submenu">
-                        <a href="javascript:void(0);">
-                            <span class="icon"><i class="fa fa-globe"></i></span>
                             <span class="text">Educación Especial</span>
                             <span class="arrow fa-angle-double-down"></span>
                         </a>
@@ -409,7 +394,7 @@
                         </ul>
                     </li>
 
-                    {% if ingresaAdmin == 1 or app.session.get('userId') == '13855318' %}                         
+                    {% if ingresaAdmin == 1 %}                         
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-globe"></i></span>

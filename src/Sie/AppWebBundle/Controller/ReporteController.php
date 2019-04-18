@@ -4396,6 +4396,7 @@ class ReporteController extends Controller {
          */
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d H:i:s'));
+        //$gestionActual = date_format($fechaActual,'Y') - 1;
         $gestionActual = date_format($fechaActual,'Y');
         $fechaEstadistica = $fechaActual->format('d-m-Y H:i:s');
         
@@ -4420,7 +4421,7 @@ class ReporteController extends Controller {
 
         // devuelve un array con los diferentes tipos de reportes 1:sexo, 2:dependencia, 3:area de atencion, 4:modalidad  
         $entityEstadistica = $this->buscaEstadisticaEspecialAreaRol($codigo,$rol); 
-       
+
         if(count($subEntidades)>0 and isset($subEntidades)){
             foreach ($subEntidades as $key => $dato) {
                 if(isset(reset($entityEstadistica)['dato'][0]['cantidad'])){             
@@ -4435,20 +4436,13 @@ class ReporteController extends Controller {
         
         // para seleccionar ti
 
-        if(count($entityEstadistica)>0){
-            //$chartMatricula = $this->chartColumnInformacionGeneral($entityEstadistica,"Matrícula",$gestionProcesada,1,"chartContainerMatricula");
-            $chartDiscapacidad = $this->chartDonut3d($entityEstadistica[3],"Estudiantes matriculados según Área de Atención",$gestionProcesada,"Estudiantes","chartContainerDiscapacidad");
-            //$chartNivelGrado = $this->chartDonutInformacionGeneralNivelGrado($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio y Año de Escolaridad ",$gestionProcesada,6,"chartContainerEfectivoNivelGrado");
-            $chartGenero = $this->chartPie($entityEstadistica[1],"Estudiantes matriculados según Sexo",$gestionProcesada,"Estudiantes","chartContainerGenero");
-            //$chartArea = $this->chartPyramidInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Área Geográfica",$gestionProcesada,4,"chartContainerEfectivoArea");
-            $chartDependencia = $this->chartColumn($entityEstadistica[2],"Estudiantes matriculados según Dependencia",$gestionProcesada,"Estudiantes","chartContainerDependencia");
-            $chartModalidad = $this->chartSemiPieDonut3d($entityEstadistica[4],"Estudiantes matriculados según Modalidad",$gestionProcesada,"Estudiantes","chartContainerModalidad");
-        } else {
-            $chartDiscapacidad = '';
-            $chartGenero = '';
-            $chartDependencia = '';
-            $chartModalidad = '';
-        }
+        //$chartMatricula = $this->chartColumnInformacionGeneral($entityEstadistica,"Matrícula",$gestionProcesada,1,"chartContainerMatricula");
+        $chartDiscapacidad = $this->chartDonut3d($entityEstadistica[3],"Estudiantes matriculados según Área de Atención",$gestionProcesada,"Estudiantes","chartContainerDiscapacidad");
+        //$chartNivelGrado = $this->chartDonutInformacionGeneralNivelGrado($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio y Año de Escolaridad ",$gestionProcesada,6,"chartContainerEfectivoNivelGrado");
+        $chartGenero = $this->chartPie($entityEstadistica[1],"Estudiantes matriculados según Sexo",$gestionProcesada,"Estudiantes","chartContainerGenero");
+        //$chartArea = $this->chartPyramidInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Área Geográfica",$gestionProcesada,4,"chartContainerEfectivoArea");
+        $chartDependencia = $this->chartColumn($entityEstadistica[2],"Estudiantes matriculados según Dependencia",$gestionProcesada,"Estudiantes","chartContainerDependencia");
+        $chartModalidad = $this->chartSemiPieDonut3d($entityEstadistica[4],"Estudiantes matriculados según Modalidad",$gestionProcesada,"Estudiantes","chartContainerModalidad");
 
         if($rol == 0){
             $mensaje = '$("#modal-bootstrap-tour").modal("show");';
@@ -4501,7 +4495,7 @@ class ReporteController extends Controller {
         $gestionActual = date_format($fechaActual,'Y');
         $fechaEstadistica = $fechaActual->format('d-m-Y H:i:s');
         
-        $gestionProcesada = $gestionActual;
+        $gestionProcesada = $gestionActual - 1;
 
         $codigo = 0;
 		$nivel = 0;	
@@ -4851,28 +4845,35 @@ class ReporteController extends Controller {
          */
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
+        //$gestionActual = date_format($fechaActual,'Y') - 1;
         $gestionActual = date_format($fechaActual,'Y');
         $gestionProcesada = $this->buscaGestionVistaMaterializadaRegular();
         //$gestionActual = 2016;
 
         $em = $this->getDoctrine()->getManager();
 
-        $queryEntidad = $em->getConnection()->prepare("
+        /* $queryEntidad = $em->getConnection()->prepare("
             with tabla as (
-                SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
-                , case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
-                , case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
+                --SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
+                --, case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
+                --, case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
+                SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(DISTINCT e.id) as cantidad
+                , emt.id as modalidad_id
+				, emt.modalidad
                 FROM estudiante AS e
                 INNER JOIN estudiante_inscripcion AS ei ON ei.estudiante_id = e.id
                 INNER JOIN estudiante_inscripcion_especial AS eie ON eie.estudiante_inscripcion_id = ei.id
                 INNER JOIN especial_area_tipo AS eat ON eie.especial_area_tipo_id = eat.id
                 INNER JOIN institucioneducativa_curso AS iec ON ei.institucioneducativa_curso_id = iec.id
+                INNER JOIN institucioneducativa_curso_especial AS iece ON iece.institucioneducativa_curso_id = iec.id --nuevo
+				INNER JOIN especial_modalidad_tipo AS emt ON iece.especial_modalidad_tipo_id = emt.id --nuevo
                 INNER JOIN institucioneducativa AS ie ON iec.institucioneducativa_id = ie.id
                 WHERE
                 iec.gestion_tipo_id IN (".$gestionActual.") AND
                 ie.institucioneducativa_tipo_id = 4
                 GROUP BY
-                eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
+                --eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
+                eat.id, ie.dependencia_tipo_id, e.genero_tipo_id,emt.id,emt.modalidad
             ) 
             
             select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre
@@ -4902,51 +4903,113 @@ class ReporteController extends Controller {
             
             order by tipo_id, id
              
+        ");  */
+        $queryEntidad = $em->getConnection()->prepare("
+            with tabla as (
+                --SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
+                --, case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
+                --, case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
+                SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(DISTINCT e.id) as cantidad
+                , emt.id as modalidad_id
+				, emt.modalidad
+                FROM estudiante AS e
+                INNER JOIN estudiante_inscripcion AS ei ON ei.estudiante_id = e.id
+                INNER JOIN estudiante_inscripcion_especial AS eie ON eie.estudiante_inscripcion_id = ei.id
+                INNER JOIN especial_area_tipo AS eat ON eie.especial_area_tipo_id = eat.id
+                INNER JOIN institucioneducativa_curso AS iec ON ei.institucioneducativa_curso_id = iec.id
+                INNER JOIN institucioneducativa_curso_especial AS iece ON iece.institucioneducativa_curso_id = iec.id --nuevo
+				INNER JOIN especial_modalidad_tipo AS emt ON iece.especial_modalidad_tipo_id = emt.id --nuevo
+                INNER JOIN institucioneducativa AS ie ON iec.institucioneducativa_id = ie.id
+                WHERE
+                iec.gestion_tipo_id IN (".$gestionActual.") AND
+                ie.institucioneducativa_tipo_id = 4
+                GROUP BY
+                --eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
+                eat.id, ie.dependencia_tipo_id, e.genero_tipo_id,emt.id,emt.modalidad
+            ) 
+            
+            select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre
+            , sum(cantidad) as cantidad, 0 as cantidad_directa,0 as cantidad_indirecta from tabla as t
+            inner join genero_tipo as gt on gt.id = t.genero_tipo_id
+            group by gt.id, gt.genero
+            
+            union all
+            
+            select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
+            , sum(cantidad) as cantidad, 0 as cantidad_directa,0 as cantidad_indirecta from tabla as t 
+            inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
+            group by dt.id, dt.dependencia
+            
+            union all
+            
+            select 3 as tipo_id, 'Área de Atención' as tipo_nombre, eat.id, eat.area_especial as nombre
+            , sum(cantidad) as cantidad,SUM(CASE t.modalidad_id when 1 THEN cantidad else 0 end) as cantidad_directa, SUM(CASE t.modalidad_id WHEN 2 THEN cantidad else 0 END ) as cantidad_indirecta from tabla as t 
+            inner join especial_area_tipo as eat on eat.id = t.area_tipo_id
+            group by eat.id, eat.area_especial
+            
+            union all
+            
+            select 4 as tipo_id, 'Modalidad' as tipo_nombre, t.modalidad_id, t.modalidad as nombre
+            , sum(cantidad) as cantidad,0 as cantidad_directa,0 as cantidad_indirecta from tabla as t 
+            group by t.modalidad_id, t.modalidad
+            
+            order by tipo_id, id
+             
         "); 
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {
             $queryEntidad = $em->getConnection()->prepare("
                 with tabla as (
-                    SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
-                    , case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
-                    , case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
+                    --SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
+                    --, case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
+                    --, case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
+                    SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(DISTINCT e.id) as cantidad
+                    , emt.id as modalidad_id
+					, emt.modalidad
                     FROM estudiante AS e
                     INNER JOIN estudiante_inscripcion AS ei ON ei.estudiante_id = e.id
                     INNER JOIN estudiante_inscripcion_especial AS eie ON eie.estudiante_inscripcion_id = ei.id
                     INNER JOIN especial_area_tipo AS eat ON eie.especial_area_tipo_id = eat.id
                     INNER JOIN institucioneducativa_curso AS iec ON ei.institucioneducativa_curso_id = iec.id
+                    INNER JOIN institucioneducativa_curso_especial AS iece ON iece.institucioneducativa_curso_id = iec.id  --nuevo
+					INNER JOIN especial_modalidad_tipo AS emt ON iece.especial_modalidad_tipo_id = emt.id  --nuevo
                     INNER JOIN institucioneducativa AS ie ON iec.institucioneducativa_id = ie.id
                     inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
                     WHERE
                     iec.gestion_tipo_id IN (".$gestionActual.") AND ie.institucioneducativa_tipo_id = 4 AND ie.id = ".$area."
                     GROUP BY
-                    eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
+                    --eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
+                    eat.id, ie.dependencia_tipo_id, e.genero_tipo_id,emt.id,emt.modalidad
                 ) 
                 
                 select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre
-                , sum(cantidad) as cantidad from tabla as t 
+                --, sum(cantidad) as cantidad from tabla as t 
+                , sum(cantidad) as cantidad, 0 as cantidad_directa,0 as cantidad_indirecta from tabla as t
                 inner join genero_tipo as gt on gt.id = t.genero_tipo_id
                 group by gt.id, gt.genero
                 
                 union all
                 
                 select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
-                , sum(cantidad) as cantidad from tabla as t 
+                --, sum(cantidad) as cantidad from tabla as t 
+                , sum(cantidad) as cantidad, 0 as cantidad_directa,0 as cantidad_indirecta from tabla as t
                 inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
                 group by dt.id, dt.dependencia
                 
                 union all
                 
                 select 3 as tipo_id, 'Área de Atención' as tipo_nombre, eat.id, eat.area_especial as nombre
-                , sum(cantidad) as cantidad from tabla as t 
+                --, sum(cantidad) as cantidad from tabla as t 
+                , sum(cantidad) as cantidad,SUM(CASE t.modalidad_id when 1 THEN cantidad else 0 end) as cantidad_directa, SUM(CASE t.modalidad_id WHEN 2 THEN cantidad else 0 END ) as cantidad_indirecta from tabla as t 
                 inner join especial_area_tipo as eat on eat.id = t.area_tipo_id
                 group by eat.id, eat.area_especial
                 
                 union all
                 
                 select 4 as tipo_id, 'Modalidad' as tipo_nombre, t.modalidad_id, t.modalidad as nombre
-                , sum(cantidad) as cantidad from tabla as t 
+                --, sum(cantidad) as cantidad from tabla as t 
+                , sum(cantidad) as cantidad, 0 as cantidad_directa,0 as cantidad_indirecta from tabla as t
                 group by t.modalidad_id, t.modalidad
                 
                 order by tipo_id, id
@@ -4957,46 +5020,56 @@ class ReporteController extends Controller {
         {
             $queryEntidad = $em->getConnection()->prepare("    
                 with tabla as (
-                    SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
-                    , case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
-                    , case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
+                    --SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
+                    --, case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
+                    --, case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
+                    SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(DISTINCT e.id) as cantidad
+                    , emt.id as modalidad_id
+					, emt.modalidad
                     FROM estudiante AS e
                     INNER JOIN estudiante_inscripcion AS ei ON ei.estudiante_id = e.id
                     INNER JOIN estudiante_inscripcion_especial AS eie ON eie.estudiante_inscripcion_id = ei.id
                     INNER JOIN especial_area_tipo AS eat ON eie.especial_area_tipo_id = eat.id
                     INNER JOIN institucioneducativa_curso AS iec ON ei.institucioneducativa_curso_id = iec.id
+                    INNER JOIN institucioneducativa_curso_especial AS iece ON iece.institucioneducativa_curso_id = iec.id  --nuevo
+					INNER JOIN especial_modalidad_tipo AS emt ON iece.especial_modalidad_tipo_id = emt.id  --nuevo
                     INNER JOIN institucioneducativa AS ie ON iec.institucioneducativa_id = ie.id
                     inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
                     left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
                     WHERE
                     iec.gestion_tipo_id IN (".$gestionActual.") AND ie.institucioneducativa_tipo_id = 4 AND lt5.codigo = '".$area."'
                     GROUP BY
-                    eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
+                    --eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
+                    eat.id, ie.dependencia_tipo_id, e.genero_tipo_id,emt.id,emt.modalidad
                 ) 
                 
                 select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre
-                , sum(cantidad) as cantidad from tabla as t 
+                --, sum(cantidad) as cantidad from tabla as t 
+                , sum(cantidad) as cantidad, 0 as cantidad_directa,0 as cantidad_indirecta from tabla as t
                 inner join genero_tipo as gt on gt.id = t.genero_tipo_id
                 group by gt.id, gt.genero
                 
                 union all
                 
                 select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
-                , sum(cantidad) as cantidad from tabla as t 
+                --, sum(cantidad) as cantidad from tabla as t 
+                , sum(cantidad) as cantidad, 0 as cantidad_directa,0 as cantidad_indirecta from tabla as t
                 inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
                 group by dt.id, dt.dependencia
                 
                 union all
                 
                 select 3 as tipo_id, 'Área de Atención' as tipo_nombre, eat.id, eat.area_especial as nombre
-                , sum(cantidad) as cantidad from tabla as t 
+                --, sum(cantidad) as cantidad from tabla as t 
+                , sum(cantidad) as cantidad,SUM(CASE t.modalidad_id when 1 THEN cantidad else 0 end) as cantidad_directa, SUM(CASE t.modalidad_id WHEN 2 THEN cantidad else 0 END ) as cantidad_indirecta from tabla as t 
                 inner join especial_area_tipo as eat on eat.id = t.area_tipo_id
                 group by eat.id, eat.area_especial
                 
                 union all
                 
                 select 4 as tipo_id, 'Modalidad' as tipo_nombre, t.modalidad_id, t.modalidad as nombre
-                , sum(cantidad) as cantidad from tabla as t 
+                --, sum(cantidad) as cantidad from tabla as t 
+                , sum(cantidad) as cantidad, 0 as cantidad_directa,0 as cantidad_indirecta from tabla as t
                 group by t.modalidad_id, t.modalidad
                 
                 order by tipo_id, id
@@ -5007,14 +5080,19 @@ class ReporteController extends Controller {
         {
             $queryEntidad = $em->getConnection()->prepare("
                 with tabla as (
-                    SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
-                    , case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
-                    , case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
+                    --SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
+                    --, case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
+                    --, case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
+                    SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(DISTINCT e.id) as cantidad
+                    , emt.id as modalidad_id
+					, emt.modalidad
                     FROM estudiante AS e
                     INNER JOIN estudiante_inscripcion AS ei ON ei.estudiante_id = e.id
                     INNER JOIN estudiante_inscripcion_especial AS eie ON eie.estudiante_inscripcion_id = ei.id
                     INNER JOIN especial_area_tipo AS eat ON eie.especial_area_tipo_id = eat.id
                     INNER JOIN institucioneducativa_curso AS iec ON ei.institucioneducativa_curso_id = iec.id
+                    INNER JOIN institucioneducativa_curso_especial AS iece ON iece.institucioneducativa_curso_id = iec.id  --nuevo
+					INNER JOIN especial_modalidad_tipo AS emt ON iece.especial_modalidad_tipo_id = emt.id  --nuevo
                     INNER JOIN institucioneducativa AS ie ON iec.institucioneducativa_id = ie.id
                     inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
                     left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
@@ -5025,32 +5103,37 @@ class ReporteController extends Controller {
                     WHERE
                     iec.gestion_tipo_id IN (".$gestionActual.") AND ie.institucioneducativa_tipo_id = 4 AND lt4.codigo = '".$area."'
                     GROUP BY
-                    eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
+                    --eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
+                    eat.id, ie.dependencia_tipo_id, e.genero_tipo_id,emt.id,emt.modalidad
                 ) 
                 
                 select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre
-                , sum(cantidad) as cantidad from tabla as t 
+                --, sum(cantidad) as cantidad from tabla as t 
+                , sum(cantidad) as cantidad, 0 as cantidad_directa,0 as cantidad_indirecta from tabla as t
                 inner join genero_tipo as gt on gt.id = t.genero_tipo_id
                 group by gt.id, gt.genero
                 
                 union all
                 
                 select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
-                , sum(cantidad) as cantidad from tabla as t 
+                --, sum(cantidad) as cantidad from tabla as t 
+                , sum(cantidad) as cantidad, 0 as cantidad_directa,0 as cantidad_indirecta from tabla as t
                 inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
                 group by dt.id, dt.dependencia
                 
                 union all
                 
                 select 3 as tipo_id, 'Área de Atención' as tipo_nombre, eat.id, eat.area_especial as nombre
-                , sum(cantidad) as cantidad from tabla as t 
+                --, sum(cantidad) as cantidad from tabla as t 
+                , sum(cantidad) as cantidad,SUM(CASE t.modalidad_id when 1 THEN cantidad else 0 end) as cantidad_directa, SUM(CASE t.modalidad_id WHEN 2 THEN cantidad else 0 END ) as cantidad_indirecta from tabla as t 
                 inner join especial_area_tipo as eat on eat.id = t.area_tipo_id
                 group by eat.id, eat.area_especial
                 
                 union all
                 
                 select 4 as tipo_id, 'Modalidad' as tipo_nombre, t.modalidad_id, t.modalidad as nombre
-                , sum(cantidad) as cantidad from tabla as t 
+                --, sum(cantidad) as cantidad from tabla as t 
+                , sum(cantidad) as cantidad, 0 as cantidad_directa,0 as cantidad_indirecta from tabla as t
                 group by t.modalidad_id, t.modalidad
                 
                 order by tipo_id, id
@@ -5061,45 +5144,55 @@ class ReporteController extends Controller {
         {            
             $queryEntidad = $em->getConnection()->prepare("
                 with tabla as (
-                    SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
-                    , case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
-                    , case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
+                    --SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
+                    --, case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
+                    --, case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
+                    SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(DISTINCT e.id) as cantidad
+                    , emt.id as modalidad_id
+					, emt.modalidad
                     FROM estudiante AS e
                     INNER JOIN estudiante_inscripcion AS ei ON ei.estudiante_id = e.id
                     INNER JOIN estudiante_inscripcion_especial AS eie ON eie.estudiante_inscripcion_id = ei.id
                     INNER JOIN especial_area_tipo AS eat ON eie.especial_area_tipo_id = eat.id
                     INNER JOIN institucioneducativa_curso AS iec ON ei.institucioneducativa_curso_id = iec.id
+                    INNER JOIN institucioneducativa_curso_especial AS iece ON iece.institucioneducativa_curso_id = iec.id  --nuevo
+					INNER JOIN especial_modalidad_tipo AS emt ON iece.especial_modalidad_tipo_id = emt.id  --nuevo
                     INNER JOIN institucioneducativa AS ie ON iec.institucioneducativa_id = ie.id
                     WHERE
                     iec.gestion_tipo_id IN (".$gestionActual.") AND
                     ie.institucioneducativa_tipo_id = 4
                     GROUP BY
-                    eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
+                    --eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
+                    eat.id, ie.dependencia_tipo_id, e.genero_tipo_id,emt.id,emt.modalidad
                 ) 
                 
                 select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre
-                , sum(cantidad) as cantidad from tabla as t 
+                --, sum(cantidad) as cantidad from tabla as t 
+                , sum(cantidad) as cantidad, 0 as cantidad_directa,0 as cantidad_indirecta from tabla as t
                 inner join genero_tipo as gt on gt.id = t.genero_tipo_id
                 group by gt.id, gt.genero
                 
                 union all
                 
                 select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
-                , sum(cantidad) as cantidad from tabla as t 
+                --, sum(cantidad) as cantidad from tabla as t 
+                , sum(cantidad) as cantidad, 0 as cantidad_directa,0 as cantidad_indirecta from tabla as t
                 inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
                 group by dt.id, dt.dependencia
                 
                 union all
                 
                 select 3 as tipo_id, 'Área de Atención' as tipo_nombre, eat.id, eat.area_especial as nombre
-                , sum(cantidad) as cantidad from tabla as t 
+                --, sum(cantidad) as cantidad from tabla as t 
+                , sum(cantidad) as cantidad,SUM(CASE t.modalidad_id when 1 THEN cantidad else 0 end) as cantidad_directa, SUM(CASE t.modalidad_id WHEN 2 THEN cantidad else 0 END ) as cantidad_indirecta from tabla as t 
                 inner join especial_area_tipo as eat on eat.id = t.area_tipo_id
                 group by eat.id, eat.area_especial
                 
                 union all
                 
                 select 4 as tipo_id, 'Modalidad' as tipo_nombre, t.modalidad_id, t.modalidad as nombre
-                , sum(cantidad) as cantidad from tabla as t 
+                --, sum(cantidad) as cantidad from tabla as t 
+                , sum(cantidad) as cantidad, 0 as cantidad_directa,0 as cantidad_indirecta from tabla as t
                 group by t.modalidad_id, t.modalidad
                 
                 order by tipo_id, id
@@ -5110,8 +5203,8 @@ class ReporteController extends Controller {
         $objEntidad = $queryEntidad->fetchAll(); 
 
         $aDato = array();
-
         foreach ($objEntidad as $key => $dato) {
+            
             $aDato[$dato['tipo_id']]['tipo'] = $dato['tipo_nombre'];
             if (isset($aDato[$dato['tipo_id']]['dato'][0]['cantidad'])){
                 $cantidadParcial = $aDato[$dato['tipo_id']]['dato'][0]['cantidad'] + $dato['cantidad'];
@@ -5119,8 +5212,13 @@ class ReporteController extends Controller {
                 $cantidadParcial = $dato['cantidad'];
             }    
             $aDato[$dato['tipo_id']]['dato'][0] = array('detalle'=>'Total', 'cantidad'=>$cantidadParcial);    
-            $aDato[$dato['tipo_id']]['dato'][$dato['id']] = array('detalle'=>$dato['nombre'], 'cantidad'=>$dato['cantidad']);  
+            if($dato['tipo_id'] == 3){
+                $aDato[$dato['tipo_id']]['dato'][$dato['id']] = array('detalle'=>$dato['nombre'], 'cantidad'=>$dato['cantidad'], 'cantidad_directa'=>$dato['cantidad_directa'], 'cantidad_indirecta'=>$dato['cantidad_indirecta']);      
+            }else{
+                $aDato[$dato['tipo_id']]['dato'][$dato['id']] = array('detalle'=>$dato['nombre'], 'cantidad'=>$dato['cantidad']);  
+            }
         }
+        //dump($aDato);die;
         return $aDato;
     }
 
@@ -5140,7 +5238,8 @@ class ReporteController extends Controller {
                 $subTotal = $dato['cantidad'];
             } else {
                 $porcentaje = round(((100*$dato['cantidad'])/(($subTotal==0) ? 1: $subTotal)),1);
-                $datosTemp = $datosTemp."{name: '".$dato['detalle']."', y: ".$porcentaje.", label: ".$dato['cantidad']."},";
+                //$datosTemp = $datosTemp."{name: '".$dato['detalle']."', y: ".$porcentaje.", label: ".$dato['cantidad']."},";
+                $datosTemp = $datosTemp."{name: '".$dato['detalle']."', y: ".$porcentaje.", label: ".$dato['cantidad'].", label1: ".$dato['cantidad_directa'].", label2: ".$dato['cantidad_indirecta']."},";
             }
         }
         
@@ -5184,7 +5283,9 @@ class ReporteController extends Controller {
                         shared: true,
                         useHTML: true,
                         headerFormat: '<span style=&#39;font-size:11px&#39;>{series.name}</span><br>',
-                        pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.label:,.0f} ".$pointLabel."</b> del total<br/>'
+                        pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.label:,.0f} ".$pointLabel."</b> del total<br/>'+
+                                        '<span style=&#39;color:{point.color}&#39;>Directa</span>: <b>{point.label1:,.0f} ".$pointLabel."</b><br/>'+
+                                        '<span style=&#39;color:{point.color}&#39;>Indirecta</span>: <b>{point.label2:,.0f} ".$pointLabel."</b><br/>'
                     },
                     series: [{
                         name: '".$entity['tipo']."',
@@ -5419,15 +5520,16 @@ class ReporteController extends Controller {
          */
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
+        //$gestionActual = date_format($fechaActual,'Y') - 1;
         $gestionActual = date_format($fechaActual,'Y');
         $gestionProcesada = $this->buscaGestionVistaMaterializadaRegular();
         //$gestionActual = 2016;
 
         $em = $this->getDoctrine()->getManager();
-
         $queryEntidad = $em->getConnection()->prepare("
             SELECT 'Departamento' as nombreArea, lt4.codigo as codigo, lt4.lugar  as nombre, 7 as rolUsuario 
-            , count(*) as total_inscrito
+            --, count(*) as total_inscrito
+            , count(DISTINCT e.id) as total_inscrito
             , coalesce(count(distinct institucioneducativa_id),0) as total_ues
             FROM estudiante AS e
             INNER JOIN estudiante_inscripcion AS ei ON ei.estudiante_id = e.id
@@ -5446,7 +5548,7 @@ class ReporteController extends Controller {
             ie.institucioneducativa_tipo_id = 4
             GROUP BY lt4.id, lt4.codigo, lt4.lugar 
             ORDER BY lt4.id, lt4.codigo, lt4.lugar 
-        "); 
+        ");
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {                 
@@ -5456,7 +5558,8 @@ class ReporteController extends Controller {
         {
             $queryEntidad = $em->getConnection()->prepare("
                     SELECT 'Unidad Educativa' as nombreArea, ie.id as codigo, ie.id::varchar||' - '||ie.institucioneducativa as nombre, 9 as rolUsuario 
-                    , count(*) as total_inscrito
+                    --, count(*) as total_inscrito
+                    , count(DISTINCT e.id) as total_inscrito
                     , coalesce(count(distinct institucioneducativa_id),0) as total_ues
                     FROM estudiante AS e
                     INNER JOIN estudiante_inscripcion AS ei ON ei.estudiante_id = e.id
@@ -5477,7 +5580,8 @@ class ReporteController extends Controller {
         {
             $queryEntidad = $em->getConnection()->prepare("
                 SELECT 'Distrito Educativo' as nombreArea, lt5.codigo as codigo, lt5.lugar  as nombre, 10 as rolUsuario 
-                , count(*) as total_inscrito
+                --, count(*) as total_inscrito
+                , count(DISTINCT e.id) as total_inscrito
                 , coalesce(count(distinct institucioneducativa_id),0) as total_ues
                 FROM estudiante AS e
                 INNER JOIN estudiante_inscripcion AS ei ON ei.estudiante_id = e.id
@@ -5503,7 +5607,8 @@ class ReporteController extends Controller {
         {
             $queryEntidad = $em->getConnection()->prepare("
                 SELECT 'Departamento' as nombreArea, lt4.codigo as codigo, lt4.lugar  as nombre, 7 as rolUsuario 
-                , count(*) as total_inscrito
+                --, count(*) as total_inscrito
+                , count(DISTINCT e.id) as total_inscrito
                 , coalesce(count(distinct institucioneducativa_id),0) as total_ues
                 FROM estudiante AS e
                 INNER JOIN estudiante_inscripcion AS ei ON ei.estudiante_id = e.id
