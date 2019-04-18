@@ -15,11 +15,11 @@
             <!--/ END META SECTION -->
 
             <!-- START @FAVICONS -->
-            <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-144x144-precomposed.png" rel="apple-touch-icon-precomposed" sizes="144x144">
+            <!-- <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-144x144-precomposed.png" rel="apple-touch-icon-precomposed" sizes="144x144">
             <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-114x114-precomposed.png" rel="apple-touch-icon-precomposed" sizes="114x114">
             <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-72x72-precomposed.png" rel="apple-touch-icon-precomposed" sizes="72x72">
             <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-57x57-precomposed.png" rel="apple-touch-icon-precomposed">
-            <link href="{{asset('webEspecial/img/ico/html/apple-touch-icon.png')}}" rel="shortcut icon">
+            <link href="{{asset('webEspecial/img/ico/html/apple-touch-icon.png')}}" rel="shortcut icon"> -->
             <!--/ END FAVICONS -->
 
             <!-- START @FONT STYLES -->
@@ -42,7 +42,7 @@
             <link href="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
             <link href="{{asset('juegos/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
 
-            <link href="{{asset('css/plugins/bootstrap-combined/combined.css') }}" rel="stylesheet">
+            <link href="{{asset('css/plugins/bootstrap-combined/combined.css') }}" type="text/html" rel="stylesheet">
             <link rel="stylesheet" type="text/css" href="{{asset('webEspecial/assets/commercial/plugins/cube-portfolio/cubeportfolio/css/cubeportfolio.css')}}">
             <!--/ END PAGE LEVEL STYLES -->
 
@@ -237,7 +237,6 @@
                                         <span class="caret"></span>
                                     </span>
                                 </a>
-                                <!-- Start dropdown menu -->
                                 <ul class="dropdown-menu animated flipInX">
                                     <li class="dropdown-header">Account</li>
                                     <li><a href="{{path('sie_usuarios_homepage')}}"><i class="fa fa-user"></i>Gestión de usuarios</a></li>
@@ -559,68 +558,67 @@
                                         <!--/ End category current working -->
 
                                         <!-- Start left navigation - current working -->
-                                        <li>
+                                        <!-- <li>
                                             <div class="media-list working">
                                                 <a href="form-element.html#" class="media">
                                                     <div class="media-object pull-left has-notif">
                                                         <img src="{{asset('webEspecial/img/avatar/35/10.png')}}" class="img-circle" alt="Daddy Botak">
                                                         <i class="online"></i>
-                                                    </div><!-- /.media-object -->
+                                                    </div>
                                                     <div class="media-body">
                                                         <span class="media-heading">Daddy Botak</span>
                                                         <span class="media-meta status">online</span>
                                                         <span class="media-meta device"><i class="fa fa-globe"></i></span>
-                                                    </div><!-- /.media-body -->
-                                                </a><!-- /.media -->
+                                                    </div>
+                                                </a>
                                                 <a href="form-element.html#" class="media">
                                                     <div class="media-object pull-left has-notif">
                                                         <img src="{{asset('webEspecial/img/avatar/35/11.png')}}" class="img-circle" alt="Sarah Tingting">
                                                         <i class="offline"></i>
-                                                    </div><!-- /.media-object -->
+                                                    </div>
                                                     <div class="media-body">
                                                         <span class="media-heading">Sarah Tingting</span>
                                                         <span class="media-meta status">offline</span>
                                                         <span class="media-meta device"><i class="fa fa-globe"></i></span>
                                                         <span class="media-meta time">7 m</span>
-                                                    </div><!-- /.media-body -->
-                                                </a><!-- /.media -->
+                                                    </div>
+                                                </a>
                                                 <a href="form-element.html#" class="media">
                                                     <div class="media-object pull-left has-notif">
                                                         <img src="{{asset('webEspecial/img/avatar/35/26.png')}}" class="img-circle" alt="">
                                                         <i class="busy"></i>
-                                                    </div><!-- /.media-object -->
+                                                    </div>
                                                     <div class="media-body">
                                                         <span class="media-heading">Nicolas Olivier</span>
                                                         <span class="media-meta status">busy</span>
                                                         <span class="media-meta device"><i class="fa fa-mobile"></i></span>
-                                                    </div><!-- /.media-body -->
-                                                </a><!-- /.media -->
+                                                    </div>
+                                                </a>
                                                 <a href="form-element.html#" class="media">
                                                     <div class="media-object pull-left has-notif">
                                                         <img src="{{asset('webEspecial/img/avatar/35/13.png')}}" class="img-circle" alt="Claudia Cinta">
                                                         <i class="online"></i>
-                                                    </div><!-- /.media-object -->
+                                                    </div>
                                                     <div class="media-body">
                                                         <span class="media-heading">Claudia Cinta</span>
                                                         <span class="media-meta status">online</span>
                                                         <span class="media-meta device"><i class="fa fa-mobile"></i></span>
-                                                    </div><!-- /.media-body -->
-                                                </a><!-- /.media -->
+                                                    </div>
+                                                </a>
                                                 <a href="form-element.html#" class="media">
                                                     <div class="media-object pull-left has-notif">
                                                         <img src="{{asset('webEspecial/img/avatar/35/26.png')}}" class="img-circle" alt="">
                                                         <i class="busy"></i>
-                                                    </div><!-- /.media-object -->
+                                                    </div>
                                                     <div class="media-body">
                                                         <span class="media-heading">Catherine Parker</span>
                                                         <span class="media-meta status">busy</span>
                                                         <span class="media-meta device"><i class="fa fa-mobile"></i></span>
-                                                    </div><!-- /.media-body -->
-                                                </a><!-- /.media -->
-                                            </div><!-- /.media-list -->
-                                        </li>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </li> -->
                                         <!--/ End left navigation - current working -->
-
                                     </ul>
                                     <!-- Start right navigation - menu -->
                                 </div>
@@ -961,208 +959,185 @@
                                     <!-- Start right navigation - menu -->
                                 </div>
                             </div><!-- /#sidebar-setting -->
-                            <div class="tab-pane" id="sidebar-chat">
+                            <!-- <div class="tab-pane" id="sidebar-chat">
                                 <div class="sidebar-chat">
-
-                                    <!-- Start right navigation - menu -->
                                     <ul class="sidebar-menu niceScroll">
-
-                                        <!-- Start category family chat -->
                                         <li class="sidebar-category">
                                             <span>FAMILY</span>
                                             <span class="pull-right"><i class="fa fa-home"></i></span>
                                         </li>
-                                        <!--/ End category family chat -->
-
                                         <li>
-                                            <!-- Start chat - contact list -->
                                             <div class="media-list">
                                                 <a href="form-element.html#" class="media">
                                                     <div class="media-object pull-left has-notif">
                                                         <img src="{{asset('webEspecial/img/avatar/35/10.png')}}" class="img-circle" alt="Daddy Botak">
                                                         <i class="online"></i>
-                                                    </div><!-- /.media-object -->
+                                                    </div>
                                                     <div class="media-body">
                                                         <span class="media-heading">Daddy Botak</span>
                                                         <span class="media-meta status">online</span>
                                                         <span class="media-meta device"><i class="fa fa-globe"></i></span>
-                                                    </div><!-- /.media-body -->
-                                                </a><!-- /.media -->
+                                                    </div>
+                                                </a>
                                                 <a href="form-element.html#" class="media">
                                                     <div class="media-object pull-left has-notif">
                                                         <img src="{{asset('webEspecial/img/avatar/35/11.png')}}" class="img-circle" alt="Sarah Tingting">
                                                         <i class="offline"></i>
-                                                    </div><!-- /.media-object -->
+                                                    </div>
                                                     <div class="media-body">
                                                         <span class="media-heading">Sarah Tingting</span>
                                                         <span class="media-meta status">offline</span>
                                                         <span class="media-meta device"><i class="fa fa-globe"></i></span>
                                                         <span class="media-meta time">7 m</span>
-                                                    </div><!-- /.media-body -->
-                                                </a><!-- /.media -->
+                                                    </div>
+                                                </a>
                                                 <a href="form-element.html#" class="media">
                                                     <div class="media-object pull-left has-notif">
                                                         <img src="{{asset('webEspecial/img/avatar/35/26.png')}}" class="img-circle" alt="...">
                                                         <i class="busy"></i>
-                                                    </div><!-- /.media-object -->
+                                                    </div>
                                                     <div class="media-body">
                                                         <span class="media-heading">Nicolas Olivier</span>
                                                         <span class="media-meta status">busy</span>
                                                         <span class="media-meta device"><i class="fa fa-mobile"></i></span>
-                                                    </div><!-- /.media-body -->
-                                                </a><!-- /.media -->
+                                                    </div>
+                                                </a>
                                                 <a href="form-element.html#" class="media">
                                                     <div class="media-object pull-left has-notif">
                                                         <img src="{{asset('webEspecial/img/avatar/35/12.png')}}" class="img-circle" alt="Harry Potret">
                                                         <i class="online"></i>
-                                                    </div><!-- /.media-object -->
+                                                    </div>
                                                     <div class="media-body">
                                                         <span class="media-heading">Harry Potret</span>
                                                         <span class="media-meta status">online</span>
                                                         <span class="media-meta device"><i class="fa fa-mobile"></i></span>
-                                                    </div><!-- /.media-body -->
-                                                </a><!-- /.media -->
+                                                    </div>
+                                                </a>
                                                 <a href="form-element.html#" class="media">
                                                     <div class="media-object pull-left has-notif">
                                                         <img src="{{asset('webEspecial/img/avatar/35/26.png')}}" class="img-circle" alt="...">
                                                         <i class="busy"></i>
-                                                    </div><!-- /.media-object -->
+                                                    </div>
                                                     <div class="media-body">
                                                         <span class="media-heading">Catherine Parker</span>
                                                         <span class="media-meta status">busy</span>
                                                         <span class="media-meta device"><i class="fa fa-mobile"></i></span>
-                                                    </div><!-- /.media-body -->
-                                                </a><!-- /.media -->
-                                            </div><!-- /.media-list -->
-                                            <!--/ End chat - contact list -->
+                                                    </div>
+                                                </a>
+                                            </div>
                                         </li>
-
-                                        <!-- Start category friends chat -->
                                         <li class="sidebar-category">
                                             <span>FRIENDS</span>
                                             <span class="pull-right"><i class="fa fa-group"></i></span>
                                         </li>
-                                        <!--/ End category friends chat -->
-
                                         <li>
-                                            <!-- Start chat - contact list -->
                                             <div class="media-list">
                                                 <a href="form-element.html#" class="media">
                                                     <div class="media-object pull-left has-notif">
                                                         <img src="{{asset('webEspecial/img/avatar/35/15.png')}}" class="img-circle" alt="Jeck Joko">
                                                         <i class="online"></i>
-                                                    </div><!-- /.media-object -->
+                                                    </div>
                                                     <div class="media-body">
                                                         <span class="media-heading">Jeck Joko</span>
                                                         <span class="media-meta status">online</span>
                                                         <span class="media-meta device"><i class="fa fa-globe"></i></span>
-                                                    </div><!-- /.media-body -->
-                                                </a><!-- /.media -->
+                                                    </div>
+                                                </a>
                                                 <a href="form-element.html#" class="media">
                                                     <div class="media-object pull-left has-notif">
                                                         <img src="{{asset('webEspecial/img/avatar/35/16.png')}}" class="img-circle" alt="Tenny Imoet">
                                                         <i class="busy"></i>
-                                                    </div><!-- /.media-object -->
+                                                    </div>
                                                     <div class="media-body">
                                                         <span class="media-heading">Tenny Imoet</span>
                                                         <span class="media-meta status">busy</span>
                                                         <span class="media-meta device"><i class="fa fa-mobile"></i></span>
-                                                    </div><!-- /.media-body -->
-                                                </a><!-- /.media -->
+                                                    </div>
+                                                </a>
                                                 <a href="form-element.html#" class="media">
                                                     <div class="media-object pull-left has-notif">
                                                         <img src="{{asset('webEspecial/img/avatar/35/17.png')}}" class="img-circle" alt="Leli Madang">
                                                         <i class="offline"></i>
-                                                    </div><!-- /.media-object -->
+                                                    </div>
                                                     <div class="media-body">
                                                         <span class="media-heading">Leli Madang</span>
                                                         <span class="media-meta status">offline</span>
                                                         <span class="media-meta device"><i class="fa fa-mobile"></i></span>
                                                         <span class="media-meta time">2 m</span>
-                                                    </div><!-- /.media-body -->
-                                                </a><!-- /.media -->
+                                                    </div>
+                                                </a>
                                                 <a href="form-element.html#" class="media">
                                                     <div class="media-object pull-left has-notif">
                                                         <img src="{{asset('webEspecial/img/avatar/35/18.png')}}" class="img-circle" alt="Rebecca Cabean">
                                                         <i class="offline"></i>
-                                                    </div><!-- /.media-object -->
+                                                    </div>
                                                     <div class="media-body">
                                                         <span class="media-heading">Rebecca Cabean</span>
                                                         <span class="media-meta status">offline</span>
                                                         <span class="media-meta device"><i class="fa fa-mobile"></i></span>
                                                         <span class="media-meta time">8 m</span>
-                                                    </div><!-- /.media-body -->
-                                                </a><!-- /.media -->
+                                                    </div>
+                                                </a>
                                                 <a href="form-element.html#" class="media">
                                                     <div class="media-object pull-left has-notif">
                                                         <img src="{{asset('webEspecial/img/avatar/35/26.png')}}" class="img-circle" alt="...">
                                                         <i class="busy"></i>
-                                                    </div><!-- /.media-object -->
+                                                    </div>
                                                     <div class="media-body">
                                                         <span class="media-heading">ondoel return</span>
                                                         <span class="media-meta status">busy</span>
                                                         <span class="media-meta device"><i class="fa fa-mobile"></i></span>
-                                                    </div><!-- /.media-body -->
-                                                </a><!-- /.media -->
-                                            </div><!-- /.media-list -->
-                                            <!--/ End chat - contact list -->
+                                                    </div>
+                                                </a>
+                                            </div>
                                         </li>
-
-                                        <!-- Start category other chat -->
                                         <li class="sidebar-category">
                                             <span>OTHERS</span>
                                             <span class="pull-right"><i class="fa fa-share"></i></span>
                                         </li>
-                                        <!--/ End category other chat -->
-
                                         <li>
-                                            <!-- Start chat - contact list -->
                                             <div class="media-list">
                                                 <a href="form-element.html#" class="media">
                                                     <div class="media-object pull-left has-notif">
                                                         <img src="{{asset('webEspecial/img/avatar/35/19.png')}}" class="img-circle" alt="Sishy Mawar">
                                                         <i class="offline"></i>
-                                                    </div><!-- /.media-object -->
+                                                    </div>
                                                     <div class="media-body">
                                                         <span class="media-heading">Sishy Mawar</span>
                                                         <span class="media-meta status">offline</span>
                                                         <span class="media-meta device"><i class="fa fa-mobile"></i></span>
                                                         <span class="media-meta time">23 m</span>
-                                                    </div><!-- /.media-body -->
-                                                </a><!-- /.media -->
+                                                    </div>
+                                                </a>
                                                 <a href="form-element.html#" class="media">
                                                     <div class="media-object pull-left has-notif">
                                                         <img src="{{asset('webEspecial/img/avatar/35/20.png')}}" class="img-circle" alt="Mbah Roso">
                                                         <i class="away"></i>
-                                                    </div><!-- /.media-object -->
+                                                    </div>
                                                     <div class="media-body">
                                                         <span class="media-heading">Mbah Roso</span>
                                                         <span class="media-meta status">away</span>
                                                         <span class="media-meta device"><i class="fa fa-mobile"></i></span>
                                                         <span class="media-meta time">2 h</span>
-                                                    </div><!-- /.media-body -->
-                                                </a><!-- /.media -->
+                                                    </div>
+                                                </a>
                                                 <a href="form-element.html#" class="media">
                                                     <div class="media-object pull-left has-notif">
                                                         <img src="{{asset('webEspecial/img/avatar/35/26.png')}}" class="img-circle" alt="..."
                                                              >
                                                         <i class="busy"></i>
-                                                    </div><!-- /.media-object -->
+                                                    </div>
                                                     <div class="media-body">
                                                         <span class="media-heading">Alma Butoi</span>
                                                         <span class="media-meta status">busy</span>
                                                         <span class="media-meta device"><i class="fa fa-mobile"></i></span>
-                                                    </div><!-- /.media-body -->
-                                                </a><!-- /.media -->
-                                            </div><!-- /.media-list -->
-                                            <!--/ End chat - contact list -->
+                                                    </div>
+                                                </a>
+                                            </div>
                                         </li>
-
-                                    </ul><!-- /.sidebar-menu -->
-                                    <!-- Start right navigation - menu -->
-
-                                </div><!-- /.sidebar-chat -->
-                            </div><!-- /#sidebar-chat -->
+                                    </ul>
+                                </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>

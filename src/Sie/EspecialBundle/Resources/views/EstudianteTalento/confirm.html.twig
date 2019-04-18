@@ -61,46 +61,53 @@
                                 <h4>Documento: <a href="{{asset('uploads/archivos/flujos/'~institucion~'/talento/'~ documento )}}" target="_blank">Informe Psicopedagógico</a></h4>
                             </div>
                         </div>
-                        <div id="carga"></div>
                         <hr>
-                        <div class="row" id="myform">
-                            <form id="confirmar" action="" autocomplete="off">
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <button type="button" class="btn btn-primary" onclick="openModal()">Confirmar</button>
+                            </div>
+                            {# <form id="confirmar" action="" autocomplete="off">
                                 <input type="hidden" id="tramite_id" value="{{ tramite_id }}">
                                 <div class="col-md-12 text-center">
-                                    {#<div class="form-group">
-                                        <label for="es_talento">¿Es Talento?</label>
-                                        <select type="text" class="form-control" id="es_talento" name="es_talento" disabled required>
-                                            <option value="" disabled selected>Seleccione...</option>
-                                            <option value="SI">Si</option>
-                                            <option value="NO">No</option>
-                                        </select>
-                                    </div>#}
                                     <h4>¿Está seguro(a) de confirmar la conclusión del trámite?</h4>
                                 </div>
                                 <div class="col-md-12 text-center">
                                     <button type="submit" class="btn btn-primary" id="confirma">Confirmar</button>
                                 </div>
-                            </form>
+                            </form> #}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div id="modalConfirm" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <form id="confirmar">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Confirmar</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="tramite_id" value="{{ tramite_id }}">
+                        <input type="hidden" id="tramite_st" value="0">
+                        <div id="carga"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="confirma">Aceptar</button>
+                        <button type="button" class="btn btn-default" onclick="closeModal()">Cerrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 {% block javascripts %}
     {{parent()}}
-    {#<script src="{{asset('js/jquery-ui.min.js')}}"></script>#}
     <script>
         $(document).ready(function() {
+            $("#carga").html('<h5>¿Está seguro(a) de finalizar trámite?</h5>');
         });
-
-        function mesage(tipo, titulo, msg) {
-            $("#carga").append('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
-                '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
-                '<strong>'+ titulo +'</strong> '+ msg +' </div>');
-            setTimeout(function () { $("#carga").empty(); }, 3000);
-        }
 
         $("#confirmar").submit(function (event) {
             event.preventDefault();
@@ -111,28 +118,39 @@
                 data: {'tramite_id': $('#tramite_id').val()},
                 dataType: 'json',
                 beforeSend: function () {
-                    $("#carga").empty();
-                    $("#carga").append('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
-                    $("#myform").css('display', 'none');
+                    $("#carga").html('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
                 },
                 success: function (data) {
-                    $("#confirma").attr('disabled', false);
-                    $("#carga").empty();
                     if (data.estado == 200) {
-                        mesage('info', 'Notificación', data.msg);
-                        location.href = "{{ path('wf_tramite_recibido') }}";
+                        mesage('info', data.msg);
+                        $("#tramite_st").val(1);
                     } else {
-                        mesage('warning', 'Notificación', data.msg);
-                        $("#myform").css('display', 'block');
+                        mesage('warning', data.msg);
+                        $("#confirma").attr('disabled', true);
                     }
                 },
                 error: function (error) {
-                    $("#carga").empty();
-                    $("#myform").css('display', 'block');
-                    $("#confirma").attr('disabled', false);
+                    $("#confirma").attr('disabled', true);
                 }
             });
         });
+
+        function mesage(tipo, msg) {
+            $("#carga").html('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">'+ msg +' </div>');
+        }
+
+        function openModal() {
+            $("#modalConfirm").modal('show');
+            $("#confirma").attr('disabled', false);
+            $("#tramite_st").val(0);
+        }
+
+        function closeModal() {
+            $("#modalConfirm").modal('hide');
+            if ($("#tramite_st").val()==1) {
+                location.href = "{{ path('wf_tramite_recibido') }}";
+            }
+        }
     </script>
 {% endblock %}
 

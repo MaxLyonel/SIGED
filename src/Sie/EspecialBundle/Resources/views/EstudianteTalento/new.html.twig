@@ -31,11 +31,11 @@
                     </div>
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-md-12">
-                                <form class="form-inline text-center">
+                            <div class="col-sm-12 col-md-12">
+                                <form class="form-inline text-center" style="margin-bottom: 8px">
                                   <div class="form-group">
                                     <div class="input-group">
-                                      <input type="text" class="form-control" id="rude" placeholder="Buscar por RUDE">
+                                      <input type="text" class="form-control" id="rude" placeholder="Buscar por RUDE" autocomplete="off">
                                       <div class="input-group-addon"><i class="fa fa-search"></i></div>
                                     </div>
                                   </div>
@@ -47,7 +47,7 @@
                         <hr>
                         <div class="row">
                             <form id="registro" autocomplete="off">
-                                <div class="col-md-6">
+                                <div class="col-sm-6 col-md-6">
                                     <div class="form-group">
                                         <label for="nombre">Nombre</label>
                                         <input type="text" class="form-control noedit" id="nombre" name="nombre" required>
@@ -79,7 +79,7 @@
                                         <input type="text" class="form-control noedit" id="fecha_nacimiento" name="fecha_nacimiento" required>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-sm-6 col-md-6">
                                     <input type="hidden" id="estudiante_id" name="estudiante_id">
                                     <input type="hidden" id="estudiante_ins_id" name="estudiante_ins_id">
                                     <input type="hidden" id="flujotipo_id" name="flujotipo_id" value="{{ flujotipo_id }}">
@@ -175,7 +175,9 @@
                     }
                 });
             } else {
+                $("#carga").empty();
                 mesage('info', 'Alerta', 'Ingrese código RUDE del estudiante', false);
+                $('#rude').focus();
             }
         }
 
@@ -220,7 +222,7 @@
                         //location.href = "{ { path('wf_tramite_recibido') }}";
                         location.href = "{{ path('wf_tramite_index') }}";
                     } else {
-                        mesage('error', 'Error', 'Error al guardar datos.');
+                        mesage('danger', 'Alerta', data.msg, false);
                     }
                 },
                 error: function (error) {

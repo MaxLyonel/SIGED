@@ -44,10 +44,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="carga"></div>
                         <hr>
                         <div class="row">
-                            <form id="modifica" action="" autocomplete="off">
+                            <form id="modifica" autocomplete="off">
                                 <div class="col-md-6 col-sm-6">
                                     <input type="hidden" id="tramite_id" name="tramite_id" value="{{ tramite_id }}">
                                     <div class="form-group">
@@ -67,7 +66,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="acelera">Puede Acelerar</label>
+                                        <label for="acelera">¿Puede Acelerar?</label>
                                         <select type="text" class="form-control" id="acelera" name="acelera" disabled required>
                                             <option value="" disabled selected>Seleccione...</option>
                                             <option value="true">Si</option>
@@ -86,7 +85,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-12 col-sm-12 text-center">
-                                    <button type="submit" class="btn btn-primary" id="actualiza">Guardar</button>
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
                                 </div>
                             </form>
                         </div>
@@ -95,12 +94,29 @@
             </div>
         </div>
     </div>
+    <div id="modalProcess" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Confirmar</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="tramite_st" value="0">
+                    <div id="carga"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="actualiza" onclick="updateTramite()">Aceptar</button>
+                    <button type="button" class="btn btn-default" onclick="closeModal()">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 {% block javascripts %}
     {{parent()}}
-    {#<script src="{{asset('js/jquery-ui.min.js')}}"></script>#}
     <script>
         $(document).ready(function() {
+            $("#carga").html('<h5>¿Está seguro(a) de guardar la información ingresada?</h5>');
             $("#es_talento").prop("disabled", false);
         });
         $('.noedit').keydown(function() {
@@ -111,6 +127,9 @@
                 $("#tipo_talento").prop("disabled", false);
             } else {
                 $("#tipo_talento").prop("disabled", true);
+                $("#acelera").prop("disabled", true);
+                $("#tipo_talento").val('');
+                $("#acelera").val('');
             }
         });
         $("#tipo_talento").on('change', function () {
@@ -123,13 +142,6 @@
             }
         });
 
-        function mesage(tipo, titulo, msg) {
-            $("#carga").append('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
-                '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
-                '<strong>'+ titulo +'</strong> '+ msg +' </div>');
-            setTimeout(function () { $("#carga").empty(); }, 3500);
-        }
-
         function clearInput() {
             $("#es_talento").val('');
             $("#tipo_talento").val('');
@@ -140,6 +152,12 @@
 
         $("#modifica").submit(function (event) {
             event.preventDefault();
+            $("#tramite_st").val(0);
+            $("#actualiza").attr('disabled', false);
+            $("#modalProcess").modal('show');
+        });
+
+        function updateTramite() {
             $("#actualiza").attr('disabled', true);
             var fd = new FormData();
             fd.append('tramite_id', $("#tramite_id").val());
@@ -152,7 +170,6 @@
             $.ajax({
                 type: 'post',
                 url: Routing.generate('talento_extraordinario_update'),
-                //url: "{ { path('solicitud_bth_guarda_Dep') }}",
                 data: fd,
                 mimeType:"multipart/form-data",
                 contentType: false,
@@ -160,25 +177,36 @@
                 processData:false,
                 dataType: 'json',
                 beforeSend: function () {
-                    $("#carga").empty();
-                    $("#carga").append('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
+                    $("#carga").html('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
                 },
-                success: function (data) {console.log(data.estado);
-                    $("#actualiza").attr('disabled', false);
-                    $("#carga").empty();
+                success: function (data) {
                     if (data.estado == 200) {
                         clearInput();
-                        mesage('info', 'Notificación', data.msg);
-                        location.href = "{{ path('wf_tramite_recibido') }}";
+                        $("#tramite_st").val(1);
+                        mesage('info', data.msg);
                     } else {
-                        mesage('warning', 'Notificación', 'No se pudo guardar los datos.');
+                        console.log(data.msg);
+                        mesage('warning', 'No se pudo guardar los datos. Cierre la ventana flotante e intente de nuevo.');
+                        $("#actualiza").attr('disabled', true);
                     }
                 },
                 error: function (error) {
                     $("#actualiza").attr('disabled', false);
+                    $("#actualiza").attr('disabled', true);
                 }
             });
-        });
+        }
+
+        function closeModal() {
+            $("#modalProcess").modal('hide');
+            if ($("#tramite_st").val()==1) {
+                location.href = "{{ path('wf_tramite_recibido') }}";
+            }
+        }
+
+        function mesage(tipo, msg) {
+            $("#carga").html('<div class="alert alert-'+ tipo +'" role="alert">'+ msg +' </div>');
+        }
     </script>
 {% endblock %}
 
