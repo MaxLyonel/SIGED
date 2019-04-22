@@ -1,0 +1,41 @@
+Sie\AppWebBundle\Entity\CdlClubLectura:
+    type: entity
+    table: cdl_club_lectura
+    indexes:
+        IDX_C35705CC1D5CDAA:
+            columns:
+                - maestroinscripcion_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nombreClub:
+            type: string
+            nullable: true
+            length: 1000
+            fixed: false
+            comment: ''
+            column: nombre_club
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    manyToOne:
+        maestroinscripcion:
+            targetEntity: MaestroInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                maestroinscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
