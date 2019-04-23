@@ -1,7 +1,33 @@
-{% extends "::base.html.twig" %}
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+<div class="header-content">
+    <h2><i class="fa fa-list-alt"></i> Registro Promotor/Encargado <span> Busqueda</span></h2>
+      <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Registro Promotor</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+      </div><!-- /.breadcrumb-wrapper -->
+</div>
+<div class="body-content animated fadeIn">
+    <div class="row">
+        <div class="col-xs-12 col-lg-12">
+            <div class="panel panel-icon panel-primary">
+                <div class="panel-heading">
+                    <i class="fa fa-list">   </i>   Encargado
+                </div>
+                <div class="panel-body">
+                    
+                </div>
+            </div>
 
-{% block title %}SieHerramientaBundle:Promotor:index{% endblock %}
+        </div>
+    </div>
+</div>
 
-{% block body %}
-<h1>Welcome to the Promotor:index page</h1>
+</div>
 {% endblock %}

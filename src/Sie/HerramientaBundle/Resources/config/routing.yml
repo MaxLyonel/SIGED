@@ -195,6 +195,6 @@ sie_herramienta_registro_resultado:
     resource: "@SieHerramientaBundle/Resources/config/routing/regresultevent.yml"
     prefix:   /sie/regresultevent
 
- sie_herramienta_registro_estudiante:
+sie_herramienta_registro_estudiante:
      resource: "@SieHerramientaBundle/Resources/config/routing/regstudent.yml"
      prefix:   /sie/regstudent
