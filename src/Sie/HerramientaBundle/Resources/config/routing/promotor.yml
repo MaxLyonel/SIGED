@@ -1,0 +1,12 @@
+promotor:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:Promotor:index }
+
+promotor_promotor_register:
+    path:     /promotorregister
+    defaults: { _controller: SieHerramientaBundle:Promotor:register }
+
+promotor_promotor_find:
+    path:     /promotorfind
+    defaults: { _controller: SieHerramientaBundle:Promotor:find }
+

@@ -1,0 +1,11 @@
+regevent:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:RegEvent:index }
+
+regevent_event_register:
+    path:     /eventregister
+    defaults: { _controller: SieHerramientaBundle:RegEvent:register }
+
+regevent_event_find:
+    path:     /eventfind
+    defaults: { _controller: SieHerramientaBundle:RegEvent:find }

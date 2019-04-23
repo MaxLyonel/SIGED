@@ -1,0 +1,10 @@
+regstudent:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:RegStudent:index }
+
+regstudent_student_register:
+    path:     /studentregister
+    defaults: { _controller: SieHerramientaBundle:RegStudent:register }
+regstudent_student_find:
+    path:     /studentfind
+    defaults: { _controller: SieHerramientaBundle:RegStudent:find }

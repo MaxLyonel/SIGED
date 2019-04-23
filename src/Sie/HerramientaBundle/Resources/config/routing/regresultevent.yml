@@ -1,0 +1,9 @@
+regresultevent:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:RegResultEvent:index }
+
+
+regresultevent_result_find:
+    path:     /resultfind
+    defaults: { _controller: SieHerramientaBundle:RegResultEvent:find }
+
