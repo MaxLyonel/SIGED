@@ -40,9 +40,9 @@ class RegEventController extends Controller
             ));    }
 
     public function registerAction(Request $request)
-    {
+    {  dump($request);die;
         $em = $this->getDoctrine()->getManager();
-        
+
         return $this->render('SieHerramientaBundle:RegEvent:register.html.twig', array(
                 // ...
             ));
