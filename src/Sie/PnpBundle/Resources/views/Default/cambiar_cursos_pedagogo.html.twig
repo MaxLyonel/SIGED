@@ -1,0 +1,185 @@
+{% extends 'layoutPnp.html.twig' %}
+
+{% block body -%}
+
+    <div class="header-content">
+        <h2><i class="fa fa-home animated flip"></i>Cambiar Cursos Pedagogo <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">
+                    Curso
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Cambar Cursos Pedagogo</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('notice') %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Bien!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('error') %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>¡Advertencia!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+
+<div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-xs-12 col-lg-12">
+                <div class="panel panel-icon panel-primary">
+                    <div class="panel-heading">
+                        Buscar Cursos por Municipio <small>Se mostrará los cursos abiertos</small>
+                    </div>
+                    <div class="panel-body">
+                        <form class="form-inline">
+                            <div class="form-group col-xs-12 col-lg-4">
+                                <label class="col-sm-5 control-label">Departamento:</label>
+                                <div class="col-sm-7">
+                                    <select required="required" data-placeholder="Seleccionar" id="form_departamento" class="form-control chosen-select" >
+                                    <option value="">Departamento</option>
+                                        {% for id_departamento in id_departamentos %}
+                                            <option value="{{ id_departamento.id }}">{{ id_departamento.lugar }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-12 col-lg-4">
+                                <label class="col-sm-3 control-label">Municipio:</label>
+                                <div class="col-sm-9">
+                                    <select required="required" data-placeholder="Seleccionar"  name="municipio" id="form_municipio" class="form-control chosen-select" >
+                                        <option value="">Municipio</option>                    
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-12 col-lg-4">
+                                <a role="button" onclick="return SeeBuscar()" class="btn btn-primary rounded" href="#" > Buscar</a><br/><br/>
+                            </div> 
+                        </form>
+                    </div>
+                    <div id="facilitador"></div>
+                </div>
+            </div>
+        </div>
+                
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+
+    <script type="text/javascript">
+     $(document).ready(function() {
+        initialise();
+    } );
+    $("#selectall").on("click", function() {  
+  $(".cursos").prop("checked", this.checked);  
+});  
+
+// if all checkbox are selected, check the selectall checkbox and viceversa  
+$(".cursos").on("click", function() {  
+  if ($(".cursos").length == $(".cursos:checked").length) {  
+    $("#selectall").prop("checked", true);  
+  } else {  
+    $("#selectall").prop("checked", false);  
+  }  
+});
+    function initialise()
+    {
+         var espanol = {"sProcessing": "Procesando...",
+                     "sLengthMenu": "Mostrar _MENU_ registros",
+                     "sZeroRecords": "No se encontraron resultados",
+                     "sInfo": "Mostrando desde _START_ hasta _END_ de _TOTAL_ registros",
+                     "sInfoEmpty": "No existen registros",
+                     "sInfoFiltered": "(filtrado de un total de _MAX_ líneas)",
+                     "sInfoPostFix": "",
+                     "sSearch": "Buscar:",
+                     "sUrl": "",
+                     "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                     },
+                     "buttons":{
+                        "copy": "Copiar",
+                        "print":"Imprimir"
+                     }
+                    };
+
+        var currentLang = espanol;    
+
+        //var table = $('#tablaListadoPersonas').DataTable();
+        var dtable = $('#tablaListadoPersonas').dataTable( {"oLanguage": espanol} );
+        
+        
+        $('#tablaListadoPersonas tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        } );
+        
+    }
+    $("#form_departamento").change(function(){                            
+            var iddep = $(this).val();            
+            var route = Routing.generate('sie_pnp_buscar_municipios', { ieid: iddep });             
+            var data;
+            $.ajax({
+                type: 'get',     
+                url: route,
+                data: data,
+                success: function(data) {                        
+                        datos = $.parseJSON(data);
+                        $("#form_municipio").html('');                       
+                        var $province_selector = $('#form_municipio');
+                        $province_selector.html('<option value="">Municipio</option>');
+                        for (var i=0, total = datos.length; i < total; i++) {
+                            $province_selector.append('<option value="' + datos[i].id + '">' + datos[i].municipio + '</option>');
+                        }
+                        $('#form_municipio').trigger("chosen:updated");
+                    }
+                });            
+            });
+ function SeeBuscar(){
+        
+        var id_municipio = document.getElementById("form_municipio").value;
+        var id_departamento = document.getElementById("form_departamento").value;
+        if(id_municipio == ""){
+            alert("!Error! Elegir el municipio")
+            return false;
+        }      
+        var formData = $('#formxls').serialize();
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('sie_pnp_cambiar_cursos_pedagogo_encontrado', {'id_municipio': id_municipio,'id_departamento':id_departamento}),
+            data: formData,
+            beforeSend: function () {
+                $("#facilitador").empty();
+                $("#facilitador").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+            },
+            success: function (data) {
+                $("#facilitador").empty();
+                $("#facilitador").append(data);
+            },
+            error: function(data){
+                $("#facilitador").empty();
+                $("#facilitador").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+            }
+        });
+    }
+    </script>
+{% endblock %}

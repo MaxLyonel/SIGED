@@ -580,7 +580,7 @@ class RegistroController extends Controller {
 
         $response = new JsonResponse();
 
-        if ($id_usuario != 13833121 and $id_usuario != 13855318){
+        if ($id_usuario != 13833121 and $id_usuario != 13855318 and $id_usuario != 13794833){
             $faseActivo = $this->getFaseActivo($faseId, $nivelId, $fechaActual);
             if (!$faseActivo) {
                 return $response->setData(array(
@@ -984,7 +984,7 @@ class RegistroController extends Controller {
                 $nivel = $entityDatos->getPruebaTipo()->getDisciplinaTipo()->getNivelTipo()->getId();
                 $faseId = $entityDatos->getFaseTipo()->getId();
 
-                if ($id_usuario != 13833121){
+                if ($id_usuario != 13833121 and $id_usuario != 13794833){
                     $faseActivo = $this->getFaseActivo($faseId, $nivel, $fechaActual);
                     if (!$faseActivo) {
                         return $response->setData(array(

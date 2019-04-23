@@ -64,7 +64,8 @@ class ReglaController extends Controller
                     }
                 }
                 if(!$msg1[0]){
-                    return $estudianteNombreApellido.' '.$msg;
+                    return array('0' => $msg1[0], '1' => $estudianteNombreApellido.' '.$msg1[1]);
+                    //return $estudianteNombreApellido.' '.$msg;                    
                 }                
             }
             
