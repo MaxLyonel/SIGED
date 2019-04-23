@@ -1,4 +1,12 @@
 {% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .modal-dialog{
+            width: 70%;
+        }
+    </style>
+{% endblock %}
 
 {% block contentoption %}
 
@@ -57,6 +65,7 @@
                                             <th class="text-center" style="min-width: 15px;">No. Trámite</th>
                                             <th>Trámite</th>
                                             <th>Tipo de Trámite</th>
+                                            <th>Código</th>
                                             <th>Nombre</th>
                                             <th>Fecha de inicio</th>
                                             <th>Fecha de fin</th>
@@ -70,6 +79,7 @@
                                             <th class="text-center" style="min-width: 15px;">No. Trámite</th>
                                             <th>Trámite</th>
                                             <th>Tipo de Trámite</th>
+                                            <th>Código</th>
                                             <th>Nombre</th>
                                             <th>Fecha de inicio</th>
                                             <th>Fecha de fin</th>
@@ -84,9 +94,10 @@
                                             <td>{{ entity.id }}</td>
                                             <td>{{ entity.flujo }}</td>
                                             <td>{{ entity.tramite_tipo }}</td>
+                                            <td>{{ entity.codigo_tabla }}</td>
                                             <td>{{ entity.nombre }}</td>
-                                            <td>{{ entity.fecha_registro }}</td>
-                                            <td>{{ entity.fecha_fin }}</td>
+                                            <td>{{ entity.fecha_registro|date('d-m-Y') }}</td>
+                                            <td>{{ entity.fecha_fin|date('d-m-Y') }}</td>
                                             <td>{{ entity.duracion }}</td>
                                             <td><span class="label label-success">{{ entity.estado }} </span></td>
                                             <td class="text-center">

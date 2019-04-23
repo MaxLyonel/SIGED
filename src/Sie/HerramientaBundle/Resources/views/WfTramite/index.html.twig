@@ -49,31 +49,33 @@
                     
                     <div class="panel-body">
                         <div class="row">
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-middle table-primary">
-                                    <thead>
-                                        <tr>
-                                            <th style="max-width: 5px">No.</th>
-                                            <th>Trámite</th>
-                                            <th class="text-center"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for entity in entities %}
-                                        <tr>
-                                            <td class="text-center" style="max-width: 5px">
-                                                <strong>{{ loop.index }}</strong>
-                                            </td>
-                                            <td>{{ entity.flujo }}</td>
-                                            <td class="text-center">
-                                                <a href="{{ path('wf_tramite_nuevo', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Nuevo Trámite">
-                                                    <i class="fa fa-pencil"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-middle table-primary">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" style="max-width: 5px">No.</th>
+                                                <th>Trámite</th>
+                                                <th class="text-center" style="max-width: 20px">Nuevo Trámite</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for entity in entities %}
+                                                <tr>
+                                                    <td class="text-center" style="max-width: 5px">
+                                                        <strong>{{ loop.index }}</strong>
+                                                    </td>
+                                                    <td>{{ entity.flujo }}</td>
+                                                    <td class="text-center" style="max-width: 20px">
+                                                        <a href="{{ path('wf_tramite_nuevo', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Iniciar Trámite">
+                                                            <i class="fa fa-pencil"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div><!-- /.panel-body -->

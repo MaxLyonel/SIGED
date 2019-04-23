@@ -65,3 +65,11 @@ alternativa_operativo_ampliar:
 alternativa_operativo_ver_ceas:
     path:     /operativoverceas
     defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoVerCeas}
+
+alternativa_operativo_nuevo_reapertura:
+    path:     /operativonuevoreapertura
+    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoNuevoReapertura}
+
+alternativa_operativo_nuevo_reapertura_guardar:
+    path:     /operativonuevoreaperturaguardar
+    defaults: { _controller: SieHerramientaAlternativaBundle:Operativo:operativoNuevoReaperturaGuardar}

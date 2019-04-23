@@ -1,0 +1,156 @@
+
+{% if exist == true %}
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4>Información Unidad Educativa</h4>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover cf">
+                        <thead class="cf">
+                            <tr class="">
+                                <th class="text-center">SIE</th>
+                                <th class="text-center">Unidad Educativa</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="">
+                                <td data-title="Rude" class="text-center">{{unidadEducativa.id}}</td>
+                                <td data-title="Nombre" class="text-center">{{ unidadEducativa.institucioneducativa|e }} </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4>Decargar Boletín Centralizador</h4>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover cf">
+                        <thead class="cf">
+                            <tr class="">
+                                <th class="text-center">Nivel</th>
+                                <th class="text-center">Grado</th>
+                                <th class="text-center">Paralelo</th>
+                                <th class="text-center">Turno</th>
+                                <th class="text-center">Estudiantes</th>
+                                <th class="text-center">Opción</th>
+                                <th class="text-center">Opción</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for data in courses%}
+                                {% set level = data.nivel   %}
+                                {% set grado = data.grado   %}
+                                {% set paralelo = data.paralelo  %}
+                                {% set itemsUe = level~", "~grado~", "~paralelo   %}
+                                <tr>
+                                    <td data-title="Nivel">{{data.nivel}}</td>
+                                    <td data-title="Grado">{{data.grado}}</td>
+                                    <td data-title="Paralelo" class="text-center">{{data.paralelo}}</td>
+                                    <td data-title="turno">{{ data.turno|e }} </td>
+                                    <td data-title="Estudiantes" class="text-center">{{data.students|e}}</td>
+                                    <td data-title="Opción" class="text-center">
+                                        <a class="btn btn-link" href="{{ path('donwload_boletinPromoPerUe', {'ue':data.id,'nivel':data.nivelId,'ciclo':data.cicloId,'grado':data.gradoId,'paralelo':data.paraleloId,'turno':data.turnoId,'gestion':gestionSelected, 'itemsUe':itemsUe } )}}">
+                                            <i class="fa fa-download"></i> Boletín Centralizador
+                                        </a>
+                                    </td>
+
+                                    <td data-title="Opción" class="text-center">
+                                        <a class="btn btn-link" href="{{ path('donwload_listMaestrosPerUe', {'ue':data.id,'nivel':data.nivelId,'ciclo':data.cicloId,'grado':data.gradoId,'paralelo':data.paraleloId,'turno':data.turnoId,'gestion':gestionSelected, 'itemsUe':itemsUe } )}}">
+                                            <i class="fa fa-download"></i> Maestros
+                                        </a>
+                                    </td>
+                                </tr>
+                            {%endfor%}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+{%else%}
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warningconsultaue') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <div class="row">
+
+        <!-- <div class="col-md-12"> -->
+
+           
+            
+{#             
+              {% for typeVal,validations in arrValidation %}
+
+                  {% if  typeVal == 'observaciones_calidad' %}
+                      <div class="col-md-12 col-sm-12">
+                            <div class="panel panel-danger">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">{{typeVal | upper}}</h3>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    {% for validation in validations %}
+                                        <li>
+                                         {{validation.obs}}
+                                        </li>
+                                    {% endfor %}
+                                </div><!-- /.panel-body -->
+                            </div><!-- /.panel -->
+                          
+                        </div>                  
+                  {% endif %}
+
+                  {% if  typeVal == 'observaciones_incosistencia' %}
+                        <div class="col-md-12 col-sm-12">
+                            <div class="panel panel-danger">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">{{typeVal | upper}}</h3>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    {% for validation in validations %}
+                                        <li>
+                                         {{validation.observacion}}
+                                        </li>
+                                    {% endfor %}
+                                </div><!-- /.panel-body -->
+                            </div><!-- /.panel -->
+                          
+                        </div>
+                    
+                  {% endif %}
+              {% endfor %}
+
+#}
+                <!-- handle array -->
+            
+            
+        <!-- </div>         -->
+    </div>
+
+{%endif%}
+
+
+
+<script>
+
+
+</script>
+

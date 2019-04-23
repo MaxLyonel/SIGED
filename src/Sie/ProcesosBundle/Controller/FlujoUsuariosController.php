@@ -56,6 +56,7 @@ class FlujoUsuariosController extends Controller
                 ->innerJoin('SieAppWebBundle:ProcesoTipo', 'pt', 'with', 'pt.id = fp.proceso')
                 ->where('fp.flujoTipo='.$flujotipo)
                 ->andWhere('fp.rolTipo not in (1,2,3,5,9)') //usuarios individuales como ser estudiante, maestro,director,apoderado
+                ->orderBy('fp.id') //usuarios individuales como ser estudiante, maestro,director,apoderado
                 ->getQuery()
                 ->getResult();
         $tareasArray = array();
@@ -157,7 +158,7 @@ class FlujoUsuariosController extends Controller
     {
         $form = $this->createFormBuilder()
             ->add('flujotipo','entity',array('label'=>'Tipo de proceso:','required'=>true,'class'=>'SieAppWebBundle:FlujoTipo','query_builder'=>function(EntityRepository $ft){
-                return $ft->createQueryBuilder('ft')->where('ft.id > 4')->andWhere("ft.obs like '%ACTIVO%'")->orderBy('ft.flujo','ASC');},'property'=>'flujo','empty_value' => 'Seleccione proceso'))
+                return $ft->createQueryBuilder('ft')->where('ft.id > 5')->andWhere("ft.obs like '%ACTIVO%'")->orderBy('ft.flujo','ASC');},'property'=>'flujo','empty_value' => 'Seleccione proceso'))
             ->add('buscar', 'button', array('label'=>'Buscar','attr'=>array('class'=>'btn btn-primary')))
             ->getForm();
         return $form;
@@ -233,8 +234,13 @@ class FlujoUsuariosController extends Controller
             }
         }
         $wfusuarios = $em->getRepository('SieAppWebBundle:WfUsuarioFlujoProceso')->createQueryBuilder('wfu')
-                    ->select('wfu')
+                    ->select('wfu.id,u.username,p.nombre,p.paterno,p.materno,r.rol,pt.procesoTipo,lt.lugar')
                     ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'fp.id = wfu.flujoProceso')
+                    ->innerJoin('SieAppWebBundle:RolTipo', 'r', 'with', 'r.id = fp.rolTipo')
+                    ->innerJoin('SieAppWebBundle:ProcesoTipo', 'pt', 'with', 'pt.id = fp.proceso')
+                    ->innerJoin('SieAppWebBundle:LugarTipo', 'lt', 'with', 'lt.id = wfu.lugarTipoId')
+                    ->innerJoin('SieAppWebBundle:Usuario', 'u', 'with', 'u.id = wfu.usuario')
+                    ->innerJoin('SieAppWebBundle:Persona', 'p', 'with', 'p.id = u.persona')
                     ->where('fp.flujoTipo='.$wfusuario->getFlujoProceso()->getFlujoTipo()->getId())
                     ->andWhere('wfu.esactivo=true')
                     ->orderBy('fp.id')

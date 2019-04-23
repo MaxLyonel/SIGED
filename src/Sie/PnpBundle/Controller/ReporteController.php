@@ -39,7 +39,7 @@ class ReporteController extends Controller
 //////////////Reporte General 
 public function reporte_generalAction($nivel_ini,$lugar,$nivel_fin,Request $request){
 //carlos
-    $em = $this->getDoctrine()->getEntityManager();
+    $em = $this->getDoctrine()->getManager();
     $db = $em->getConnection();
 
     $query = "SELECT min((extract(year from ic.fecha_fin))) as gestion_ini,
@@ -295,7 +295,8 @@ public function reporte_generalAction($nivel_ini,$lugar,$nivel_fin,Request $requ
 ////////////////////////////REPORTE POR GESTION
 public function reporte_por_gestionAction($nivel_ini,$lugar,$nivel_fin,Request $request){
 
-    $em = $this->getDoctrine()->getEntityManager();
+    $em = $this->getDoctrine()->getManager();
+    $em = $this->getDoctrine()->getManager();
     $db = $em->getConnection();
 
     $query = "SELECT min((extract(year from ic.fecha_fin))) as gestion_ini,
@@ -541,7 +542,7 @@ public function reporte_por_gestionAction($nivel_ini,$lugar,$nivel_fin,Request $
 /////////////////////////////////busquedas//////////////////////
 // buscar datos estudiantes
     public function retornar_estudianteAction($ci){
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
         $query = "SELECT
                       estudiante.id as estudiante_id,
@@ -575,7 +576,7 @@ public function reporte_por_gestionAction($nivel_ini,$lugar,$nivel_fin,Request $
 
     // buscar datos persona
     public function retornar_personaAction($ci){
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
         $query = "SELECT
                   p.id,p.carnet as carnet_identidad,p.rda,p.paterno,p.materno,p.nombre,p.fecha_nacimiento,g.genero
@@ -592,7 +593,7 @@ public function reporte_por_gestionAction($nivel_ini,$lugar,$nivel_fin,Request $
 
     //buscar archivos
      public function retornar_archivos_personaAction($persona_id,$ie){
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
     $query = "
             select persona.carnet, persona.nombre, persona.paterno, persona.materno,

@@ -98,7 +98,15 @@ class Areas {
         $matsecf2018 = array(1031,1032,1033,1034,1035,1036,1037,1039,1040,1043,1044,1051,1052,1053);
         $matsecg2018 = array(1031,1032,1033,1034,1035,1036,1037,1040,1043,1044,1051,1052,1053);
 
-
+        /**
+         * Para gestion 2019 en adelante
+         */
+        $matsece2019 = array(1031,1032,1033,1034,1035,1036,1037,1040,1041,1042,1043,1044);
+        $matsecf2019 = array(1031,1032,1033,1034,1035,1036,1037,1040,1041,1042,1043,1044);
+        $matsecg2019 = array(1031,1032,1033,1034,1035,1036,1037,1040,1041,1042,1043,1044);
+        // Plenas
+        $matsecf2019plena = array(1031,1032,1033,1034,1035,1036,1037,1038,1040,1041,1042,1043,1044);
+        $matsecg2019plena = array(1031,1032,1033,1034,1035,1036,1037,1039,1040,1041,1042,1043,1044);
 
         $idsAsignaturas = array();
         switch ($gestion) {
@@ -229,10 +237,15 @@ class Areas {
                                     // Para unidades educativas nocturnas
                                     $idsAsignaturas = $matnoctb;
                                 }else{
-                                    if($gestion >= 2018){
+                                    $idsAsignaturas = $matsece;
+                                    if($gestion == 2018){
                                         $idsAsignaturas = $matsece2018;
-                                    }else{
-                                        $idsAsignaturas = $matsece;
+                                    }
+                                    if($gestion == 2019){
+                                        $idsAsignaturas = $matsece2019;
+                                        if($tipoUEId == 1){
+                                            $idsAsignaturas = $matsecf2019plena;
+                                        }
                                     }
                                 }
                                 break;
@@ -243,16 +256,20 @@ class Areas {
                                     $idsAsignaturas = $matnoctb;
                                 }else{
                                     if($tipoUEId == 1 and $grado <= $gradoUEId){
-                                        if($gestion >= 2018){
+                                        $idsAsignaturas = $matsecf;
+                                        if($gestion == 2018){
                                             $idsAsignaturas = $matsecf2018;
-                                        }else{
-                                            $idsAsignaturas = $matsecf;
+                                        }
+                                        if($gestion == 2019){
+                                            $idsAsignaturas = $matsecg2019plena;
                                         }
                                     }else{
-                                        if($gestion >= 2018){
+                                        $idsAsignaturas = $matsecg;
+                                        if($gestion == 2018){
                                             $idsAsignaturas = $matsecg2018;     
-                                        }else{
-                                            $idsAsignaturas = $matsecg;
+                                        }
+                                        if($gestion == 2019){
+                                            $idsAsignaturas = $matsecg2019;     
                                         }
                                     }
                                 }

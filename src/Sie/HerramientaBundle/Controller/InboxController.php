@@ -20,6 +20,9 @@ use Symfony\Component\Security\Core\User\User;
 use Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnico;
 
 
+use Doctrine\DBAL\Types\Type;
+Type::overrideType('datetime', 'Doctrine\DBAL\Types\VarDateTimeType');
+
 /**
  * EstudianteInscripcion controller.
  *
@@ -228,32 +231,40 @@ class InboxController extends Controller {
             case 1:
               # plena
               $this->session->set('ue_plena', true);
+              $this->session->set('acceso_total', true);
               break;
             case 2:
                 # tec teg
-              $this->session->set('ue_tecteg', true);
+                $this->session->set('ue_tecteg', true);
+                $this->session->set('acceso_total', true);
                 break;
             case 3:
                 # tec teg
-              $this->session->set('ue_modular', true);
+                $this->session->set('ue_modular', true);
+                $this->session->set('acceso_total', true);
                 break;
             case 4:
                 # tec teg
-              $this->session->set('ue_caldiff', true);
+                $this->session->set('ue_caldiff', true);
+                $this->session->set('acceso_total', true);
                 break;
             case 5:
                 # tec teg
-              $this->session->set('ue_humanistica_web', true);
+                $this->session->set('ue_humanistica_web', true);
+                $this->session->set('acceso_total', true);
                 break;
             default:
-              $this->session->set('ue_humanistica', true);
-              break;
+                $this->session->set('ue_humanistica', true);
+                $this->session->set('acceso_total', false);
+                break;
           }
 
         }else{
           // $this->session->set('ue_tecteg', (array_search("$this->unidadEducativa",$this->arrUeTecTeg,true)!=false)?true:false);
-          $this->session->set('ue_plena', ($objValidateUePlena)?true:false);
+          //$this->session->set('ue_plena', ($objValidateUePlena)?true:false);
           // dump($this->session->get('ue_humanistica'));die;
+          $this->session->set('ue_humanistica', true);
+          $this->session->set('acceso_total', false);
         }
         //look for Humanistica UE
         $objRegularUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array(
@@ -296,9 +307,11 @@ class InboxController extends Controller {
             ->where('ie.id = :idInstitucion')
             ->andWhere('fp.id = :flujoP')
             ->andWhere('fp.proceso = :proceso')
+            ->andWhere('t.gestionId = :gestion')
             ->setParameter('idInstitucion', $this->unidadEducativa)
             ->setParameter('flujoP', 13)
             ->setParameter('proceso', 11)
+            ->setParameter('gestion', $arrSieInfo[0]['gestion'])
             ->orderBy('t.gestionId')
             ->getQuery();
 
@@ -551,28 +564,37 @@ class InboxController extends Controller {
            case 1:
              # plena
              $this->session->set('ue_plena', true);
+             $this->session->set('acceso_total', true);
              break;
            case 2:
                # tec teg
              $this->session->set('ue_tecteg', true);
+             $this->session->set('acceso_total', true);
                break;
            case 3:
                # tec teg
              $this->session->set('ue_modular', true);
+             $this->session->set('acceso_total', true);
                break;
            case 4:
                # tec teg
              $this->session->set('ue_caldiff', true);
+             $this->session->set('acceso_total', true);
                break;
            case 5:
                # tec teg
              $this->session->set('ue_humanistica_web', true);
+             $this->session->set('acceso_total', true);
                break;
            default:
-             # code...
+              $this->session->set('ue_humanistica', true);
+             $this->session->set('acceso_total', false);
              break;
          }
 
+       }else{
+          $this->session->set('ue_humanistica', true);
+          $this->session->set('acceso_total', false);
        }
         //validation if the user is logged
         if (!isset($id_usuario)) {

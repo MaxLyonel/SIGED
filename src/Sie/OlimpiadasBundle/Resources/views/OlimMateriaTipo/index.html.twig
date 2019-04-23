@@ -177,7 +177,7 @@
                                                             <i class="fa fa-list"></i> 
                                                         </a>
 
-                                                        {% if entity.id in [9] %}
+                                                        {% if entity.subeArchivo == true %}
                                                             <a href="{{ path('olimgestionarchivos_index', { 'idMateria': entity.id, 'gestion': olimpiada.gestionTipo.id }) }}" class="btn btn-info btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Archivos">
                                                                 <i class="fa fa-file-pdf-o"></i> 
                                                             </a>

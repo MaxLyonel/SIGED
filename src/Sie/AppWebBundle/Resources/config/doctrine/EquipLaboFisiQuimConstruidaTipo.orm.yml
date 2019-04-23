@@ -1,0 +1,20 @@
+Sie\AppWebBundle\Entity\EquipLaboFisiQuimConstruidaTipo:
+    type: entity
+    table: equip_labo_fisi_quim_construida_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        construccion:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

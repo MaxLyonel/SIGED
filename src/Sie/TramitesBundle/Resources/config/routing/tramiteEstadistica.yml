@@ -1,4 +1,16 @@
+tramite_estadistica_certificado_tecnico_emitido:
+    path:     /certificado/tecnico/emitido
+    defaults: { _controller: SieTramitesBundle:EstadisticaCertificacionTecnica:certTecEmitido }
+
 tramite_estadistica_diploma_humanistico_egreso:
     path:     /diploma/humanistico/egreso
     defaults: { _controller: SieTramitesBundle:TramiteEstadistica:dipHumEgreso }
+
+tramite_estadistica_certificado_tecnico_emitido_descarga_general:
+    path:     /certificado/tecnico/emitido/descarga/general
+    defaults: { _controller: SieTramitesBundle:EstadisticaCertificacionTecnica:certTecEmitidoDescargaGeneral }
+
+tramite_estadistica_certificado_tecnico_emitido_descarga_especialidad:
+    path:     /certificado/tecnico/emitido/descarga/especialidad
+    defaults: { _controller: SieTramitesBundle:EstadisticaCertificacionTecnica:certTecEmitidoDescargaEspecialidad }
 

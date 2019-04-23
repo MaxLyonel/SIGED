@@ -18,6 +18,7 @@
                         <input type="text" id="grado_tipo_id" name="grado_tipo_id" value="" required="required" style="display:none" />
                         Fecha Inicio:
                         <input type="text" id="fecha_inicio" class="form-control" name="fecha_inicio" placeholder="Digite Fecha Inicio" required="required" value=""/>&nbsp;&nbsp;<br>
+                        <input type="hidden" id="fecha_inicio_ant" class="form-control" name="fecha_inicio_ant" placeholder="Digite Fecha Final" required="required" value=""/>
                         Fecha Fin:
                         <input type="text" id="fecha_fin" class="form-control" name="fecha_fin" placeholder="Digite Fecha Final" required="required" value=""/>
                         <br><br>
@@ -93,6 +94,7 @@
                         </div>
                         <div class="panel-body">
                             {% if (totales) %}
+                            <input type="hidden" name="roluser" id="roluser" value="{{ roluser}}">
                             <button class="btn btn-xs btn-danger rounded glyphicon glyphicon-copy" id="copy-button" data-clipboard-target="#tablaTotales"> Copiar Lista</button>
                                 <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
                                     <table id="tablaTotales" class="display" cellspacing="0" width="100%">
@@ -157,7 +159,7 @@
                     </div>
                 </div>
             {% else %}
-                {% if ('8' == app.session.get('roluser')) %}
+                {% if ('8' == app.session.get('roluser')) or ('21' == app.session.get('roluser')) %}
                     <div class="panel panel-icon panel-primary">
                         <div class="panel-heading">
                             Reporte de cursos
@@ -355,6 +357,7 @@
          $('#Modal_fecha').modal('show');
          $('#curso_id').val(id);
          $('#fecha_fin').val(fecha_fin);
+         $('#fecha_inicio_ant').val(fecha_inicio);
          $('#fecha_inicio').val(fecha_inicio);
          $('#plan').val(plan);
          $('#ciclo_tipo_id').val(ciclo_tipo_id);
@@ -363,12 +366,20 @@
 
     function validar_fecha(){
         var f1 = document.getElementById("fecha_inicio").value;
+        var f1a = document.getElementById("fecha_inicio_ant").value;
         var f2 = document.getElementById("fecha_fin").value;
         var plan = document.getElementById("plan").value;
         var b = document.getElementById("ciclo_tipo_id").value;
         var p = document.getElementById("grado_tipo_id").value;
+        var roluser = document.getElementById("roluser").value;
         var aFecha1 = f1.split('/'); 
         var aFecha2 = f2.split('/'); 
+        var aFecha1a = f1a.split('/'); 
+        
+        if(aFecha1[2] < aFecha1a[2] && roluser != 8){
+            alert("Error, Fecha inicial nueva no puede ser de gestión menor que la anterior fecha.");
+            return false;
+        }
         var fFecha1 = Date.UTC(aFecha1[2],aFecha1[1]-1,aFecha1[0]); 
         var fFecha2 = Date.UTC(aFecha2[2],aFecha2[1]-1,aFecha2[0]); 
         var dif = fFecha2 - fFecha1;

@@ -21,13 +21,17 @@
             <div class="panel panel-primary rounded shadow">
             <!-- Start panel heading -->
             <div class="panel-heading">
-                <h3 class="panel-title">Reporte Laboratorios FIS-QUIM</h3>
+                <div class="pull-left">
+                    <h3 class="panel-title">Reporte Laboratorios FIS-QUIM</h3>
+                </div>
+                <div class="pull-right">
+                    <a href="{{path('herramienta_reportelabofisquim_reportexls')}}" class="btn btn-md btn-success">Descargar reporte <i class="fa fa-fw fa-file-excel-o"></i></a>
+                </div>
                 <div class="clearfix"></div>
             </div><!-- /.panel-heading -->
             <!--/ End panel heading -->
             <!-- Start panel content -->
             <div class="panel-body">
-                <hr>
                 <div class="row">
                     <div class="col-md-12">
                         {% if registro_labo is not empty %}
@@ -38,8 +42,10 @@
                                             <th style="min-width:15px">#</th>
                                             <th>Departamento</th>
                                             <th>Distrito</th>
-                                            <th>SIE</th>
+                                            <th>Código SIE</th>
+                                            <th>Código LE</th>
                                             <th>Institución Educativa</th>
+                                            <th>Dependencia</th>
                                             <th>Registro</th>
                                             <th>Fotos</th>
                                         </tr>
@@ -49,8 +55,10 @@
                                             <th style="min-width:15px">#</th>
                                             <th>Departamento</th>
                                             <th>Distrito</th>
-                                            <th>SIE</th>
+                                            <th>Código SIE</th>
+                                            <th>Código LE</th>
                                             <th>Institución Educativa</th>
+                                            <th>Dependencia</th>
                                             <th>Registro</th>
                                             <th>Fotos</th>
                                         </tr>
@@ -62,11 +70,14 @@
                                                 <td>{{registro.departamento}}</td>
                                                 <td>{{registro.distrito}}</td>
                                                 <td>{{registro.rue}}</td>
+                                                <td>{{registro.cod_le_id}}</td>
                                                 <td>{{registro.ue}}</td>
+                                                <td>{{registro.dependencia}}</td>
                                                 <td><span class="label label-{% if registro.registro_labo == 'NO' %}danger{% else %}success{% endif %}">{{registro.registro_labo}}</span></td>
                                                 <td>
                                                     {% if registro.id is not null %}
                                                         <button onclick="verFotos({{registro.id}})" class="btn btn-xs btn-info"> <i class="fa fa-eye"></i> </button>
+                                                        <button onclick="detalle({{registro.rue}})" class="btn btn-xs btn-success"> <i class="fa fa-list"></i> </button>
                                                     {% endif %}
                                                 </td>
                                             </tr>
@@ -87,6 +98,9 @@
       </div>
     </div>
 <div class="modal fade" id="modalFotos"> </div>
+<div class="modal fade" id="modalDetalle">
+    
+</div>
 
 {% endblock %}
 {% block javascripts%}
@@ -143,6 +157,26 @@
                 $('#modalFotos').empty();
                 $('#modalFotos').append(data);
                 $('#modalFotos').modal('show');
+            },
+            error: function(data){
+
+            }
+        });
+        
+    }
+
+    function detalle(sie){
+        $.ajax({
+            url: Routing.generate('herramienta_reportelabofisquim_detalle'),
+            type: 'post',
+            data: {sie: sie},
+            beforeSend: function(){
+
+            },
+            success: function(data){
+                $('#modalDetalle').empty();
+                $('#modalDetalle').append(data);
+                $('#modalDetalle').modal('show');
             },
             error: function(data){
 

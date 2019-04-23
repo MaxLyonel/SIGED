@@ -18,8 +18,8 @@ use Sie\AppWebBundle\Entity\EstudianteNota;
 use Sie\AppWebBundle\Entity\EstudianteNotaCualitativa;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\User;
-use Sie\ProcesosBundle\Controller\TramiteRueController;
-use Sie\ProcesosBundle\Controller\WfTramiteController;
+// use Sie\ProcesosBundle\Controller\TramiteRueController;
+// use Sie\ProcesosBundle\Controller\WfTramiteController;
 use Sie\AppWebBundle\Entity\InstitucioneducativaEspecialidadTecnicoHumanistico;
 use Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnico;
 use Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnicoTipo;
@@ -540,8 +540,7 @@ class ConsultasController extends Controller {
              $materno = ($request->get('materno')) ?  mb_strtoupper($request->get('materno'), "UTF-8") :"";
              $nombre = ($request->get('nombre')) ?  mb_strtoupper($request->get('nombre'), "UTF-8") :   "";
 
-             /**
-             Busqueda por Datos personales  */
+             /** Busqueda por Datos personales  */
              $em = $this->getDoctrine()->getManager();
              $query = $em->getConnection()->prepare("SELECT  mins.institucioneducativa_id,mins.gestion_tipo_id,ps.carnet,ps.complemento,ps.nombre,ps.paterno,ps.materno,
                                                                 ft.formacion,ps.genero_tipo_id,ps.rda,ps.fecha_nacimiento,ps.correo,ps.celular,ps.direccion,

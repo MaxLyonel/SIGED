@@ -8,8 +8,8 @@ $("#tb_carnet").numeric("positiveInteger");
 $("#tb_carnet").attr("maxlength",'10');
 
 // aplicamos las mascaras para las fechas
-$("#t_fechaNacimiento").inputmask({ "alias": "dd-mm-yyyy" });
-$("#tb_fechaNacimiento").inputmask({ "alias": "dd-mm-yyyy" });
+$("#t_fechaNacimiento").inputmask({ "alias": "dd-mm-yyyy" , 'placeholder':'dd-mm-aaaa'});
+$("#tb_fechaNacimiento").inputmask({ "alias": "dd-mm-yyyy" , 'placeholder':'dd-mm-aaaa'});
 $("#tb_complemento").inputmask({mask: "9a"});
 
 // convertimos el complemento en mayusculas
@@ -27,6 +27,7 @@ var t_validarTieneTutor = function(){
     var tiene = $('input:radio[name=t_tieneTutor]:checked').val();
     t_limpiarBuscador();
     if(tiene == 1){
+
         $('#t_divTutor').css('display','block');
         $('#t_carnet').attr('required','required');
         $('#t_expedido').attr('required','required');
@@ -37,6 +38,14 @@ var t_validarTieneTutor = function(){
         $('#t_ocupacion').attr('required','required');
         $('#t_instruccion').attr('required','required');
         $('#t_parentesco').attr('required','required');
+
+        // Validamos si el usuario tiene carnet
+        var carnet = $('#t_carnet').val();
+        if(carnet.indexOf('SC') != -1){
+            $('#t_carnet').val('');
+            $('#t_carnet').removeAttr('required');
+            $('#t_expedido').attr('disabled','disabled');
+        }
 
     }else{
         $('#t_divTutor').css('display','none');
@@ -55,6 +64,7 @@ var t_validarTieneTutor = function(){
         $('#t_genero').val('');
         $('#t_correo').val('');
         $('#t_telefono').val('');
+        $('#t_celular').val('');
         $('#t_idioma').val('');
         $('#t_ocupacion').val(0);
         $('#t_instruccion').val(0);
@@ -110,8 +120,20 @@ $('#t_ocupacion').on('change',function(){
 // CAMBIAR ATRIBUTOS DE REQUERIDO
 $('#tb_sinCarnet').on('change', function(){
     if($(this).is(':checked')){
+        $('#tb_carnet').val('');
+        $('#tb_carnet').attr('disabled','disabled');
+        $('#tb_complemento').val('');
+        $('#tb_complemento').attr('disabled','disabled');
+
+        $('#tb_paterno').focus();
+
         $('#t_carnet').removeAttr('required');
     }else{
+        $('#tb_carnet').removeAttr('disabled');
+        $('#tb_complemento').removeAttr('disabled');
+        
+        $('#tb_carnet').focus();
+
         $('#t_carnet').attr('required','required');
     }
 });
@@ -133,7 +155,9 @@ var t_buscarTutor = function(){
     var t_anioActual = t_fechaActual.getFullYear();
 
     if(t_anio < 1900 || (t_anioActual - t_anio) < 15 || (t_anioActual - t_anio) > 100){
-        alert('La fecha de nacimiento no es válida, verfique e intentelo nuevamente.');
+        $('#t_mensaje').empty();
+        t_cambiarFondoMensaje(3);
+        $('#t_mensaje').append('La fecha de nacimiento no es válida, verfique e intentelo nuevamente.');
         return;
     }
     /////////
@@ -153,7 +177,14 @@ var t_buscarTutor = function(){
                 fecha_nacimiento: t_fechaNacimiento
             };
 
+            $('#t_expedido').attr('disabled','disabled');
+            $('#t_expedido').val('');
+
             t_cargarDatos(data);
+
+            $('#m_mensaje').empty();
+            m_cambiarFondoMensaje(2);
+            $('#m_mensaje').append('Datos cargados');
 
         }else{
             // $('#t_idPersona').val('nuevo');
@@ -174,7 +205,7 @@ var t_buscarTutor = function(){
                     $('#t_mensaje').append('Buscando...');
                 },
                 success: function(data){
-
+                    $('#t_expedido').removeAttr('disabled');
                     // Ponemos el id de la tutor en nuevo
                     $('#t_idPersona').val('nuevo');
 
@@ -204,7 +235,7 @@ var t_buscarTutor = function(){
                     }
 
                     // Verificar el parentesco con el estudiante
-                    setTimeout("t_validarParentesco()",3000);
+                    // setTimeout("t_validarParentesco()",3000);
 
                 },
                 error: function(data){
@@ -251,6 +282,7 @@ function t_borrarDatos(){
     $('#t_genero').val('');
     $('#t_correo').val('');
     $('#t_telefono').val('');
+    $('#t_celular').val('');
 }
 
 var t_cambiarFondoMensaje = function(opcion){
@@ -310,6 +342,7 @@ function saveFormTutor(){
 
             if(data.status == 200){
                 $('#t_id').val(data.id);
+                $('#t_idDatos').val(data.idDatos);
                 $('#t_idPersona').val(data.idPersona);
 
                 $('#paso5').parent('li').removeClass('disabled');

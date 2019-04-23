@@ -1,7 +1,7 @@
 {% extends 'layoutHerramienta.html.twig' %}
 {% block contentoption %}
     <div class="header-content">
-        <h2><i class="fa fa-table animated fadeIn"></i> Formulario de Solicitud BTH.</h2>
+        <h2><i class="fa fa-table animated fadeIn"></i> Formulario de Solicitud BTH. -  {{ tramite_tipo }}</h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -204,7 +204,7 @@
                                         </div><!-- /.panel-body -->
                                     </div>
                                     <div class="panel panel-primary">
-                                        <div class="panel-heading">
+                                        <div class="panel-heading">especialidad
                                             <h3 class="panel-title">5.- Especialidad</h3>
                                         </div><!-- /.panel-heading -->
                                         <div class="panel-body">
@@ -215,17 +215,16 @@
                                                 <div class="col-md-3">
                                                 </div>
                                                 <div class="col-md-5">
-                                                    {% if (tipoTramite == 45)  %} {#tramite Nuevo#}
+                                                    {% if (tramite_tipo == 'Registro Nuevo')  %} {#tramite Nuevo#}
                                                         <select  id="select_especialidade" name="select_especialidade[]" class="chosen-select" multiple="" tabindex="-1" style="display: none;">
                                                             {% for especialidad in especialidadlista %}
                                                                 <option value="{{ especialidad.id }}">{{ especialidad.especialidad }}</option>
                                                             {% endfor %}
                                                         </select>
                                                     {% else %}{#tramite Ratificacion#}
-                                                    <select data-placeholder="Seleccionar especialidad" id="lista_select_especialidad" name="lista_select_especialidad[]"  class="form-control" multiple=""  >
+                                                    <select data-placeholder="Seleccionar especialidad" id="lista_select_especialidad" class="chosen-select" name="lista_select_especialidad[]"  class="form-control" multiple=""  >
                                                         {% for especialidadarray in especialidadarray %}
-                                                            {#{% if especialidadarray.id ==   %}#}
-                                                            <option value="{{ especialidadarray.id }}">{{ especialidadarray.especialidad }}</option>
+                                                            <option value="{{ especialidadarray.id }}" disabled="disabled" >{{ especialidadarray.especialidad }}</option>
                                                         {% endfor %}
                                                     </select>
                                                     {% endif %}
@@ -245,7 +244,7 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <strong>Documento adjunto</strong><br>
-                                                    <a  class="btn btn-lilac btn-xs btn-stroke" href="{{asset('uploads/archivos/'~ documento )}}" target="_blank">
+                                                    <a  class="btn btn-lilac btn-xs btn-stroke" href="{{asset('uploads/archivos/flujos/'~institucion.id~'/'~'bth/'~ documento )}}" target="_blank">
                                                         <i class="fa fa-file-pdf-o fa-2x" >  </i>   Informe Enviado por la Dirección Distrital
                                                     </a>
                                                 </div>
@@ -264,11 +263,7 @@
                 </div>
             </div>
         </div>
-        <ul id="select_esp" style="display: none">
-        {% for especialidadarray in especialidadinfo %}
-            <li>{{ especialidadarray }}</li>
-        {% endfor %}
-        </ul>
+        <input  type="hidden" id="tramite_tipo"  value="{{ tramite_tipo }}">
     </div>
 {% endblock %}
 {% block javascripts%}
@@ -281,12 +276,27 @@
             }
             $('#obs').hide();
             var select_array = [];
-            $('#select_esp').find('li').each(function (index, item) {
-                select_array.push(item.innerHTML);
+            var mensaje =false;
+            $('#lista_select_especialidad').find('option').each(function () {
+                if(this.value == 3 || this.value == 4 ){
+                    mensaje =true;
+                }
+                select_array.push(this.value);
             });
             setTimeout(function () {
-                $("#select_especialidade").val(select_array).trigger('chosen:updated');
-            },1000);
+                $("#lista_select_especialidad").val(select_array).trigger('chosen:updated');
+            },500);
+            if (mensaje){
+                swal({
+                    icon: "warning",
+                    text: "Una o todas de sus especialidades con las que cuenta su Unidad Educativa se vio afectada con la actualización de especialidades - 2019.",
+                    value: true,
+                    visible: true,
+                    className: "",
+                    closeModal: true,
+                    button: "Entendido",
+                });
+            }
         });
         function muestraobs(){
             var respuesta=$('input:radio[name=radiotype1]:checked').val();
@@ -297,9 +307,10 @@
             }
         }
         function  enviarSolicitubthDis() {
-            var idsolicitud={{ tipoTramite }};
-            switch (true) {
-                case (idsolicitud == 45)://Registro Nuevo
+            var idsolicitud  = {{ tipoTramite }};
+            var tramite_tipo = $('#tramite_tipo').val();
+            switch (tramite_tipo) {
+                case 'Registro Nuevo'://Registro Nuevo
                     swal({
                         title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
                         text: "La información llenada será enviada a la Direccion Distrital.",
@@ -310,8 +321,7 @@
                     })
                         .then(function(willDelete)  {
                             if (willDelete) {
-                                var institucionid={{ institucion.id }}
-                                var tipoTramite={{ tipoTramite }}
+                                var institucionid={{ institucion.id }};
                                 var ip = [];
                                 if($('#informe:checked').val())
                                     ip.push({ informe : 1});
@@ -321,14 +331,13 @@
                                     ip.push({select_especialidad : $('#select_especialidade').val()});
                                 else
                                 {swal("Debe seleccionar al menos una especialidad."); return false;}
-
                                 var obstxt=$('#obstxt').val();
                                 var ipt=JSON.stringify(ip);
                                 var imagen = '{{ asset("img/loading96.gif") }}';
                                 $.ajax({
                                     type: 'post',
                                     url: "{{ path('solicitud_bth_enviosolicitud') }}",
-                                    data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},idsolicitud:idsolicitud,sw:1 },
+                                    data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},idsolicitud:idsolicitud,solicitud:tramite_tipo,idflujotipo:{{ flujotipo }},sw:1 },
                                     dataType : 'json',
                                     beforeSend: function () {
                                         swal({
@@ -339,12 +348,12 @@
                                         });
                                     },
                                     success: function (data) {
-                                        console.log(data);
-                                        if (data==1 ){
+                                        //console.log(data);
+                                        if (data.estado ==1 ){
                                             swal("Su formulario se ha enviado con éxito, con Nro. Trámite: " + {{ id_tramite}} );
-                                            location.href = "{{ path('wf_tramite_index') }}";
+                                            location.href = "{{ path('wf_tramite_recibido') }}";
                                         }
-                                        else if(data==2 ){
+                                        else if(data.estado ==2 ){
                                             swal("Debe iniciar su trámite como 'Ratificacion'");
                                         }else {
                                             swal('Su formulario no se envío correctamente');
@@ -357,9 +366,8 @@
                                 });
                             }
                         });
-
                     break;
-                case (idsolicitud == 46)://Ratificacion
+                case 'Ratificación': //Ratificacion
                     swal({
                         title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
                         text: "La información llenada será enviada a la Direccion Distrital.",
@@ -377,12 +385,11 @@
                                     ip.push({ informe : 1});
                                 else ip.push({ informe : 0 });
                                 ip.push({institucionid : institucionid});
-
-                                    var especialidades_id = [];
-                                    $("#lista_select_especialidad").find("option").each(function(index, opc){
-                                        especialidades_id.push(opc.value);
-                                    });
-                                    ip.push({"select_especialidad" : especialidades_id});
+                                var especialidades_id = [];
+                                $("#lista_select_especialidad").find("option").each(function(){
+                                    especialidades_id.push(this.value);
+                                });
+                                ip.push({"select_especialidad" : especialidades_id});
 
                                 var obstxt=$('#obstxt').val();
                                 var ipt=JSON.stringify(ip);
@@ -390,7 +397,7 @@
                                 $.ajax({
                                     type: 'post',
                                     url: "{{ path('solicitud_bth_enviosolicitud') }}",
-                                    data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},sw:1 },
+                                    data:{ipt: ipt,id_distrito: {{ ubicacion['codigo_distrito'] }},institucionid:{{ institucion.id }},id_tramite:{{ id_tramite}},idsolicitud:idsolicitud,tipoTramite:{{ tipoTramite }},idflujotipo:{{ flujotipo }},sw:1},
                                     dataType : 'json',
                                     before: function () {
                                         swal({
@@ -401,16 +408,17 @@
                                         });
                                     },
                                     success: function (data) {
-                                            if (data==1){
-                                                swal("Su formulario se ha enviado con éxito, con Nro. de Trámite:"+{{ id_tramite}} );
-                                                location.href = "{{ path('wf_tramite_index') }}";
-                                            }
-                                            else if(data==3 ){
-                                                swal("Debe iniciar su trámite como 'Registro Nuevo'");
-                                            }else {
-                                                swal('Su formulario no se envío correctamente');
-                                            }
-                                        },
+                                        console.log(data);
+                                        if (data.estado==1){
+                                            swal("Su formulario se ha enviado con éxito, con Nro. de Trámite:"+{{ id_tramite}} );
+                                            location.href = "{{ path('wf_tramite_recibido') }}";
+                                        }
+                                        else if(data.estado==3 ){
+                                            swal("Debe iniciar su trámite como 'Registro Nuevo'");
+                                        }else {
+                                            swal('Su formulario no se envío correctamente');
+                                        }
+                                    },
                                     complete: function () {
                                         swal.stopLoading();
                                         swal.close();
@@ -419,10 +427,9 @@
                             }
                         });
                     break;
-
+                default:
+                break;
             }
         }
-
     </script>
-
 {% endblock %}

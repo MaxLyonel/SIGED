@@ -44,7 +44,7 @@
                 </div>
             </div>
         </div>
-    <div class="row" >
+    <div class="row"  >
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title" id="titulo">Formularios </h3>
@@ -456,7 +456,7 @@
                         <h4 class="modal-title" id="myModalLabel">Modal title</h4>
                     </div>#}
                     <div class="modal-body">
-                        <h2 align="center">¡Su formulario fue enviado con éxito!.</h2>
+                        <h2 align="center"><span id="msg">¡Su formulario fue enviado con éxito!.</span></h2>
 
                         <div class="alert alert-danger">
                             <strong>Nota.- !</strong> Descargue su comporbante en "Trámites Enviados".
@@ -493,14 +493,15 @@
         x--;
     });
     function cargarFormularioSolicitud() {
+        var solicitud=$('#form_solicitud :selected').text();
         var idsolicitud=$('#form_solicitud').val();
         switch (true){
-            case (idsolicitud == 45):
+            case (solicitud == 'Registro Nuevo'):
                 document.getElementById("titulo").innerHTML = "Formulario de <strong><em>Registro Nuevo</em></strong>";
                 $('#form_regularizacion').hide();
                 $('#form_nuevo').show(2000);
                 break;
-            case (idsolicitud == 46)://ratificacion
+            case (solicitud == 'Ratificación')://ratificacion
                 document.getElementById("titulo").innerHTML= "Formulario de Ratificación";
                 $('#form_nuevo').hide();
                 $('#form_regularizacion').show(2000);
@@ -513,33 +514,30 @@
                     success: function (data) {
                        // console.log(data);
                         var select_array = [];
+                        var mensaje = false;
                         $('#lista_especialidades_ratificacion').empty();
-                        $(data).each(function(i, v){ // indice, valor
-                            if (v.activo == false ) {
-                            $('#lista_especialidades_ratificacion').append('<option disabled="disabled" value="' + v.id + '">' + v.especialidad + '</option>');
-                            } else {
-                            $('#lista_especialidades_ratificacion').append('<option value="' + v.id + '">' + v.especialidad + '</option>');
-                            $('#mensaje').show();
-                            /*alert('Su unidada tiene especialidades que sufrieron cambio, tomar en cuenta.....');*/
-                               /* swal ( "Oops" ,  "Something went wrong!" ,  "alert" );*/
-                                swal({
-                                    icon: "warning",
-                                    text: "Una o todas de sus especialidades con las que cuenta su Unidad Educativa se vio afectada con la Homologación de especialidades - 2019," +'\n'+
-                                            "Por favor se pide una verificación de las mismas.",
-                                    value: true,
-                                    visible: true,
-                                    className: "",
-                                    closeModal: true,
-                                    button: "Entendido!",
-                                });
-
+                        $(data).each(function(i, v){
+                            if (v.activo == true ) {
+                                mensaje = true;
                             }
-                            select_array.push(v.id);
+                            $('#lista_especialidades_ratificacion').append('<option disabled="disabled" value="' + v.id + '">' + v.especialidad + '</option>');
+                            select_array.push(v.id); // solo las especialidades que no tiene ningun cambio.
                         });
                         $("#lista_especialidades_ratificacion").chosen({ width: "95%" });
                         setTimeout(function () {
                             $("#lista_especialidades_ratificacion").val(select_array).trigger('chosen:updated');
                         },500);
+                        if (mensaje) {
+                            swal({
+                                icon: "warning",
+                                text: "Una o todas de sus especialidades con las que cuenta su Unidad Educativa se vio afectada con la actualización de especialidades - 2019," +'\n',
+                                value: true,
+                                visible: true,
+                                className: "",
+                                closeModal: true,
+                                button: "Entendido",
+                            });
+                        }
                     }
                 });
                 break;
@@ -551,8 +549,9 @@
         * Funcion que envia la solicitud BTH capturando los valor introducidos
         * en el formulario.*/
         var idsolicitud=$('#form_solicitud').val();
+        var solicitud=$('#form_solicitud :selected').text();
         switch (true){
-            case (idsolicitud == 45): //Registro Nuevo
+            case (solicitud == 'Registro Nuevo'): //Registro Nuevo
                 swal({
                     title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
                     text:  "La información llenada será enviada a la Dirección Distrital." +
@@ -585,7 +584,7 @@
                             $.ajax({
                                 type: 'post',
                                 url: "{{ path('solicitud_bth_enviosolicitud') }}",
-                                data:{ipt: ipt,id_distrito: {{ ubicacion['lugarTipoIdDistrito'] }},institucionid:{{ institucion.id }},idsolicitud:idsolicitud,sw:0},
+                                data:{ipt: ipt,id_distrito: {{ ubicacion['lugarTipoIdDistrito'] }},institucionid:{{ institucion.id }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ idflujo }},sw:0},
                                 dataType : 'json',
                                 beforeSend: function () {
                                     swal({
@@ -597,7 +596,7 @@
                                 },
                                 success: function (data) {
 
-                                    if (data==1 ){
+                                    if (data.estado==1 ){
                                         swal.stopLoading();
                                         swal.close();
                                         $(".modal-backdrop ").css("display", "none");
@@ -605,8 +604,9 @@
                                         $(".modal-backdrop ").css("display", "none");
 
                                     }
-                                    else if(data==2 ){
-                                        swal(" Su Unidad Educativa ya se declaro como BTH - Debe iniciar su trámite como 'Ratificacion'");
+                                    else if(data.estado==2 ){
+                                        swal(" Su Unidad Educativa ya se declaró como BTH y por lo tanto debe iniciar su trámite como 'Ratificación', ó  \n" +
+                                            " A su Unidada Educativa no le corresponde realizar el trámite de solicitud BTH");
                                     }else {
                                         swal('Su formulario no se envío correctamente debido a que: \n' +
                                             '- Su Unidad Educativa ya inicio su trámite como "REGISTRO NUEVO". \n' +
@@ -622,7 +622,7 @@
                         }
                     });
                 break;
-            case (idsolicitud == 46): //Ratificacion
+            case (solicitud == 'Ratificación'): //Ratificacion
 
                 swal({
                     title: "¿Está Segura/o de enviar los valores introducidos en el formulario?",
@@ -646,61 +646,16 @@
                             };
                             ip.push({institucionid : institucionid});
                             var especialidades_id = [];
-                            /*$("#lista_especialidades_ratificacion").find("option").each(function(index, opc){
-                                especialidades_id.push(opc.value);
-                            });*/
-                            if($('#lista_especialidades_ratificacion').val()) {
-                                var verificar1 = false, verificar2 = false;
-                                var caso1 = false, caso2 = false;
-                                $("#lista_especialidades_ratificacion").find('option').each(function () {
-                                    if ($(this).is('[disabled=disabled]')) {
-                                        especialidades_id.push(this.value);
-                                    }
-                                    if (this.value == 41 || this.value == 42) {
-                                        verificar1 = true;
-                                    }
-                                    if (this.value == 64 | this.value == 65) {
-                                        verificar2 = true;
-                                    }
-                                });
-                                var seleccionado = $('#lista_especialidades_ratificacion').val();
-                                if (verificar1) {
-                                    for (var i in seleccionado) {
-                                        if (seleccionado[i] == 41 || seleccionado[i] == 42) {
-                                            especialidades_id.push(seleccionado[i]);
-                                            caso1 = true;
-                                        }
-                                    }
-                                    if (!caso1) {
-                                        swal("Debe seleccionar al menos una especialidad entre TEXTILES Y CONFECCIONES Y TEJIDOS Y TELARES.");
-                                        return false;
-                                    }
-                                }
-                                if (verificar2) {
-                                    for (var i in seleccionado) {
-                                        if (seleccionado[i] == 64 || seleccionado[i] == 65) {
-                                            especialidades_id.push(seleccionado[i]);
-                                            caso2 = true;
-                                        }
-                                    }
-                                    if (!caso2) {
-                                        swal("Debe seleccionar al menos una especialidad entre CARPINTERIA EN MADERA  o CARPINTERIA METALICA ");
-                                        return false;
-                                    }
-                                }
-                                ip.push({select_especialidad : especialidades_id});
-                                //console.log(especialidades_id);
-                            } else {
-                                swal("Debe seleccionar al menos una especialidad.");
-                                return false;
-                            } //alert(especialidades_id);
-                            console.log('res',especialidades_id);
+                            $("#lista_especialidades_ratificacion").find("option").each(function(){
+                                especialidades_id.push(this.value);
+                            });
+                            ip.push({select_especialidad : especialidades_id});
                             var ipt=JSON.stringify(ip);
                             var imagen = '{{ asset("img/loading96.gif") }}';
                             $.ajax({
                                 type: 'post',
                                 url: "{{ path('solicitud_bth_enviosolicitud') }}",
-                                data:{ipt: ipt,id_distrito: {{ ubicacion['lugarTipoIdDistrito'] }},institucionid:{{ institucion.id }},idsolicitud:idsolicitud,sw:0},
+                                data:{ipt: ipt,id_distrito: {{ ubicacion['lugarTipoIdDistrito'] }},institucionid:{{ institucion.id }},idsolicitud:idsolicitud,solicitud:solicitud,idflujotipo:{{ idflujo }},sw:0},
                                 dataType : 'json',
                                 beforeSend: function () {
                                     swal({
@@ -711,18 +666,19 @@
                                     });
                                 },
                                 success: function (data) {
-                                    if (data==1){
+                                    if (data.estado==1){
                                         swal.stopLoading();
                                         swal.close();+
                                         $(".modal-backdrop ").css("display", "none");
+                                        $('#msg').text(data.msg);
                                         $('#recargar').modal('show');
                                         $(".modal-backdrop ").css("display", "none");
 
                                     }
-                                    else if(data==2 ){
+                                    else if(data.estado==2 ){
                                         swal("Debe iniciar su trámite como 'Registro Nuevo'");
                                     }else {
-                                        swal('Su formulario no se envío correctamente debido a que: \n '   +
+                                        swal('Su formulario no se envío correctamente debido a alguna de las siguientes razones: \n '   +
                                             '- Su Unidad Educativa ya inicio su trámite como "REGISTRO NUEVO o RATIFICACION.  \n' +
                                             '- Su Unidad Educativa ya se encuentra registrado como BTH.');
                                     }
@@ -746,8 +702,5 @@
             $('#form_regularizacion').hide();
             $('#mensaje').hide();
     });
-
-
-
 </script>
 {% endblock %}

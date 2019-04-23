@@ -264,6 +264,12 @@ class OlimReglasOlimpiadasTipoController extends Controller
                 throw $this->createNotFoundException('Unable to find OlimReglasOlimpiadasTipo entity.');
             }
 
+            $niveles = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasNivelGradoTipo')->findBy(array('olimReglasOlimpiadasTipo'=>$id));
+            foreach ($niveles as $n) {
+                $em->remove($n);
+                $em->flush();
+            }
+
             $em->remove($entity);
             $em->flush();
         

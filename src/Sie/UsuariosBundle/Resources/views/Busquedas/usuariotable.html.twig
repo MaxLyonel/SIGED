@@ -48,7 +48,12 @@
                                         <span class="label label-default">Desactivado</span>
                                     {% endif %}        
                                 </td>
-                                <td>{{ persona.nombre }} {{ persona.paterno }} {{ persona.materno }}, CI:{{ [persona.carnet,persona.complemento]|join|trim}}</td>   
+                                <td>
+                                    {{ persona.nombre }} {{ persona.paterno }} {{ persona.materno }}, CI:{{ [persona.carnet,persona.complemento]|join|trim}}
+                                    {% if is_granted('ROLE_TECSN_SIG') or is_granted('ROLE_TECSD_SIG')  %}
+                                        <a class="btn btn-xs btn-default" href="#" onclick="personaFormEdit('{{persona.personaid}}')"> <i class="fa fa-fw fa-edit"></i> Editar</a>
+                                    {% endif %}
+                                </td>   
                                 <td>
                                     {% set roles_depu = persona.roles|replace({'"':'','{':'','}':''}) %}
                                     {% set rolesarray = roles_depu|split(',') %}   

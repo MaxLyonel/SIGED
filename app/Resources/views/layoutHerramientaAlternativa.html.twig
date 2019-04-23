@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
 <!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
-<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+<!--[if !IE]><!--> <html lang="es"> <!--<![endif]-->
 
     <!-- START @HEAD -->
     {% block stylesheets %}
@@ -10,17 +10,13 @@
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
             <meta name="description" content="Blankon is a theme fullpack admin template powered by Twitter bootstrap 3 front-end framework. Included are multiple example pages, elements styles, and javascript widgets to get your project started.">
-            <meta name="keywords" content="admin, admin template, bootstrap3, clean, fontawesome4, good documentation, lightweight admin, responsive dashboard, webapp">
-            <meta name="author" content="Djava UI">
+            <meta name="keywords" content="Educación alternativa  ">
+            <meta name="author" content="SIE">
             <title>SIGED | Herramienta Acadamica Alternativa</title>
             <!--/ END META SECTION -->
 
             <!-- START @FAVICONS -->
-            <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-144x144-precomposed.png" rel="apple-touch-icon-precomposed" sizes="144x144">
-            <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-114x114-precomposed.png" rel="apple-touch-icon-precomposed" sizes="114x114">
-            <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-72x72-precomposed.png" rel="apple-touch-icon-precomposed" sizes="72x72">
-            <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-57x57-precomposed.png" rel="apple-touch-icon-precomposed">
-            <link href="{{asset('webherramienta/img/ico/html/apple-touch-icon.png')}}" rel="shortcut icon">
+            
             <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
             <!--/ END FAVICONS -->
 
@@ -35,20 +31,20 @@
 
             <!-- START @PAGE LEVEL STYLES -->
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/fontawesome/css/font-awesome.min.css')}}" rel="stylesheet">
-            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/animate.css/animate.min.css')}}" rel="stylesheet">
-            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.css')}}" rel="stylesheet">
-            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/jasny-bootstrap-fileinput/css/jasny-bootstrap-fileinput.min.css')}}" rel="stylesheet">
+            {#<link href="{{asset('webherramienta/assets/global/plugins/bower_components/animate.css/animate.min.css')}}" rel="stylesheet">#}
+            {#<link href="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.css')}}" rel="stylesheet">#}
+            {#<link href="{{asset('webherramienta/assets/global/plugins/bower_components/jasny-bootstrap-fileinput/css/jasny-bootstrap-fileinput.min.css')}}" rel="stylesheet">#}
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.min.css')}}" rel="stylesheet">
-            <link href="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
+            {#<link href="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">#}
             <link href="{{asset('juegos/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/css/datatables.responsive.css')}}" rel="stylesheet">
-            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
-            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/ion.rangeSlider/css/ion.rangeSlider.css')}}" rel="stylesheet">
+            {#<link href="{{asset('webherramienta/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">#}
+            {#<link href="{{asset('webherramienta/assets/global/plugins/bower_components/ion.rangeSlider/css/ion.rangeSlider.css')}}" rel="stylesheet">#}
             <link href="{{asset('webherramienta/assets/commercial/plugins/cube-portfolio/cubeportfolio/css/cubeportfolio.min.css')}}" rel="stylesheet">
-            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css')}}" rel="stylesheet">
-            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/x-editable/dist/inputs-ext/typeaheadjs/lib/typeahead.js-bootstrap.css')}}" rel="stylesheet">
-            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/x-editable/dist/inputs-ext/address/address.css')}}" rel="stylesheet">
+            {#<link href="{{asset('webherramienta/assets/global/plugins/bower_components/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css')}}" rel="stylesheet">#}
+            {#<link href="{{asset('webherramienta/assets/global/plugins/bower_components/x-editable/dist/inputs-ext/typeaheadjs/lib/typeahead.js-bootstrap.css')}}" rel="stylesheet">#}
+            {#<link href="{{asset('webherramienta/assets/global/plugins/bower_components/x-editable/dist/inputs-ext/address/address.css')}}" rel="stylesheet">#}
             {#<link href="{{asset('webherramienta/assets/global/plugins/bower_components/morrisjs/morris.css')}}" rel="stylesheet">#}
             {#NO EXSTE ESTE ARCHIVO#}
             {#<link href="{{asset('css/plugins/bootstrap-combined/combined.css') }}" rel="stylesheet"> #}
@@ -78,9 +74,8 @@
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/html5shiv/dist/html5shiv.min.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/respond-minmax/dest/respond.min.js')}}"></script>
             <![endif]-->
-            <script src="{{asset('js/plugins/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
             <!--/ END IE SUPPORT -->
-            <link rel="stylesheet" type="text/css" href="CSS.css">
+            <!-- <link rel="stylesheet" type="text/css" href="CSS.css"> -->
             <link href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
         </head>
     {% endblock %}
@@ -378,7 +373,13 @@
                             <li class="dropdown navbar-profile">
                                 <a href="form-element.html#" class="dropdown-toggle" data-toggle="dropdown">
                                     <span class="meta">
-                                        <span class="avatar"><img src="/uploads/personasfotos/{{app.session.get('userfoto')}}" class="img-circle" alt="IMG"></span>
+                                        <span class="avatar">
+                                            {% if app.session.get('userfoto') is not null %}
+                                                <img src="{{asset('uploads/personasfotos/' ~ app.session.get('userfoto'))}}" class="img-circle" alt="IMG">
+                                            {% else %}
+                                                <img src="{{asset('img/photo.png')}}" class="img-circle" alt="IMG">
+                                            {% endif %}
+                                        </span>
                                         <span class="text hidden-xs hidden-sm text-muted">{{app.session.get('name')}}</span>
                                         <span class="caret"></span>
                                     </span>
@@ -425,7 +426,12 @@
                     <div class="media">
                         <a class="pull-left has-notif avatar" {#href="page-profile.html"#}>
                             {#<img src="{{asset('webherramienta/img/avatar/50/1.png')}}" alt="admin">#}
-                            <img class="img-circle" src ="/uploads/personasfotos/{{app.session.get('userfoto')}}" height="150" width="150" >
+                            {# <img class="img-circle" src ="/uploads/personasfotos/{{app.session.get('userfoto')}}" height="150" width="150" > #}
+                            {% if app.session.get('userfoto') is not null %}
+                                <img src="{{asset('uploads/personasfotos/' ~ app.session.get('userfoto'))}}" class="img-circle" alt="IMG" height="150" width="150">
+                            {% else %}
+                                <img src="{{asset('img/photo.png')}}" class="img-circle" alt="IMG" height="150" width="150">
+                            {% endif %}
                             <i class="online"></i>
                         </a>
                         <div class="media-body">
@@ -509,6 +515,7 @@
                                         <li><a href="{{path('alternativa_operativo_gestion_pasada')}}">Habilitar Operativo Gestión Pasada</a></li> 
                                         <li><a href="{{path('alternativa_operativo_ampliar')}}">Ampliar Operativo</a></li> 
                                         <li><a href="{{path('alternativa_operativo_regularizar')}}">Regularizar Operativo</a></li> 
+                                        <li><a href="{{path('alternativa_operativo_nuevo_reapertura')}}">Habilitar Operativo CEAS Nuevos</a></li> 
                                         <li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
                                         <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>
                                     </ul>
@@ -519,7 +526,7 @@
                                 {#<li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>#}
 
                                 <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
-                                <li><a href="{{path('herramientalt_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>                       
+                                {# <li><a href="{{path('herramientalt_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>                        #}
                                 <li><a href="{{path('herramientalt_ceducativa_crear_sucursal')}}">Habilitar Sucursal </a></li>
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
                                 {#<li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
@@ -586,7 +593,8 @@
                                     <ul>
                                         <li><a href="{{path('alternativa_operativo_home')}}">Habilitar Operativo</a></li> 
                                         <li><a href="{{path('alternativa_operativo_ampliar')}}">Ampliar Operativo</a></li>
-                                        <li><a href="{{path('alternativa_operativo_regularizar')}}">Regularizar Operativo</a></li>  
+                                        <li><a href="{{path('alternativa_operativo_regularizar')}}">Regularizar Operativo</a></li>
+                                        <li><a href="{{path('alternativa_operativo_nuevo_reapertura')}}">Habilitar Operativo CEAS Nuevos</a></li> 
                                         <li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
                                         <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>
                                     </ul>
@@ -636,10 +644,11 @@
                                         <span class="arrow"></span>
                                     </a>
                                     <ul>
-                                        <li><a href="{{path('alternativa_operativo_home')}}">Habilitar Operativo</a></li>                        
+                                        <li><a href="{{path('alternativa_operativo_home')}}">Habilitar Operativo</a></li>
                                         <li><a href="{{path('herramientalt_ceducativa_crear_sucursal')}}">Habilitar Sucursal </a></li>
                                         <li><a href="{{path('alternativa_operativo_ampliar')}}">Ampliar Operativo</a></li>
-                                        <li><a href="{{path('alternativa_operativo_regularizar')}}">Regularizar Operativo</a></li> 
+                                        <li><a href="{{path('alternativa_operativo_regularizar')}}">Regularizar Operativo</a></li>
+                                        <li><a href="{{path('alternativa_operativo_nuevo_reapertura')}}">Habilitar Operativo CEAS Nuevos</a></li>
                                         <li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
                                         <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>
                                     </ul>
@@ -725,15 +734,15 @@
             <!-- START @PAGE CONTENT -->
             <section id="page-content">
                 <div class="header-content" style="background-color: #6d7b61;">
-                    <h2><i class="fa fa-university"></i> {{app.session.get('ie_nombre')}} 
-                        <span> {{app.session.get('ie_id')}}  {{app.session.get('ie_gestion')}}  {{app.session.get('ie_per_nom')}}
+                    <h2 style="color: #EEEEEE; font-weight:bold"><i class="fa fa-university"></i> {{app.session.get('ie_nombre')}} 
+                        <span style="color: #EEEEEE"> {{app.session.get('ie_id')}}  {{app.session.get('ie_gestion')}}  {{app.session.get('ie_per_nom')}}
                             {#{% if (app.session.get('ie_per_estado') != '0') %}#}
                                 : <i class="fa fa-wrench"></i> {{app.session.get('ie_operativo')}}
                             {#{% endif %}                            #}
                         </span>
                     </h2>
                     <div class="breadcrumb-wrapper hidden-xs">
-                        <span class="label">Sub Centro:</span>
+                        <span class="label" style="color: #EEEEEE">Sub Centro:</span>
                         <ol class="breadcrumb">
                             <li>
                                 <a href="">{{app.session.get('ie_subcea')}}</a>
@@ -1256,16 +1265,16 @@
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/horizontal-chart/build/js/jquery.horizBarChart.min.js')}}"></script>#}
             
 
-            
+            <script src="{{asset('js/plugins/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
             
             <!--/ END PAGE LEVEL PLUGINS -->
             
             <!-- START @PAGE LEVEL SCRIPTS -->
             <script src="{{asset('webherramienta/assets/admin/js/apps.js')}}"></script>
             <script src="{{asset('webherramienta/assets/admin/js/pages/blankon.chart.easypie.js')}}"></script>
-            {#<script src="{{asset('webherramienta/assets/admin/js/pages/blankon.dashboard.retail.js')}}"></script>#}
+            {#<script src="{{asset('webherramienta/assets/admin/js/pages/blankon.dashboard.retail.js')}}"></script>
             <script src="{{asset('webherramienta/assets/admin/js/pages/blankon.blog.type2.js')}}"></script>
-            <script src="{{asset('webherramienta/assets/admin/js/pages/blankon.slider.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/admin/js/pages/blankon.slider.js')}}"></script>#}
             <script src="{{asset('webherramienta/assets/admin/js/pages/blankon.form.element.js')}}"></script>
             <script src="{{asset('webherramienta/assets/admin/js/pages/blankon.form.validation.js')}}"></script>
             <script src="{{asset('webherramienta/assets/admin/js/demo.js')}}"></script>
@@ -1280,11 +1289,12 @@
             <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
             <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
             <!--/ END GOOGLE ANALYTICS -->
-
-            <script src="{{ asset('js/highcharts/highcharts.js')}}"></script>
+            {#<script src="{{ asset('js/highcharts/highcharts.js')}}"></script>
             <script src="{{ asset('js/highcharts/funnel.js')}}"></script>
             <script src="{{ asset('js/highcharts/highcharts-3d.js')}}"></script>
             <script src="{{ asset('js/highcharts/exporting.js')}}"></script>
+            #}
+            
             <script>
             //ABRIR MODAL CON SUBCENTROS GESTIONES Y SEMESTRES
             //PENDIENTE DE LLEVAR A OTRO ARCHIVO
@@ -1410,7 +1420,9 @@
                     });
                 };    
             </script>
+            {#
             <script src="{{ asset('bower_components/select2/dist/js/select2.min.js') }}"></script>
+            #}
             <script src="{{ asset('js/jquery.alphanum.js') }}"></script>
         {%endblock%}
     </body>

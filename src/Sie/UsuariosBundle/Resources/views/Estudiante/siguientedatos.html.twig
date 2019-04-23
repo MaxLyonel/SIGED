@@ -78,10 +78,10 @@
                                         </div>
                                         <div class="col-lg-6">    
                                             <label class="required">Cod. Sie donde se inscribira :</label><br/>
-                                                {% if app.session.get('ie_id') != '-1' %}
-                                                    <input value="{{app.session.get('ie_id')}}" type="text" class="form-control typeahead rounded" name="busquedaDatosTotForm[Sie]" id="busquedaDatosTotForm_Sie" placeholder="Código Sie" onkeypress="return soloNumeros(event);">
+                                                {% if app.session.get('ie_id') != '-1' and app.session.get('roluser') == 9 %}
+                                                    <input value="{{app.session.get('ie_id')}}" type="text" class="form-control typeahead rounded" name="busquedaDatosTotForm[Sie]" id="busquedaDatosTotForm_Sie" placeholder="Código Sie" onkeypress="return soloNumeros(event);" readonly="1">
                                                 {% else %}
-                                                    <input type="text" class="form-control typeahead rounded" name="busquedaDatosTotForm[Sie]" id="busquedaDatosTotForm_Sie" placeholder="Código Sie" onkeypress="return soloNumeros(event);" readonly>
+                                                    <input type="text" class="form-control typeahead rounded" name="busquedaDatosTotForm[Sie]" id="busquedaDatosTotForm_Sie" placeholder="Código Sie" onkeypress="return soloNumeros(event);" >
                                                 {% endif %}
                                         </div>
                                     </div>
@@ -270,8 +270,8 @@
                         $("#butguardar").empty();
                     },
                     success: function (data) {
-                        $("#busquedaDatosTotForm_InputCi").prop("disabled", true );
-                        $("#busquedaDatosTotForm_InputComplemento").prop("disabled", true );
+                        $("#busquedaDatosTotForm_InputCi").prop("readonly", true );
+                        $("#busquedaDatosTotForm_InputComplemento").prop("readonly", true );
                         $("#busquedaDatosTotForm_Genero").prop("disabled", true );
                         $("#busquedaDatosTotForm_Pais").prop("disabled", true );
                         $("#busquedaDatosTotForm_Depto").prop("disabled", true );

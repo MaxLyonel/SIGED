@@ -1,7 +1,6 @@
 {% extends 'layoutHerramienta.html.twig' %}
 
 {% block contentoption %}
-
     <!-- Start page header -->
       {% include 'SieHerramientaBundle:Principal:breadcrumbstrail.html.twig' with {'sie': odataUedu.id, 'gestion':gestion , 'opcion': 'Estudiante'} %}
     <!--/ End page header -->
@@ -21,18 +20,30 @@
                           <i class="fa fa-edit" ></i> Cerrar sexto grado
                         </button>
                     {% endif %}
-                    #}
+                #}
                 
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <a class="btn btn-block btn-twitter" href="{{ path('donwload_listStudentPerUe', {'gestion': gestion, 'ue': odataUedu.id} )}}"><i class="fa fa-download"></i> Listado de Estudiantes</a>
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-primary" style="margin-bottom:0px">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h5>Cursos</h5>
+                                </div>
+                                <div class="pull-right">
+                                    Opciones:
+                                    <a class="btn btn-twitter" href="{{ path('donwload_listStudentPerUe', {'gestion': gestion, 'ue': odataUedu.id} )}}" data-toggle="tooltip" data-placemente="top" data-original-title="Listado de estudiantes"><i class="fa fa-download"></i></a>
+                                    <a class="btn btn-info" href="{{ path('donwload_nnats', {'gestion': gestion, 'sie': odataUedu.id} )}}" data-toggle="tooltip" data-placemente="top" data-original-title="Reporte NNATS"><i class="fa fa-download"></i></a>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <small>
                     <div class="tree well">
@@ -55,7 +66,7 @@
                                                                 {% for paraleloKey, dataParalelo in dataGrado %}
                                                                     <li>
                                                                       <a href="#" onclick="seeStudents('{{dataParalelo.infoUe}}');">
-                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">
+                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Lista de Inscritos">
                                                                             <span ><i class="icon-leaf"></i>
                                                                                 {{paraleloKey}}
                                                                             </span>
@@ -66,11 +77,13 @@
                                                                                 <i class="fa fa-group"></i>
                                                                             </button>
                                                                         </div-->
+                                                                              
                                                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Areas/Maestros">
                                                                             <button class="btn btn-circle btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getAreas('{{dataParalelo.infoUe}}');">
                                                                                 <i class="fa fa-group"></i>
                                                                             </button>
                                                                         </div>
+                                                                        
                                                                         <!--button type="button" class="btn btn-warning btn-xs dropdown-toggle" data-toggle="dropdown" tabindex="-1">
                                                                             <i class="fa fa-caret-square-o-down"></i>
                                                                         </button>
@@ -92,7 +105,7 @@
 
                                                                         </table-->
 
-                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Areas/Maestros">
+                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Datos del curso">
                                                                             <button class="btn btn-circle btn-info btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getDatosCurso('{{dataParalelo.infoUe}}');">
                                                                                 <i class="fa fa-list"></i>
                                                                             </button>

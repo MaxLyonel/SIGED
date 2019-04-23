@@ -2375,7 +2375,7 @@ class TramiteDetalleController extends Controller {
                         $tramiteController->setContainer($this->container);
 
                         if ($flujoSeleccionado == 'Adelante'){
-                            $msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
+                            // $msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
                         }
 
                         if($msgContenido != ""){
@@ -4444,17 +4444,17 @@ class TramiteDetalleController extends Controller {
         }
 
         // $rolPermitido = array(8,13);
-        $rolPermitido = array(9);
+        // $rolPermitido = array(9);
 
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
+        // $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
-        if (!$esValidoUsuarioRol){
-            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('tramite_homepage'));
-        }
+        // if (!$esValidoUsuarioRol){
+        //     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
+        //     return $this->redirect($this->generateUrl('tramite_homepage'));
+        // }
 
         $documentoTipoId = 1;
         $institucioneducativaId = 0;

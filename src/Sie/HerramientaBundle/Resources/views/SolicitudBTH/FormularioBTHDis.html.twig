@@ -255,7 +255,11 @@
                                             <h3 class="panel-title">6.- Evaluación Distrital</h3>
                                         </div><!-- /.panel-heading -->
                                         <div class="panel-body">
-
+                                            <div class="row">
+                                                <div class="alert alert-warning">
+                                                    <strong>Nota.-</strong> Se recomienda adjuntar el informe a la Dirección Departamental de Educación para la autorización o postergación de la misma.
+                                                </div>
+                                            </div>
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <strong>¿Solicitud Procedente?</strong>
@@ -280,24 +284,26 @@
 
 
                                                 <div class="col-md-8" id="obs">
-                                                    <textarea class="form-control" rows="5" id="obstxt"></textarea>
+                                                    <textarea class="form-control" rows="5" id="obstxt" placeholder="Escriba la observación en caso de caso de devolución."></textarea>
                                                 </div>
                                             </div>
                                             <div class="row"></div>
-                                            <div class="row">
+                                           {# <div class="row">
                                                 <div class="col-md-4">
                                                     <strong>Documento adjunto</strong><br>
-                                                    <a  class="btn btn-lilac btn-xs btn-stroke" href="{{asset('uploads/archivos/'~ documento )}}" target="_blank">
+                                                    <a  class="btn btn-lilac btn-xs btn-stroke" href="{{asset('uploads/archivos/flujos/'~institucion.id~'/'~'bth/'~ documento )}}" target="_blank">
                                                         <i class="fa fa-file-pdf-o fa-2x" >  </i>   Informe Enviado por la Dirección Departamental
                                                     </a>
                                                 </div>
-                                            </div>
+                                            </div>#}
                                             <BR>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="pull-left">
-                                                        {#<button class="btn btn-sm btn-facebook"  title="Adjuntar Documento"><i class="glyphicon glyphicon-paperclip"></i>Adjuntar Documento</button>#}
-                                                        <input type="file" id="adjdocumento" title="Adjuntar Documento" accept="application/pdf">
+                                                        <label for="adjdocumento">
+                                                            <i class="fa fa-cloud-upload"></i> Adjuntar Informe
+                                                        </label>
+                                                        <input type="file" id="adjdocumento" title="Adjuntar Informe" accept="application/pdf,.doc,.docx">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -414,7 +420,7 @@
                             contentType: false,
                             cache: false,
                             processData:false,
-                            //dataType : 'json',
+                            dataType : 'json',
                             before: function () {
                                 swal({
                                     title: "Enviando...",
@@ -423,8 +429,8 @@
                                     buttons: false
                                 });
                             },
-                            success: function (data) {
-                                if (data==1){
+                            success: function (data) {console.log(data.msg);
+                                if (data.estado==1){
                                     swal("Su respuesta se ha enviado con éxito Muchas gracias");
                                     location.href = "{{ path('wf_tramite_recibido') }}";
                                 }

@@ -200,11 +200,11 @@ class EstudianteController extends Controller
         $em->getConnection()->beginTransaction();
         $data = $request->request->all();
         $form = $data['busquedaDatosTotForm'];
-        
+        // dump($form);die;
         $response = new JsonResponse();
         //check if the SIE is on ALTERNATIVA
         $swOnAlternativa = $this->validateOnAlternativa($form);
-        if($swOnAlternativa){
+        if($swOnAlternativa && $form['InputCi']==''){
           return $response->setData(array('error'=>true,'mensaje' => '¡Proceso detenido! Los campos Carnet de Identidad y/o complemento son requeridos!')); 
         }
 
@@ -256,14 +256,14 @@ class EstudianteController extends Controller
                 //added validation segip by krlos
                 if($form['swValidationSegip']==1){
                     $valSegip = 1;
-                    $messageValSegip = 'SI VALIDADO SEGIP';
+                    // $messageValSegip = 'SI VALIDADO SEGIP';
                 }else{
                     $valSegip = 0;
-                    $messageValSegip = 'NO VALIDADO SEGIP';
+                    // $messageValSegip = 'NO VALIDADO SEGIP';
                 }
 
                 $estudiante->setSegipId($valSegip);
-                $estudiante->setObservacion($messageValSegip);
+                // $estudiante->setObservacion($messageValSegip);
                 
                 $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($form['Expedido']));
                 $em->persist($estudiante);
@@ -276,6 +276,17 @@ class EstudianteController extends Controller
                 $UsuarioGeneracionRude->setDatosCreacion(serialize($aDatosCreacion));
                 $em->persist($UsuarioGeneracionRude);
                 $em->flush();
+
+                $this->get('funciones')->setLogTransaccion(
+                     $estudiante->getId(),
+                     'estudiante',
+                     'C',
+                     '',
+                     $estudiante,
+                     '',
+                     'USUARIOS',
+                     json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                 );
 
                 $em->getConnection()->commit();
                 return $response->setData(array('error'=>false,'mensaje' => '¡Proceso realizado exitosamente! Código rude generado: '.$codigoRude));

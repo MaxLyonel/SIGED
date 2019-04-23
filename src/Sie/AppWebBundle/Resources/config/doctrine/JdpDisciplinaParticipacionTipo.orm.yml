@@ -1,0 +1,32 @@
+Sie\AppWebBundle\Entity\JdpDisciplinaParticipacionTipo:
+    type: entity
+    table: jdp_disciplina_participacion_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        disciplinaParticipacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: disciplina_participacion
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        cantidad:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+    lifecycleCallbacks: {  }
