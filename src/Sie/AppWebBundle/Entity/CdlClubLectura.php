@@ -108,4 +108,32 @@ class CdlClubLectura
     {
         return $this->maestroinscripcion;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\InstitucioneducativaSucursal
+     */
+    private $institucioneducativasucursal;
+
+
+    /**
+     * Set institucioneducativasucursal
+     *
+     * @param \Sie\AppWebBundle\Entity\InstitucioneducativaSucursal $institucioneducativasucursal
+     * @return CdlClubLectura
+     */
+    public function setInstitucioneducativasucursal(\Sie\AppWebBundle\Entity\InstitucioneducativaSucursal $institucioneducativasucursal = null)
+    {
+        $this->institucioneducativasucursal = $institucioneducativasucursal;
+    
+        return $this;
+    }
+
+    /**
+     * Get institucioneducativasucursal
+     *
+     * @return \Sie\AppWebBundle\Entity\InstitucioneducativaSucursal 
+     */
+    public function getInstitucioneducativasucursal()
+    {
+        return $this->institucioneducativasucursal;
+    }
 }

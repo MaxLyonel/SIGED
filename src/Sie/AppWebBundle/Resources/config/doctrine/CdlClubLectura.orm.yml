@@ -5,6 +5,9 @@ Sie\AppWebBundle\Entity\CdlClubLectura:
         IDX_C35705CC1D5CDAA:
             columns:
                 - maestroinscripcion_id
+        IDX_C35705C84BCD5DC:
+            columns:
+                - institucioneducativasucursal_id
     id:
         id:
             type: integer
@@ -36,6 +39,15 @@ Sie\AppWebBundle\Entity\CdlClubLectura:
             inversedBy: null
             joinColumns:
                 maestroinscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativasucursal:
+            targetEntity: InstitucioneducativaSucursal
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativasucursal_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
