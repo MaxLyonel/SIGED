@@ -1,12 +1,20 @@
-promotor:
+aca_promotor_index:
     path:     /
     defaults: { _controller: SieHerramientaBundle:Promotor:index }
 
-promotor_promotor_register:
+aca_promotor_promotor_listPromotor:
+    path:     /listPromotor
+    defaults: { _controller: SieHerramientaBundle:Promotor:listPromotor }
+    
+aca_promotor_promotor_selectsie:
+    path:     /selectsie
+    defaults: { _controller: SieHerramientaBundle:Promotor:selectsie }
+
+aca_promotor_promotor_register:
     path:     /promotorregister
     defaults: { _controller: SieHerramientaBundle:Promotor:register }
 
-promotor_promotor_find:
+aca_promotor_promotor_find:
     path:     /promotorfind
     defaults: { _controller: SieHerramientaBundle:Promotor:find }
 
