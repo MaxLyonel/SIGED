@@ -161,3 +161,7 @@ sie_herramienta_regularization_docente:
 # sie_herramienta_regularization_docente_to_distrito:
 #     resource: "@SieHerramientaBundle/Resources/config/routing/regularizationlistdocentetodistrito.yml"
 #     prefix:   /sie/regularizationlistdocente
+
+sie_herramienta_tramite_talento:
+    resource: "@SieHerramientaBundle/Resources/config/routing/tramiteTalento.yml"
+    prefix:   /sie/tramitetalento

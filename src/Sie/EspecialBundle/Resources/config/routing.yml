@@ -60,7 +60,7 @@ sie_especial_info_students:
 
 sie_especial_talento_extraordinario:
     resource: "@SieEspecialBundle/Resources/config/routing/talentoExtraordinario.yml"
-    prefix:   /espsie/talentoExtraordinario
+    prefix:   /espsie/talento
 
 index:
     path:     /index

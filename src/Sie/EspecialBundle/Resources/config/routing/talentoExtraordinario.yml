@@ -1,7 +1,3 @@
-talento_extraordinario_index:
-    path:     /
-    defaults: { _controller: SieEspecialBundle:EstudianteTalento:index }
-    
 talento_extraordinario_new:
     path:     /nuevo
     defaults: { _controller: SieEspecialBundle:EstudianteTalento:new }
@@ -42,6 +38,6 @@ talento_extraordinario_new_comprobante:
     path:     /reporte/solicitud
     defaults: { _controller: SieEspecialBundle:EstudianteTalento:rptSolicitud }
 
-"talento_extraordinario_check_comprobante":
+talento_extraordinario_check_comprobante:
     path:     /reporte/informe
     defaults: { _controller: SieEspecialBundle:EstudianteTalento:rptInforme }

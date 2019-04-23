@@ -1,6 +1,13 @@
 inscription_talento_index:
     path:    /
-    defaults: { _controller: SieRegularBundle:InscriptionTalento:index }
+    defaults: { _controller: SieRegularBundle:InscriptionTalento:new } #cambiar a 'new' para inscripcion con TE integrado
+
+#Busqueda de estudiantes por SIE para TE integrado
+inscription_talento_search_result:
+    path:    /buscar
+    defaults: { _controller: SieRegularBundle:InscriptionTalento:search }
+    options:
+        expose: true
 
 inscription_talento_result:
     path:    /result
@@ -31,14 +38,3 @@ inscription_talento_findturno:
     defaults: { _controller: SieRegularBundle:InscriptionTalento:findturno }
     options:
         expose: true
-
-# Inscripcion con estudiante_talento
-inscription_talento_list:
-    path:    /lista
-    defaults: { _controller: SieRegularBundle:InscriptionTalentoE:index }
-
-inscription_talento_search_result:
-     path:    /buscar
-     defaults: { _controller: SieRegularBundle:InscriptionTalentoE:search }
-     options:
-         expose: true

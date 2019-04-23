@@ -1,0 +1,11 @@
+tramite_talento_search:
+    path:     /busqueda
+    defaults: { _controller: SieEspecialBundle:EstudianteTalento:searchStudent }
+    options:
+        expose: true
+
+tramite_talento_save:
+    path:     /guardar
+    defaults: { _controller: SieEspecialBundle:EstudianteTalento:save } #SieHerramientaBundle:TramiteTalento:save 
+    options:
+        expose: true
