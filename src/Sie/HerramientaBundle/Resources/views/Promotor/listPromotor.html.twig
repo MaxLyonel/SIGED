@@ -49,8 +49,16 @@
                                                 <td class="text-center">{{loop.index}}</td>
                                                 <td>{{promotor.paterno}} {{promotor.materno}} {{promotor.nombre}}</td>
                                                 <td>{{promotor.nombreClub}}</td>
-                                                <td>Estudiantes</td>
-                                                <td>Eventos</td>
+                                                <td>
+                                                <form action="#">                                            
+                                                            <button class="btn btn-success" type="submit">Estudiantes</button>
+                                                </form>
+                                                </td>
+                                                <td>
+                                                <form action="#">                                            
+                                                            <button class="btn btn-success" type="submit">Eventos</button>
+                                                </form>
+                                                </td>
                                             </tr>
                                             {% endfor%}
                                         </tbody>

@@ -237,7 +237,7 @@ class PromotorController extends Controller{
 
     private function registerPromotorForm($jsonDataRegister){
          return $this->createFormBuilder()
-            ->add('nombreclub', 'text', array('attr'=>array('label' => 'nombre del club','value'=>'', 'maxlength'=>8, 'class'=>'form-control', 'placeholder' => 'REGISTRE NOMBRE DEL CLUB')))
+            ->add('nombreclub', 'text', array('attr'=>array('label' => 'nombre del club','value'=>'', 'maxlength'=>32, 'class'=>'form-control', 'placeholder' => 'REGISTRE NOMBRE DEL CLUB')))
             ->add('jsonDataRegister', 'hidden', array('attr'=>array('value'=>$jsonDataRegister, )))
             ->add('registerData', 'button', array('label'=>'Registrar','attr'=>array('class'=>'btn btn-info', 'onclick'=>'registerPromotor()')))
             ->getForm();
