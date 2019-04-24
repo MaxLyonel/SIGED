@@ -1,0 +1,62 @@
+<div class="row">
+    <div class="col-md-12">
+
+      {% for flashMessage in app.session.flashbag.get('messagePromotor') %}
+            <div class="alert alert-{{typeMessage}} alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Resultado de la Busqueda!</br></strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+
+        {% if flagPromotor %}
+
+        <div class="table-responsive mb-20">
+            <table class="table">
+                <thead>
+                    <tr>
+                        
+                        <th>CI Complemento</th>
+                        <th>Paterno</th>
+                        <th>Materno</th>
+                        <th>Nombre(s)</th>
+                    </tr>
+                </thead>
+            
+                <tbody>
+                    <tr class="success">
+                        <td>{{promotorData.carnet}} {{promotorData.complemento}}</td>
+                        <td>{{promotorData.paterno}}</td>
+                        <td>{{promotorData.materno}}</td>
+                        <td>{{promotorData.nombre}}</td>
+                    </tr>
+                
+                </tbody>
+            </table>
+        </div>
+
+        {{form(form)}}
+
+        <form action="#">
+                <div class="form-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input placeholder="REGISTRE NOMBRE DEL CLUB" class="form-control" type="text">
+                            </div>
+                        </div>
+                    </div>
+                
+                </div><!-- /.form-body -->
+                <div class="form-footer">
+                    <div class="pull-right">
+                        {# <button class="btn btn-danger mr-5">Cancel</button>
+                        <button class="btn btn-success" type="submit">Registrar</button> #}
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.form-footer -->
+        </form>
+
+        {% endif %}
+
+    </div>
+</div>
