@@ -13,11 +13,15 @@ use Sie\AppWebBundle\Entity\CdlIntegrantes;
 
 class RegStudentController extends Controller
 {
-    public function indexAction(Request $request)
-    {
-        $idClubLectura = 1;//$request->get('id');
-        $sie = 40730067;//$request->get('sie');
-        $gestion = 2019;//$request->get('gestion');
+    public function indexAction(Request $request){
+        //get the send data by post
+        $form = $request->get('form');
+        $arrDataUe = json_decode($form['jsonDataUe'],true);
+        
+        //set the correct values
+        $idClubLectura = $form['cdlId'];
+        $gestion       = $arrDataUe['gestionTipo'];
+        $sie           = $arrDataUe['institucioneducativa'];        
 
         return $this->render('SieHerramientaBundle:RegStudent:index.html.twig', array(
                 'integrantes'=>$this->integrantes($idClubLectura),

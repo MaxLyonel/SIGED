@@ -21,8 +21,20 @@
                         <td class="text-center">{{loop.index}}</td>
                         <td>{{promotor.paterno}} {{promotor.materno}} {{promotor.nombre}}</td>
                         <td>{{promotor.nombreClub}}</td>
-                        <td>Estudiantes</td>
-                        <td>Eventos</td>
+                        <td align="center">                                                    
+                            <form action="{{path('regstudent')}}" method="post" data-toggle="validator" role="form">
+                                <input type="hidden" id="form_jsonDataUe" name="form[jsonDataUe]" value="{{jsonDataUe}}">
+                                <input type="hidden" id="form_cdlId" name="form[cdlId]" value="{{promotor.id}}">
+                                <button class="btn btn-xs btn-success" type="submit">Estudiantes</button>
+                            </form>
+                        </td>
+                        <td align="center">
+                            <form action="{{path('regevent')}}" method="post" data-toggle="validator" role="form">
+                                <input type="hidden" id="form_jsonDataUe" name="form[jsonDataUe]" value="{{jsonDataUe}}">
+                                <input type="hidden" id="form_cdlId" name="form[cdlId]" value="{{promotor.id}}">
+                                <button class="btn btn-xs btn-success" type="submit">Eventos</button>
+                            </form>
+                        </td>
                     </tr>
                     {% endfor%}
                 </tbody>

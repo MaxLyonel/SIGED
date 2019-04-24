@@ -221,8 +221,8 @@ class PromotorController extends Controller{
           $jsonDataRegister = json_encode( array(
                             'mainsid'     =>$selectPromotor['miId'],
                             'iesucursalId'=>$arrDataUe['iesucursalId'],
-                            'sie'         => $arrDataUe['institucioneducativa'],
-                            'gestion'     => $arrDataUe['gestionTipo']
+                            'institucioneducativa'         => $arrDataUe['institucioneducativa'],
+                            'gestionTipo'     => $arrDataUe['gestionTipo']
                         ));
 
 
@@ -248,6 +248,7 @@ class PromotorController extends Controller{
         //get the send data
         $form = $request->get('form');
         $arrDataRegister = json_decode($form['jsonDataRegister'],true);
+        
         //creete db conexion
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
@@ -277,7 +278,7 @@ class PromotorController extends Controller{
 
         return $this->render('SieHerramientaBundle:Promotor:registerpromotor.html.twig', array(
                 'objPromotor'  => $objPromotor,
-                // 'jsonDataUe' => json_encode($arrDataUe),
+                'jsonDataUe' => $form['jsonDataRegister'],
             ));    
 
 
