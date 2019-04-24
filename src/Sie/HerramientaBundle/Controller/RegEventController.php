@@ -12,11 +12,22 @@ use Sie\AppWebBundle\Entity\CdlEventos;
 class RegEventController extends Controller
 {
     public function indexAction(Request $request)
-    {
+    {// dump($request);die;
+
+        $form = $request->get('form');
+        $arrDataUe = json_decode($form['jsonDataUe'],true);
+
+        //set the correct values
+        //$idClubLectura = $form['cdlId'];
+        $gestion       =
+
+
         $this->session = $request->getSession();
-        $id_Intitucion = $this->session->get('ie_id');
-        $id_gestion = $this->session->get('currentyear');
-        $id_cdl_club_lectura = 1;// $request->get('id_cdl_club_lectura');// id de club de lectura que manda al registrar encargado
+        $id_Intitucion = $arrDataUe['institucioneducativa'];;
+        $id_gestion = $arrDataUe['gestionTipo'];
+        $id_cdl_club_lectura=$form['cdlId'];
+        //$id_cdl_club_lectura = 1;//
+        //$request->get('id_cdl_club_lectura');// id de club de lectura que manda al registrar encargado
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT even.id,even.nombre_evento,even.fecha_inicio,even.fecha_fin 
                                                 FROM cdl_eventos even INNER JOIN cdl_club_lectura lec ON even.cdl_club_lectura_id = lec.id 
