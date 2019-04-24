@@ -33,15 +33,15 @@
                 </tbody>
             </table>
         </div>
-
-        {{form(form)}}
-
-        <form action="#">
+        {{ form_start(form,{ 'attr': {'class': 'tab-content form-horizontal','id':'registerPromotorId','onsubmit':'return false;'} } ) }}
                 <div class="form-body">
                     <div class="form-group">
                         <div class="row">
-                            <div class="col-md-12">
-                                <input placeholder="REGISTRE NOMBRE DEL CLUB" class="form-control" type="text">
+                            <div class="col-md-10">
+                                {{form_widget(form.nombreclub)}}
+                            </div>
+                            <div class="col-md-2">
+                                {{form_widget(form.registerData)}}
                             </div>
                         </div>
                     </div>
@@ -54,7 +54,7 @@
                     </div>
                     <div class="clearfix"></div>
                 </div><!-- /.form-footer -->
-        </form>
+        {{form_end(form)}}
 
         {% endif %}
 
