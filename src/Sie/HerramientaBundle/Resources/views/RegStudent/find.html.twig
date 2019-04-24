@@ -1,7 +1,29 @@
-{% extends "::base.html.twig" %}
-
-{% block title %}SieHerramientaBundle:RegStudent:find{% endblock %}
-
-{% block body %}
-<h1>Welcome to the RegStudent:find page</h1>
-{% endblock %}
+{% if estudiantes|length > 0 %}
+	
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th>Rude</th>
+				<th>Paterno</th>
+				<th>Materno</th>
+				<th>Nombre</th>
+				<th>Opción</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for estudiante in estudiantes %}
+				<tr>
+					<td>{{estudiante.codigoRude}}</td>
+					<td>{{estudiante.paterno}}</td>
+					<td>{{estudiante.materno}}</td>
+					<td>{{estudiante.nombre}}</td>
+					<td>
+						<button type="button" onclick="agregarEstudiante({{cdl}},{{estudiante.id}})"> <i class="fa fa-check"></i> </button>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% else %}
+	No hay resultados
+{% endif %}
