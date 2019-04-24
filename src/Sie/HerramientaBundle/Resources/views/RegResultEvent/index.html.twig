@@ -1,7 +1,342 @@
-{% extends "::base.html.twig" %}
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> Registro de Resultados </h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Registro de Resultados</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            {% if app.session.flashBag.has('exito') %}
+            <div class="alert alert-success">
+                {% for msg in app.session.flashBag.get('exito') %}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ msg }}
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% if app.session.flashBag.has('error') %}
+                <div class="alert alert-danger">
+                    {% for msg in app.session.flashBag.get('error') %}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ msg }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="row">
+            <div id="mensajeeventos"></div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel rounded shadow panel-default">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Club de Lectura: <strong>{{ club }} / </strong> {{ nombreevento }} </h3>
+                        </div>
+                        <div class="pull-right">
+                            <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_resultado"><i class="fa fa-plus"></i>   Nuevo Resultado</button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="panel-body panel-primary">
+                            {% if listaresultado is not empty %}
+                                <div id="no-more-tables">
+                                    <table class="table table-striped table-primary" id="resultados">
+                                        <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Nombre</th>
+                                            <th>Opciones</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for listaresultado in listaresultado %}
+                                            <tr>
+                                                <td data-title="N°">{{ loop.index }}</td>
+                                                <td data-title="evento">{{ listaresultado.nombreProducto }}</td>
+                                                <td data-title="Acciones">
+                                                    <button class="btn-link" onclick="showeditResultado({{ listaresultado.id }},'{{ listaresultado.nombreProducto  }}');"><i class="fa fa-edit"></i> </button>
+                                                    <form action="{{path('regresultevent_delete')}}" method="post" style="display: inline-block">
+                                                        <input type="hidden" name="idResultado" value="{{listaresultado.id}}">
+                                                        <input type="hidden" name="idEvento"    value="{{id_evento}}">
+                                                        <input type="hidden" name="Club"        value="{{club}}">
+                                                        <input type="hidden" name="idInstitucion" value="{{id_Intitucion}}">
+                                                        <input type="hidden" name="gestion" value="{{id_gestion}}">
+                                                        <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el resultado!. ¿Desea continuar?');"><i class="fa fa-trash-o text-danger"></i> </button>
+                                                    </form>
+                                                    <button onclick="verFotos({{listaresultado.id}})" class="btn-link"> <i class="fa fa-eye"></i>  Ver imagenes  </button>
+                                                    {#<form action="{{path('regresultevent_delete')}}" method="post" style="display: inline-block">
+                                                        <input type="hidden" name="idResultado" value="{{listaresultado.id}}">
+                                                        <input type="hidden" name="idEvento"    value="{{id_evento}}">
+                                                        <input type="hidden" name="Club"        value="{{club}}">
+                                                        <input type="hidden" name="idInstitucion" value="{{id_Intitucion}}">
+                                                        <input type="hidden" name="gestion" value="{{id_gestion}}">
+                                                        <button type="submit" class="btn-link" ><i class="fa fa-eye text-warning"></i>   Ver imagenes </button>
+                                                    </form>#}
+                                                    {#<button class="btn-link" data-toggle="modal" data-target="#modal_imagenes"><i class="fa fa-eye text-warning"></i>   Ver imagenes</button>#}
+                                                    <button class="btn-link" data-toggle="modal" data-target="#modal_imagenes"><i class="fa fa-plus text-success">   </i>   Agregar imagenes</button>
 
-{% block title %}SieHerramientaBundle:RegResultEvent:index{% endblock %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                No hay Eventos registrados
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-{% block body %}
-<h1>Welcome to the RegResultEvent:index page</h1>
+    <div id="modal_resultado" class="modal in" tabindex="-1" role="dialog" aria-hidden="true" >
+        <div class="modal-dialog modal-md modal-primary" id="">
+            <div class="modal-content">
+                <form id="form_resultado">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">Nuevo Resultado</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="id_resultado" id="id_resultado" value="0">
+                        <input type="hidden" name="id_evento" id="id_club" value="{{ id_evento }}">
+                        <div class="form-group">
+                            <label for="club">Club de Lectura: </label> {{ club }}
+                            <label for="club">Evento: </label> {{ nombreevento }}
+                        </div>
+                        <div class="form-group">
+                            <label for="nombreresultado">Nombre del Resultado</label>
+                            <input type="text" class="form-control" name="nombreresultado" id="nombreresultado" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-theme" id="guardar">Registrar</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal_imagenes" class="modal in" tabindex="-1" role="dialog" aria-hidden="true" >
+        <div class="modal-dialog modal-md modal-primary" id="">
+            <div class="modal-content">
+                <form id="form_imagenes">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">Adicionar Imagenes</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <fieldset>
+                                    <div id="tabla_imagenes">
+                                        <a onclick="agregarImagen()" class="btn-link"><i class="fa fa-plus-square"></i> Agregar Imagen</a>
+                                        <table class="table table-striped table-default">
+                                            <thead>
+                                            <tr>
+                                                <th class="col-lg-4"><strong>Título</strong></th>
+                                                <th class="col-lg-2"><strong>Imagen</strong></th>
+                                                <th class="col-lg-2"><strong>Opciones</strong></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="imagenes">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-theme" id="guardar">Registrar</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalFotos">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Fotos</h4>
+                </div>
+                <div class="modal-body">
+                    {% if fotos|length > 0 %}
+                        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                            <!-- Indicators -->
+                            <ol class="carousel-indicators">
+                                {% for foto in fotos %}
+                                    <li data-target="#carousel-example-generic" data-slide-to="{{loop.index - 1}}" {% if loop.index == 1 %} class="active" {% endif %}></li>
+                                {% endfor %}
+                            </ol>
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner" role="listbox">
+                                {% for foto in fotos %}
+                                    <div {% if loop.index == 1 %} class="item active" {% else %} class="item" {% endif %} >
+                                        <div style="font-size:1.1em; text-align:center"> <b> {{ foto.tipo }} </b> </div>
+                                        <img src="{{asset('uploads/clublectura/' ~ foto.foto )}}" alt="...">
+                                        <div class="carousel-caption">
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Controls -->
+                            <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+
+                    {% else %}
+                        <div class="alert alert-info"> <i class="fa fa-info-circle"></i> No se cargaron fotos </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts%}
+    {{ parent() }}
+    <script>
+        $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+            $(".alert").slideUp(1000);
+        });
+        $("#form_resultado").submit( function (event) {
+            event.preventDefault();
+            $("#guardar").attr('disabled', true);
+           //limpiar();
+            var formdata = $('#form_resultado').serialize();
+            $.ajax({
+                type: 'post',
+                url: "{{ path('regresultevent_register') }}",
+                data: formdata,
+                beforeSend: function () {
+                    $("#resultados").empty();
+                    $("#resultados").append('<div class="text-center">Cargando... <img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    console.log(data);
+                    $("#guardar").attr('disabled', false);
+                    if (data.estado == 200) {
+                        $('#modal_resultado').modal('hide');
+                        mesage("success","Notificación",data.msg);
+                        setTimeout(function () { window.location.reload(true);}, 3000);
+
+                    }else{mesage("danger","Notificación",data.msg);}
+
+                },
+                error: function (error) {
+                    $("#guardar").attr('disabled', false);
+                }
+            });
+        });
+
+        function showeditResultado (id,nombre) {
+            $('#id_resultado').val(id);
+            $('#nombreresultado').val(nombre);
+            $('#modal_resultado').modal('show');
+        }
+
+        function mesage(tipo, titulo, msg) {
+            $("#mensajeeventos").html('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
+                '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                '<strong>'+ titulo +'</strong> '+ msg +' </div>');
+
+        }
+        var cantidad = 0;
+        var cont = 0;
+        function agregarImagen()
+        {
+            cont++;
+            if (cont < 50) {
+                cantidad++;
+                $('#imagenes').append("<tr id='" + cantidad + "' class='info'>\n\
+                                        <td data-title='titulo' class='form-group'><input type='text' id='nombreimagen'></td>\n\
+                                        <td data-title='imagen' class='form-group'><input type='file' id='adjdocumento' title='Adjuntar Informe' accept='application/jpg,.png'></td>\n\
+                                        <td><button type='button' onclick='eliminarimagen(" + cantidad + " )' class='btn-link'><i class='fa fa-trash-o text-danger'> Eliminar</button></td>\n\
+                                    </tr>");
+
+                /*$.ajax({
+                    type: 'get',
+                    url: Routing.generate('listaridiomasleehablaescribe'),
+                    beforeSend: function () {
+                        $("#" + idioma).empty();
+                    },
+                    success: function (data) {
+                        $("#" + idioma).empty();
+                        $("#" + idioma).append('<option value="">Seleccionar...</option>');
+                        $.each(data.idiomas, function (i, value) {
+                            $("#" + idioma).append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        // select lee
+                        $("#" + lee).append('<option value="">Seleccionar...</option>');
+                        $.each(data.conoce, function (i, value) {
+                            $("#" + lee).append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        // select habla
+                        $("#" + habla).append('<option value="">Seleccionar...</option>');
+                        $.each(data.conoce, function (i, value) {
+                            $("#" + habla).append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        // select escribe
+                        $("#" + escribe).append('<option value="">Seleccionar...</option>');
+                        $.each(data.conoce, function (i, value) {
+                            $("#" + escribe).append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
+                });*/
+            } else {
+                cont--;
+            }
+        }
+        function eliminarimagen(i) {
+            cont--;
+            $("#" + i).remove();
+        }
+        function verFotos(id){
+            //console.log(id);
+            $.ajax({
+                url: "{{ path('regresultevent_fotos') }}",
+                type: 'post',
+                data: {id: id},
+                beforeSend: function(){
+                },
+                success: function(data){
+                    $('#modalFotos').empty();
+                    $('#modalFotos').append(data);
+                    $('#modalFotos').modal('show');
+                },
+                error: function(data){
+
+                }
+            });
+
+        }
+        function limpiar() {
+            //$(".input").val("");
+            $("#nombreresultado").val('');
+        }
+
+    </script>
 {% endblock %}
