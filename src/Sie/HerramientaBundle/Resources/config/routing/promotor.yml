@@ -5,6 +5,8 @@ aca_promotor_index:
 aca_promotor_listPromotor:
     path:     /listPromotor
     defaults: { _controller: SieHerramientaBundle:Promotor:listPromotor }
+    options:
+         expose: true    
     
 aca_promotor_selectsie:
     path:     /selectsie
@@ -27,5 +29,11 @@ aca_promotor_newpromotor:
 aca_promotor_findpromotor:
     path:     /findpromotor
     defaults: { _controller: SieHerramientaBundle:Promotor:findpromotor }    
+    options:
+         expose: true
+
+aca_promotor_registerpromotor:
+    path:     /registerpromotor
+    defaults: { _controller: SieHerramientaBundle:Promotor:registerpromotor }    
     options:
          expose: true

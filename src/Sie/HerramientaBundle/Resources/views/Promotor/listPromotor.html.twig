@@ -31,33 +31,37 @@
                     <div class="clearfix"></div>
                 </div><!-- /.panel-heading -->
                 <div class="panel-body">
+                <div id="listPromotoresId">
+                    <div class="table-responsive mb-20">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">#</th>
+                                                <th>Promotor</th>
+                                                <th>Club</th>
+                                                <th>opciones</th>
+                                                <th>opciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for promotor in objPromotor%}
+                                            <tr>
+                                                <td class="text-center">{{loop.index}}</td>
+                                                <td>{{promotor.paterno}} {{promotor.materno}} {{promotor.nombre}}</td>
+                                                <td>{{promotor.nombreClub}}</td>
+                                                <td>Estudiantes</td>
+                                                <td>Eventos</td>
+                                            </tr>
+                                            {% endfor%}
+                                        </tbody>
+                                    </table>
+                                </div>
+                        
+                    </div><!-- /.panel-body -->                
+                </div>
 
-                <div class="table-responsive mb-20">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center">#</th>
-                                            <th>Promotor</th>
-                                            <th>Club</th>
-                                            <th>opciones</th>
-                                            <th>opciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for promotor in objPromotor%}
-                                        <tr>
-                                            <td class="text-center">{{loop.index}}</td>
-                                            <td>{{promotor.paterno}} {{promotor.materno}} {{promotor.nombre}}</td>
-                                            <td>{{promotor.nombreClub}}</td>
-                                            <td>Estudiantes</td>
-                                            <td>Eventos</td>
-                                        </tr>
-                                        {% endfor%}
-                                    </tbody>
-                                </table>
-                            </div>
-                    
-                </div><!-- /.panel-body -->
+                   
+
             </div>            
         </div>
     </div>
@@ -101,6 +105,26 @@
                 success: function(data){
                     $('#resultPromotorId').empty();
                     $('#resultPromotorId').append(data);
+                },
+                error: function(data){
+
+                }
+            });
+        }
+
+        var registerPromotor = function(){
+            var dataForm = $('#registerPromotorId').serialize();
+            $('#modalNewPromotor').modal('hide');
+             $.ajax({
+                url: Routing.generate('aca_promotor_registerpromotor'),
+                type: 'post',
+                data: dataForm,
+                beforeSend: function(){
+                    $('#listPromotoresId').empty();
+                },
+                success: function(data){
+                    $('#listPromotoresId').empty();
+                    $('#listPromotoresId').append(data);
                 },
                 error: function(data){
 

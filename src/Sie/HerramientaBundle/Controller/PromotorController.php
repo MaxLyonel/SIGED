@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Sie\AppWebBundle\Entity\CdlClubLectura;
+
 
 class PromotorController extends Controller{
     public $session;
@@ -215,36 +217,71 @@ class PromotorController extends Controller{
             $typeMessage = 'warning';
           }
           $this->addFlash('messagePromotor', $message);
-// dump($selectPromotor);die;
-// dump($arrDataUe);
-// dump($selectPromotor);
-// die;
+
+          $jsonDataRegister = json_encode( array(
+                            'mainsid'     =>$selectPromotor['miId'],
+                            'iesucursalId'=>$arrDataUe['iesucursalId'],
+                            'sie'         => $arrDataUe['institucioneducativa'],
+                            'gestion'     => $arrDataUe['gestionTipo']
+                        ));
+
 
         return $this->render('SieHerramientaBundle:Promotor:findPromotor.html.twig', array(
                 'flagPromotor' => $sw,
                 'promotorData' => $selectPromotor,
                 'typeMessage'  => $typeMessage,
-                'form'         => $this->registerPromotorForm()->createView()
+                'form'         => $this->registerPromotorForm($jsonDataRegister)->createView()
             ));   
 
     }
 
-    private function registerPromotorForm(){
+    private function registerPromotorForm($jsonDataRegister){
          return $this->createFormBuilder()
-            
-            ->add('nombreclub', 'text', array('attr'=>array('value'=>'4343', )))
-            ->add('mainsid', 'text', array('attr'=>array('value'=>'4343', )))
-            ->add('iesucursalId', 'text', array('attr'=>array('value'=>'4343', )))
-            ->add('findData', 'button', array('label'=>'Buscar','attr'=>array('class'=>'btn btn-info', 'onclick'=>'registerPromotor()')))
+            ->add('nombreclub', 'text', array('attr'=>array('label' => 'nombre del club','value'=>'', 'maxlength'=>8, 'class'=>'form-control', 'placeholder' => 'REGISTRE NOMBRE DEL CLUB')))
+            ->add('jsonDataRegister', 'hidden', array('attr'=>array('value'=>$jsonDataRegister, )))
+            ->add('registerData', 'button', array('label'=>'Registrar','attr'=>array('class'=>'btn btn-info', 'onclick'=>'registerPromotor()')))
             ->getForm();
     }
 
 
+    public function registerpromotorAction(Request $request){
+        //get the send data
+        $form = $request->get('form');
+        $arrDataRegister = json_decode($form['jsonDataRegister'],true);
+        //creete db conexion
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        
+        try {   
+            // save the promotro
+            $objNewCdl = new CdlClubLectura();
+            $objNewCdl->setNombreClub($form['nombreclub']);
+            $objNewCdl->setMaestroinscripcion($em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($arrDataRegister['mainsid']));
+            $objNewCdl->setInstitucioneducativasucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find($arrDataRegister['iesucursalId']));
+            $em->persist($objNewCdl);
+            $em->flush();
+            
+            $em->getConnection()->commit();
+            $message = 'Promotor registrado';
+            $this->addFlash('savepromotor',$message);
+
+            
+        } catch (Exception $e) {
+
+            $em->getConnection()->rollback();
+            echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+            
+        }
+
+        $objPromotor = $this->getDataPromotor($arrDataRegister['iesucursalId']);
+
+        return $this->render('SieHerramientaBundle:Promotor:registerpromotor.html.twig', array(
+                'objPromotor'  => $objPromotor,
+                // 'jsonDataUe' => json_encode($arrDataUe),
+            ));    
 
 
-
-
-
+    }
 
 
 
