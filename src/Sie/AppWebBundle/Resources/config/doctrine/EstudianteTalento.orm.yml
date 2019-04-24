@@ -2,15 +2,15 @@ Sie\AppWebBundle\Entity\EstudianteTalento:
     type: entity
     table: estudiante_talento
     indexes:
+        IDX_FA38B6A13AB163FE:
+            columns:
+                - institucioneducativa_id
         IDX_FA38B6A11EEFD20:
             columns:
                 - usuario_registro_id
         IDX_FA38B6A1DADD026:
             columns:
                 - usuario_modificacion_id
-        IDX_FA38B6A13AB163FE:
-            columns:
-                - institucioneducativa_id
         IDX_FA38B6A159590C39:
             columns:
                 - estudiante_id
@@ -46,6 +46,15 @@ Sie\AppWebBundle\Entity\EstudianteTalento:
             comment: ''
             column: fecha_modificacion
     manyToOne:
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         usuarioRegistro:
             targetEntity: Usuario
             cascade: {  }
@@ -62,15 +71,6 @@ Sie\AppWebBundle\Entity\EstudianteTalento:
             inversedBy: null
             joinColumns:
                 usuario_modificacion_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        institucioneducativa:
-            targetEntity: Institucioneducativa
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                institucioneducativa_id:
                     referencedColumnName: id
             orphanRemoval: false
         estudiante:
