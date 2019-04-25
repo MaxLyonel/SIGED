@@ -211,19 +211,26 @@ class PromotorController extends Controller{
             $message = 'Datos encontrados';
             $typeMessage = 'success';
 
-          }else{
-            //the person in not in this UE
-            $message = 'Datos No encontrados';
-            $typeMessage = 'warning';
-          }
-          $this->addFlash('messagePromotor', $message);
-
-          $jsonDataRegister = json_encode( array(
+            $jsonDataRegister = json_encode( array(
                             'mainsid'     =>$selectPromotor['miId'],
                             'iesucursalId'=>$arrDataUe['iesucursalId'],
                             'institucioneducativa'         => $arrDataUe['institucioneducativa'],
                             'gestionTipo'     => $arrDataUe['gestionTipo']
                         ));
+
+          }else{
+            //the person in not in this UE
+            $message = 'Datos No encontrados';
+            $typeMessage = 'warning';
+            $jsonDataRegister = json_encode( array(
+                            'iesucursalId'=>$arrDataUe['iesucursalId'],
+                            'institucioneducativa'         => $arrDataUe['institucioneducativa'],
+                            'gestionTipo'     => $arrDataUe['gestionTipo']
+                        ));
+          }
+          $this->addFlash('messagePromotor', $message);
+
+          
 
 
         return $this->render('SieHerramientaBundle:Promotor:findPromotor.html.twig', array(
@@ -279,6 +286,7 @@ class PromotorController extends Controller{
         return $this->render('SieHerramientaBundle:Promotor:registerpromotor.html.twig', array(
                 'objPromotor'  => $objPromotor,
                 'jsonDataUe' => $form['jsonDataRegister'],
+                'typeMessage' => 'success',
             ));    
 
 
@@ -305,7 +313,6 @@ class PromotorController extends Controller{
                 $em->flush();
                 $message = 'Promotor elminado';
                 $typeMessage = 'success';
-                $this->addFlash('savepromotor',$message);
                 
             } catch (Exception $e) {
                 echo 'Excepción capturada: ', $ex->getMessage(), "\n"; 
