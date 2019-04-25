@@ -39,8 +39,8 @@
                                                 <th class="text-center">#</th>
                                                 <th>Promotor</th>
                                                 <th>Club</th>
-                                                <th>opcion</th>
-                                                <th>opcion</th>
+                                                <th colspan="4">Opcines</th>
+                                                
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -50,15 +50,17 @@
                                                 <td>{{promotor.paterno}} {{promotor.materno}} {{promotor.nombre}}</td>
                                                 <td>{{promotor.nombreClub}}</td>
                                                 <td align="center">
+                                                    <button type="button" class="btn-link" onclick="removePromotor({{ promotor.id }},'{{jsonDataUe}}')" data-toggle="tooltip" data-placement="top" data-title="Eliminar"> <i class="fa fa-trash-o text-danger"></i>  </button>
+                                               
+                                                    <button type="button" class="btn-link" onclick="editPromotor({{ promotor.id }},'{{jsonDataUe}}')" data-toggle="tooltip" data-placement="top" data-title="Editar"> <i class="fa fa-edit"></i>  </button>
                                                     
-                                                    <form action="{{path('regstudent')}}" method="post" data-toggle="validator" role="form">
+                                                    <form action="{{path('regstudent')}}" method="post" data-toggle="validator" role="form" style="display: inline-block">
                                                         <input type="hidden" id="form_jsonDataUe" name="form[jsonDataUe]" value="{{jsonDataUe}}">
                                                         <input type="hidden" id="form_cdlId" name="form[cdlId]" value="{{promotor.id}}">
                                                         <button class="btn btn-xs btn-success" type="submit">Estudiantes</button>
                                                     </form>
-                                                </td>
-                                                <td align="center">
-                                                    <form action="{{path('regevent')}}" method="post" data-toggle="validator" role="form">
+                                                
+                                                    <form action="{{path('regevent')}}" method="post" data-toggle="validator" role="form" style="display: inline-block">
                                                         <input type="hidden" id="form_jsonDataUe" name="form[jsonDataUe]" value="{{jsonDataUe}}">
                                                         <input type="hidden" id="form_cdlId" name="form[cdlId]" value="{{promotor.id}}">
                                                         <button class="btn btn-xs btn-success" type="submit">Eventos</button>
@@ -127,17 +129,83 @@
 
         var registerPromotor = function(){
             var dataForm = $('#registerPromotorId').serialize();
-            $('#modalNewPromotor').modal('hide');
-             $.ajax({
-                url: Routing.generate('aca_promotor_registerpromotor'),
+            
+             
+
+            swal({
+    		    title: "¿Está segura/o de agregar al promotor?",
+    		    icon: "warning",
+    		    buttons: true,
+    		    dangerMode: true,
+    		    buttons: ["Cancelar", "Continuar"],
+    		})
+		    .then(function(respuesta)  {
+		        if (respuesta) {
+                    $('#modalNewPromotor').modal('hide');
+                    $.ajax({
+                        url: Routing.generate('aca_promotor_registerpromotor'),
+                        type: 'post',
+                        data: dataForm,
+                        beforeSend: function(){
+                            $('#listPromotoresId').empty();
+                        },
+                        success: function(data){
+                            $('#listPromotoresId').empty();
+                            $('#listPromotoresId').append(data);
+                        },
+                        error: function(data){
+
+                        }
+                    });                      
+		        }
+		    });
+        }
+
+        
+        var removePromotor = function(cdlId,jsonDataUe){
+            
+           // $('#modalNewPromotor').modal('hide');
+            swal({
+    		    title: "¿Está segura/o de eliminar de la lista al promotor?",
+    		    icon: "warning",
+    		    buttons: true,
+    		    dangerMode: true,
+    		    buttons: ["Cancelar", "Continuar"],
+    		})
+		    .then(function(respuesta)  {
+		        if (respuesta) {
+                        $.ajax({
+                        url: Routing.generate('aca_promotor_removepromotor'),
+                        type: 'post',
+                        data: {cdlId:cdlId,jsonDataUe:jsonDataUe},
+                        beforeSend: function(){
+                            $('#listPromotoresId').empty();
+                        },
+                        success: function(data){
+                            $('#listPromotoresId').empty();
+                            $('#listPromotoresId').append(data);
+                        },
+                        error: function(data){
+
+                        }
+                    });
+		        }
+		    });
+        }
+
+
+         var editPromotor =  function(cdlId,jsonDataUe){
+            $.ajax({
+                url: Routing.generate('aca_promotor_editpromotor'),
                 type: 'post',
-                data: dataForm,
+                data: {cdlId:cdlId,jsonDataUe:jsonDataUe},
                 beforeSend: function(){
-                    $('#listPromotoresId').empty();
+
                 },
                 success: function(data){
-                    $('#listPromotoresId').empty();
-                    $('#listPromotoresId').append(data);
+                    $('#modalNewPromotor').empty();
+                    $('#modalNewPromotor').append(data);
+                    $('#modalNewPromotor').modal('show');
                 },
                 error: function(data){
 

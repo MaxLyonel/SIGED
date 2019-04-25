@@ -1,0 +1,73 @@
+<div class="modal-dialog" style="width:800px;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Editar datos Club</h4>
+        </div>
+        <div class="modal-body">
+
+            {% for flashMessage in app.session.flashbag.get('messagePromotor') %}
+                <div class="alert alert-{{typeMessage}} alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Resultado de la Busqueda!</br></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+            {% if flagPromotor %}
+
+            <div class="table-responsive mb-20">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            
+                            <th>CI Complemento</th>
+                            <th>Paterno</th>
+                            <th>Materno</th>
+                            <th>Nombre(s)</th>
+                        </tr>
+                    </thead>
+                
+                    <tbody>
+                        <tr class="success">
+                            <td>{{promotorData.carnet}} {{promotorData.complemento}}</td>
+                            <td>{{promotorData.paterno}}</td>
+                            <td>{{promotorData.materno}}</td>
+                            <td>{{promotorData.nombre}}</td>
+                        </tr>
+                    
+                    </tbody>
+                </table>
+            </div>
+            {{ form_start(form,{ 'attr': {'class': 'tab-content form-horizontal','id':'registerPromotorId','onsubmit':'return false;'} } ) }}
+                    <div class="form-body">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-10">
+                                    {{form_widget(form.nombreclub)}}
+                                </div>
+                                <div class="col-md-2">
+                                    {{form_widget(form.registerData)}}
+                                </div>
+                            </div>
+                        </div>
+                    
+                    </div><!-- /.form-body -->
+                    <div class="form-footer">
+                        <div class="pull-right">
+                            {# <button class="btn btn-danger mr-5">Cancel</button>
+                            <button class="btn btn-success" type="submit">Registrar</button> #}
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.form-footer -->
+            {{form_end(form)}}
+
+            {% endif %}
+                
+
+                
+                
+        </div> 
+    </div> 
+</div> 
+</div> 
+

@@ -11,8 +11,8 @@
                         <th class="text-center">#</th>
                         <th>Promotor</th>
                         <th>Club</th>
-                        <th>opciones</th>
-                        <th>opciones</th>
+                        <th colspan="4">Opcines</th>
+                        
                     </tr>
                 </thead>
                 <tbody>
@@ -21,15 +21,18 @@
                         <td class="text-center">{{loop.index}}</td>
                         <td>{{promotor.paterno}} {{promotor.materno}} {{promotor.nombre}}</td>
                         <td>{{promotor.nombreClub}}</td>
-                        <td align="center">                                                    
-                            <form action="{{path('regstudent')}}" method="post" data-toggle="validator" role="form">
+                        <td align="center">
+                            <button type="button" class="btn-link" onclick="removePromotor({{ promotor.id }},'{{jsonDataUe}}')" data-toggle="tooltip" data-placement="top" data-title="Eliminar"> <i class="fa fa-trash-o text-danger"></i>  </button>
+                        
+                            <button type="button" class="btn-link" onclick="editPromotor({{ promotor.id }},'{{jsonDataUe}}')" data-toggle="tooltip" data-placement="top" data-title="Editar"> <i class="fa fa-edit"></i>  </button>
+                            
+                            <form action="{{path('regstudent')}}" method="post" data-toggle="validator" role="form" style="display: inline-block">
                                 <input type="hidden" id="form_jsonDataUe" name="form[jsonDataUe]" value="{{jsonDataUe}}">
                                 <input type="hidden" id="form_cdlId" name="form[cdlId]" value="{{promotor.id}}">
                                 <button class="btn btn-xs btn-success" type="submit">Estudiantes</button>
                             </form>
-                        </td>
-                        <td align="center">
-                            <form action="{{path('regevent')}}" method="post" data-toggle="validator" role="form">
+                        
+                            <form action="{{path('regevent')}}" method="post" data-toggle="validator" role="form" style="display: inline-block">
                                 <input type="hidden" id="form_jsonDataUe" name="form[jsonDataUe]" value="{{jsonDataUe}}">
                                 <input type="hidden" id="form_cdlId" name="form[cdlId]" value="{{promotor.id}}">
                                 <button class="btn btn-xs btn-success" type="submit">Eventos</button>

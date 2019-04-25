@@ -37,3 +37,15 @@ aca_promotor_registerpromotor:
     defaults: { _controller: SieHerramientaBundle:Promotor:registerpromotor }    
     options:
          expose: true
+
+aca_promotor_removepromotor:
+    path:     /removepromotor
+    defaults: { _controller: SieHerramientaBundle:Promotor:removepromotor }    
+    options:
+         expose: true
+
+aca_promotor_editpromotor:
+    path:     /editpromotor
+    defaults: { _controller: SieHerramientaBundle:Promotor:editpromotor }    
+    options:
+         expose: true    

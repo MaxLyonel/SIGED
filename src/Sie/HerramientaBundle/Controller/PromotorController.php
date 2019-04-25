@@ -284,6 +284,95 @@ class PromotorController extends Controller{
 
     }
 
+    public function removepromotorAction(Request $request){
+        //get the send data 
+        $cdlId = $request->get('cdlId');
+        $jsonDataUe = $request->get('jsonDataUe');
+        $arrDataRegister = json_decode($jsonDataUe,true);
+        // create db conexion
+        $em = $this->getDoctrine()->getManager();
+
+        try {
+            $objCdl = $em->getRepository('SieAppWebBundle:CdlClubLectura')->find($cdlId);
+            $em->remove($objCdl);
+            $em->flush();
+            $message = 'Promotor elminado';
+            $this->addFlash('savepromotor',$message);
+            
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ', $ex->getMessage(), "\n"; 
+        }
+        
+        $objPromotor = $this->getDataPromotor($arrDataRegister['iesucursalId']);
+
+        return $this->render('SieHerramientaBundle:Promotor:registerpromotor.html.twig', array(
+                'objPromotor'  => $objPromotor,
+                'jsonDataUe' => $jsonDataUe,
+            ));    
+    }
+
+
+
+
+
+    public function editpromotorAction(Request $request){
+    
+        //get the send data 
+        $cdlId = $request->get('cdlId');
+        $jsonDataUe = $request->get('jsonDataUe');
+        // create db Conexion
+        $em =  $this->getDoctrine()->getManager();
+        // get the CDL info
+        // $objCdl = $em->getRepository('SieAppWebBundle:CdlClubLectura')->find($cdlId);
+        //get info about the  maestro 
+        $selectPromotor = $this->getEditPromotor($cdlId);
+
+        // $objPerson = $em->getRepository('SieAppWebBundle:Persona')->find($objMaestro->getPersonaId());
+
+
+        
+        return $this->render('SieHerramientaBundle:Promotor:editpromotor.html.twig', array(
+            
+                'flagPromotor' => true,
+                'promotorData' => $selectPromotor[0],
+                'typeMessage'  => 'success',
+                'form' => $this->editPromotorForm($selectPromotor[0]['nombreClub'],$jsonDataUe)->createView(),
+                
+            ));    
+
+    }
+
+    //get all promotores by UE sucursal
+    private function getEditPromotor($cdlId){
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('SieAppWebBundle:CdlClubLectura');
+        $query = $entity->createQueryBuilder('cdl')
+                ->select('cdl.id, cdl.nombreClub, p.paterno, p.materno,p.nombre, p.carnet, p.complemento')
+                ->leftjoin('SieAppWebBundle:MaestroInscripcion', 'mi', 'WITH', 'cdl.maestroinscripcion = mi.id')
+                ->leftjoin('SieAppWebBundle:Persona', 'p', 'WITH', 'mi.persona = p.id')
+                ->where('cdl.id = :cdlId')
+                ->setParameter('cdlId', $cdlId)
+                // ->orderBy('iec.gestionTipo', 'DESC')
+                ->getQuery();
+
+            $objPromotor = $query->getResult();
+            if(sizeof($objPromotor)>=1)
+              return $objPromotor;
+            else
+              return false;
+
+    }
+
+    private function editPromotorForm($nombreClub,$jsonDataRegister){
+         return $this->createFormBuilder()
+            ->add('nombreclub', 'text', array('attr'=>array('label' => 'nombre del club','value'=>$nombreClub, 'maxlength'=>32, 'class'=>'form-control', 'placeholder' => 'REGISTRE NOMBRE DEL CLUB')))
+            ->add('jsonDataRegister', 'hidden', array('attr'=>array('value'=>$jsonDataRegister, )))
+            ->add('registerData', 'button', array('label'=>'Actualizar','attr'=>array('class'=>'btn btn-info', 'onclick'=>'registerPromotor()')))
+            ->getForm();
+    }
+
+
 
 
     public function findAction(){
