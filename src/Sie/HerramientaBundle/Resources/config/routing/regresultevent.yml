@@ -10,11 +10,17 @@ regresultevent_delete:
     path:     /resultdelete
     defaults: { _controller: SieHerramientaBundle:RegResultEvent:delete }
 
+regresultevent_registerimagen:
+    path:     /resultregisterimage
+    defaults: { _controller: SieHerramientaBundle:RegResultEvent:registerimagen }
+
 regresultevent_fotos:
     path:     /resultfotos
     defaults: { _controller: SieHerramientaBundle:RegResultEvent:fotos }
 
-regresultevent_result_find:
-    path:     /resultfind
-    defaults: { _controller: SieHerramientaBundle:RegResultEvent:find }
+regresultevent_deletefotos:
+    path:     /resultdeletefotos
+    defaults: { _controller: SieHerramientaBundle:RegResultEvent:deletefotos }
+
+
 
