@@ -292,23 +292,65 @@ class PromotorController extends Controller{
         // create db conexion
         $em = $this->getDoctrine()->getManager();
 
-        try {
-            $objCdl = $em->getRepository('SieAppWebBundle:CdlClubLectura')->find($cdlId);
-            $em->remove($objCdl);
-            $em->flush();
-            $message = 'Promotor elminado';
-            $this->addFlash('savepromotor',$message);
-            
-        } catch (Exception $e) {
-            echo 'Excepción capturada: ', $ex->getMessage(), "\n"; 
+        // check if the club does not have students
+        // dump(sizeof($this->integrantes($cdlId)) );
+        $typeMessage = 'warning';
+        if( sizeof($this->integrantes($cdlId))>0 || sizeof($this->eventos($cdlId))>0  ){
+            $message = 'Registro no eliminado, el club ya cuenta con registros (estudiantes y eventos)';
+            $typeMessage = 'warning';
+        }else{
+            try {
+                $objCdl = $em->getRepository('SieAppWebBundle:CdlClubLectura')->find($cdlId);
+                $em->remove($objCdl);
+                $em->flush();
+                $message = 'Promotor elminado';
+                $typeMessage = 'success';
+                $this->addFlash('savepromotor',$message);
+                
+            } catch (Exception $e) {
+                echo 'Excepción capturada: ', $ex->getMessage(), "\n"; 
+            }
+
         }
+
+        $this->addFlash('savepromotor',$message);
         
         $objPromotor = $this->getDataPromotor($arrDataRegister['iesucursalId']);
 
         return $this->render('SieHerramientaBundle:Promotor:registerpromotor.html.twig', array(
                 'objPromotor'  => $objPromotor,
                 'jsonDataUe' => $jsonDataUe,
+                'typeMessage' => $typeMessage,
             ));    
+    }
+
+    public function integrantes($idClubLectura){
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:CdlClubLectura');
+        $integrantes = $entity->createQueryBuilder('ccl')
+                        ->select('ci.id, e.codigoRude, e.paterno, e.materno, e.nombre, ccl.id as cdl')
+                        ->innerJoin('SieAppWebBundle:CdlIntegrantes','ci','with','ci.cdlClubLectura = ccl.id')
+                        ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','with','ci.estudianteInscripcion = ei.id')
+                        ->innerJoin('SieAppWebBundle:Estudiante','e','with','ei.estudiante = e.id')
+                        ->where('ccl.id = :idClub')
+                        ->setParameter('idClub', $idClubLectura)
+                        ->getQuery()
+                        ->getResult();
+
+        return $integrantes;
+    }
+    public function eventos($idClubLectura){
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:CdlClubLectura');
+        $eventos = $entity->createQueryBuilder('ccl')
+                        ->select('ccl')
+                        ->innerJoin('SieAppWebBundle:CdlEventos','ce','with','ccl.id = ce.cdlClubLectura')
+                        ->where('ccl.id = :idClub')
+                        ->setParameter('idClub', $idClubLectura)
+                        ->getQuery()
+                        ->getResult();
+
+        return $eventos;
     }
 
 
@@ -408,6 +450,7 @@ class PromotorController extends Controller{
         return $this->render('SieHerramientaBundle:Promotor:registerpromotor.html.twig', array(
                 'objPromotor'  => $objPromotor,
                 'jsonDataUe' => $form['jsonDataRegister'],
+                'typeMessage'  => 'success',
             ));    
 
 
