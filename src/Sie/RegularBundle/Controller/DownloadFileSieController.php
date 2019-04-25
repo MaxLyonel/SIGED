@@ -946,8 +946,8 @@ class DownloadFileSieController extends Controller {
           $aBimestre[-1]='Consolidado';
         }else{
           if($operativo >= 0){//mt 0 return plas 1
-            // $aBimestre[$operativo]=$aBimestres[$operativo];
-            $aBimestre[$operativo]=$aBimestres[0];
+            $aBimestre[$operativo]=$aBimestres[$operativo];
+            // $aBimestre[$operativo]=$aBimestres[0];
           }else{ //lt 0 return the same
             // $aBimestre[$operativo]=$aBimestres[$operativo];
             $aBimestre[$operativo]=$aBimestres[0];
