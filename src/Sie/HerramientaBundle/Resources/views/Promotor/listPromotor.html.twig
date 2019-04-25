@@ -1,7 +1,7 @@
 {% extends 'layoutHerramienta.html.twig' %}
 {% block contentoption %}
 <div class="header-content">
-    <h2><i class="fa fa-list-alt"></i> Registro Promotor/Encargado <span> Busqueda</span></h2>
+    <h2><i class="fa fa-list-alt"></i> Registro Promotor <span> Busqueda</span></h2>
       <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -24,8 +24,7 @@
                     </div>
                     <div class="pull-right">
                         <h3 class="panel-title">
-                        <a href="#" onclick="newPromotor('{{jsonDataUe}}');" class="btn btn-xs btn-danger"> Registrar Promotor</a>
-                        
+                            <a href="#" onclick="newPromotor('{{jsonDataUe}}');" class="btn btn-xs btn-danger"> Registrar Promotor</a>                        
                         </h3>
                     </div>
                     <div class="clearfix"></div>
@@ -211,6 +210,37 @@
 
                 }
             });
+        }
+
+        var updatePromotor = function(){
+            var dataForm = $('#editPromotorId').serialize();
+            swal({
+    		    title: "¿Está segura/o de modificar datos del club de lectura?",
+    		    icon: "warning",
+    		    buttons: true,
+    		    dangerMode: true,
+    		    buttons: ["Cancelar", "Continuar"],
+    		})
+		    .then(function(respuesta)  {
+		        if (respuesta) {
+                    $('#modalNewPromotor').modal('hide');
+                    $.ajax({
+                        url: Routing.generate('aca_promotor_updatepromotor'),
+                        type: 'post',
+                        data: dataForm,
+                        beforeSend: function(){
+                            $('#listPromotoresId').empty();
+                        },
+                        success: function(data){
+                            $('#listPromotoresId').empty();
+                            $('#listPromotoresId').append(data);
+                        },
+                        error: function(data){
+
+                        }
+                    });                      
+		        }
+		    });
         }
 
     </script>

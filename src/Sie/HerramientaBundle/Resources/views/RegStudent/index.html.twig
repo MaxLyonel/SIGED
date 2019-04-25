@@ -10,25 +10,31 @@
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
-                <li>
-                    <i class="fa fa-home"></i>
-                    <a href="#">Registro de Estudiantes</a>
-                    <i class="fa fa-angle-right"></i>
-                </li>
+				<li>
+					<i class="fa fa-home"></i>
+					<a href="#">Registro Promotor</a>
+					<i class="fa fa-angle-right"></i>
+				</li>
+				<li>
+					<a href="#">Registro de Estudiantes</a>
+					<i class="fa fa-angle-right"></i>
+				</li>                
             </ol>
         </div><!-- /.breadcrumb-wrapper -->
     </div>
     <div class="body-content animated fadeIn">
         <div class="row">
             <div class="col-lg-12">
-                <div class="panel rounded shadow panel-teal">
+                <div class="panel panel-icon panel-primary">
                     <div class="panel-heading">
                         <div class="pull-left">
                             <h3 class="panel-title">Lista de Estudiantes</h3>
                         </div>
                             <div class="pull-right">
-                                <button class="btn btn-warning btn-sm" data-toggle="modal" data-target=".bs-example-modal-lg"><i class="fa fa-plus"></i> Nuevo Estudiante</button>
-                                {#<a href="{{path('herramientalt_info_maestro_find')}}" class="btn btn-warning btn-sm"><i class="fa fa-plus"></i> Nuevo Evento</a>#}
+								<h3 class="panel-title">
+                                	<a href="#" class="btn btn-danger btn-xs" data-toggle="modal" data-target=".bs-example-modal-lg"> Nuevo Estudiante</a>
+                                	{#<a href="{{path('herramientalt_info_maestro_find')}}" class="btn btn-warning btn-sm"><i class="fa fa-plus"></i> Nuevo Evento</a>#}
+								</h3>
                             </div>
                         <div class="clearfix"></div>
                     </div>
@@ -57,7 +63,7 @@
                                                 <td>{{ integrante.materno }}</td>
                                                 <td>{{ integrante.nombre }}</td>
                                                 <td>
-                                                    <button type="button" class="btn btn-danger btn-xs" onclick="eliminarEstudiante({{ integrante.cdl }},{{ integrante.id }})"> <i class="fa fa-remove"></i>  </button>
+                                                    <button type="button" class=" btn-link" onclick="eliminarEstudiante({{ integrante.cdl }},{{ integrante.id }})" data-toggle="tooltip" data-placement="top" data-title="Eliminar"> <i class="fa fa-trash-o text-danger"></i>  </button>
                                                 </td>
                                             </tr>
                                         {% endfor %}

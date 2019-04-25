@@ -48,4 +48,10 @@ aca_promotor_editpromotor:
     path:     /editpromotor
     defaults: { _controller: SieHerramientaBundle:Promotor:editpromotor }    
     options:
-         expose: true    
+         expose: true
+
+aca_promotor_updatepromotor:
+    path:     /updatepromotor
+    defaults: { _controller: SieHerramientaBundle:Promotor:updatepromotor }    
+    options:
+         expose: true

@@ -237,7 +237,7 @@ class PromotorController extends Controller{
 
     private function registerPromotorForm($jsonDataRegister){
          return $this->createFormBuilder()
-            ->add('nombreclub', 'text', array('attr'=>array('label' => 'nombre del club','value'=>'', 'maxlength'=>32, 'class'=>'form-control', 'placeholder' => 'REGISTRE NOMBRE DEL CLUB')))
+            ->add('nombreclub', 'text', array('attr'=>array('label' => 'nombre del club','value'=>'', 'maxlength'=>32, 'class'=>'form-control','style'=>"text-transform:uppercase", 'placeholder' => 'REGISTRE NOMBRE DEL CLUB')))
             ->add('jsonDataRegister', 'hidden', array('attr'=>array('value'=>$jsonDataRegister, )))
             ->add('registerData', 'button', array('label'=>'Registrar','attr'=>array('class'=>'btn btn-info', 'onclick'=>'registerPromotor()')))
             ->getForm();
@@ -256,7 +256,7 @@ class PromotorController extends Controller{
         try {   
             // save the promotro
             $objNewCdl = new CdlClubLectura();
-            $objNewCdl->setNombreClub($form['nombreclub']);
+            $objNewCdl->setNombreClub(mb_strtoupper($form['nombreclub'], 'utf8') );
             $objNewCdl->setMaestroinscripcion($em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($arrDataRegister['mainsid']));
             $objNewCdl->setInstitucioneducativasucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find($arrDataRegister['iesucursalId']));
             $em->persist($objNewCdl);
@@ -320,16 +320,18 @@ class PromotorController extends Controller{
         //get the send data 
         $cdlId = $request->get('cdlId');
         $jsonDataUe = $request->get('jsonDataUe');
+        
         // create db Conexion
         $em =  $this->getDoctrine()->getManager();
         // get the CDL info
         // $objCdl = $em->getRepository('SieAppWebBundle:CdlClubLectura')->find($cdlId);
         //get info about the  maestro 
         $selectPromotor = $this->getEditPromotor($cdlId);
-
+        $arrDataUe = json_decode($jsonDataUe,true);
+        $arrDataUe['cdlId'] = $selectPromotor[0]['id'];
+        $jsonDataUe = json_encode($arrDataUe);
+        
         // $objPerson = $em->getRepository('SieAppWebBundle:Persona')->find($objMaestro->getPersonaId());
-
-
         
         return $this->render('SieHerramientaBundle:Promotor:editpromotor.html.twig', array(
             
@@ -366,10 +368,49 @@ class PromotorController extends Controller{
 
     private function editPromotorForm($nombreClub,$jsonDataRegister){
          return $this->createFormBuilder()
-            ->add('nombreclub', 'text', array('attr'=>array('label' => 'nombre del club','value'=>$nombreClub, 'maxlength'=>32, 'class'=>'form-control', 'placeholder' => 'REGISTRE NOMBRE DEL CLUB')))
+            ->add('nombreclub', 'text', array('attr'=>array('label' => 'nombre del club','value'=>$nombreClub, 'maxlength'=>32, 'class'=>'form-control','style'=>"text-transform:uppercase", 'placeholder' => 'REGISTRE NOMBRE DEL CLUB')))
             ->add('jsonDataRegister', 'hidden', array('attr'=>array('value'=>$jsonDataRegister, )))
-            ->add('registerData', 'button', array('label'=>'Actualizar','attr'=>array('class'=>'btn btn-info', 'onclick'=>'registerPromotor()')))
+            ->add('registerData', 'button', array('label'=>'Actualizar','attr'=>array('class'=>'btn btn-info', 'onclick'=>'updatePromotor()')))
             ->getForm();
+    }
+
+    
+    public function updatepromotorAction(Request $request){
+        
+        //get the send data
+        $form = $request->get('form');        
+        $arrDataRegister = json_decode($form['jsonDataRegister'],true);
+        //creete db conexion
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        
+        try {   
+            // update the CDL datas promotro
+            $objNewCdl = $em->getRepository('SieAppWebBundle:CdlClubLectura')->find($arrDataRegister['cdlId']);
+            $objNewCdl->setNombreClub(mb_strtoupper($form['nombreclub'], 'utf8') );
+            $em->persist($objNewCdl);
+            $em->flush();
+            
+            $em->getConnection()->commit();
+            $message = 'Datos actualizados correctamente';
+            $this->addFlash('savepromotor',$message);
+
+            
+        } catch (Exception $e) {
+
+            $em->getConnection()->rollback();
+            echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+            
+        }
+
+        $objPromotor = $this->getDataPromotor($arrDataRegister['iesucursalId']);
+
+        return $this->render('SieHerramientaBundle:Promotor:registerpromotor.html.twig', array(
+                'objPromotor'  => $objPromotor,
+                'jsonDataUe' => $form['jsonDataRegister'],
+            ));    
+
+
     }
 
 

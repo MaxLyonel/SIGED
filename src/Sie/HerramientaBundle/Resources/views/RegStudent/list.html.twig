@@ -21,7 +21,7 @@
                     <td>{{ integrante.materno }}</td>
                     <td>{{ integrante.nombre }}</td>
                     <td>
-                        <button type="button" class="btn btn-danger btn-xs" onclick="eliminarEstudiante({{ integrante.cdl }},{{ integrante.id }})"> <i class="fa fa-remove"></i>  </button>
+                        <button type="button" class=" btn-link" onclick="eliminarEstudiante({{ integrante.cdl }},{{ integrante.id }})" data-toggle="tooltip" data-placement="top" data-title="Eliminar"> <i class="fa fa-trash-o text-danger"></i>  </button>
                     </td>
                 </tr>
             {% endfor %}
