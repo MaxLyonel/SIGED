@@ -23,7 +23,9 @@ class RegEventController extends Controller
         }else{
             $id_Intitucion    = $this->session->get('ie_id');
             $id_gestion       = $this->session->get('currentyear');
-            $id_cdl_club_lectura       = $request->get('id_club');
+            $id_cdl_club_lectura     = $request->get('id_club');
+            /*$id_clubbase64     = $request->get('id_club');
+            $id_cdl_club_lectura       = base64_decode($id_clubbase64);*/
         }
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT even.id,even.nombre_evento,even.fecha_inicio,even.fecha_fin 
@@ -91,7 +93,9 @@ class RegEventController extends Controller
             $request->getSession()
                 ->getFlashBag()
                 ->add('exito', $mensaje);
-        }return $this->redirectToRoute('regevent',array('id_club'=>$request->get('id_club')));
+        }
+       // return $this->redirectToRoute('regevent',array('id_club'=>base64_encode($request->get('id_club'))));
+        return $this->redirectToRoute('regevent',array('id_club'=>$request->get('id_club')));
 
     }
 }
