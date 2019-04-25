@@ -288,11 +288,14 @@
                                     <li><a href="{{path('sie_pnp_abrir_curso')}}">Abrir Cursos</a></li>
                                      <li><a href="{{path('sie_pnp_cerrar_curso')}}">Cerrar Cursos</a></li> 
                                 {% endif %}
-                                <li><a href="{{path('sie_pnp_cambiar_facilitador')}}">Cambiar Facilitador</a></li> 
+                                <li><a href="{{path('sie_pnp_cambiar_facilitador')}}">Cambiar Facilitador</a></li>
+                                {% if ('8' == app.session.get('roluser')) or ('21' == app.session.get('roluser')) %}
+                                    <li><a href="{{path('sie_pnp_cambiar_cursos_pedagogo')}}">Cambiar Cursos Pedagogo</a></li>
+                                {% endif %}
                             </ul>
                         </li>
                     {% endif %}
-                    {% if ('21' == app.session.get('roluser')) or ('8' == app.session.get('roluser'))  %}
+                    {% if ('21' == app.session.get('roluser')) or ('8' == app.session.get('roluser'))  or ('29' == app.session.get('roluser')) %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-shield"></i></span>

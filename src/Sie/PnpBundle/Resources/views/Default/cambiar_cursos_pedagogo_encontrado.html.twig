@@ -1,0 +1,149 @@
+<!-- Website Stats  Widget -->
+ <div class="panel panel-icon panel-primary">
+    <div class="panel-heading">
+        Cuso y Facilitador Nuevo
+    </div>
+    <div class="panel-body">
+        {% if curso_existe == 1 %}
+        <form action="{{ path('sie_pnp_cambiar_cursos_pedagogo') }}" method="POST">
+            <div class="row">
+                <div class="col-md-12">
+                     <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+                        <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
+                        <input type="checkbox" id="selectall"> Seleccionar Todos/Ninguno
+                            <thead>
+                                <tr>
+                                    <th>Id Curso</th>
+                                    <th>Marcar</th>
+                                    <th>Pedagogo a Cargo</th>
+                                    <th>Opciones</th>
+                                    <th>Departamento</th>  
+                                    <th>Provincia</th>
+                                    <th>Municipio</th>
+                                    <th>Localidad</th>
+                                    <th>C.I.</th>
+                                    <th>Nombre</th>
+                                    <th>Paterno</th>
+                                    <th>Materno</th> 
+                                    <th>Ciclo</th>                            
+                                    <th>Grado</th>                           
+                                    <th>Inicio</th>                            
+                                    <th>Fin</th>                                                     
+                                </tr>
+                            </thead>
+                            <tbody> 
+                            {% for curso in cursos %}
+                                <tr>  
+                                    <td>{{curso.id}}</td>
+                                    <td align="center"><input type="checkbox" class="cursos" name="cursos[]" id="cursos" value="{{curso.curso_datos}}"></td>
+                                    <td>{{curso.ped_nombre|capitalize }} {{ curso.ped_paterno|capitalize  }}</td>
+                                     <td>
+                                        <a role="button" class="btn rounded btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id_enc': curso.id_enc~"|"~curso.bloque~"|"~curso.parte}) }}" title="Imprmimr Centralizador"> </a>
+                                        <a role="button" class="btn rounded btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado_editnew', { 'id': curso.id_enc,'val':0 }) }}" title="Ver Curso"> </a>
+                                    </td>
+                                    <td>{{curso.depto|capitalize }}</td>
+                                    <td>{{curso.provincia|capitalize }}</td>
+                                    <td>{{curso.municipio|capitalize }}</td>
+                                    <td>{{curso.localidad|capitalize }}</td>
+                                    <td>{{curso.carnet}}</td>
+                                    <td>{{curso.nombre|capitalize }}</td>
+                                    <td>{{curso.paterno|capitalize }}</td>
+                                    <td>{{curso.materno|capitalize }}</td>
+                                    <td>{% if curso.plan == 1 %}BLOQUE {% endif %}{{ curso.nciclo }}</td>
+                                    <td>{% if curso.plan == 1 %}PARTE {% endif %}{{ curso.ngrado }}</td>
+                                    <td>{{curso.fecha_inicio|date('d/m/Y')}}</td>
+                                    <td>{{curso.fecha_fin|date('d/m/Y')}}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody> 
+                        </table>
+                        <br>
+                        <div class="form-group col-xs-12 col-lg-4">
+                            <label class="col-sm-3 control-label">Pedagogo:</label>
+                            <div class="col-sm-9">
+                                <select required="required" data-placeholder="Seleccionar"  name="pedagogo_id" id="pedagogo_id" class="form-control chosen-select" >
+                                     <option value="">Pedagogo</option>
+                                        {% for pedagogo in pedagogos %}
+                                            <option value="{{ pedagogo.usuario_id }}">{{ pedagogo.nombre }} {{ pedagogo.paterno }} {{ pedagogo.materno }}</option>
+                                        {% endfor %}
+                                    </select>                   
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12 col-lg-4">
+                             <input type="submit" id="boton" value="Guardar Cursos al Pedagogo" class="btn rounded btn-success btn-large"  onclick="return confirm('¿Está seguro de cambiar los cursos a otro Pedagogo?');">
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </form>
+        {% else %}
+            <div class="alert alert-danger" align="center">CURSOS NO ECNONTRADO!!!</div>
+        {% endif %}
+      
+    </div>
+</div>
+   
+
+
+  
+    <script type="text/javascript">
+       
+    $(document).ready(function() {
+        initialise();
+    } );
+    $("#selectall").on("click", function() {  
+  $(".cursos").prop("checked", this.checked);  
+});  
+
+// if all checkbox are selected, check the selectall checkbox and viceversa  
+$(".cursos").on("click", function() {  
+  if ($(".cursos").length == $(".cursos:checked").length) {  
+    $("#selectall").prop("checked", true);  
+  } else {  
+    $("#selectall").prop("checked", false);  
+  }  
+});
+
+    function initialise()
+    {
+         var espanol = {"sProcessing": "Procesando...",
+                     "sLengthMenu": "Mostrar _MENU_ registros",
+                     "sZeroRecords": "No se encontraron resultados",
+                     "sInfo": "Mostrando desde _START_ hasta _END_ de _TOTAL_ registros",
+                     "sInfoEmpty": "No existen registros",
+                     "sInfoFiltered": "(filtrado de un total de _MAX_ líneas)",
+                     "sInfoPostFix": "",
+                     "sSearch": "Buscar:",
+                     "sUrl": "",
+                     "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                     },
+                     "buttons":{
+                        "copy": "Copiar",
+                        "print":"Imprimir"
+                     }
+                    };
+
+        var currentLang = espanol;    
+
+        //var table = $('#tablaListadoPersonas').DataTable();
+        var dtable = $('#tablaListadoPersonas').dataTable( {"oLanguage": espanol} );
+        
+        
+        $('#tablaListadoPersonas tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        } );
+        
+    }
+    </script>
+
