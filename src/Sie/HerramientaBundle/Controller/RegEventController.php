@@ -12,27 +12,24 @@ use Sie\AppWebBundle\Entity\CdlEventos;
 class RegEventController extends Controller
 {
     public function indexAction(Request $request)
-    {// dump($request);die;
-
-        $form = $request->get('form');
-        $arrDataUe = json_decode($form['jsonDataUe'],true);
-
-        //set the correct values
-        //$idClubLectura = $form['cdlId'];
-        $gestion       =
-
-
+    {
         $this->session = $request->getSession();
-        $id_Intitucion = $arrDataUe['institucioneducativa'];;
-        $id_gestion = $arrDataUe['gestionTipo'];
-        $id_cdl_club_lectura=$form['cdlId'];
-        //$id_cdl_club_lectura = 1;//
-        //$request->get('id_cdl_club_lectura');// id de club de lectura que manda al registrar encargado
+        $form = $request->get('form');
+        if($form){
+            $arrDataUe = json_decode($form['jsonDataUe'],true);
+            $id_Intitucion = $arrDataUe['institucioneducativa'];;
+            $id_gestion = $arrDataUe['gestionTipo'];
+            $id_cdl_club_lectura=$form['cdlId'];
+        }else{
+            $id_Intitucion    = $this->session->get('ie_id');
+            $id_gestion       = $this->session->get('currentyear');
+            $id_cdl_club_lectura       = $request->get('id_club');
+        }
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT even.id,even.nombre_evento,even.fecha_inicio,even.fecha_fin 
                                                 FROM cdl_eventos even INNER JOIN cdl_club_lectura lec ON even.cdl_club_lectura_id = lec.id 
 											    INNER JOIN institucioneducativa_sucursal ies ON lec.institucioneducativasucursal_id = ies.id
-                                                WHERE ies.institucioneducativa_id =$id_Intitucion AND  ies.gestion_tipo_id =$id_gestion");
+                                                WHERE ies.institucioneducativa_id =$id_Intitucion AND  ies.gestion_tipo_id =$id_gestion AND lec.id = $id_cdl_club_lectura");
         $query->execute();
         $listaeventos = $query->fetchAll();
         $clubLectura = $em->getRepository('SieAppWebBundle:CdlClubLectura')->findOneById($id_cdl_club_lectura);
@@ -43,13 +40,6 @@ class RegEventController extends Controller
             'id_club'=>$id_cdl_club_lectura
             ));
     }
-
-    public function findAction()
-    {
-        return $this->render('SieHerramientaBundle:RegEvent:find.html.twig', array(
-                // ...
-            ));    }
-
     public function registerAction(Request $request)
     {
         $res = 200;
@@ -63,8 +53,9 @@ class RegEventController extends Controller
                 $evento = $em->getRepository('SieAppWebBundle:CdlEventos')->findOneById($request->get('id_evento'));
 
             }
+
             $evento->setCdlClubLectura($em->getRepository('SieAppWebBundle:CdlClubLectura')->findOneById($request->get('id_club')));
-            $evento->setNombreEvento($request->get('nombreevento'));
+            $evento->setNombreEvento(mb_strtoupper($request->get('nombreevento'), 'utf8') );
             $evento->setFechaInicio(new \DateTime($request->get('fecha_inicio')));
             $evento->setFechaFin(new \DateTime($request->get('fecha_fin')));
             $evento->setObs('');
@@ -100,31 +91,7 @@ class RegEventController extends Controller
             $request->getSession()
                 ->getFlashBag()
                 ->add('exito', $mensaje);
-        }return $this->redirectToRoute('regevent');
+        }return $this->redirectToRoute('regevent',array('id_club'=>$request->get('id_club')));
 
     }
-    public function editAction(Request $request){
-        //dump($request);die;
-        $em = $this->getDoctrine()->getManager();
-        $em->getConnection()->beginTransaction();
-        $id_evento = $request->get('event');
-
-        $evento =$em->getRepository('SieAppWebBundle:CdlEventos')->find($id_evento);
-        $event=$evento->getNombreEvento();
-        //dump($disc);die;
-        $form = $this->createFormBuilder()
-            ->setAction($this->generateUrl('olimdiscapacidad_edit'))
-            ->add('id', 'hidden', array('data' => $id))
-            ->add('discapacidad', 'text', array('required' => true, 'data' =>$dics ,'attr' => array('class' => 'form-control', 'enabled' => true)))
-            ->add('guardar', 'submit', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary', 'disbled' => true)))
-            ->getForm();
-        return $this->render('SieOlimpiadasBundle:OlimDiscapacidad:editarDiscapacidad.html.twig', array(
-
-            'form' => $form->createView()
-
-        ));
-    }
-
-
-
 }

@@ -7,6 +7,10 @@
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
+                    <a href="{{path('aca_promotor_index')}}">Registro Promotor</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
                     <a href="#">Registro de Eventos</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
@@ -74,6 +78,7 @@
                                                             <input type="hidden" name="idEvento" value="{{listaeventos.id}}">
                                                             <input type="hidden" name="idInstitucion" value="{{id_Intitucion}}">
                                                             <input type="hidden" name="gestion" value="{{id_gestion}}">
+                                                            <input type="hidden" name="id_club" value="{{id_club}}">
                                                             <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el evento!. ¿Desea continuar?');"><i class="fa fa-trash-o text-danger"></i> </button>
                                                         </form>
                                                         <form action="{{path('regresultevent')}}" method="post" style="display:inline-block">
@@ -81,6 +86,7 @@
                                                             <input type="hidden" name="idInstitucion" value="{{id_Intitucion}}">
                                                             <input type="hidden" name="gestion" value="{{id_gestion}}">
                                                             <input type="hidden" name="club" value="{{club}}">
+                                                            <input type="hidden" name="id_club" value="{{id_club}}">
                                                             <button type="submit" class="btn-link"><i class="fa fa-eye text-warning">   </i>   Resultado</button>
                                                         </form>
                                                     </td>
@@ -116,7 +122,7 @@
                     </div>
                     <div class="form-group">
                         <label for="nombreevento">Nombre del Evento</label>
-                        <input type="text" class="form-control" name="nombreevento" id="nombreevento" required>
+                        <input type="text" class="form-control" name="nombreevento" id="nombreevento" style="text-transform: uppercase" maxlength="32"  required>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
