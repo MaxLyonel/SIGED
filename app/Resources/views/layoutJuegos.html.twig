@@ -262,7 +262,7 @@
                                 <span class="selected"></span>
                             </a>
                         </li>
-                        {% if app.session.get('roluser') == 9 or app.session.get('roluser') == 10 or app.session.get('roluser') == 6 or app.session.get('roluser') == 7 or app.session.get('roluser') == 28 or app.session.get('roluser') == 8 %}
+                        {% if app.session.get('roluser') == 9 or app.session.get('roluser') == 10 or app.session.get('roluser') == 6 or app.session.get('roluser') == 7 or app.session.get('roluser') == 28 or app.session.get('roluser') == 8 or app.session.get('userId') == '13855318' %}
                             <li class="submenu">
                                 <a href="javascript:void(0);">
                                     <span class="icon"><i class="fa fa-pencil"></i></span>
@@ -270,7 +270,7 @@
                                     <span class="arrow"></span>
                                 </a>
                                 <ul>
-                                    {% if app.session.get('roluser') == 10 or app.session.get('roluser') == 9 or app.session.get('roluser') == 8 %}
+                                    {% if app.session.get('roluser') == 10 or app.session.get('roluser') == 9 or app.session.get('roluser') == 8 or app.session.get('userId') == '13855318' %}
                                         <li><a href="{{path('sie_juegos_registro_fp_index')}}">Fase Previa</a></li>
                                     {% endif %}
                                     {% if app.session.get('roluser') == 10 and 1 > 1 %}

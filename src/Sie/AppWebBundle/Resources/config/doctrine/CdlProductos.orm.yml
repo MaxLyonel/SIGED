@@ -1,0 +1,41 @@
+Sie\AppWebBundle\Entity\CdlProductos:
+    type: entity
+    table: cdl_productos
+    indexes:
+        IDX_15B5FA17B5FD3B81:
+            columns:
+                - cdl_eventos_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nombreProducto:
+            type: string
+            nullable: true
+            length: 1000
+            fixed: false
+            comment: ''
+            column: nombre_producto
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    manyToOne:
+        cdlEventos:
+            targetEntity: CdlEventos
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                cdl_eventos_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

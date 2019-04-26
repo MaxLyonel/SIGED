@@ -461,15 +461,8 @@
                       </ul>
                     </li>
                     {% endif %}
-                    {# {% set ie = [
-                                40730011,40730014,40730016,40730027,40730038,40730039,40730040,40730050,40730061,40730063,
-                                40730065,40730067,40730068,40730070,40730071,40730073,40730083,40730084,40730085,40730095,
-                                40730099,40730100,40730102,40730105,40730116,40730134,40730138,40730262,40730394,40730420,
-                                40730422,40730434,40730470,40730479,40730518,40730521,40730546,40730550,40730560,40730563,
-                                40730567,40730590,40730592,40730614,40730620,40730621,70620075
-                                ] %} #}
-                    {# {% if (app.session.get('roluser') == 9 and app.session.get('ie_id') in ie ) or (app.session.get('roluser') == 10 and app.session.get('roluserlugarid') == 31459) or (app.session.get('roluser') == 40 and app.session.get('roluserlugarid') == 31354) %} #}
-                    {# <li class="submenu">
+                    
+                    <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
                             <span class="text">Trámites</span>
@@ -490,8 +483,8 @@
                         <ul>
                             <li><a href="{{ path('wf_tramite_seguimiento')}}">Seguimiento</a></li>
                         </ul>
-                    </li> #}
-                    {# {% endif %} #}
+                    </li>
+                    
                     {% if app.session.get('roluser') == 8  or app.session.get('roluser') == 20  %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
@@ -516,6 +509,16 @@
                                 <li><a href="{{ path('inscription_extranjeros_index')}}">Inicial/Primaria</a></li>
                                 <li><a href="{{ path('change_paralelo_sie_index')}}">Cambio de Paralelo</a></li>
                                 <li><a href="{{ path('students_inscriptions_seguimiento_index')}}">Reporte Extemporáneos</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-home"></i></span>
+                                <span class="text">Club de Lectura</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('aca_promotor_index')}}">Registro</a></li>
                             </ul>
                         </li>
                     {% endif %}

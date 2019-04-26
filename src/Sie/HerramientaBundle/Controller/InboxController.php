@@ -307,18 +307,15 @@ class InboxController extends Controller {
             ->where('ie.id = :idInstitucion')
             ->andWhere('fp.id = :flujoP')
             ->andWhere('fp.proceso = :proceso')
-            ->andWhere('t.gestionId = :gestion')
             ->setParameter('idInstitucion', $this->unidadEducativa)
             ->setParameter('flujoP', 13)
             ->setParameter('proceso', 11)
-            ->setParameter('gestion', $arrSieInfo[0]['gestion'])
             ->orderBy('t.gestionId')
             ->getQuery();
-
+            
         $entities = $query->getResult();
-        if(sizeof($entities)>0){
-          $this->session->set('ue_sol_regularizar',true);
-        }
+
+        $this->session->set('ue_sol_regularizar',false);
 
         return $this->render($this->session->get('pathSystem') . ':Inbox:index.html.twig', array(
             'objValidateUePlena'=>($objValidateUePlena)?1:0,
@@ -557,6 +554,31 @@ class InboxController extends Controller {
           'gestionTipoId' => $data['gestion']
 
         ));
+
+        $repository = $em->getRepository('SieAppWebBundle:Tramite');
+        $query = $repository->createQueryBuilder('t')
+            ->select('td')
+            ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'WITH', 'td.tramite = t.id')
+            ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'WITH', 'td.flujoProceso = fp.id')
+            ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 't.institucioneducativa = ie.id')
+            ->where('ie.id = :idInstitucion')
+            ->andWhere('fp.id = :flujoP')
+            ->andWhere('fp.proceso = :proceso')
+            ->andWhere('t.gestionId = :gestion')
+            ->setParameter('idInstitucion', $this->unidadEducativa)
+            ->setParameter('flujoP', 13)
+            ->setParameter('proceso', 11)
+            ->setParameter('gestion', $data['gestion'])
+            ->orderBy('t.gestionId')
+            ->getQuery();
+            
+        $tramites = $query->getResult();
+
+        if(sizeof($tramites)>0){
+          $this->session->set('ue_sol_regularizar',true);
+        } else {
+          $this->session->set('ue_sol_regularizar',false);
+        }
 
        if($objValidateUePlena){
          //switch to the kind of UE

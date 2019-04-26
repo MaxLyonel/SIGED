@@ -33,22 +33,30 @@ class ReglaController extends Controller
             $estudianteInscripcionJuegosController = new estudianteInscripcionJuegosController();
             $estudianteInscripcionJuegosController->setContainer($this->container);
             $estudianteInscripcionJuegos = $estudianteInscripcionJuegosController->getEstudianteInscripcionGestionFasePrueba($estudianteInscripcionId, $pruebaId, $gestionId, $faseId);
+            //dump($estudianteInscripcionJuegos[0]->getEstudianteInscripcion()->getEstudiante()->getNombre());die;
+
+            $em = $this->getDoctrine()->getManager();
+            $estudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
+            $estudianteNombre = $estudianteInscripcion->getEstudiante()->getNombre();
+            $estudiantePaterno = $estudianteInscripcion->getEstudiante()->getPaterno();
+            $estudianteMaterno = $estudianteInscripcion->getEstudiante()->getMaterno();
+            $estudianteNombreApellido = $estudianteNombre . ' ' . $estudiantePaterno . ' ' . $estudianteMaterno;
+
             //dump($estudianteInscripcionId);
             if (count($estudianteInscripcionJuegos)>0){
                 //dump('ya tiene la prueba seleccionada');die;
-                return array('0' => false, '1' => 'Estudiante ya registrado en la prueba seleccionada');
+                return array('0' => false, '1' => $estudianteNombreApellido . ' ya registrado en la prueba seleccionada');
             }
             
-            $msg = $this->valDisciplinaParticipacion($estudianteInscripcionId, $gestionId, $pruebaId, $faseId);     
-                                    
+            $msg = $this->valDisciplinaParticipacion($estudianteInscripcionId, $gestionId, $pruebaId, $faseId); 
+                                     
             if (!$msg[0]){
                 //dump('no tiene disciplina');die;
-                $em = $this->getDoctrine()->getManager();
                 $pruebaEntity = $em->getRepository('SieAppWebBundle:JdpPruebaTipo')->findOneBy(array('id' => $pruebaId));
                 $disciplinaId = $pruebaEntity->getDisciplinaTipo()->getId();
                 $disciplinaEstudianteInscripcion = $estudianteInscripcionJuegosController->getDisciplinaEstudianteInscripcion($estudianteInscripcionId, $gestionId, $faseId);
                 
-                $msg1 = array('0' => false, '1' => 'Ya no puede registrarse en otras disciplinas');
+                $msg1 = array('0' => false, '1' => $estudianteNombreApellido.' no puede registrarse en otras disciplinas');
                 foreach ($disciplinaEstudianteInscripcion as $disciplina) {
                     $disciplinaInscripcionId = $disciplina->getId();
                     if ($disciplinaInscripcionId == $disciplinaId){
@@ -56,18 +64,19 @@ class ReglaController extends Controller
                     }
                 }
                 if(!$msg1[0]){
-                    return $msg;
+                    return array('0' => $msg1[0], '1' => $estudianteNombreApellido.' '.$msg1[1]);
+                    //return $estudianteNombreApellido.' '.$msg;                    
                 }                
             }
             
             $msg = $this->valPruebaParticipacion($estudianteInscripcionId, $gestionId, $pruebaId, $faseId);   
-            
+
             if (!$msg[0]){
                 //dump('no tiene prueba');die;
                 $msg1 = $this->valConjuntoPruebaParticipacion($estudianteInscripcionId, $gestionId, $pruebaId, $faseId);
                 if (!$msg1[0]){
                     //dump($msg[1]);die;
-                    return $msg1;
+                    return array('0' => $msg1[0], '1' => $estudianteNombreApellido.' '.$msg1[1]);
                 }                
                 $msg = array('0' => true, '1' => '');
             }
@@ -83,10 +92,14 @@ class ReglaController extends Controller
                 $msg2 = $this->valPruebaRegla($estudianteInscripcionId, $gestionId, $pruebaId, $faseId, $equipoId);
                 if (!$msg2[0]){
                     //dump($msg[1]);die;
-                    return $msg2;
+                    return array('0' => $msg2[0], '1' => $estudianteNombreApellido.' '.$msg2[1]);
                 }
                 
                 $msg = array('0' => true, '1' => '');
+            }
+            
+            if ($msg[0] and $msg[1] == ''){
+                $msg = array('0' => $msg[0], '1' => $estudianteNombreApellido.' '.$msg[1]);
             }
             return $msg;
         } catch (Exception $e) {
@@ -125,13 +138,13 @@ class ReglaController extends Controller
         //dump($cantidadDisciplinaEstudiante);dump($disciplinaCantidad);
 
         if($cantidadDisciplinaEstudiante >= $disciplinaCantidad){
-            $msg = array('0' => false, '1' => 'El estudiante ya cuenta con la cantidad maxima de disciplinas permitidas');
+            $msg = array('0' => false, '1' => 'ya cuenta con la cantidad maxima de disciplinas permitidas');
         }
 
         //dump($cantidadDisciplinaParticipacionEstudiante);dump($disciplinaParticipacionCantidad);die;
 
         if($cantidadDisciplinaParticipacionEstudiante >= $disciplinaParticipacionCantidad){
-            $msg = array('0' => false, '1' => 'El estudiante ya cuenta con la cantidad maxima de participaciones permitidas en la Disciplina '.$disciplinaParticipacionNombre.', intente nuevamente');
+            $msg = array('0' => false, '1' => 'ya cuenta con la cantidad maxima de participaciones permitidas en la Disciplina '.$disciplinaParticipacionNombre.', intente nuevamente');
         }
         return $msg;
     }
@@ -167,7 +180,7 @@ class ReglaController extends Controller
             if ($cantidadPruebaEstudiante < $cantidadDisciplinaPruebaParticipacion){
                 return array('0' => true, '1' => '');
             } else {
-                return array('0' => false, '1' => 'El estudiante ya cuenta con la cantidad maxima de participaciones permitidas en la Prueba '.$pruebaParticipacionNombre.', intente nuevamente');
+                return array('0' => false, '1' => 'ya cuenta con la cantidad maxima de participaciones permitidas en la Prueba '.$pruebaParticipacionNombre.', intente nuevamente');
             }
         }
     }
@@ -216,10 +229,10 @@ class ReglaController extends Controller
             if($cantidadPruebaEstudiante < $cantidadPruebaConjunto){
                 return array('0' => true, '1' => '');
             } else {
-                return array('0' => false, '1' => 'El estudiante ya cuenta con la cantidad maxima de pruebas permitidas dentro de una disciplina');
+                return array('0' => false, '1' => 'ya cuenta con la cantidad maxima de pruebas permitidas dentro de una disciplina');
             }
         }  else {
-            return array('0' => false, '1' => 'No cuenta con mas pruebas por registrase en la disciplina');
+            return array('0' => false, '1' => 'no cuenta con mas pruebas por registrase en la disciplina');
         }    
 
         
@@ -261,7 +274,7 @@ class ReglaController extends Controller
 
             //dump($cantidadListaEquipoEstudiantePruebaInstitucion);dump($cupoInscripcion);die;
             if($cantidadListaEquipoEstudiantePruebaInstitucion >= $cupoInscripcion){
-                return array('0' => false, '1' => 'No puede registrar a mas estudiantes en el equipo'.$equipoId.' ('.$pruebaNombre.')');
+                return array('0' => false, '1' => 'no puede registrar a mas estudiantes en el equipo'.$equipoId.' ('.$pruebaNombre.')');
             }
 
             $listaEquipoPruebaInstitucion = $estudianteInscripcionJuegosController->getEquipoInscripcionInstitucionGestionFasePrueba($institucionId, $pruebaId, $gestionId, $faseId);
@@ -269,7 +282,7 @@ class ReglaController extends Controller
             //dump($cantidadListaEquipoPruebaInstitucion);dump($cupoPresentacion);die;
 
             if($cantidadListaEquipoPruebaInstitucion > $cupoPresentacion){
-                return array('0' => false, '1' => 'No puede registrar a mas equipos en la prueba '.$pruebaNombre);
+                return array('0' => false, '1' => 'no puede registrar a mas equipos en la prueba '.$pruebaNombre);
             } else {
                 //dump($cantidadListaEquipoPruebaInstitucion);dump($cupoPresentacion);die();
                 if($cantidadListaEquipoPruebaInstitucion == $cupoPresentacion){
@@ -281,7 +294,7 @@ class ReglaController extends Controller
                         }
                     }
                     if(!$listaEquipoExiste){
-                        return array('0' => false, '1' => 'No puede registrar a mas equipos en la prueba '.$pruebaNombre);
+                        return array('0' => false, '1' => 'no puede registrar a mas equipos en la prueba '.$pruebaNombre);
                     } 
                 } 
             }          
@@ -290,7 +303,7 @@ class ReglaController extends Controller
             $cantidadListaPruebaInstitucion = count($listaPruebaInstitucion);
 
             if($cantidadListaPruebaInstitucion >= $cupoInscripcion){
-                return array('0' => false, '1' => 'No puede registrar a mas estudiantes en '.$pruebaNombre);
+                return array('0' => false, '1' => 'no puede registrar a mas estudiantes en '.$pruebaNombre);
             }
         }
 
