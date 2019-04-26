@@ -6,13 +6,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Sie\AppWebBundle\Entity\CdlClubLectura;
 
 use Sie\AppWebBundle\Entity\CdlEventos;
 
 class RegEventController extends Controller
 {
     public function indexAction(Request $request)
-    {
+    { //dump($request);die;
         $this->session = $request->getSession();
         $form = $request->get('form');
         if($form){
@@ -24,21 +25,22 @@ class RegEventController extends Controller
             $id_Intitucion    = $this->session->get('ie_id');
             $id_gestion       = $this->session->get('currentyear');
             $id_cdl_club_lectura     = $request->get('id_club');
-            /*$id_clubbase64     = $request->get('id_club');
-            $id_cdl_club_lectura       = base64_decode($id_clubbase64);*/
         }
+        //dump(base64_decode($id_cdl_club_lectura),$id_cdl_club_lectura);die;
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT even.id,even.nombre_evento,even.fecha_inicio,even.fecha_fin 
-                                                FROM cdl_eventos even INNER JOIN cdl_club_lectura lec ON even.cdl_club_lectura_id = lec.id 
-											    INNER JOIN institucioneducativa_sucursal ies ON lec.institucioneducativasucursal_id = ies.id
-                                                WHERE ies.institucioneducativa_id =$id_Intitucion AND  ies.gestion_tipo_id =$id_gestion AND lec.id = $id_cdl_club_lectura");
+                                                FROM cdl_eventos even                                                
+                                                WHERE  even.cdl_club_lectura_id = $id_cdl_club_lectura");
         $query->execute();
         $listaeventos = $query->fetchAll();
         $clubLectura = $em->getRepository('SieAppWebBundle:CdlClubLectura')->findOneById($id_cdl_club_lectura);
+        /*$id_cdl_club_lectura       = base64_decode($request->get('id_club'));*/
+
         return $this->render('SieHerramientaBundle:RegEvent:index.html.twig', array('listaeventos'=>$listaeventos,
             'id_Intitucion'=>$id_Intitucion,
             'id_gestion'=>$id_gestion,
             'club'=>$clubLectura->getNombreClub(),
+            //'id_club'=>base64_decode($id_cdl_club_lectura)
             'id_club'=>$id_cdl_club_lectura
             ));
     }
@@ -95,6 +97,7 @@ class RegEventController extends Controller
                 ->add('exito', $mensaje);
         }
        // return $this->redirectToRoute('regevent',array('id_club'=>base64_encode($request->get('id_club'))));
+
         return $this->redirectToRoute('regevent',array('id_club'=>$request->get('id_club')));
 
     }

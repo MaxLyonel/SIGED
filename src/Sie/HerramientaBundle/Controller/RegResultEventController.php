@@ -25,13 +25,12 @@ class RegResultEventController extends Controller
         $this->session = new Session();
 
     }
-
     public function indexAction(Request $request)
     {   $id_Intitucion = $this->session->get('idInstitucion');
         $id_gestion = $this->session->get('currentyear');
         $id_evento = $request->get('idEvento');  //dump($id_evento);die; // id de evento
         $club = $request->get('club');// id de evento
-        $id_club = $request->get('id_club');
+        $id_club = $request->get('id_club') ;
         $em = $this->getDoctrine()->getManager();
         $evento = $em->getRepository('SieAppWebBundle:CdlEventos')->findOneById($id_evento);
         $resultado = $em->getRepository('SieAppWebBundle:CdlProductos')->findBy(array('cdlEventos'=>$id_evento));
@@ -69,7 +68,9 @@ class RegResultEventController extends Controller
             $res = 500;
             $mensaje = 'No se pudo guardar los datos';
         }
-        return new JsonResponse(array('estado' => $res, 'msg' => $mensaje));
+        $resultado = $em->getRepository('SieAppWebBundle:CdlProductos')->findBy(array('cdlEventos'=>$request->get('id_evento')));
+
+        return new JsonResponse(array('estado' => $res, 'msg' => $mensaje,'listaresultado'=>$resultado));
     }
     public function deleteAction(Request $request){// dump($request);die;
         $em=$this->getDoctrine()->getManager();
