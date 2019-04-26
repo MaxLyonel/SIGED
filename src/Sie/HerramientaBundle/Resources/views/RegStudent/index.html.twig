@@ -1,0 +1,300 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+	<style type="text/css">
+		.jupper{
+			text-transform: uppercase;
+		}
+	</style>
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> Registro de Miembros <span> Busqueda</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+				<li>
+					<i class="fa fa-home"></i>
+					<a href="{{path('aca_promotor_index')}}">Registro Promotor</a>
+					<i class="fa fa-angle-right"></i>
+				</li>
+				<li>
+					<a href="#">Registro de Estudiantes</a>
+					<i class="fa fa-angle-right"></i>
+				</li>                
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-icon panel-primary">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Lista de Miembros</h3>
+                        </div>
+                            <div class="pull-right">
+								<h3 class="panel-title">
+                                	<a href="#" class="btn btn-facebook btn-xs" data-toggle="modal" data-target=".bs-example-modal-lg"> Nuevo Miembro</a>
+                                	{#<a href="{{path('herramientalt_info_maestro_find')}}" class="btn btn-warning btn-sm"><i class="fa fa-plus"></i> Nuevo Evento</a>#}
+								</h3>
+                            </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="panel-body panel-primary" id="integrantes">
+                            {% if integrantes is not empty %}
+                                <div id="no-more-tables">
+                                    <table class="table table-striped table-primary">
+                                        <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Rude</th>
+                                            <th>Paterno</th>
+                                            <th>Materno</th>
+                                            <th>Nombre</th>
+                                            <th>Opción</th>
+
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for integrante in integrantes %}
+                                            <tr>
+                                                <td>{{ loop.index }}</td>
+                                                <td>{{ integrante.codigoRude }}</td>
+                                                <td>{{ integrante.paterno }}</td>
+                                                <td>{{ integrante.materno }}</td>
+                                                <td>{{ integrante.nombre }}</td>
+                                                <td>
+                                                    <button type="button" class=" btn-link" onclick="eliminarEstudiante({{ integrante.cdl }},{{ integrante.id }})" data-toggle="tooltip" data-placement="top" data-title="Eliminar"> <i class="fa fa-trash-o text-danger"></i>  </button>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                No hay Integrantes registrados
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bs-example-modal-lg in" tabindex="-1" role="dialog" aria-hidden="true" id="modalEstudiante">
+        <div class="modal-dialog modal-md modal-primary">
+            <div class="modal-content" style="width: 800px;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title"><i class="fa fa-search"></i> Nuevo Miembro</h4>
+                </div>
+                <div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+
+	                        <!-- Start vertical tabs -->
+	                        <div class="panel panel-tab panel-tab-double panel-tab-vertical row no-margin mb-15 rounded shadow">
+	                            <!-- Start tabs heading -->
+	                            <div class="panel-heading no-padding col-lg-3 col-md-3 col-sm-3">
+	                            	Búsquedas:
+	                                <ul class="nav nav-tabs">
+	                                    <li class="active">
+	                                        <a href="component-tabsaccordion.html#tab3-1" data-toggle="tab" aria-expanded="false">
+	                                            <i class="fa fa-user"></i>
+	                                            <div>
+	                                                <span class="text-strong">Código</span>
+	                                                <span>RUDE</span>
+	                                            </div>
+	                                        </a>
+	                                    </li>
+	                                    <li class="">
+	                                        <a href="component-tabsaccordion.html#tab3-2" data-toggle="tab" aria-expanded="true">
+	                                            <i class="fa fa-file-text"></i>
+	                                            <div>
+	                                                <span class="text-strong">Datos</span>
+	                                                <span>Personales</span>
+	                                            </div>
+	                                        </a>
+	                                    </li>
+	                                </ul>
+	                            </div><!-- /.panel-heading -->
+	                            <!--/ End tabs heading -->
+
+	                            <!-- Start tabs content -->
+	                            <div class="panel-body col-lg-9 col-md-9 col-sm-9">
+	                                <div class="tab-content">
+	                                    <div class="tab-pane fade active in" id="tab3-1">
+	                                    	<form action="" id="formRude" onsubmit="buscarEstudiante('rude'); return false">
+	                                    		<input type="hidden" name="tipo" value="rude">
+	                                    		<input type="hidden" name="sie" value="{{sie}}">
+	                                    		<input type="hidden" name="gestion" value="{{gestion}}">
+	                                    		<input type="hidden" name="cdl" value="{{cdl}}">
+		                                        <div class="form-group">
+		                                            <label for="nombreevento">Rude:</label>
+		                                            <input type="text" class="form-control jupper" name="rude" id="rude" placeholder="Rude" required>
+		                                        </div>
+												<button type="submit" class="btn btn-info">Buscar</button>
+											</form>
+	                                    </div>
+	                                    <div class="tab-pane fade" id="tab3-2">
+                                        	<form action="" id="formDatos" onsubmit="buscarEstudiante('datos'); return false">
+                                        		<input type="hidden" name="tipo" value="datos">
+                                        		<input type="hidden" name="sie" value="{{sie}}">
+                                        		<input type="hidden" name="gestion" value="{{gestion}}">
+                                        		<input type="hidden" name="cdl" value="{{cdl}}">
+                                        		<div class="row">
+	    	                                        <div class="form-group col-md-4">
+	    	                                            <label for="nombreevento">Nombre(s):</label>
+	    	                                            <input type="text" class="form-control jupper" name="nombre" id="nombre" placeholder="Nombre" required>
+	    	                                        </div>
+	    	                                        <div class="form-group col-md-4">
+	    	                                            <label for="nombreevento">Paterno:</label>
+	    	                                            <input type="text" class="form-control jupper" name="paterno" id="paterno" placeholder="Paterno" required>
+	    	                                        </div>
+	    	                                        <div class="form-group col-md-4">
+	    	                                            <label for="nombreevento">Materno:</label>
+	    	                                            <input type="text" class="form-control jupper" name="materno" id="materno" placeholder="Materno" required>
+	    	                                        </div>
+
+    	                                        </div>
+    											<button type="submit" class="btn btn-info">Buscar</button>
+    										</form>
+	                                    </div>
+	                                </div>
+	                            </div><!-- /.panel-body -->
+	                            <!--/ End tabs content -->
+	                        </div><!-- /.panel -->
+	                        <!--/ End vertical tabs -->
+
+	                    </div>
+                    </div>
+					
+					<hr>
+
+					<div id="resultado"></div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts%}
+    {{ parent() }}
+    <script>
+    	function buscarEstudiante(tipo){
+    		if (tipo == 'rude'){
+    			var formdata = $('#formRude').serialize();
+    		}else{
+    			var formdata = $('#formDatos').serialize();
+    		}
+
+    		$.ajax({
+    		    type: 'post',
+    		    url: Routing.generate('regstudent_student_find'),
+    		    data: formdata,
+    		    beforeSend: function () {
+    		        swal({
+    		            title: "Buscando...",
+    		            text: "Espere un momento por favor",
+    		            buttons: false
+    		        });
+
+    		        $('#resultado').empty();
+    		    },
+    		    success: function (data) {
+    		    	swal.stopLoading();
+    		        swal.close();
+    		    	$('#resultado').append(data);
+    		    },
+    		    complete: function () {
+    		        swal.stopLoading();
+    		        swal.close();
+    		    }
+    		});
+
+    	}
+
+    	function agregarEstudiante(cdl,idInscripcion){
+    		swal({
+    		    title: "¿Está segura/o de agregar el estudiante?",
+    		    icon: "warning",
+    		    buttons: true,
+    		    dangerMode: true,
+    		    buttons: ["Cancelar", "Continuar"],
+    		})
+		    .then(function(respuesta)  {
+		        if (respuesta) {
+		            $.ajax({
+		                type: 'post',
+		                url: Routing.generate('regstudent_student_register'),
+		                data: {cdl: cdl, idInscripcion: idInscripcion},
+		                beforeSend: function () {
+		                    swal({
+		                        title: "Agregando estudiante...",
+		                        text: "Espere un momento por favor",
+		                        buttons: false
+		                    });
+		                },
+		                success: function (data) {
+		                	$('#integrantes').empty();
+		                	$('#integrantes').append(data);
+		                	limpiarformularios();
+		                	$('#modalEstudiante').modal('hide');
+		                },
+		                complete: function () {
+		                    swal.stopLoading();
+		                    swal.close();
+		                }
+		            });
+		        }
+		    });
+    	}
+
+    	function eliminarEstudiante(cdl,id){
+    		swal({
+    		    title: "¿Está segura/o de eliminar de la lista al estudiante?",
+    		    icon: "warning",
+    		    buttons: true,
+    		    dangerMode: true,
+    		    buttons: ["Cancelar", "Continuar"],
+    		})
+		    .then(function(respuesta)  {
+		        if (respuesta) {
+		            $.ajax({
+		                type: 'post',
+		                url: Routing.generate('regstudent_student_delete'),
+		                data: {cdl: cdl, id: id},
+		                beforeSend: function () {
+		                    swal({
+		                        title: "Eliminado al estudiante de la lista...",
+		                        text: "Espere un momento por favor",
+		                        buttons: false
+		                    });
+		                },
+		                success: function (data) {
+		                	$('#integrantes').empty();
+		                	$('#integrantes').append(data);
+		                	limpiarformularios();
+		                },
+		                complete: function () {
+		                    swal.stopLoading();
+		                    swal.close();
+		                }
+		            });
+		        }
+		    });
+    	}
+
+    	function limpiarformularios(){
+    		$('#rude').val('');
+    		$('#nombre').val('');
+    		$('#paterno').val('');
+    		$('#materno').val('');
+
+    		$('#resultado').empty();
+    	}
+    </script>
+{% endblock %}
