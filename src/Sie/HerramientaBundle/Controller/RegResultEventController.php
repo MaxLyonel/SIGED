@@ -57,7 +57,7 @@ class RegResultEventController extends Controller
 
             }
             $resultado->setCdlEventos($em->getRepository('SieAppWebBundle:CdlEventos')->findOneById($request->get('id_evento')));
-            $resultado->setNombreProducto($request->get('nombreresultado'));
+            $resultado->setNombreProducto(mb_strtoupper($request->get('nombreresultado'), 'utf8'));
             $resultado->setObs('');
             $em->persist($resultado);
             $em->flush();
@@ -72,7 +72,7 @@ class RegResultEventController extends Controller
 
         return new JsonResponse(array('estado' => $res, 'msg' => $mensaje,'listaresultado'=>$resultado));
     }
-    public function deleteAction(Request $request){// dump($request);die;
+    public function deleteAction(Request $request){ //dump($request);die;
         $em=$this->getDoctrine()->getManager();
         $resultado = $em->getRepository('SieAppWebBundle:CdlProductos')->findOneById($request->get('idResultado'));
         $imagenes  = $em->getRepository('SieAppWebBundle:CdlProductoimagen')->findBy(array('cdlProductos'=>$request->get('idResultado')));
@@ -80,19 +80,20 @@ class RegResultEventController extends Controller
             throw $this->createNotFoundation('No existe el resultado');
         }
         if($imagenes){
-            $mensaje = 'El resultado: ' . $resultado->getNombreProducto() . ' no fue eliminado porque tiene imágenes registradas';
+            $mensaje = 'La Actividad: ' . $resultado->getNombreProducto() . ' no fue eliminado porque tiene imágenes registradas';
             $request->getSession()
                 ->getFlashBag()
                 ->add('error', $mensaje);
         }else{
             $em->remove($resultado);
             $em->flush();
-            $mensaje = 'El resultado: ' . $resultado->getNombreProducto() . ' fue eliminado con éxito';
+            $mensaje = 'La Actividad: ' . $resultado->getNombreProducto() . ' fue eliminado con éxito';
             $request->getSession()
                 ->getFlashBag()
                 ->add('exito', $mensaje);
         }
         return $this->redirectToRoute('regresultevent', array('idEvento'=>$request->get('idEvento'),'club'=>$request->get('club'),
+            'id_club'=>$request->get('id_club'),
             'idInstitucion'=>$request->get('idInstitucion'),'gestion'=>$request->get('gestion')));
     }
     public function registerimagenAction(Request $request ){ //dump($request);die;

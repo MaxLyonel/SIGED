@@ -1,7 +1,7 @@
 {% extends 'layoutHerramienta.html.twig' %}
 {% block contentoption %}
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> Registro de Resultados </h2>
+        <h2><i class="fa fa-list-alt"></i> Registro de Actividades </h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -44,10 +44,10 @@
                 <div class="panel rounded shadow panel-primary">
                     <div class="panel-heading">
                         <div class="pull-left">
-                            <h3 class="panel-title">Club de Lectura: <strong>{{ club }} / </strong> {{ nombreevento }} </h3>
+                            <h3 class="panel-title">Club de Lectura: <strong>{{ club }} </strong>  Evento: <strong>{{ nombreevento }}</strong> </h3>
                         </div>
                         <div class="pull-right">
-                            <a class="btn btn-xs btn-facebook" onclick="showModalRes()">   Nuevo Resultado</a>
+                            <a class="btn btn-xs btn-facebook" onclick="showModalRes()">   Nueva Actividad </a>
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -74,11 +74,12 @@
                                                         <input type="hidden" name="idResultado" value="{{listaresultado.id}}">
                                                         <input type="hidden" name="idEvento"    value="{{id_evento}}">
                                                         <input type="hidden" name="Club"        value="{{club}}">
+                                                        <input type="hidden" name="id_club"     value="{{id_club}}">
                                                         <input type="hidden" name="idInstitucion" value="{{id_Intitucion}}">
                                                         <input type="hidden" name="gestion" value="{{id_gestion}}">
                                                         <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el resultado!. ¿Desea continuar?');"><i class="fa fa-trash-o text-danger"></i> </button>
                                                     </form>
-                                                    <button onclick="verFotos({{listaresultado.id}})" class="btn-link"> <i class="fa fa-eye"></i>  Ver imagenes  </button>
+                                                    <button onclick="verFotos({{listaresultado.id}})" class="btn-link"> <i class="fa fa-eye text-warning " ></i>  Ver imágenes  </button>
                                                     <button class="btn-link" onclick="showModalImg({{listaresultado.id}})"><i class="fa fa-plus text-success">   </i>   Agregar imágenes</button>
                                                 </td>
                                             </tr>
@@ -87,7 +88,7 @@
                                     </table>
                                 </div>
                             {% else %}
-                                No hay Eventos registrados
+                                No hay Actividades registradas
                             {% endif %}
                         </div>
                     </div>
@@ -102,18 +103,18 @@
                 <form id="form_resultado">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title">Nuevo Resultado</h4>
+                        <h4 class="modal-title">Nueva Actividad</h4>
                     </div>
                     <div class="modal-body">
                         <input type="hidden" name="id_resultado" id="id_resultado" value="0">
                         <input type="hidden" name="id_evento" id="id_club" value="{{ id_evento }}">
                         <div class="form-group">
-                            <label for="club">Club de Lectura: </label> {{ club }}
-                            <label for="club">Evento: </label> {{ nombreevento }}
+                            <label for="club">Club de Lectura: </label> <strong>{{ club }}</strong> <br>
+                            <label for="club">Evento: </label> <strong>{{ nombreevento }}</strong>
                         </div>
                         <div class="form-group">
                             <label for="nombreresultado">Nombre</label>
-                            <input type="text" class="form-control" name="nombreresultado" id="nombreresultado" required>
+                            <input type="text" class="form-control" name="nombreresultado" id="nombreresultado" style="text-transform: uppercase" maxlength="32" autocomplete="off" required>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -310,7 +311,6 @@
         }
 
         function deleteImage(id,id_resultado) {
-
             swal({
                 title: "¿Está Segura/o de eliminar la imagen ?",
                 icon:  "warning",
@@ -335,11 +335,5 @@
                     });
                 });
         }
-
-        function limpiar() {
-            //$(".input").val("");
-            $("#nombreresultado").val('');
-        }
-
     </script>
 {% endblock %}

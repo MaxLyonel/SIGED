@@ -1,7 +1,7 @@
 {% extends 'layoutHerramienta.html.twig' %}
 {% block contentoption %}
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> Registro de Evento <span> Busqueda</span></h2>
+        <h2><i class="fa fa-list-alt"></i> Registro de Eventos <span> Búsqueda</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -91,7 +91,7 @@
                                                             <input type="hidden" name="gestion" value="{{id_gestion}}">
                                                             <input type="hidden" name="club" value="{{club}}">
                                                             <input type="hidden" name="id_club" value="{{id_club}}">
-                                                            <button type="submit" class="btn-link"><i class="fa fa-eye text-warning">   </i>   Resultado</button>
+                                                            <button type="submit" class="btn-link"><i class="fa fa-eye text-warning">   </i>   Actividad</button>
                                                         </form>
                                                     </td>
                                             </tr>
@@ -125,7 +125,7 @@
                     </div>
                     <div class="form-group">
                         <label for="nombreevento">Nombre del Evento</label>
-                        <input type="text" class="form-control" name="nombreevento" id="nombreevento" style="text-transform: uppercase" maxlength="32"  required>
+                        <input type="text" class="form-control" name="nombreevento" id="nombreevento" style="text-transform: uppercase" maxlength="32" autocomplete="off" required>
                     </div>
                     <div class="row">
                         <div id='sandbox-container'>
@@ -133,13 +133,13 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="fecha_inicio" >Día Inicio</label>
-                                        <input class="form-control" name="fecha_inicio" id="fecha_inicio" required>
+                                        <input class="form-control" name="fecha_inicio" id="fecha_inicio" autocomplete="off" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="fecha_fin" >Día Fin</label>
-                                        <input class="form-control" name="fecha_fin" id="fecha_fin" required>
+                                        <input class="form-control" name="fecha_fin" id="fecha_fin" autocomplete="off" required>
                                     </div>
                                 </div>
                             </div>
@@ -228,12 +228,12 @@
                 $("#fecha_fin").val($('#fecha_inicio').val());
             }
         });
-        $('#form_fechaFin').on('change',function(){
+        $('#fecha_fin').on('change',function(){
             //if($("#form_fechaFin").val().length >= 1){
             if($("#fecha_fin").val() < $("#fecha_inicio").val()){
-                $("#fecha_inicio").val($('#fecha_fin').val());
+                $("#fecha_fin").val($('#fecha_inicio').val());
             }
-            //}
+           // }
         });
 
     </script>
