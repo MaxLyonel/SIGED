@@ -121,23 +121,26 @@
                     <input type="hidden" name="id_club" id="id_club" value="{{ id_club }}">
                     <div class="form-group">
                         <label for="club">Club de Lectura: </label> {{ club }}
-                       {# <input type="text" class="form-control" name="club" id="club" value="{{ club }}" disabled>#}
                     </div>
                     <div class="form-group">
                         <label for="nombreevento">Nombre del Evento</label>
                         <input type="text" class="form-control" name="nombreevento" id="nombreevento" style="text-transform: uppercase" maxlength="32"  required>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="fecha_inicio" >Día Inicio</label>
-                                <input type="date" class="form-control" name="fecha_inicio" id="fecha_inicio" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="fecha_fin" >Día Fin</label>
-                                <input type="date" class="form-control" name="fecha_fin" id="fecha_fin" required>
+                        <div id='sandbox-container'>
+                            <div class="input-daterange" id="datepicker">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="fecha_inicio" >Día Inicio</label>
+                                        <input class="form-control" name="fecha_inicio" id="fecha_inicio" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="fecha_fin" >Día Fin</label>
+                                        <input class="form-control" name="fecha_fin" id="fecha_fin" required>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -175,8 +178,8 @@
                     if (data.estado == 200) {
                         $('#modal_evento').modal('hide');
                         mesage("success","Notificación",data.msg);
-                        setTimeout(function () { window.location.reload(true);}, 3000);
-
+                        window.location.reload(true)
+                        //setTimeout(function () { window.location.reload(true);}, 2000);
                     }else{mesage("danger","Notificación",data.msg);}
 
                 },
@@ -201,6 +204,28 @@
                 '<strong>'+ titulo +'</strong> '+ msg +' </div>');
 
         }
+
+        $('.calendario').datepicker({
+            format: 'dd-mm-yyyy',
+            todayBtn: 'linked'
+        });
+        // DateRangePicker
+        $('#sandbox-container .input-daterange').datepicker({
+            format: 'dd-mm-yyyy',
+            todayBtn: 'linked'
+        });
+        $('#fecha_inicio').on('change',function(){
+            if($("#fecha_fin").val().length < 1){
+                $("#fecha_fin").val($('#fecha_inicio').val());
+            }
+        });
+        $('#form_fechaFin').on('change',function(){
+            //if($("#form_fechaFin").val().length >= 1){
+            if($("#fecha_fin").val() < $("#fecha_inicio").val()){
+                $("#fecha_inicio").val($('#fecha_fin').val());
+            }
+            //}
+        });
 
     </script>
 {% endblock %}
