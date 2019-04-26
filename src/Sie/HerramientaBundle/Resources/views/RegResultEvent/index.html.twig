@@ -47,7 +47,7 @@
                             <h3 class="panel-title">Club de Lectura: <strong>{{ club }} / </strong> {{ nombreevento }} </h3>
                         </div>
                         <div class="pull-right">
-                            <a class="btn btn-xs btn-danger" onclick="showModalRes()">   Nuevo Resultado</a>
+                            <a class="btn btn-xs btn-facebook" onclick="showModalRes()">   Nuevo Resultado</a>
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -186,6 +186,7 @@
         });
         function showModalRes() {
             $('#nombreresultado').val('');
+            $('#id_resultado').val('0');
             $('#modal_resultado').modal('show');
         }
         $("#form_resultado").submit( function (event) {
@@ -206,9 +207,9 @@
                     if (data.estado == 200) {
                         $('#modal_resultado').modal('hide');
                         mesage("success","Notificación",data.msg);
+                        /*$("#resultados").append(data.listaresultado);*/
                         window.location.reload(true);
                         //setTimeout(function () { window.location.reload(true);}, 3000);
-
                     }else{mesage("danger","Notificación",data.msg);}
 
                 },

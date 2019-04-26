@@ -48,7 +48,8 @@
                         </div>
                             <div class="pull-right">
                                 <h3 class="panel-title">
-                                    <a class="btn btn-xs btn-danger" data-toggle="modal" data-target="#modal_evento"> Nuevo Evento</a>
+                                    <a class="btn btn-xs btn-facebook" {#data-toggle="modal" data-target="#modal_evento"#} onclick="showModalEvent()"> Nuevo Evento</a>
+                                    {#<a class="btn btn-xs btn-danger" onclick="showModalRes()">   Nuevo Resultado</a>#}
                                 </h3>
                                 
                             </div>
@@ -160,6 +161,14 @@
         $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
             $(".alert").slideUp(1000);
         });
+        function showModalEvent() {
+            $('#nombreevento').val('');
+            $('#fecha_inicio').val('');
+            $('#fecha_fin').val('');
+            $('#id_evento').val('0');
+            $('#modal_evento').modal('show');
+        }
+
         $("#form_eventos").submit( function (event) {
             event.preventDefault();
             $("#guardar").attr('disabled', true);
