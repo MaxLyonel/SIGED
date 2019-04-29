@@ -1,0 +1,46 @@
+Sie\AppWebBundle\Entity\CdlIntegrantes:
+    type: entity
+    table: cdl_integrantes
+    indexes:
+        IDX_EF9A556B7A6BAF3D:
+            columns:
+                - cdl_club_lectura_id
+        IDX_EF9A556BA1104027:
+            columns:
+                - estudiante_inscripcion_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    manyToOne:
+        cdlClubLectura:
+            targetEntity: CdlClubLectura
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                cdl_club_lectura_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

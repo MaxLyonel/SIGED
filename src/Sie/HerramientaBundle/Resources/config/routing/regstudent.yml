@@ -1,0 +1,21 @@
+regstudent:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:RegStudent:index }
+
+regstudent_student_find:
+    path:     /studentfind
+    defaults: { _controller: SieHerramientaBundle:RegStudent:find }
+    options:
+        expose: true
+
+regstudent_student_register:
+    path:     /studentregister
+    defaults: { _controller: SieHerramientaBundle:RegStudent:register }
+    options:
+        expose: true
+
+regstudent_student_delete:
+    path:     /studentdelete
+    defaults: { _controller: SieHerramientaBundle:RegStudent:delete }
+    options:
+        expose: true

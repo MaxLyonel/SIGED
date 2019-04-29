@@ -395,10 +395,10 @@
             var respuesta=$('input:radio[name=radiotypedep]:checked').val();
             var respuesta2=$('input:radio[name=radiotypedevolucion]:checked').val();
             if(respuesta == 'no' && respuesta2 == 'no' ){
-
                 var msj = '{{ id_tramite }}';
                 if(confirm('Al seleccionar la opción NO en ambas preguntas, el trámite será cancelado.¿Esta seguro de cancelar el tramite: '+ msj +'?')){
-                    return true;
+                    enviarSolicituDepartamentaldbth();
+                    //return true;
                 }else{
                     return false;
                 }
