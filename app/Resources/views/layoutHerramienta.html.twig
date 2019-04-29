@@ -337,6 +337,8 @@
                         <ul>
                             {#<li><a href="{{ path('herramienta_change_paralelo_sie_index_calidad')}}">Cambio de Paralelo</a></li>#}
                             <li><a href="{{ path('herramienta_ieducativa_index_calidad')}}">Unidad Educativa / Cursos</a></li>
+                            <li><a href="{{ path('download_file_sie_index')}}">Generar Archivo IGM</a></li>
+                            <li><a href="{{ path('consolidation_sie_web')}}">Subir Archivo EMP</a></li>
                         </ul>
                     </li>
                     {#
@@ -511,8 +513,20 @@
                                 <li><a href="{{ path('students_inscriptions_seguimiento_index')}}">Reporte Extemporáneos</a></li>
                             </ul>
                         </li>
+                        
                     {% endif %}
-
+                    {% if  app.session.get('roluser') == 9 or app.session.get('roluser') == 20 or app.session.get('roluser') == 8   %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-home"></i></span>
+                                <span class="text">Club de Lectura</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('aca_promotor_index')}}">Registro</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
 
                     {#
                         <li class="submenu">

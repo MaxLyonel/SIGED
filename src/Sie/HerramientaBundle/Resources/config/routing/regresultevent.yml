@@ -1,0 +1,26 @@
+regresultevent:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:RegResultEvent:index }
+
+regresultevent_register:
+    path:     /resultregister
+    defaults: { _controller: SieHerramientaBundle:RegResultEvent:register }
+
+regresultevent_delete:
+    path:     /resultdelete
+    defaults: { _controller: SieHerramientaBundle:RegResultEvent:delete }
+
+regresultevent_registerimagen:
+    path:     /resultregisterimage
+    defaults: { _controller: SieHerramientaBundle:RegResultEvent:registerimagen }
+
+regresultevent_fotos:
+    path:     /resultfotos
+    defaults: { _controller: SieHerramientaBundle:RegResultEvent:fotos }
+
+regresultevent_deletefotos:
+    path:     /resultdeletefotos
+    defaults: { _controller: SieHerramientaBundle:RegResultEvent:deletefotos }
+
+
+

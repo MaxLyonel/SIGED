@@ -514,8 +514,6 @@ class DownloadFileSieController extends Controller {
                           $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txtIG('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
                           break;
                         case '2':
-                            $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt_2B_2018('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
-                          break;
                         case '3':
                         case '4':
                         case '5':
@@ -823,7 +821,7 @@ class DownloadFileSieController extends Controller {
 
         //get path of the file
         $dir = $this->get('kernel')->getRootDir() . '/../web/uploads/instaladores/';
-        $file = 'instalador_SIGED_SIE_v129.exe';
+        $file = 'instalador_SIGED_SIE_v1291.exe';
 
         //create response to donwload the file
         $response = new Response();
@@ -946,8 +944,8 @@ class DownloadFileSieController extends Controller {
           $aBimestre[-1]='Consolidado';
         }else{
           if($operativo >= 0){//mt 0 return plas 1
-            // $aBimestre[$operativo]=$aBimestres[$operativo];
-            $aBimestre[$operativo]=$aBimestres[0];
+            $aBimestre[$operativo]=$aBimestres[$operativo];
+            // $aBimestre[$operativo]=$aBimestres[0];
           }else{ //lt 0 return the same
             // $aBimestre[$operativo]=$aBimestres[$operativo];
             $aBimestre[$operativo]=$aBimestres[0];
