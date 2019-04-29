@@ -1,7 +1,7 @@
 {% extends 'layoutHerramienta.html.twig' %}
 {% block contentoption %}
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> Registro de Actividades <span> Búsqueda</span></h2>
+        <h2><i class="fa fa-list-alt"></i> Registro de Lecturas <span> Búsqueda</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -11,7 +11,7 @@
                     <i class="fa fa-angle-right"></i>
                 </li>
                 <li>
-                    <a href="#">Registro de Actividades</a>
+                    <a href="#">Registro de Lecturas</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
             </ol>
@@ -44,11 +44,11 @@
                 <div class="panel panel-icon panel-primary">
                     <div class="panel-heading">
                         <div class="pull-left">
-                            <h3 class="panel-title">Actividades del club de Lectura: <strong>{{ club }}</strong> </h3>
+                            <h3 class="panel-title">Lecturas del Club de Lectura: <strong>{{ club }}</strong> </h3>
                         </div>
                             <div class="pull-right">
                                 <h3 class="panel-title">
-                                    <a class="btn btn-xs btn-facebook" {#data-toggle="modal" data-target="#modal_evento"#} onclick="showModalEvent()"> Nueva Actividad</a>
+                                    <a class="btn btn-xs btn-facebook" {#data-toggle="modal" data-target="#modal_evento"#} onclick="showModalEvent()"> Nueva Lectura</a>
                                     {#<a class="btn btn-xs btn-danger" onclick="showModalRes()">   Nuevo Resultado</a>#}
                                 </h3>
                                 
@@ -63,7 +63,7 @@
                                         <thead>
                                         <tr>
                                             <th>No.</th>
-                                            <th>Nombre</th>
+                                            <th>Título&nbsp;de&nbsp;la&nbsp;Lectura</th>
                                             <th>Fecha Inicio</th>
                                             <th>Fecha Fin</th>
                                             <th>Opciones</th>
@@ -83,7 +83,7 @@
                                                             <input type="hidden" name="idInstitucion" value="{{id_Intitucion}}">
                                                             <input type="hidden" name="gestion" value="{{id_gestion}}">
                                                             <input type="hidden" name="id_club" value="{{id_club}}">
-                                                            <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el evento!. ¿Desea continuar?');"><i class="fa fa-trash-o text-danger"></i> </button>
+                                                            <button type="submit" class="btn-link" onclick="return confirm('Se eliminará la lectura!. ¿Desea continuar?');"><i class="fa fa-trash-o text-danger"></i> </button>
                                                         </form>
                                                         <form action="{{path('regresultevent')}}" method="post" style="display:inline-block">
                                                             <input type="hidden" name="idEvento" value="{{listaeventos.id}}">
@@ -91,7 +91,7 @@
                                                             <input type="hidden" name="gestion" value="{{id_gestion}}">
                                                             <input type="hidden" name="club" value="{{club}}">
                                                             <input type="hidden" name="id_club" value="{{id_club}}">
-                                                            <button type="submit" class="btn-link"><i class="fa fa-eye text-warning">   </i>   Resultado</button>
+                                                            <button type="submit" class="btn-link"><i class="fa fa-eye text-warning"></i> Producto</button>
                                                         </form>
                                                     </td>
                                             </tr>
@@ -115,7 +115,7 @@
                 <form id="form_eventos">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title">Nueva Actividad</h4>
+                    <h4 class="modal-title">Nueva Lectura</h4>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="id_evento" id="id_evento" value="0">
@@ -124,7 +124,7 @@
                         <label for="club">Club de Lectura: </label> {{ club }}
                     </div>
                     <div class="form-group">
-                        <label for="nombreevento">Nombre </label>
+                        <label for="nombreevento">Titulo de la Lectura</label>
                         <input type="text" class="form-control" name="nombreevento" id="nombreevento" style="text-transform: uppercase" maxlength="32" autocomplete="off" required>
                     </div>
                     <div class="row">
