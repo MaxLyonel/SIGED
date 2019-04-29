@@ -21,6 +21,7 @@
         </div><!-- /.breadcrumb-wrapper -->
     </div><!-- /.header-content -->
     <div class="body-content animated fadeIn">
+    {% if estado == 0 %}
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="panel">
@@ -447,7 +448,6 @@
             </div><!-- /.panel-body -->
         </div>
     </div>
-
         <div class="modal fade" id="recargar" tabindex="-1" role="dialog" style=" border-radius: 80px;" >
             <div class="modal-dialog " role="document">
                 <div class="modal-content">
@@ -468,6 +468,39 @@
                 </div>
             </div>
         </div>
+    </div>
+        {% else %}
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="panel">
+                        <div class="panel-body">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title"></h3>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="alert alert-warning ">
+                                            <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
+                                            <div class="notification-info">
+                                                <p>
+                                                    Su Unidad Educativa ya inicio su trámite
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <a href="{{ path('wf_tramite_index') }}" class="btn btn-info">Volver</a>
+                                    </div>
+                                </div><!-- /.panel-body -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            {% endif %}
     </div>
 {% endblock %}
 {% block javascripts%}
