@@ -23,9 +23,9 @@ class Notas{
 	public function __construct(EntityManager $entityManager) {
 		$this->em = $entityManager;
         $this->session = new Session();
-        $this->estadosPermitidos = array(4,5,11,26,37,55,56,57,58);
+        $this->estadosPermitidos = array(4,5,11,26,28,37,55,56,57,58);
         // Estados que podran actualizar su estado
-        $this->estadosActualizables = array(4,5,11);
+        $this->estadosActualizables = array(4,5,11,28);
 	}
 
     public function setFunciones(Funciones $funciones)
@@ -1122,7 +1122,7 @@ class Notas{
                                 ));
                                 if($promedioGeneral){
                                     if ($promedioGeneral->getNotaCuantitativa() < 51) {
-                                        $nuevoEstado = 11;
+                                        $nuevoEstado = 28; // ESTADO RETENIDO 28 - REEMPLAZA ESTADO REPROBADO 11
                                     } else {
                                         $nuevoEstado = 5;
                                     }
