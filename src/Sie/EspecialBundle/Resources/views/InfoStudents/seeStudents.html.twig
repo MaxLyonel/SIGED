@@ -62,7 +62,7 @@
                         <tr>
                         <input type="hidden" id="formdata_data" name="formdata[data]" value="{{aData}}">
                         <td align="center" class="warning" colspan="3">Estudiantes Inscritos</br>
-                            {{ueducativaInfo.turno}} - {{ueducativaInfo.areaEspecial}} - {{ueducativaInfo.nivel}} - {{ueducativaInfo.grado}} / {{ueducativaInfo.programa}} - {{ueducativaInfo.paralelo}}
+                            {{ueducativaInfo.turno}} - {{ueducativaInfo.areaEspecial}} - {{ueducativaInfo.nivel}} - {% if nivel not in [410,411] %} {{ueducativaInfo.grado}} {% endif %} {% if nivel == 410 %} {{ueducativaInfo.servicio}} {% endif %} {% if nivel == 411 %} {{ueducativaInfo.programa}} {% endif %} - {{ueducativaInfo.paralelo}}
                             {% if ueducativaInfo.iecLugar %} </br> {{ueducativaInfo.iecLugar}} {% endif %}
                         </td>
                         <td>Opciones</td>
@@ -71,7 +71,6 @@
                         {#init the array info student #}
                         {% set objInfoStudent = [] %}
                         {% for data in objStudents %}
-
                           {% set items = {
 
                                           'id': data.id,
@@ -95,12 +94,19 @@
 
                                 <td>
                                     {# {% if 1==1 %} #}
-                                    {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 %}
+                                    {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and arrDataLibreta.areaEspecialId in [1,2,3,5] and arrDataLibreta.calificaciones == true %}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
                                         <button type="button" class="btn btn-circle btn-danger " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{data.estInsEspId}});" >
                                             <i class="fa fa-list"></i>
                                         </button>
                                     </div>
+                                    {% endif %}
+                                    {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and arrDataLibreta.areaEspecialId in [1,2,3,5] and  operativo > 0 and gestion >= 2019 and arrDataLibreta.calificaciones == true %}
+                                         <form action="{{path('especialDownload_libreta', {'infoUe': infoUe, 'infoStudent':data|json_encode() } )}}" method="post" style="display:inline-block">
+                                            <button type="submit" class="btn btn-circle btn-lilac tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Imprimir Libreta">
+                                                <i class="fa fa-archive" style="color:#FFFFFF"></i>
+                                            </button>
+                                        </form>
                                     {% endif %}
                                     {% if onlyview == false and gestion == app.session.get('currentyear') %}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">

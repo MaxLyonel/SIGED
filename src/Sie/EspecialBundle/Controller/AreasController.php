@@ -240,7 +240,7 @@ class AreasController extends Controller {
             ->setParameter('idInstitucion', $sie)
             ->setParameter('gestion', $gestion)
             // ->setParameter('areas', array(1,2,3,5))
-            ->setParameter('areas', array(1,2,3,4,5,6,7))
+            ->setParameter('areas', array(1,2,3,4,5))
             ->addOrderBy('eat.id')
             ->distinct()
             ->getQuery();
@@ -436,13 +436,16 @@ class AreasController extends Controller {
                     AND iec.nivelTipo = :nivel
                     AND iec.gradoTipo = :grado
             		AND iece.especialAreaTipo = :area
+                    AND pro.id NOT IN(:programa)
             		ORDER BY pt.paralelo')
                     ->setParameter('id', $idInstitucion)
                     ->setParameter('gestion', $gestion)
                     ->setParameter('area', $area)
                     ->setParameter('turno', $turno)
                     ->setParameter('nivel', $nivel)
-                    ->setParameter('grado', $grado);
+                    ->setParameter('grado', $grado)
+                    ->setParameter('programa', array(17));
+                    
             $paralelos = $query->getResult();
 
             $paralelosArray = array();

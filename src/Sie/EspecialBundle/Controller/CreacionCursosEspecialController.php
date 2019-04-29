@@ -194,7 +194,7 @@ class CreacionCursosEspecialController extends Controller {
              */
             $query = $em->createQuery(
             		'SELECT a FROM SieAppWebBundle:EspecialAreaTipo a
-                                    WHERE a.id IN (:id) ORDER BY a.id'
+                                    WHERE a.id IN (:id) ORDER BY a.areaEspecial'
                      )->setParameter('id',array(1,2,3,4,5,6,7));
                     // )->setParameter('id',array(1,2,3,4,5,6,7,8,9,100));
             		$areas_result = $query->getResult();
@@ -272,8 +272,8 @@ class CreacionCursosEspecialController extends Controller {
             				 */
             $query = $em->createQuery(
             						'SELECT at FROM SieAppWebBundle:EspecialTecnicaEspecialidadTipo at
-                                    WHERE at.id != :id'
-            						)->setParameter('id',100);
+                                    WHERE at.id != :id ORDER BY at.especialidad'
+                                    )->setParameter('id',100);
             						$tecnicas_result = $query->getResult();
             						$tecnicas = array();
             						foreach ($tecnicas_result as $at){
@@ -283,7 +283,7 @@ class CreacionCursosEspecialController extends Controller {
             /*
              * Listamos los niveles tecnicos validos
              */
-            $query = $em->createQuery('SELECT nt FROM SieAppWebBundle:EspecialNivelTecnicoTipo nt');
+            $query = $em->createQuery('SELECT nt FROM SieAppWebBundle:EspecialNivelTecnicoTipo nt ORDER BY nt.nivelTecnico');
             		$nivelesTecnico = $query->getResult();
             		$nivelesTecnicoArray = array();
             		foreach ($nivelesTecnico as $t){

@@ -621,12 +621,14 @@ class InstitucioneducativaRepository extends EntityRepository {
                 ->select('tt.id as turnoId, nt.id as nivelId, gt.id as gradoId, pt.id as paraleloId, tt.turno,
                           nt.nivel, gt.grado, pt.paralelo, IDENTITY(iec.cicloTipo) as cicloTipoId, eat.id as areaEspecialId,
                           IDENTITY(iece.especialProgramaTipo) as especialProgramaTipo, ept.programa as programa,
+                          IDENTITY(iece.especialServicioTipo) as especialServicioTipo, est.servicio as servicio,
                           iec.id as iecId, eat.areaEspecial,iece.id as ieceId, iec.lugar as iecLugar
                           ')
                 ->from('SieAppWebBundle:InstitucioneducativaCurso', 'iec')
                 ->leftJoin('SieAppWebBundle:InstitucioneducativaCursoEspecial', 'iece', 'WITH', 'iec.id = iece.institucioneducativaCurso')
                 ->leftJoin('SieAppWebBundle:EspecialAreaTipo', 'eat', 'WITH', 'iece.especialAreaTipo = eat.id')
-                ->leftJoin('SieAppWebBundle:especialProgramaTipo', 'ept', 'WITH', 'iece.especialProgramaTipo = ept.id')
+                ->leftJoin('SieAppWebBundle:EspecialProgramaTipo', 'ept', 'WITH', 'iece.especialProgramaTipo = ept.id')
+                ->leftJoin('SieAppWebBundle:EspecialServicioTipo', 'est', 'WITH', 'iece.especialServicioTipo = est.id')
                 ->leftJoin('SieAppWebBundle:TurnoTipo', 'tt', 'WITH', 'iec.turnoTipo = tt.id')
                 ->leftJoin('SieAppWebBundle:NivelTipo', 'nt', 'WITH', 'iec.nivelTipo = nt.id')
                 ->leftJoin('SieAppWebBundle:GradoTipo', 'gt', 'WITH', 'iec.gradoTipo = gt.id')
@@ -636,9 +638,9 @@ class InstitucioneducativaRepository extends EntityRepository {
                 ->setParameter('sie', $sie)
                 ->setParameter('gestion', $gestion)
                 //->distinct()
-                ->groupBy('tt.id, nt.id,ept.programa, gt.id, pt.id, iec.cicloTipo,eat.id, iec.id,iece.id')
+                ->groupBy('tt.id, nt.id, ept.programa, est.servicio, gt.id, pt.id, iec.cicloTipo,eat.id, iec.id,iece.id')
                 //->orderBy('tt.id, nt.id,ept.programa, gt.id, pt.id, iec.cicloTipo,eat.id, iec.id,iece.id')
-                ->orderBy('tt.id,eat.id, nt.id,ept.programa, gt.id, pt.id, iec.cicloTipo, iec.id,iece.id')
+                ->orderBy('tt.id, eat.id, nt.id,ept.programa, est.servicio, gt.id, pt.id, iec.cicloTipo, iec.id,iece.id')
 
 
         ;

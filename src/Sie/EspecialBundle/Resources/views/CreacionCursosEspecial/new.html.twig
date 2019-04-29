@@ -197,6 +197,7 @@
                     $.each(data.niveles, function (i, value) {
                         $("#form_nivel").append('<option value="' + i + '">' + value + '</option>');
                     });
+                    dropdown("#form_nivel");
                 }
             });
         }
@@ -243,6 +244,7 @@
                     $.each(data.grados, function (i, value) {
                         $("#form_grado").append('<option value="' + i + '">' + value + '</option>');
                     });
+                        dropdown("#form_grado");
                         listarServicios();
                         listarProgramas();
                 }
@@ -273,6 +275,7 @@
                     $.each(data.servicios, function (i, value) {
                         $("#form_servicio").append('<option value="' + i + '">' + value + '</option>');
                     });
+                    dropdown("#form_servicio");
                 }
             });
         }
@@ -297,6 +300,8 @@
                     $.each(data.programas, function (i, value) {
                         $("#form_programa").append('<option value="' + i + '">' + value + '</option>');
                     });
+                    
+                    dropdown("#form_programa");
                 }
             });
         }
@@ -315,6 +320,14 @@
                 return false;
             }
         }
+        function dropdown(form_select) {
+            // choose target dropdown
+            var foption = $(form_select + ' option:first');
+            var soptions = $(form_select + ' option:not(:first)').sort(function (a, b) {
+                return a.text == b.text ? 0 : a.text < b.text ? -1 : 1
+            });
+            $(form_select).html(soptions).prepend(foption);
+        };
         
     </script>
 {% endblock %}

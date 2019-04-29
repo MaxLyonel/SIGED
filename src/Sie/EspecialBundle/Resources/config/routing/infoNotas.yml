@@ -9,3 +9,7 @@ especialInfoNotas_create_update:
      defaults: { _controller: SieEspecialBundle:InfoNotas:createUpdate }
      options:
          expose: true
+
+especialDownload_libreta:
+    path:    /especialLibreta
+    defaults: { _controller: SieEspecialBundle:InfoNotas:especailDownloadLibreta }

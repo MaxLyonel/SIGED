@@ -160,7 +160,7 @@
             <div class="panel panel-teal">
                 <div class="panel-heading">
                     <div class="panel-title">
-                        <h4>Área: {{area.areaEspecial}}</h4>
+                        <h4>Sub Área: {{area.areaEspecial}}</h4>
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -258,6 +258,7 @@
                     $.each(data.niveles, function (i, value) {
                         $("#form_nivel").append('<option value="' + i + '">' + value + '</option>');
                     });
+                    dropdown("#form_nivel");
                 }
             });
         }
@@ -286,6 +287,8 @@
                     $.each(data.grados, function (i, value) {
                         $("#form_grado").append('<option value="' + i + '">' + value + '</option>');
                     });
+                    
+                    dropdown("#form_grado");
                 }
             });
         }
@@ -311,6 +314,8 @@
                     $.each(data.paralelos, function (i, value) {
                         $("#form_paralelo").append('<option value="' + i + '">' + value + '</option>');
                     });
+
+                    dropdown("#form_paralelo");
                 }
             });
         }
@@ -560,6 +565,15 @@
                     }
                 }
             });
+        };
+
+        function dropdown(form_select) {
+            // choose target dropdown
+            var foption = $(form_select + ' option:first');
+            var soptions = $(form_select + ' option:not(:first)').sort(function (a, b) {
+                return a.text == b.text ? 0 : a.text < b.text ? -1 : 1
+            });
+            $(form_select).html(soptions).prepend(foption);
         };
               
     </script>

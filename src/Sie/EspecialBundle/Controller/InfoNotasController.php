@@ -2,10 +2,13 @@
 
 namespace Sie\EspecialBundle\Controller;
 
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCurso;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta;
@@ -230,6 +233,64 @@ class InfoNotasController extends Controller {
             }
         }
         return $operativo;
+    }
+
+    public function especailDownloadLibretaAction(Request $request){
+        
+        $arrInfoUe = unserialize($request->get('infoUe'));
+        $arrInfoStudent = json_decode($request->get('infoStudent'),true);
+        dump($arrInfoStudent);die;
+        $sie = $arrInfoUe['requestUser']['sie'];
+        $estInsId = $arrInfoStudent['estInsId'];
+        $areaEspecialId = $arrInfoUe['ueducativaInfoId']['areaEspecialId'];
+
+        switch ($areaEspecialId){
+            case 2:
+                $archivo = "esp_est_LibretaEscolar_Visual_v2_pvc.rptdesign";
+                $nombre = 'libreta_especial_visual_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
+                $data = $arrInfoStudent['estInsId'] .'|'. $arrInfoStudent['codigoRude'] .'|'.$arrInfoUe['requestUser']['sie'].'|'.$arrInfoUe['requestUser']['gestion'].'|'.$arrInfoUe['ueducativaInfoId']['nivelId'].'|'.$arrInfoUe['ueducativaInfoId']['turnoId'].'|'.$arrInfoUe['ueducativaInfoId']['paraleloId'].'|'.$arrInfoStudent['estInsEspId'];
+                $link = 'http://libreta.minedu.gob.bo/lib/'.$this->getLinkEncript($data);
+                $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie .'&lk='. $link . '&&__format=pdf&';
+                break;
+        }
+        //dump(file_get_contents($report));die;
+        //ini_set("allow_url_fopen", true);
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $nombre ));
+        $response->setContent(file_get_contents($report));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+    private function getLinkEncript($datos){
+
+        $codes = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/';
+        // Encriptamos los datos
+        $result = "";
+        $a = 0;
+        $b = 0;
+        for($i=0;$i<strlen($datos);$i++){
+            //$x = strpos($codes, $datos[$i]) ;
+            $x = ord($datos[$i]) ;
+            $b = $b * 256 + $x;
+            $a = $a + 8;
+  
+            while ( $a >= 6) {
+                $a = $a - 6;
+                $x = floor($b/(1 << $a));
+                $b = $b % (1 << $a);
+                $result = $result.''.substr($codes, $x,1);
+            }
+        }
+        if($a > 0){
+            $x = $b << (6 - $a);
+            $result = $result.''.substr($codes, $x,1);
+        }
+        return $result;
     }
 
 }
