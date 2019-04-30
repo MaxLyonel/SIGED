@@ -506,6 +506,7 @@
                         </li>
                     {% endif %}
                     {% if  app.session.get('roluser') == 9   %}
+                        {#
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
@@ -519,7 +520,7 @@
                                 <li><a href="{{ path('students_inscriptions_seguimiento_index')}}">Reporte Extemporáneos</a></li>
                             </ul>
                         </li>
-                        
+                        #}
                     {% endif %}
                     {% if  app.session.get('roluser') == 9 or app.session.get('roluser') == 20 or app.session.get('roluser') == 8   %}
                         <li class="submenu">
