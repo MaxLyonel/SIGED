@@ -387,18 +387,10 @@
                         </li>#}
                     {% endif %}
 
-                    {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10 or app.session.get('roluser') == 20 %}
-                    <li class="submenu">
-                      <a href="javascript:void(0);">
-                        <span class="icon"><i class="fa fa-diamond"></i></span>
-                        <span class="text">Gestión Personal U.E.</span>
-                        <span class="arrow"></span>
-                      </a>
-                      <ul>
-                        <li><a href="{{ path('herramienta_info_personal_adm_tsie_index')}}">Personal Administrativo</a></li>
-                        <li><a href="{{ path('herramienta_info_maestro_tsie_index')}}">Personal Docente</a></li>
-                      </ul>
-                    </li>
+                    {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10  or app.session.get('roluser') == 20  %}
+                    {#
+                    #}
+                    
                     {# <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
@@ -453,40 +445,54 @@
                     <li class="submenu">
                       <a href="javascript:void(0);">
                         <span class="icon"><i class="fa fa-diamond"></i></span>
+                        <span class="text">Gestión Personal U.E.</span>
+                        <span class="arrow"></span>
+                      </a>
+                      <ul>
+                        <li><a href="{{ path('herramienta_info_personal_adm_tsie_index')}}">Personal Administrativo</a></li>
+                        <li><a href="{{ path('herramienta_info_maestro_tsie_index')}}">Personal Docente</a></li>
+                      </ul>
+                    </li>
+
+
+                    <li class="submenu">
+                      <a href="javascript:void(0);">
+                        <span class="icon"><i class="fa fa-diamond"></i></span>
                         <span class="text">Gestión</span>
                         <span class="arrow"></span>
                       </a>
                       <ul>
                           <li><a href="{{ path('herramienta_findsie_index')}}">Busqueda por SIE</a></li>
-                          <li><a href="{{ path('herramienta_newspeciality_index')}}">Registro Especialidad</a></li>
+                          {#<li><a href="{{ path('herramienta_newspeciality_index')}}">Registro Especialidad</a></li>#}
+                          
                           <!--li><a href="{{ path('herramienta_apderado_estudiante_index')}}">Apoderado - Estudiante</a></li-->
                       </ul>
                     </li>
                     {% endif %}
-                    
-                    <li class="submenu">
-                        <a href="javascript:void(0);">
-                            <span class="icon"><i class="fa fa-home"></i></span>
-                            <span class="text">Trámites</span>
-                            <span class="arrow"></span>
-                        </a>
-                        <ul>
-                            <li><a href="{{ path('wf_tramite_index')}}">Nuevo Trámite</a></li>
-                        </ul>
-                        <ul>
-                            <li><a href="{{ path('wf_tramite_recibido')}}">Recibidos</a></li>
-                        </ul>
-                        <ul>
-                            <li><a href="{{ path('wf_tramite_enviados')}}">Enviados</a></li>
-                        </ul>
-                        <ul>
-                            <li><a href="{{ path('wf_tramite_concluidos')}}">Concluidos</a></li>
-                        </ul>
-                        <ul>
-                            <li><a href="{{ path('wf_tramite_seguimiento')}}">Seguimiento</a></li>
-                        </ul>
-                    </li>
-                    
+                    {% if app.session.get('roluser') != 20  %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-home"></i></span>
+                                <span class="text">Trámites</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('wf_tramite_index')}}">Nuevo Trámite</a></li>
+                            </ul>
+                            <ul>
+                                <li><a href="{{ path('wf_tramite_recibido')}}">Recibidos</a></li>
+                            </ul>
+                            <ul>
+                                <li><a href="{{ path('wf_tramite_enviados')}}">Enviados</a></li>
+                            </ul>
+                            <ul>
+                                <li><a href="{{ path('wf_tramite_concluidos')}}">Concluidos</a></li>
+                            </ul>
+                            <ul>
+                                <li><a href="{{ path('wf_tramite_seguimiento')}}">Seguimiento</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
                     {% if app.session.get('roluser') == 8  or app.session.get('roluser') == 20  %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
