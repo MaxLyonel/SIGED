@@ -166,7 +166,7 @@ class InfoStudentsController extends Controller {
       $arrDataLibreta = array();
       $arrDataLibreta['areaEspecialId'] = ($aInfoUeducativa['ueducativaInfoId']['areaEspecialId'])?$aInfoUeducativa['ueducativaInfoId']['areaEspecialId']:'';
       $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
-      if($nivel == 411 and $aInfoUeducativa['ueducativaInfoId']['programaId'] == 17){
+      if(($nivel == 411 and ($aInfoUeducativa['ueducativaInfoId']['programaId'] == 17 or $aInfoUeducativa['ueducativaInfoId']['programaId'] == 13 )) or $nivel == 405 or $nivel == 410){
         $arrDataLibreta['calificaciones'] = false;
       }else{
         $arrDataLibreta['calificaciones'] = true;
@@ -391,7 +391,7 @@ class InfoStudentsController extends Controller {
       $arrDataLibreta = array();
       $arrDataLibreta['areaEspecialId'] = ($aInfoUeducativa['ueducativaInfoId']['areaEspecialId'])?$aInfoUeducativa['ueducativaInfoId']['areaEspecialId']:'';
       $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
-      if($nivel == 411 and $aInfoUeducativa['ueducativaInfoId']['programaId'] == 17){
+      if(($nivel == 411 and ($aInfoUeducativa['ueducativaInfoId']['programaId'] == 17 or $aInfoUeducativa['ueducativaInfoId']['programaId'] == 13 )) or $nivel == 405 or $nivel == 410){
         $arrDataLibreta['calificaciones'] = false;
       }else{
         $arrDataLibreta['calificaciones'] = true;
@@ -605,7 +605,7 @@ class InfoStudentsController extends Controller {
       $arrDataLibreta = array();
       $arrDataLibreta['areaEspecialId'] = ($aInfoUeducativa['ueducativaInfoId']['areaEspecialId'])?$aInfoUeducativa['ueducativaInfoId']['areaEspecialId']:'';
       $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
-      if($nivel == 411 and $aInfoUeducativa['ueducativaInfoId']['programaId'] == 17){
+      if(($nivel == 411 and ($aInfoUeducativa['ueducativaInfoId']['programaId'] == 17 or $aInfoUeducativa['ueducativaInfoId']['programaId'] == 13 )) or $nivel == 405 or $nivel == 410){
         $arrDataLibreta['calificaciones'] = false;
       }else{
         $arrDataLibreta['calificaciones'] = true;

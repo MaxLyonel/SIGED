@@ -89,11 +89,11 @@
                                                     
                                                     <tr>
                                                         <td style = "border-top-style: none;">Contenidos Programados</td>
-                                                        <td style = "border-top-style: none;"><textarea name="contenidos[]" class="form-control" required style="text-transform:uppercase;">{% if n.nota %} {{n.nota.contenidos}} {% endif %} </textarea></td>
+                                                        <td style = "border-top-style: none;"><textarea name="contenidos[]" class="form-control" required style="text-transform:uppercase;" maxlength="70">{% if n.nota %} {{n.nota.contenidos}} {% endif %} </textarea></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Resultados Alcanzados</td>
-                                                        <td><textarea name="resultados[]" class="form-control" required style="text-transform:uppercase;">{% if n.nota %}{{n.nota.resultados}} {% endif %}</textarea></td>
+                                                        <td><textarea name="resultados[]" class="form-control" required style="text-transform:uppercase;" maxlength="70">{% if n.nota %}{{n.nota.resultados}} {% endif %}</textarea></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Indicador Alcanzado</td>
