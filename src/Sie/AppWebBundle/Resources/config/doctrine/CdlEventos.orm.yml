@@ -1,0 +1,51 @@
+Sie\AppWebBundle\Entity\CdlEventos:
+    type: entity
+    table: cdl_eventos
+    indexes:
+        IDX_BAA314F47A6BAF3D:
+            columns:
+                - cdl_club_lectura_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nombreEvento:
+            type: string
+            nullable: true
+            length: 1000
+            fixed: false
+            comment: ''
+            column: nombre_evento
+        fechaInicio:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_inicio
+        fechaFin:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_fin
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    manyToOne:
+        cdlClubLectura:
+            targetEntity: CdlClubLectura
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                cdl_club_lectura_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

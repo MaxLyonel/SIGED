@@ -472,6 +472,7 @@ class ControlCalidadController extends Controller {
                 $query->execute();
                 $resultado = $query->fetchAll();
                 break;
+
             case 12://INSCRIPCIÓN INCORRECTA
                 $query = $em->getConnection()->prepare("SELECT sp_sist_calidad_incorr_insc (:tipo, :rude, :param, :gestion)");
                 $query->bindValue(':tipo', '2');
@@ -482,8 +483,18 @@ class ControlCalidadController extends Controller {
                 $resultado = $query->fetchAll();
                 break;
 
-            case 3://DOS RUDES
-                $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_doble_insc (:tipo, :rude, :param, :gestion)');
+            case 13://DOBLE INSCRIPCIÓN
+                $query = $em->getConnection()->prepare("SELECT sp_sist_calidad_doble_insc (:tipo, :rude, :param, :gestion)");
+                $query->bindValue(':tipo', '2');
+                $query->bindValue(':rude', $form['llave']);
+                $query->bindValue(':param', '');
+                $query->bindValue(':gestion', $form['gestion']);
+                $query->execute();
+                $resultado = $query->fetchAll();
+                break;
+
+            case 16://SIN HISTORIAL
+                $query = $em->getConnection()->prepare("SELECT sp_sist_calidad_sin_historial (:tipo, :rude, :param, :gestion)");
                 $query->bindValue(':tipo', '2');
                 $query->bindValue(':rude', $form['llave']);
                 $query->bindValue(':param', '');

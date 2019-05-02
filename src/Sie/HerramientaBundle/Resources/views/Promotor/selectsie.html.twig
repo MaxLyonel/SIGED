@@ -1,0 +1,37 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+<div class="header-content">
+    <h2><i class="fa fa-list-alt"></i> Club de Lectura <span> Busqueda</span></h2>
+      <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Club de Lectura</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+      </div><!-- /.breadcrumb-wrapper -->
+</div>
+<div class="body-content animated fadeIn">
+    <div class="row">
+        <div class="col-xs-12 col-lg-12">
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Inserte SIE</h3>
+                    </div>
+                    
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+                    {{form(form)}}
+                </div><!-- /.panel-body -->
+            </div>            
+        </div>
+    </div>
+</div>
+
+</div>
+{% endblock %}

@@ -569,41 +569,48 @@ class DownloadController extends Controller {
 
         // Validamos que tipo de libreta se ha de imprimir
         // Modular y plena
-
         if($this->session->get('ue_tecteg') == false){
             $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
             if( !in_array($this->session->get('roluser'), array(7,8,10)) ){
                 $operativo = $operativo - 1;
             }
-            if($gestion == $this->session->get('currentyear') and $operativo >= 1 and $operativo <= 3){
+            if($gestion == 2019){
                 switch ($nivel) {
-                    case 11: $reporte = 'reg_est_LibretaEscolar_inicial_b'.$operativo.'_v1_rcm.rptdesign'; break;
-                    case 12: $reporte = 'reg_est_LibretaEscolar_primaria_b'.$operativo.'_v1_rcm.rptdesign'; break;
-                    case 13: $reporte = 'reg_est_LibretaEscolar_secundaria_b'.$operativo.'_v1_rcm.rptdesign'; break;
+                    case 11: $reporte = 'reg_est_LibretaEscolar_inicial_v2_rcm.rptdesign'; break;
+                    case 12: $reporte = 'reg_est_LibretaEscolar_primaria_v2_rcm.rptdesign'; break;
+                    case 13: $reporte = 'reg_est_LibretaEscolar_secundaria_v2_rcm.rptdesign'; break;
                 }
             }else{
-                switch ($nivel) {
-                    case 11: $reporte = 'reg_est_LibretaEscolar_inicial_v1_rcm.rptdesign'; break;
-                    case 12: $reporte = 'reg_est_LibretaEscolar_primaria_v1_rcm.rptdesign'; break;
-                    case 13:
-                            if($sie == '80730460'){
-                                if($gestion == 2014 and $nivel == 13 and $grado >= 4 and $paralelo >= 6){
-                                    $reporte = 'reg_est_CertificadoNotas_UnidadesEducativasTecnologicas2016_v1_ivg.rptdesign';
-                                }else{
-                                    if($sie == '80730460' and $gestion == 2015 and $nivel == 13 and $grado >= 5 and $paralelo >= 6){
+                if($gestion == $this->session->get('currentyear') and $operativo >= 1 and $operativo <= 3){
+                    switch ($nivel) {
+                        case 11: $reporte = 'reg_est_LibretaEscolar_inicial_b'.$operativo.'_v1_rcm.rptdesign'; break;
+                        case 12: $reporte = 'reg_est_LibretaEscolar_primaria_b'.$operativo.'_v1_rcm.rptdesign'; break;
+                        case 13: $reporte = 'reg_est_LibretaEscolar_secundaria_b'.$operativo.'_v1_rcm.rptdesign'; break;
+                    }
+                }else{
+                    switch ($nivel) {
+                        case 11: $reporte = 'reg_est_LibretaEscolar_inicial_v1_rcm.rptdesign'; break;
+                        case 12: $reporte = 'reg_est_LibretaEscolar_primaria_v1_rcm.rptdesign'; break;
+                        case 13:
+                                if($sie == '80730460'){
+                                    if($gestion == 2014 and $nivel == 13 and $grado >= 4 and $paralelo >= 6){
                                         $reporte = 'reg_est_CertificadoNotas_UnidadesEducativasTecnologicas2016_v1_ivg.rptdesign';
                                     }else{
-                                        if($sie == '80730460' and $gestion == 2016 and $nivel == 13 and $grado >= 6 and $paralelo >= 6){
+                                        if($sie == '80730460' and $gestion == 2015 and $nivel == 13 and $grado >= 5 and $paralelo >= 6){
                                             $reporte = 'reg_est_CertificadoNotas_UnidadesEducativasTecnologicas2016_v1_ivg.rptdesign';
                                         }else{
-                                            $reporte = 'reg_est_LibretaEscolar_secundaria_v1_rcm.rptdesign';
+                                            if($sie == '80730460' and $gestion == 2016 and $nivel == 13 and $grado >= 6 and $paralelo >= 6){
+                                                $reporte = 'reg_est_CertificadoNotas_UnidadesEducativasTecnologicas2016_v1_ivg.rptdesign';
+                                            }else{
+                                                $reporte = 'reg_est_LibretaEscolar_secundaria_v1_rcm.rptdesign';
+                                            }
                                         }
                                     }
+                                }else{
+                                    $reporte = 'reg_est_LibretaEscolar_secundaria_v1_rcm.rptdesign';
                                 }
-                            }else{
-                                $reporte = 'reg_est_LibretaEscolar_secundaria_v1_rcm.rptdesign';
-                            }
-                            break;
+                                break;
+                    }
                 }
             }
         }else{
