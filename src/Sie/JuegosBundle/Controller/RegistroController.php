@@ -435,7 +435,7 @@ class RegistroController extends Controller {
             $estudianteInscripcionEntity = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $estInsId));
             $estudianteInscripcionNombre = $estudianteInscripcionEntity->getEstudiante()->getNombre().' '.$estudianteInscripcionEntity->getEstudiante()->getPaterno().' '.$estudianteInscripcionEntity->getEstudiante()->getMaterno();
 
-            $estudianteInscripcionJuegos = new EstudianteInscripcionJuegos();
+            $estudianteInscripcionJuegos = new JdpEstudianteInscripcionJuegos();
             $estudianteInscripcionJuegos->setEstudianteInscripcion($estudianteInscripcionEntity );
             $estudianteInscripcionJuegos->setPruebaTipo($pruebaEntity);
             $estudianteInscripcionJuegos->setGestionTipo($gestionEntity);
@@ -639,7 +639,7 @@ class RegistroController extends Controller {
         foreach($deportistas as $deportista){
             $estInsId = base64_decode($deportista);
 
-            $msg = $reglaController->valEstudianteInscripcionJuegos($estInsId, $gestionActual, $pruebaId, $faseId, $equipoId);
+            $msg = $reglaController->valEstudianteInscripcionJuegos($estInsId, $gestionActual, $pruebaId, $faseId, $equipoId, 0);
 
             // $msg = $this->validaInscripcionJuegos($estInsId,$gestionActual,$pruebaId,$faseId,$nivelId);
             

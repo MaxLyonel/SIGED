@@ -19,6 +19,8 @@ sie_juegos_clasificacion_lista_deportistas:
 sie_juegos_clasificacion_lista_deportistas_registro:
     path:    /lista/deportistas/registro
     defaults: { _controller: SieJuegosBundle:Clasificacion:listaDeportistasRegistro }
+    options:
+         expose: true  
 
 sie_juegos_eliminacion_clasificacion_deportista:
     path:    /eliminacion/prueba/estudiantes/f1/{inscripcion}

@@ -23,11 +23,101 @@ class ReglaController extends Controller
 
     //********************************************************************************************************************************
     // DESCRIPCION DEL METODO:
+    // Funcion que valida la clasificacion de un estudiante deportistas gestion, prueba y fase
+    // PARAMETROS: estudianteInscripcionId, gestionId, pruebaId, faseId
+    // AUTOR: RCANAVIRI
+    //********************************************************************************************************************************
+    public function valEstudianteClasificacionJuegos($estudianteInscripcionId, $gestionId, $pruebaId, $faseId, $equipoId, $lugarTipoId, $posicion){            
+        try{
+            // verifica si ya cuenta con una inscripcion en la prueba, gestion y fase seleccionada            
+            $estudianteInscripcionJuegosController = new estudianteInscripcionJuegosController();
+            $estudianteInscripcionJuegosController->setContainer($this->container);
+            //dump($estudianteInscripcionId);dump($pruebaId);dump($gestionId);dump($faseId);die;
+            $estudianteInscripcionJuegos = $estudianteInscripcionJuegosController->getEstudianteInscripcionGestionFasePrueba($estudianteInscripcionId, $pruebaId, $gestionId, $faseId);
+            //dump($estudianteInscripcionJuegos[0]->getEstudianteInscripcion()->getEstudiante()->getNombre());die;
+            
+            $em = $this->getDoctrine()->getManager();
+            $estudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
+            $estudianteNombre = $estudianteInscripcion->getEstudiante()->getNombre();
+            $estudiantePaterno = $estudianteInscripcion->getEstudiante()->getPaterno();
+            $estudianteMaterno = $estudianteInscripcion->getEstudiante()->getMaterno();
+            $estudianteNombreApellido = $estudianteNombre . ' ' . $estudiantePaterno . ' ' . $estudianteMaterno;
+
+            //dump($estudianteInscripcionId);
+            if (count($estudianteInscripcionJuegos)>0){
+                //dump('ya tiene la prueba seleccionada');die;
+                return array('0' => false, '1' => $estudianteNombreApellido . ' ya registrado en la prueba seleccionada');
+            }
+            
+            $msg = $this->valDisciplinaParticipacion($estudianteInscripcionId, $gestionId, $pruebaId, $faseId); 
+                                     
+            if (!$msg[0]){
+                //dump('no tiene disciplina');die;
+                $pruebaEntity = $em->getRepository('SieAppWebBundle:JdpPruebaTipo')->findOneBy(array('id' => $pruebaId));
+                $disciplinaId = $pruebaEntity->getDisciplinaTipo()->getId();
+                $disciplinaEstudianteInscripcion = $estudianteInscripcionJuegosController->getDisciplinaEstudianteInscripcion($estudianteInscripcionId, $gestionId, $faseId);
+                
+                $msg1 = array('0' => false, '1' => $estudianteNombreApellido.' no puede registrarse en otras disciplinas');
+                foreach ($disciplinaEstudianteInscripcion as $disciplina) {
+                    $disciplinaInscripcionId = $disciplina->getId();
+                    if ($disciplinaInscripcionId == $disciplinaId){
+                        $msg1 = array('0' => true, '1' => '');
+                    }
+                }
+                if(!$msg1[0]){
+                    return array('0' => $msg1[0], '1' => $estudianteNombreApellido.' '.$msg1[1]);
+                    //return $estudianteNombreApellido.' '.$msg;                    
+                }                
+            }
+            
+            $msg = $this->valPruebaParticipacion($estudianteInscripcionId, $gestionId, $pruebaId, $faseId);  
+
+            if (!$msg[0]){
+                //dump('no tiene prueba');die;
+                $msg1 = $this->valConjuntoPruebaParticipacion($estudianteInscripcionId, $gestionId, $pruebaId, $faseId);
+                if (!$msg1[0]){
+                    //dump($msg[1]);die;
+                    return array('0' => $msg1[0], '1' => $estudianteNombreApellido.' '.$msg1[1]);
+                }                
+                $msg = array('0' => true, '1' => '');
+            }
+
+            if ($msg[0]){
+                //dump('no tiene prueba');die;
+                // $msg1 = $this->valConjuntoPruebaParticipacion($estudianteInscripcionId, $gestionId, $pruebaId, $faseId);
+                // if (!$msg1[0]){
+                //     //dump($msg[1]);die;
+                //     return $msg1;
+                // }
+                
+                $msg2 = $this->valPruebaRegla($estudianteInscripcionId, $gestionId, $pruebaId, $faseId, $equipoId, $posicion);
+  
+                if (!$msg2[0]){
+                    //dump($msg[1]);die;
+                    return array('0' => $msg2[0], '1' => $estudianteNombreApellido.' '.$msg2[1]);
+                }
+                
+                $msg = array('0' => true, '1' => '');
+            }
+            
+            if ($msg[0] and $msg[1] == ''){
+                $msg = array('0' => $msg[0], '1' => $estudianteNombreApellido.' '.$msg[1]);
+            }
+            return $msg;
+        } catch (Exception $e) {
+            return array('0' => false, '1' => 'Error al procesar la información, intente nuevamente');
+        }
+    }
+
+
+
+    //********************************************************************************************************************************
+    // DESCRIPCION DEL METODO:
     // Funcion que valida la inscripcion de un estudiante deportistas gestion, prueba y fase
     // PARAMETROS: estudianteInscripcionId, gestionId, pruebaId, faseId
     // AUTOR: RCANAVIRI
     //********************************************************************************************************************************
-    public function valEstudianteInscripcionJuegos($estudianteInscripcionId, $gestionId, $pruebaId, $faseId, $equipoId){            
+    public function valEstudianteInscripcionJuegos($estudianteInscripcionId, $gestionId, $pruebaId, $faseId, $equipoId, $posicion){            
         try{
             // verifica si ya cuenta con una inscripcion en la prueba, gestion y fase seleccionada            
             $estudianteInscripcionJuegosController = new estudianteInscripcionJuegosController();
@@ -89,7 +179,7 @@ class ReglaController extends Controller
                 //     return $msg1;
                 // }
                 
-                $msg2 = $this->valPruebaRegla($estudianteInscripcionId, $gestionId, $pruebaId, $faseId, $equipoId);
+                $msg2 = $this->valPruebaRegla($estudianteInscripcionId, $gestionId, $pruebaId, $faseId, $equipoId, $posicion);
                 if (!$msg2[0]){
                     //dump($msg[1]);die;
                     return array('0' => $msg2[0], '1' => $estudianteNombreApellido.' '.$msg2[1]);
@@ -244,7 +334,7 @@ class ReglaController extends Controller
     // PARAMETROS: estudianteInscripcionId, gestionId, pruebaId, faseId
     // AUTOR: RCANAVIRI
     //********************************************************************************************************************************
-    public function valPruebaRegla($estudianteInscripcionId, $gestionId, $pruebaId, $faseId, $equipoId){               
+    public function valPruebaRegla($estudianteInscripcionId, $gestionId, $pruebaId, $faseId, $equipoId, $posicion){               
         $pruebaReglaEntity = $this->getPruebaRegla($gestionId, $faseId, $pruebaId);
 
         if(count($pruebaReglaEntity)<=0){
@@ -261,7 +351,21 @@ class ReglaController extends Controller
         $em = $this->getDoctrine()->getManager();
         $estudianteInscripcionEntity = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
         $institucioneducativaCursoEntity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('id' => $estudianteInscripcionEntity->getInstitucioneducativaCurso()->getId()));
-        $institucionId = $institucioneducativaCursoEntity->getInstitucioneducativa()->getId();
+        
+        switch ($faseId) {
+            case 2:
+                $institucionId = $this->session->get('roluserlugarid');
+                break;
+            case 3:
+                $institucionId = $this->session->get('roluserlugarid');;
+                break;
+            case 4:
+                $institucionId = $this->session->get('roluserlugarid');;
+                break;
+            default:                
+                $institucionId = $institucioneducativaCursoEntity->getInstitucioneducativa()->getId();
+                break;
+        }
         $estudianteFechaNacimiento = $estudianteInscripcionEntity->getEstudiante()->getFechaNacimiento();
         $estudianteGestionNacimiento = date_format($estudianteFechaNacimiento,'Y');
 
@@ -269,7 +373,8 @@ class ReglaController extends Controller
         $estudianteInscripcionJuegosController = new estudianteInscripcionJuegosController();
         $estudianteInscripcionJuegosController->setContainer($this->container);
         if($pruebaParticipacionId == 1){   
-            $listaEquipoEstudiantePruebaInstitucion = $estudianteInscripcionJuegosController->getEquipoEstudianteInscripcionInstitucionGestionFasePrueba($institucionId, $pruebaId, $gestionId, $faseId, $equipoId);
+            $listaEquipoEstudiantePruebaInstitucion = $estudianteInscripcionJuegosController->getEquipoEstudianteInscripcionInstitucionGestionFasePrueba($institucionId, $pruebaId, $gestionId, $faseId, $equipoId, $posicion);
+            //dump($listaEquipoEstudiantePruebaInstitucion);die;
             $cantidadListaEquipoEstudiantePruebaInstitucion = count($listaEquipoEstudiantePruebaInstitucion);
 
             //dump($cantidadListaEquipoEstudiantePruebaInstitucion);dump($cupoInscripcion);die;
@@ -277,7 +382,7 @@ class ReglaController extends Controller
                 return array('0' => false, '1' => 'no puede registrar a mas estudiantes en el equipo'.$equipoId.' ('.$pruebaNombre.')');
             }
 
-            $listaEquipoPruebaInstitucion = $estudianteInscripcionJuegosController->getEquipoInscripcionInstitucionGestionFasePrueba($institucionId, $pruebaId, $gestionId, $faseId);
+            $listaEquipoPruebaInstitucion = $estudianteInscripcionJuegosController->getEquipoInscripcionInstitucionGestionFasePrueba($institucionId, $pruebaId, $gestionId, $faseId, $posicion);
             $cantidadListaEquipoPruebaInstitucion = count($listaEquipoPruebaInstitucion);
             //dump($cantidadListaEquipoPruebaInstitucion);dump($cupoPresentacion);die;
 
@@ -299,9 +404,9 @@ class ReglaController extends Controller
                 } 
             }          
         } else {
-            $listaPruebaInstitucion = $estudianteInscripcionJuegosController->getEstudianteInscripcionInstitucionGestionFasePrueba($institucionId, $pruebaId, $gestionId, $faseId);
+            $listaPruebaInstitucion = $estudianteInscripcionJuegosController->getEstudianteInscripcionInstitucionGestionFasePrueba($institucionId, $pruebaId, $gestionId, $faseId, $posicion);
             $cantidadListaPruebaInstitucion = count($listaPruebaInstitucion);
-
+            //dump($institucionId);die;
             if($cantidadListaPruebaInstitucion >= $cupoInscripcion){
                 return array('0' => false, '1' => 'no puede registrar a mas estudiantes en '.$pruebaNombre);
             }
