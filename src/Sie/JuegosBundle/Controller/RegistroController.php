@@ -16,8 +16,8 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Sie\JuegosBundle\Controller\EstudianteInscripcionJuegosController as estudianteInscripcionJuegosController;
 use Sie\JuegosBundle\Controller\ReglaController as reglaController;
 
-use Sie\AppWebBundle\Entity\JdpEstudianteInscripcionJuegos as EstudianteInscripcionJuegos;
-use Sie\AppWebBundle\Entity\JdpEquipoEstudianteInscripcionJuegos as EquipoEstudianteInscripcionJuegos;
+use Sie\AppWebBundle\Entity\JdpEstudianteInscripcionJuegos;
+use Sie\AppWebBundle\Entity\JdpEquipoEstudianteInscripcionJuegos;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Util\SecureRandom;
@@ -448,7 +448,7 @@ class RegistroController extends Controller {
             $em->persist($estudianteInscripcionJuegos);
 
             if($equipoId > 0){
-                $equipoEstudianteInscripcionJuegos = new EquipoEstudianteInscripcionJuegos();
+                $equipoEstudianteInscripcionJuegos = new JdpEquipoEstudianteInscripcionJuegos();
                 $equipoEstudianteInscripcionJuegos->setEstudianteInscripcionJuegos($estudianteInscripcionJuegos);
                 $equipoEstudianteInscripcionJuegos->setEquipoId($equipoId);
                 $equipoEstudianteInscripcionJuegos->setEquipoNombre('Equipo'.$equipoId);
