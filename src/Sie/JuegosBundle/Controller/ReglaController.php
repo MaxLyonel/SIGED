@@ -350,6 +350,12 @@ class ReglaController extends Controller
         
         $em = $this->getDoctrine()->getManager();
         $estudianteInscripcionEntity = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
+
+        $estadoMatriculaInicioId = $estudianteInscripcionEntity->getEstadomatriculaInicioTipo()->getId();
+        if($estadoMatriculaInicioId == 9 or $estadoMatriculaInicioId == 15){
+            return array('0' => false, '1' => 'no puede registrar a estudiantes con traslado');
+        }
+
         $institucioneducativaCursoEntity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('id' => $estudianteInscripcionEntity->getInstitucioneducativaCurso()->getId()));
         
         switch ($faseId) {
@@ -357,10 +363,10 @@ class ReglaController extends Controller
                 $institucionId = $this->session->get('roluserlugarid');
                 break;
             case 3:
-                $institucionId = $this->session->get('roluserlugarid');;
+                $institucionId = $this->session->get('roluserlugarid');
                 break;
             case 4:
-                $institucionId = $this->session->get('roluserlugarid');;
+                $institucionId = $this->session->get('roluserlugarid');
                 break;
             default:                
                 $institucionId = $institucioneducativaCursoEntity->getInstitucioneducativa()->getId();
