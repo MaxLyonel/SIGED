@@ -201,13 +201,6 @@
                                             </a>
                                         </div>
                                     {% endif %}
-                                    
-                                    {# IMPRESION DE LIBRETA #}
-                                    {% if imprimirLibreta == true and data.estadomatriculaId in estadosPermitidosImprimir %}
-                                            <a class="btn btn-circle btn-lilac" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
-                                              <i class="fa fa-archive" style="color:#FFFFFF"></i>
-                                            </a>
-                                    {% endif %}
 
                                     {# REGISTRO DE NOTAS #}
                                     {% if app.session.get('acceso_total') %}
@@ -218,6 +211,13 @@
                                                 </button>
                                             </div>
                                         {% endif %}
+                                    {% endif %}
+
+                                    {# IMPRESION DE LIBRETA #}
+                                    {% if imprimirLibreta == true and data.estadomatriculaId in estadosPermitidosImprimir %}
+                                            <a class="btn btn-circle btn-lilac" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
+                                              <i class="fa fa-archive" style="color:#FFFFFF"></i>
+                                            </a>
                                     {% endif %}
                                       
                                     {# ELIMINAR INSCRIPCION #}

@@ -243,7 +243,7 @@ class Areas {
                                     }
                                     if($gestion == 2019){
                                         $idsAsignaturas = $matsece2019;
-                                        if($tipoUEId == 1){
+                                        if($tipoUEId == 1 or ($tipoUEId == 7 and $grado <= $gradoUEId)){
                                             $idsAsignaturas = $matsecf2019plena;
                                         }
                                     }
@@ -424,7 +424,7 @@ class Areas {
                     'posiblesEliminar'=>$posiblesEliminar,
                     'vista'=>$vista
                 );
-            } 
+            }
             return null;
         } catch (Exception $e) {
             return null;
