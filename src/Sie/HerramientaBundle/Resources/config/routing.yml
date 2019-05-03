@@ -186,3 +186,7 @@ sie_herramienta_nnats:
 sie_herramienta_tramite_talento:
     resource: "@SieHerramientaBundle/Resources/config/routing/tramiteTalento.yml"
     prefix:   /sie/tramitetalento
+
+sie_herramienta_tramite_acelera:
+    resource: "@SieHerramientaBundle/Resources/config/routing/tramiteAcelera.yml"
+    prefix:   /sie/tramiteacelera

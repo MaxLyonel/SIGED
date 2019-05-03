@@ -1,0 +1,15 @@
+tramite_acelera_new:
+    path:     /nuevo
+    defaults: { _controller: SieHerramientaBundle:TramiteAcelera:new }
+
+tramite_acelera_search:
+    path:     /busqueda
+    defaults: { _controller: SieHerramientaBundle:TramiteAcelera:searchStudent }
+    options:
+        expose: true
+
+tramite_acelera_save:
+    path:     /guardar
+    defaults: { _controller: SieHerramientaBundle:TramiteAcelera:save } #SieHerramientaBundle:TramiteTalento:save 
+    options:
+        expose: true
