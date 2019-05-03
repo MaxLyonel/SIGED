@@ -865,7 +865,7 @@ class SolicitudModificacionCalificacionesController extends Controller {
      */
     public function formSearch($gestion){
         $gestiones = array();
-        for($i=2008;$i<=$gestion;$i++){
+        for($i=2008;$i<=2018;$i++){
             $gestiones[$i] = $i;
         }
 
