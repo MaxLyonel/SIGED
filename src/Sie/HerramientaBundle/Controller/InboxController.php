@@ -378,6 +378,7 @@ class InboxController extends Controller {
       $btnForm  = ($this->operativoUe <= 5 )?'submit':'button';
       switch ($objTypeOfUEId) {
         case 1:
+        case 7:
           # code...
           $label = 'U.E. Plena';
           $btnClass = 'btn btn-primary text-center btn-block';
