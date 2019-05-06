@@ -139,15 +139,20 @@
                                             <td>{{ entity.proceso_tipo }}</td>
                                             <td>
                                             {% if entity.id_estado == 15 or entity.id_estado == 4 %} {#si esta enviado/devuelto #}
-                                                <a href="{{ path('wf_tramite_recibido_guardar', { 'id': entity.id }) }}" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="top" title="Recibir para:{{ entity.proceso_tipo }}">
+                                                <form action="{{ path('wf_tramite_recibido_guardar', { 'id': entity.id }) }}" method="post" style="display:inline-block" onsubmit="return checkSubmit();">                                    
+                                                    <button type="submit" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Recibir para:{{ entity.proceso_tipo }}">
+                                                        <i class="glyphicon glyphicon-check"></i>
+                                                    </button>
+                                                </form>
+                                                {# <a href="{{ path('wf_tramite_recibido_guardar', { 'id': entity.id }) }}" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="top" title="Recibir para:{{ entity.proceso_tipo }}">
                                                     <i class="glyphicon glyphicon-check"></i>
-                                                </a>
+                                                </a> #}
                                                 <a class="btn btn-success btn-xs" data-toggle="modal" data-target="#modal" data-placement="top" title="Derivar Tarea" onclick="derivar({{entity.id}},{{entity.idflujo}})">
                                                     <i class="glyphicon glyphicon-share-alt"></i>
                                                 </a>
                                             {% endif %}
                                             {% if entity.id_estado == 3 %} {#si esta recibido #}
-                                                <a href="{{ path('wf_tramite_recibido_enviar', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="{{ entity.proceso_tipo }}">
+                                                <a href="{{ path('wf_tramite_recibido_enviar', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="{{ entity.proceso_tipo }}" onclick="this.disabled='true'">
                                                     <i class="fa fa-pencil"></i>
                                                 </a>
                                             {% endif %}
@@ -175,6 +180,17 @@
         $( document ).ready(function() {
             cargatablas();
         });
+        var statSend = false;
+        function checkSubmit() {
+            if (!statSend) {
+                statSend = true;
+                return true;
+            } else {
+                alert("El tramite ya se esta recibiendo...");
+            return false;
+            }
+        }
+        
         var cargatablas = function (identif){
             // Setup - add a text input to each footer cell
             $('#recepDep tfoot th').each( function () {
