@@ -90,7 +90,7 @@ class ReglaController extends Controller
                 //     return $msg1;
                 // }
                 
-                $msg2 = $this->valPruebaRegla($estudianteInscripcionId, $gestionId, $pruebaId, $faseId, $equipoId, $posicion);
+                $msg2 = $this->valPruebaRegla($estudianteInscripcionId, $gestionId, $pruebaId, $faseId, $equipoId, $posicion, $lugarTipoId);
   
                 if (!$msg2[0]){
                     //dump($msg[1]);die;
@@ -117,7 +117,7 @@ class ReglaController extends Controller
     // PARAMETROS: estudianteInscripcionId, gestionId, pruebaId, faseId
     // AUTOR: RCANAVIRI
     //********************************************************************************************************************************
-    public function valEstudianteInscripcionJuegos($estudianteInscripcionId, $gestionId, $pruebaId, $faseId, $equipoId, $posicion){            
+    public function valEstudianteInscripcionJuegos($estudianteInscripcionId, $gestionId, $pruebaId, $faseId, $equipoId, $posicion, $lugarTipoId){            
         try{
             // verifica si ya cuenta con una inscripcion en la prueba, gestion y fase seleccionada            
             $estudianteInscripcionJuegosController = new estudianteInscripcionJuegosController();
@@ -179,7 +179,7 @@ class ReglaController extends Controller
                 //     return $msg1;
                 // }
                 
-                $msg2 = $this->valPruebaRegla($estudianteInscripcionId, $gestionId, $pruebaId, $faseId, $equipoId, $posicion);
+                $msg2 = $this->valPruebaRegla($estudianteInscripcionId, $gestionId, $pruebaId, $faseId, $equipoId, $posicion, $lugarTipoId);
                 if (!$msg2[0]){
                     //dump($msg[1]);die;
                     return array('0' => $msg2[0], '1' => $estudianteNombreApellido.' '.$msg2[1]);
@@ -334,7 +334,7 @@ class ReglaController extends Controller
     // PARAMETROS: estudianteInscripcionId, gestionId, pruebaId, faseId
     // AUTOR: RCANAVIRI
     //********************************************************************************************************************************
-    public function valPruebaRegla($estudianteInscripcionId, $gestionId, $pruebaId, $faseId, $equipoId, $posicion){               
+    public function valPruebaRegla($estudianteInscripcionId, $gestionId, $pruebaId, $faseId, $equipoId, $posicion, $entidadUsuarioId){               
         $pruebaReglaEntity = $this->getPruebaRegla($gestionId, $faseId, $pruebaId);
 
         if(count($pruebaReglaEntity)<=0){
@@ -361,6 +361,134 @@ class ReglaController extends Controller
         switch ($faseId) {
             case 2:
                 $institucionId = $this->session->get('roluserlugarid');
+                $xCupo = 1;
+                if ($entidadUsuarioId == 31642){ // MAGDALENA/ BAURES/ HUACARAJE
+                    $xCupo = 3;
+                }
+                if ($entidadUsuarioId == 31637){
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31639){
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31640  ){
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31552  ){
+                    $xCupo = 3;
+                }
+                if ($entidadUsuarioId == 31553  ){
+                    $xCupo = 3;
+                }
+                if ($entidadUsuarioId == 31613  ){
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31590  ){
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31612  ){
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31610  ){
+                    $xCupo = 3;
+                }
+                if ($entidadUsuarioId == 31617  ){
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31554  ){
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31363  ){
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31564  ){
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31458  ){
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31459  ){
+                    $xCupo = 3;
+                }
+                if ($entidadUsuarioId == 79356  ){
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31508  ){
+                    $xCupo = 3;
+                }
+                if ($entidadUsuarioId == 31622  ){ // SANTA CRUZ 1
+                    $xCupo = 7;
+                }
+                if ($entidadUsuarioId == 31623  ){ // SANTA CRUZ 2
+                    $xCupo = 6;
+                }
+                if ($entidadUsuarioId == 31624  ){ // SANTA CRUZ 3
+                    $xCupo = 5;
+                }
+                if ($entidadUsuarioId == 79359  ){ // PLAN TRES MILL (SANTA CRUZ 4)
+                    $xCupo = 6;
+                }
+                if ($entidadUsuarioId == 31504  ){
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31505  ){
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31530  ){
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31455  ){ // LA PAZ 1
+                    $xCupo = 3;
+                }
+                if ($entidadUsuarioId == 31456  ){ // LA PAZ 2
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31457  ){ // LA PAZ 3
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31395  ){  // ACHACACHI
+                    $xCupo = 5;
+                }
+                if ($entidadUsuarioId == 31426  ){  // CAJUATA
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31398  ){  //  CAQUIAVIRI
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31454  ){  // CARANAVI
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31448  ){  // CHARAZANI
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31443  ){  // COLQUENCHA
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31397  ){  // CORO CORO
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31403  ){  // PUERTO ACOSTA
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31451  ){  // SAN PEDRO DE CURACHUARA
+                    $xCupo = 3;
+                }
+                if ($entidadUsuarioId == 31450  ){  // SAN PEDRO DE TIQUINA
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31411  ){  // TACACOMA
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 31422  ){  // YACO MALLA
+                    $xCupo = 2;
+                }
+                if ($entidadUsuarioId == 99226  ){  // VILLA ABECIA - LAS CARRERAS
+                    $xCupo = 2;
+                }
+                $cupoPresentacion = $cupoPresentacion * $xCupo;
+                if($pruebaParticipacionId == 2){   
+                    $cupoInscripcion = $cupoInscripcion * $xCupo;
+                }
                 break;
             case 3:
                 $institucionId = $this->session->get('roluserlugarid');

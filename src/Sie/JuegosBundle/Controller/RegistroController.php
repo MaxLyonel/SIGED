@@ -566,6 +566,7 @@ class RegistroController extends Controller {
         // $gestionActual = 2018;
         $sesion = $request->getSession();
         $id_usuario = $this->session->get('userId');
+        $id_usuario_lugar = $this->session->get('roluserlugarid');
 
         //validation if the user is logged
         if (!isset($id_usuario)) {
@@ -639,7 +640,7 @@ class RegistroController extends Controller {
         foreach($deportistas as $deportista){
             $estInsId = base64_decode($deportista);
 
-            $msg = $reglaController->valEstudianteInscripcionJuegos($estInsId, $gestionActual, $pruebaId, $faseId, $equipoId, 0);
+            $msg = $reglaController->valEstudianteInscripcionJuegos($estInsId, $gestionActual, $pruebaId, $faseId, $equipoId, 0, $id_usuario_lugar);
 
             // $msg = $this->validaInscripcionJuegos($estInsId,$gestionActual,$pruebaId,$faseId,$nivelId);
             
