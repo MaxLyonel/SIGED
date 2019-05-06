@@ -434,6 +434,9 @@
                                     swal("Su respuesta se ha enviado con éxito Muchas gracias");
                                     location.href = "{{ path('wf_tramite_recibido') }}";
                                 }
+                                else if(data.estado == 4){
+                                    swal(data.msg)
+                                }
                                 else{
                                     swal("Su respuesta no se envío correctamente");
                                 }

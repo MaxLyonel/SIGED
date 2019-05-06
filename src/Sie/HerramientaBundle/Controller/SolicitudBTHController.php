@@ -468,7 +468,11 @@ class SolicitudBTHController extends Controller {
                         $idTramite = $request->get('id_tramite');
                         $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'','',$idTramite,$datos,'',$id_distrito);
                     }
-                    $res = 1;
+                    if ($mensaje['dato']==true){
+                        $res = 1;
+                    }else{
+                        $res = 4;
+                    }
                 }
                 else{
                     $res = 2;  //No puede iniciar su trámite como nuevo
@@ -533,7 +537,13 @@ class SolicitudBTHController extends Controller {
                             $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario, $id_rol, $flujotipo, $tarea, $tabla, $id_Institucion, '', '', $idTramite, $datos, '', $id_distrito);
                             //dump($mensaje);die;
                         }
-                        $res = 1;
+                        if ($mensaje['dato']==true){
+                            $res = 1;
+                        }else{
+                            $res = 4;
+                        }
+
+
                     }else{
                         $res = 2;//debe iniciar como  Nuevo ya que es BTH pero no tiene especialidades
                     }
@@ -1114,7 +1124,11 @@ class SolicitudBTHController extends Controller {
                   $mensaje = $wfTramiteController->guardarTramiteRecibido($id_usuario, $tarea1,$id_tramite);
                   $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea1,$tabla,$institucionid,'','',$id_tramite,$datos,'',$id_distrito);
               }
-              $res = 1;
+              if ($mensaje['dato']==true){
+                  $res = 1;
+              }else{
+                  $res = 4;
+              }
           }
           catch (Exception $exceptione){
               $res = 0;

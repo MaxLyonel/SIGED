@@ -640,7 +640,10 @@
                                     else if(data.estado==2 ){
                                         swal(" Su Unidad Educativa ya se declaró como BTH y por lo tanto debe iniciar su trámite como 'Ratificación', ó  \n" +
                                             " A su Unidada Educativa no le corresponde realizar el trámite de solicitud BTH");
-                                    }else {
+                                    }else if(data.estado == 4){
+                                        swal(data.msg)
+                                    }
+                                    else {
                                         swal('Su formulario no se envío correctamente debido a que: \n' +
                                             '- Su Unidad Educativa ya inicio su trámite como "REGISTRO NUEVO". \n' +
                                             '- Su Unidad Educativa ya se encuentra registrado como BTH, ' +
