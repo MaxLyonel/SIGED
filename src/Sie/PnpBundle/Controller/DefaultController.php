@@ -3307,6 +3307,8 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
             $curso_id=$request->get("curso_id");
             $fecha_inicio=$request->get("fecha_inicio");
             $fecha_fin=$request->get("fecha_fin");
+            $form_municipio=$request->get("form_municipio");
+            $localidad=$request->get("localidad");
             $gestion_g= substr($fecha_fin,-4);
 
             $institucion_educativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($curso_id);
@@ -3380,6 +3382,10 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
             $product->setFechaFin(\DateTime::createFromFormat('d/m/Y', $fecha_fin));
             $product->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($gestion_g));
             $product->setMaestroInscripcionAsesor($maestroinscripcion);
+            $em->flush();
+            $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($curso_id);
+            $result->setLugarTipoSeccion($em->getRepository('SieAppWebBundle:LugarTipo')->find($form_municipio));
+            $result->setLocalidad($localidad);
             $em->flush();
         }
         $id_enc=$id;
@@ -3567,10 +3573,10 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
         //print_r($lugar_usuario); die;      
         //LISTA DE TOTALES POR GESTION DEPTO PARTE Y BLOQUE
                 $query = "
-               SELECT carnet, complemento,nombre,paterno,materno,fecha_inicio,fecha_fin,ciclo_tipo_id,grado_tipo_id,id,depto,provincia,lugar,localidad,obs,esactivo,count(*) as est,SUM(CASE WHEN estadomatricula_tipo_id=62
+              SELECT carnet, complemento,nombre,paterno,materno,fecha_inicio,fecha_fin,ciclo_tipo_id,grado_tipo_id,id,depto,provincia,lugar,localidad,obs,esactivo,count(*) as est,SUM(CASE WHEN estadomatricula_tipo_id=62
             THEN 1
             ELSE 0
-    END) as est_aprob,nciclo,ngrado,plan
+    END) as est_aprob,nciclo,ngrado,plan,lugar_id,provincia_id,depto_id
 from (
 select persona.carnet,persona.complemento, persona.nombre, persona.paterno, persona.materno,
 institucioneducativa_curso.fecha_inicio, institucioneducativa_curso.fecha_fin,
@@ -3597,7 +3603,8 @@ CASE
         WHEN institucioneducativa_curso.institucioneducativa_id = 82480050 THEN
                 'PANDO'                         
     END AS depto,
-institucioneducativa_curso.lugar as provincia,llt.lugar,iecd.localidad,iecd.obs,iecd.esactivo,ei.estadomatricula_tipo_id
+institucioneducativa_curso.lugar as provincia,llt.lugar,iecd.localidad,iecd.obs,iecd.esactivo,ei.estadomatricula_tipo_id,
+lt1.id as lugar_id,lt2.id as provincia_id,lt3.id as depto_id
 
 from institucioneducativa_curso 
 inner join maestro_inscripcion 
@@ -3612,11 +3619,14 @@ left join estudiante_inscripcion ei
 on ei.institucioneducativa_curso_id=institucioneducativa_curso.id
 inner join ciclo_tipo ct ON institucioneducativa_curso.ciclo_tipo_id=ct.id
 inner join grado_tipo gt ON institucioneducativa_curso.grado_tipo_id=gt.id
+inner join lugar_tipo lt1 on iecd.lugar_tipo_id_seccion=lt1.id
+inner join lugar_tipo lt2 on lt2.id=lt1.lugar_tipo_id
+inner join lugar_tipo lt3 on lt3.id=lt2.lugar_tipo_id
 where 
 date_part('year', institucioneducativa_curso.fecha_fin) = $gestion $consulta
 
 ) as t1
-GROUP BY carnet, complemento,nombre,paterno,materno,fecha_inicio,fecha_fin,ciclo_tipo_id,grado_tipo_id,id,depto,provincia,lugar,localidad,obs,esactivo,nciclo,ngrado,plan
+GROUP BY carnet, complemento,nombre,paterno,materno,fecha_inicio,fecha_fin,ciclo_tipo_id,grado_tipo_id,id,depto,depto_id,provincia,provincia_id,lugar,lugar_id,localidad,obs,esactivo,nciclo,ngrado,plan
 order by                 
 fecha_inicio,
 ciclo_tipo_id, grado_tipo_id 
@@ -3655,8 +3665,11 @@ ciclo_tipo_id, grado_tipo_id
                 $datos_filas["id"] = $p["id"];
                 $datos_filas["id_enc"] = $this->encriptar($p["id"]);
                 $datos_filas["depto"] = $p["depto"];
+                $datos_filas["depto_id"] = $p["depto_id"];
                 $datos_filas["provincia"] = $p["provincia"];
+                $datos_filas["provincia_id"] = $p["provincia_id"];
                 $datos_filas["lugar"] = $p["lugar"];
+                $datos_filas["lugar_id"] = $p["lugar_id"];
                 $datos_filas["localidad"] = $p["localidad"];
                 if(isset($opciones[1])){
                     $usu=$em->getRepository('SieAppWebBundle:Usuario')->findOneById(intval($opciones[1]));
@@ -3692,8 +3705,11 @@ ciclo_tipo_id, grado_tipo_id
             $datos_filas["id"] = $p["id"];
             $datos_filas["id_enc"] = $this->encriptar($p["id"]);
             $datos_filas["depto"] = $p["depto"];
+            $datos_filas["depto_id"] = $p["depto_id"];
             $datos_filas["provincia"] = $p["provincia"];
+            $datos_filas["provincia_id"] = $p["provincia_id"];
             $datos_filas["lugar"] = $p["lugar"];
+            $datos_filas["lugar_id"] = $p["lugar_id"];
             $datos_filas["localidad"] = $p["localidad"];
             //////de obs ver quien creo el curso y quien lo cerro
             $cadena = $p["obs"];
@@ -4567,8 +4583,11 @@ ciclo_tipo_id, grado_tipo_id
         /////////////////INICAL conocer fecha inicial del curso para permitir o no inscribir
         $institucioneducativa_curso= $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($curso_id);
         $gestion_ini=$institucioneducativa_curso->getFechaInicio();
-        $sie=$institucioneducativa_curso->getInstitucioneducativa()->getId();
         $gestion_ini= date_format($gestion_ini,"Y");
+        $gestion_fin=$institucioneducativa_curso->getFechaFin();
+        $gestion_fin= date_format($gestion_fin,"Y");
+        $sie=$institucioneducativa_curso->getInstitucioneducativa()->getId();
+        
         $usuario_id = $this->session->get('userId');
         if(!$usuario_id){
             return $this->redirectToRoute('logout');
@@ -4755,7 +4774,7 @@ ciclo_tipo_id, grado_tipo_id
         if($rec_sab){
             $fecha_homologacion=$rec_sab->getFechaHomologacion();    
             $fecha_homologacion= date_format($fecha_homologacion,"Y");    
-            if($fecha_homologacion<=$gestion_ini){
+            if($fecha_homologacion<=$gestion_fin){//ctv
                 $curso_rs=$rec_sab->getCurso();
                 if($curso_rs==2){$bloque_rs_toca=1;$parte_rs_toca=2;}
                 elseif($curso_rs==3){$bloque_rs_toca=2;$parte_rs_toca=1;}
@@ -8694,7 +8713,7 @@ public function cambiar_cursos_pedagogoAction(Request $request){
 
         ));
 }
-public function cambiar_cursos_pedagogo_encontradoAction($id_municipio,$id_departamento){//ctv
+public function cambiar_cursos_pedagogo_encontradoAction($id_municipio,$id_departamento){
     $em = $this->getDoctrine()->getManager();
     $db = $em->getConnection();
     $departamento = $em->getRepository('SieAppWebBundle:LugarTipo')->find($id_departamento);
@@ -8730,7 +8749,7 @@ order by rt.id,lt.lugar
         }
     }
     $id_municipio=$this->desencriptar($id_municipio);
-    $curso_existe=0;//ctv
+    $curso_existe=0;
     $query = "SELECT ic.id,icd.obs,u.id as usuario_id,ped.nombre as ped_nombre,ped.paterno as ped_paterno,lt3.lugar as depto,lt2.lugar as provincia,lt1.lugar as municipio,
     icd.localidad,p.carnet,p.complemento,p.nombre,p.paterno,p.materno,
     ic.fecha_inicio,ic.fecha_fin,ic.ciclo_tipo_id as bloque,icd.id as curso_datos,
