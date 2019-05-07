@@ -364,6 +364,7 @@ class WfTramiteController extends Controller
             $em->getConnection()->commit();
             $mensaje['dato'] = true;
             $mensaje['msg'] = 'El trámite Nro. '. $tramite->getId() .' se guardó correctamente';
+            $mensaje['idtramite'] = $tramite->getId();
             return $mensaje;
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
