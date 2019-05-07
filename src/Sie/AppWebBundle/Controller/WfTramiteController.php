@@ -681,6 +681,18 @@ class WfTramiteController extends Controller
         return $uid;
     }
 
+    public function eliminarTramiteNuevo($idtramite)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
+        $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
+        $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->findOneBy(array('tramiteDetalle'=>$tramiteDetalle->getId()));
+        $em->remove($wfSolicitudTramite);
+        $em->remove($tramiteDetalle);
+        $em->remove($tramite);
+        $em->flush();
+        return true;
+    }
     public function eliminarTramiteRecibido($idtramite)
     {
         $em = $this->getDoctrine()->getManager();
