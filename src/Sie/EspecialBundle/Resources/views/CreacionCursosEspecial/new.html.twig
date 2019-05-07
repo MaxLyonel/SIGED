@@ -68,7 +68,15 @@
                                         {% endfor %}
                                         <div class="help-block with-errors"></div>
                                     </div>
-                                    
+                                    <div class="form-group col-lg-6 col-md-12" id="divFisicoMotor" style="display:none">
+                                        {% for a in form.fisicoMotor %}
+                                            <div class="col-md-3 rdio rdio-primary circle">
+                                                {{ form_widget(a,{ 'attr':{'class':'fisicoMotor'}  }) }}
+                                                {{ form_label(a) }}
+                                            </div>
+                                        {% endfor %}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="form-group col-lg-6 col-md-12">
@@ -170,6 +178,13 @@
             }else{
                 $("#divMultiple").hide();
                 $(".multiple").removeAttr('required');
+            }
+            if(area == 4){
+                $("#divFisicoMotor").show();
+                $(".fisicoMotor").attr('required', true);
+            }else{
+                $("#divFisicoMotor").hide();
+                $(".fisicoMotor").removeAttr('required');
             }
             
             $.ajax({
