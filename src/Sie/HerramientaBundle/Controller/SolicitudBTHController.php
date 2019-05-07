@@ -559,7 +559,8 @@ class SolicitudBTHController extends Controller {
          * Adecuacion: se regustra comoo plena a las unidades q inicien su tramite.
          *
          */
-        if ($res == 1 and $sw == 0) {
+        //
+        if ($res == 1 and (int)$sw == 0) {
             $institucioneducativa = $em->getRepository('SieAppWebBundle:InstitucionEducativa')->find($id_Institucion);
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_humanistico_tecnico');")->execute();
             $entity = new InstitucioneducativaHumanisticoTecnico();
