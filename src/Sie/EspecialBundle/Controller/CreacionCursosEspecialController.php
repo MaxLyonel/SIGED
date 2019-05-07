@@ -304,7 +304,8 @@ class CreacionCursosEspecialController extends Controller {
                     ->add('tecnica','choice',array('label'=>'Técnica','choices'=>$tecnicas,'data'=> $tecnica,'attr'=>array('class'=>'form-control')))
                     ->add('nivelTecnico','choice',array('label'=>'Nivel de Formación Técnica','choices'=>$nivelesTecnicoArray,'data'=> $nivelTecnico,'attr'=>array('class'=>'form-control')))
                     ->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'attr'=>array('class'=>'form-control')))
-                    ->add('multiple','choice',array('label'=>'Multiple','choices'=>array('Auditiva/Multiple'=>'Auditiva/Multiple','Visual/Multiple'=>'Visual/Multiple','Otro'=>'Otro'),'multiple' => false,'expanded' => true,'attr'=>array('class'=>'form-control')))
+                    ->add('fisicoMotor','choice',array('label'=>'Fisico-Motora','choices'=>array('Físico-Motora/Auditiva'=>'Físico-Motora/Auditiva','Físico-Motora/Visual'=>'Físico-Motora/Visual','Otro'=>'Otro'),'multiple' => false,'expanded' => true,'attr'=>array('class'=>'form-control')))
+                    ->add('multiple','choice',array('label'=>'Multiple','choices'=>array('Auditiva/Multiple'=>'Auditiva/Multiple','Visual/Multiple'=>'Visual/Multiple','Intelectual/Múltiple'=>'Intelectual/Múltiple'),'multiple' => false,'expanded' => true,'attr'=>array('class'=>'form-control')))
                     ->add('educacionCasa', CheckboxType::class, array('label'=>'Educación en Casa','required' => false))
                     ->add('guardar','submit',array('label'=>'Crear Curso','attr'=>array('class'=>'btn btn-primary')))
                     ->getForm();
@@ -395,17 +396,19 @@ class CreacionCursosEspecialController extends Controller {
                     $modalidad = 1;
                     if(isset($form['multiple']) and $form['multiple'] != 'Otro'){
                         $lugar="EDUCACION EN CASA" . '-' . $form['multiple'];
+                    }elseif(isset($form['fisicoMotor']) and $form['fisicoMotor'] != 'Otro'){
+                        $lugar="EDUCACION EN CASA" . '-' . $form['fisicoMotor'];
                     }else {
                         $lugar="EDUCACION EN CASA";
                     }
                     
-                }elseif($form['area'] == 1 and ($form['programa'] == 13 or $form['programa'] == 17)){
+                }elseif($form['area'] == 1 and ($form['programa'] == 13 or $form['servicio'] == 20)){
                     $modalidad = 2;
-                }elseif($form['area'] == 2 and ($form['programa'] == 10 or $form['programa'] == 17)){
+                }elseif($form['area'] == 2 and ($form['programa'] == 10 or $form['servicio'] == 21)){
                     $modalidad = 2;
-                }elseif(($form['area'] == 3 or $form['area'] == 5) and $form['programa'] == 17){
+                }elseif(($form['area'] == 3 or $form['area'] == 5) and $form['servicio'] == 20){
                     $modalidad = 2;
-                }elseif($form['area'] == 6 and $form['programa'] == 17){
+                }elseif($form['area'] == 6 and $form['servicio'] == 20){
                     $modalidad = 2;
                 }else{
                     $modalidad = 1;
@@ -673,7 +676,7 @@ class CreacionCursosEspecialController extends Controller {
     		$query = $em->createQuery(
     				'SELECT s.id, s.servicio FROM SieAppWebBundle:EspecialServicioTipo s
                                     WHERE s.id IN (:id)'
-    				)->setParameter('id',array(6,7));
+    				)->setParameter('id',array(6,7,20));
     	}
     	elseif ($area == "7" and $nivel == "410" and  $grado == "99" ) {
     		$query = $em->createQuery(
@@ -681,13 +684,18 @@ class CreacionCursosEspecialController extends Controller {
                                     WHERE s.id IN (:id)'
     				)->setParameter('id',array(8,9,10,11,12,13,14,15,16,17,18,19));
     	}
-    	elseif (($area == "1" or $area == "2" or $area == "3" or $area == "4" or $area == "5" or $area == "8" or $area == "9")  and $nivel == "410" and  $grado == "99" ) {
+    	elseif (($area == "1" or $area == "3" or $area == "4" or $area == "5" or $area == "8" or $area == "9")  and $nivel == "410" and  $grado == "99" ) {
     		$query = $em->createQuery(
     				'SELECT s.id, s.servicio FROM SieAppWebBundle:EspecialServicioTipo s
                                     WHERE s.id IN (:id)'
-    				)->setParameter('id',array(1,2,3,4,5));
+    				)->setParameter('id',array(1,2,3,4,5,20));
     	}
-
+        elseif ($area == "2" and $nivel == "410" and  $grado == "99" ) {
+    		$query = $em->createQuery(
+    				'SELECT s.id, s.servicio FROM SieAppWebBundle:EspecialServicioTipo s
+                                    WHERE s.id IN (:id)'
+    				)->setParameter('id',array(1,2,3,4,5,21));
+    	}
        	elseif (($area == "9")  and $nivel == "410" and  $grado == "99" ) {
     		$query = $em->createQuery(
     				'SELECT s.id, s.servicio FROM SieAppWebBundle:EspecialServicioTipo s
@@ -718,25 +726,25 @@ class CreacionCursosEspecialController extends Controller {
     		$query = $em->createQuery(
     				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
                                     WHERE p.id IN (:id)'
-    				)->setParameter('id',array(13,17));
+    				)->setParameter('id',array(13));
     	}
     	elseif ($area == "2" and $nivel == "411" and  $grado == "99" ) {
     		$query = $em->createQuery(
     				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
                                     WHERE p.id IN (:id)'
-    				)->setParameter('id',array(7,8,9,10,11,12,14,15,16,17));
+    				)->setParameter('id',array(7,8,9,10,11,12,14,15,16));
         }
         elseif (($area == "3" or $area == "5") and $nivel == "411" and  $grado == "99" ) {
     		$query = $em->createQuery(
     				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
                                     WHERE p.id IN (:id) order by p.programa'
-                    )->setParameter('id',array(17));
+                    )->setParameter('id',array(99));
         }elseif ($area == "6" and $nivel == "411" and  $grado == "99" ) {
     		$query = $em->createQuery(
     				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
                                     WHERE p.id IN (:id) order by p.programa'
                     //)->setParameter('id',array(1,2,3,4,5,6));
-                    )->setParameter('id',array(5,6,17));
+                    )->setParameter('id',array(5,6));
     	}elseif ($area == "4" and $nivel == "411" and  $grado == "99" ) {
             $query = $em->createQuery(
                 'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p

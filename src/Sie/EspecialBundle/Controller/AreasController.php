@@ -240,7 +240,7 @@ class AreasController extends Controller {
             ->setParameter('idInstitucion', $sie)
             ->setParameter('gestion', $gestion)
             // ->setParameter('areas', array(1,2,3,5))
-            ->setParameter('areas', array(1,2,3,4,5))
+            ->setParameter('areas', array(1,2,3,4,5,6))
             ->addOrderBy('eat.id')
             ->distinct()
             ->getQuery();
@@ -258,7 +258,7 @@ class AreasController extends Controller {
             }
 
             $query = $em->createQuery('SELECT a FROM SieAppWebBundle:EspecialAreaTipo a
-                                    WHERE a.id IN (:id) ORDER BY a.id')->setParameter('id',array(1,2,3,5));
+                                    WHERE a.id IN (:id) ORDER BY a.id')->setParameter('id',array(1,2,3,4,5,6));
     		$areas_result = $query->getResult();
             $areas = array();
             foreach ($areas_result as $a){
@@ -480,7 +480,7 @@ class AreasController extends Controller {
             $institucionCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($idCurso);
             $institucionCursoEspecial = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->findOneBy(array('institucioneducativaCurso' => $institucionCurso));
             $idarea = $institucionCursoEspecial->getEspecialAreaTipo()->getId();
-            if($idarea == 2){
+            if($idarea == 2 or $idarea == 4){
                 $esvisual = true;
             }else{
                 $esvisual = false;
@@ -605,16 +605,35 @@ class AreasController extends Controller {
                                     )->setParameter('ids',array())
                                     ->getResult();
                                     break;
-                                case 13:
-                                case 17:
-                                /*     $asignaturas = $em->createQuery(
+                                case 18:
+                                    $asignaturas = $em->createQuery(
                                             'SELECT at
                                             FROM SieAppWebBundle:AsignaturaTipo at
                                             WHERE at.id IN (:ids)
                                             ORDER BY at.id ASC'
                                     )->setParameter('ids',array(496))
                                     ->getResult();
-                                    break; */
+                                    break;
+                            }
+                            break;
+                case 410:   $servicio = $institucionCursoEspecial->getEspecialServicioTipo()->getId();
+                            switch($servicio){
+                                case 20:    $asignaturas = $em->createQuery(
+                                                'SELECT at
+                                                FROM SieAppWebBundle:AsignaturaTipo at
+                                                WHERE at.id IN (:ids)
+                                                ORDER BY at.id ASC'
+                                                )->setParameter('ids',array(497))
+                                                ->getResult();
+                                            break;
+                                case 21:    $asignaturas = $em->createQuery(
+                                                'SELECT at
+                                                FROM SieAppWebBundle:AsignaturaTipo at
+                                                WHERE at.id IN (:ids)
+                                                ORDER BY at.id ASC'
+                                                )->setParameter('ids',array(498))
+                                                ->getResult();
+                                            break;
                             }
                             break;
             	case 11:    $asignaturas = $em->createQuery(
@@ -777,7 +796,7 @@ class AreasController extends Controller {
             $em->getConnection()->beginTransaction();
             $form = $request->get('form');
             //dump($form);die;
-            if($form['idArea'] == 2){
+            if($form['idArea'] == 2 or $form['idArea'] == 4){
                 $esvisual = true;
             }else{
                 $esvisual = false;
@@ -878,7 +897,7 @@ class AreasController extends Controller {
             $cursoEspecial = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->findOneBy(array('institucioneducativaCurso'=>$idCurso));
             $idEspecialArea = $cursoEspecial->getEspecialAreaTipo()->getId();
             
-            if($idEspecialArea == 2){
+            if($idEspecialArea == 2 or $idEspecialArea == 4){
                 $esvisual = true;
             }else{
                 $esvisual = false;
@@ -1052,7 +1071,7 @@ class AreasController extends Controller {
             $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($cursoOferta->getInsitucioneducativaCurso()->getId());
             $cursoEspecial = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->findOneBy(array('institucioneducativaCurso'=>$curso->getId()));
             $idEspecialArea = $cursoEspecial->getEspecialAreaTipo()->getId();
-            if($idEspecialArea == 2){
+            if($idEspecialArea == 2 or $idEspecialArea == 4){
                 $esvisual = true;
             }else{
                 $esvisual = false;
