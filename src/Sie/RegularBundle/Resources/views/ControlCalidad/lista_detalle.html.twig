@@ -62,7 +62,7 @@
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Está a punto de omitir el proceso de validación del registro observado, por tanto, confirmará que la información actual es la correcta. ¿Desea continuar?');"><i class="fa fa-ban"></i> Omitir</button>
                                             </form> #}
                                         {% endif %}
-                                        {% if regla.id == 2 or regla.id == 3 or regla.id == 6 or regla.id == 8 %}
+                                        {% if regla.id == 2 or regla.id == 3 or regla.id == 6 or regla.id == 8 or regla.id == 12 or regla.id == 13 or regla.id == 16 %}
                                             <form action="{{path('ccalidad_verificar')}}" method="post">
                                                 <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
                                                 <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
@@ -121,7 +121,7 @@
                                                 </form>
                                             {% endif %}
                                         {% elseif regla.id == 16 %}
-                                            {% if detalle.solucionTipoId == 2 %}
+                                            {% if detalle.solucionTipoId == 0 or detalle.solucionTipoId == 2 %}
                                                 <form action="{{path('reg_changestadoqa_index')}}" method="post"  target="_blank">
                                                     <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
                                                     <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
@@ -175,11 +175,12 @@
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Está a punto de ratificar el proceso de validación del registro observado, por tanto, confirmará que la información actual es la correcta. ¿Desea continuar?');"><i class="fa fa-check"></i> Ratificar Edad</button>
                                             </form>
                                         {% endif %}
-                                        {% if regla.id == 2 or regla.id == 3 or regla.id == 6 or regla.id == 8 or regla.id == 10 or regla.id == 11 or regla.id == 12 or regla.id == 20 or regla.id == 9 or regla.id == 14 %}
-                                            {# <form action="{{path('ccalidad_omitir')}}" method="post">
+                                        {#{% if regla.id == 2 or regla.id == 3 or regla.id == 6 or regla.id == 8 or regla.id == 10 or regla.id == 11 or regla.id == 12 or regla.id == 20 or regla.id == 9 or regla.id == 14 or regla.id == 2 %}#}
+                                        {% if 0==1 %}
+                                            <form action="{{path('ccalidad_omitir')}}" method="post">
                                                 <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Está a punto de omitir el proceso de validación del registro observado, por tanto, confirmará que la información actual es la correcta. ¿Desea continuar?');"><i class="fa fa-ban"></i> Omitir</button>
-                                            </form> #}
+                                            </form>
                                         {% endif %}
                                     {% elseif app.session.get('roluser') == 9 %}
                                         {% if regla.id == 27 %}

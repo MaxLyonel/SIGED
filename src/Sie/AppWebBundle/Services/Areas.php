@@ -243,7 +243,7 @@ class Areas {
                                     }
                                     if($gestion == 2019){
                                         $idsAsignaturas = $matsece2019;
-                                        if($tipoUEId == 1){
+                                        if($tipoUEId == 1 or ($tipoUEId == 7 and $grado <= $gradoUEId)){
                                             $idsAsignaturas = $matsecf2019plena;
                                         }
                                     }
@@ -424,7 +424,7 @@ class Areas {
                     'posiblesEliminar'=>$posiblesEliminar,
                     'vista'=>$vista
                 );
-            } 
+            }
             return null;
         } catch (Exception $e) {
             return null;
@@ -507,7 +507,7 @@ class Areas {
             $this->em->getConnection()->beginTransaction();
 
             $curso = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($idCurso);
-            $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
+            // $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
             // Registramos la nueva Área
             $newArea = new InstitucioneducativaCursoOferta();
             $newArea->setAsignaturaTipo($this->em->getRepository('SieAppWebBundle:AsignaturaTipo')->find($idAsignatura));
@@ -530,7 +530,7 @@ class Areas {
             );*/
 
             // Actualizamos el id de la tabla estudiante asignatura
-            $query = $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');")->execute();
+            // $query = $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');")->execute();
             // Listamos los estudinates inscritos
             // para registrar el curso a los estudiantes
             $inscritos = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findBy(array('institucioneducativaCurso' => $idCurso));
@@ -539,7 +539,7 @@ class Areas {
                 // Verificamos si el estudiante ya tiene la asignatura
                 $estInscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneBy(array('estudianteInscripcion'=>$ins->getId(),'institucioneducativaCursoOferta'=>$newArea->getId()));
                 if(!$estInscripcion){
-                    $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');")->execute();
+                    // $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');")->execute();
                     $newEstAsig = new EstudianteAsignatura();
                     $newEstAsig->setGestionTipo($this->em->getRepository('SieAppWebBundle:GestionTipo')->find($curso->getGestionTipo()->getId()));
                     $newEstAsig->setFechaRegistro(new \DateTime('now'));

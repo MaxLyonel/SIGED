@@ -1,0 +1,57 @@
+aca_promotor_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:Promotor:index }
+
+aca_promotor_listPromotor:
+    path:     /listPromotor
+    defaults: { _controller: SieHerramientaBundle:Promotor:listPromotor }
+    options:
+         expose: true    
+    
+aca_promotor_selectsie:
+    path:     /selectsie
+    defaults: { _controller: SieHerramientaBundle:Promotor:selectsie }
+
+aca_promotor_register:
+    path:     /promotorregister
+    defaults: { _controller: SieHerramientaBundle:Promotor:register }
+
+aca_promotor_find:
+    path:     /promotorfind
+    defaults: { _controller: SieHerramientaBundle:Promotor:find }
+
+aca_promotor_newpromotor:
+    path:     /newpromotor
+    defaults: { _controller: SieHerramientaBundle:Promotor:newpromotor }    
+    options:
+         expose: true
+
+aca_promotor_findpromotor:
+    path:     /findpromotor
+    defaults: { _controller: SieHerramientaBundle:Promotor:findpromotor }    
+    options:
+         expose: true
+
+aca_promotor_registerpromotor:
+    path:     /registerpromotor
+    defaults: { _controller: SieHerramientaBundle:Promotor:registerpromotor }    
+    options:
+         expose: true
+
+aca_promotor_removepromotor:
+    path:     /removepromotor
+    defaults: { _controller: SieHerramientaBundle:Promotor:removepromotor }    
+    options:
+         expose: true
+
+aca_promotor_editpromotor:
+    path:     /editpromotor
+    defaults: { _controller: SieHerramientaBundle:Promotor:editpromotor }    
+    options:
+         expose: true
+
+aca_promotor_updatepromotor:
+    path:     /updatepromotor
+    defaults: { _controller: SieHerramientaBundle:Promotor:updatepromotor }    
+    options:
+         expose: true

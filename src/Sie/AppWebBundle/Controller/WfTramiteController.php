@@ -185,12 +185,13 @@ class WfTramiteController extends Controller
     /**
      * Registro del tramite como recibido
      */
-    public function recibidosGuardarAction(Request $request,$id)
+    public function recibidosGuardarAction(Request $request)
     {
         $this->session = $request->getSession();
         //dump($this->session);die;
         $usuario = $this->session->get('userId');
         $rol = $this->session->get('roluser');
+        $id = $request->get('id');
         //validation if the user is logged
         if (!isset($usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -1082,13 +1083,13 @@ class WfTramiteController extends Controller
                 (SELECT t1.id,t1.tramite_id, t1.flujo_proceso_id,te.tramite_estado,t1.fecha_recepcion,t1.fecha_envio,pr.nombre as usuario_remitente,pd.nombre as usuario_destinatario,i.institucioneducativa,t1.valor_evaluacion,t1.obs
                     FROM tramite_detalle t1 join tramite t on t1.tramite_id=t.id
                     join tramite_estado te on t1.tramite_estado_id=te.id
-                    join wf_solicitud_tramite wfs on wfs.tramite_detalle_id=t1.id
+                    left join wf_solicitud_tramite wfs on wfs.tramite_detalle_id=t1.id
                     left join usuario ur on t1.usuario_remitente_id=ur.id
                     left join persona pr on ur.persona_id=pr.id
                     left join usuario ud on t1.usuario_destinatario_id=ud.id
                     left join persona pd on ud.persona_id=pd.id
                     left join institucioneducativa i on t.institucioneducativa_id=i.id
-                    where t1.tramite_id='. $idtramite .' and wfs.es_valido=true order by t1.id)d
+                    where t1.tramite_id='. $idtramite .' and (wfs.es_valido=true or wfs.id ISNULL) order by t1.id)d
                 ON p.id=d.flujo_proceso_id order by p.orden,d.fecha_envio');
         }
         

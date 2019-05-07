@@ -1,0 +1,41 @@
+{% if fotos|length > 0 %}
+
+    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+            {% for foto in fotos %}
+                <li data-target="#carousel-example-generic" data-slide-to="{{loop.index - 1}}" {% if loop.index == 1 %} class="active" {% endif %}></li>
+            {% endfor %}
+        </ol>
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner" role="listbox">
+            {% for foto in fotos %}
+                <div {% if loop.index == 1 %} class="item active" {% else %} class="item" {% endif %} >
+                     <div style="font-size:1.1em; text-align:center">
+                         <button class="btn btn-danger btn-sm" onclick="deleteImage({{ foto.id }},{{ id_resultado }})"><i class="fa fa-trash"></i> Eliminar</button>
+                         <br>
+                         <b><strong>{{ foto.obs }}</strong>  </b>
+                     </div>
+                     <img src="{{asset('uploads/club/'~idinstitucion~'/'~'lectura/' ~ foto.url_imagen )}}" alt="...">
+                     <div class="carousel-caption">
+                         {#<h3><strong>{{ foto.obs }}</strong></h3>#}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Controls -->
+        <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+
+{% else %}
+    <div class="alert alert-info"> <i class="fa fa-info-circle"></i> No se cargaron fotos </div>
+{% endif %}

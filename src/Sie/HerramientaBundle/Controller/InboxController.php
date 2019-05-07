@@ -224,11 +224,11 @@ class InboxController extends Controller {
         // $this->session->set('ue_noturna', (array_search("$this->unidadEducativa",$this->arrUeNocturnas,true)!=false)?true:false);
         //get type of UE
         $objTypeOfUE = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->getTypeOfUE(array('sie'=>$this->unidadEducativa,'gestion'=>$gestionOpeUnidadEducativa));
-
         if($objValidateUePlena){
           //switch to the kind of UE
           switch ($objValidateUePlena->getInstitucioneducativaHumanisticoTecnicoTipo()->getId()) {
             case 1:
+            case 7:
               # plena
               $this->session->set('ue_plena', true);
               $this->session->set('acceso_total', true);
@@ -307,18 +307,15 @@ class InboxController extends Controller {
             ->where('ie.id = :idInstitucion')
             ->andWhere('fp.id = :flujoP')
             ->andWhere('fp.proceso = :proceso')
-            ->andWhere('t.gestionId = :gestion')
             ->setParameter('idInstitucion', $this->unidadEducativa)
             ->setParameter('flujoP', 13)
             ->setParameter('proceso', 11)
-            ->setParameter('gestion', $arrSieInfo[0]['gestion'])
             ->orderBy('t.gestionId')
             ->getQuery();
-
+            
         $entities = $query->getResult();
-        if(sizeof($entities)>0){
-          $this->session->set('ue_sol_regularizar',true);
-        }
+
+        $this->session->set('ue_sol_regularizar',false);
 
         return $this->render($this->session->get('pathSystem') . ':Inbox:index.html.twig', array(
             'objValidateUePlena'=>($objValidateUePlena)?1:0,
@@ -381,6 +378,7 @@ class InboxController extends Controller {
       $btnForm  = ($this->operativoUe <= 5 )?'submit':'button';
       switch ($objTypeOfUEId) {
         case 1:
+        case 7:
           # code...
           $label = 'U.E. Plena';
           $btnClass = 'btn btn-primary text-center btn-block';
@@ -558,10 +556,36 @@ class InboxController extends Controller {
 
         ));
 
+        $repository = $em->getRepository('SieAppWebBundle:Tramite');
+        $query = $repository->createQueryBuilder('t')
+            ->select('td')
+            ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'WITH', 'td.tramite = t.id')
+            ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'WITH', 'td.flujoProceso = fp.id')
+            ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 't.institucioneducativa = ie.id')
+            ->where('ie.id = :idInstitucion')
+            ->andWhere('fp.id = :flujoP')
+            ->andWhere('fp.proceso = :proceso')
+            ->andWhere('t.gestionId = :gestion')
+            ->setParameter('idInstitucion', $this->unidadEducativa)
+            ->setParameter('flujoP', 13)
+            ->setParameter('proceso', 11)
+            ->setParameter('gestion', $data['gestion'])
+            ->orderBy('t.gestionId')
+            ->getQuery();
+            
+        $tramites = $query->getResult();
+
+        if(sizeof($tramites)>0){
+          $this->session->set('ue_sol_regularizar',true);
+        } else {
+          $this->session->set('ue_sol_regularizar',false);
+        }
+
        if($objValidateUePlena){
          //switch to the kind of UE
          switch ($objValidateUePlena->getInstitucioneducativaHumanisticoTecnicoTipo()->getId()) {
            case 1:
+           case 7:
              # plena
              $this->session->set('ue_plena', true);
              $this->session->set('acceso_total', true);

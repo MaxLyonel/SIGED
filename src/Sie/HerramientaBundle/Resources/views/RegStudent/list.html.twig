@@ -1,0 +1,33 @@
+{% if integrantes is not empty %}
+    <div id="no-more-tables">
+        <table class="table table-striped table-primary">
+            <thead>
+            <tr>
+                <th>No.</th>
+                <th>Rude</th>
+                <th>Paterno</th>
+                <th>Materno</th>
+                <th>Nombre</th>
+                <th>Opción</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            {% for integrante in integrantes %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ integrante.codigoRude }}</td>
+                    <td>{{ integrante.paterno }}</td>
+                    <td>{{ integrante.materno }}</td>
+                    <td>{{ integrante.nombre }}</td>
+                    <td>
+                        <button type="button" class=" btn-link" onclick="eliminarEstudiante({{ integrante.cdl }},{{ integrante.id }})" data-toggle="tooltip" data-placement="top" data-title="Eliminar"> <i class="fa fa-trash-o text-danger"></i>  </button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    No hay Integrantes registrados
+{% endif %}
