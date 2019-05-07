@@ -185,12 +185,13 @@ class WfTramiteController extends Controller
     /**
      * Registro del tramite como recibido
      */
-    public function recibidosGuardarAction(Request $request,$id)
+    public function recibidosGuardarAction(Request $request)
     {
         $this->session = $request->getSession();
         //dump($this->session);die;
         $usuario = $this->session->get('userId');
         $rol = $this->session->get('roluser');
+        $id = $request->get('id');
         //validation if the user is logged
         if (!isset($usuario)) {
             return $this->redirect($this->generateUrl('login'));

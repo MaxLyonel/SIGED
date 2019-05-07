@@ -11,7 +11,7 @@ wf_tramite_recibido:
     defaults: { _controller: SieAppWebBundle:WfTramite:recibidos }
 
 wf_tramite_recibido_guardar:
-    path:     /{id}/recibidosguardar
+    path:     /recibidosguardar
     defaults: { _controller: SieAppWebBundle:WfTramite:recibidosGuardar }
 
 wf_tramite_recibido_enviar:
