@@ -3308,9 +3308,13 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
             $fecha_inicio=$request->get("fecha_inicio");
             $fecha_fin=$request->get("fecha_fin");
             $form_municipio=$request->get("form_municipio");
+            $form_provincia=$request->get("form_provincia");
             $localidad=$request->get("localidad");
             $gestion_g= substr($fecha_fin,-4);
-
+            $result=$em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($form_provincia);
+            $nom_prov=$result->getLugar();
+            $result=$em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($form_municipio);
+            $nom_mun=$result->getLugar();
             $institucion_educativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($curso_id);
             $ie=$institucion_educativa->getInstitucioneducativa()->getId();
             $id_maestro_inscripcion=$institucion_educativa->getMaestroInscripcionAsesor()->getId();
@@ -3382,11 +3386,22 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
             $product->setFechaFin(\DateTime::createFromFormat('d/m/Y', $fecha_fin));
             $product->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($gestion_g));
             $product->setMaestroInscripcionAsesor($maestroinscripcion);
+            $product->setLugar($nom_prov);
             $em->flush();
             $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($curso_id);
             $result->setLugarTipoSeccion($em->getRepository('SieAppWebBundle:LugarTipo')->find($form_municipio));
             $result->setLocalidad($localidad);
             $em->flush();
+            //actualizar nombre de municipio y localidad ctv
+            $estudiantes=$em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findByinstitucioneducativaCurso($curso_id);
+            if($estudiantes)
+            foreach ($estudiantes as $estudiante) {
+                    $ei_id=$estudiante->getId();
+                    $result=$em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($ei_id);
+                    $result->setLugar($nom_mun);
+                    $result->setLugarcurso($localidad);
+                    $em->flush();
+                }
         }
         $id_enc=$id;
         $id=$this->desencriptar($id_enc);
@@ -4774,7 +4789,7 @@ ciclo_tipo_id, grado_tipo_id
         if($rec_sab){
             $fecha_homologacion=$rec_sab->getFechaHomologacion();    
             $fecha_homologacion= date_format($fecha_homologacion,"Y");    
-            if($fecha_homologacion<=$gestion_fin){//ctv
+            if($fecha_homologacion<=$gestion_fin){
                 $curso_rs=$rec_sab->getCurso();
                 if($curso_rs==2){$bloque_rs_toca=1;$parte_rs_toca=2;}
                 elseif($curso_rs==3){$bloque_rs_toca=2;$parte_rs_toca=1;}
