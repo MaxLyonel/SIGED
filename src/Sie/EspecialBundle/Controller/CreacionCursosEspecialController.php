@@ -626,9 +626,14 @@ class CreacionCursosEspecialController extends Controller {
     		$query = $em->createQuery(
     				'SELECT g.id, g.grado FROM SieAppWebBundle:GradoTipo g
                                     WHERE g.id IN (:id)'
-    				)->setParameter('id',array(1,2,3,4,5));
+    				)->setParameter('id',array(1,2));
     	}
-    	elseif ($nivel == "402" or $nivel == "406" ) {
+    	elseif ($nivel == "402") {
+    		$query = $em->createQuery(
+    				'SELECT g.id, g.grado FROM SieAppWebBundle:GradoTipo g
+                                    WHERE g.id IN (:id)'
+    				)->setParameter('id',array(1,2,3,4,5,6));
+    	}elseif ($nivel == "406" ) {
     		$query = $em->createQuery(
     				'SELECT g.id, g.grado FROM SieAppWebBundle:GradoTipo g
                                     WHERE g.id IN (:id)'

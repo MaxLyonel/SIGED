@@ -180,25 +180,18 @@ class FlujoProcesoController extends Controller
                 $em->persist($flujoproceso);
                 $em->flush();
                 $em->getConnection()->commit();
+                if($flujoproceso->getEsEvaluacion() == true){
+                    $flujoproceso->setTareaSigId($flujoproceso->getId());
+                    $em->flush();
+                }
                 if ($orden)
                 {
-                    //$fp = $em->getRepository('SieAppWebBundle:FlujoProceso')->findBy(array('tareaAntId'=>''));
-                    //dump($form);die;
-                    $query=$em->getConnection()->prepare('select id from flujo_proceso where tarea_ant_id='.$form['tareaant']);
-                    $query->execute();
-                    $fp = $query->fetchAll();
-                    //dump($fp);die;
                     $flujop = $em->getRepository('SieAppWebBundle:FlujoProceso')->find($form['tareaant']);
-                    if($flujop->getEsEvaluacion()==TRUE)
+                    if($flujop->getEsEvaluacion() == FALSE)
                     {
-                        $id=$flujop->getId();
-                    }else{
-                        $id= $fp[0]['id'];
+                        $flujop->setTareaSigId($flujoproceso->getId());
+                        $em->flush();
                     }
-                    $flujop->setTareaSigId($id);
-                    $em->persist($flujop);
-                    $em->flush();
-                    //$em->getConnection()->commit();
                 }
                 //dump($flujoproceso);die;
                 //$em->getConnection()->commit();

@@ -490,7 +490,7 @@ class AreasController extends Controller {
             $asignaturas = null;
             
             switch($idNivel){
-                case 401: switch ($grado) {
+                case 401:   switch ($grado) {
                                 case 1:
                                 case 2:
                                     $asignaturas = $em->createQuery(
@@ -501,7 +501,7 @@ class AreasController extends Controller {
                                     )->setParameter('ids',array(464,465,466,467))
                                     ->getResult();
                                     break;
-                                case 3:
+                             /*    case 3:
                                 case 4:
                                 case 5:
                                     $asignaturas = $em->createQuery(
@@ -511,7 +511,7 @@ class AreasController extends Controller {
                                     ORDER BY at.id ASC'
                                     )->setParameter('ids',array(468,469,470,471,472,473,474))
                                     ->getResult();
-                                    break;
+                                    break; */
                             }
                             break;
                 case 402: $asignaturas = $em->createQuery(

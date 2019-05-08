@@ -110,7 +110,10 @@
                         {% endfor %}
                         {% set sw = 0 %}
                         {% for f in flujo %}
-                            {% if f.es_evaluacion =="1" %}
+                            {% if f.tarea_ant_id == null %}
+                                st->{{f.id}}
+                            {% endif %}
+                            {% if f.es_evaluacion == true %}
                                 {{f.id}}->c{{f.id}}
                                 {% if f.condicion == "SI" %}
                                     c{{f.id}}(yes)->{{f.condicion_tarea_siguiente}}
@@ -122,16 +125,10 @@
                                     {% endif %}
                                 {% endif %}
                             {% else %}
-                                {% set sw = 0 %}
-                                {% if f.tarea_ant_id == null %}
-                                    st->{{f.id}}
-                                    {{f.id}}->{{f.tarea_sig_id}}
+                                {% if f.tarea_sig_id == null %}
+                                    {{f.id}}->e
                                 {% else %}
-                                    {% if f.tarea_sig_id == null %}
-                                        {{f.id}}->e
-                                    {% else %}
-                                        {{f.id}}->{{f.tarea_sig_id}}
-                                    {% endif %}
+                                    {{f.id}}->{{f.tarea_sig_id}}
                                 {% endif %}
                             {% endif %}
                         {% endfor %}
