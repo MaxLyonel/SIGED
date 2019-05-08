@@ -670,8 +670,8 @@ class CreacionCursosEspecialController extends Controller {
 
 
     public function listarServiciosAction($area,$nivel,$grado) {
-    	$em = $this->getDoctrine()->getManager();
-
+        $em = $this->getDoctrine()->getManager();
+        $this->session = new Session();
     	if ($area == "6" and $nivel == "410" and  $grado == "99" ) {
     		$query = $em->createQuery(
     				'SELECT s.id, s.servicio FROM SieAppWebBundle:EspecialServicioTipo s
@@ -679,10 +679,17 @@ class CreacionCursosEspecialController extends Controller {
     				)->setParameter('id',array(6,7,20));
     	}
     	elseif ($area == "7" and $nivel == "410" and  $grado == "99" ) {
-    		$query = $em->createQuery(
+            if ($this->session->get('idGestion') < 2019) {
+                $query = $em->createQuery(
     				'SELECT s.id, s.servicio FROM SieAppWebBundle:EspecialServicioTipo s
                                     WHERE s.id IN (:id)'
     				)->setParameter('id',array(8,9,10,11,12,13,14,15,16,17,18,19));
+            } else {
+                $query = $em->createQuery(
+    				'SELECT s.id, s.servicio FROM SieAppWebBundle:EspecialServicioTipo s
+                                    WHERE s.id IN (:id)'
+    				)->setParameter('id',array(8,9,10,11,12,14,15));
+            }
     	}
     	elseif (($area == "1" or $area == "3" or $area == "4" or $area == "5" or $area == "8" or $area == "9")  and $nivel == "410" and  $grado == "99" ) {
     		$query = $em->createQuery(
@@ -720,13 +727,20 @@ class CreacionCursosEspecialController extends Controller {
     }
 
     public function listarProgramasAction($area,$nivel,$grado) {
-    	$em = $this->getDoctrine()->getManager();
-
+        $em = $this->getDoctrine()->getManager();
+        $this->session = new Session();
     	if ( $area == "1" and $nivel == "411" and  $grado == "99" ) {
-    		$query = $em->createQuery(
+    		if ($this->session->get('idGestion') < 2019) {
+                $query = $em->createQuery(
     				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
                                     WHERE p.id IN (:id)'
     				)->setParameter('id',array(13));
+            } else {
+                $query = $em->createQuery(
+    				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
+                                    WHERE p.id IN (:id)'
+    				)->setParameter('id',array(13, 19, 20, 21, 22, 23));
+            }
     	}
     	elseif ($area == "2" and $nivel == "411" and  $grado == "99" ) {
     		$query = $em->createQuery(
@@ -751,11 +765,17 @@ class CreacionCursosEspecialController extends Controller {
                                 WHERE p.id IN (:id) order by p.programa'
                 )->setParameter('id',array(18));
         }else {
-    		$query = $em->createQuery(
-                
+            if ($this->session->get('idGestion') < 2019) {
+                $query = $em->createQuery(
     				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
                                     WHERE p.id = (:id)'
     				)->setParameter('id',99);
+            } else {
+                $query = $em->createQuery(
+    				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
+                                    WHERE p.id IN (:id)'
+    				)->setParameter('id',array(23, 24));
+            }
     	}
 
 //     	    		$query = $em->createQuery(

@@ -343,6 +343,14 @@
             });
             $(form_select).html(soptions).prepend(foption);
         };
+
+        $('#form_educacionCasa').change(function() {
+            if($(this).is(":checked")) {
+                var returnVal = confirm("¿Esta seguro(a) de definir el curso para Educación en Casa?");
+                $(this).attr("checked", returnVal);
+            }
+            $('#form_educacionCasa').val($(this).is(':checked'));        
+        });
         
     </script>
 {% endblock %}
