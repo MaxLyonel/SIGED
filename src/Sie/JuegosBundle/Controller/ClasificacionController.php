@@ -155,6 +155,7 @@ class ClasificacionController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        // $gestionActual = 2018;
 
         $em = $this->getDoctrine()->getManager();
         $fase = $request->get('form_fase');
@@ -657,6 +658,7 @@ class ClasificacionController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        // $gestionActual = 2018;
         $this->session->set('save', false);
 
         $fase = 4;
@@ -782,6 +784,7 @@ class ClasificacionController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        // $gestionActual = 2018;
 
         $sesion = $request->getSession();
         $id_usuario = $this->session->get('userId');
@@ -990,6 +993,7 @@ class ClasificacionController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        // $gestionActual = 2018;
 
         $em = $this->getDoctrine()->getManager();
         //get grado
@@ -1052,6 +1056,7 @@ class ClasificacionController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        // $gestionActual = 2018;
         $ue = $this->session->get('userName');
 
         $em = $this->getDoctrine()->getManager();
@@ -1864,6 +1869,7 @@ class ClasificacionController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        // $gestionActual = 2018;
         $em = $this->getDoctrine()->getManager();
 
         $queryEntidad = $em->getConnection()->prepare("
@@ -1906,6 +1912,7 @@ class ClasificacionController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        // $gestionActual = 2018;
         $em = $this->getDoctrine()->getManager();
 
         $objEntidad = $this->buscaEntidadFase($fase,$usuario);
@@ -1933,6 +1940,7 @@ class ClasificacionController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        // $gestionActual = 2018;
         $em = $this->getDoctrine()->getManager();
 
         $sesion = $request->getSession();
@@ -1970,6 +1978,7 @@ class ClasificacionController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        // $gestionActual = 2018;
         $em = $this->getDoctrine()->getManager();
 
         $sesion = $request->getSession();
@@ -2156,6 +2165,7 @@ class ClasificacionController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        // $gestionActual = 2018;
         $em = $this->getDoctrine()->getManager();
 
         if (isset($_POST['id'])){
@@ -2210,6 +2220,7 @@ class ClasificacionController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        // $gestionActual = 2018;
         $em = $this->getDoctrine()->getManager();
 
         $objEntidad = $this->buscaEntidadFase($fase,$usuario);
@@ -2242,6 +2253,7 @@ class ClasificacionController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        // $gestionActual = 2018;
         $em = $this->getDoctrine()->getManager();
 
         $objEntidad = $this->buscaEntidadFase($fase,$usuario);
@@ -2279,6 +2291,7 @@ class ClasificacionController extends Controller {
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
         // $gestionActual = 2018;
+        // // $gestionActual = 2018;
 
         $em = $this->getDoctrine()->getManager();
 
@@ -2334,6 +2347,7 @@ class ClasificacionController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        // $gestionActual = 2018;
 
         $em = $this->getDoctrine()->getManager();
 
@@ -2383,6 +2397,7 @@ class ClasificacionController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        // $gestionActual = 2018;
 
         $em = $this->getDoctrine()->getManager();
 
@@ -2431,6 +2446,7 @@ class ClasificacionController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        // $gestionActual = 2018;
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         $respuesta = array();
