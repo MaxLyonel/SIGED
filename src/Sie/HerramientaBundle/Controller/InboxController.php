@@ -1074,7 +1074,7 @@ class InboxController extends Controller {
       $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_rude_txt('" . $arrData['id'] . "','" . $arrData['gestion'] . "','" . $cabecera . "');");
       $query->execute();
 
-      $newGenerateFile = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'R';
+      $newGenerateFile = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'RB';
       
 
       //decode base64
