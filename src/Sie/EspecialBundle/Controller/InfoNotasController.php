@@ -152,7 +152,13 @@ class InfoNotasController extends Controller {
                     }
                     break;
                 case 7: // Talento extraordinario
-                        break;
+                    $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
+                    $template = 'especialSeguimiento';
+                    $actualizarMatricula = false;
+                    if($operativo >= 4 or $gestion < $gestionActual){
+                        $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(48,77)));
+                    }
+                    break;
                 case 8: // Sordeceguera
                         break;
 
@@ -161,7 +167,6 @@ class InfoNotasController extends Controller {
                 case 100: // Modalidad Indirecta
                         break;
             }
-            
             if($notas){
                 return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array('notas'=>$notas,'inscripcion'=>$inscripcion,'vista'=>$vista,'template'=>$template,'actualizar'=>$actualizarMatricula,'operativo'=>$operativo,'estadosMatricula'=>$estadosMatricula,'discapacidad'=>$discapacidad));
             }else{
@@ -174,7 +179,7 @@ class InfoNotasController extends Controller {
     }
 
     public function createUpdateAction(Request $request){
-        try {            
+        try {
             $idInscripcion = $request->get('idInscripcion');
             $discapacidad = $request->get('discapacidad');
             // Registramos las notas
@@ -184,10 +189,10 @@ class InfoNotasController extends Controller {
             if($request->get('actualizar') == true){
                 $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
             }
-
+            
             // Actualizar estado de matricula de los notas que son cualitativas siempre 
             // y cuando esten en el cuarto bimestre
-            if($request->get('operativo') >= 4 and $request->get('actualizar') == false){
+            if(($request->get('operativo') >= 4 and $request->get('actualizar') == false) or ($discapacidad == 7 and $request->get('actualizar') == false)){
                 $em = $this->getDoctrine()->getManager();
                 $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
                 $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($request->get('nuevoEstadomatricula')));

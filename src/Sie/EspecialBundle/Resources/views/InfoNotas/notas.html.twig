@@ -11,13 +11,13 @@
 	        <div class="panel panel-danger">
 	            <div class="modal-header" style="background:#D52F27">
 	                <div class="pull-left">
-	                    <h3 class="panel-title" style="color:#FFFFFF">Notas del Estudiante</h3>
+	                    <h3 class="panel-title" style="color:#FFFFFF">{% if (notas.gestion > 2018 and discapacidad in [7]) %} Seguimiento {% else %} Notas {% endif %} del Estudiante</h3>
 	                </div>
 	                <div class="clearfix"></div>
 	            </div>
 	            <div class="panel-body no-padding" id="modal-body">
 	            	<div class="alert " style="padding:10px">
-					    <h5 class="text-lilac">Datos del Curso</h5>
+					    <h5 class="text-lilac">Datos del Curso/Grupo</h5>
 					    <table class="table table-condensed table-bordered" style="background:#EEEEEE">
 					        <tr>
 					            <th>Nivel</th><td>{{inscripcion.institucioneducativaCurso.nivelTipo.nivel|upper}}</td>
@@ -32,7 +32,7 @@
 					    <h5 class="text-info">Datos del Estudiante</h5>
 					    <table class="table table-condensed table-bordered" style="background:#EEEEEE">
 					        <tr>
-					            <th>Codigo Rude</th><td style="color:#0086DD">{{inscripcion.estudiante.codigoRude}}</td>
+					            <th>Código Rude</th><td style="color:#0086DD">{{inscripcion.estudiante.codigoRude}}</td>
 					        </tr>
 					        <tr>
 					            <th>Estudiante</th><td style="color:#0086DD"><b>{{inscripcion.estudiante.nombre}} {{inscripcion.estudiante.paterno}} {{inscripcion.estudiante.materno}}</b></td>
@@ -41,7 +41,11 @@
 					            <th>Estado de matrícula</th><td>{{inscripcion.estadomatriculaTipo.estadomatricula}}</td>
 					        </tr>
 					    </table>
+						{% if (notas.gestion > 2018 and discapacidad in [7]) %}
+						<h5 style="color:#0086DD">Seguimiento</h5>
+						{% else %}
 						<h5>Notas <small style="float:right;color:#4D8595">Operativo Actual-{{notas.operativo}}</small></h5>
+						{% endif %}
 					    {# {% include 'SieAppWebBundle:Services/Notas:'~ template ~'.html.twig' with {'notas':notas, 'vista':vista} %} #}
 						{% include 'SieAppWebBundle:Services/Notas:'~ template ~'.html.twig' with { 'notas':notas, 'vista':vista, 'discapacidad':discapacidad } %}
 
@@ -65,7 +69,6 @@
 								</tr>
 							</table>
 						{% endif %}
-
 					</div>
 
 	            </div>
@@ -75,6 +78,9 @@
 	            {% if notas.estadoMatricula in notas.estadosPermitidos and notas.cuantitativas|length > 0 and onlyview == false %}
 		            <button type="submit" class="btn btn-success">Guardar Cambios</button>
 		        {% endif %}
+				{% if (notas.estadoMatricula in notas.estadosPermitidos and notas.gestion > 2018 and discapacidad in [7]) %}
+					<button type="submit" class="btn btn-success">Guardar</button>
+				{% endif %}
 	        </div>
 	    </div><!-- /.modal-content -->
 	    </form>
@@ -91,7 +97,14 @@
     var registrarNotasEspecial = function(){
     	var enviar = validarEnvioNotas();
         if(enviar == true){
-	    	var formData = $('#formNotasEspecial').serialize();
+	    	var formData = $('#formNotasEspecial').serialize();//"textarea[name!=int1]", .not('form[textarea]')
+			//Seguimiento para Talento Extraordinario
+			var notas = [];
+			$("#tbl_nota tbody tr").each(function() {
+				$this = $(this);
+				notas.push({"inter": $this.find("textarea.pi").val(), "desc": $this.find("textarea.dc").val()});
+			});
+			formData = formData+"&seguimiento="+JSON.stringify(notas);
 		    $.ajax({
 		        type: 'post',
 		        url: Routing.generate('especialInfoNotas_create_update'),
