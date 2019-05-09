@@ -1380,22 +1380,7 @@ class TramiteRueController extends Controller
             //dump($idtramite);die;
             //Modificacion de datos propios de la solicitud
             $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
-            $wfSolicitudTramite = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wf')
-                ->select('wf')
-                ->innerJoin('SieAppWebBundle:Tramite', 't', 'with', 't.id = wf.tramite')
-                ->where('t.id =' . $tramite->getId())
-                ->getQuery()
-                ->getResult();
-            //dump($wfSolicitudTramite);die;
-            if($wfSolicitudTramite){
-                //datos de la solicitud
-                $wfSolicitudTramite[0]->setDatos($datos);
-                $wfSolicitudTramite[0]->setEsValido(true);
-                $wfSolicitudTramite[0]->setFechaModificacion(new \DateTime(date('Y-m-d H:i:s')));
-                $em->flush();
-            }
-            //dump($tramite);die;
-            //$tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($tramiteD[0]->getTramite()->getId());
+
         }
         //insert tramite_detalle
         //dump($tramiteD);die;
