@@ -19,7 +19,7 @@ creacioncursos_especial_delete:
 
          
 listar_niveles_especial:
-    path:     /listarNiveles/{area}/
+    path:     /listarNiveles/{area}/{modalidad}
     defaults: { _controller: "SieEspecialBundle:CreacionCursosEspecial:listarNiveles"}
     options:
          expose: true

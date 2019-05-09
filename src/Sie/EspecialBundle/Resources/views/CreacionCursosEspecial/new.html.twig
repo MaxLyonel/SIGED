@@ -51,17 +51,14 @@
                                 <div class="row">
                                     <div class="form-group col-lg-6 col-md-12">
                                         {{form_label(form.area)}}
-                                        {{form_widget(form.area,{ 'attr':{'onchange':'listarNiveles()'}  }) }}
+                                        {{form_widget(form.area) }}
                                         <div class="help-block with-errors"></div>
                                     </div>
-                                    <div class="form-group col-lg-6 col-md-12">
-                                        {{form_label(form.turno)}}
-                                        {{form_widget(form.turno) }}
-                                        <div class="help-block with-errors"></div>
-                                    </div>
+                                </div>
+                                <div class="row">
                                     <div class="form-group col-lg-6 col-md-12" id="divMultiple" style="display:none">
                                         {% for a in form.multiple %}
-                                            <div class="col-md-3 rdio rdio-primary circle">
+                                            <div class="col-md-4 rdio rdio-primary circle">
                                                 {{ form_widget(a,{ 'attr':{'class':'multiple'}  }) }}
                                                 {{ form_label(a) }}
                                             </div>
@@ -70,11 +67,23 @@
                                     </div>
                                     <div class="form-group col-lg-6 col-md-12" id="divFisicoMotor" style="display:none">
                                         {% for a in form.fisicoMotor %}
-                                            <div class="col-md-3 rdio rdio-primary circle">
+                                            <div class="col-md-4 rdio rdio-primary circle">
                                                 {{ form_widget(a,{ 'attr':{'class':'fisicoMotor'}  }) }}
                                                 {{ form_label(a) }}
                                             </div>
                                         {% endfor %}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{form_label(form.modalidad)}}
+                                        {{form_widget(form.modalidad,{ 'attr':{'onchange':'listarNiveles()'}  }) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{form_label(form.turno)}}
+                                        {{form_widget(form.turno) }}
                                         <div class="help-block with-errors"></div>
                                     </div>
                                 </div>
@@ -146,6 +155,7 @@
 
         function listarNiveles() {
             var area = $('#form_area').val();
+            var modalidad = $('#form_modalidad').val();
             if(area== 4 || area== 6 || area== 7){
                 $("#divgrado").hide();
                 $("#divtecnica").hide();
@@ -189,7 +199,7 @@
             
             $.ajax({
                 type: 'get',
-                url: Routing.generate('listar_niveles_especial', {'area':area}),
+                url: Routing.generate('listar_niveles_especial', {'area':area,'modalidad':modalidad}),
                 beforeSend: function () {
                     $("#form_nivel").empty();
                     $("#form_grado").empty();

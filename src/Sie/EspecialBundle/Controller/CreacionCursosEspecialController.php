@@ -297,7 +297,8 @@ class CreacionCursosEspecialController extends Controller {
                     ->add('idGestion','hidden',array('data'=>$request->get('idGestion')))
                     ->add('turno','choice',array('label'=>'Turno','choices'=>$turnos,'attr'=>array('class'=>'form-control')))
                     ->add('area', 'choice',array('label'=>'Subárea','choices'=>$areas , 'empty_value' => 'Seleccionar', 'required' => true, 'attr' => array('class' => 'form-control')))
-                    ->add('nivel','choice',array('label'=>'Nivel','empty_value'=>'Seleccionar','attr'=>array('class'=>'form-control')))
+                    ->add('modalidad','choice',array('label'=>'Modalidad','choices'=>array(1=>'DIRECTA',2=>'INDIRECTA'),'empty_value' => 'Seleccionar','required' => true, 'attr' => array('class' => 'form-control'),'attr'=>array('class'=>'form-control')))
+                    ->add('nivel','choice',array('label'=>'Oferta','empty_value'=>'Seleccionar','attr'=>array('class'=>'form-control')))
                     ->add('grado','choice',array('label'=>'Grado','empty_value'=>'Seleccionar','attr'=>array('class'=>'form-control')))
                     ->add('programa','choice',array('label'=>'Programa','empty_value'=>'Seleccionar','attr'=>array('class'=>'form-control')))
                     ->add('servicio','choice',array('label'=>'Servicio','empty_value'=>'Seleccionar','attr'=>array('class'=>'form-control')))
@@ -544,43 +545,66 @@ class CreacionCursosEspecialController extends Controller {
     }
 
 
-    public function listarNivelesAction($area) {
+    public function listarNivelesAction($area,$modalidad) {
     	$em = $this->getDoctrine()->getManager();
 
     	if ($area == "1" ) {
-    		$query = $em->createQuery(
-    				'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
-                                    WHERE n.id IN (:id)'
-    				)->setParameter('id',array(403,404,405,410,411));
+            if($modalidad == 1)
+                $nivelesArray = array(403,404,405,410,411);
+            else{
+                $nivelesArray = array(410);
+            }
+            $query = $em->createQuery(
+                'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
+                            WHERE n.id IN (:id)'
+                )->setParameter('id',$nivelesArray);
     	}
     	elseif ($area == "2" ) {
+            if($modalidad == 1)
+                $nivelesArray = array(405,410,411);
+            else{
+                $nivelesArray = array(410);
+            }
     		$query = $em->createQuery(
     				'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
                                     WHERE n.id IN (:id)'
-    				)->setParameter('id',array(405,410,411));
-
-
+    				)->setParameter('id',$nivelesArray);
     	}
     	elseif ($area == "3" or $area == "5" ) {
-    	$query = $em->createQuery(
+            if($modalidad == 1)
+                $nivelesArray = array(401,402,405,410,411);
+            else{
+                $nivelesArray = array(410);
+            }
+            $query = $em->createQuery(
     			'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
                                     WHERE n.id IN (:id)'
-    		)->setParameter('id',array(401,402,405,410,411));
+    		    )->setParameter('id',$nivelesArray);
         }
         elseif ($area == "4" ) {   //educacion en casa alternativa-regular
+            if($modalidad == 1)
+                $nivelesArray = array(411);
+            else{
+                $nivelesArray = array(99);
+            }
             $query = $em->createQuery(
                     'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
                                         WHERE n.id IN (:id)'
-                )->setParameter('id',array(411));
+                )->setParameter('id',$nivelesArray);
         }
-    	/*elseif ($area == "6" ) {    //DIFICULTADES EN EL APRENDIZAJE
-    		$query = $em->createQuery(
+    	elseif ($area == "6" ) {    //DIFICULTADES EN EL APRENDIZAJE
+            if($modalidad == 1)
+                $nivelesArray = array(410,411);
+            else{
+                $nivelesArray = array(410);
+            }
+            $query = $em->createQuery(
     				'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
                                     WHERE n.id IN (:id)'
-    				)->setParameter('id',array(410,411));
+    				)->setParameter('id',$nivelesArray);
 
     	}
-        
+        /*
     	elseif ($area == "8" ) {
     			$query = $em->createQuery(
     					'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
@@ -602,11 +626,11 @@ class CreacionCursosEspecialController extends Controller {
                     )->setParameter('id',array(999));
 
         }*/
-    	else  {
-    	$query = $em->createQuery(
-    			'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
+    	elseif ($area == "7"){
+    	    $query = $em->createQuery(
+    		    	'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
                                     WHERE n.id IN (:id)'
-    		)->setParameter('id',array(410,411));
+    		        )->setParameter('id',array(410,411));
     	}
 
     	$niveles = $query->getResult();
