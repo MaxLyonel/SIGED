@@ -108,21 +108,21 @@ e=>end: Fin|past
 {% for f in flujo %}
     {{f.id}}=>operation: {{f.proceso_tipo}}
     {% if f.es_evaluacion =="1" %}
-        c{{f.id}}=>condition: {{f.variable_evaluacion}}?
+        c{{f.id}}=>condition: ¿{{f.variable_evaluacion}}?
     {% endif %}
 {% endfor %}
 {% set sw = 0 %}
 {% for f in flujo %}
-    {% if f.es_evaluacion =="1" %}
-        {#{% if sw == 0 %}#}
+    {% if f.tarea_ant_id == null %}
+        st->{{f.id}}
+    {% endif %}
+    {% if f.es_evaluacion == true %}
         {% if f.id == 48 %}
             {{f.id}}(right)->c{{f.id}}
             {% set sw = 1 %}
         {% else %}
             {{f.id}}()->c{{f.id}}
-            {% set sw = 1 %}
         {% endif %}
-        {#{% endif %}#}
         {% if f.condicion == "SI" %}
             {% if f.id == 48 %}
                 c{{f.id}}(yes,top)->{{f.condicion_tarea_siguiente}}
@@ -137,17 +137,10 @@ e=>end: Fin|past
             {% endif %}
         {% endif %}
     {% else %}
-        {% set sw = 0 %}
-        {% if f.tarea_ant_id == null %}
-            st->{{f.id}}
-            {{f.id}}->{{f.tarea_sig_id}}
+        {% if f.tarea_sig_id == null %}
+            {{f.id}}->e
         {% else %}
-            {% if f.tarea_sig_id == null %}
-                {{f.id}}->e
-            {% else %}
-                
-                {{f.id}}->{{f.tarea_sig_id}}
-            {% endif %}
+            {{f.id}}->{{f.tarea_sig_id}}
         {% endif %}
     {% endif %}
 {% endfor %}
@@ -192,7 +185,7 @@ st@>e({"stroke":"Green"})
                       // 'x': 30,
                       // 'y': 50,
                       'line-width': 3,
-                      'maxWidth': 3,//ensures the flowcharts fits within a certian width
+                      'maxWidth': 5,//ensures the flowcharts fits within a certian width
                       'line-length': 20,
                       'text-margin': 10,
                       'font-size': 12,
