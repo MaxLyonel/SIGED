@@ -25,7 +25,7 @@
 			/*display: none;*/
 			overflow-y: auto;
 			box-shadow: 3px 3px 5px #BCC4E5;
-			z-index: 1005;
+			/* z-index: 1401; */
 		}
 		.menu-header{
 			background-color: #0A60FE;
@@ -159,6 +159,10 @@
 			font-weight: bold;
 		}
 
+		.popover{
+			z-index: 1500;
+		}
+
 	</style>
 </head>
 <body>
@@ -178,7 +182,6 @@
 			<a href="{{path('sie_gis_login')}}" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="right" title="Tooltip on top"><small>Iniciar Session</small></a>
 		{% endif %}
 	</div>
-
 	<div class="menu">
 		<div class="menu-header">
 			<h3>SIGEE <a href="#" style="float:right; font-size:0.7em; margin: 10px 10px 0 0; color:#FFFFFF; text-decoration:none" onclick="ocultarMenu();" data-container="body" data-toggle="popover" data-placement="top" data-content="Ocultar menu" data-trigger="hover"> <i class="fa fa-chevron-left"></i> </a></h3>
@@ -249,7 +252,7 @@
 				<div class="longitud"></div>
 			</div>
 			<div class="col-sm-4">
-				<button class="btn btn-secondary btn-sm" onclick="cerrarGeoreferencial();"><small>Cancelar</small></button>
+				<button class="btn btn-secondary btn-sm" onclick="cerrarGeoreferencial(0);"><small>Cancelar</small></button>
 				<button class="btn btn-primary btn-sm" onclick="updateGeoreferencial();"><small>Guardar Cambios</small></button>
 			</div>
 		</div>
@@ -320,12 +323,24 @@
 		var marker;
 		var contMarker = 1;
 		var infobox;
-		var image = "{{asset('images/marker.png')}}";
+		// var image = "{{asset('images/marker.png')}}";
+		var image = new khtml.maplib.overlay.MarkerImage(
+							  "{{asset('images/marker.png')}}",		// url
+							  {width: 50, height: 50},	// size
+							  {x: 0, y: 0},			// origin
+							  {x: 10, y: 20}		// anchorPoint
+						 );
+		var image2 = new khtml.maplib.overlay.MarkerImage(
+							  "{{asset('images/marker2.png')}}",		// url
+							  {width: 50, height: 50},	// size
+							  {x: 0, y: 0},			// origin
+							  {x: 10, y: 20}		// anchorPoint
+						 );
 		var contentString;
 		var poligono;
 		var cordsPoligono;
-		var latitud;
-		var longitud;
+		var latitud = -16.50666;
+		var longitud = -68.12793;
 		var latitudPreview;
 		var longitudPreview;
 		var codigoEdificio;
@@ -336,6 +351,7 @@
 		var idComunidadNext = 'Ninguno';
 		var idComunidad = 'Ninguno';
 		var actualizarGeo = false;
+		var zoom = 6;
 
 		/* FUNCIONES PARA MANIPULAR EL MENU */
 
@@ -368,7 +384,7 @@
 
 		function initMap() {
 
-			var zoom = 6;
+			$('#map').empty();
 
 			// map = new OpenLayers.Map("map");
 			// map.addLayer(new OpenLayers.Layer.OSM());
@@ -381,8 +397,8 @@
 			
 			// map.setCenter(myLatLng, zoom);
 
-			map = khtml.maplib.Map(document.getElementById("map"));
-			map.centerAndZoom(new khtml.maplib.LatLng(-16.50666,-68.12793),zoom);
+			map = new khtml.maplib.Map(document.getElementById("map"));
+			map.centerAndZoom(new khtml.maplib.LatLng(latitud,longitud),zoom);
 
 		    // map = new google.maps.Map(document.getElementById('map'), {
 		    //     center: myLatLng,
@@ -407,16 +423,16 @@
 
 		/* VALIDACION DE MARCADOR */
 
-		function validarPosicion(){
-			var estado = poligono.contains(marker.getPosition());
-		    if (estado) {
-		    	console.log(marker.getPosition().lat());
-		        console.log(marker.getPosition().lng());
-		    	console.log('Si es valido');
-		    }else{
-		    	console.log('No es valido');
-		    }
-		}
+		// function validarPosicion(){
+		// 	var estado = poligono.contains(marker.getPosition());
+		//     if (estado) {
+		//     	console.log(marker.getPosition().lat());
+		//         console.log(marker.getPosition().lng());
+		//     	console.log('Si es valido');
+		//     }else{
+		//     	console.log('No es valido');
+		//     }
+		// }
 
 		function validar(){
 			var latitud = $('#latitud').val();
@@ -588,10 +604,13 @@
 						        position: new khtml.maplib.LatLng(data.latitud,data.longitud), 
 						        map: map,
 						        title: 'Edificio Educativo',
-						        draggable: false
+						        draggable: false,
+						        icon: image
 						});
 
-						map.centerAndZoom(new khtml.maplib.LatLng(data.latitud,data.longitud), 15);
+						zoom = map.zoom();
+
+						map.centerAndZoom(new khtml.maplib.LatLng(data.latitud,data.longitud), zoom);
 
 						contentString = '<div>Código SIE</div>'+
 										'<b>'+data.id+'</b>'+
@@ -727,9 +746,11 @@
 					idComunidadNext = data.idComunidad;
 					codigo = i;
 					$('#detalle').empty();
+
 					if(marker){
 						marker.destroy();
 					}
+
 					if(data.coordenadas == true){
 						latitud = data.latitud;
 						longitud = data.longitud;
@@ -738,10 +759,13 @@
 						        position: new khtml.maplib.LatLng(latitud,longitud), 
 						        map: map,
 						        title: 'Edificio Educativo',
-						        draggable: false
+						        draggable: false,
+						        icon: image
 						});
 
-						map.centerAndZoom(new khtml.maplib.LatLng(latitud,longitud), 15);
+						zoom = map.zoom();
+
+						map.centerAndZoom(new khtml.maplib.LatLng(latitud,longitud), zoom);
 
 						contentString = '<div>Código de Edificio</div>'+
 										'<b>'+data.codEdificio+'</b>';
@@ -907,8 +931,14 @@
 				 //    poligono.setMap(map);
 
 				    /*  eliminamos el marcador previo */
-				    if(marker){marker.destroy();}
-				    var lat, lon;
+				    if(marker){
+				    	marker.destroy();
+				    }
+
+				    var lat, lng;
+
+				    zoom = map.zoom();
+
 				    if(latitudPreview == 'Ninguno' || longitudPreview == 'Ninguno'){
 				    	// //var posicionMarcador = {lat:-16.76031273193217, lng:-64.56658868750003};
 				    	// var posicionMarcador = {data.latitudMunicipio, data.longitudMunicipio};
@@ -916,9 +946,9 @@
 				    	// //map.setCenter({lat:-16.76031273193217, lng:-64.56658868750003});
 			    		// map.setZoom(6);
 			    		lat = data.latitudMunicipio;
-			    		lon = data.longitudMunicipio;
+			    		lng = data.longitudMunicipio;
 
-			    		map.centerAndZoom(new khtml.maplib.LatLng(data.latitudMunicipio,data.longitudMunicipio), 6);
+			    		// map.centerAndZoom(new khtml.maplib.LatLng(data.latitudMunicipio,data.longitudMunicipio), zoom);
 
 			    		$('.latitud').empty();
 			    		$('.latitud').text(data.latitudMunicipio);
@@ -927,28 +957,29 @@
 				    }else{
 				    	// var posicionMarcador = {lat:latitud, lng:longitud};
 				    	// map.setCenter({lat:latitud, lng:longitud});
-				    	map.centerAndZoom(new khtml.maplib.LatLng(latitud,longitud), 6);
+				    	// map.centerAndZoom(new khtml.maplib.LatLng(latitud,longitud), zoom);
 
 				    	lat = latitud;
-				    	lon = longitud;
+				    	lng = longitud;
 				    }
 
 				    marker = new khtml.maplib.overlay.Marker({
-				            position: new khtml.maplib.LatLng(lat,lon), 
+				            position: new khtml.maplib.LatLng(lat,lng),
 				            map: map,
 				            title: 'Edificio Educativo',
-				            draggable: true
+				            draggable: true,
+				            icon: image2
 				    });
 
-				    map.centerAndZoom(new khtml.maplib.LatLng(lat,lon), 15);
+				    // map.centerAndZoom(new khtml.maplib.LatLng(lat,lng), zoom);
 
 				    contentString = '<div>Código Edificio</div>'+
 				    				'<b>'+data.codEdificio+'</b>';
 
 				    infobox = new khtml.maplib.overlay.InfoWindow({content: contentString});
 
-				    marker.attachEvent( 'click', function() {
-				        	infobox.open(map, this);
+				    marker.attachEvent('click', function() {
+				        infobox.open(map, this);
 				    });
 
 			    	/* Creamos un marcador */
@@ -1003,7 +1034,14 @@
 				    	$('.longitud').text(marker.getPosition().lng());
 				    	latitud = marker.getPosition().lat();
 				    	longitud = marker.getPosition().lng();
+
+				    	map.redraw();
+				    	// marker.setPosition(new khtml.maplib.LatLng(latitud,longitud));
 					});
+
+					// marker.attachEvent('click', function(){
+					// 	console.log('moviendo');
+					// });
 				},
 				error: function(data){
 					alert('error');
@@ -1021,11 +1059,15 @@
 			var bLatitud = $('#bLatitud').val();
 			var bLongitud = $('#bLongitud').val();
 			if(bLatitud != "" && bLongitud != ""){
-				var latlng = new google.maps.LatLng(bLatitud, bLongitud);
-    			marker.setPosition(latlng);
-    			map.setZoom(6);
+				// var latlng = new google.maps.LatLng(bLatitud, bLongitud);
+    // 			marker.setPosition(latlng);
+    			marker.setPosition(new khtml.maplib.LatLng(bLatitud,bLongitud));
+    			// map.setZoom(6);
     			latitud = bLatitud;
     			longitud = bLongitud;
+
+    			map.center(new khtml.maplib.LatLng(latitud,longitud));
+
     			$('.latitud').empty();
     			$('.longitud').empty();
     			$('.latitud').text(bLatitud);
@@ -1042,23 +1084,106 @@
 			}
 		}
 
-		function cerrarGeoreferencial(){
+		// document.getElementById("map").addEventListener("click", function(event){
+
+		//   	event.preventDefault();
+		//   	if(marker){
+		// 		marker.clear();
+		// 	}
+		//   	console.log('click en mapa');
+
+		// });
+
+		function cerrarGeoreferencial(i){
+
 			idComunidadNext = idComunidad;
 			actualizarGeo = false;
 			$('.coordenadas').fadeOut(200);
+			// map = null;
+			// map = khtml.maplib.Map(document.getElementById("map"));
+			// marker2.clear();
+			// marker2.destroy();
+			// map.redraw();
+			// map.removeOverlays();
+
+			// map.clearMap();
+			// map.redraw();
+
 			if(latitudPreview == 'Ninguno' || longitudPreview == 'Ninguno'){
 				if(marker){marker.destroy();}
 				// map.setCenter({lat:-16.76031273193217, lng:-64.56658868750003});
 				//map.setZoom(6);
 			}else{
-				console.log(latitudPreview);
-				console.log(longitudPreview);
-				marker.setPosition({latitudPreview, longitudPreview});
-				// marker.setDraggable(false);
-				map.centerAndZoom(new khtml.maplib.LatLng(latitudPreview,longitudPreview), 15);
-				//map.setZoom(6);
+				if(marker){
+					marker.destroy();
+				}
+
+				if(i == 0){
+					latitud = latitudPreview;
+					longitud = longitudPreview;
+				}else{
+					latitud = latitud;
+					longitud = longitud;
+				}
+
+				zoom = map.zoom();
+				map.centerAndZoom(new khtml.maplib.LatLng(latitud,longitud), zoom);
+
+				initMap();
+
+				if(tipoBusqueda == 'edificio'){
+					seleccionarEdificio(codigo);
+				}else{
+					seleccionarUnidad(codigo);
+				}
+
+				// marker = new khtml.maplib.overlay.Marker({
+				//         position: new khtml.maplib.LatLng(latitudPreview,longitudPreview),
+				//         map: map,
+				//         title: 'Edificio Educativo',
+				//         draggable: false,
+				//         icon: image
+				// });
+
+				// zoom = map.zoom();
+
+				// map.centerAndZoom(new khtml.maplib.LatLng(latitudPreview,longitudPreview), zoom);
+
+				// contentString = '<div>Código Edificio</div>'+
+				// 				'<b>'+codigoEdificio+'</b>';
+
+				// infobox = new khtml.maplib.overlay.InfoWindow({content: contentString});
+
+				// marker.attachEvent( 'click', function() {
+				//     infobox.open(map, this);
+				// });
+
+				// marker = new khtml.maplib.overlay.Marker({
+				//         position: new khtml.maplib.LatLng(latitudPreview,longitudPreview),
+				//         map: map,
+				//         title: 'Edificio Educativo',
+				//         draggable: false
+				// });
+
+				// map.centerAndZoom(new khtml.maplib.LatLng(latitudPreview,longitudPreview), 15);
+
+				// contentString = '<div>Código Edificio</div>'+
+				// 				'<b>'+codigoEdificio+'</b>';
+
+				// infobox = new khtml.maplib.overlay.InfoWindow({content: contentString});
+
+				// marker.attachEvent( 'click', function() {
+				//     infobox.open(map, this);
+				// });
 			}
 			// if (poligono) {poligono.setMap(null);}
+			
+			// initMap();
+			// if(tipoBusqueda == 'edificio'){
+			// 	seleccionarEdificio(codigo);
+			// }else{
+			// 	seleccionarUnidad(codigo);
+			// }
 			mostrarMenu();
 		}
 
@@ -1067,8 +1192,24 @@
 	    		type: 'post',
 	    		url: Routing.generate('sie_gis_datos_update_georeferencial',{'codEdificio' : codigoEdificio, 'latitud':marker.getPosition().lat(), 'longitud':marker.getPosition().lng(),'idComunidad': idComunidadNext, 'actualizarGeografica': actualizarGeo}),
 	    		beforeSend: function(){
-					var latlng = new google.maps.LatLng(latitud, longitud);
-	    			marker.setPosition(latlng);
+	    			console.log('guardando....');
+					// var latlng = new google.maps.LatLng(latitud, longitud);
+	    			// 			marker.setPosition(latlng);
+	    			// marker.setPosition(new khtml.maplib.LatLng(marker.getPosition().lat(),marker.getPosition().lng()));
+	    			zoom = map.zoom();
+	    			latitud = marker.getPosition().lat();
+	    			longitud = marker.getPosition().lng();
+	    			map.centerAndZoom(new khtml.maplib.LatLng(latitud,longitud), zoom);
+	    			// map.centerAndZoom(new khtml.maplib.LatLng(data.latitudMunicipio,data.longitudMunicipio), zoom);
+	    			// if(marker){ marker.destroy();}
+	    // 			cerrarGeoreferencial();
+	    // 			$.notifyClose();
+					// $.notify({
+					// 	icon: 'fa fa-check',
+					// 	message: 'Actualizando...'
+					// },{
+					// 	type: 'info'
+					// });
 	    		},
 	    		success: function(data){
 	    			if (data.status == 200) {
@@ -1076,12 +1217,8 @@
 	    				idComunidad = idComunidadNext;
 
 		    			console.log('Guardado');
-		    			if(tipoBusqueda == 'edificio'){
-		    				seleccionarEdificio(codigo);
-		    			}else{
-		    				seleccionarUnidad(codigo);
-		    			}
-		    			cerrarGeoreferencial();
+		    			
+		    			cerrarGeoreferencial(1);
 		    			$.notifyClose();
 						$.notify({
 							icon: 'fa fa-check',
