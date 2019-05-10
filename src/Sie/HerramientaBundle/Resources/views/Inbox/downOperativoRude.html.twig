@@ -6,9 +6,12 @@
             <h3>  <p class="label label-info"> <i class="fa fa-download"></i> ARCHIVO GENERADO</p></h3>
         </a> 
     {% else %}
-        <div class="alert alert-danger">
-            <strong></strong> Problemas al descargar el archio, el archivo no presetan Inicio de Gesti&oacute;n
-        </div>
+       {% for flashMessage in app.session.flashbag.get('notidonwloadrude') %}
+                    <div class="alert alert-warning alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                    </div>
+        {% endfor %}    
     {% endif %}
 </div>	
 </center>

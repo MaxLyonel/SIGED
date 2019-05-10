@@ -1061,52 +1061,75 @@ class InboxController extends Controller {
       
       //get values send
       $form = $request->get('form');
+
       //get the file to generate the new file
       $dir = '/archivos/descargas/';
       // conver json values to array
       $arrData = json_decode($form['data'],true);
-      $objOperativo = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
-        'unidadEducativa' => $arrData['id'],
-        'gestion' => $arrData['gestion'],
-      ));
-      // dump($objOperativo);
-      // dump($arrData);
       
-      $cabecera = 'R';
-      //before to donwload file remove the old
-      $fileRude = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'RB';
-      system('rm -fr ' . $dir .$fileRude.'.sie' );      
-      system('rm -fr ' . $dir .$fileRude.'.igm' );
+      $objOperativoLog = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findOneBy(array(
+        'institucioneducativa' => $arrData['id'],
+        'gestionTipoId' => $arrData['gestion'],
+        'institucioneducativaOperativoLogTipo' => 5,
+      ));
 
-      if($objOperativo /*&&  $objOperativo->getBim1()*/){
-        $sw = true;
-        //to generate the file execute de function
-        $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_rude_txt('" . $arrData['id'] . "','" . $arrData['gestion'] . "','" . $cabecera . "');");
-        $query->execute();
+      if(!$objOperativoLog){
 
-        $newGenerateFile = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'RB';
-        
+            $objOperativo = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+            'unidadEducativa' => $arrData['id'],
+            'gestion' => $arrData['gestion'],
+          ));
+          // dump($objOperativo);
+          // dump($arrData);
+          
+          $cabecera = 'R';
+          //before to donwload file remove the old
+          $fileRude = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'RB';
+          system('rm -fr ' . $dir .$fileRude.'.sie' );      
+          system('rm -fr ' . $dir .$fileRude.'.igm' );
 
-        //decode base64
-        $outputdata = system('base64 '.$dir.''.$newGenerateFile. '.sie  >> ' . $dir . 'NR' . $newGenerateFile . '.sie');
+          if($objOperativo /*&&  $objOperativo->getBim1()*/){
+            $sw = true;
+            //to generate the file execute de function
+            $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_rude_txt('" . $arrData['id'] . "','" . $arrData['gestion'] . "','" . $cabecera . "');");
+            $query->execute();
 
-        system('rm -fr ' . $dir . $newGenerateFile.'.sie');
-        exec('mv ' . $dir . 'NR' .$newGenerateFile . '.sie ' . $dir . $newGenerateFile . '.sie ');
+            $newGenerateFile = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'RB';
+            
 
-        //name the file
-       exec('zip -P 3I35I3Client ' . $dir . $newGenerateFile . '.zip ' . $dir  . $newGenerateFile . '.sie');
-       exec('mv ' . $dir . $newGenerateFile . '.zip ' . $dir . $newGenerateFile . '.igm ');
-       $dataDownload = array(
-          'file' => $newGenerateFile . '.igm ',
-          'datadownload' => $form['data'],
-          'sw' => $sw
-        );
+            //decode base64
+            $outputdata = system('base64 '.$dir.''.$newGenerateFile. '.sie  >> ' . $dir . 'NR' . $newGenerateFile . '.sie');
+
+            system('rm -fr ' . $dir . $newGenerateFile.'.sie');
+            exec('mv ' . $dir . 'NR' .$newGenerateFile . '.sie ' . $dir . $newGenerateFile . '.sie ');
+
+            //name the file
+           exec('zip -P 3I35I3Client ' . $dir . $newGenerateFile . '.zip ' . $dir  . $newGenerateFile . '.sie');
+           exec('mv ' . $dir . $newGenerateFile . '.zip ' . $dir . $newGenerateFile . '.igm ');
+           $dataDownload = array(
+              'file' => $newGenerateFile . '.igm ',
+              'datadownload' => $form['data'],
+              'sw' => $sw
+            );
+          }else{
+            $message = "Problemas al descargar el archio, el archivo no presetan Inicio de Gestión";
+            $this->addFlash('notidonwloadrude', $message);
+            $sw = false;
+            $dataDownload = array(
+              'sw' => $sw
+            );
+          }     
+
       }else{
-        $sw = false;
-        $dataDownload = array(
-          'sw' => $sw
-        );
-      }     
+            $message = "No se puede descargar por que ya fue descargado";
+            $this->addFlash('notidonwloadrude', $message);
+            $sw = false;
+            $dataDownload = array(
+              'sw' => $sw
+            );
+      }   
+
+      
      return $this->render($this->session->get('pathSystem') . ':Inbox:downOperativoRude.html.twig', $dataDownload );
     }
 
