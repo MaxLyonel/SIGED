@@ -1064,35 +1064,49 @@ class InboxController extends Controller {
       $dir = '/archivos/descargas/';
       // conver json values to array
       $arrData = json_decode($form['data'],true);
+      $objOperativo = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+        'unidadEducativa' => $arrData['id'],
+        'gestion' => $arrData['gestion'],
+      ));
+      // dump($objOperativo);
+      // dump($arrData);
+      
       $cabecera = 'R';
       //before to donwload file remove the old
-      $fileRude = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'R';
+      $fileRude = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'RB';
       system('rm -fr ' . $dir .$fileRude.'.sie' );      
       system('rm -fr ' . $dir .$fileRude.'.igm' );
-      
-      //to generate the file execute de function
-      $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_rude_txt('" . $arrData['id'] . "','" . $arrData['gestion'] . "','" . $cabecera . "');");
-      $query->execute();
 
-      $newGenerateFile = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'RB';
-      
+      if($objOperativo /*&&  $objOperativo->getBim1()*/){
+        $sw = true;
+        //to generate the file execute de function
+        $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_rude_txt('" . $arrData['id'] . "','" . $arrData['gestion'] . "','" . $cabecera . "');");
+        $query->execute();
 
-      //decode base64
-      $outputdata = system('base64 '.$dir.''.$newGenerateFile. '.sie  >> ' . $dir . 'NR' . $newGenerateFile . '.sie');
+        $newGenerateFile = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'RB';
+        
 
-      system('rm -fr ' . $dir . $newGenerateFile.'.sie');
-      exec('mv ' . $dir . 'NR' .$newGenerateFile . '.sie ' . $dir . $newGenerateFile . '.sie ');
+        //decode base64
+        $outputdata = system('base64 '.$dir.''.$newGenerateFile. '.sie  >> ' . $dir . 'NR' . $newGenerateFile . '.sie');
 
-      //name the file
-     exec('zip -P 3I35I3Client ' . $dir . $newGenerateFile . '.zip ' . $dir  . $newGenerateFile . '.sie');
-     exec('mv ' . $dir . $newGenerateFile . '.zip ' . $dir . $newGenerateFile . '.igm ');
-     
-     return $this->render($this->session->get('pathSystem') . ':Inbox:downOperativoRude.html.twig', array(
-        'file' => $newGenerateFile . '.igm ',
-        'datadownload' => $form['data'],
+        system('rm -fr ' . $dir . $newGenerateFile.'.sie');
+        exec('mv ' . $dir . 'NR' .$newGenerateFile . '.sie ' . $dir . $newGenerateFile . '.sie ');
 
-     ));
-
+        //name the file
+       exec('zip -P 3I35I3Client ' . $dir . $newGenerateFile . '.zip ' . $dir  . $newGenerateFile . '.sie');
+       exec('mv ' . $dir . $newGenerateFile . '.zip ' . $dir . $newGenerateFile . '.igm ');
+       $dataDownload = array(
+          'file' => $newGenerateFile . '.igm ',
+          'datadownload' => $form['data'],
+          'sw' => $sw
+        );
+      }else{
+        $sw = false;
+        $dataDownload = array(
+          'sw' => $sw
+        );
+      }     
+     return $this->render($this->session->get('pathSystem') . ':Inbox:downOperativoRude.html.twig', $dataDownload );
     }
 
     public function downloadAction(Request $request, $file,$datadownload) {
