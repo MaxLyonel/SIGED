@@ -49,14 +49,16 @@
                         <div class="panel-body">
                             {{form_start(form, { 'attr':{'onsubmit':'return validacion()'}  })}}
                                 <div class="row">
-                                    <div class="form-group col-lg-6 col-md-12">
-                                        {{form_label(form.area)}}
-                                        {{form_widget(form.area) }}
-                                        <div class="help-block with-errors"></div>
+                                    <div class="col-lg-offset-3 col-lg-6 col-md-12">
+                                        <div class="form-group">
+                                            {{form_label(form.area)}}
+                                            {{form_widget(form.area, { 'attr':{'onchange':'reseteaTodo()', 'disabled':'disabled'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="form-group col-lg-6 col-md-12" id="divMultiple" style="display:none">
+                                    <div class="form-group col-md-12" id="divMultiple" style="display:none">
                                         {% for a in form.multiple %}
                                             <div class="col-md-4 rdio rdio-primary circle">
                                                 {{ form_widget(a,{ 'attr':{'class':'multiple'}  }) }}
@@ -65,7 +67,7 @@
                                         {% endfor %}
                                         <div class="help-block with-errors"></div>
                                     </div>
-                                    <div class="form-group col-lg-6 col-md-12" id="divFisicoMotor" style="display:none">
+                                    <div class="form-group col-md-12" id="divFisicoMotor" style="display:none">
                                         {% for a in form.fisicoMotor %}
                                             <div class="col-md-4 rdio rdio-primary circle">
                                                 {{ form_widget(a,{ 'attr':{'class':'fisicoMotor'}  }) }}
@@ -152,79 +154,71 @@
     {{parent()}}
     <script src="{{asset('js/jquery-ui.min.js')}}"></script>
     <script>
-
+        $( document ).ready(function() {
+            $('#form_area').attr('disabled', false)
+        });
         function listarNiveles() {
             var area = $('#form_area').val();
-            var modalidad = $('#form_modalidad').val();
-            if(area== 4 || area== 6 || area== 7){
-                $("#divgrado").hide();
-                $("#divtecnica").hide();
-                $("#divniveltec").hide();
-            }else{
-                $("#divgrado").show();
-                $("#divtecnica").show();
-                $("#divniveltec").show();
-            }
-            $("#divservicio").show();
-            $("#divprograma").show();
-            if(area== 3 || area == 4 || area== 5){
-                $("#divEc").show();
-            }else{
-                $("#divEc").hide();
-            }
-            if(area == 4){
-                $("#form_educacionCasa").prop('checked', true);
-            }else{
-                $("#form_educacionCasa").prop('checked', false);
-            }
-            if(area == 2){
-                $('#idparalelo').text("Grupo");
-            }else{
-                $('#idparalelo').text("Paralelo");
-            }
-            if(area == 5){
-                $("#divMultiple").show();
-                $(".multiple").attr('required', true);
-            }else{
-                $("#divMultiple").hide();
-                $(".multiple").removeAttr('required');
-            }
-            if(area == 4){
-                $("#divFisicoMotor").show();
-                $(".fisicoMotor").attr('required', true);
-            }else{
-                $("#divFisicoMotor").hide();
-                $(".fisicoMotor").removeAttr('required');
-            }
-            
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('listar_niveles_especial', {'area':area,'modalidad':modalidad}),
-                beforeSend: function () {
-                    $("#form_nivel").empty();
-                    $("#form_grado").empty();
-                    $("#form_programa").empty();
-                    $("#form_servicio").empty();
-                    $("#form_nivel").append('<option value="">Buscando...</option>');
-                    $("#form_grado").append('<option value="">Buscando...</option>');
-                    $("#form_programa").append('<option value="">Buscando...</option>');
-                    $("#form_servicio").append('<option value="">Buscando...</option>');
-                },
-                success: function (data) {
-                    $("#form_nivel").empty();
-                    $("#form_grado").empty();
-                    $("#form_programa").empty();
-                    $("#form_servicio").empty();
-                    $("#form_nivel").append('<option value="">Seleccionar...</option>');
-                    $("#form_grado").append('<option value="">Seleccionar...</option>');
-                    $("#form_programa").append('<option value="">Seleccionar...</option>');
-                    $("#form_servicio").append('<option value="">Seleccionar...</option>');
-                    $.each(data.niveles, function (i, value) {
-                        $("#form_nivel").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                    dropdown("#form_nivel");
+            if (area == "") {
+                alert("Seleccione Subárea");
+                $('#form_modalidad').val('');
+            } else {
+                var modalidad = $('#form_modalidad').val();
+                if(area== 4 || area== 6 || area== 7){
+                    $("#divgrado").hide();
+                    $("#divtecnica").hide();
+                    $("#divniveltec").hide();
+                }else{
+                    $("#divgrado").show();
+                    $("#divtecnica").show();
+                    $("#divniveltec").show();
                 }
-            });
+                $("#divservicio").show();
+                $("#divprograma").show();
+                if(area== 3 || area == 4 || area== 5){
+                    $("#divEc").show();
+                }else{
+                    $("#divEc").hide();
+                }
+                if(area == 4){
+                    $("#form_educacionCasa").prop('checked', true);
+                }else{
+                    $("#form_educacionCasa").prop('checked', false);
+                }
+                if(area == 2){
+                    $('#idparalelo').text("Grupo");
+                }else{
+                    $('#idparalelo').text("Paralelo");
+                }
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('listar_niveles_especial', {'area':area,'modalidad':modalidad}),
+                    beforeSend: function () {
+                        $("#form_nivel").empty();
+                        $("#form_grado").empty();
+                        $("#form_programa").empty();
+                        $("#form_servicio").empty();
+                        $("#form_nivel").append('<option value="">Buscando...</option>');
+                        $("#form_grado").append('<option value="">Buscando...</option>');
+                        $("#form_programa").append('<option value="">Buscando...</option>');
+                        $("#form_servicio").append('<option value="">Buscando...</option>');
+                    },
+                    success: function (data) {
+                        $("#form_nivel").empty();
+                        $("#form_grado").empty();
+                        $("#form_programa").empty();
+                        $("#form_servicio").empty();
+                        $("#form_nivel").append('<option value="">Seleccionar...</option>');
+                        $("#form_grado").append('<option value="">Seleccionar...</option>');
+                        $("#form_programa").append('<option value="">Seleccionar...</option>');
+                        $("#form_servicio").append('<option value="">Seleccionar...</option>');
+                        $.each(data.niveles, function (i, value) {
+                            $("#form_nivel").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        dropdown("#form_nivel");
+                    }
+                });
+            }
         }
 
         function listarGrados() {
@@ -280,9 +274,10 @@
             var area = $('#form_area').val();
             var nivel = $('#form_nivel').val();
             var grado = $('#form_grado').val();
+            var modalidad = $('#form_modalidad').val();
             $.ajax({
                 type: 'get',
-                url: Routing.generate('listar_servicios_especial', {'area':area,'nivel':nivel,'grado':grado}),
+                url: Routing.generate('listar_servicios_especial', {'area':area,'nivel':nivel,'grado':grado,'modalidad':modalidad}),
                 beforeSend: function () {
                     $("#form_programa").empty();
                     $("#form_servicio").empty();
@@ -309,10 +304,10 @@
 			var area  = $('#form_area').val();
         	var nivel = $('#form_nivel').val();
             var grado = $('#form_grado').val();
-
+            var modalidad = $('#form_modalidad').val();
             $.ajax({
                 type: 'get',
-                url: Routing.generate('listar_programas_especial', {'area':area,'nivel':nivel,'grado':grado}),
+                url: Routing.generate('listar_programas_especial', {'area':area,'nivel':nivel,'grado':grado,'modalidad':modalidad}),
                 beforeSend: function () {
                     $("#form_programa").empty();
                     $("#form_programa").append('<option value="">Buscando...</option>');
@@ -361,6 +356,48 @@
             }
             $('#form_educacionCasa').val($(this).is(':checked'));        
         });
-        
+        function reseteaTodo() {
+            var area  = $('#form_area').val();
+            $("#form_programa").html('<option value="">Seleccionar...</option>');
+            $("#form_servicio").html('<option value="">Seleccionar...</option>');
+            $("#form_modalidad").val('');
+            if(area == 2){
+                $('#idparalelo').text("Grupo");
+            }else{
+                $('#idparalelo').text("Paralelo");
+            }
+            $("#divservicio").show();
+            $("#divprograma").show();
+            if(area== 3 || area == 4 || area== 5){
+                $("#divEc").show();
+            }else{
+                $("#divEc").hide();
+            }
+            if(area == 4){
+                $("#divFisicoMotor").show();
+                $(".fisicoMotor").attr('required', true);
+                $("#form_educacionCasa").prop('checked', true);
+            }else{
+                $("#divFisicoMotor").hide();
+                $(".fisicoMotor").removeAttr('required');
+                $("#form_educacionCasa").prop('checked', false);
+            }
+            if(area == 5){
+                $("#divMultiple").show();
+                $(".multiple").attr('required', true);
+            }else{
+                $("#divMultiple").hide();
+                $(".multiple").removeAttr('required');
+            }
+            if(area== 4 || area== 6 || area== 7){
+                $("#divgrado").hide();
+                $("#divtecnica").hide();
+                $("#divniveltec").hide();
+            }else{
+                $("#divgrado").show();
+                $("#divtecnica").show();
+                $("#divniveltec").show();
+            }
+        }
     </script>
 {% endblock %}

@@ -411,6 +411,8 @@ class CreacionCursosEspecialController extends Controller {
                     $modalidad = 2;
                 }elseif($form['area'] == 6 and $form['servicio'] == 20){
                     $modalidad = 2;
+                }elseif($form['area'] == 7 and ($form['programa'] == 23 or $form['programa'] == 24)){
+                    $modalidad = 2;
                 }else{
                     $modalidad = 1;
                 }
@@ -549,9 +551,9 @@ class CreacionCursosEspecialController extends Controller {
     	$em = $this->getDoctrine()->getManager();
 
     	if ($area == "1" ) {
-            if($modalidad == 1)
+            if($modalidad == 1){
                 $nivelesArray = array(403,404,405,410,411);
-            else{
+            }else{
                 $nivelesArray = array(410);
             }
             $query = $em->createQuery(
@@ -560,9 +562,9 @@ class CreacionCursosEspecialController extends Controller {
                 )->setParameter('id',$nivelesArray);
     	}
     	elseif ($area == "2" ) {
-            if($modalidad == 1)
+            if($modalidad == 1){
                 $nivelesArray = array(405,410,411);
-            else{
+            }else{
                 $nivelesArray = array(410);
             }
     		$query = $em->createQuery(
@@ -571,9 +573,9 @@ class CreacionCursosEspecialController extends Controller {
     				)->setParameter('id',$nivelesArray);
     	}
     	elseif ($area == "3" or $area == "5" ) {
-            if($modalidad == 1)
+            if($modalidad == 1){
                 $nivelesArray = array(401,402,405,410,411);
-            else{
+            }else{
                 $nivelesArray = array(410);
             }
             $query = $em->createQuery(
@@ -582,9 +584,9 @@ class CreacionCursosEspecialController extends Controller {
     		    )->setParameter('id',$nivelesArray);
         }
         elseif ($area == "4" ) {   //educacion en casa alternativa-regular
-            if($modalidad == 1)
+            if($modalidad == 1){
                 $nivelesArray = array(411);
-            else{
+            }else{
                 $nivelesArray = array(99);
             }
             $query = $em->createQuery(
@@ -593,9 +595,9 @@ class CreacionCursosEspecialController extends Controller {
                 )->setParameter('id',$nivelesArray);
         }
     	elseif ($area == "6" ) {    //DIFICULTADES EN EL APRENDIZAJE
-            if($modalidad == 1)
+            if($modalidad == 1){
                 $nivelesArray = array(410,411);
-            else{
+            }else{
                 $nivelesArray = array(410);
             }
             $query = $em->createQuery(
@@ -603,7 +605,7 @@ class CreacionCursosEspecialController extends Controller {
                                     WHERE n.id IN (:id)'
     				)->setParameter('id',$nivelesArray);
 
-    	}
+        }
         /*
     	elseif ($area == "8" ) {
     			$query = $em->createQuery(
@@ -626,26 +628,28 @@ class CreacionCursosEspecialController extends Controller {
                     )->setParameter('id',array(999));
 
         }*/
-    	elseif ($area == "7"){
-    	    $query = $em->createQuery(
-    		    	'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
+        elseif ($area == "7") {    //TALENTO EXTRAORDINARIO
+            if($modalidad == 1){
+                $nivelesArray = array(411);
+            }else{
+                $nivelesArray = array(410);
+            }
+            $query = $em->createQuery(
+    				'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
                                     WHERE n.id IN (:id)'
-    		        )->setParameter('id',array(410,411));
+    				)->setParameter('id',$nivelesArray);
     	}
-
     	$niveles = $query->getResult();
-        			$nivelesArray = array();
-        			for($i=0;$i<count($niveles);$i++){
-        				$nivelesArray[$niveles[$i]['id']] = $niveles[$i]['nivel'];
-        			}
-        			$response = new JsonResponse();
-        			return $response->setData(array('niveles' => $nivelesArray));
+        $nivelesArray = array();
+        for($i=0;$i<count($niveles);$i++){
+            $nivelesArray[$niveles[$i]['id']] = $niveles[$i]['nivel'];
+        }
+        $response = new JsonResponse();
+        return $response->setData(array('niveles' => $nivelesArray));
     }
-
 
     public function listarGradosAction($nivel) {
     	$em = $this->getDoctrine()->getManager();
-
     	if ($nivel == "401" ) {
     		$query = $em->createQuery(
     				'SELECT g.id, g.grado FROM SieAppWebBundle:GradoTipo g
@@ -697,16 +701,20 @@ class CreacionCursosEspecialController extends Controller {
     	return $response->setData(array('grados' => $gradosArray));
     }
 
-
-    public function listarServiciosAction($area,$nivel,$grado) {
+    public function listarServiciosAction($area,$nivel,$grado,$modalidad) {
         $em = $this->getDoctrine()->getManager();
         $this->session = new Session();
     	if ($area == "6" and $nivel == "410" and  $grado == "99" ) {
+            if($modalidad == 1){
+                $nivelesArray = array(6,7);
+            }else{
+                $nivelesArray = array(20);
+            }
     		$query = $em->createQuery(
     				'SELECT s.id, s.servicio FROM SieAppWebBundle:EspecialServicioTipo s
                                     WHERE s.id IN (:id)'
-    				)->setParameter('id',array(6,7,20));
-    	}
+    				)->setParameter('id',$nivelesArray);//array(6,7,20)
+        }
     	elseif ($area == "7" and $nivel == "410" and  $grado == "99" ) {
             if ($this->session->get('idGestion') < 2019) {
                 $query = $em->createQuery(
@@ -719,32 +727,43 @@ class CreacionCursosEspecialController extends Controller {
                                     WHERE s.id IN (:id)'
     				)->setParameter('id',array(8,9,10,11,12,14,15));
             }
-    	}
+        }
     	elseif (($area == "1" or $area == "3" or $area == "4" or $area == "5" or $area == "8" or $area == "9")  and $nivel == "410" and  $grado == "99" ) {
-    		$query = $em->createQuery(
+            if($modalidad == 1 and ($area == "4" or $area == "8" or $area == "9")){
+                $nivelesArray = array(1,2,3,4,5,20);
+            }elseif($modalidad == 1 and ($area == "1" or $area == "3" or $area == "5")){
+                $nivelesArray = array(1,2,3,4,5);
+            }else{
+                $nivelesArray = array(20);
+            }
+            $query = $em->createQuery(
     				'SELECT s.id, s.servicio FROM SieAppWebBundle:EspecialServicioTipo s
                                     WHERE s.id IN (:id)'
-    				)->setParameter('id',array(1,2,3,4,5,20));
-    	}
+    				)->setParameter('id',$nivelesArray);//array(1,2,3,4,5,20)
+        }
         elseif ($area == "2" and $nivel == "410" and  $grado == "99" ) {
+            if($modalidad == 1){
+                $nivelesArray = array(1,2,3,4,5);
+            }else{
+                $nivelesArray = array(21);
+            }
     		$query = $em->createQuery(
     				'SELECT s.id, s.servicio FROM SieAppWebBundle:EspecialServicioTipo s
                                     WHERE s.id IN (:id)'
-    				)->setParameter('id',array(1,2,3,4,5,21));
-    	}
+    				)->setParameter('id',$nivelesArray);//array(1,2,3,4,5,21)
+        }
        	elseif (($area == "9")  and $nivel == "410" and  $grado == "99" ) {
     		$query = $em->createQuery(
     				'SELECT s.id, s.servicio FROM SieAppWebBundle:EspecialServicioTipo s
                                     WHERE s.id IN (:id)'
     				)->setParameter('id',array(20));
-    	}
+        }
     	else {
     		$query = $em->createQuery(
     				'SELECT s.id, s.servicio FROM SieAppWebBundle:EspecialServicioTipo s
                                     WHERE s.id = (:id)'
     				)->setParameter('id',99);
     	}
-
 
     	$servicios = $query->getResult();
     	$serviciosArray = array();
@@ -755,7 +774,7 @@ class CreacionCursosEspecialController extends Controller {
     	return $response->setData(array('servicios' => $serviciosArray));
     }
 
-    public function listarProgramasAction($area,$nivel,$grado) {
+    public function listarProgramasAction($area,$nivel,$grado,$modalidad) {
         $em = $this->getDoctrine()->getManager();
         $this->session = new Session();
     	if ( $area == "1" and $nivel == "411" and  $grado == "99" ) {
@@ -765,17 +784,27 @@ class CreacionCursosEspecialController extends Controller {
                                     WHERE p.id IN (:id)'
     				)->setParameter('id',array(13));
             } else {
+                if($modalidad == 1){
+                    $nivelesArray = array(19, 20, 21, 22, 23);
+                }else{
+                    $nivelesArray = array(13);
+                }
                 $query = $em->createQuery(
     				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
                                     WHERE p.id IN (:id)'
-    				)->setParameter('id',array(13, 19, 20, 21, 22, 23));
+    				)->setParameter('id',$nivelesArray);//array(13, 19, 20, 21, 22, 23)
             }
-    	}
+        }
     	elseif ($area == "2" and $nivel == "411" and  $grado == "99" ) {
+            if($modalidad == 1){
+                $nivelesArray = array(7,8,9,11,12,14,15,16);
+            }else{
+                $nivelesArray = array(10);
+            }
     		$query = $em->createQuery(
     				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
                                     WHERE p.id IN (:id)'
-    				)->setParameter('id',array(7,8,9,10,11,12,14,15,16));
+    				)->setParameter('id',$nivelesArray);//array(7,8,9,10,11,12,14,15,16)
         }
         elseif (($area == "3" or $area == "5") and $nivel == "411" and  $grado == "99" ) {
     		$query = $em->createQuery(

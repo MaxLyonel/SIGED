@@ -31,12 +31,12 @@ listar_grados_especial:
          expose: true
          
 listar_servicios_especial:
-    path:     /listarServicios/{area}/{nivel}/{grado}/
+    path:     /listarServicios/{area}/{nivel}/{grado}/{modalidad}
     defaults: { _controller: "SieEspecialBundle:CreacionCursosEspecial:listarServicios"}
     options:
          expose: true
 listar_programas_especial:
-    path:     /listarProgramas/{area}/{nivel}/{grado}/
+    path:     /listarProgramas/{area}/{nivel}/{grado}/{modalidad}
     defaults: { _controller: "SieEspecialBundle:CreacionCursosEspecial:listarProgramas"}
     options:
          expose: true
