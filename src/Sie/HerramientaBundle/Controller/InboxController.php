@@ -1149,7 +1149,7 @@ class InboxController extends Controller {
         $file = preg_replace('/\s+/', '', $file);
         $file = str_replace('%20', '', $file);
         // save the log operativo
-        $objinstitucioneducativaOperativoLog = $this->saveInstitucioneducativaOperativoLog($form);
+        
         //create response to donwload the file
         $response = new Response();
         //then send the headers to foce download the zip file
@@ -1164,43 +1164,6 @@ class InboxController extends Controller {
         return $response;
     }
 
-     /**
-     * save the log information about sie file donwload
-     * @param  [type] $form [description]
-     * @return [type]       [description]
-     */
-
-    private function saveInstitucioneducativaOperativoLog($data){
-        //conexion to DB
-        $em = $this->getDoctrine()->getManager();
-        $em->getConnection()->beginTransaction();
-        try {
-          //save the log data
-          $objDownloadFilenewOpe = new InstitucioneducativaOperativoLog();
-          $objDownloadFilenewOpe->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(5));
-          $objDownloadFilenewOpe->setGestionTipoId($data['gestion']);
-          $objDownloadFilenewOpe->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
-          $objDownloadFilenewOpe->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($data['id']));
-          $objDownloadFilenewOpe->setInstitucioneducativaSucursal(0);
-          $objDownloadFilenewOpe->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(0));
-          $objDownloadFilenewOpe->setDescripcion('...');
-          $objDownloadFilenewOpe->setEsexitoso('t');
-          $objDownloadFilenewOpe->setEsonline('t');
-          $objDownloadFilenewOpe->setUsuario($this->session->get('userId'));
-          $objDownloadFilenewOpe->setFechaRegistro(new \DateTime('now'));
-          $objDownloadFilenewOpe->setClienteDescripcion($_SERVER['HTTP_USER_AGENT']);
-          $em->persist($objDownloadFilenewOpe);
-          $em->flush();
-           $em->getConnection()->commit();
-          //dump($data);die;
-          return 'krlos';
-        } catch (Exception $e) {
-          $em->getConnection()->rollback();
-          echo 'Excepción capturada: ', $ex->getMessage(), "\n";
-        }
-    }
-
-
-
+     
 
 }
