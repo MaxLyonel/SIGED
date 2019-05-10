@@ -33,3 +33,8 @@ sie_juegos_fixture:
 sie_juegos_estadistica:
     resource: "@SieJuegosBundle/Resources/config/routing/estadistica.yml"
     prefix:   /estadistica
+
+sie_juegos_RegisterPersonStudent:
+    resource: "@SieJuegosBundle/Resources/config/routing/RegisterPersonStudent.yml"
+    prefix:   /person
+
