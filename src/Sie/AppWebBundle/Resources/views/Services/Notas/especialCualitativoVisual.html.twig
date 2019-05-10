@@ -132,7 +132,7 @@
                                             <table class="table">
                                                 <tr>
                                                     <td style = "border-top-style: none;">Contenidos Programados</td>
-                                                    <td style = "border-top-style: none;"><textarea class="form-control" name="contenidos[]" disabled>{{n.nota.contenidos}} </textarea></td>
+                                                    <td style = "border-top-style: none;"><textarea class="form-control" name="" disabled>{{n.nota.contenidos}} </textarea></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Resultados Alcanzados</td>
@@ -178,7 +178,8 @@
                             <td style="padding:0px; margin:0px">
                                 {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
                                     {% if (c.notaCualitativa == "") or (vista == 2) %}
-                                        <select class="form-control" name="estadoFinal" id="" required>
+                                        <input type="hidden" name="idNotaTipoCualitativa" value="{{c.idNotaTipo}}">
+                                        <select class="form-control" name="notaCualitativa" id="" required>
                                             <option value="">Seleccionar....</option>
                                             {% for ef in notas.estadosFinales %}
                                                 <option value="{{ef.id}}">{{ef.estadomatricula}}</option>
