@@ -1,4 +1,4 @@
-tramite_acelera_new:
+tramite_acelera_nuevo:
     path:     /nuevo
     defaults: { _controller: SieHerramientaBundle:TramiteAcelera:new }
 
@@ -10,6 +10,6 @@ tramite_acelera_search:
 
 tramite_acelera_save:
     path:     /guardar
-    defaults: { _controller: SieHerramientaBundle:TramiteAcelera:save } #SieHerramientaBundle:TramiteTalento:save 
+    defaults: { _controller: SieHerramientaBundle:TramiteAcelera:save }
     options:
         expose: true
