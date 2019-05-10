@@ -1113,6 +1113,7 @@ class InboxController extends Controller {
       // dump($datadownload);die;
       $form = json_decode($datadownload,true);
       $form['operativoTipo']=5;
+      $objinstitucioneducativaOperativoLog = $this->saveInstitucioneducativaOperativoLog($form);
       dump($form);
       die;
       // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,1);
@@ -1155,9 +1156,9 @@ class InboxController extends Controller {
           $objDownloadFilenewOpe->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(5));
           $objDownloadFilenewOpe->setGestionTipoId($data['gestion']);
           $objDownloadFilenewOpe->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
-          $objDownloadFilenewOpe->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($data['sie']));
+          $objDownloadFilenewOpe->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($data['id']));
           $objDownloadFilenewOpe->setInstitucioneducativaSucursal(0);
-          $objDownloadFilenewOpe->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($data['bimestre']));
+          $objDownloadFilenewOpe->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(0));
           $objDownloadFilenewOpe->setDescripcion('...');
           $objDownloadFilenewOpe->setEsexitoso('t');
           $objDownloadFilenewOpe->setEsonline('t');
