@@ -23,7 +23,7 @@ sie_juegos_clasificacion_lista_deportistas_registro:
          expose: true  
 
 sie_juegos_eliminacion_clasificacion_deportista:
-    path:    /eliminacion/prueba/estudiantes/f1/{inscripcion}
+    path:    /eliminacion/prueba/estudiantes
     defaults: { _controller: SieJuegosBundle:Clasificacion:eliminaPruebaInscripcion }
     options:
          expose: true 

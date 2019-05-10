@@ -423,7 +423,7 @@ class ReglaController extends Controller
                     $xCupo = 6;
                 }
                 if ($entidadUsuarioId == 31624  ){ // SANTA CRUZ 3
-                    $xCupo = 5;
+                    $xCupo = 4;
                 }
                 if ($entidadUsuarioId == 79359  ){ // PLAN TRES MILL (SANTA CRUZ 4)
                     $xCupo = 6;
