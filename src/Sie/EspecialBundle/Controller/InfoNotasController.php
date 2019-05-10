@@ -78,25 +78,16 @@ class InfoNotasController extends Controller {
                         }
                         break;
                 case 2: // Visual
-                        $notas = $this->get('notas')->especial_cualitativo($idInscripcion,$operativo);
-                        //$notas = $this->get('notas')->especial_cualitativo_visual($idInscripcion,$operativo);
                         if($notas['tipoNota'] == 'Trimestre'){
+                            $notas = $this->get('notas')->especial_cualitativo($idInscripcion,$operativo);
                             $template = 'especialCualitativoTrimestral';
                         }else{
                             if($gestion < 2019){
+                                $notas = $this->get('notas')->especial_cualitativo($idInscripcion,$operativo);
                                 $template = 'especialCualitativo';
                             }else{
-                        /*         $etapas = $em->createQueryBuilder()
-                                                    ->select('enc.id as idEstudianteCualitativo, nt.id as idNotaTipo')
-                                                    ->from('SieAppWebBundle:EstudianteNotaCualitativa','enc')
-                                                    ->innerJoin('SieAppWebBundle:NotaTipo','nt','with','enc.notaTipo = nt.id')
-                                                    ->orderBy('nt.id','ASC')
-                                                    ->where('enc.estudianteInscripcion = :estId')
-                                                    ->setParameter('estId',$idInscripcion)
-                                                    ->getQuery()
-                                                    ->getResult();
-                                $operativo = count($etapas)+1;                     */
-                                $template = 'especialCualitativo1';
+                                $notas = $this->get('notas')->especial_cualitativo_visual($idInscripcion,$operativo);
+                                $template = 'especialCualitativoVisual';
                             }
                         }
                         $actualizarMatricula = false;
@@ -178,6 +169,7 @@ class InfoNotasController extends Controller {
                 case 100: // Modalidad Indirecta
                         break;
             }
+            //dump($notas);die;
             if($notas){
                 return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array('notas'=>$notas,'inscripcion'=>$inscripcion,'vista'=>$vista,'template'=>$template,'actualizar'=>$actualizarMatricula,'operativo'=>$operativo,'estadosMatricula'=>$estadosMatricula,'discapacidad'=>$discapacidad));
             }else{
