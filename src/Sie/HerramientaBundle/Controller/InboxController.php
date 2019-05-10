@@ -1073,9 +1073,18 @@ class InboxController extends Controller {
         'institucioneducativaOperativoLogTipo' => 5,
       ));
 
-      if(!$objOperativoLog){
+      if($objOperativoLog){
 
-            $objOperativo = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+          $message = "No se puede descargar por que ya fue descargado";
+            $this->addFlash('notidonwloadrude', $message);
+            $sw = false;
+            $dataDownload = array(
+              'sw' => $sw
+            );  
+
+      }else{
+
+          $objOperativo = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
             'unidadEducativa' => $arrData['id'],
             'gestion' => $arrData['gestion'],
           ));
@@ -1118,15 +1127,8 @@ class InboxController extends Controller {
             $dataDownload = array(
               'sw' => $sw
             );
-          }     
-
-      }else{
-            $message = "No se puede descargar por que ya fue descargado";
-            $this->addFlash('notidonwloadrude', $message);
-            $sw = false;
-            $dataDownload = array(
-              'sw' => $sw
-            );
+          }   
+          
       }   
 
       
