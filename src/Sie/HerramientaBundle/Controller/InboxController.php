@@ -1075,7 +1075,7 @@ class InboxController extends Controller {
 
       if($objOperativoLog){
 
-          $message = "No se puede proceder por que ya fue descargado";
+          $message = "No se puede proceder por que el archivo ya fue descargado";
             $this->addFlash('notidonwloadrude', $message);
             $sw = false;
             $dataDownload = array(
