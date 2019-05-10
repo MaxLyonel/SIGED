@@ -1114,9 +1114,7 @@ class InboxController extends Controller {
       // dump($datadownload);die;
       $form = json_decode($datadownload,true);
       $form['operativoTipo']=5;
-      $objinstitucioneducativaOperativoLog = $this->saveInstitucioneducativaOperativoLog($form);
-      dump($form);
-      die;
+      
       // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,1);
       $objOperativoLog = $this->get('funciones')->saveOperativoLog($form);
         //get path of the file
