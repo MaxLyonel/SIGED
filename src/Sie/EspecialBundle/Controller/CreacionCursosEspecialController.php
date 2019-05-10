@@ -784,11 +784,12 @@ class CreacionCursosEspecialController extends Controller {
                                     WHERE p.id IN (:id)'
     				)->setParameter('id',array(13));
             } else {
-                if($modalidad == 1){
-                    $nivelesArray = array(19, 20, 21, 22, 23);
-                }else{
-                    $nivelesArray = array(13);
-                }
+                $nivelesArray = array(19, 20, 21, 22, 23);
+                // if($modalidad == 1){
+                //     $nivelesArray = array(19, 20, 21, 22, 23);
+                // }else{
+                //     $nivelesArray = array(13);
+                // }
                 $query = $em->createQuery(
     				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
                                     WHERE p.id IN (:id)'
