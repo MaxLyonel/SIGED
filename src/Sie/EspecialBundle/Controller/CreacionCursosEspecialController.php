@@ -823,20 +823,29 @@ class CreacionCursosEspecialController extends Controller {
                 'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
                                 WHERE p.id IN (:id) order by p.programa'
                 )->setParameter('id',array(18));
-        }else {
+        }elseif ($area == "7" and $nivel == "411" and  $grado == "99" ) {
             if ($this->session->get('idGestion') < 2019) {
                 $query = $em->createQuery(
     				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
                                     WHERE p.id = (:id)'
     				)->setParameter('id',99);
             } else {
+                if($modalidad == 1){
+                    $nivelesArray = array(23, 24);
+                }else{
+                    $nivelesArray = array(99);
+                }
                 $query = $em->createQuery(
     				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
                                     WHERE p.id IN (:id)'
-    				)->setParameter('id',array(23, 24));
+    				)->setParameter('id',$nivelesArray);//array(23, 24)
             }
-    	}
-
+    	}else{
+            $query = $em->createQuery(
+                'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p
+                                WHERE p.id = (:id)'
+                )->setParameter('id',99);
+        }
 //     	    		$query = $em->createQuery(
 //     	    				'SELECT p.id, p.programa FROM SieAppWebBundle:ProgramaTipo p
 //     	                                    WHERE p.id = (:id)'

@@ -132,9 +132,8 @@
                                 <table class="table table bordered cf dataTable">
                                     <thead class="cf">
                                         <tr>
-
                                             <th>Área Esp.</th>
-                                            <th>Nivel</th>
+                                            <th>Oferta</th>
                                             <th>Grado</th>
                                             <th>Paralelo/Grupo</th>
                                             <th>Programa</th>
@@ -151,114 +150,113 @@
                                             {% if c.institucioneducativaCurso.turnoTipo.id != turno %}
 
                                                 {% set turno = c.institucioneducativaCurso.turnoTipo.id %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <h4>Turno - {{c.institucioneducativaCurso.turnoTipo.turno}}</h4>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-collapse collapse in" id="panel{{turno}}">
+                        <div class="panel-body">
+                            <div id="no-more-tables">
+                                <table class="table table bordered cf dataTable">
+                                    <thead class="cf">
+                                        <tr>
+                                            <th>Área Esp.</th>
+                                            <th>Oferta</th>
+                                            <th>Grado</th>
+                                            <th>Paralelo/Grupo</th>
+                                            <th>Programa</th>
+                                            <th>Servicio</th>
+                                            <th>Técnica</th>
+                                            <th>Turno</th>
+                                            <th>Modalidad</th>
+                                            <th>Observación</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr {% if c.institucioneducativaCurso.nivelTipo.id == 11 %} 
+                                            class="success" 
+                                        {% else %}
+                                            {% if c .institucioneducativaCurso.nivelTipo.id == 12 %}
+                                                class="warning"
+                                            {% else %}
+                                                class="info"
+                                            {% endif %}
+                                        {% endif %}>
+
+                                        <td data-title="Area">{{c.especialAreaTipo.areaEspecial}}</td>
+                                        <td data-title="Nivel">{{c.institucioneducativaCurso.nivelTipo.nivel}}</td>
+                                        <td data-title="Grado">{{c.institucioneducativaCurso.gradoTipo.grado|upper}}</td>
+                                        <td data-title="Paralelo/Grupo">{{c.institucioneducativaCurso.paraleloTipo.paralelo}}</td>
+                                        <td data-title="Programa">{{c.especialProgramaTipo.programa}}</td>
+                                        <td data-title="Servicio">{{c.especialServicioTipo.servicio}}</td>
+                                        <td data-title="Tecnica">{{c.especialNivelTecnicoTipo.nivelTecnico}}-{{c.especialTecnicaEspecialidadTipo.especialidad}}</td>
+                                        <td data-title="Turno">{{c.institucioneducativaCurso.turnoTipo.turno}}</td>
+                                        <td data-title="Modalidad">{% if  c.especialModalidadTipo %} {{c.especialModalidadTipo.modalidad}} {% endif %}</td>
+                                        <td data-title="Observación">{{ c.institucioneducativaCurso.lugar }}</td>
+                                        <td data-title="Acciones">
+                                            {% if onlyview %}
+                                                -
+                                            {% else %}
+                                                <form action="{{path('creacioncursos_especial_delete')}}" style="display: inline-block;" method="post">
+                                                    <input type="hidden" name="idCurso" value="{{c.id}}">
+                                                    <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');"><i class="fa fa-eraser text-danger"></i> Eliminar</button>
+                                                </form>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr {% if c.institucioneducativaCurso.nivelTipo.id == 11 %} 
+                                        class="success" 
+                                    {% else %}
+                                        {% if c.institucioneducativaCurso.nivelTipo.id == 12 %}
+                                            class="warning"
+                                        {% else %}
+                                            class="info"
+                                        {% endif %}
+                                        {% endif %}>
+                                            <td data-title="Area">{{c.especialAreaTipo.areaEspecial}}</td>
+                                            <td data-title="Nivel">{{c.institucioneducativaCurso.nivelTipo.nivel}}</td>
+                                            <td data-title="Grado">{{c.institucioneducativaCurso.gradoTipo.grado|upper}}</td>
+                                            <td data-title="Paralelo/Grupo">{{c.institucioneducativaCurso.paraleloTipo.paralelo}}</td>
+                                            <td data-title="Programa">{{c.especialProgramaTipo.programa}}</td>
+                                            <td data-title="Servicio">{{c.especialServicioTipo.servicio}}</td>
+                                            <td data-title="Tecnica">{{c.especialNivelTecnicoTipo.nivelTecnico}}-{{c.especialTecnicaEspecialidadTipo.especialidad}}</td>
+                                            <td data-title="Turno">{{c.institucioneducativaCurso.turnoTipo.turno}}</td>
+                                            <td data-title="Modalidad">{% if  c.especialModalidadTipo %} {{c.especialModalidadTipo.modalidad}} {% endif %}</td>
+                                            <td data-title="Observación">{{ c.institucioneducativaCurso.lugar }}</td>
+                                            <td data-title="Acciones">
+                                                {% if onlyview %}
+                                                    -
+                                                {% else %}
+                                                    <form action="{{path('creacioncursos_especial_delete')}}" style="display: inline-block;" method="post">
+                                                        <input type="hidden" name="idCurso" value="{{c.id}}">
+                                                        <button type="submit" class="btn-link" onclick="return confirm('Se eliminará el registro. ¿Desea continuar?');"><i class="fa fa-eraser text-danger"></i> Eliminar</button>
+                                                    </form>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                            {% endfor %}
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
-                                <div class="panel-title">
-                                    <h4>Turno - {{c.institucioneducativaCurso.turnoTipo.turno}}</h4>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="panel-collapse collapse in" id="panel{{turno}}">
-                                <div class="panel-body">
-                                    <div id="no-more-tables">
-                                        <table class="table table bordered cf dataTable">
-                                            <thead class="cf">
-                                                <tr>
 
-                                                    <th>Área Esp.</th>
-                                                    <th>Nivel</th>
-                                                    <th>Grado</th>
-                                                    <th>Paralelo/Grupo</th>
-                                                    <th>Programa</th>
-                                                    <th>Servicio</th>
-                                                    <th>Técnica</th>
-                                                    <th>Turno</th>
-                                                    <th>Modalidad</th>
-                                                    <th>Observación</th>
-                                                    <th>Acciones</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr {% if c.institucioneducativaCurso.nivelTipo.id == 11 %} 
-                                                    class="success" 
-                                                {% else %}
-                                                    {% if c .institucioneducativaCurso.nivelTipo.id == 12 %}
-                                                        class="warning"
-                                                    {% else %}
-                                                        class="info"
-                                                    {% endif %}
-                                                {% endif %}>
+                        {% endif %}    
 
-                                                <td data-title="Area">{{c.especialAreaTipo.areaEspecial}}</td>
-                                                <td data-title="Nivel">{{c.institucioneducativaCurso.nivelTipo.nivel}}</td>
-                                                <td data-title="Grado">{{c.institucioneducativaCurso.gradoTipo.grado|upper}}</td>
-                                                <td data-title="Paralelo/Grupo">{{c.institucioneducativaCurso.paraleloTipo.paralelo}}</td>
-                                                <td data-title="Programa">{{c.especialProgramaTipo.programa}}</td>
-                                                <td data-title="Servicio">{{c.especialServicioTipo.servicio}}</td>
-                                                <td data-title="Tecnica">{{c.especialNivelTecnicoTipo.nivelTecnico}}-{{c.especialTecnicaEspecialidadTipo.especialidad}}</td>
-                                                <td data-title="Turno">{{c.institucioneducativaCurso.turnoTipo.turno}}</td>
-                                                <td data-title="Modalidad">{% if  c.especialModalidadTipo %} {{c.especialModalidadTipo.modalidad}} {% endif %}</td>
-                                                <td data-title="Observación">{{ c.institucioneducativaCurso.lugar }}</td>
-                                                <td data-title="Acciones">
-                                                    {% if onlyview %}
-                                                        -
-                                                    {% else %}
-                                                        <form action="{{path('creacioncursos_especial_delete')}}" style="display: inline-block;" method="post">
-                                                            <input type="hidden" name="idCurso" value="{{c.id}}">
-                                                            <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');"><i class="fa fa-eraser text-danger"></i> Eliminar</button>
-                                                        </form>
-                                                    {% endif %}
-                                                </td>
-                                            </tr>
-                                        {% else %}
-                                            <tr {% if c.institucioneducativaCurso.nivelTipo.id == 11 %} 
-                                                class="success" 
-                                            {% else %}
-                                                {% if c.institucioneducativaCurso.nivelTipo.id == 12 %}
-                                                    class="warning"
-                                                {% else %}
-                                                    class="info"
-                                                {% endif %}
-                                                {% endif %}>
-                                                    <td data-title="Area">{{c.especialAreaTipo.areaEspecial}}</td>
-                                                    <td data-title="Nivel">{{c.institucioneducativaCurso.nivelTipo.nivel}}</td>
-                                                    <td data-title="Grado">{{c.institucioneducativaCurso.gradoTipo.grado|upper}}</td>
-                                                    <td data-title="Paralelo/Grupo">{{c.institucioneducativaCurso.paraleloTipo.paralelo}}</td>
-                                                    <td data-title="Programa">{{c.especialProgramaTipo.programa}}</td>
-                                                    <td data-title="Servicio">{{c.especialServicioTipo.servicio}}</td>
-                                                    <td data-title="Tecnica">{{c.especialNivelTecnicoTipo.nivelTecnico}}-{{c.especialTecnicaEspecialidadTipo.especialidad}}</td>
-                                                    <td data-title="Turno">{{c.institucioneducativaCurso.turnoTipo.turno}}</td>
-                                                    <td data-title="Modalidad">{% if  c.especialModalidadTipo %} {{c.especialModalidadTipo.modalidad}} {% endif %}</td>
-                                                    <td data-title="Observación">{{ c.institucioneducativaCurso.lugar }}</td>
-                                                    <td data-title="Acciones">
-                                                        {% if onlyview %}
-                                                            -
-                                                        {% else %}
-                                                            <form action="{{path('creacioncursos_especial_delete')}}" style="display: inline-block;" method="post">
-                                                                <input type="hidden" name="idCurso" value="{{c.id}}">
-                                                                <button type="submit" class="btn-link" onclick="return confirm('Se eliminará el registro. ¿Desea continuar?');"><i class="fa fa-eraser text-danger"></i> Eliminar</button>
-                                                            </form>
-                                                        {% endif %}
-                                                    </td>
-                                                </tr>
-                                                {% endif %}
-                                                    {% endfor %}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {% endif %}    
-
-                                </div>
-                            </div>
                         </div>
-                            {% endblock %}
+                    </div>
+                </div>
+                    {% endblock %}
