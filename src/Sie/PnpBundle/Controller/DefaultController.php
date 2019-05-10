@@ -3392,7 +3392,7 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
             $result->setLugarTipoSeccion($em->getRepository('SieAppWebBundle:LugarTipo')->find($form_municipio));
             $result->setLocalidad($localidad);
             $em->flush();
-            //actualizar nombre de municipio y localidad ctv
+            //actualizar nombre de municipio y localidad
             $estudiantes=$em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findByinstitucioneducativaCurso($curso_id);
             if($estudiantes)
             foreach ($estudiantes as $estudiante) {
@@ -6913,7 +6913,7 @@ public function crear_curso_automaticoAction(Request $request){
                 $id_estudiante=$estudiante_inscripcion->getEstudiante()->getId();
                 $id_estudiante_inscripcion=$estudiante_inscripcion->getId();
                 $matricula_estado_id=$estudiante_inscripcion->getEstadomatriculaTipo()->getId();
-                if($matricula_estado_id==61)$aprobo=0;//
+                if($matricula_estado_id!=62 )$aprobo=0;
                 // id de la tabla estudiante_asignatura
                 
                 if($aprobo==1){//Aprobo por esa razon se lo registra al estudiante en estudiantes inscripcion
