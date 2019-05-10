@@ -355,7 +355,10 @@
                                         }
                                         else if(data.estado ==2 ){
                                             swal("Debe iniciar su trámite como 'Ratificacion'");
-                                        }else {
+                                        }else if(data.estado == 4){
+                                            swal(data.msg)
+                                        }
+                                        else {
                                             swal('Su formulario no se envío correctamente');
                                         }
                                     },
@@ -415,7 +418,10 @@
                                         }
                                         else if(data.estado==3 ){
                                             swal("Debe iniciar su trámite como 'Registro Nuevo'");
-                                        }else {
+                                        }else if(data.estado == 4){
+                                            swal(data.msg)
+                                        }
+                                        else {
                                             swal('Su formulario no se envío correctamente');
                                         }
                                     },

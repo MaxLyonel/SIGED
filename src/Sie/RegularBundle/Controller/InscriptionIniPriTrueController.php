@@ -1065,9 +1065,11 @@ class InscriptionIniPriTrueController extends Controller {
                 ->leftJoin('SieAppWebBundle:EstadoMatriculaTipo', 'em', 'WITH', 'ei.estadomatriculaTipo = em.id')
                 ->where('e.codigoRude = :id')
                 ->andwhere('iec.gestionTipo = :gestion')
+                ->andwhere('i.institucioneducativaTipo = :insteducativaTipo')
                 ->andwhere('ei.estadomatriculaTipo IN (:mat)')
                 ->setParameter('id', $id)
                 ->setParameter('gestion', $gestion)
+                ->setParameter('insteducativaTipo', 1)
                 ->setParameter('mat', array( 4,5,26,37,55,56,57,58 ))
                 ->orderBy('iec.gestionTipo', 'DESC')
                 ->getQuery();

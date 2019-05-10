@@ -1,0 +1,70 @@
+ <div class="modal-dialog modal-lg modal-photo-viewer">
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">Busqueda Entrenador</h4>
+                    </div>
+                    <div class="modal-body no-padding">
+                    {% if showOptionRegister %}
+
+
+                        {{form_start(form,{'attr':{'id':'formLookForPersonId' }} )}}
+
+
+		            <div class="panel rounded shadow">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title"></h3>
+                            </div>
+                            
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div class="panel-body no-padding">
+
+                            
+                                <div class="form-body">
+                                   
+
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                            	{{form_widget(form.carnet)}}
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{form_widget(form.complemento)}}
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                
+                                </div><!-- /.form-body -->
+                                <div class="form-footer">
+                                    <div class="pull-right">
+                                        <!-- <button class="btn btn-danger mr-5">Cancel</button> -->
+                                        {{form_widget(form.find)}}                                        
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.form-footer -->
+                            
+
+                        </div><!-- /.panel-body -->
+                    </div>
+
+
+		            {{form_end(form)}}
+                    {% else %}
+                    <div class="alert alert-warning">
+                        <strong>Entrenador registrado</strong> 
+                    </div>
+                        
+                    {% endif %}
+
+                    </div>
+					<div id="idPersonData">
+					</div>
+                </div>
+                <!-- /.modal-content -->
+                
+            </div>
+            <!-- /.modal-dialog -->

@@ -468,7 +468,11 @@ class SolicitudBTHController extends Controller {
                         $idTramite = $request->get('id_tramite');
                         $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea,$tabla,$id_Institucion,'','',$idTramite,$datos,'',$id_distrito);
                     }
-                    $res = 1;
+                    if ($mensaje['dato']==true){
+                        $res = 1;
+                    }else{
+                        $res = 4;
+                    }
                 }
                 else{
                     $res = 2;  //No puede iniciar su trámite como nuevo
@@ -533,7 +537,13 @@ class SolicitudBTHController extends Controller {
                             $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario, $id_rol, $flujotipo, $tarea, $tabla, $id_Institucion, '', '', $idTramite, $datos, '', $id_distrito);
                             //dump($mensaje);die;
                         }
-                        $res = 1;
+                        if ($mensaje['dato']==true){
+                            $res = 1;
+                        }else{
+                            $res = 4;
+                        }
+
+
                     }else{
                         $res = 2;//debe iniciar como  Nuevo ya que es BTH pero no tiene especialidades
                     }
@@ -549,7 +559,8 @@ class SolicitudBTHController extends Controller {
          * Adecuacion: se regustra comoo plena a las unidades q inicien su tramite.
          *
          */
-        if ($res == 1 and $sw == 0) {
+        
+        if ($res == 1 and (int)$sw == 0) {
             $institucioneducativa = $em->getRepository('SieAppWebBundle:InstitucionEducativa')->find($id_Institucion);
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_humanistico_tecnico');")->execute();
             $entity = new InstitucioneducativaHumanisticoTecnico();
@@ -1114,7 +1125,11 @@ class SolicitudBTHController extends Controller {
                   $mensaje = $wfTramiteController->guardarTramiteRecibido($id_usuario, $tarea1,$id_tramite);
                   $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea1,$tabla,$institucionid,'','',$id_tramite,$datos,'',$id_distrito);
               }
-              $res = 1;
+              if ($mensaje['dato']==true){
+                  $res = 1;
+              }else{
+                  $res = 4;
+              }
           }
           catch (Exception $exceptione){
               $res = 0;
@@ -1745,10 +1760,22 @@ class SolicitudBTHController extends Controller {
                 ///// FIN DE volcado a la base de datoa
             }
             else{
+
                 $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 6));
                 $tarea2   = $flujoproceso->getId();//6 realiza observacion
                 $mensaje = $wfTramiteController->guardarTramiteRecibido($id_usuario, $tarea2,$idtramite);
                 $mensaje = $wfTramiteController->guardarTramiteEnviado($id_usuario,$id_rol,$flujotipo,$tarea2,$tabla,$institucionid,$obs,$evaluacion2,$idtramite,$datos,'',$id_distrito);
+                /**
+                 * Al dar como respuesta NO se elimina el registro de la UE de la tabla InstitucioneducativaHumanisticoTecnico y
+                 * no se registran las especialidades
+                 */
+                $institucionBth = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array('institucioneducativaId'=>$institucionid,'gestionTipoId'=>$this->session->get('currentyear')));
+                if($institucionBth){
+                    $em->remove($institucionBth);
+                    $em->flush();
+                }
+
+
             }
             $res = 1;
         }

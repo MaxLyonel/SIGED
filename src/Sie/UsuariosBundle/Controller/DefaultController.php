@@ -916,17 +916,21 @@ class DefaultController extends Controller
         $response = new JsonResponse();        
         try {
             $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->find($usuariorolid);
+            $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($usuarioid);
             $esActivoRol = $usuariorol->getEsActivo();                    
+
             if ($esActivoRol == 'true')
                 {
-                $usuariorol->setEsActivo('false');            
+                $usuariorol->setEsActivo('false');
+                $em->flush();            
                 }
             else
                 {
-                $usuariorol->setEsActivo('true');                
+                $usuariorol->setEsActivo('true'); 
+                $em->flush();               
+                $usuario->setEsActivo('true');  
+                $em->flush();
                 }
-            $em->persist($usuariorol);
-            $em->flush();
             
             $em->getConnection()->commit();
             return $response->setData(array(
