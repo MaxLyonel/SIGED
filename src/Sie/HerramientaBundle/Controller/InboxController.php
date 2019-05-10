@@ -18,6 +18,7 @@ use Sie\AppWebBundle\Entity\RegistroConsolidacion;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\User;
 use Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnico;
+use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoLog;
 
 
 use Doctrine\DBAL\Types\Type;
