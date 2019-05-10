@@ -1113,6 +1113,8 @@ class InboxController extends Controller {
       // dump($datadownload);die;
       $form = json_decode($datadownload,true);
       $form['operativoTipo']=5;
+      dump($form);
+      die;
       // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,1);
       $objOperativoLog = $this->get('funciones')->saveOperativoLog($form);
         //get path of the file
@@ -1121,6 +1123,8 @@ class InboxController extends Controller {
         //remove space on the post values
         $file = preg_replace('/\s+/', '', $file);
         $file = str_replace('%20', '', $file);
+        // save the log operativo
+        $objinstitucioneducativaOperativoLog = $this->saveInstitucioneducativaOperativoLog($form);
         //create response to donwload the file
         $response = new Response();
         //then send the headers to foce download the zip file
@@ -1133,6 +1137,42 @@ class InboxController extends Controller {
         $response->sendHeaders();
         $response->setContent(readfile($dir . $file));
         return $response;
+    }
+
+     /**
+     * save the log information about sie file donwload
+     * @param  [type] $form [description]
+     * @return [type]       [description]
+     */
+
+    private function saveInstitucioneducativaOperativoLog($data){
+        //conexion to DB
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        try {
+          //save the log data
+          $objDownloadFilenewOpe = new InstitucioneducativaOperativoLog();
+          $objDownloadFilenewOpe->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(5));
+          $objDownloadFilenewOpe->setGestionTipoId($data['gestion']);
+          $objDownloadFilenewOpe->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
+          $objDownloadFilenewOpe->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($data['sie']));
+          $objDownloadFilenewOpe->setInstitucioneducativaSucursal(0);
+          $objDownloadFilenewOpe->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($data['bimestre']));
+          $objDownloadFilenewOpe->setDescripcion('...');
+          $objDownloadFilenewOpe->setEsexitoso('t');
+          $objDownloadFilenewOpe->setEsonline('t');
+          $objDownloadFilenewOpe->setUsuario($this->session->get('userId'));
+          $objDownloadFilenewOpe->setFechaRegistro(new \DateTime('now'));
+          $objDownloadFilenewOpe->setClienteDescripcion($_SERVER['HTTP_USER_AGENT']);
+          $em->persist($objDownloadFilenewOpe);
+          $em->flush();
+           $em->getConnection()->commit();
+          //dump($data);die;
+          return 'krlos';
+        } catch (Exception $e) {
+          $em->getConnection()->rollback();
+          echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+        }
     }
 
 
