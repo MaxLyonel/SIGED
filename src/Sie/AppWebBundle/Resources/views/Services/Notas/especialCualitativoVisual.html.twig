@@ -19,8 +19,8 @@
                             Asignatura
                         </th>
                         {% if notas.operativo > 0 %}
-                            {% for i in notas.etapas %}
-                                <th>{{ i }} Etapa</th>
+                            {% for e in notas.etapas %}
+                                <th style = "text-align: center;">{{ e.etapa }}° Etapa</th>
                             {% endfor %}
                         {% else %}
                             <th>Notas Cuantitativas</th>
@@ -31,13 +31,22 @@
                     <tr>
                         <td></td>
                             {% if notas.operativo > 0 %}
-                                {% for i in notas.etapas %}
-                                    <td>
-                                        <label for="fechaEtapas" class="col-sm-2">Fechas:</label>
-                                        <div class="col-sm-7">
-                                            <input type="text" id="fechaEtapas" placeholder= "{{ "now"|date("d/m/Y") }}-{{ "now"|date("d/m/Y") }}"class="form-control noedit fecha" name="fechaEtapas[{{i}}]" value={% if notas.fechaEtapas and notas.fechaEtapas[i] is defined  %} "{{notas.fechaEtapas[i].fechaEtapa}}" disabled {% else %} "" {% endif %} autocomplete="off" required ></br>
-                                        </div>
-                                    </td>
+                                {% for e in notas.etapas %}
+                                    {% if e.fechaEtapa %}
+                                        <td>
+                                            <label for="fechaEtapas" class="col-sm-2">Fechas:</label>
+                                            <div class="col-sm-7">
+                                                <input type="text" id="fechaEtapas" placeholder= "{{ "now"|date("d/m/Y") }}-{{ "now"|date("d/m/Y") }}"class="form-control noedit fecha" name="" value="{{e.fechaEtapa}}" disabled ></br>
+                                            </div>
+                                        </td>
+                                     {% else %}    
+                                        <td>
+                                            <label for="fechaEtapas" class="col-sm-2">Fechas:</label>
+                                            <div class="col-sm-7">
+                                                <input type="text" id="fechaEtapas" placeholder= "{{ "now"|date("d/m/Y") }}-{{ "now"|date("d/m/Y") }}"class="form-control noedit fecha" name="fechaEtapa[{{e.etapa}}]" value="" autocomplete="off" required ></br>
+                                            </div>
+                                        </td>
+                                    {% endif %}
                                 {% endfor %}
                             {% else %}
                                 <td></td>
@@ -53,7 +62,7 @@
                                 {% for n in a.notas %}
                                     {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
                                         {% if n.nota == "" or n.nota.idIndicador not in [1,2,3,5] or vista == 2 %}
-                                                <td data-title="{{notas.etapas[n.idNotaTipo]}}° Etapa">
+                                                <td>
                                                 <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
                                                 <input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
                                                 <input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
@@ -92,7 +101,7 @@
                                                 </table>
                                             </td>
                                         {% else %}
-                                            <td data-title="{{notas.etapas[n.idNotaTipo]}}° Etapa">
+                                            <td>
                                                 <table class="table">
                                                     <tr>
                                                         <td style = "border-top-style: none;">Contenidos Programados:</td>
@@ -128,7 +137,7 @@
                                             </td>
                                         {% endif %}
                                     {% else %}
-                                        <td data-title="{{notas.etapas[n.idNotaTipo]}}° Etapa">
+                                        <td>
                                             <table class="table">
                                                 <tr>
                                                     <td style = "border-top-style: none;">Contenidos Programados</td>
@@ -173,7 +182,7 @@
                         </tr>
                     {% endfor %}
                     <tr>
-                        <td style="background:#8AE5B6"><b>Estado Final de la Etapa:</b></td>
+                        <td style="background:#8AE5B6;height:100px;"><b>Estado Final de la Etapa:</b></td>
                         {% for c in notas.cualitativas %}
                             <td style="padding:0px; margin:0px">
                                 {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
@@ -189,7 +198,7 @@
                                         <select class="form-control" name="" id="" disabled>
                                             <option value="">Seleccionar....</option>
                                             {% for ef in notas.estadosFinales %}
-                                                <option value="{{ef.id}}" {% if ef.id == c.notaCualitativa.estadoFinal %} selected {% endif %}>{{ef.estadomatricula}}</option>
+                                                <option value="{{ef.id}}" {% if ef.id == c.notaCualitativa.estadoEtapa %} selected {% endif %}>{{ef.estadomatricula}}</option>
                                             {% endfor %}
                                         </select>
                                     {% endif %}
