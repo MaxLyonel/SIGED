@@ -713,7 +713,10 @@
                                     }
                                     else if(data.estado==2 ){
                                         swal("Debe iniciar su trámite como 'Registro Nuevo'");
-                                    }else {
+                                    }else if(data.estado == 4){
+                                        swal(data.msg)
+                                    }
+                                    else {
                                         swal('Su formulario no se envío correctamente debido a alguna de las siguientes razones: \n '   +
                                             '- Su Unidad Educativa ya inicio su trámite como "REGISTRO NUEVO o RATIFICACION.  \n' +
                                             '- Su Unidad Educativa ya se encuentra registrado como BTH.');

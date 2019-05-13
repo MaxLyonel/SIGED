@@ -329,24 +329,29 @@ class ControlCalidadController extends Controller {
             $vreglaentidad = $em->getRepository('SieAppWebBundle:ValidacionReglaEntidadTipo')->findOneById($vregla->getValidacionReglaEntidadTipo());
 
             $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneByCodigoRude($vproceso->getLlave());
-
-            if($estudiante->getCarnetIdentidad()){
-                $resultadoEdadEstudiante = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($estudiante->getCarnetIdentidad(),array('fecha_nacimiento'=>$estudiante->getFechaNacimiento()->format('d-m-Y')),'prod','academico');
-
-                if($resultadoEdadEstudiante){
-                    $mensaje = "Se realizó el proceso satisfactoriamente. Los datos de la/el estudiante se validaron correctamente con SEGIP.";
+            if($estudiante){
+                if($estudiante->getCarnetIdentidad()){
+                    $resultadoEdadEstudiante = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($estudiante->getCarnetIdentidad(),array('fecha_nacimiento'=>$estudiante->getFechaNacimiento()->format('d-m-Y')),'prod','academico');
+    
+                    if($resultadoEdadEstudiante){
+                        $mensaje = "Se realizó el proceso satisfactoriamente. Los datos de la/el estudiante se validaron correctamente con SEGIP.";
+                        $this->ratificar($vproceso);
+                        $this->addFlash('success', $mensaje);
+                    } else {
+                        $mensaje = "No se realizó la validación con SEGIP. Actualice el C.I. de el la/el estudiante.";
+                        $this->addFlash('warning', $mensaje);
+                    }                
+                } else {
+                    $mensaje = "Se realizó el proceso satisfactoriamente. La validación con SEGIP fue omitida debido a que la/el estudiante no cuenta con C.I.";
                     $this->ratificar($vproceso);
                     $this->addFlash('success', $mensaje);
-                } else {
-                    $mensaje = "No se realizó la validación con SEGIP. Actualice el C.I. de el la/el estudiante.";
-                    $this->addFlash('warning', $mensaje);
-                }                
+                }
             } else {
-                $mensaje = "Se realizó el proceso satisfactoriamente. La validación con SEGIP fue omitida debido a que la/el estudiante no cuenta con C.I.";
+                $mensaje = "Se realizó el proceso satisfactoriamente.";
                 $this->ratificar($vproceso);
                 $this->addFlash('success', $mensaje);
-            }       
-
+            }
+            
         return $this->redirect($this->generateUrl('ccalidad_list', array('id' => $vreglaentidad->getId(), 'gestion' => $gestion)));
     }
 
