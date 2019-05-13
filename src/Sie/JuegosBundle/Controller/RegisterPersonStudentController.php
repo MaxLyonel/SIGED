@@ -817,24 +817,29 @@ class RegisterPersonStudentController extends Controller{
         
         $equipoEstudianteInscripcionJuegosEntity = $em->getRepository('SieAppWebBundle:JdpEquipoEstudianteInscripcionJuegos')->findOneBy(array('estudianteInscripcionJuegos' => $estudianteInscripcionJuegosId));                        
         //dump($equipoEstudianteInscripcionJuegosEntity);die;
-        $equipoId = $equipoEstudianteInscripcionJuegosEntity->getEquipoId();
-        $pruebaId = $equipoEstudianteInscripcionJuegosEntity->getEstudianteInscripcionJuegos()->getPruebaTipo()->getId();
-        //dump($equipoEstudianteInscripcionJuegosEntity);dump($equipoId);dump($pruebaId);
+        if(count($equipoEstudianteInscripcionJuegosEntity)>0){
+            $equipoId = $equipoEstudianteInscripcionJuegosEntity->getEquipoId();
+            $pruebaId = $equipoEstudianteInscripcionJuegosEntity->getEstudianteInscripcionJuegos()->getPruebaTipo()->getId();
+            //dump($equipoEstudianteInscripcionJuegosEntity);dump($equipoId);dump($pruebaId);
 
-        $repositoryVerInsPru = $this->getDoctrine()->getRepository('SieAppWebBundle:JdpEstudianteInscripcionJuegos');
-        $queryVerInsPru = $repositoryVerInsPru->createQueryBuilder('eij')
-            ->select('distinct eeij.equipoId as equipoId, eeij.equipoNombre as equipoNombre, p.id as personaId, p.nombre, p.paterno, p.materno')
-            ->innerJoin('SieAppWebBundle:JdpEquipoEstudianteInscripcionJuegos','eeij','WITH','eeij.estudianteInscripcionJuegos = eij.id')
-            ->innerJoin('SieAppWebBundle:JdpPersonaInscripcionJuegos','pij','WITH','pij.estudianteInscripcionJuegos = eij.id')
-            ->innerJoin('SieAppWebBundle:Persona','p','WITH','p.id = pij.persona')
-            ->where('eeij.equipoId = :codEquipo')
-            ->andwhere('eij.faseTipo = :codFase')
-            ->andwhere('eij.pruebaTipo = :codPrueba')
-            ->setParameter('codEquipo', $equipoId)
-            ->setParameter('codFase', $faseId)
-            ->setParameter('codPrueba', $pruebaId)
-            ->getQuery();
-        $verInsPru = $queryVerInsPru->getArrayResult();
+            $repositoryVerInsPru = $this->getDoctrine()->getRepository('SieAppWebBundle:JdpEstudianteInscripcionJuegos');
+            $queryVerInsPru = $repositoryVerInsPru->createQueryBuilder('eij')
+                ->select('distinct eeij.equipoId as equipoId, eeij.equipoNombre as equipoNombre, p.id as personaId, p.nombre, p.paterno, p.materno')
+                ->innerJoin('SieAppWebBundle:JdpEquipoEstudianteInscripcionJuegos','eeij','WITH','eeij.estudianteInscripcionJuegos = eij.id')
+                ->innerJoin('SieAppWebBundle:JdpPersonaInscripcionJuegos','pij','WITH','pij.estudianteInscripcionJuegos = eij.id')
+                ->innerJoin('SieAppWebBundle:Persona','p','WITH','p.id = pij.persona')
+                ->where('eeij.equipoId = :codEquipo')
+                ->andwhere('eij.faseTipo = :codFase')
+                ->andwhere('eij.pruebaTipo = :codPrueba')
+                ->setParameter('codEquipo', $equipoId)
+                ->setParameter('codFase', $faseId)
+                ->setParameter('codPrueba', $pruebaId)
+                ->getQuery();
+            $verInsPru = $queryVerInsPru->getArrayResult();
+        } else {
+            $verInsPru = array();
+        }
+        
         //dump($verInsPru);die;
         if (count($verInsPru) > 0){
             return $verInsPru[0];
