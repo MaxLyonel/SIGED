@@ -1734,12 +1734,19 @@ class Notas{
             if($cualitativas){
                 $inicio = $cualitativas[0]['idNotaTipo'];
                 $fin = $cualitativas[0]['idNotaTipo']+1;
-                $etapasArray[$cualitativas[0]['idNotaTipo']] = json_decode($cualitativas[0]['notaCualitativa'],true)['etapa'];
-                $etapasArray[$cualitativas[0]['idNotaTipo']+1] = json_decode($cualitativas[0]['notaCualitativa'],true)['etapa']+1;
+                $etapasArray[0] = array('idNotaTipo'=>$cualitativas[0]['idNotaTipo'],
+                                        'etapa'=>json_decode($cualitativas[0]['notaCualitativa'],true)['etapa'],
+                                        'fechaEtapa'=>json_decode($cualitativas[0]['notaCualitativa'],true)['fechaEtapa']
+                                    );
+                $etapasArray[1] = array('idNotaTipo'=>$cualitativas[0]['idNotaTipo']+1,
+                                    'etapa'=>json_decode($cualitativas[0]['notaCualitativa'],true)['etapa']+1,
+                                    'fechaEtapa'=>""
+                                );
             }else{
-                $inicio = 42;
-                $fin = 42;
-                $etapasArray[42] = 1;
+                $etapasArray[0] = array('idNotaTipo'=>42,
+                                        'etapa'=>1,
+                                        'fechaEtapa'=>""
+                                );
             }
             
             foreach ($asignaturas as $a) {
@@ -1770,8 +1777,6 @@ class Notas{
                                     'idNotaTipo'=>$an['idNotaTipo'],
                                     'idEstudianteAsignatura'=>$an['idEstudianteAsignatura']
                                 );
-                                //dump(json_decode($valorNota,true)['fecha_fin']);die;
-                                $fechaEtapasArray[$i] = array('fechaEtapa'=>json_decode($valorNota,true)['fechaEtapa']);
                             $existe = 'si';
                             break;
                         }
@@ -1805,10 +1810,10 @@ class Notas{
                 if($cualitativas and $existe == false){
                     $arrayCualitativas[] = array(
                                                 'idInscripcion'=>$idInscripcion,
-                                                'idEstudianteNotaCualitativa'=>$cualitativas['idEstudianteCualitativo'],
-                                                'idNotaTipo'=>$cualitativas['idNotaTipo'],
-                                                'notaCualitativa'=>json_decode($cualitativas['notaCualitativa'],true),
-                                                'notaTipo'=>$cualitativas['notaTipo']
+                                                'idEstudianteNotaCualitativa'=>$cualitativas[0]['idEstudianteCualitativo'],
+                                                'idNotaTipo'=>$cualitativas[0]['idNotaTipo'],
+                                                'notaCualitativa'=>json_decode($cualitativas[0]['notaCualitativa'],true),
+                                                'notaTipo'=>$cualitativas[0]['notaTipo']
                                             );
                     $existe = true;
                 }else{
@@ -1849,7 +1854,6 @@ class Notas{
                 'estadosPermitidos' =>$estadosPermitidos,
                 'tiposNotas'        =>$tiposNotasArray,
                 'estadosFinales'    =>$estadosFinales,
-                'fechaEtapas'       =>$fechaEtapasArray,
                 'etapas'            =>$etapasArray
             );
 
@@ -2155,7 +2159,7 @@ class Notas{
             $idNotaTipo = $request->get('idNotaTipo');
             $idEstudianteAsignatura = $request->get('idEstudianteAsignatura');
             $gestion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($request->get('idInscripcion'))->getInstitucioneducativaCurso()->getGestionTipo()->getId();
-            $fechaEtapas = $request->get('fechaEtapas');
+            $fechaEtapa = $request->get('fechaEtapa');
             $contenidos = $request->get('contenidos');
             $resultados = $request->get('resultados');
             $indicador = $request->get('indicador');
@@ -2168,7 +2172,7 @@ class Notas{
             // Datos de las notas cualitativas
             $idEstudianteNotaCualitativa = $request->get('idEstudianteNotaCualitativa');
             $idNotaTipoCualitativa = $request->get('idNotaTipoCualitativa');
-            $notaCualitativa = array('etapa'=>key($fechaEtapas),'estadoEtapa'=>$request->get('notaCualitativa'),'fechaEtapa'=>current($fechaEtapas));
+            $notaCualitativa = array('etapa'=>key($fechaEtapa),'estadoEtapa'=>$request->get('notaCualitativa'),'fechaEtapa'=>current($fechaEtapa));
             $idInscripcion = $request->get('idInscripcion');
             
             // Registro de notas visual
