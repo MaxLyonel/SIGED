@@ -42,7 +42,7 @@
                                         </li>
                                         <li>
 
-                                            {# <!-- this is for the RUDE OPERATIVO start -->
+                                            <!-- this is for the RUDE OPERATIVO start -->
                                             {{form_start(formOperativoRude, { 'attr':{'id':'downOperativoRudeId'} })}}
                                             {{form_widget(formOperativoRude.downOperativoRude)}}
                                             {{form_end(formOperativoRude)}}
@@ -50,7 +50,7 @@
                                                 
                                             </div>
                                             <!-- this is for the RUDE OPERATIVO end -->
-                                             #}
+                                            
                                             <!--a href="page-profile.html" class="btn btn-success text-center btn-block">PRO Account</a-->
                                             {% if objValidateUePlena or app.session.get('ue_modular') or app.session.get('ue_regularizar') or app.session.get('ue_noturna') or app.session.get('ue_tecteg') or app.session.get('ue_general') or app.session.get('ue_humanistica') %}
                                               {{form(form)}}
