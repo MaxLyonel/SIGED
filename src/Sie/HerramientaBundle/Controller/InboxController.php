@@ -1067,22 +1067,22 @@ class InboxController extends Controller {
       // conver json values to array
       $arrData = json_decode($form['data'],true);
       
-      $objOperativoLog = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findOneBy(array(
-        'institucioneducativa' => $arrData['id'],
-        'gestionTipoId' => $arrData['gestion'],
-        'institucioneducativaOperativoLogTipo' => 5,
-      ));
+      // $objOperativoLog = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findOneBy(array(
+      //   'institucioneducativa' => $arrData['id'],
+      //   'gestionTipoId' => $arrData['gestion'],
+      //   'institucioneducativaOperativoLogTipo' => 5,
+      // ));
 
-      if($objOperativoLog){
+      // if($objOperativoLog){
 
-          $message = "No se puede proceder por que el archivo ya fue descargado";
-            $this->addFlash('notidonwloadrude', $message);
-            $sw = false;
-            $dataDownload = array(
-              'sw' => $sw
-            );  
+      //     $message = "No se puede proceder por que el archivo ya fue descargado";
+      //       $this->addFlash('notidonwloadrude', $message);
+      //       $sw = false;
+      //       $dataDownload = array(
+      //         'sw' => $sw
+      //       );  
 
-      }else{
+      // }else{
 
           $objOperativo = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
             'unidadEducativa' => $arrData['id'],
@@ -1129,7 +1129,7 @@ class InboxController extends Controller {
             );
           }   
           
-      }   
+      // }   
 
       
      return $this->render($this->session->get('pathSystem') . ':Inbox:downOperativoRude.html.twig', $dataDownload );
