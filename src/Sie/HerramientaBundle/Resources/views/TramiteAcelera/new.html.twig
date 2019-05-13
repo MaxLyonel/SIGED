@@ -95,16 +95,17 @@
                             <div class="row">
                                 <div class="col-sm-6 col-md-6">
                                     <div class="form-group">
+                                        <label for="informe">Informe Psicopedagógico</label>
+                                        <input type="hidden" class="form-control" id="informe" name="informe">
+                                        <a class="form-control" role="button" href="">Documento adjunto</a>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="solicitud_tutor">Solicitud del Padre/Madre/Tutor</label>
                                         <input type="file" class="form-control myfiles" id="solicitud_tutor" name="solicitud_tutor" accept=".pdf,.doc,.docx" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="informe_comision">Informe Comisión Pedagógica</label>
                                         <input type="file" class="form-control myfiles" id="informe_comision" name="informe_comision" accept=".pdf,.doc,.docx" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="grado_cantidad">Cantidad Grados a Acelerar</label>
-                                        <input type="text" class="form-control numeric" id="grado_cantidad" name="grado_cantidad" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-md-6">
@@ -113,9 +114,16 @@
                                     <input type="hidden" id="institucioneducativa_id" name="institucioneducativa_id" value="{{ institucioneducativa_id }}">
                                     <input type="hidden" id="flujotipo_id" name="flujotipo_id" value="{{ flujotipo_id }}">
                                     <div class="form-group">
-                                        <label for="informe">Informe Psicopedagógico</label>
-                                        <input type="hidden" class="form-control" id="informe" name="informe">
-                                        <a class="form-control" role="button" href="">Documento adjunto</a>
+                                        <label for="grado_cantidad">Cantidad Grados a Acelerar</label>
+                                        <input type="text" class="form-control numeric" id="grado_cantidad" name="grado_cantidad" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="procede_aceleracion">¿Procede Aceleración?</label>
+                                        <select class="form-control" id="procede_aceleracion" name="procede_aceleracion" required>
+                                            <option value="" disabled selected>Seleccione...</option>
+                                            <option value="SI">Si</option>
+                                            <option value="NO">No</option>
+                                        </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="fecha_solicitud">Fecha Solicitud</label>
@@ -266,9 +274,14 @@
             $("#institucion_educativa").val('');
             $("#estudiante_id").val('');
             $("#estudiante_ins_id").val('');
-            $("#fecha_solicitud").val('');
+            $("#tipo_talento").val('');
+            $("#puede_acelerar").val('');
+            
             $("#solicitud_tutor").val('');
             $("#informe_comision").val('');
+            $("#grado_cantidad").val('');
+            $("#procede_aceleracion").val('');
+            $("#fecha_solicitud").val('');
             $("#informe").text('');
         }
 
@@ -288,11 +301,15 @@
             fd.append('institucioneducativa_id', $("#institucioneducativa_id").val());
             fd.append('fecha_solicitud', $("#fecha_solicitud").val());
             var docsol = document.getElementById('solicitud_tutor');
-            fd.append('solicitud_tutor', docsol.files[0]);
+            {# fd.append('solicitud_tutor', docsol.files[0]); #}
             var doccom = document.getElementById('informe_comision');
-            fd.append('informe_comision', doccom.files[0]);
-            fd.append('grado_cantidad', $("#grado_cantidad").val());
+            {# fd.append('informe_comision', doccom.files[0]); #}
 
+            fd.append("documento[]", docsol.files[0]);
+            fd.append("documento[]", doccom.files[0]);
+
+            fd.append('grado_cantidad', $("#grado_cantidad").val());
+            fd.append('procede_aceleracion', $("#procede_aceleracion").val());
             $.ajax({
                 type: 'post',
                 url: Routing.generate('tramite_acelera_save'),

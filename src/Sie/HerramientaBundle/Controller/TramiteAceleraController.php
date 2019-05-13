@@ -55,7 +55,6 @@ class TramiteAceleraController extends Controller
         $flujotipo_id = trim($request->get('flujotipo_id'));
         $em = $this->getDoctrine()->getManager();
         $response = new JsonResponse();
-
         $estudiante_result = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rude));
         $estudiante = array();
         if (!empty($estudiante_result)){
@@ -90,8 +89,9 @@ class TramiteAceleraController extends Controller
                     $msg = "exito";
                 }
                 $institucioneducativa_curso_id = $einscripcion_result->getInstitucioneducativaCurso();
-                $iecurso_result = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('id' => $institucioneducativa_curso_id));//'gestion_tipo_id' => $gestion_actual
-                if (!empty($iecurso_result)){
+                $iecurso_result = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('id' => $institucioneducativa_curso_id, 'gestionTipo' => 2018));//$em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($request->getSession()->get('currentyear'))
+                // $iecurso_result = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('id' => $institucioneducativa_curso_id, 'gestionTipo' => $em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($request->getSession()->get('currentyear'))));
+                if (!empty($iecurso_result)){//dump($iecurso_result->getInstitucioneducativa()->getId());die;
                     $ieducativa_result = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $iecurso_result->getInstitucioneducativa()));
                 } else {
                     $ieducativa_result = null;
@@ -106,7 +106,8 @@ class TramiteAceleraController extends Controller
                     'fecha_nacimiento' => $estudiante_result->getFechaNacimiento()==null?array(date=>''):$estudiante_result->getFechaNacimiento(),
                     'estudiante_ins_id' => $estudianteinscripcion_id,
                     'estudiante_id' => $estudiante_result->getId(),
-                    'institucioneducativa_id' => $ieducativa_result==null?'':$ieducativa_result->getId(),
+                    //'institucioneducativa_id' => $ieducativa_result==null?'':$ieducativa_result->getId(),
+                    'institucioneducativa_id' => $ieducativa_result==null?'':$iecurso_result->getInstitucioneducativa()->getId(),
                     'institucion_educativa' => $ieducativa_result==null?'':$ieducativa_result->getInstitucioneducativa(),
                     'tipo_talento' => $estudiante_talento->getTalentoTipo(),
                     'puede_acelerar' => $estudiante_talento->getAcelera()==true?'Si':'No'
@@ -126,24 +127,38 @@ class TramiteAceleraController extends Controller
         $em = $this->getDoctrine()->getManager();
         // $em->getConnection()->beginTransaction();
         $destination_path = 'uploads/archivos/flujos/tramite/aceleracion/';
-        $documentoSol = $request->files->get('solicitud_tutor');
-        if(!empty($documentoSol)) {
-            // $path = $_SERVER['DOCUMENT_ROOT'] . $_REQUEST['folder'] . '/';
-            /* if(!file_exists($destination_path)) { 
-                mkdir($destination_path, 0777, true);
-            } */
-            $doc_sol = date('YmdHis').'1.'.$documentoSol->getClientOriginalExtension();
-            $documentoSol->move($destination_path, $doc_sol);
-        }else{
-            $doc_sol='default-2x.pdf';
+        /* $path = $_SERVER['DOCUMENT_ROOT'] . $_REQUEST['folder'] . '/';
+        if(!file_exists($destination_path)) { 
+            mkdir($destination_path, 0777, true);
+        } */
+        $cant = count($request->files->get('documento'));
+        for($i = 0; $i < $cant; $i++) {
+            if($i == 0) {
+                $doc_sol = date('YmdHis').$i.'.'.$request->files->get('documento')[$i]->getClientOriginalExtension();
+                $request->files->get('documento')[$i]->move($destination_path, $doc_sol);
+            } else {
+                $doc_com = date('YmdHis').$i.'.'.$request->files->get('documento')[$i]->getClientOriginalExtension();
+                $request->files->get('documento')[$i]->move($destination_path, $doc_com);
+            }
         }
-        $documentoCom = $request->files->get('informe_comision');
-        if(!empty($documentoCom)) {            
-            $doc_com = date('YmdHis').'2.'.$documentoCom->getClientOriginalExtension();
-            //$documentoSol->move($destination_path, $doc_com);
-        }else{
-            $doc_com='default-2x.pdf';
-        }
+        // $documentoSol = $request->files->get('solicitud_tutor');
+        // if(!empty($documentoSol)) {
+        //     // $path = $_SERVER['DOCUMENT_ROOT'] . $_REQUEST['folder'] . '/';
+        //     /* if(!file_exists($destination_path)) { 
+        //         mkdir($destination_path, 0777, true);
+        //     } */
+        //     $doc_sol = date('YmdHis').'1.'.$documentoSol->getClientOriginalExtension();
+        //     $documentoSol->move($destination_path, $doc_sol);
+        // }else{
+        //     $doc_sol='default-2x.pdf';
+        // }
+        // $documentoCom = $request->files->get('informe_comision');
+        // if(!empty($documentoCom)) {            
+        //     $doc_com = date('YmdHis').'2.'.$documentoCom->getClientOriginalExtension();
+        //     //$documentoSol->move($destination_path, $doc_com);
+        // }else{
+        //     $doc_com='default-2x.pdf';
+        // }
         $datos = array();
         $datos['estudiante_id'] = $request->get('estudiante_id');
         $datos['estudiante_ins_id'] = $request->get('estudiante_ins_id');
@@ -151,11 +166,9 @@ class TramiteAceleraController extends Controller
         $datos['institucioneducativa_id'] = $request->get('institucioneducativa_id');
         $datos['fecha_solicitud'] = $request->get('fecha_solicitud');
         $datos['grado_cantidad'] = $request->get('grado_cantidad');
+        $datos['procede_aceleracion'] = $request->get('procede_aceleracion');
         $datos['solicitud_tutor'] = $doc_sol;
         $datos['informe_comision'] = $doc_com;
-
-        //$datos = json_decode($request->get('solicitud'));//dump($datos);die;
-
         $usuario_id = $request->getSession()->get('userId');
         $rol_id = $request->getSession()->get('roluser');
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $datos['flujotipo_id'], 'orden' => 1));
@@ -173,22 +186,21 @@ class TramiteAceleraController extends Controller
         $tramite_id = '';
         $distrito_id = 0;
         $lugarlocalidad_id = 0;
-        $ieducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($institucioneducativa_id);
+        $ieducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->getSession()->get('ie_id'));//$institucioneducativa_id
         if ($ieducativa) {
             $distrito_id = $ieducativa->getLeJuridicciongeografica()->getLugarTipoIdDistrito();
             $lugarlocalidad_id = $ieducativa->getLeJuridicciongeografica()->getLugarTipoLocalidad()->getId();
         }
         $wfTramiteController = new WfTramiteController();
         $wfTramiteController->setContainer($this->container);
-        //dump($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $institucioneducativa_id, $observaciones, $tipotramite_id,'', $tramite_id, json_encode($datos), $lugarlocalidad_id, $distrito_id);die;
-        $result = $wfTramiteController->guardarTramiteNuevo($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $institucioneducativa_id, $observaciones, $tipotramite_id,'SI', $tramite_id, json_encode($datos), $lugarlocalidad_id, $distrito_id);
+        //dump($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $institucioneducativa_id, $observaciones, $tipotramite_id,$datos['procede_aceleracion'], $tramite_id, json_encode($datos), $lugarlocalidad_id, $distrito_id);die;
+        $result = $wfTramiteController->guardarTramiteNuevo($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $institucioneducativa_id, $observaciones, $tipotramite_id, $datos['procede_aceleracion'], $tramite_id, json_encode($datos), $lugarlocalidad_id, $distrito_id);
         if ($result['dato'] == true) {
             $msg = $result['msg'];
         } else {
             $estado = 500;
             $msg = $result['msg'];
         }
-        $em->getConnection()->commit();
         return $response->setData(array('estado' => $estado, 'msg' => $msg));
     }
 }
