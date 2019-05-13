@@ -77,6 +77,7 @@ class TramiteAceleraController extends Controller
                     ->getQuery()
                     ->getResult();
                 $valida = false;
+                // dump($resultDatos);die;
                 foreach ($resultDatos as $item) {
                     $datos = json_decode($item->getdatos());
                     if ($datos->estudiante_id == $estudiante_result->getId()) {
@@ -88,8 +89,8 @@ class TramiteAceleraController extends Controller
                 } else {
                     $msg = "exito";
                 }
-                $institucioneducativa_curso_id = $einscripcion_result->getInstitucioneducativaCurso();
-                $iecurso_result = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('id' => $institucioneducativa_curso_id, 'gestionTipo' => 2018));//$em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($request->getSession()->get('currentyear'))
+                $institucioneducativa_curso_id = $einscripcion_result->getInstitucioneducativaCurso();//, 'gestionTipo' => 2018
+                $iecurso_result = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('id' => $institucioneducativa_curso_id));//$em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($request->getSession()->get('currentyear'))
                 // $iecurso_result = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('id' => $institucioneducativa_curso_id, 'gestionTipo' => $em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($request->getSession()->get('currentyear'))));
                 if (!empty($iecurso_result)){//dump($iecurso_result->getInstitucioneducativa()->getId());die;
                     $ieducativa_result = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $iecurso_result->getInstitucioneducativa()));
@@ -110,7 +111,8 @@ class TramiteAceleraController extends Controller
                     'institucioneducativa_id' => $ieducativa_result==null?'':$iecurso_result->getInstitucioneducativa()->getId(),
                     'institucion_educativa' => $ieducativa_result==null?'':$ieducativa_result->getInstitucioneducativa(),
                     'tipo_talento' => $estudiante_talento->getTalentoTipo(),
-                    'puede_acelerar' => $estudiante_talento->getAcelera()==true?'Si':'No'
+                    'puede_acelerar' => $estudiante_talento->getAcelera()==true?'Si':'No',
+                    'informe' => "20190411210929.pdf"
                 );
             } else {
                 $msg = 'noins';
@@ -167,6 +169,7 @@ class TramiteAceleraController extends Controller
         $datos['fecha_solicitud'] = $request->get('fecha_solicitud');
         $datos['grado_cantidad'] = $request->get('grado_cantidad');
         $datos['procede_aceleracion'] = $request->get('procede_aceleracion');
+        $datos['informe'] = $request->get('informe');
         $datos['solicitud_tutor'] = $doc_sol;
         $datos['informe_comision'] = $doc_com;
         $usuario_id = $request->getSession()->get('userId');
@@ -202,5 +205,31 @@ class TramiteAceleraController extends Controller
             $msg = $result['msg'];
         }
         return $response->setData(array('estado' => $estado, 'msg' => $msg));
+    }
+
+    public function supleAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $tramite_id = $request->get('id');
+        $rol = $request->getSession()->get('roluser');
+        if ($rol != 9 || $tramite_id==null) {
+            return $this->redirect($this->generateUrl('wf_tramite_index'));
+        }//dump($request->getSession()->get('pathSystem'));die;
+        $resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
+            ->select('wfd')
+            ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
+            ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'td.flujoProceso = fp.id')
+            ->where('td.tramite='.$tramite_id)
+            ->andWhere('fp.orden=1')
+            ->andWhere("wfd.esValido=true")
+            ->orderBy("td.flujoProceso")
+            ->getQuery()
+            ->getSingleResult();
+        $datos = json_decode($resultDatos->getdatos());
+        $restudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($datos->estudiante_id);
+        $estudiante = $restudiante->getNombre().' '.$restudiante->getPaterno().' '.$restudiante->getMaterno();
+        $rude = $restudiante->getCodigoRude();
+        $informe = "";
+        // dump($datos);die;
+        return $this->render('SieHerramientaBundle:TramiteAcelera:suple.html.twig', array('tramite_id' => $tramite_id, 'rude' => $rude, 'estudiante' => $estudiante, 'procede_aceleracion' => $datos->procede_aceleracion, 'grado_cantidad' => $datos->grado_cantidad, 'informe' => $informe, 'solicitud_tutor' => $datos->solicitud_tutor, 'informe_comision' => $datos->informe_comision));
     }
 }
