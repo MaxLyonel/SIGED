@@ -41,7 +41,7 @@
                                             <p class="text-muted text-capitalize">{{arrSieInfo.id}}</p>
                                         </li>
                                         <li>
-
+                                            {% if app.session.get('ie_id') > 0 %}    
                                             <!-- this is for the RUDE OPERATIVO start -->
                                             {{form_start(formOperativoRude, { 'attr':{'id':'downOperativoRudeId'} })}}
                                             {{form_widget(formOperativoRude.downOperativoRude)}}
@@ -49,6 +49,7 @@
                                             <div id="downoperativoId">
                                                 
                                             </div>
+                                            {% endif %}
                                             <!-- this is for the RUDE OPERATIVO end -->
                                             
                                             <!--a href="page-profile.html" class="btn btn-success text-center btn-block">PRO Account</a-->
