@@ -1,0 +1,69 @@
+ <div class="modal-dialog modal-lg modal-photo-viewer">
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">Datos Entrenador</h4>
+                    </div>
+                    <div class="modal-body no-padding">
+
+                       {% if swShowCouch %}
+
+                             <table class="table table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <th>Carnet:</th>
+                                        <td>{{dataPerson.carnet}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Complemento:</th>
+                                        <td>{{dataPerson.complemento}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Paterno:</th>
+                                        <td>{{dataPerson.paterno}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Materno:</th>
+                                        <td>{{dataPerson.materno}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Nombre(s):</th>
+                                        <td>{{dataPerson.nombre}}</td>
+                                    </tr>
+                                   <tr>
+                                        <th></th>
+                                        <td> 
+                                                <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-form" onclick="removeCouch('{{dataPerson.idRemove|base64_encode}}');" >
+                                                          <i class="fa fa-user"></i>Eliminar Entrenador
+                                                      </button>
+                                        </td>
+                                    </tr>
+                               
+                                    </tbody>
+                                </table>
+
+                        {% else %}
+                           <div class="alert alert-warning">
+                                <strong>Entrenador No registrado</strong> 
+                           </div>
+                        {% endif %}
+
+                          
+
+                          
+
+                    </div>
+                    <div id="idPersonData">
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+                
+            </div>
+            <!-- /.modal-dialog -->

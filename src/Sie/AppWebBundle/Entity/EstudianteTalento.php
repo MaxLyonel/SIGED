@@ -248,4 +248,32 @@ class EstudianteTalento
     {
         return $this->estudiante;
     }
+    /**
+     * @var string
+     */
+    private $informe;
+
+
+    /**
+     * Set informe
+     *
+     * @param string $informe
+     * @return EstudianteTalento
+     */
+    public function setInforme($informe)
+    {
+        $this->informe = $informe;
+    
+        return $this;
+    }
+
+    /**
+     * Get informe
+     *
+     * @return string 
+     */
+    public function getInforme()
+    {
+        return $this->informe;
+    }
 }

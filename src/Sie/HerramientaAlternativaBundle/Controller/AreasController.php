@@ -87,17 +87,20 @@ class AreasController extends Controller {
             $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($idCurso);
             
             $smp = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($idAsignatura);
-            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
-            
-            $ieco = new InstitucioneducativaCursoOferta();
-            $ieco->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find(3));
-            $ieco->setInsitucioneducativaCurso($curso);
-            $ieco->setSuperiorModuloPeriodo($smp);
-            $ieco->setHorasmes(0);
-            $em->persist($ieco);
-            $em->flush();
+            $codigo = $smp->getSuperiorModuloTipo()->getCodigo();
+            if ($codigo != '415'){
+                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
+                
+                $ieco = new InstitucioneducativaCursoOferta();
+                $ieco->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find(3));
+                $ieco->setInsitucioneducativaCurso($curso);
+                $ieco->setSuperiorModuloPeriodo($smp);
+                $ieco->setHorasmes(0);
+                $em->persist($ieco);
+                $em->flush();
+                $em->getConnection()->commit();
 
-            $em->getConnection()->commit();
+            }
             // Mostramos nuevamente las areas del curso
             $data = $this->getAreas($infoUe);
             $data['primaria'] = $primaria;
@@ -378,12 +381,14 @@ class AreasController extends Controller {
                 ->andWhere('isuc.periodoTipoId = :periodoId')
                 ->andWhere('isuc.gestionTipo = :gestion')
                 ->andWhere('isuc.institucioneducativa = :institucion')
+                ->andWhere('isuc.id = :sucursal')
                 ->andWhere('smp.id NOT IN (:actuales)')
                 ->setParameter('setId', $setId)
                 ->setParameter('satCodigo', $satCodigo)
                 ->setParameter('periodoId', $periodo)
                 ->setParameter('gestion', $gestion)
                 ->setParameter('institucion', $institucion)
+                ->setParameter('sucursal', $sucursal)
                 ->setParameter('actuales', $actuales)
                 ->getQuery()
                 ->getResult();
@@ -404,11 +409,13 @@ class AreasController extends Controller {
                 ->andWhere('isuc.periodoTipoId = :periodoId')
                 ->andWhere('isuc.gestionTipo = :gestion')
                 ->andWhere('isuc.institucioneducativa = :institucion')
+                ->andWhere('isuc.id = :sucursal')
                 ->setParameter('setId', $setId)
                 ->setParameter('satCodigo', $satCodigo)
                 ->setParameter('periodoId', $periodo)
                 ->setParameter('gestion', $gestion)
                 ->setParameter('institucion', $institucion)
+                ->setParameter('sucursal', $sucursal)
                 ->getQuery()
                 ->getResult();
         }
