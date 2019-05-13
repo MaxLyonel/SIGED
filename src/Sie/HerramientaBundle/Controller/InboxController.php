@@ -18,6 +18,7 @@ use Sie\AppWebBundle\Entity\RegistroConsolidacion;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\User;
 use Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnico;
+use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoLog;
 
 
 use Doctrine\DBAL\Types\Type;
@@ -1060,45 +1061,85 @@ class InboxController extends Controller {
       
       //get values send
       $form = $request->get('form');
+
       //get the file to generate the new file
       $dir = '/archivos/descargas/';
       // conver json values to array
       $arrData = json_decode($form['data'],true);
-      $cabecera = 'R';
-      //before to donwload file remove the old
-      $fileRude = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'R';
-      system('rm -fr ' . $dir .$fileRude.'.sie' );      
-      system('rm -fr ' . $dir .$fileRude.'.igm' );
       
-      //to generate the file execute de function
-      $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_rude_txt('" . $arrData['id'] . "','" . $arrData['gestion'] . "','" . $cabecera . "');");
-      $query->execute();
+      // $objOperativoLog = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findOneBy(array(
+      //   'institucioneducativa' => $arrData['id'],
+      //   'gestionTipoId' => $arrData['gestion'],
+      //   'institucioneducativaOperativoLogTipo' => 5,
+      // ));
 
-      $newGenerateFile = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'R';
+      // if($objOperativoLog){
+
+      //     $message = "No se puede proceder por que el archivo ya fue descargado";
+      //       $this->addFlash('notidonwloadrude', $message);
+      //       $sw = false;
+      //       $dataDownload = array(
+      //         'sw' => $sw
+      //       );  
+
+      // }else{
+
+          $objOperativo = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+            'unidadEducativa' => $arrData['id'],
+            'gestion' => $arrData['gestion'],
+          ));
+          // dump($objOperativo);
+          // dump($arrData);
+          
+          $cabecera = 'R';
+          //before to donwload file remove the old
+          $fileRude = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'RB';
+          system('rm -fr ' . $dir .$fileRude.'.sie' );      
+          system('rm -fr ' . $dir .$fileRude.'.igm' );
+
+          if($objOperativo /*&&  $objOperativo->getBim1()*/){
+            $sw = true;
+            //to generate the file execute de function
+            $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_rude_txt('" . $arrData['id'] . "','" . $arrData['gestion'] . "','" . $cabecera . "');");
+            $query->execute();
+
+            $newGenerateFile = $arrData['id'] . '-' . date('Y-m-d') . '_' . 'RB';
+            
+
+            //decode base64
+            $outputdata = system('base64 '.$dir.''.$newGenerateFile. '.sie  >> ' . $dir . 'NR' . $newGenerateFile . '.sie');
+
+            system('rm -fr ' . $dir . $newGenerateFile.'.sie');
+            exec('mv ' . $dir . 'NR' .$newGenerateFile . '.sie ' . $dir . $newGenerateFile . '.sie ');
+
+            //name the file
+           exec('zip -P 3I35I3Client ' . $dir . $newGenerateFile . '.zip ' . $dir  . $newGenerateFile . '.sie');
+           exec('mv ' . $dir . $newGenerateFile . '.zip ' . $dir . $newGenerateFile . '.igm ');
+           $dataDownload = array(
+              'file' => $newGenerateFile . '.igm ',
+              'datadownload' => $form['data'],
+              'sw' => $sw
+            );
+          }else{
+            $message = "Problemas al descargar el archio, el archivo no presetan Inicio de Gestión";
+            $this->addFlash('notidonwloadrude', $message);
+            $sw = false;
+            $dataDownload = array(
+              'sw' => $sw
+            );
+          }   
+          
+      // }   
+
       
-
-      //decode base64
-      $outputdata = system('base64 '.$dir.''.$newGenerateFile. '.sie  >> ' . $dir . 'NR' . $newGenerateFile . '.sie');
-
-      system('rm -fr ' . $dir . $newGenerateFile.'.sie');
-      exec('mv ' . $dir . 'NR' .$newGenerateFile . '.sie ' . $dir . $newGenerateFile . '.sie ');
-
-      //name the file
-     exec('zip -P 3I35I3Client ' . $dir . $newGenerateFile . '.zip ' . $dir  . $newGenerateFile . '.sie');
-     exec('mv ' . $dir . $newGenerateFile . '.zip ' . $dir . $newGenerateFile . '.igm ');
-     
-     return $this->render($this->session->get('pathSystem') . ':Inbox:downOperativoRude.html.twig', array(
-        'file' => $newGenerateFile . '.igm ',
-        'datadownload' => $form['data'],
-
-     ));
-
+     return $this->render($this->session->get('pathSystem') . ':Inbox:downOperativoRude.html.twig', $dataDownload );
     }
 
     public function downloadAction(Request $request, $file,$datadownload) {
       // dump($datadownload);die;
       $form = json_decode($datadownload,true);
       $form['operativoTipo']=5;
+      
       // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,1);
       $objOperativoLog = $this->get('funciones')->saveOperativoLog($form);
         //get path of the file
@@ -1107,6 +1148,8 @@ class InboxController extends Controller {
         //remove space on the post values
         $file = preg_replace('/\s+/', '', $file);
         $file = str_replace('%20', '', $file);
+        // save the log operativo
+        
         //create response to donwload the file
         $response = new Response();
         //then send the headers to foce download the zip file
@@ -1121,7 +1164,6 @@ class InboxController extends Controller {
         return $response;
     }
 
-
-
+     
 
 }
