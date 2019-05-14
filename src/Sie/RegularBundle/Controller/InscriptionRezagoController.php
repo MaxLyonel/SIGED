@@ -28,6 +28,7 @@ class InscriptionRezagoController extends Controller {
     public $aCursos;
     public $lastUE;
     public $oparalelos;
+    public $arrLevelYearOld;
 
     /**
      * the class constructor
@@ -35,6 +36,11 @@ class InscriptionRezagoController extends Controller {
     public function __construct() {
         $this->session = new Session();
         $this->aCursos = $this->fillCursos();
+
+        $this->arrLevelYearOld = array(
+            '12' => array(6,7,8,9,10,11),
+            '13' => array(12,13,14,15,15,15),
+        );
     }
 
     /**
@@ -108,6 +114,34 @@ class InscriptionRezagoController extends Controller {
         return $y_dif;
     }
 
+    public function validationInscription($data){
+
+        //create db conexino
+        $em = $this->getDoctrine()->getManager();
+
+         $inscription3 = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
+            $query = $inscription3->createQueryBuilder('ei')
+                    ->select('iec.id as iecId,(ei.id) as inscriptionId,IDENTITY(iec.institucioneducativa) as institucioneducativa ', 'IDENTITY(iec.nivelTipo) as nivel', 'IDENTITY(iec.gradoTipo) as grado', 'IDENTITY(iec.paraleloTipo) as paralelo', 'IDENTITY(iec.turnoTipo) as turno', 'IDENTITY(iec.cicloTipo) as ciclo', 'IDENTITY(ei.estadomatriculaTipo) as matricula, IDENTITY(ei.estudiante) as studentId')
+                    ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso=iec.id')
+                    ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
+                    ->leftJoin('SieAppWebBundle:InstitucioneducativaTipo', 'it', 'WITH', 'i.institucioneducativaTipo = it.id')
+                    ->where('ei.estudiante = :id')
+                    ->andwhere('iec.gestionTipo = :gestion')
+                    ->andwhere('ei.estadomatriculaTipo IN (:matricula)')
+                    ->andwhere('it.id = :ietipo')
+                    ->setParameter('id', $data['studentId'])
+                    ->setParameter('gestion', $data['gestion'])
+                    ->setParameter('matricula', $data['matricula'])
+
+                    ->setParameter('ietipo', 1)
+                    ->getQuery();
+
+            $studentInscription = $query->getResult();
+
+            return $studentInscription;
+
+    }
+
     /**
      * obtiene el formulario para realizar la modificacion
      * @param Request $request
@@ -139,24 +173,12 @@ class InscriptionRezagoController extends Controller {
                 return $this->redirectToRoute('inscription_rezago_index');
             }
 
-            //look for inscription like rezago
-            $inscription3 = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
-            $query = $inscription3->createQueryBuilder('ei')
-                    ->select('iec.id as iecId,(ei.id) as inscriptionId,IDENTITY(iec.institucioneducativa) as institucioneducativa ', 'IDENTITY(iec.nivelTipo) as nivel', 'IDENTITY(iec.gradoTipo) as grado', 'IDENTITY(iec.paraleloTipo) as paralelo', 'IDENTITY(iec.turnoTipo) as turno', 'IDENTITY(iec.cicloTipo) as ciclo', 'IDENTITY(ei.estadomatriculaTipo) as matricula')
-                    ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso=iec.id')
-                    ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
-                    ->leftJoin('SieAppWebBundle:InstitucioneducativaTipo', 'it', 'WITH', 'i.institucioneducativaTipo = it.id')
-                    ->where('ei.estudiante = :id')
-                    ->andwhere('iec.gestionTipo = :gestion')
-                    ->andwhere('ei.estadomatriculaTipo = :matricula')
-                    ->andwhere('it.id = :ietipo')
-                    ->setParameter('id', $student->getId())
-                    ->setParameter('gestion', $this->session->get('currentyear'))
-                    ->setParameter('matricula', '4')
-                    ->setParameter('ietipo', 1)
-                    ->getQuery();
+               
 
-            $studentInscription = $query->getResult();
+            //look for inscription like rezago  current year by ID = 4 efectivo
+            $inscriptionData = array('studentId' => $student->getId(), 'gestion' => $this->session->get('currentyear'),'matricula' => array('4'));
+            $studentInscription = $this->validationInscription($inscriptionData);
+            
             if (!$studentInscription) {
                 $message = 'No se puede realizar la inscripción, Estudiante no presenta inscripción';
                 $this->addFlash('warningrezago', $message);
@@ -169,6 +191,31 @@ class InscriptionRezagoController extends Controller {
                 $this->addFlash('warningrezago', $message);
                 return $this->redirectToRoute('inscription_rezago_index');
             }
+
+            //look for inscription like rezago  by id 10 NI
+            $arrMatriculas=array(5,6,10);
+            $inscriptionData = array('studentId' => $student->getId(), 'gestion' => $this->session->get('currentyear')-1,'matricula' => $arrMatriculas );
+            $studentInscriptionLastYear = $this->validationInscription($inscriptionData);
+
+            if ($studentInscriptionLastYear) {
+                if(in_array($studentInscriptionLastYear[0]['matricula'], array(4,5,11)) ){
+                    $message = 'No se puede realizar la inscripción, el estudiante presenta inscripción en la gestion pasada';
+                    $this->addFlash('warningrezago', $message);
+                    return $this->redirectToRoute('inscription_rezago_index');
+                }
+            }
+
+            // look student data to validate the years old trougth the level and grado
+            $student = $em->getRepository('SieAppWebBundle:Estudiante')->find($studentInscription[0]['studentId']);
+            $yearsStudent = $this->get('seguimiento')->getYearsOldsStudentByFecha($student->getFechaNacimiento()->format('d-m-Y'), "30-06-".$this->session->get('currentyear'));
+            if($yearsStudent[0] > $this->arrLevelYearOld[$studentInscription[0]['nivel']][$studentInscription[0]['grado']-1] && $yearsStudent[0] <= 15){
+                // nothing to do
+            }else{
+                $message = 'No se puede realizar la inscripción, la/el estudiante no cumple con la edad requerida';
+                $this->addFlash('warningrezago', $message);
+                return $this->redirectToRoute('inscription_rezago_index');
+            }            
+
             //get the notas of student
             $boolStudentCalification = $this->getStudentNotasValidation($studentInscription, $student->getId());
             //check if the student has calification
