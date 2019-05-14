@@ -119,14 +119,16 @@
                                             </tr>
                                             <tr>
                                                 <td colspan="2">
-                                                    {{form_start(formOperativoRude, { 'attr':{'id':'downOperativoRudeId'} })}}
-                                                    {{form_widget(formOperativoRude.downOperativoRude)}}
-                                                    {{form_end(formOperativoRude)}}
-                                                
+                                                    {% if app.session.get('ie_id') > 0 %}
+                                                        {{form_start(formOperativoRude, { 'attr':{'id':'downOperativoRudeId'} })}}
+                                                        {{form_widget(formOperativoRude.downOperativoRude)}}
+                                                        {{form_end(formOperativoRude)}}
                                                     
-                                                    <div id="downoperativoId">
                                                         
-                                                    </div>
+                                                        <div id="downoperativoId">
+                                                            
+                                                        </div>
+                                                    {% endif %}
                                                 </td>
                                             </tr>
                                     </table>
