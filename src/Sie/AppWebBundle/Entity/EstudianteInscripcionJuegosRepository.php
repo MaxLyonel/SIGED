@@ -104,7 +104,7 @@ class EstudianteInscripcionJuegosRepository extends EntityRepository
         $qb = $this->getEntityManager()->createQueryBuilder();
         
         $qb
-                ->select("eij.posicion as posicion, ft.id as fase, ie.id as ue, ie.institucioneducativa as institucioneducativa, e.id, lt6.lugar as distrito, ct.id as circunscripcion, e.carnetIdentidad,e.complemento,e.codigoRude, e.paterno, e.materno, e.nombre, prt.id as pruebaId, prt.prueba, dit.id as disciplinaId, dit.disciplina, g.id as generoId, g.genero, e.fechaNacimiento, nt.nivel,gt.grado,pt.paralelo,tt.turno,ptp.pais,ltd.lugar,ltp.lugar, e.localidadNac, emt.estadomatricula,emt.id as estadomatriculaId, ei.id as eInsId, eij.id as eInsJueId, coalesce(eeij.equipoId,0) as equipoId, coalesce(eeij.equipoNombre,'') as equipoNombre, ppt.id as pruebaTipoId, ppt.disciplinaParticipacion as pruebaTipo")
+                ->select("eij.posicion as posicion, ft.id as fase, ie.id as ue, ie.institucioneducativa as institucioneducativa, e.id, lt6.lugar as distrito, ct.id as circunscripcion, e.carnetIdentidad,e.complemento,e.codigoRude, e.paterno, e.materno, e.nombre, prt.id as pruebaId, prt.prueba, dit.id as disciplinaId, dit.disciplina, g.id as generoId, g.genero, e.fechaNacimiento, nt.nivel,gt.grado,pt.paralelo,tt.turno,ptp.pais,ltd.lugar,ltp.lugar, e.localidadNac, emt.estadomatricula,emt.id as estadomatriculaId, ei.id as eInsId, eij.id as eInsJueId, coalesce(eeij.equipoId,0) as equipoId, coalesce(eeij.equipoNombre,'') as equipoNombre, ppt.id as pruebaTipoId, ppt.disciplinaParticipacion as pruebaTipo, coalesce(p.nombre,'') as nombrePersona, coalesce(p.paterno,'') as paternoPersona, coalesce(p.materno,'') as maternoPersona")
                 ->from('SieAppWebBundle:JdpEstudianteInscripcionJuegos', 'eij')
                 ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'ei.id = eij.estudianteInscripcion')
                 ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')
@@ -132,6 +132,8 @@ class EstudianteInscripcionJuegosRepository extends EntityRepository
                 ->leftJoin('SieAppWebBundle:LugarTipo','lt5','WITH','lt5.id = lt4.lugarTipo') 
                 ->leftJoin('SieAppWebBundle:LugarTipo','lt6','WITH','lt6.id = jg.lugarTipoIdDistrito')
                 ->leftJoin('SieAppWebBundle:JdpEquipoEstudianteInscripcionJuegos','eeij','WITH','eeij.estudianteInscripcionJuegos = eij.id')
+                ->leftJoin('SieAppWebBundle:JdpPersonaInscripcionJuegos','pij','WITH','pij.estudianteInscripcionJuegos = eij.id')
+                ->leftjoin('SieAppWebBundle:Persona', 'p', 'WITH', 'p.id = pij.persona')
                 ->where('eij.gestionTipo = :gestion')
                 ->andwhere('dit.nivelTipo = :nivel')
                 ->andwhere('prt.id = :prueba')

@@ -200,7 +200,8 @@ class EstudianteTalentoController extends Controller {
         $documento = $request->files->get('informe');
         if(!empty($documento)) {
             // $path = $_SERVER['DOCUMENT_ROOT'] . $_REQUEST['folder'] . '/';
-            $destination_path = 'uploads/archivos/flujos/'.$request->getSession()->get('ie_id').'/talento/';
+            // $destination_path = 'uploads/archivos/flujos/'.$request->getSession()->get('ie_id').'/talento/';
+            $destination_path = 'uploads/archivos/flujos/tramite/talento/';
             /* if(!file_exists($destination_path)) { 
                 mkdir($destination_path, 0777, true);
             } */
@@ -326,6 +327,7 @@ class EstudianteTalentoController extends Controller {
                     $estudianteTalento->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->findOneById($tareasDatos[0]['datos']['estudiante_id']));
                     $estudianteTalento->setTalentoTipo($tareasDatos[1]['datos']['tipo_talento']);
                     $estudianteTalento->setAcelera($tareasDatos[1]['datos']['acelera']);
+                    $estudianteTalento->setInforme($tareasDatos[1]['datos']['informe']);
                     $estudianteTalento->setFechaRegistro(new \DateTime(date('Y-m-d')));
                     //$estudianteTalento->setFechaModificacion(new \DateTime(date('Y-m-d')));
                     $estudianteTalento->setUsuarioRegistro($em->getRepository('SieAppWebBundle:Usuario')->findOneById($usuario_id));
