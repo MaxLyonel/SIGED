@@ -182,7 +182,10 @@
                         </tr>
                     {% endfor %}
                     <tr>
-                        <td style="background:#8AE5B6;height:100px;"><b>Estado Final de la Etapa:</b></td>
+                        <td></td>
+                        <td colspan="2"></td></tr>
+                    <tr>
+                        <td style="background:#8AE5B6;"><b>Estado Final de la Etapa:</b></td>
                         {% for c in notas.cualitativas %}
                             <td style="padding:0px; margin:0px">
                                 {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
@@ -206,6 +209,9 @@
                             </td>
                         {% endfor %}    
                     </tr>
+                    <tr>
+                        <td></td>
+                        <td colspan="2"></td></tr>
                 </tbody>
             </table>
         {% else %}
