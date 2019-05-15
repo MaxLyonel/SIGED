@@ -1,19 +1,31 @@
 tramite_acelera_nuevo:
     path:     /nuevo
-    defaults: { _controller: SieHerramientaBundle:TramiteAcelera:new }
+    defaults: { _controller: SieHerramientaBundle:TramiteAcelera:nuevo }
 
 tramite_acelera_search:
     path:     /busqueda
-    defaults: { _controller: SieHerramientaBundle:TramiteAcelera:searchStudent }
+    defaults: { _controller: SieHerramientaBundle:TramiteAcelera:buscaEstudiante }
     options:
         expose: true
 
-tramite_acelera_save:
+tramite_acelera_save_new:
     path:     /guardar
-    defaults: { _controller: SieHerramientaBundle:TramiteAcelera:save }
+    defaults: { _controller: SieHerramientaBundle:TramiteAcelera:guardaNuevo }
     options:
         expose: true
 
 tramite_acelera_supletorio:
     path:     /supletorio
-    defaults: { _controller: SieHerramientaBundle:TramiteAcelera:suple }
+    defaults: { _controller: SieHerramientaBundle:TramiteAcelera:supletorio }
+
+tramite_acelera_save_suple:
+    path:     /guardarsuple
+    defaults: { _controller: SieHerramientaBundle:TramiteAcelera:guardaSuple }
+    options:
+        expose: true
+
+tramite_acelera_save_obs:
+    path:     /guardarobs
+    defaults: { _controller: SieHerramientaBundle:TramiteAcelera:guardaObs }
+    options:
+        expose: true

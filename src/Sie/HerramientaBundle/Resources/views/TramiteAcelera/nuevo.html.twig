@@ -114,16 +114,16 @@
                                     <input type="hidden" id="institucioneducativa_id" name="institucioneducativa_id" value="{{ institucioneducativa_id }}">
                                     <input type="hidden" id="flujotipo_id" name="flujotipo_id" value="{{ flujotipo_id }}">
                                     <div class="form-group">
-                                        <label for="grado_cantidad">Grados a Acelerar</label>
-                                        <input type="text" class="form-control numeric" id="grado_cantidad" name="grado_cantidad" required>
-                                    </div>
-                                    <div class="form-group">
                                         <label for="procede_aceleracion">¿Procede Aceleración?</label>
-                                        <select class="form-control" id="procede_aceleracion" name="procede_aceleracion" required>
+                                        <select class="form-control" id="procede_aceleracion" name="procede_aceleracion" onchange="aceleracion()" required>
                                             <option value="" disabled selected>Seleccione...</option>
                                             <option value="SI">Si</option>
                                             <option value="NO">No</option>
                                         </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="grado_cantidad">Grados a Acelerar</label>
+                                        <input type="text" class="form-control numeric" id="grado_cantidad" name="grado_cantidad" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="fecha_solicitud">Fecha Solicitud</label>
@@ -137,7 +137,7 @@
                             <h5 class="float-left"><b class="text-danger">Nota:</b> El documento adjunto no debe superar los 2MB</h5>
                             <div class="row">
                                 <div class="col-md-12 text-center">
-                                    <button type="submit" class="btn btn-primary" id="guardar">Guardar</button>
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
                                 </div>
                             </div>
                         </form>
@@ -229,10 +229,12 @@
                             $("#informe").val(data.estudiante.informe);
                             $('#inf_psico').css('display', 'block');
                             $("#estudiante_ins_id").val(data.estudiante.estudiante_ins_id);
-                        } else if (data.msg == 'nocurso') {
-                            mesage('warning', 'Notificación', 'Estudiante no está inscrito en la gestión actual.', true, 0);
                         } else if (data.msg == 'notalento') {
                             mesage('warning', 'Notificación', 'Estudiante no está determinado como talento extraordinario.', true, 0);
+                        } else if (data.msg == 'noregular') {
+                            mesage('warning', 'Notificación', 'Estudiante no está en educación regular.', true, 0);
+                        } else if (data.msg == 'nocurso') {
+                            mesage('warning', 'Notificación', 'Estudiante no está inscrito en la gestión actual.', true, 0);
                         } else if (data.msg == 'noins') {
                             mesage('warning', 'Notificación', 'Estudiante no está inscrito.', true, 0);
                         } else if (data.msg == 'noest') {
@@ -287,6 +289,17 @@
             $("#procede_aceleracion").val('');
             $("#fecha_solicitud").val('');
             $("#informe").val('');
+            $("#url_informe").attr('href', '');
+        }
+
+        function aceleracion() {
+            if ($("#procede_aceleracion").val()=="NO") {
+                $('#grado_cantidad').val(0);
+                $('#grado_cantidad').attr('disabled', true);
+            } else {
+                $('#grado_cantidad').val('');
+                $('#grado_cantidad').attr('disabled', false);
+            }
         }
 
         $("#registro").submit(function (event) {
@@ -304,19 +317,16 @@
             fd.append('flujotipo_id', $("#flujotipo_id").val());
             fd.append('institucioneducativa_id', $("#institucioneducativa_id").val());
             fd.append('fecha_solicitud', $("#fecha_solicitud").val());
+            fd.append('informe', $("#informe").val());
             var docsol = document.getElementById('solicitud_tutor');
-            {# fd.append('solicitud_tutor', docsol.files[0]); #}
             var doccom = document.getElementById('informe_comision');
-            {# fd.append('informe_comision', doccom.files[0]); #}
-
             fd.append("documento[]", docsol.files[0]);
             fd.append("documento[]", doccom.files[0]);
-
             fd.append('grado_cantidad', $("#grado_cantidad").val());
             fd.append('procede_aceleracion', $("#procede_aceleracion").val());
             $.ajax({
                 type: 'post',
-                url: Routing.generate('tramite_acelera_save'),
+                url: Routing.generate('tramite_acelera_save_new'),
                 data: fd,
                 mimeType:"multipart/form-data",
                 contentType: false,
@@ -327,15 +337,16 @@
                     $("#envio").html('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
                 },
                 success: function (data) {
-                    $("#guardar").attr('disabled', false);
                     $("#envio").empty();
                     if (data.estado == 200) {
+                        $("#guardar").attr('disabled', true);
                         clearInput();
                         $("#tramite_st").val(1);
                         mesage('info', 'Notificación', data.msg, false, 1);
                         //location.href = "{{ path('wf_tramite_index') }}";
                     } else {
                         mesage('danger', 'Alerta', data.msg, false, 1);
+                        $("#guardar").attr('disabled', false);
                     }
                 },
                 error: function (error) {

@@ -1,0 +1,13 @@
+tramite_acelera_verifica:
+    path:     /verifica
+    defaults: { _controller: SieHerramientaBundle:TramiteAcelera:verifica }
+
+tramite_acelera_observacion:
+    path:     /observacion
+    defaults: { _controller: SieHerramientaBundle:TramiteAcelera:observacion }
+
+tramite_acelera_save_verify:
+    path:     /guardarverifica
+    defaults: { _controller: SieHerramientaBundle:TramiteAcelera:guardaVerifica }
+    options:
+        expose: true

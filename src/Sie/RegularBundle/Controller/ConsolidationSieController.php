@@ -298,7 +298,6 @@ class ConsolidationSieController extends Controller {
 
                 //get the content of extract file
                 $aDataFileUnzip = explode('/', $result);
-
                 
                 $aFileName = explode('_', $originalName);
                 $nameFileUnZip = str_replace(' ', '\ ', $aDataFileUnzip[sizeof($aDataFileUnzip) - 1]);
@@ -520,10 +519,12 @@ class ConsolidationSieController extends Controller {
                 }
                 //save the log info
                 $dataSave = array(
-                  'gestion' => $aDataExtractFileUE[4],
-                  'bimestre' => $aDataExtractFileUE[5]-1,
-                  'sie' => $aDataExtractFileUE[1],
+                  'gestion'          => $aDataExtractFileUE[4],
+                  'bimestre'         => $aDataExtractFileUE[5]-1,
+                  'sie'              => $aDataExtractFileUE[1],
+                  'operativoLogTipo' => $aFileInfoSie[6],
                 );
+
                 $objinstitucioneducativaOperativoLog = $this->saveInstitucioneducativaOperativoLog($dataSave);
                 $em->getConnection()->commit();
                 system('rm -fr '  . $dirtmp);
@@ -734,15 +735,37 @@ class ConsolidationSieController extends Controller {
          */
 
         private function saveInstitucioneducativaOperativoLog($data){
+          dump($data);
+          //get the correct operativo log tipo id to save on the log table
+          switch ($data['operativoLogTipo']) {            
+            case "0":
+              # code...
+              $operativoLogTipo = 6;
+              break;
+            case "1":
+            case "2":
+            case "3":
+            case "4":
+            case "5":
+              # code...
+              $operativoLogTipo = 2;
+              break;
+            
+            default:
+              # code...
+              $operativoLogTipo = 2;
+              break;
+          }
+          
             //conexion to DB
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             try {
               //save the log data
               $objDownloadFilenewOpe = new InstitucioneducativaOperativoLog();
-              $objDownloadFilenewOpe->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(2));
+              $objDownloadFilenewOpe->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find($operativoLogTipo));
               $objDownloadFilenewOpe->setGestionTipoId($data['gestion']);
-              $objDownloadFilenewOpe->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find($data['bimestre']+1));
+              $objDownloadFilenewOpe->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
               $objDownloadFilenewOpe->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($data['sie']));
               $objDownloadFilenewOpe->setInstitucioneducativaSucursal(0);
               $objDownloadFilenewOpe->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($data['bimestre']));

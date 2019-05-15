@@ -348,19 +348,42 @@ class SolicitudBTHController extends Controller {
     }
 
     public function verificatramite($id_Institucion,$gestion,$flujotipo){
-
         /**
          * Verificicacion de que la UE inicio un tramite
          */
-
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT COUNT(tr.id)AS  cantidad_tramite_bth FROM tramite tr  
                                                     WHERE tr.flujo_tipo_id = $flujotipo AND tr.institucioneducativa_id = $id_Institucion
                                                     AND tr.gestion_id = $gestion");
         $query->execute();
-        $tramite_ue = $query->fetchAll();
+        $tramite_ue = $query->fetchAll(); //dump($tramite_ue);die;
         $tramite_iniciado=$tramite_ue[0]['cantidad_tramite_bth'];
-        return $tramite_iniciado;
+        if($tramite_iniciado==0){
+            /**
+             * Verifica si la unidad educativa que inicio el tramite tenga estudiantes para el nivel SECUNDARIA
+             */
+            $query = $em->getConnection()->prepare("SELECT count(ei.id) AS est
+                                                FROM estudiante_inscripcion ei
+                                                INNER JOIN institucioneducativa_curso iec ON ei.institucioneducativa_curso_id = iec.id
+                                                WHERE
+                                                iec.nivel_tipo_id = 13 AND
+                                                ei.estadomatricula_tipo_id = 4 AND
+                                                iec.gestion_tipo_id = $gestion AND
+                                                iec.institucioneducativa_id = $id_Institucion
+                                                group by
+                                                iec.institucioneducativa_id");
+            $query->execute();
+            $cant_alumnos = $query->fetchAll(); //dump($cant_alumnos);die;
+            $cantidad_est=count($cant_alumnos)>0? $cant_alumnos[0]['est']:0;
+            if ($cantidad_est==0){
+                $tramite_iniciado=1;
+            }else{
+                $tramite_iniciado=0;
+            }
+            return $tramite_iniciado;
+        }else{
+            return $tramite_iniciado;
+        }
     }
     public function guardasolicitudAction(Request $request){
         $id_Institucion = $request->get('institucionid');

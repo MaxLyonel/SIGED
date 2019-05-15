@@ -170,7 +170,7 @@ class PrincipalController extends Controller {
     private function formOperativoRude($data,$objTypeOfUE){
       return $this->createFormBuilder()
             ->add('data', 'hidden', array('data'=>$data))
-            ->add('downOperativoRude','button',array('label'=>'Generar Archivo RUDE', 'attr'=>array('class'=>'btn btn-inverse btn-stroke text-center btn-block', 'onclick'=> 'downOperativoRudeup()') ))
+            ->add('downOperativoRude','button',array('label'=>'Generar Archivo RUDE', 'attr'=>array('class'=>'btn btn-inverse btn-warning btn-stroke text-center btn-block', 'onclick'=> 'downOperativoRudeup()') ))
             ->getForm();
 
     }
