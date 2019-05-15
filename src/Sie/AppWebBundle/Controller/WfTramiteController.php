@@ -176,7 +176,7 @@ class WfTramiteController extends Controller
         ((select rol_tipo_id from flujo_proceso where id= wftc.condicion_tarea_siguiente)=". $rol ." and (te.id=15 or te.id=4) and fp.es_evaluacion is true and td.valor_evaluacion=wftc.condicion) ) and td.usuario_destinatario_id=".$usuario." 
         order by ft.flujo,te.tramite_estado,fecha_estado,t.id,proceso_tipo,tt.tramite_tipo,id_estado,td.obs,p.nombre");
         $query->execute();
-        $data['entities'] = $query->fetchAll();;
+        $data['entities'] = $query->fetchAll();
         $data['titulo'] = "Listado de trámites recibidos";
         //dump($data);die;
         return $this->render($pathSystem.':WfTramite:recibidos.html.twig', $data);
