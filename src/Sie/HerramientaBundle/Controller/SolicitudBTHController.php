@@ -1792,11 +1792,14 @@ class SolicitudBTHController extends Controller {
                  * Al dar como respuesta NO se elimina el registro de la UE de la tabla InstitucioneducativaHumanisticoTecnico y
                  * no se registran las especialidades
                  */
-                $institucionBth = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array('institucioneducativaId'=>$institucionid,'gestionTipoId'=>$this->session->get('currentyear')));
-                if($institucionBth){
-                    $em->remove($institucionBth);
-                    $em->flush();
+                if($evaluacion2 =='NO'){
+                    $institucionBth = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array('institucioneducativaId'=>$institucionid,'gestionTipoId'=>$this->session->get('currentyear')));
+                    if($institucionBth){
+                        $em->remove($institucionBth);
+                        $em->flush();
+                    }
                 }
+
 
 
             }
