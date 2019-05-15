@@ -350,7 +350,7 @@ class InscriptionIniPriTrueController extends Controller {
       $arrStudentFecnac = array();
       $arrStudentFecnac = (explode(' ',$dataStudent['fechaNacimiento']->date));
       list($year, $month, $day) = (explode('-',$arrStudentFecnac[0]));
-      $tiempo = $this->tiempo_transcurrido($day.'-'.$month.'-'.$year, '30-6-2016');
+      $tiempo = $this->tiempo_transcurrido($day.'-'.$month.'-'.$year, '30-6-'.date('Y'));
 
       //new student validation
         if ($tiempo[0]<=6){
