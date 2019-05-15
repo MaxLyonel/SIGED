@@ -113,7 +113,7 @@ class WfTramiteController extends Controller
                 $query->bindValue(':rolId', $rol);
                 $query->execute();
                 $aTuicion = $query->fetchAll();
-                if ($aTuicion[0]['get_ue_tuicion']) {
+                if (!$aTuicion[0]['get_ue_tuicion']) {
                     return $this->redirectToRoute($flujoproceso[0]->getRutaFormulario(),array('id'=>$id));  
                 }else{
                     $request->getSession()
