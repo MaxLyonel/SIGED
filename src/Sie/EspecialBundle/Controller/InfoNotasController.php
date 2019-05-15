@@ -53,6 +53,7 @@ class InfoNotasController extends Controller {
             $gestionActual = $this->session->get('currentyear');
 
             $operativo = $this->operativo($sie,$gestion);
+            //dump($operativo);die;
 
             $notas = null;
             $vista = 1;
@@ -90,7 +91,7 @@ class InfoNotasController extends Controller {
                                 $template = 'especialCualitativoVisual';
                             }
                         }
-                        $actualizarMatricula = false;
+                        $actualizarMatricula = true;
                         if($operativo >= 4 or $gestion < $gestionActual){
                             $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(70,71,72,73)));
                         }
@@ -225,6 +226,7 @@ class InfoNotasController extends Controller {
                         ->setParameter('gestion',$gestion)
                         ->getQuery()
                         ->getResult();
+        //dump($registroOperativo);die;
         if(!$registroOperativo){
             // Si no existe es operativo inicio de gestion
             $operativo = 0;
@@ -252,7 +254,7 @@ class InfoNotasController extends Controller {
         
         $arrInfoUe = unserialize($request->get('infoUe'));
         $arrInfoStudent = json_decode($request->get('infoStudent'),true);
-        //dump($arrInfoStudent);die;
+        dump($arrInfoStudent);die;
         $sie = $arrInfoUe['requestUser']['sie'];
         $estInsId = $arrInfoStudent['estInsId'];
         $areaEspecialId = $arrInfoUe['ueducativaInfoId']['areaEspecialId'];

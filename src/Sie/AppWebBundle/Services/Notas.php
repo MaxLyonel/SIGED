@@ -1485,7 +1485,7 @@ class Notas{
                             $valorNota = $an['notaCualitativa'];
                         }
                         if($i == $an['idNotaTipo']){
-                            if($gestion > 2018 and ($discapacidad == 2 or $discapacidad == 3 or $discapacidad == 5)){
+                            if($gestion > 2018 and ($discapacidad == 3 or $discapacidad == 5)){
                                 $notasArray[$cont]['notas'][] =   array(
                                     'id'=>$cont."-".$i,
                                     'idEstudianteNota'=>$an['idNota'],
@@ -1494,11 +1494,7 @@ class Notas{
                                     'idEstudianteAsignatura'=>$an['idEstudianteAsignatura']
                                 );
                                 //dump(json_decode($valorNota,true)['fecha_fin']);die;
-                                if($discapacidad == 2){
-                                    $fechaEtapasArray[$i] = array('fechaEtapa'=>json_decode($valorNota,true)['fechaEtapa']);
-                                }
-                                /* $fechaEtapasArray[$i] = array('fechainicio'=>json_decode($valorNota,true)['fechainicio'],
-                                                                'fechafin'=>json_decode($valorNota,true)['fechafin']); */
+                                
                             }else{
                                 $notasArray[$cont]['notas'][] =   array(
                                     'id'=>$cont."-".$i,
@@ -1620,9 +1616,9 @@ class Notas{
 
             $estadosPermitidos = array(0,4,5,70,71,72,73,47);
 			// Tipos de notas
-            if (($discapacidad == 2 or $discapacidad == 3 or $discapacidad == 5 or $discapacidad == 7) and $gestion > 2018){
-                $tiposNotas = $this->em->getRepository('SieAppWebBundle:NotaEspecialTipo')->findById(array(1,2,3,5,7));
-                $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(78,79,80));
+            if (($discapacidad == 3 or $discapacidad == 5 or $discapacidad == 7) and $gestion > 2018){
+                $tiposNotas = $this->em->getRepository('SieAppWebBundle:NotaEspecialTipo')->findById(array(1,2,4));
+                $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(81,82,83));
             }else{
                 $tiposNotas = $this->em->getRepository('SieAppWebBundle:NotaEspecialTipo')->findById(array(1,2,3,4));
                 $estadosFinales = "";
@@ -1662,8 +1658,10 @@ class Notas{
             $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
             $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
             $nivel = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+            $cursoEspecial = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->findOneBy(array('institucioneducativaCurso'=>$inscripcion->getInstitucioneducativaCurso()->getId()));
+            $programa = $cursoEspecial->getEspecialProgramaTipo()->getId();
             $grado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
-            $discapacidad = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->findOneBY(array('institucioneducativaCurso'=>$inscripcion->getInstitucioneducativaCurso()->getId()))->getEspecialAreaTipo()->getId();
+            $discapacidad = $cursoEspecial->getEspecialAreaTipo()->getId();
             $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
             $gestionActual = $this->session->get('currentyear');
 
@@ -1716,40 +1714,96 @@ class Notas{
             $notasArray = array();
             $cont = 0;
             $tipoNota = $this->getTipoNota($sie,$gestion,$nivel,$grado,$discapacidad);
-            
-            $fechaEtapasArray = array();
-            
-            $cualitativas = $this->em->createQueryBuilder()
+            /**
+             * Notas cualitativas
+             */
+            /* $cualitativas = $this->em->createQueryBuilder()
                                     ->select('enc.id as idEstudianteCualitativo, nt.id as idNotaTipo','enc.notaCualitativa','nt.notaTipo')
                                     ->from('SieAppWebBundle:EstudianteNotaCualitativa','enc')
                                     ->innerJoin('SieAppWebBundle:NotaTipo','nt','with','enc.notaTipo = nt.id')
+                                    ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','enc.estudianteInscripcion = ei.id')
                                     ->orderBy('nt.id','ASC')
-                                    ->where('enc.estudianteInscripcion = :estId')
+                                    ->where('ei.id = :estId')
                                     ->setParameter('estId',$idInscripcion)
                                     ->orderBy('nt.id','DESC')
                                     ->setMaxResults(1)
                                     ->getQuery()
-                                    ->getResult();
-            //dump($cualitativas);die;
+                                    ->getResult(); */
+            $cualitativas = $this->em->createQueryBuilder()
+                                    ->select('ei.id as idEstudianteInscripcion,enc.id as idEstudianteCualitativo, nt.id as idNotaTipo,enc.notaCualitativa,nt.notaTipo,gt.id as gestion')
+                                    ->from('SieAppWebBundle:EstudianteNotaCualitativa','enc')
+                                    ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','with','enc.estudianteInscripcion = ei.id')
+                                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','iec.id = ei.institucioneducativaCurso')
+                                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoEspecial','iece','with','iece.institucioneducativaCurso = iec.id')
+                                    ->innerJoin('SieAppWebBundle:NotaTipo','nt','with','enc.notaTipo = nt.id')
+                                    ->innerJoin('SieAppWebBundle:GestionTipo','gt','with','iec.gestionTipo = gt.id')
+                                    ->where('ei.estudiante = '. $inscripcion->getEstudiante()->getId())
+                                    ->andWhere('gt.id > 2018')
+                                    ->andWhere('iece.especialProgramaTipo = '.$programa)
+                                    ->orderBy('gt.id','DESC')
+                                    ->addOrderBy('nt.id','DESC')
+                                    ->setMaxResults(1)
+                                    ->getQuery()
+                                    ->getResult();                                    
+            //dump($cualitativas, $idInscripcion,$gestion);die;
             if($cualitativas){
-                $inicio = $cualitativas[0]['idNotaTipo'];
-                $fin = $cualitativas[0]['idNotaTipo']+1;
-                $etapasArray[0] = array('idNotaTipo'=>$cualitativas[0]['idNotaTipo'],
-                                        'etapa'=>json_decode($cualitativas[0]['notaCualitativa'],true)['etapa'],
-                                        'fechaEtapa'=>json_decode($cualitativas[0]['notaCualitativa'],true)['fechaEtapa']
+                if(json_decode($cualitativas[0]['notaCualitativa'],true)['estadoEtapa'] == 78){
+                    $inicio = 0;
+                    $fin = 0;
+                    $etapasArray[0] = array('idNotaTipo'=>$cualitativas[0]['idNotaTipo'],
+                                            'etapa'=>json_decode($cualitativas[0]['notaCualitativa'],true)['etapa'],
+                                            'fechaEtapa'=>json_decode($cualitativas[0]['notaCualitativa'],true)['fechaEtapa']
                                     );
-                $etapasArray[1] = array('idNotaTipo'=>$cualitativas[0]['idNotaTipo']+1,
-                                    'etapa'=>json_decode($cualitativas[0]['notaCualitativa'],true)['etapa']+1,
-                                    'fechaEtapa'=>""
-                                );
+                }else{
+                    $inicio = 0;
+                    $fin = 1;
+                    if(json_decode($cualitativas[0]['notaCualitativa'],true)['estadoEtapa'] == 80){
+                        $etapa = json_decode($cualitativas[0]['notaCualitativa'],true)['etapa'];
+                    }else{
+                        $etapa = json_decode($cualitativas[0]['notaCualitativa'],true)['etapa']+1;
+                    }
+                    if($cualitativas[0]['gestion'] == $gestion){
+                        $idNotaTipo = $cualitativas[0]['idNotaTipo']+1;
+                    }else{
+                        $idNotaTipo = 42;
+                    }
+                    $etapasArray[0] = array('idNotaTipo'=>$cualitativas[0]['idNotaTipo'],
+                                                'etapa'=>json_decode($cualitativas[0]['notaCualitativa'],true)['etapa'],
+                                                'fechaEtapa'=>json_decode($cualitativas[0]['notaCualitativa'],true)['fechaEtapa']
+                                        );
+                    $etapasArray[1] = array('idNotaTipo'=>$idNotaTipo,
+                                            'etapa'=>$etapa,
+                                            'fechaEtapa'=>""
+                                        );
+                }
+                $idEstudianteInscripcion = $cualitativas[0]['idEstudianteInscripcion'];
             }else{
+                $inicio = 0;
+                $fin = 0;
                 $etapasArray[0] = array('idNotaTipo'=>42,
                                         'etapa'=>1,
                                         'fechaEtapa'=>""
                                 );
+                $idEstudianteInscripcion = $idInscripcion;
             }
-            
-            foreach ($asignaturas as $a) {
+            //dump($cualitativas, $idInscripcion,$gestion,$etapasArray);die;
+            $asignaturasC = $this->em->createQueryBuilder()
+                                ->select('at.id, at.area, asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
+                                ->from('SieAppWebBundle:EstudianteAsignatura','ea')
+                                ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
+                                ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
+                                ->innerJoin('SieAppWebBundle:AsignaturaTipo','asit','WITH','ieco.asignaturaTipo = asit.id')
+                                ->innerJoin('SieAppWebBundle:AreaTipo','at','WITH','asit.areaTipo = at.id')
+                                ->groupBy('at.id, at.area, asit.id, asit.asignatura, ea.id')
+                                ->orderBy('at.id','ASC')
+                                ->addOrderBy('asit.id','ASC')
+                                ->where('ei.id = :idInscripcion')
+                                ->setParameter('idInscripcion',$idEstudianteInscripcion)
+                                ->getQuery()
+                                ->getResult();
+            //  dump($asignaturasC,$asignaturas);die;
+            foreach ($asignaturasC as $key=>$a) {
+                //dump($asignaturas,$a,$key);die;
                 $notasArray[$cont] = array('areaId'=>$a['id'],'area'=>$a['area'],'idAsignatura'=>$a['asignaturaId'],'asignatura'=>$a['asignatura']);
 
                 $asignaturasNotas = $this->em->createQueryBuilder()
@@ -1761,17 +1815,19 @@ class Notas{
                                     ->innerJoin('SieAppWebBundle:NotaTipo','nt','with','en.notaTipo = nt.id')
                                     ->orderBy('nt.id','ASC')
                                     ->where('ea.id = :estAsigId')
+                                    ->andWhere('en.notaTipo = :nt')
                                     ->setParameter('estAsigId',$a['estAsigId'])
+                                    ->setParameter('nt',$etapasArray[0]['idNotaTipo'])
                                     ->getQuery()
                                     ->getResult();
-                //dump($asignaturasNotas);die;
+                //dump($asignaturasC,$asignaturasNotas);die;
                 for($i=$inicio;$i<=$fin;$i++){
                     $existe = 'no';
                     foreach ($asignaturasNotas as $an) {
 						$valorNota = $an['notaCualitativa'];
-                        if($i == $an['idNotaTipo']){
+                        if($etapasArray[$i]['idNotaTipo'] == $an['idNotaTipo']){
                             $notasArray[$cont]['notas'][] =   array(
-                                    'id'=>$cont."-".$i,
+                                    'id'=>$cont."-".$etapasArray[$i]['idNotaTipo'],
                                     'idEstudianteNota'=>$an['idNota'],
                                     'nota'=>json_decode($valorNota,true),
                                     'idNotaTipo'=>$an['idNotaTipo'],
@@ -1782,21 +1838,22 @@ class Notas{
                         }
 
                     }
+                    //dump($notasArray);die;
                     if($existe == 'no'){
                         $valorNota = '';
                         $notasArray[$cont]['notas'][] =   array(
-                                                    'id'=>$cont."-".$i,
+                                                    'id'=>$cont."-".$etapasArray[$i]['idNotaTipo'],
                                                     'idEstudianteNota'=>'nuevo',
                                                     'nota'=>$valorNota,
-                                                    'idNotaTipo'=>$i,
-                                                    'idEstudianteAsignatura'=>$a['estAsigId']
+                                                    'idNotaTipo'=>$etapasArray[$i]['idNotaTipo'],
+                                                    'idEstudianteAsignatura'=>$asignaturas[$key]['estAsigId']
                                                 );
                     }
                 }
                 
                 $cont++;
             }
-
+            //dump($notasArray);die;
             $areas = array();
             $areas = $notasArray;
             //dump($areas);die;
@@ -1809,7 +1866,7 @@ class Notas{
             for($i=$inicio;$i<=$fin;$i++){
                 if($cualitativas and $existe == false){
                     $arrayCualitativas[] = array(
-                                                'idInscripcion'=>$idInscripcion,
+                                                'idInscripcion'=>$cualitativas[0]['idEstudianteInscripcion'],
                                                 'idEstudianteNotaCualitativa'=>$cualitativas[0]['idEstudianteCualitativo'],
                                                 'idNotaTipo'=>$cualitativas[0]['idNotaTipo'],
                                                 'notaCualitativa'=>json_decode($cualitativas[0]['notaCualitativa'],true),
@@ -1823,9 +1880,9 @@ class Notas{
                     $arrayCualitativas[] = array(
                                             'idInscripcion'=>$idInscripcion,
                                             'idEstudianteNotaCualitativa'=>'nuevo',
-                                            'idNotaTipo'=>$i,
+                                            'idNotaTipo'=>$etapasArray[$i]['idNotaTipo'],
                                             'notaCualitativa'=>'',
-                                            'notaTipo'=>$this->literal($i).' '.$tipoNota
+                                            'notaTipo'=>$this->literal($etapasArray[$i]['idNotaTipo']).' '.$tipoNota
                                         );
                 }
             }
@@ -1844,7 +1901,7 @@ class Notas{
             return array(
                 'cuantitativas'     =>$areas,
                 'cualitativas'      =>$arrayCualitativas,
-                'operativo'         =>$fin,
+                'operativo'         =>$operativo,
                 'nivel'             =>$nivel,
                 'estadoMatricula'   =>$inscripcion->getEstadomatriculaTipo()->getId(),
                 'gestionActual'     =>$this->session->get('currentyear'),
