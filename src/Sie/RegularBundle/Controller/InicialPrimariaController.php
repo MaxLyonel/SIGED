@@ -204,7 +204,7 @@ class InicialPrimariaController extends Controller {
         $form = $request->get('form');
 
         //get how old is the student
-        $tiempo = $this->tiempo_transcurrido($form['fnacimiento'], '30-6-2016');
+        $tiempo = $this->tiempo_transcurrido($form['fnacimiento'], '30-6-'.date('Y'));
         $yearStudent = $tiempo[0];
         $form['yearStudent'] = $yearStudent;
 
@@ -491,7 +491,7 @@ class InicialPrimariaController extends Controller {
             //get how old is the student
             $sbday = explode(' ', $sbirthdate);
             list ($year, $month, $day) = explode('-', $sbday[0]);
-            $tiempo = $this->tiempo_transcurrido($day . '-' . $month . '-' . $year, '30-6-2016');
+            $tiempo = $this->tiempo_transcurrido($day . '-' . $month . '-' . $year, '30-6-'.date('Y'));
             $yearStudent = $tiempo[0];
             $data[0]['yearStudent'] = $yearStudent;
             //build the form to the inscription
