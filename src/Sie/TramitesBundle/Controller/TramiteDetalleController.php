@@ -1119,7 +1119,7 @@ class TramiteDetalleController extends Controller {
                 foreach ($tramites as $tramite) {
                     $tramiteId = (Int) base64_decode($tramite);
                     $entidadTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $tramiteId));
-                    $estudianteInscripcionId = $entidadTramite->getEstudianteInscripcion()->getId();
+                    $estudianteInscripcionId = $entidadTramite->getEstudianteInscripcion()->getId();                    
                     $entidadEstudianteInscripcion = $entidadTramite->getEstudianteInscripcion();
                     //$entidadEstudianteInscripcion = $em->getRepository('SieAppWebBundle:estudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
                     $msgContenido = "";
@@ -1144,8 +1144,16 @@ class TramiteDetalleController extends Controller {
                             } else {
                                 $gestionId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getInstitucioneducativaSucursal()->getGestionTipo()->getId();
                             }
+
+                            $tipoMallaEstudianteInscripcion = $tramiteController->getCertTecTipoMallaInscripcion($estudianteInscripcionId, $especialidadId, $nivelId);
+                        
+                            $mallaNueva = false;
+                            if(count($tipoMallaEstudianteInscripcion)>0){
+                                $mallaNueva = $tipoMallaEstudianteInscripcion[0]['vigente'];
+                            }
+
                             $msg = array('0'=>true, '1'=>$participante);
-                            $msgContenido = $tramiteController->getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId);
+                            $msgContenido = $tramiteController->getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId, $mallaNueva);
                             // $msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
                         }
 
@@ -1649,7 +1657,7 @@ class TramiteDetalleController extends Controller {
                 foreach ($tramites as $tramite) {
                     $tramiteId = (Int) base64_decode($tramite);
                     $entidadTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $tramiteId));
-                    $estudianteInscripcionId = $entidadTramite->getEstudianteInscripcion()->getId();
+                    $estudianteInscripcionId = $entidadTramite->getEstudianteInscripcion()->getId();                    
                     $entidadEstudianteInscripcion = $entidadTramite->getEstudianteInscripcion();
                     //$entidadEstudianteInscripcion = $em->getRepository('SieAppWebBundle:estudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
                     $msgContenido = "";
@@ -1695,8 +1703,16 @@ class TramiteDetalleController extends Controller {
                             } else {
                                 $gestionId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getInstitucioneducativaSucursal()->getGestionTipo()->getId();
                             }
+
+                            $tipoMallaEstudianteInscripcion = $tramiteController->getCertTecTipoMallaInscripcion($estudianteInscripcionId, $especialidadId, $nivelId);
+                        
+                            $mallaNueva = false;
+                            if(count($tipoMallaEstudianteInscripcion)>0){
+                                $mallaNueva = $tipoMallaEstudianteInscripcion[0]['vigente'];
+                            }
+
                             $msg = array('0'=>true, '1'=>$participante);
-                            $msgContenido = $tramiteController->getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId);
+                            $msgContenido = $tramiteController->getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId, $mallaNueva);
                             
                             // $msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
 
@@ -2136,7 +2152,7 @@ class TramiteDetalleController extends Controller {
         $tramiteController->setContainer($this->container);
 
         // $rolPermitido = array(8,13);
-        $rolPermitido = array(9);
+        $rolPermitido = array(9,8);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
