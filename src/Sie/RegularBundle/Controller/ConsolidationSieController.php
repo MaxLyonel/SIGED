@@ -735,7 +735,7 @@ class ConsolidationSieController extends Controller {
          */
 
         private function saveInstitucioneducativaOperativoLog($data){
-          dump($data);
+          // dump($data);
           //get the correct operativo log tipo id to save on the log table
           switch ($data['operativoLogTipo']) {            
             case "0":
