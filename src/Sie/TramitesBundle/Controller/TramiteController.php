@@ -177,10 +177,10 @@ class TramiteController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
-        $activeMenu = $defaultTramiteController->setActiveMenu($route);
+        //$activeMenu = $defaultTramiteController->setActiveMenu($route);
 
         // $rolPermitido = array(8,13);
-        $rolPermitido = array(9);
+        $rolPermitido = array(9,8);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -399,7 +399,6 @@ class TramiteController extends Controller {
                 $messageError = "";
                 foreach ($participantes as $participante) {
                     $estudianteInscripcionId = (Int) base64_decode($participante);
-
                     $entidadEstudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
                     $participante = trim($entidadEstudianteInscripcion->getEstudiante()->getPaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getMaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getNombre());
                     $participanteId =  $entidadEstudianteInscripcion->getEstudiante()->getId();
@@ -416,8 +415,16 @@ class TramiteController extends Controller {
                         } else {
                             $gestionId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getInstitucioneducativaSucursal()->getGestionTipo()->getId();
                         }
+
+                        $tipoMallaEstudianteInscripcion = $this->getCertTecTipoMallaInscripcion($estudianteInscripcionId, $especialidadId, $nivelId);
+                        
+                        $mallaNueva = false;
+                        if(count($tipoMallaEstudianteInscripcion)>0){
+                            $mallaNueva = $tipoMallaEstudianteInscripcion[0]['vigente'];
+                        } 
+
                         $msg = array('0'=>true, '1'=>$participante);
-                        $msgContenido = $this->getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId);
+                        $msgContenido = $this->getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId, $mallaNueva);
                         // $msgContenido = "";
                         //dump($msgContenido);die;
                         // VALIDACION DE SOLO UN TRAMITE POR ESTUDIANTE (RUDE)
@@ -2410,7 +2417,7 @@ class TramiteController extends Controller {
     // PARAMETROS: estudianteId, gestionId, especialidadId, nivelId
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId) {
+    public function getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId, $mallaNueva) {
         $msgContenido = "";
         $cargaHorariaTotal = 0;
 
@@ -3715,5 +3722,40 @@ class TramiteController extends Controller {
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');
         return $response;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que halla la carga horaria  de un estudiante segun id de inscripción 
+    // PARAMETROS: participanteId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getCertTecTipoMallaInscripcion($participanteId, $especialidadId, $nivelId) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+            select distinct e.id as estudiante_id, e.codigo_rude, e.paterno||' '||e.materno||' '||e.nombre as participante, sest.id as especialidad_id, sest.especialidad, sat.codigo as nivel_id, sat.acreditacion
+            , ies.gestion_tipo_id as gestion, pt.periodo as periodo, ie.id as institucioneducativa_id, ie.institucioneducativa, smt.esvigente as vigente
+            from superior_facultad_area_tipo as sfat
+            inner join superior_especialidad_tipo as sest on sfat.id = sest.superior_facultad_area_tipo_id
+            inner join superior_acreditacion_especialidad as sae on sest.id = sae.superior_especialidad_tipo_id
+            inner join superior_acreditacion_tipo as sat on sae.superior_acreditacion_tipo_id=sat.id
+            inner join superior_institucioneducativa_acreditacion as siea on siea.acreditacion_especialidad_id = sae.id
+            inner join institucioneducativa_sucursal as ies on siea.institucioneducativa_sucursal_id = ies.id
+            inner join superior_institucioneducativa_periodo as siep on siep.superior_institucioneducativa_acreditacion_id = siea.id
+            inner join institucioneducativa_curso as iec on iec.superior_institucioneducativa_periodo_id = siep.id
+            inner join (select * from estudiante_inscripcion where id = ".$participanteId.") as ei on iec.id=ei.institucioneducativa_curso_id
+            inner join estudiante as e on ei.estudiante_id=e.id
+            inner join superior_modulo_periodo as smp ON smp.institucioneducativa_periodo_id = siep.id
+            inner join superior_modulo_tipo smt ON smt.id = smp.superior_modulo_tipo_id
+            inner join institucioneducativa_curso_oferta as ieco on ieco.superior_modulo_periodo_id = smp.id and ieco.insitucioneducativa_curso_id = iec.id
+            inner join estudiante_asignatura as ea on ea.institucioneducativa_curso_oferta_id = ieco.id and ea.estudiante_inscripcion_id = ei.id
+            inner join periodo_tipo as pt on pt.id = ies.periodo_tipo_id
+            inner join institucioneducativa as ie on ie.id = iec.institucioneducativa_id
+            where sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." 
+            order by smt.esvigente
+        ");
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+        return $objEntidad;
     }
 }
