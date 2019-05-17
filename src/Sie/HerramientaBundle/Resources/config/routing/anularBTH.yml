@@ -1,0 +1,27 @@
+anularbth_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:AnularBTH:index }
+
+anularbth_listasie:
+    path:     /anularbthsie
+    defaults: { _controller: SieHerramientaBundle:AnularBTH:busquedasie }
+
+
+anularbth_anula:
+    path:     /anularbth
+    defaults: { _controller: SieHerramientaBundle:AnularBTH:anulabth }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
