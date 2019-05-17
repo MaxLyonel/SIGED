@@ -475,7 +475,7 @@ class DownloadController extends Controller {
         $sie = $ue;
         $data = $user.'|'.$sie.'|'.$gestion.'|'.$nivel.'|'.$ciclo.'|'.$grado.'|'.$paralelo.'|'.$turno;
         $link = 'http://'.$_SERVER['SERVER_NAME'].'/cen/'.$this->getLinkEncript($data);
-        switch (variable) {
+        switch ($version) {
             case 1:
                 # code...
                 $nameReportInicial  = 'reg_lst_EstudiantesBoletinPromocionPeriodo_v1';
