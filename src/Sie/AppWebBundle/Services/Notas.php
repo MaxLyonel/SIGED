@@ -1920,7 +1920,7 @@ class Notas{
     }
 
     public function especialRegistro(Request $request, $discapacidad){
-        $this->session = $request->getSession();
+        $this->session = $request->getSession();dump($request);die;
         $id_usuario = $this->session->get('userId');
         // Validar si existe la session del usuario
         if (!isset($id_usuario)) {
@@ -1978,6 +1978,7 @@ class Notas{
 
             if($tipo == 'Bimestre' or $tipo == 'Etapa'){
                 // Registro y/o modificacion de notas
+                $total = 0;$cantidad=0;
                 for($i=0;$i<count($idEstudianteNota);$i++) {
                     if($idEstudianteNota[$i] == 'nuevo'){
                         //if((!in_array($nivel, $nivelesCualitativos) and $notas[$i] != 0 ) or (in_array($nivel, $nivelesCualitativos) and $notas[$i] != "")){
@@ -2048,6 +2049,36 @@ class Notas{
                                 json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
                             );*/
                         }
+                    }
+                    if ($discapacidad == 1 and (($i+1)%5 == 0) and $request->get('operativo') == 4 and $nivel == 404) {
+                        $total += $notas[$i];
+                        $cantidad += 1;
+                    }
+                }
+
+                if($discapacidad == 1 and $request->get('operativo') == 4 and $nivel == 404) {
+                    $promedio = $cantidad>0?round($total/$cantidad):$total;//round(($total/$cantidad), 3)
+                    $notaCualitativa = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion' => $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion), 'notaTipo' => $this->em->getRepository('SieAppWebBundle:NotaTipo')->find(5)));
+                    if ($notaCualitativa) {
+                        $notaCualitativa->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find(5));
+                        $notaCualitativa->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
+                        $notaCualitativa->setNotaCuantitativa($promedio);
+                        $this->em->persist($notaCualitativa);
+                        $this->em->flush();
+                    } else {
+                        $query = $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota_cualitativa');")->execute();
+                        $notaCualitativa = new EstudianteNotaCualitativa();
+                        $notaCualitativa->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find(5));
+                        $notaCualitativa->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
+                        $notaCualitativa->setNotaCuantitativa($promedio);
+                        $notaCualitativa->setNotaCualitativa('');
+                        $notaCualitativa->setRecomendacion('');
+                        $notaCualitativa->setUsuarioId($this->session->get('userId'));
+                        $notaCualitativa->setFechaRegistro(new \DateTime('now'));
+                        $notaCualitativa->setFechaModificacion(new \DateTime('now'));
+                        $notaCualitativa->setObs('Promedio');
+                        $this->em->persist($notaCualitativa);
+                        $this->em->flush();
                     }
                 }
 

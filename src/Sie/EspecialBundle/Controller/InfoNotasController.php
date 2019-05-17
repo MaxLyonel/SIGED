@@ -53,7 +53,6 @@ class InfoNotasController extends Controller {
             $gestionActual = $this->session->get('currentyear');
 
             $operativo = $this->operativo($sie,$gestion);
-            //dump($operativo);die;
 
             $notas = null;
             $vista = 1;

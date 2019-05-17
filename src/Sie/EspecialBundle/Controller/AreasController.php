@@ -675,7 +675,7 @@ class AreasController extends Controller {
                                     AND at.id IN (:ids)
                                     ORDER BY at.id ASC'
                             		)->setParameter('idNivel', 12)
-                            		->setParameter('ids',array(1011,1012,1013,1014,1015,1016,1017,1018,1019))
+                            		->setParameter('ids',array(1011,1012,1013,1014,1015,1016,1017,1018,1019,32832))
                             		->getResult();
                             		break;
 
