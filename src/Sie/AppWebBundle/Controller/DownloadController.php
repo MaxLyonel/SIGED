@@ -456,6 +456,64 @@ class DownloadController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
     }
+    /**
+     * get the list of students per UE
+     * @param Request $request
+     * @param type $ue
+     * @param type $gestion
+     * @return Response a pdf list students per UE
+     */
+    public function boletinPromoPerUeNewVersionAction(Request $request, $version, $ue, $nivel, $ciclo, $grado, $paralelo, $turno, $gestion, $itemsUe) {
+
+        $aDataUe = explode(',', $itemsUe);
+
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'boletin_centralizador_' . $ue . '_' . $nivel . '_' . trim($aDataUe[1]) . '_' . trim($aDataUe[2]) . '_' . $gestion . '.pdf'));
+        //get the data to do the report
+        $user= $this->session->get('userName');//strtolower(str_replace(' ','_', $this->session->get('name').' '.$this->session->get('lastname').' '.$this->session->get('lastname2')));
+        $sie = $ue;
+        $data = $user.'|'.$sie.'|'.$gestion.'|'.$nivel.'|'.$ciclo.'|'.$grado.'|'.$paralelo.'|'.$turno;
+        $link = 'http://'.$_SERVER['SERVER_NAME'].'/cen/'.$this->getLinkEncript($data);
+        switch (variable) {
+            case 1:
+                # code...
+                $nameReportInicial  = 'reg_lst_EstudiantesBoletinPromocionPeriodo_v1';
+                $nameReportPrimSecc = 'reg_lst_EstudiantesBoletinPromocion_inicialPeriodo_v1';
+
+                break;
+            case 2:
+                # code...
+                $nameReportInicial  = 'reg_lst_EstudiantesBoletinPromocionPeriodo_v2';
+                $nameReportPrimSecc = 'reg_lst_EstudiantesBoletinPromocion_inicialPeriodo_v2';
+            
+                break;
+            
+            default:
+                # code...
+                $nameReportInicial  = 'reg_lst_EstudiantesBoletinPromocionPeriodo_v1';
+                $nameReportPrimSecc = 'reg_lst_EstudiantesBoletinPromocion_inicialPeriodo_v1';
+                break;
+        }
+        switch ($nivel) {
+            case 1:
+            case 11:
+                $report = $this->container->getParameter('urlreportweb') . $nameReportInicial.'.rptdesign&usuario=' . $user . '&lk=' . $link .'&institucioneducativa_id='. $sie .'&nivel_tipo_id=' . $nivel . '&ciclo_tipo_id=' . $ciclo . '&grado_tipo_id=' . $grado . '&paralelo_tipo_id=' . $paralelo . '&turno_tipo_id=' . $turno . '&gestion_tipo_id=' . $gestion . '&&__format=pdf&';
+                break;
+            case 2:
+            case 3:
+            case 12:
+            case 13:
+                $report = $this->container->getParameter('urlreportweb') . $nameReportPrimSecc.'.rptdesign&usuario=' . $user . '&lk=' . $link .'&institucioneducativa_id='. $sie .'&nivel_tipo_id=' . $nivel . '&ciclo_tipo_id=' . $ciclo . '&grado_tipo_id=' . $grado . '&paralelo_tipo_id=' . $paralelo . '&turno_tipo_id=' . $turno . '&gestion_tipo_id=' . $gestion . '&&__format=pdf&';
+                break;
+          }
+        $response->setContent(file_get_contents($report));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
 
     /**
      * get the list of maestros per UE
