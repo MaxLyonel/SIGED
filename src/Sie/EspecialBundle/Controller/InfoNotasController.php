@@ -101,7 +101,7 @@ class InfoNotasController extends Controller {
                         switch ($nivel) {
                             case 401:
                             case 402:
-                                if($grado <= 5){
+                                if($grado <= 6){
                                     $notas = $this->get('notas')->especial_cualitativo($idInscripcion,$operativo);
                                     $template = 'especialCualitativo';
                                     $actualizarMatricula = false;
@@ -143,7 +143,7 @@ class InfoNotasController extends Controller {
                 /* case 5: //Multiple
                         break; */
                 case 6: //Dificultades en el aprendizaje
-                    $notas = $this->get('notas')->especial_cualitativo($idInscripcion,$operativo);
+                    /* $notas = $this->get('notas')->especial_cualitativo($idInscripcion,$operativo);
                     if($notas['tipoNota'] == 'Trimestre'){
                         $template = 'especialCualitativoTrimestral';
                     }else{
@@ -153,7 +153,7 @@ class InfoNotasController extends Controller {
                     if($operativo >= 4 or $gestion < $gestionActual){
                         $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(48,77)));
                     }
-                    break;
+                    break; */
                 case 7: // Talento extraordinario
                     $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
                     $template = 'especialSeguimiento';
