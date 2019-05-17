@@ -1,0 +1,114 @@
+{% set onlyview = app.session.get('onlyview') %}
+{% if inscripcion is defined %}
+	<div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+	        <div class="panel panel-danger">
+	            <div class="modal-header" style="background:#D52F27">
+	                <div class="pull-left">
+	                    <h3 class="panel-title" style="color:#FFFFFF">Etapas del Estudiante</h3>
+	                </div>
+	                <div class="clearfix"></div>
+	            </div>
+	            <div class="panel-body no-padding" id="modal-body">
+	            	<div class="alert " style="padding:10px">
+					    <h5 class="text-lilac">Datos del Grupo</h5>
+					    <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+					        <tr>
+					            <th>Programa</th><td>{{ueducativaInfo.programa}}</td>
+					            <th>Gestión</th><td>{{inscripcion.institucioneducativaCurso.gestionTipo.id}}</td>
+					        </tr>
+					        <tr>
+					            <th>Grupo</th><td>{{inscripcion.institucioneducativaCurso.paraleloTipo.paralelo|upper}}</td>
+								<th>Turno</th><td>{{inscripcion.institucioneducativaCurso.turnoTipo.turno|upper}}</td>
+
+					        </tr>
+					    </table>
+
+					    <h5 class="text-info">Datos del Estudiante</h5>
+					    <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+					        <tr>
+					            <th>Código Rude</th><td style="color:#0086DD">{{inscripcion.estudiante.codigoRude}}</td>
+					        </tr>
+					        <tr>
+					            <th>Estudiante</th><td style="color:#0086DD"><b>{{inscripcion.estudiante.nombre}} {{inscripcion.estudiante.paterno}} {{inscripcion.estudiante.materno}}</b></td>
+					        </tr>
+					        <tr>
+					            <th>Estado de matrícula</th><td>{{inscripcion.estadomatriculaTipo.estadomatricula}}</td>
+					        </tr>
+					    </table>
+						<h5 class="text-teal">Etapas del Estudiante</h5>
+						<table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                			<thead>
+                    			<tr>
+                        			<th style="max-width: 30px">Etapa</th>
+                        			<th>Fecha de Etapa</th>
+									<th>Estado Final</th>
+                        			<th>Accion</th>
+                    			</tr>
+                			</thead>
+                			<tbody>
+                    			{% for e in etapas %}
+		                        	<tr>
+            	                		<td align="center">{{ e.etapa }}</td>
+	                	            	<td>{{ e.fecha_etapa }}</td>
+										<td{% if e.estadomatricula == 'EXTENDIDO' %} class="text-danger" {% endif %}>
+											{% if e.estadomatricula == 'CONCLUIDO' %}<span class="label label-success">{{ e.estadomatricula }}</span>{% else %} {{ e.estadomatricula }}{% endif %}
+										</td>
+    	                            	<td align="center">
+											<form action="{{path('especialDownload_libreta', {'idNotaTipo': e.nota_tipo_id,'infoUe': infoUe, 'infoStudent':infoStudent } )}}" method="post" style="display:inline-block">
+                                                <button type="submit" class="btn btn-lilac btn-xs btn-stroke" data-toggle="tooltip" data-placement="top" data-original-title="Imprimir Libreta">
+                                                    Imprimir{# <i class="fa fa-archive" style="color:#FFFFFF"></i> #}
+                                                </button>
+                                            </form>
+										</td>
+        	                		</tr>
+            	        		{% endfor %}
+                			</tbody>
+            			</table>
+					</div>
+	            </div>
+	        </div>
+	        <div class="modal-footer">
+	            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+	        </div>
+	    </div><!-- /.modal-content -->
+	    </form>
+	</div><!-- /.modal-dialog -->
+{% else %}
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="alert alert-warning"><i class="fa fa-warning"></i> Opción no disponible.</div>
+		</div>
+	</div>
+{% endif %}
+<script>
+    var registrarNotasEspecial = function(){
+    	var enviar = validarEnvioNotas();
+        if(enviar == true){
+	    	var formData = $('#formNotasEspecial').serialize();//"textarea[name!=int1]", .not('form[textarea]')
+			//Seguimiento para Talento Extraordinario
+			var notas = [];
+			$("#tbl_nota tbody tr").each(function() {
+				$this = $(this);
+				notas.push({"inter": $this.find("textarea.pi").val(), "desc": $this.find("textarea.dc").val()});
+			});
+			formData = formData+"&seguimiento="+JSON.stringify(notas);
+		    $.ajax({
+		        type: 'post',
+		        url: Routing.generate('especialInfoNotas_create_update'),
+		        data: formData,
+		        beforeSend: function () {
+		            $('#modal-body').empty();
+		            $('.modal-footer').empty();
+		            $('#modal-body').append("<div style='text-align:center; padding:10px; color:#6ECBFF; font-size:15px'><img src='{{asset('img/loading-sm.gif')}}'><br>Espere mientras se procesan los cambios...</div>");
+		        },
+		        success: function (data) {
+		            $('#modal').modal('hide');
+		        },
+		        error: function (data) {
+
+		        }
+		    });
+		}
+	}
+</script>

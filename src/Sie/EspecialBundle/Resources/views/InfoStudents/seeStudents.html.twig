@@ -102,11 +102,19 @@
                                     </div>
                                     {% endif %}
                                     {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and arrDataLibreta.areaEspecialId in [1,2,3,5] and  operativo > 0 and gestion >= 2019 and arrDataLibreta.calificaciones == true %}
-                                         <form action="{{path('especialDownload_libreta', {'infoUe': infoUe, 'infoStudent':data|json_encode() } )}}" method="post" style="display:inline-block">
-                                            <button type="submit" class="btn btn-circle btn-lilac tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Imprimir Libreta">
-                                                <i class="fa fa-archive" style="color:#FFFFFF"></i>
-                                            </button>
-                                        </form>
+                                        {% if arrDataLibreta.areaEspecialId == 2 %}
+                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Imprimir Libreta">
+                                                <button type="button" class="btn btn-circle btn-lilac " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getLibretasVisual('{{infoUe}}', '{{data|json_encode()}}');" >
+                                                    <i class="fa fa-archive" style="color:#FFFFFF"></i>
+                                                </button>
+                                            </div>
+                                        {% else %}
+                                            <form action="{{path('especialDownload_libreta', {'infoUe': infoUe, 'infoStudent':data|json_encode() } )}}" method="post" style="display:inline-block">
+                                                <button type="submit" class="btn btn-circle btn-lilac tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Imprimir Libreta">
+                                                    <i class="fa fa-archive" style="color:#FFFFFF"></i>
+                                                </button>
+                                            </form>
+                                        {% endif %}        
                                     {% endif %}
                                     {% if onlyview == false and gestion == app.session.get('currentyear') %}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
@@ -148,6 +156,30 @@
             type: 'post',
             data: ({idInscripcionEspecial: idInscripcionEspecial}),
             url: "{{ path('especialInfoNotas') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+    var getLibretasVisual = function (infoUe,infoStudent) {
+        //alert(infoUe);
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: "{{ path('especial_etapas_visual') }}",
             beforeSend: function () {
                 $('#modal').empty();
             },

@@ -100,7 +100,7 @@ class InfoNotasController extends Controller {
                         switch ($nivel) {
                             case 401:
                             case 402:
-                                if($grado <= 5){
+                                if($grado <= 6){
                                     $notas = $this->get('notas')->especial_cualitativo($idInscripcion,$operativo);
                                     $template = 'especialCualitativo';
                                     $actualizarMatricula = false;
@@ -142,7 +142,7 @@ class InfoNotasController extends Controller {
                 /* case 5: //Multiple
                         break; */
                 case 6: //Dificultades en el aprendizaje
-                    $notas = $this->get('notas')->especial_cualitativo($idInscripcion,$operativo);
+                    /* $notas = $this->get('notas')->especial_cualitativo($idInscripcion,$operativo);
                     if($notas['tipoNota'] == 'Trimestre'){
                         $template = 'especialCualitativoTrimestral';
                     }else{
@@ -152,7 +152,7 @@ class InfoNotasController extends Controller {
                     if($operativo >= 4 or $gestion < $gestionActual){
                         $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(48,77)));
                     }
-                    break;
+                    break; */
                 case 7: // Talento extraordinario
                     $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
                     $template = 'especialSeguimiento';
@@ -249,10 +249,38 @@ class InfoNotasController extends Controller {
         return $operativo;
     }
 
-    public function especailDownloadLibretaAction(Request $request){
+    public function especialEtapasVisualAction(Request $request){
         
         $arrInfoUe = unserialize($request->get('infoUe'));
         $arrInfoStudent = json_decode($request->get('infoStudent'),true);
+        //dump($arrInfoStudent,$arrInfoUe);die;
+        $sie = $arrInfoUe['requestUser']['sie'];
+        $estInsId = $arrInfoStudent['estInsId'];
+        $em = $this->getDoctrine()->getManager();
+        
+        $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($estInsId);
+        
+        $query = $em->getConnection()->prepare("select enc.id as id_nota_cualitativa,nota_tipo_id,nota_cualitativa::json->>'etapa' as etapa, emt.estadomatricula,'Del '|| split_part(nota_cualitativa::json->>'fechaEtapa', '-', 1)||' al '||split_part(nota_cualitativa::json->>'fechaEtapa', '-', 2) as fecha_etapa
+                                                from estudiante_nota_cualitativa enc
+                                                join estadomatricula_tipo emt on (enc.nota_cualitativa::json->>'estadoEtapa')::INTEGER=emt.id
+                                                WHERE estudiante_inscripcion_id=". $estInsId ."
+                                                ORDER BY nota_tipo_id");
+        $query->execute();
+        $etapas = $query->fetchAll();
+        
+        //dump($etapas);die;
+        if($inscripcion){
+            return $this->render('SieEspecialBundle:InfoNotas:etapas.html.twig',array('inscripcion'=>$inscripcion,'ueducativaInfo'=>$arrInfoUe['ueducativaInfo'],'etapas'=>$etapas,'infoUe'=>$request->get('infoUe'),'infoStudent'=>$request->get('infoStudent')));
+        }else{
+            return $this->render('SieEspecialBundle:InfoNotas:etapas.html.twig',array('inscripcion'=>$inscripcion));
+        }
+    }
+
+    public function especialDownloadLibretaAction(Request $request){
+        
+        $arrInfoUe = unserialize($request->get('infoUe'));
+        $arrInfoStudent = json_decode($request->get('infoStudent'),true);
+
         dump($arrInfoStudent);die;
         $sie = $arrInfoUe['requestUser']['sie'];
         $estInsId = $arrInfoStudent['estInsId'];
@@ -260,11 +288,13 @@ class InfoNotasController extends Controller {
 
         switch ($areaEspecialId){
             case 2:
+                $idNotaTipo = $request->get('idNotaTipo');
+                //dump($idNotaTipo);die;
                 $archivo = "esp_est_LibretaEscolar_Visual_v2_pvc.rptdesign";
                 $nombre = 'libreta_especial_visual_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
                 $data = $arrInfoStudent['estInsId'] .'|'. $arrInfoStudent['codigoRude'] .'|'.$arrInfoUe['requestUser']['sie'].'|'.$arrInfoUe['requestUser']['gestion'].'|'.$arrInfoUe['ueducativaInfoId']['nivelId'].'|'.$arrInfoUe['ueducativaInfoId']['turnoId'].'|'.$arrInfoUe['ueducativaInfoId']['paraleloId'].'|'.$arrInfoStudent['estInsEspId'];
                 $link = 'http://libreta.minedu.gob.bo/lib/'.$this->getLinkEncript($data);
-                $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie .'&lk='. $link . '&&__format=pdf&';
+                $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie. '&idnotatipo=' . $idNotaTipo .'&lk='. $link . '&&__format=pdf&';
                 break;
             case 3:
             case 5:
@@ -275,8 +305,7 @@ class InfoNotasController extends Controller {
                 $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie .'&lk='. $link . '&&__format=pdf&';
                 break;
         }
-        //dump(file_get_contents($report));die;
-        //ini_set("allow_url_fopen", true);
+
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $nombre ));

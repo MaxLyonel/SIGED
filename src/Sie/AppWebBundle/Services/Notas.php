@@ -1019,6 +1019,9 @@ class Notas{
         }
     }
 
+
+    
+
 	public function actualizarEstadoMatricula($idInscripcion){
         try {
             $this->em->getConnection()->beginTransaction();
@@ -1976,7 +1979,7 @@ class Notas{
             $idInscripcion = $request->get('idInscripcion');
             $nivelesCualitativos = array(1,11,401,402,403,411);
 
-            if($tipo == 'Bimestre' or $tipo == 'Etapa'){
+            if($tipo == 'Bimestre'){
                 // Registro y/o modificacion de notas
                 $total = 0;$cantidad=0;
                 for($i=0;$i<count($idEstudianteNota);$i++) {

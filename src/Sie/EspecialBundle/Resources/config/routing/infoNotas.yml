@@ -12,4 +12,8 @@ especialInfoNotas_create_update:
 
 especialDownload_libreta:
     path:    /especialLibreta
-    defaults: { _controller: SieEspecialBundle:InfoNotas:especailDownloadLibreta }
+    defaults: { _controller: SieEspecialBundle:InfoNotas:especialDownloadLibreta }
+
+especial_etapas_visual:
+    path:    /especialEtapasVisual
+    defaults: { _controller: SieEspecialBundle:InfoNotas:especialEtapasVisual }
