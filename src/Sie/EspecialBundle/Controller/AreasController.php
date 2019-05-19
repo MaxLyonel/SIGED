@@ -649,11 +649,11 @@ class AreasController extends Controller {
                 case 403:    $asignaturas = $em->createQuery(
                             'SELECT at
                                     FROM SieAppWebBundle:AsignaturaTipo at
-                                    WHERE at.asignaturaNivel = :idNivel
+                                    WHERE at.asignaturaNivel IN (:idNivel)
                                     AND at.id IN (:ids)
                                     ORDER BY at.id ASC'
-                            		)->setParameter('idNivel', 11)
-                            		->setParameter('ids',array(1000,1001,1002,1003))
+                            		)->setParameter('idNivel', array(11, 12))
+                            		->setParameter('ids',array(1000,1001,1002,1003,32832))
                             		->getResult();
                             		break;
 

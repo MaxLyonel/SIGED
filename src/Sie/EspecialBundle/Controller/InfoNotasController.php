@@ -138,7 +138,13 @@ class InfoNotasController extends Controller {
                         }
                         break;
                 case 4: // Fisico -motora
-                        break;
+                    $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
+                    $template = 'especialSeguimiento';
+                    $actualizarMatricula = false;
+                    if($operativo >= 4 or $gestion < $gestionActual){
+                        $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(48,77)));
+                    }
+                break;
                 /* case 5: //Multiple
                         break; */
                 case 6: //Dificultades en el aprendizaje
@@ -200,8 +206,7 @@ class InfoNotasController extends Controller {
             
             // Actualizar estado de matricula de los notas que son cualitativas siempre 
             // y cuando esten en el cuarto bimestre
-            if(($request->get('operativo') >= 4 and $request->get('actualizar') == false) or ($discapacidad == 7 and $request->get('actualizar') == false)){
-                
+            if(($request->get('operativo') >= 4 and $request->get('actualizar') == false) or ($discapacidad == 4 and $request->get('actualizar') == false) or ($discapacidad == 6 and $request->get('actualizar') == false) or ($discapacidad == 7 and $request->get('actualizar') == false)){
                 $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
                 $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($request->get('nuevoEstadomatricula')));
                 $em->flush();

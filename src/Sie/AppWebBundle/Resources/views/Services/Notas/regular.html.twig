@@ -12,7 +12,7 @@
 
 {% if notas.cuantitativas|length > 0 %}
 
-    {% if notas.gestion == 2019 and notas.nivel == 11 %}
+    {% if notas.gestion == 2019 and (notas.nivel == 11 or notas.nivel == 403) %}
         <div class="row">
             <div class="col-md-12">
                 <table class="table table-bordered cf" style="backgroud:#FFFFFF">

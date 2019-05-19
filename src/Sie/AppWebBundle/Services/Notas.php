@@ -1923,7 +1923,7 @@ class Notas{
     }
 
     public function especialRegistro(Request $request, $discapacidad){
-        $this->session = $request->getSession();dump($request);die;
+        $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
         // Validar si existe la session del usuario
         if (!isset($id_usuario)) {
@@ -2213,7 +2213,7 @@ class Notas{
                 }
             }
             // Datos del siguimiento
-            if($gestion > 2018 and ($discapacidad == 7)){
+            if($gestion > 2018 and ($discapacidad == 4 or $discapacidad == 6 or $discapacidad == 7)){
                 $seguimientoNota = new EstudianteNotaCualitativa();
                 $seguimientoNota->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($request->get('tipoNota')));
                 $seguimientoNota->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($request->get('idInscripcion')));
@@ -2330,7 +2330,7 @@ class Notas{
                 }
             }
             
-            if (($subarea == 7) and $gestion > 2018){
+            if (($subarea == 4 or $subarea == 6 or $subarea == 7) and $gestion > 2018){
                 $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(78));
             }else{
                 $estadosFinales = array();
