@@ -238,10 +238,17 @@ class AreasController extends Controller {
             ->andWhere('ic.gestionTipo = :gestion')
             ->andWhere('eat.id IN (:areas)')
             ->setParameter('idInstitucion', $sie)
-            ->setParameter('gestion', $gestion)
-            // ->setParameter('areas', array(1,2,3,5))
-            ->setParameter('areas', array(1,2,3,4,5,6))
-            ->addOrderBy('eat.id')
+            ->setParameter('gestion', $gestion);
+            if($gestion < 2019){
+                $query = $query
+                ->setParameter('areas', array(1,2,3,5));
+            }else{
+                $query = $query
+                ->setParameter('areas', array(1,2,3,4,5,6,7));
+            }
+            $query = $query
+            //->addOrderBy('eat.id')
+            ->addOrderBy('eat.areaEspecial')
             ->distinct()
             ->getQuery();
 
