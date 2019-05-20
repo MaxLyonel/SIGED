@@ -55,7 +55,7 @@ class InfoStudentsController extends Controller {
               
               $sinfoUeducativa = serialize(array(
                   'ueducativaInfo' => array('nivel' => $uEducativa['nivel'], 'grado' => $uEducativa['grado'], 'paralelo' => $uEducativa['paralelo'], 'turno' => $uEducativa['turno'], 'programa' => $uEducativa['programa'], 'servicio' => $uEducativa['servicio'], 'areaEspecial' => $uEducativa['areaEspecial'], 'iecLugar'=>$uEducativa['iecLugar']),
-                  'ueducativaInfoId' => array('paraleloId' => $uEducativa['paraleloId'], 'turnoId' => $uEducativa['turnoId'],'programaId'=>$uEducativa['especialProgramaTipo'], 'nivelId' => $uEducativa['nivelId'], 'gradoId' => $uEducativa['gradoId'], 'cicloId' => $uEducativa['cicloTipoId'], 'iecId' => $uEducativa['iecId'], 'ieceId' => $uEducativa['ieceId'],'areaEspecialId' => $uEducativa['areaEspecialId']),
+                  'ueducativaInfoId' => array('paraleloId' => $uEducativa['paraleloId'], 'turnoId' => $uEducativa['turnoId'],'programaId'=>$uEducativa['especialProgramaTipo'],'servicioId'=>$uEducativa['especialServicioTipo'], 'nivelId' => $uEducativa['nivelId'], 'gradoId' => $uEducativa['gradoId'], 'cicloId' => $uEducativa['cicloTipoId'], 'iecId' => $uEducativa['iecId'], 'ieceId' => $uEducativa['ieceId'],'areaEspecialId' => $uEducativa['areaEspecialId']),
                   'requestUser' => array('sie' => $form['sie'], 'gestion' => $form['gestion'])
               ));
               
@@ -161,18 +161,20 @@ class InfoStudentsController extends Controller {
 
       // Para el centralizador
       $itemsUe = $aInfoUeducativa['ueducativaInfo']['nivel'].",".$aInfoUeducativa['ueducativaInfo']['grado'].",".$aInfoUeducativa['ueducativaInfo']['paralelo'];
-
+      //dump($aInfoUeducativa);die;
       $operativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToCollege($sie,$gestion);
       $arrDataLibreta = array();
       $arrDataLibreta['areaEspecialId'] = ($aInfoUeducativa['ueducativaInfoId']['areaEspecialId'])?$aInfoUeducativa['ueducativaInfoId']['areaEspecialId']:'';
       $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
-      if(($nivel == 411 and ($aInfoUeducativa['ueducativaInfoId']['programaId'] == 17 or $aInfoUeducativa['ueducativaInfoId']['programaId'] == 13 )) or $nivel == 405 or $nivel == 410){
-        $arrDataLibreta['calificaciones'] = false;
-      }else{
+      $nivelesLibreta = array(401,402,403,404);
+      $programasLibreta = array(7,8,9,12,14,15);
+      
+      if(in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
         $arrDataLibreta['calificaciones'] = true;
+      }else{
+        $arrDataLibreta['calificaciones'] = false;
       }
-      //dump($aInfoUeducativa['ueducativaInfo']);die;
-
+      
       // $UePlenasAddSpeciality = (in_array($sie, $arrUePlenasAddSpeciality))?true:false;
 
       return $this->render($this->session->get('pathSystem') . ':InfoStudents:seeStudents.html.twig', array(
@@ -391,10 +393,13 @@ class InfoStudentsController extends Controller {
       $arrDataLibreta = array();
       $arrDataLibreta['areaEspecialId'] = ($aInfoUeducativa['ueducativaInfoId']['areaEspecialId'])?$aInfoUeducativa['ueducativaInfoId']['areaEspecialId']:'';
       $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
-      if(($nivel == 411 and ($aInfoUeducativa['ueducativaInfoId']['programaId'] == 17 or $aInfoUeducativa['ueducativaInfoId']['programaId'] == 13 )) or $nivel == 405 or $nivel == 410){
-        $arrDataLibreta['calificaciones'] = false;
-      }else{
+      $nivelesLibreta = array(401,402,403,404);
+      $programasLibreta = array(7,8,9,12,14,15);
+      
+      if(in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
         $arrDataLibreta['calificaciones'] = true;
+      }else{
+        $arrDataLibreta['calificaciones'] = false;
       }
       //reload the students list
       $exist = true;
@@ -605,10 +610,13 @@ class InfoStudentsController extends Controller {
       $arrDataLibreta = array();
       $arrDataLibreta['areaEspecialId'] = ($aInfoUeducativa['ueducativaInfoId']['areaEspecialId'])?$aInfoUeducativa['ueducativaInfoId']['areaEspecialId']:'';
       $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
-      if(($nivel == 411 and ($aInfoUeducativa['ueducativaInfoId']['programaId'] == 17 or $aInfoUeducativa['ueducativaInfoId']['programaId'] == 13 )) or $nivel == 405 or $nivel == 410){
-        $arrDataLibreta['calificaciones'] = false;
-      }else{
+      $nivelesLibreta = array(401,402,403,404);
+      $programasLibreta = array(7,8,9,12,14,15);
+      
+      if(in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
         $arrDataLibreta['calificaciones'] = true;
+      }else{
+        $arrDataLibreta['calificaciones'] = false;
       }
       // Para el centralizador
       $itemsUe = $aInfoUeducativa['ueducativaInfo']['nivel'].",".$aInfoUeducativa['ueducativaInfo']['grado'].",".$aInfoUeducativa['ueducativaInfo']['paralelo'];
