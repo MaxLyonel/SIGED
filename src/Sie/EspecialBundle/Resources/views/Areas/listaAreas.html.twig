@@ -38,7 +38,11 @@
                             <td data-title="Campo">{{areas.campo}}</td>
                             <td data-title="Código">{{areas.codigo}}</td>
                         {% endif %}
-                        <td data-title='Área'>{{areas.asignatura}}</td>
+                        {% if areas.programaServicio %}
+                            <td data-title='Área'>{{areas.programaServicio}}</td>
+                        {% else %}
+                            <td data-title='Área'>{{areas.asignatura}}</td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             </tbody>
@@ -82,7 +86,11 @@
                             <tbody>
                                 {% for areas in areasNivel %}
                                     <tr id="fila{{areas.codigo}}" style="display:none">
-                                        <td data-title='Área'>{{areas.asignatura}}</td>
+                                        {% if areas.programaServicio %}
+                                            <td data-title='Área'>{{areas.programaServicio}}</td>
+                                        {% else %}
+                                            <td data-title='Área'>{{areas.asignatura}}</td>
+                                        {% endif %}
                                         <td data-title="Maestro">
                                             <select name="{{areas.codigo}}" id="{{areas.codigo}}" class="chosen-select form-control">
                                                 <option value="">Seleccionar...</option>

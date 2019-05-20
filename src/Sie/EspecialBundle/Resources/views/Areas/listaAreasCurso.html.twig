@@ -47,7 +47,11 @@
                             <td data-title="Campo">{{cursoOferta.area}}&nbsp;</td>
                             <td data-title="Codigo">{{cursoOferta.idAsignatura}}&nbsp;</td>
                         {% endif %}
-                        <td data-title="Area">{{cursoOferta.asignatura}}&nbsp;</td>
+                        {% if cursoOferta.programaServicio %}
+                            <td data-title='Área'>{{cursoOferta.programaServicio}}</td>
+                        {% else %}
+                            <td data-title="Area">{{cursoOferta.asignatura}}&nbsp;</td>
+                        {% endif %}
 
                         <td data-title="Acciones">
                             
