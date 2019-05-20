@@ -2331,7 +2331,7 @@ class Notas{
             }
             
             if (($subarea == 4 or $subarea == 6 or $subarea == 7) and $gestion > 2018){
-                $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(78));
+                $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(47,10,78));
             }else{
                 $estadosFinales = array();
             }
