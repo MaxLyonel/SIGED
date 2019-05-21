@@ -58,14 +58,13 @@
                                                 {% else %}
                                                     <td>{{ d.tramite_estado }}</td>
                                                 {% endif %}
-                                                {% if d.es_evaluacion == true  %}
-                                                    {% if d.valor_evaluacion == "SI" %}
-                                                        <td>PROCEDENTE: {{d.obs}}</td>
-                                                    {% else %}
-                                                        <td>IMPROCEDENTE: {{d.obs}}</td>
-                                                    {% endif %}
+                                                {% if d.es_evaluacion == true  and d.fecha_envio %}
+                                                    <td>¿{{d.variable_evaluacion}}?</br>
+                                                        {{d.valor_evaluacion}}</br>
+                                                        {% if d.obs  %} Observación: {{d.obs}} {% endif %}
+                                                    </td>
                                                 {% else %}
-                                                    <td>{{d.obs}}</td>
+                                                    <td>{% if d.obs  %} Observación: {{d.obs}} {% endif %}</td>
                                                 {% endif %}
                                             {% else %}
                                                 <td>{% if sw == 0 %}<span class="label label-warning">PENDIENTE</span>{% endif %}</td>
