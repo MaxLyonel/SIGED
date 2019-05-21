@@ -541,12 +541,15 @@ class ClasificacionController extends Controller {
         $arrIdInscription = array();
         $ainscritos = array();
 
-        //dump($infoDeporte);die;
         foreach ($objDeportistasFase as $inscrito) {
             $inscritoId = (int)$inscrito['eInsJueId'];
             $inscritoPosicion = (int)$inscrito['posicion'];
-            $inscritoEquipoId = (int)$inscrito['equipoId'];
-            $inscritoNombre = trim('PUESTO'.$inscritoPosicion.' - '.$inscrito['paterno'].' '.$inscrito['materno'].' '.$inscrito['nombre']);
+            if($pruebaId == 89 or $pruebaId == 90){
+                $inscritoEquipoId = (int)$inscrito['ue'];
+            } else {
+                $inscritoEquipoId = (int)$inscrito['equipoId'];
+            }
+            $inscritoNombre = trim('PUESTO '.$inscritoPosicion.' - '.$inscrito['paterno'].' '.$inscrito['materno'].' '.$inscrito['nombre']);
             $entrenadorNombre = trim($inscrito['paternoPersona'].' '.$inscrito['maternoPersona'].' '.$inscrito['nombrePersona']);
             if ($entrenadorNombre == "" or !isset($entrenadorNombre) or $entrenadorNombre == false){
                 $entrenadorNombre = "Registrar entrenador";
@@ -557,8 +560,9 @@ class ClasificacionController extends Controller {
         $arrIdInscription=array();
         $arrNewTeam = array();
         $entrenador = "";
+
         foreach ($ainscritos as $key => $value) {
-            if($key != 0 or $pruebaId == 89 or $pruebaId == 90){
+            if($key != 0 or $pruebaId == 89 or $pruebaId == 90){                
                 foreach ($value as $idinscription => $student) {
                     $arrIdInscription[]=$idinscription;
                     $jsonIdInscription = json_encode($arrIdInscription);
@@ -1054,8 +1058,13 @@ class ClasificacionController extends Controller {
                     foreach ($objDeportistasFase as $inscrito) {
                         $inscritoId = (int)$inscrito['eInsJueId'];
                         $inscritoPosicion = (int)$inscrito['posicion'];
-                        $inscritoEquipoId = (int)$inscrito['equipoId'];
-                        $inscritoNombre = trim('PUESTO'.$inscritoPosicion.' - '.$inscrito['paterno'].' '.$inscrito['materno'].' '.$inscrito['nombre']);
+                        //$inscritoEquipoId = (int)$inscrito['equipoId'];
+                        if($pruebaId == 89 or $pruebaId == 90){
+                            $inscritoEquipoId = (int)$inscrito['ue'];
+                        } else {
+                            $inscritoEquipoId = (int)$inscrito['equipoId'];
+                        }
+                        $inscritoNombre = trim('PUESTO '.$inscritoPosicion.' - '.$inscrito['paterno'].' '.$inscrito['materno'].' '.$inscrito['nombre']);
                         $entrenadorNombre = trim($inscrito['paternoPersona'].' '.$inscrito['maternoPersona'].' '.$inscrito['nombrePersona']);
                         if ($entrenadorNombre == "" or !isset($entrenadorNombre) or $entrenadorNombre == false){
                             $entrenadorNombre = "Registrar entrenador";
@@ -1130,28 +1139,28 @@ class ClasificacionController extends Controller {
         $gestionActual = date_format($fechaActual,'Y');
         // $gestionActual = 2018;
 
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();src/Sie/JuegosBundle/Controller/ClasificacionController.php
         //get grado
         $apruebas = array();
         $ainscritos = array();
-        $entity = $em->getRepository('SieAppWebBundle:PruebaTipo');
-        $query = $entity->createQueryBuilder('pt')
-                ->innerJoin('SieAppWebBundle:DisciplinaTipo', 'dt', 'WITH', 'dt.id = pt.disciplinaTipo')
-                ->innerJoin('SieAppWebBundle:GeneroTipo', 'gt', 'WITH', 'gt.id = pt.generoTipo')
+        $entity = $em->getRepository('SieAppWebBusrc/Sie/JuegosBundle/Controller/ClasificacionController.php
+        $query = $entity->createQueryBuilder('pt'src/Sie/JuegosBundle/Controller/ClasificacionController.php
+                ->innerJoin('SieAppWebBundle:Discsrc/Sie/JuegosBundle/Controller/ClasificacionController.php
+                ->innerJoin('SieAppWebBundle:Genesrc/Sie/JuegosBundle/Controller/ClasificacionController.php
                 ->where('dt.id = :disciplinaId')
                 ->andWhere('gt.id = :generoId')
-                ->setParameter('disciplinaId', $disciplina)
-                ->setParameter('generoId', $genero)
+                ->setParameter('disciplinaId', $dsrc/Sie/JuegosBundle/Controller/ClasificacionController.php
+                ->setParameter('generoId', $genersrc/Sie/JuegosBundle/Controller/ClasificacionController.php
                 ->distinct()
                 ->orderBy('pt.prueba', 'ASC')
                 ->getQuery();
         $aPruebas = $query->getResult();
         foreach ($aPruebas as $prueba) {
-            $apruebas[$prueba->getId()] = $prueba->getPrueba();
+            $apruebas[$prueba->getId()] = $pruebasrc/Sie/JuegosBundle/Controller/ClasificacionController.php
         }
 
         if (count($apruebas) > 0){
-            $aprueba01 = array_keys($apruebas)[0];
+            $aprueba01 = array_keys($apruebas)[0]src/Sie/JuegosBundle/Controller/ClasificacionController.php
         } else {
             $aprueba01 = 0;
         }
