@@ -280,7 +280,7 @@ class ConsolidationSieController extends Controller {
                 // //make the temp dir name
                 $dirtmp = $this->get('kernel')->getRootDir() . '/../web/empfiles/' . $aName[0];
                 if (!file_exists($dirtmp)) {
-                    mkdir($dirtmp, 0777);
+                    mkdir($dirtmp, 0770);
                 }else{
                   system('rm -fr ' . $dirtmp.'/*');
                 }
@@ -309,7 +309,7 @@ class ConsolidationSieController extends Controller {
 
                 //get the content of file
                 $fileInfoContent = file($dirtmp . '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 2]);
-
+                
                 //validate the full descompresition with the SieTypeFile from begin to the end
                 if ((strcmp(preg_replace('/\s+/', '', $fileInfoContent[0]), preg_replace('/\s+/', '', $fileInfoContent[sizeof($fileInfoContent) - 1]))) !== 0) {
                     $session->getFlashBag()->add('warningcons', 'El archivo ' . $originalName . ' tiene fallas en el contenido');
@@ -433,28 +433,28 @@ class ConsolidationSieController extends Controller {
                 $yearDir = $mainDir . $aDataExtractFileUE[4];
                 $yearDirToSave =  $aDataExtractFileUE[4];
                 if (!file_exists($yearDir)) {
-                    mkdir($yearDir, 0777);
+                    mkdir($yearDir, 0770);
                 }
                 //create the distrito directory
                 $distritoDir = $yearDir . '/' . $aDataExtractFileUE[38];
                 $distritoDirToSave = $yearDirToSave . '/' . $aDataExtractFileUE[38];
 
                 if (!file_exists($distritoDir)) {
-                    mkdir($distritoDir, 0777);
+                    mkdir($distritoDir, 0770);
                 }
                 //create the cod UE directory
                 $unidadEducativaDir = $distritoDir . '/' . $aDataExtractFileUE[1];
                 $unidadEducativaDirToSave = $distritoDirToSave . '/' . $aDataExtractFileUE[1];
 
                 if (!file_exists($unidadEducativaDir)) {
-                    mkdir($unidadEducativaDir, 0777);
+                    mkdir($unidadEducativaDir, 0770);
                 }
                 //create the sucursal directory
                 $periodoDir = $unidadEducativaDir . '/' . $aDataExtractFileUE[5];
                 $periodoDirToSave = $unidadEducativaDirToSave . '/' . $aDataExtractFileUE[5];
 
                 if (!file_exists($periodoDir)) {
-                    mkdir($periodoDir, 0777);
+                    mkdir($periodoDir, 0770);
                 }
 // dump($periodoDirToSave. '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 2]);
 // die;
@@ -541,6 +541,8 @@ class ConsolidationSieController extends Controller {
             $session->getFlashBag()->add('warningcons', 'Datos enviados incorrectamente');
             return $this->redirect($this->generateUrl('consolidation_sie_web'));
         }
+    
+    }        
 
         //////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////
@@ -558,7 +560,7 @@ class ConsolidationSieController extends Controller {
         //create directories on app server
 //        $dirgestion = $this->get('kernel')->getRootDir() . '/../web/empfiles/' . '2015';
 //        if (!file_exists($dirgestion)) {
-//            mkdir($dirgestion, 0777);
+//            mkdir($dirgestion, 0770);
 //        }
 //        //create the directory on db server
 //        $pathgestion = "/consolidacion_online/" . '2015';
@@ -569,7 +571,7 @@ class ConsolidationSieController extends Controller {
 //        $objUnidEducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($id);
 //        $dirdistrito = $dirgestion . '/' . $objUnidEducativa[0]['distritoTipoId'];
 //        if (!file_exists($dirdistrito)) {
-//            mkdir($dirdistrito, 0777);
+//            mkdir($dirdistrito, 0770);
 //        }
 //        //create the directory on db server
 //        $pathdistrito = $pathgestion . '/' . $objUnidEducativa[0]['distritoTipoId'];
@@ -580,7 +582,7 @@ class ConsolidationSieController extends Controller {
 //        //create the sie directory
 //        $dirsie = $dirdistrito . '/' . $id;
 //        if (!file_exists($dirsie)) {
-//            mkdir($dirsie, 0777);
+//            mkdir($dirsie, 0770);
 //        }
 //        //create the directory on db server
 //        $pathsie = $pathdistrito . '/' . $id;
@@ -653,7 +655,7 @@ class ConsolidationSieController extends Controller {
 //        ));
 //        $dirope = $dirsie . '/' . $aFileInfoSie[6];
 //        if (!file_exists($dirope)) {
-//            mkdir($dirope, 0777);
+//            mkdir($dirope, 0770);
 //        }
 //        //create the directory on db server
 //        $pathope = $pathsie . '/' . $aFileInfoSie[6];
@@ -725,7 +727,7 @@ class ConsolidationSieController extends Controller {
 //            $session->getFlashBag()->add('warningcons', 'Datos enviados incorrectamente');
 //            return $this->redirect($this->generateUrl('consolidation_sie_web'));
 //        }
-    }
+    
 
 
         /**
