@@ -2897,7 +2897,8 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
             try {
                 // id de la tabla maestro_inscripcion
                 $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($institucioneducativa_curso_id);
-                $maestroinscripcion_id=$result->getMaestroInscripcionAsesor()->getId();
+                if($result)
+                        $maestroinscripcion_id=$result->getMaestroInscripcionAsesor()->getId();
                 // id de la tabla institucion_curso_oferta
                 $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findByinsitucioneducativaCurso($institucioneducativa_curso_id);
                 $institucioneducativa_curso_oferta_id = array();
@@ -4047,6 +4048,7 @@ ciclo_tipo_id, grado_tipo_id
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
         $userId = $this->session->get('userId');
+        $notas_bien=1;
 
         
         ////////cerrar curso
@@ -5959,6 +5961,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                 //ELIMINAR RUDE
                 //buscar el id del rude
                 $result = $em->getRepository('SieAppWebBundle:Rude')->findByestudianteInscripcion($estudiante_inscripcion_id);
+                $rude_eliminar = array();
                 foreach ($result as $results) {
                 $rude_eliminar[]=$results->getId();
             }   
@@ -6664,6 +6667,10 @@ public function crear_curso_automaticoAction(Request $request){
         $em = $this->getDoctrine()->getManager(); 
         ///datos de la institucionEducativaCurso: id del maestro_inscripcion,bloque,parte,ci
         $institucion_educativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($id_curso);
+        if(!$institucion_educativa){
+                return $this->redirectToRoute('logout');
+            }
+
         $id_maestro_inscripcion=$institucion_educativa->getMaestroInscripcionAsesor()->getId();
         $bloque_actual=$institucion_educativa->getCicloTipo()->getId();
         $parte_actual=$institucion_educativa->getGradoTipo()->getId();
@@ -8458,18 +8465,19 @@ public function rudeal_guardarAction(Request $request){
             $em->persist($newrudeidioma);
             $em->flush();
             //IDIOMA FRECUENCIA
-            foreach ($idioma_frecuencia as $p) {
-                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_idioma');");
-                $query->execute();
-                $newrudeidioma = new RudeIdioma();
-                $newrudeidioma->setRude($newrude);
-                $newrudeidioma->setHablaTipo($em->getRepository('SieAppWebBundle:HablaTipo')->findOneById(2));//2 FRECUENCIA
-                $newrudeidioma->setIdiomaTipo($em->getRepository('SieAppWebBundle:IdiomaTipo')->findOneById($p));
-                $newrudeidioma->setFechaRegistro(new \DateTime('now'));
-                $newrudeidioma->setFechaModificacion(new \DateTime('now'));
-                $em->persist($newrudeidioma);
-                $em->flush();
-            }
+            if($idioma_frecuencia)
+                foreach ($idioma_frecuencia as $p) {
+                    $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('rude_idioma');");
+                    $query->execute();
+                    $newrudeidioma = new RudeIdioma();
+                    $newrudeidioma->setRude($newrude);
+                    $newrudeidioma->setHablaTipo($em->getRepository('SieAppWebBundle:HablaTipo')->findOneById(2));//2 FRECUENCIA
+                    $newrudeidioma->setIdiomaTipo($em->getRepository('SieAppWebBundle:IdiomaTipo')->findOneById($p));
+                    $newrudeidioma->setFechaRegistro(new \DateTime('now'));
+                    $newrudeidioma->setFechaModificacion(new \DateTime('now'));
+                    $em->persist($newrudeidioma);
+                    $em->flush();
+                }
             //SALUD
             //si es modificar primero debemos elimianar
             if($rude_id!=0){
