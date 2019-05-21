@@ -25,21 +25,46 @@ class EstudianteInscripcionJuegosController extends Controller
     // PARAMETROS: por POST  disciplinaId, generoId
     // AUTOR: RCANAVIRI
     //********************************************************************************************************************************
-    public function getEstudianteInscripcionInstitucionGestionFasePrueba($institucionEducativaId, $pruebaId, $gestionId, $faseId){            
+    public function getEstudianteInscripcionInstitucionGestionFasePrueba($institucionId, $pruebaId, $gestionId, $faseId, $posicion){            
         $em = $this->getDoctrine()->getManager();
         $entity = $this->getDoctrine()->getRepository('SieAppWebBundle:JdpEstudianteInscripcionJuegos');
         $query = $entity->createQueryBuilder('eij')                
             ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ei.id = eij.estudianteInscripcion')
-            ->leftJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')
-            ->where('iec.institucioneducativa = :codInstitucion')
-            ->andwhere('eij.gestionTipo = :codGestion')
+            ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')        
+            ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = iec.institucioneducativa')
+            ->innerJoin('SieAppWebBundle:JurisdiccionGeografica','jg','WITH','jg.id = ie.leJuridicciongeografica')      
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt1','WITH','lt1.id = jg.lugarTipoLocalidad')        
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt2','WITH','lt2.id = lt1.lugarTipo')        
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt3','WITH','lt3.id = lt2.lugarTipo')       
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt4','WITH','lt4.id = lt3.lugarTipo')       
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt5','WITH','lt5.id = lt4.lugarTipo') 
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt6','WITH','lt6.id = jg.lugarTipoIdDistrito')
+            ->leftjoin('SieAppWebBundle:CircunscripcionTipo', 'ct', 'WITH', 'ct.id = jg.circunscripcionTipo') 
+            ->where('eij.gestionTipo = :codGestion')
             ->andwhere('eij.faseTipo = :codFase')
-            ->andwhere('eij.pruebaTipo = :codPrueba')
-            ->setParameter('codInstitucion', $institucionEducativaId)
-            ->setParameter('codGestion', $gestionId)
-            ->setParameter('codFase', $faseId)
-            ->setParameter('codPrueba', $pruebaId)
-            ->getQuery();
+            ->andwhere('eij.pruebaTipo = :codPrueba');
+            switch ($faseId) {
+                case 2:
+                    $query = $query->andwhere('lt6.id = :codInstitucion');
+                    $query = $query->andwhere('eij.posicion = '.$posicion);
+                    break;
+                case 3:
+                    $query = $query->andwhere('jg.circunscripcionTipo = :codInstitucion');
+                    $query = $query->andwhere('eij.posicion = '.$posicion);
+                    break;
+                case 4:
+                    $query = $query->andwhere('lt5.id = :codInstitucion');
+                    $query = $query->andwhere('eij.posicion = '.$posicion);
+                    break;
+                default:
+                    $query = $query->andwhere('iec.institucioneducativa = :codInstitucion');
+                    break;
+            }
+            $query = $query  ->setParameter('codInstitucion', $institucionId)
+                ->setParameter('codGestion', $gestionId)
+                ->setParameter('codFase', $faseId)
+                ->setParameter('codPrueba', $pruebaId)
+                ->getQuery();
         $entity = $query->getResult();
         if (count($entity) > 0){
             return $entity; 
@@ -54,23 +79,48 @@ class EstudianteInscripcionJuegosController extends Controller
     // PARAMETROS: por POST  disciplinaId, generoId
     // AUTOR: RCANAVIRI
     //********************************************************************************************************************************
-    public function getEquipoInscripcionInstitucionGestionFasePrueba($institucionEducativaId, $pruebaId, $gestionId, $faseId){            
+    public function getEquipoInscripcionInstitucionGestionFasePrueba($institucionId, $pruebaId, $gestionId, $faseId, $posicion){            
         $em = $this->getDoctrine()->getManager();
         $entity = $this->getDoctrine()->getRepository('SieAppWebBundle:JdpEquipoEstudianteInscripcionJuegos');
         $query = $entity->createQueryBuilder('eeij')  
             ->select('distinct eeij.equipoId, eeij.equipoNombre')              
-            ->leftJoin('SieAppWebBundle:JdpEstudianteInscripcionJuegos','eij','WITH','eij.id = eeij.estudianteInscripcionJuegos')
+            ->innerJoin('SieAppWebBundle:JdpEstudianteInscripcionJuegos','eij','WITH','eij.id = eeij.estudianteInscripcionJuegos')
             ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ei.id = eij.estudianteInscripcion')
-            ->leftJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')
-            ->where('iec.institucioneducativa = :codInstitucion')
-            ->andwhere('eij.gestionTipo = :codGestion')
+            ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')          
+            ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = iec.institucioneducativa')
+            ->innerJoin('SieAppWebBundle:JurisdiccionGeografica','jg','WITH','jg.id = ie.leJuridicciongeografica')      
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt1','WITH','lt1.id = jg.lugarTipoLocalidad')        
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt2','WITH','lt2.id = lt1.lugarTipo')        
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt3','WITH','lt3.id = lt2.lugarTipo')       
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt4','WITH','lt4.id = lt3.lugarTipo')       
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt5','WITH','lt5.id = lt4.lugarTipo') 
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt6','WITH','lt6.id = jg.lugarTipoIdDistrito')
+            ->leftjoin('SieAppWebBundle:CircunscripcionTipo', 'ct', 'WITH', 'ct.id = jg.circunscripcionTipo') 
+            ->where('eij.gestionTipo = :codGestion')
             ->andwhere('eij.faseTipo = :codFase')
-            ->andwhere('eij.pruebaTipo = :codPrueba')
-            ->setParameter('codInstitucion', $institucionEducativaId)
-            ->setParameter('codGestion', $gestionId)
-            ->setParameter('codFase', $faseId)
-            ->setParameter('codPrueba', $pruebaId)
-            ->getQuery();
+            ->andwhere('eij.pruebaTipo = :codPrueba');
+            switch ($faseId) {
+                case 2:
+                    $query = $query->andwhere('lt6.id = :codInstitucion');
+                    $query = $query->andwhere('eij.posicion = '.$posicion);
+                    break;
+                case 3:
+                    $query = $query->andwhere('jg.circunscripcionTipo = :codInstitucion');
+                    $query = $query->andwhere('eij.posicion = '.$posicion);
+                    break;
+                case 4:
+                    $query = $query->andwhere('lt5.id = :codInstitucion');
+                    $query = $query->andwhere('eij.posicion = '.$posicion);
+                    break;
+                default:
+                    $query = $query->andwhere('iec.institucioneducativa = :codInstitucion');
+                    break;
+            }
+            $query = $query  ->setParameter('codInstitucion', $institucionId)
+                ->setParameter('codGestion', $gestionId)
+                ->setParameter('codFase', $faseId)
+                ->setParameter('codPrueba', $pruebaId)
+                ->getQuery();
         $entity = $query->getResult();
         if (count($entity) > 0){
             return $entity; 
@@ -86,24 +136,49 @@ class EstudianteInscripcionJuegosController extends Controller
     // PARAMETROS: por POST  disciplinaId, generoId
     // AUTOR: RCANAVIRI
     //********************************************************************************************************************************
-    public function getEquipoEstudianteInscripcionInstitucionGestionFasePrueba($institucionEducativaId, $pruebaId, $gestionId, $faseId, $equipoId){            
+    public function getEquipoEstudianteInscripcionInstitucionGestionFasePrueba($institucionId, $pruebaId, $gestionId, $faseId, $equipoId, $posicion){            
         $em = $this->getDoctrine()->getManager();
         $entity = $this->getDoctrine()->getRepository('SieAppWebBundle:JdpEquipoEstudianteInscripcionJuegos');
         $query = $entity->createQueryBuilder('eeij')              
             ->innerJoin('SieAppWebBundle:JdpEstudianteInscripcionJuegos','eij','WITH','eij.id = eeij.estudianteInscripcionJuegos')
             ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ei.id = eij.estudianteInscripcion')
             ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')
-            ->where('iec.institucioneducativa = :codInstitucion')
-            ->andwhere('eij.gestionTipo = :codGestion')
+            ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = iec.institucioneducativa')
+            ->innerJoin('SieAppWebBundle:JurisdiccionGeografica','jg','WITH','jg.id = ie.leJuridicciongeografica')      
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt1','WITH','lt1.id = jg.lugarTipoLocalidad')        
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt2','WITH','lt2.id = lt1.lugarTipo')        
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt3','WITH','lt3.id = lt2.lugarTipo')       
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt4','WITH','lt4.id = lt3.lugarTipo')       
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt5','WITH','lt5.id = lt4.lugarTipo') 
+            ->innerJoin('SieAppWebBundle:LugarTipo','lt6','WITH','lt6.id = jg.lugarTipoIdDistrito')
+            ->leftjoin('SieAppWebBundle:CircunscripcionTipo', 'ct', 'WITH', 'ct.id = jg.circunscripcionTipo')  
+            ->where('eij.gestionTipo = :codGestion')
             ->andwhere('eij.faseTipo = :codFase')
             ->andwhere('eij.pruebaTipo = :codPrueba')
-            ->andwhere('eeij.equipoId = :codEquipo')
-            ->setParameter('codInstitucion', $institucionEducativaId)
-            ->setParameter('codGestion', $gestionId)
-            ->setParameter('codFase', $faseId)
-            ->setParameter('codPrueba', $pruebaId)
-            ->setParameter('codEquipo', $equipoId)
-            ->getQuery();
+            ->andwhere('eeij.equipoId = :codEquipo');
+        switch ($faseId) {
+            case 2:
+                $query = $query->andwhere('lt6.id = :codInstitucion');
+                $query = $query->andwhere('eij.posicion = '.$posicion);
+                break;
+            case 3:
+                $query = $query->andwhere('jg.circunscripcionTipo = :codInstitucion');
+                $query = $query->andwhere('eij.posicion = '.$posicion);
+                break;
+            case 4:
+                $query = $query->andwhere('lt5.id = :codInstitucion');
+                $query = $query->andwhere('eij.posicion = '.$posicion);
+                break;
+            default:
+                $query = $query->andwhere('iec.institucioneducativa = :codInstitucion');
+                break;
+        }
+        $query = $query  ->setParameter('codInstitucion', $institucionId)
+                ->setParameter('codGestion', $gestionId)
+                ->setParameter('codFase', $faseId)
+                ->setParameter('codPrueba', $pruebaId)
+                ->setParameter('codEquipo', $equipoId)
+                ->getQuery();
         $entity = $query->getResult();
         if (count($entity) > 0){
             return $entity; 

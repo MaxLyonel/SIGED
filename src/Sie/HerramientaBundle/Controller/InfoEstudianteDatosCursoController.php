@@ -53,30 +53,34 @@ class InfoEstudianteDatosCursoController extends Controller {
     	            	'query_builder'=> function(EntityRepository $er){
     	            		return $er->createQueryBuilder('it')
     	            				->select('it')
-    	            				->where('it.id NOT IN (:ids)')
-    	            				->setParameter('ids', array(97,98,99,0));
+    	            				->where('it.esVigente = true')
+                                    ->addOrderBy('it.idioma','asc');
+    	            				// ->setParameter('ids', array(97,98,99,0));
     	            	},
-    	            	'required' => true
+    	            	'required' => true,
+                        'empty_value'=>'Seleccionar...'
     	            ))
     	            ->add('idiomaRegHabladoTipo', null, array(
     	            	'class'=>'SieAppWebBundle:IdiomaTipo',
     	            	'query_builder'=> function(EntityRepository $er){
     	            		return $er->createQueryBuilder('it')
     	            				->select('it')
-    	            				->where('it.id NOT IN (:ids)')
-    	            				->setParameter('ids', array(97,99,0));
+    	            				->where('it.esVigente = true')
+                                    ->addOrderBy('it.idioma','asc');
     	            	},
-    	            	'required' => true
+    	            	'required' => true,
+                        'empty_value'=>'Seleccionar...'
     	            ))
     	            ->add('idiomaMenHabladoTipo', null, array(
     	            	'class'=>'SieAppWebBundle:IdiomaTipo',
     	            	'query_builder'=> function(EntityRepository $er){
     	            		return $er->createQueryBuilder('it')
     	            				->select('it')
-    	            				->where('it.id NOT IN (:ids)')
-    	            				->setParameter('ids', array(97,99,0));
+    	            				->where('it.esVigente = true')
+                                    ->addOrderBy('it.idioma','asc');
     	            	},
-    	            	'required' => true
+    	            	'required' => true,
+                        'empty_value'=>'Seleccionar...'
     	            ))
 
     	            ->add('priLenEnsenanzaTipo', null, array(
@@ -84,29 +88,34 @@ class InfoEstudianteDatosCursoController extends Controller {
     	            	'query_builder'=> function(EntityRepository $er){
     	            		return $er->createQueryBuilder('it')
     	            				->select('it')
-    	            				->where('it.id NOT IN (:ids)')
-    	            				->setParameter('ids', array(97,98,99,0));
+    	            				->where('it.esVigente = true')
+                                    ->addOrderBy('it.idioma','asc');
     	            	},
-    	            	'required' => true))
+    	            	'required' => true,
+                        'empty_value'=>'Seleccionar...'
+                    ))
     	            ->add('segLenEnsenanzaTipo', null, array(
     	            	'class'=>'SieAppWebBundle:IdiomaTipo',
     	            	'query_builder'=> function(EntityRepository $er){
     	            		return $er->createQueryBuilder('it')
     	            				->select('it')
-    	            				->where('it.id NOT IN (:ids)')
-    	            				->setParameter('ids', array(97,99,0));
+    	            				->where('it.esVigente = true')
+                                    ->addOrderBy('it.idioma','asc');
     	            	},
-    	            	'required' => true))
+    	            	'required' => true,
+                        'empty_value'=>'Seleccionar...'
+                    ))
     	            ->add('terLenEnsenanzaTipo', null, array(
     	            	'class'=>'SieAppWebBundle:IdiomaTipo',
     	            	'query_builder'=> function(EntityRepository $er){
     	            		return $er->createQueryBuilder('it')
     	            				->select('it')
-    	            				->where('it.id NOT IN (:ids)')
-    	            				->setParameter('ids', array(97,99,0));
+    	            				->where('it.esVigente = true')
+                                    ->addOrderBy('it.idioma','asc');
     	            	},
-    	            	'required' => true))
-
+    	            	'required' => true,
+                        'empty_value'=>'Seleccionar...'
+                    ))
     	            ->add('desayunoEscolar', 'choice', array(
     	            	'required' => true,
     	            	'choices'=>array('1'=>'Si','0'=>'No'),

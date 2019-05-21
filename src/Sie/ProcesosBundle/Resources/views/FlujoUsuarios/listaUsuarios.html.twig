@@ -244,11 +244,11 @@
         });
     }
 
-    function derivarTramite(id,tarea,u){
-        
-        formData = {id: id, tarea: tarea, usuario: u};
+    function derivarTramite(id,tarea,u,tramites){
+        //alert(tramites);
+        formData = {id: id, tarea: tarea, usuario: u, tramites: tramites};
         $.ajax({
-            type: 'get',
+            type: 'post',
             url: "{{path('flujousuarios_derivar_tramites_guardar')}}",
             data: formData,
             beforeSend: function () {

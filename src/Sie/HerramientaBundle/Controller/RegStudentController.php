@@ -31,6 +31,11 @@ class RegStudentController extends Controller
         ));    
     }
 
+    /**
+     * Listado de integrantes de un club de lectura
+     * @param  [integer] $idClubLectura     [Identificador del club de lectura para obtener la lista de integrantes]
+     * @return [array]                      [lista de integrantes]
+     */
     public function integrantes($idClubLectura){
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SieAppWebBundle:CdlClubLectura');
@@ -47,10 +52,22 @@ class RegStudentController extends Controller
         return $integrantes;
     }
 
+    /**
+     * [Funcion para buscar estudiante por rude o nombres]
+     * @param  [varchar] $tipo  [Tipo de busqueda vales[rude, nombre]]
+     * @param  [integer] $cdl               [id del club de lectura]
+     * @param  [integer] $sie               [id de la unidad educativa]
+     * @param  [integer] $gestion           [gestion del operativo]
+     * @param  [varchar] $rude              [rude del estudiante]
+     * @param  [varchar] $nombre            [nombre del estudiante]
+     * @param  [varchar] $paterno           [paterno del estudiante]
+     * @param  [varchar] $materno           [materno del estudiante]
+     * @return [view]           [retorna la vista con el listado de estudiantes encontrados]
+     */
     public function findAction(Request $request)
     {
 
-        // dump($request);die;
+        
         $tipo = $request->get('tipo');
 
         $cdl = $request->get('cdl');
@@ -60,6 +77,8 @@ class RegStudentController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $estudiantes = null;
+
+        // REALIZAMOS LA BUSQUEDA DEL ESTUDIANTE DE ACUERDO AL TIPO RUDE O NOMBRE
         if ($tipo == 'rude') {
             $rude = $request->get('rude');
             $estudiantes = $em->createQueryBuilder()
@@ -108,6 +127,12 @@ class RegStudentController extends Controller
         ));    
     }
 
+    /**
+     * Registro del estudiante en el clud de lectura
+     * @param  [integer] $cdl               [id del club de lectura]
+     * @param  [integer] $idInscripcion     [id de inscripcion del estudiante para registrarlo en el club de lectura]
+     * @return [view]                       [Lista actualizada de integrantes]
+     */
     public function registerAction(Request $request)
     {
         $cdl = $request->get('cdl');
@@ -115,21 +140,27 @@ class RegStudentController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        // validamos que no este registrado
-        $integranteInscrito = $em->getRepository('SieAppWebBundle:CdlIntegrantes')->findOneBy(array(
-            'cdlClubLectura'=>$cdl,
-            'estudianteInscripcion'=>$idInscripcion
+        $cantidadIntegrantes = $em->getRepository('SieAppWebBundle:CdlIntegrantes')->findBy(array(
+            'cdlClubLectura'=>$cdl
         ));
 
-        if(!$integranteInscrito){
-            $cdlIntegrantes = new CdlIntegrantes();
-            $cdlIntegrantes->setCdlClubLectura($em->getRepository('SieAppWebBundle:CdlClubLectura')->find($cdl));
-            $cdlIntegrantes->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
-            $cdlIntegrantes->setObs('');
-            $em->persist($cdlIntegrantes);
-            $em->flush();
-        }else{
-            
+        // VERIFICAMOS QUE LA CANTIDAD DE INSCRITOS SEA MENOR A 20 
+        if(count($cantidadIntegrantes) < 20){
+            // validamos que no este registrado
+            $integranteInscrito = $em->getRepository('SieAppWebBundle:CdlIntegrantes')->findOneBy(array(
+                'cdlClubLectura'=>$cdl,
+                'estudianteInscripcion'=>$idInscripcion
+            ));
+
+            if(!$integranteInscrito){
+
+                $cdlIntegrantes = new CdlIntegrantes();
+                $cdlIntegrantes->setCdlClubLectura($em->getRepository('SieAppWebBundle:CdlClubLectura')->find($cdl));
+                $cdlIntegrantes->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
+                $cdlIntegrantes->setObs('');
+                $em->persist($cdlIntegrantes);
+                $em->flush();
+            }
         }
 
         return $this->render('SieHerramientaBundle:RegStudent:list.html.twig', array(
@@ -137,6 +168,12 @@ class RegStudentController extends Controller
         ));    
     }
 
+    /**
+     * Eliminar integrante
+     * @param  [integer] $cdl [id del club de lectura]
+     * @param  [integer] $id  [id del registro del integrante a eliminar]
+     * @return [view]         [Lista actualizada de integrantes]
+     */
     public function deleteAction(Request $request)
     {
         $cdl = $request->get('cdl');
@@ -144,6 +181,7 @@ class RegStudentController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+        // OBTENEMOS EL REGISTRO DEL INTEGRANTE PARA ELIMINARLO
         $cdlIntegrantes = $em->getRepository('SieAppWebBundle:CdlIntegrantes')->find($id);
         $em->remove($cdlIntegrantes);
         $em->flush();

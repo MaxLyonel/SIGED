@@ -162,7 +162,17 @@ class PrincipalController extends Controller {
           'form' => $this->searchForm()->createView(),
           'rie' => $this->obtieneDatosPrincipal(), //Datos para la pantalla principal de RIE
           //'objObservactionSie' => $objObservactionSie
+          'formOperativoRude'=> $this->formOperativoRude(json_encode(array('id'=>$this->sesion->get('ie_id'),'gestion'=>$this->sesion->get('currentyear'))),array())->createView(),
         ));
+    }
+
+     // this is fot the RUDE Operativo
+    private function formOperativoRude($data,$objTypeOfUE){
+      return $this->createFormBuilder()
+            ->add('data', 'hidden', array('data'=>$data))
+            ->add('downOperativoRude','button',array('label'=>'Generar Archivo RUDE', 'attr'=>array('class'=>'btn btn-inverse btn-warning btn-stroke text-center btn-block', 'onclick'=> 'downOperativoRudeup()') ))
+            ->getForm();
+
     }
 
     /**
