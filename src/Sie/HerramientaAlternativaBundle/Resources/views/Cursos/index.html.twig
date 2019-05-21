@@ -1,4 +1,4 @@
-{% extends 'layoutHerramientaAlternativa.html.twig' %}
+    {% extends 'layoutHerramientaAlternativa.html.twig' %}
 
 {% block contentoption %}
     <div class="header-content">
@@ -94,11 +94,11 @@
                                                                             </div>
                                                                             {#{% if (dataParalelo.nivelId == 15) and ((app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3'))%}#}
                                                                             {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
-                                                                            {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripción">
+                                                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripción">
                                                                                 <button class="btn btn-circle btn-lilac btn-stroke" data-toggle="" data-target="" onclick="getStudents('{{ dataParalelo.infoUe }}');">
                                                                                     <i class="fa fa-group"></i>
                                                                                 </button>
-                                                                            </div> #}
+                                                                            </div> 
                                                                             {% endif %}
                                                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Áreas/Maestros">
                                                                                 <button class="btn btn-circle btn-danger btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getAreas('{{ dataParalelo.infoUe }}');">
@@ -306,6 +306,7 @@
         var doInscription = function () {
             var elem = document.getElementById('formStudentInscription').elements;
             var sw = true;
+
             for (var i = 0; i < elem.length; i++) {
                 if (elem[i].type == 'checkbox')
                     if ((elem[i].checked))
@@ -313,8 +314,21 @@
             }
             if (sw) {
                 alert('Tiene que seleccionar por lo menos una inscripción.');
-                return flase;
+                return false;
             }
+            if(!$('#form_level').val()){
+                alert('Tiene que seleccionar el NIVEL para realizar la inscripción.');
+                return false;
+            }
+            if(!$('#form_etapa').val()){
+                alert('Tiene que seleccionar el ETAPA para realizar la inscripción.');
+                return false;
+            }
+            if(!$('#form_paralelo').val()){
+                alert('Tiene que seleccionar el PARALELO para realizar la inscripción.');
+                return false;
+            }                      
+
             if(confirm('Esta seguro de realizar la inscripción?')){
               var formIns = $('#formStudentInscription').serialize();
               $.ajax({
@@ -493,5 +507,55 @@
             });
 
         };
+
+        var getEtapa = function(levelId){
+            var infoUeData = $('#form_infoUe').val();
+            $.ajax({
+                type: 'post',
+                data: {'levelId':levelId,'infoUeData':infoUeData},
+                url: Routing.generate('herramientalt_get_etapa'),
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    
+                    $("#form_etapa").empty();
+                    $("#form_etapa").append('<option value="">Seleccionar</option>');
+                    $.each(data.arrEtapa, function (i, value) {
+                        $("#form_etapa").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    
+                }
+            });
+        };
+
+        
+        var getParaleloIns = function(etapaId){
+
+            var infoUeData = $('#form_infoUe').val();
+            var levelId    = $('#form_level').val();
+
+            $.ajax({
+                type: 'post',
+                data: {'etapaId':etapaId,'levelId':levelId,'infoUeData':infoUeData},
+                url: Routing.generate('herramientalt_get_paraleloins'),
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    //$("#answerid").empty();
+                    //$("#answerid").append(data);
+
+                    
+                    $("#form_paralelo").empty();
+                    $("#form_paralelo").append('<option value="">Seleccionar</option>');
+                    $.each(data.arrParalelo, function (i, value) {
+                        $("#form_paralelo").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    
+                }
+            });
+        };        
+
+
+
     </script>
 {%endblock%}

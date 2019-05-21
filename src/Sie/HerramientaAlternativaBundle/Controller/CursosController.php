@@ -17,6 +17,7 @@ class CursosController extends Controller {
 
     public $session;
     public $idInstitucion;
+    public $arrLevelHumanistic;
 
     /**
      * the class constructor
@@ -25,6 +26,13 @@ class CursosController extends Controller {
         //init the session values
         $this->session = new Session();
         $this->aCursos = $this->fillCursos();
+        $this->arrLevelHumanistic = array(
+            '15.1.1',
+            '15.1.2',
+            '15.2.1',
+            '15.2.2',
+            '15.2.3',            
+        );
     }
 
     /**
@@ -74,7 +82,7 @@ class CursosController extends Controller {
 
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
-
+// dump($aInfoUeducativa);die;
         $exist = true;
         $objStudents = array();
         $dataUe=(unserialize($infoUe));
@@ -239,7 +247,6 @@ class CursosController extends Controller {
         ));
     }
 
-
     /**
     * funcion to get the students will be register on the new level
     *
@@ -266,39 +273,173 @@ class CursosController extends Controller {
             $periodo = '2';
             $gestion = $this->session->get('ie_gestion');
         }
-        $objPrevStudents = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getListStudentPerCourseTodoInscriptionAlter(
+        
+        $selectLevel = $aInfoUeducativa['ueducativaInfoId']['nivelId'].".".$aInfoUeducativa['ueducativaInfoId']['setCodigo'].".".$aInfoUeducativa['ueducativaInfoId']['satCodigo'];
+        // if($selectLevel != '15.1.1'){
+
+            // reset($this->arrLevelHumanistic);
+            // $sw = true;
+            // //look for the next level to show
+            // while($sw &&  ($levelHum = current($this->arrLevelHumanistic))){
+            //     $ind = key($this->arrLevelHumanistic);
+            //     //look for the selected level 
+            //     if($levelHum == $selectLevel){
+            //         $selectInd = $ind-1;
+            //         $sw = false;
+            //     }              
+            //   next($this->arrLevelHumanistic);
+            // }
+            // //get level, ciclo & grado info to find the student on this info
+            // if(!$sw){
+            //     list($aInfoUeducativa['ueducativaInfoId']['nivelId'],$aInfoUeducativa['ueducativaInfoId']['setCodigo'],$aInfoUeducativa['ueducativaInfoId']['satCodigo']) = explode('.', $this->arrLevelHumanistic[$selectInd]);
+            // }
+            //get the studentes
+            $objPrevStudents = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getListStudentPerCourseTodoInscriptionAlter(
                 $this->session->get('ie_id'), $gestion, $this->session->get('ie_subcea'), $periodo,
                 $aInfoUeducativa['ueducativaInfoId']['nivelId'],$aInfoUeducativa['ueducativaInfoId']['setCodigo'],$aInfoUeducativa['ueducativaInfoId']['satCodigo'],
                 $aInfoUeducativa['ueducativaInfoId']['paraleloId'],$aInfoUeducativa['ueducativaInfoId']['turnoId']
               );
 
-        if(!($objPrevStudents>0)){
-          $message = 'No existe información de Estudiantes...';
-          $this->addFlash('warningstudents', $message);
-          return $this->render($this->session->get('pathSystem') . ':InfoEstudianteRequest:students.html.twig', array(
-                      'exist' => false
-          ));
+            if(!($objPrevStudents>0)){
+              $message = 'No existe información de Estudiantes...';
+              $this->addFlash('warningstudents', $message);
+              return $this->render($this->session->get('pathSystem') . ':InfoEstudianteRequest:students.html.twig', array(
+                          'exist' => false
+              ));
+            }
+            
+            foreach($objPrevStudents as $student){
+              //find student if has an inscription on the current course
+              // $postulantStudent = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array(
+              //                                                                                           'estudiante'=>$student['id'],
+              //                                                                                           'institucioneducativaCurso'=>$aInfoUeducativa['ueducativaInfoId']['iecId']
+              //                                                                                           ));
+              
+              $postulantStudent = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getCurrentStudentInscriptionOnAlt(array('estudianteId' => $student['id'], 'gestion' => $this->session->get('ie_gestion') ));
+              //check if the student exists
+              if(!$postulantStudent){
+                $objStudents[]=$student;
+              }
+            }//end foreach
+            // dump($objStudents);
+            // die;
+            if($objStudents){
+                //condition to find the sie's level
+                $data = array(
+                    'sie'=>$this->session->get('ie_id'),
+                    'gestion'=>$this->session->get('ie_gestion'),
+                    'sucursal'=>$this->session->get('ie_subcea'),
+                    'periodo'=>$this->session->get('ie_per_cod'),
+                );
+                //look for sie's level
+                $objLevelCEA = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getLevelPerSieGestionSubceaPeriodo($data);
+                $arrLevelCEA = array();
+                foreach ($objLevelCEA as $key => $value) {
+                    # code...
+                    $arrLevelCEA[$value['codigo']] = $value['especialidad'];
+                }
+                
+                $aInfoUeducativa['dataInscription'] = array(
+                    'sie'=>$this->session->get('ie_id'),
+                    'gestion'=>$this->session->get('ie_gestion'),
+                    'sucursal'=>$this->session->get('ie_subcea'),
+                    'periodo'=>$this->session->get('ie_per_cod'),
+                );
+                $jsonInfoUe = json_encode($aInfoUeducativa);
+                
+                return $this->render($this->session->get('pathSystem') . ':InfoEstudianteRequest:students.html.twig', array(
+                        'objStudents' => $objStudents,
+                        'form' => $this->createFormStudentInscriptionInscription($jsonInfoUe,$arrLevelCEA)->createView(),
+                        'exist' => $exist,
+                        'infoUe' => $infoUe,
+                        'iecId'=>$aInfoUeducativa['ueducativaInfoId']['iecId']
+                ));
+            }else{
+
+                $message = 'No existe información de Estudiantes...';
+                $this->addFlash('warningstudents', $message);
+                return $this->render($this->session->get('pathSystem') . ':InfoEstudianteRequest:students.html.twig', array(
+                          'exist' => false
+                ));
+            }
+    }
+
+    /**
+     * create form to do the massive inscription
+     * @return type obj form
+     */
+    private function createFormStudentInscriptionInscription($data,$arrLevel) {
+        return $this->createFormBuilder()
+                        ->add('inscription', 'button', array('label' => 'Inscribir', 'attr' => array('class' => 'btn btn-primary', 'onclick' => 'doInscription()')))
+                        ->add('level','choice',array('label'=>'Nivel','choices'=>$arrLevel, 'empty_value'=>'Seleccionar Nivel...', 'attr'=>array('class'=>'form-control')))
+                        ->add('etapa','choice',array('label'=>'Etapa', 'attr'=>array('class'=>'form-control')))
+                        ->add('paralelo','choice',array('label'=>'Paralelo', 'attr'=>array('class'=>'form-control')))
+                        ->add('infoUe', 'text', array('data' => $data))
+                        ->getForm();
+    }    
+    public function getEtapaAction(Request $request){
+        // create db conexion
+        $em = $this->getDoctrine()->getManager();
+        // get the send files
+        $infoUeData = $request->get('infoUeData');
+        $levelId    = $request->get('levelId');
+        $arrUeData  = json_decode($infoUeData,true);
+        $arrUeData['dataInscription']['levelId'] = $levelId;
+        $arrDataToProcess = $arrUeData['dataInscription'];
+        //get all periodos by level
+        $objEtapaCEA = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getEtapaPerSieGestionSubceaPeriodo($arrDataToProcess);
+        //create array periodo
+        $arrEtapaCEA = array();
+        foreach ($objEtapaCEA as $key => $value) {
+            # code...
+            $arrEtapaCEA[$value['codigo']] = $value['acreditacion'];
         }
-        foreach($objPrevStudents as $student){
-          //find student if has an inscription on the current course
-          $postulantStudent = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array(
-                                                                                                    'estudiante'=>$student['id'],
-                                                                                                    'institucioneducativaCurso'=>$aInfoUeducativa['ueducativaInfoId']['iecId']
-                                                                                                    ));
-          //check if the student exists
-          if(!$postulantStudent){
-            $objStudents[]=$student;
-          }
-        }//end foreach
-        //dump($objStudents);
-        //die;
-        return $this->render($this->session->get('pathSystem') . ':InfoEstudianteRequest:students.html.twig', array(
-                    'objStudents' => $objStudents,
-                    'form' => $this->createFormStudentInscription($infoUe)->createView(),
-                    'exist' => $exist,
-                    'infoUe' => $infoUe,
-                    'iecId'=>$aInfoUeducativa['ueducativaInfoId']['iecId']
-        ));
+        // set values on json mode
+        $response = new JsonResponse();
+        // return the data find
+        return $response->setData(array('arrEtapa'=>$arrEtapaCEA));
+
+    }
+
+    public function getParaleloInsAction(Request $request){
+        // create db conexion
+        $em = $this->getDoctrine()->getManager();
+        //get the send data 
+        $etapaId    = $request->get('etapaId');
+        $levelId    = $request->get('levelId');
+        $infoUeData = $request->get('infoUeData');
+        $arrUeData  = json_decode($infoUeData,true);
+        $arrUeData['dataInscription']['levelId'] = $levelId;
+        $arrUeData['dataInscription']['etapaId'] = $etapaId;
+        $arrDataToProcess = $arrUeData['dataInscription'];
+        
+        //get all periodos by level
+        $objParaleloCEA = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getParaleloPerSieGestionSubceaPeriodo($arrDataToProcess);
+
+        $arrParaleloCEA = array();
+        foreach ($objParaleloCEA as $key => $value) {
+            # code...
+            $arrParaleloCEA[$value['id']] = $value['paralelo'];
+        }
+        // set values on json mode
+        $response = new JsonResponse();
+        // return the data find
+        return $response->setData(array('arrParalelo'=>$arrParaleloCEA));
+    }
+
+        // }else{
+        //     $message = 'No existe información de Estudiantes...';
+        //       $this->addFlash('warningstudents', $message);
+        //       return $this->render($this->session->get('pathSystem') . ':InfoEstudianteRequest:students.html.twig', array(
+        //                   'exist' => false
+        //       ));
+        // }
+        
+
+
+
+        
+        
         //dump($objPrevStudents);die;
         //$objCurrentStudents = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getListStudentPerCourseAlter($aInfoUeducativa['ueducativaInfoId']['iecId']);
         //get students will be registered
@@ -335,7 +476,7 @@ class CursosController extends Controller {
         } else {
           $objPrevStudents = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getListStudentPerCourseTodoInscriptionAlter($this->session->get('ie_id'), $this->session->get('ie_gestion'), $this->session->get('ie_subcea'), $this->session->get('ie_per_cod'), $aInfoUeducativa['ueducativaInfoId']['nivelId']);
         }*/
-    }
+ 
 
 
     public function inscriptionAction(Request $request) {
@@ -347,7 +488,14 @@ class CursosController extends Controller {
         $infoUe = $request->get('formdata')['data'];
         $arraInfoUe = unserialize($infoUe);
         $dataStudents = $request->get('form');
-
+        $arrDataInscription  =  json_decode( $dataStudents['infoUe'],true);
+        // complete to all data to find the iec id
+        $arrDataInscription['dataInscription']['levelId']   = $dataStudents['level'];
+        $arrDataInscription['dataInscription']['etapaId']   = $dataStudents['etapa'];
+        $arrDataInscription['dataInscription']['paraleloId']= $dataStudents['paralelo'];
+        // look for the iecId of institucioneducativaCurso table
+        $iecId = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getInstEduCursoPerSieGestionSubceaPeriodoParalelo($arrDataInscription['dataInscription']);        
+    
         try {
             //do the inscription to the next level
             reset($dataStudents);
@@ -390,7 +538,8 @@ class CursosController extends Controller {
                     $studentInscription->setObservacion(1);
                     $studentInscription->setFechaInscripcion(new \DateTime(date('Y-m-d')));
                     $studentInscription->setFechaRegistro(new \DateTime(date('Y-m-d')));
-                    $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($arraInfoUe['ueducativaInfoId']['iecId']));
+                    // $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($arraInfoUe['ueducativaInfoId']['iecId']));
+                    $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecId[0]['id']));
                     //$studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(7));
                     $studentInscription->setCodUeProcedenciaId(0);
                     $em->persist($studentInscription);
@@ -445,7 +594,7 @@ class CursosController extends Controller {
             }else{
                    $etapaespecialidad = $arraInfoUe['ueducativaInfo']['grado'];
             }
-
+            $primariaNuevo = $this->get('funciones')->verificarMateriasPrimariaAlternativa($arraInfoUe['ueducativaInfoId']['iecId']);
             $objStudents = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getListStudentPerCourseAlter($arraInfoUe['ueducativaInfoId']['iecId']);
             return $this->render($this->session->get('pathSystem') . ':InfoEstudianteRequest:seeStudents.html.twig', array(
                         'objStudents' => $objStudents,
@@ -455,7 +604,8 @@ class CursosController extends Controller {
                         'infoUe' => $infoUe,
                         'etapaespecialidad' => $etapaespecialidad,
                         'dataUe'=> $arraInfoUe['ueducativaInfo'],
-                        'totalInscritos'=>count($objStudents)
+                        'totalInscritos'=>count($objStudents),
+                        'primariaNuevo' => $primariaNuevo
             ));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
@@ -465,6 +615,7 @@ class CursosController extends Controller {
             }else{
                    $etapaespecialidad = $arraInfoUe['ueducativaInfo']['grado'];
             }
+            $primariaNuevo = $this->get('funciones')->verificarMateriasPrimariaAlternativa($arraInfoUe['ueducativaInfoId']['iecId']);
             $objStudents = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getListStudentPerCourseAlter($arraInfoUe['ueducativaInfoId']['iecId']);
             return $this->render($this->session->get('pathSystem') . ':InfoEstudianteRequest:seeStudents.html.twig', array(
                         'objStudents' => $objStudents,
@@ -474,7 +625,8 @@ class CursosController extends Controller {
                         'infoUe' => $infoUe,
                         'etapaespecialidad' => $etapaespecialidad,
                         'dataUe'=> $arraInfoUe['ueducativaInfo'],
-                        'totalInscritos'=>count($objStudents)
+                        'totalInscritos'=>count($objStudents),
+                        'primariaNuevo' => $primariaNuevo
             ));
         }
     }
