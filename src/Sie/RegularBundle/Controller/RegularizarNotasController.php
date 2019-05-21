@@ -119,10 +119,10 @@ class RegularizarNotasController extends Controller {
                         $plantilla = 'modular';
                         $operativo = 4;
                     }else{
-                        $plantilla = 'regular1';
+                        $plantilla = 'regular';
                     }
                 }else{
-                    $plantilla = 'regular1';
+                    $plantilla = 'regular';
                     $tipoUE = array('id'=>5,'tipo'=>'Humanistica','nivel'=>0);
                 }
             }else{
@@ -144,6 +144,7 @@ class RegularizarNotasController extends Controller {
                 $notas = $this->get('notas')->regular($idInscripcion,$operativo);
             }
 
+            // dump($notas);die;
 
             $em->getConnection()->commit();
             return $this->render('SieRegularBundle:RegularizarNotas:show.html.twig', array(

@@ -517,17 +517,22 @@ class Areas {
             $this->em->flush();
 
             // Registro de materia curso oferta en el log
-            /*
+            $arrayArea = [];
+            $arrayArea['id'] = $newArea->getId();
+            $arrayArea['asignaturaTipo'] = $newArea->getAsignaturaTipo()->getId();
+            $arrayArea['institucioneducativaCurso'] = $newArea->getInsitucioneducativaCurso()->getId();
+            $arrayArea['horasMes'] = $newArea->getHorasmes();
+            
             $this->funciones->setLogTransaccion(
                 $newArea->getId(),
                 'institucioneducativa_curso_oferta',
                 'C',
                 '',
-                $newArea,
+                $arrayArea,
                 '',
                 'ACADEMICO',
                 json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-            );*/
+            );
 
             // Actualizamos el id de la tabla estudiante asignatura
             // $query = $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');")->execute();
@@ -549,17 +554,23 @@ class Areas {
                     $this->em->flush();
 
                     // Registro de materia para estudiantes estudiante_asignatura en el log
-                    /*
+                    $arrayEstAsig = [];
+                    $arrayEstAsig['id'] = $newEstAsig->getId();
+                    $arrayEstAsig['gestionTipo'] = $newEstAsig->getGestionTipo()->getId();
+                    $arrayEstAsig['fechaRegistro'] = $newEstAsig->getFechaRegistro()->format('d-m-Y');
+                    $arrayEstAsig['estudianteInscripcion'] = $newEstAsig->getEstudianteInscripcion()->getId();
+                    $arrayEstAsig['institucioneducativaCursoOferta'] = $newEstAsig->getInstitucioneducativaCursoOferta()->getId();
+                    
                     $this->funciones->setLogTransaccion(
                         $newEstAsig->getId(),
                         'estudiante_asignatura',
                         'C',
                         '',
-                        $newEstAsig,
+                        $arrayEstAsig,
                         '',
                         'ACADEMICO',
                         json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-                    );*/
+                    );
                 }
 
                 // Actualizamos los estados de matricula de los estudiantes
