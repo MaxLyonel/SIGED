@@ -109,6 +109,17 @@
         margin-top: 10px;
         margin-bottom: 10px;
     }
+
+    .validar:invalid {
+        height: 0px !important;
+        opacity: 0 !important;
+        position: absolute !important;
+        display: flex !important;
+    }
+
+    .validar:invalid[multiple] {
+        margin-top: 15px !important;
+    }
 </style>
 <div class="modal-dialog" style="width: 1000px">
     <div class="modal-content">
@@ -438,7 +449,7 @@
 
                                         <div class="panel-footer no-bg">
                                             <ul class="pager wizard no-margin">
-                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                {# <li class="previous"><a href="#" onclick="prev();">Anterior</a></li> #}
                                                 <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
                                             </ul>
                                         </div>
@@ -526,7 +537,7 @@
                                         <div class="row form-group">
                                             <label class="col-md-6">4.1.1. ¿Cúal es el idioma en el que aprendio a hablar en su niñez?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.idiomaNines, {'attr':{'class':'form-control'} }) }}
+                                                {{ form_widget(formSocioeconomico.idiomaNines, {'attr':{'class':'form-control validar'} }) }}
                                             </div>
                                         </div>
                                         <div class="row form-group">
@@ -535,7 +546,7 @@
                                         <div class="row form-group">
                                             <div class="col-md-4 col-sm-4">
                                                 <small>a) Más frecuente (*)</small>
-                                                {{ form_widget(formSocioeconomico.idioma1, {'attr':{'class':'form-control jupper'} }) }}
+                                                {{ form_widget(formSocioeconomico.idioma1, {'attr':{'class':'form-control jupper validar'} }) }}
                                             </div>
                                             <div class="col-md-4 col-sm-4">
                                                 <small>b) Medianamente frecuente</small>
@@ -549,7 +560,7 @@
                                         <div class="form-group">
                                             <label class="col-md-6">4.1.3. ¿Pertenece a alguna nación, pueblo indigena originario campesino o afroboliviano?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.nacionOriginariaTipo, {'attr':{'class':'form-control jupper'} }) }}
+                                                {{ form_widget(formSocioeconomico.nacionOriginariaTipo, {'attr':{'class':'form-control jupper validar'} }) }}
                                             </div>
                                         </div>
                                         <div class="row">
@@ -567,7 +578,7 @@
                                         <div class="row form-group">
                                             <label class="col-md-6">4.2.2. El año pasado, por problemas de salud, ¿acudió o se atendió en...?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.acudioCentro, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                                {{ form_widget(formSocioeconomico.acudioCentro, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
                                             </div>
                                         </div>
                                         <div class="row form-group">
@@ -622,7 +633,7 @@
                                         <div class="row form-group">
                                             <label class="col-md-6">4.3.6. La vivienda que ocupa el hogar es:</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.viviendaOcupaTipo, {'attr':{'class':'form-control jupper'} }) }}
+                                                {{ form_widget(formSocioeconomico.viviendaOcupaTipo, {'attr':{'class':'form-control jupper validar'} }) }}
                                             </div>
                                         </div>
 
@@ -635,14 +646,14 @@
                                         <div class="row form-group">
                                             <label class="col-md-6">4.4.1. El estudiante accesde a internet en:</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.accesoInternet, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                                {{ form_widget(formSocioeconomico.accesoInternet, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
                                             </div>
                                         </div>
                                         <fieldset id="fieldsetInternet">
                                             <div class="row form-group">
                                                 <label class="col-md-6">4.4.2. ¿Con que frecuencia usa internet?</label>
                                                 <div class="col-md-6 col-sm-6">
-                                                    {{ form_widget(formSocioeconomico.frecuenciaUsoInternetTipo, {'attr':{'class':'form-control jupper'} }) }}
+                                                    {{ form_widget(formSocioeconomico.frecuenciaUsoInternetTipo, {'attr':{'class':'form-control jupper validar'} }) }}
                                                 </div>
                                             </div>
                                         </fieldset>
@@ -664,26 +675,26 @@
                                                 <div class="col-md-6"></div>
                                                 <div class="col-md-6">
                                                     <p>Marque los meses que trabajo</p>
-                                                    {{ form_widget(formSocioeconomico.mesesTrabajados, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                                    {{ form_widget(formSocioeconomico.mesesTrabajados, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
                                                 </div>
                                             </div>
                                             <div class="row form-group">
                                                 <label class="col-md-6">4.5.2. En la pasada gestión ¿En que actividad trabajó el estudiante?</label>
                                                 <div class="col-md-6 col-sm-6">
-                                                    {{ form_widget(formSocioeconomico.actividades, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                                    {{ form_widget(formSocioeconomico.actividades, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
                                                     {{ form_widget(formSocioeconomico.actividadOtro, {'attr':{'class':'form-control jupper','placeholder':'Especificar otra actividad','autocomplete':'off'} }) }}
                                                 </div>
                                             </div>
                                             <div class="row form-group">
                                                 <label class="col-md-6">4.5.3. ¿En que turno trabajó el estudiante?</label>
                                                 <div class="col-md-6 col-sm-6">
-                                                    {{ form_widget(formSocioeconomico.turnosTrabajo, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                                    {{ form_widget(formSocioeconomico.turnosTrabajo, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
                                                 </div>
                                             </div>
                                             <div class="row form-group">
                                                 <label class="col-md-6">4.5.4. ¿Con que frecuencia trabajó?</label>
                                                 <div class="col-md-6 col-sm-6">
-                                                    {{ form_widget(formSocioeconomico.frecuenciaTrabajoTipo, {'attr':{'class':'form-control jupper'} }) }}
+                                                    {{ form_widget(formSocioeconomico.frecuenciaTrabajoTipo, {'attr':{'class':'form-control jupper validar'} }) }}
                                                 </div>
                                             </div>
                                             <div class="row form-group">
@@ -691,7 +702,7 @@
                                                 <div class="col-md-6 col-sm-6">
                                                     {{ form_widget(formSocioeconomico.respuestaPago, {'attr':{'class':'radioTipoPago'} }) }}
                                                     <fieldset id="fieldsetTipoPago">
-                                                        {{ form_widget(formSocioeconomico.recibioTipoPago, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                                        {{ form_widget(formSocioeconomico.recibioTipoPago, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
                                                     </fieldset>
                                                 </div>
                                             </div>
@@ -705,14 +716,14 @@
                                         <div class="row form-group">
                                             <label class="col-md-6">4.6.1 Generalmente ¿Como llega el estudiante a la unidad educativa?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.medioTransporte, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                                {{ form_widget(formSocioeconomico.medioTransporte, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
                                                 {{ form_widget(formSocioeconomico.medioTransporteOtro, {'attr':{'class':'form-control jupper','placeholder':'ESPECIFIQUE OTRO MEDIO DE TRANSPORTE', 'autocomplete':'off'} }) }}
                                             </div>
                                         </div>
                                         <div class="row form-group">
                                             <label class="col-md-6">4.6.2 Segun el medio de transporte señalado, ¿Cuál es el tiempo máximo que demora el estudiante desde su vivienda hasta la Unidad Educativa?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.tiempoTransporte, {'attr':{'class':'form-control jupper'} }) }}
+                                                {{ form_widget(formSocioeconomico.tiempoTransporte, {'attr':{'class':'form-control jupper validar'} }) }}
                                             </div>
                                         </div>
                                         <div class="row">
@@ -1478,6 +1489,8 @@
     $('#form_tiempoTransporte').chosen({width: "100%"});
     $('#form_abandono').chosen({width: "100%"});
 
+    $.validator.setDefaults({ ignore: ":hidden:not(select)" });
+
     $(".readonly").keydown(function(e){
         e.preventDefault();
     });
@@ -1519,12 +1532,25 @@
             $('#form_accesoInternet').val([4]);
             $('#fieldsetInternet').attr('disabled','disabled');
             $('#form_accesoInternet').trigger("chosen:updated");
+
             $('#form_frecuenciaUsoInternetTipo').val('');
-            $('#form_frecuenciaUsoInternetTipo').prop('disabled', true).trigger("chosen:updated");
+            $('#form_frecuenciaUsoInternetTipo').removeAttr('required');
+            $('#form_frecuenciaUsoInternetTipo').attr('disabled', 'disabled');
+            $('#form_frecuenciaUsoInternetTipo').trigger("chosen:updated");
+            $('#form_frecuenciaUsoInternetTipo').trigger("chosen:updated");
+
+            console.log('no requerido');
         }else{
-            $('#fieldsetInternet').removeAttr('disabled');
-            $('#form_frecuenciaUsoInternetTipo').prop('disabled', false).trigger("chosen:updated");
+            // $('#fieldsetInternet').removeAttr('disabled');
+            // $('#form_frecuenciaUsoInternetTipo').removeAttr('required');
+            $('#form_frecuenciaUsoInternetTipo').removeAttr('disabled');
+            $('#form_frecuenciaUsoInternetTipo').attr('required','required');
+            $('#form_frecuenciaUsoInternetTipo').trigger("chosen:updated");
+            $('#form_frecuenciaUsoInternetTipo').trigger("chosen:updated");
+            console.log('requerido');
         }
+
+        $.validator.setDefaults({ ignore: ":hidden:not(select)" });
     }
 
     $('#form_accesoInternet').on('change',function(e){
