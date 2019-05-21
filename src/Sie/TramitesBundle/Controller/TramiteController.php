@@ -374,6 +374,7 @@ class TramiteController extends Controller {
 
         $institucioneducativaId = 0;
         $gestionId = $gestionActual->format('Y');
+        $gestionInscripcionId = $gestionActual->format('Y');
         $especialidadId = 0;
         $periodoId = 3;
         $nivelId = 0;
@@ -400,6 +401,7 @@ class TramiteController extends Controller {
                 foreach ($participantes as $participante) {
                     $estudianteInscripcionId = (Int) base64_decode($participante);
                     $entidadEstudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
+                    //dump(count($entidadEstudianteInscripcion));die;
                     $participante = trim($entidadEstudianteInscripcion->getEstudiante()->getPaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getMaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getNombre());
                     $participanteId =  $entidadEstudianteInscripcion->getEstudiante()->getId();
                     $msgContenido = "";
@@ -415,7 +417,7 @@ class TramiteController extends Controller {
                         } else {
                             $gestionId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getInstitucioneducativaSucursal()->getGestionTipo()->getId();
                         }
-
+                        $gestionInscripcionId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getInstitucioneducativaSucursal()->getGestionTipo()->getId();
                         $tipoMallaEstudianteInscripcion = $this->getCertTecTipoMallaInscripcion($estudianteInscripcionId, $especialidadId, $nivelId);
                         
                         $mallaNueva = false;
@@ -458,7 +460,7 @@ class TramiteController extends Controller {
                         }
 
                         $gestionId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getSuperiorInstitucioneducativaPeriodo()->getSuperiorInstitucioneducativaAcreditacion()->getInstitucioneducativaSucursal()->getGestionTipo()->getId();
-
+                        
                         $tramiteId = $this->setTramiteEstudiante($estudianteInscripcionId, $gestionId, $tramiteTipoId, $flujoTipoId, $em);
 
                         $tramiteProcesoController = new tramiteProcesoController();
@@ -497,8 +499,7 @@ class TramiteController extends Controller {
                 'infoAutorizacionCentro' => $entityAutorizacionCentro,
             ));
             */
-
-            $formBusqueda = array('sie'=>$institucionEducativaId,'gestion'=>$gestionId,'especialidad'=>$especialidadId,'nivel'=>$nivelId);
+            $formBusqueda = array('sie'=>$institucionEducativaId,'gestion'=>$gestionInscripcionId,'especialidad'=>$especialidadId,'nivel'=>$nivelId);
             return $this->redirectToRoute('tramite_certificado_tecnico_registro_lista', ['form' => $formBusqueda], 307);
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
@@ -1355,7 +1356,7 @@ class TramiteController extends Controller {
     // PARAMETROS: participanteId, especialidadId, nivelId
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, $nivelId) {
+    public function getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, $nivelId, $mallaNueva) {
         $msg = array('0'=>true, '1'=>'');
         $nivel = '';
         
@@ -1377,11 +1378,11 @@ class TramiteController extends Controller {
 
         if(count($objCargaHoraria)>0){
             $cargaHoraria = $objCargaHoraria[0]['carga_horaria'];
-            $verCargaHorariaNivel = $this->certTecCargaHorariaNivelMinimo($nivelId,$cargaHoraria);
+            $verCargaHorariaNivel = $this->certTecCargaHorariaNivelMinimo($nivelId, $cargaHoraria, $mallaNueva);
             if ($verCargaHorariaNivel != "") {
                 $msg = array('0'=>false, '1'=>$verCargaHorariaNivel);
             } else {
-                $cargaHoraria = $this->certTecCargaHorariaNivelExcedente($nivelId,$cargaHoraria);
+                $cargaHoraria = $this->certTecCargaHorariaNivelExcedente($nivelId, $cargaHoraria, $mallaNueva);
                 $msg = array('0'=>true, '1'=>$cargaHoraria);
             }
         } else {
@@ -1391,11 +1392,11 @@ class TramiteController extends Controller {
 
             if(count($objCargaHorariaHomologacion)>0){
                 $cargaHoraria = $objCargaHorariaHomologacion[0]['carga_horaria'];
-                $verCargaHorariaNivel = $this->certTecCargaHorariaNivelMinimo($nivelId,$cargaHoraria);
+                $verCargaHorariaNivel = $this->certTecCargaHorariaNivelMinimo($nivelId, $cargaHoraria, $mallaNueva);
                 if ($verCargaHorariaNivel!="") {
                     $msg = array('0'=>false, '1'=>$participante.$verCargaHorariaNivel);
                 }  else {
-                    $cargaHoraria = $this->certTecCargaHorariaNivelExcedente($nivelId,$cargaHoraria);
+                    $cargaHoraria = $this->certTecCargaHorariaNivelExcedente($nivelId, $cargaHoraria, $mallaNueva);
                     $msg = array('0'=>true, '1'=>$cargaHoraria);
                 }
             } else {
@@ -1412,7 +1413,7 @@ class TramiteController extends Controller {
     // PARAMETROS: participanteId, especialidadId, nivelId
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function getCertTecCargaHorariaGestionPeriodoEstudiante($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId) {
+    public function getCertTecCargaHorariaGestionPeriodoEstudiante($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId, $mallaNueva) {
         $msg = array('0'=>true, '1'=>'');
         $nivel = '';
         
@@ -1434,11 +1435,11 @@ class TramiteController extends Controller {
 
         if(count($objCargaHoraria)>0){
             $cargaHoraria = $objCargaHoraria[0]['carga_horaria'];
-            $verCargaHorariaNivel = $this->certTecCargaHorariaNivelMinimo($nivelId,$cargaHoraria);
+            $verCargaHorariaNivel = $this->certTecCargaHorariaNivelMinimo($nivelId,$cargaHoraria, $mallaNueva);
             if ($verCargaHorariaNivel != "") {
                 $msg = array('0'=>false, '1'=>$verCargaHorariaNivel);
             } else {
-                $cargaHoraria = $this->certTecCargaHorariaNivelExcedente($nivelId,$cargaHoraria);
+                $cargaHoraria = $this->certTecCargaHorariaNivelExcedente($nivelId,$cargaHoraria, $mallaNueva);
                 $msg = array('0'=>true, '1'=>$cargaHoraria);
             }
         } else {
@@ -1448,11 +1449,11 @@ class TramiteController extends Controller {
 
             if(count($objCargaHorariaHomologacion)>0){
                 $cargaHoraria = $objCargaHorariaHomologacion[0]['carga_horaria'];
-                $verCargaHorariaNivel = $this->certTecCargaHorariaNivelMinimo($nivelId,$cargaHoraria);
+                $verCargaHorariaNivel = $this->certTecCargaHorariaNivelMinimo($nivelId,$cargaHoraria, $mallaNueva);
                 if ($verCargaHorariaNivel!="") {
                     $msg = array('0'=>false, '1'=>$participante.$verCargaHorariaNivel);
                 }  else {
-                    $cargaHoraria = $this->certTecCargaHorariaNivelExcedente($nivelId,$cargaHoraria);
+                    $cargaHoraria = $this->certTecCargaHorariaNivelExcedente($nivelId,$cargaHoraria, $mallaNueva);
                     $msg = array('0'=>true, '1'=>$cargaHoraria);
                 }
             } else {
@@ -1469,22 +1470,41 @@ class TramiteController extends Controller {
     // PARAMETROS: nivelId, cargaHoraria
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function certTecCargaHorariaNivelMinimo($nivelId,$cargaHoraria) {
+    public function certTecCargaHorariaNivelMinimo($nivelId,$cargaHoraria, $mallaNueva) {
         $msg = '';
-        if ($nivelId == 1) {
-            if ($cargaHoraria < 800){
-                $msg = 'Solo cuenta con '.$cargaHoraria.' de 800 horas minimas en Técnico Básico';
+        if($mallaNueva){
+            if ($nivelId == 1) {
+                if ($cargaHoraria < 500){
+                    $msg = 'Solo cuenta con '.$cargaHoraria.' de 500 horas minimas en Técnico Básico';
+                }
+            } elseif ($nivelId == 2) {
+                if ($cargaHoraria < 500){
+                    $msg = 'Solo cuenta con '.$cargaHoraria.' de 500 horas minimas en Técnico Auxiliar';
+                }
+            } elseif ($nivelId == 3) {
+                if ($cargaHoraria < 1000){
+                    $msg = 'Solo cuenta con '.$cargaHoraria.' de 1000 horas minimas en Técnico Medio';
+                }
+            } else {
+                $msg = 'Nivel no encontrado';
             }
-        } elseif ($nivelId == 2) {
-            if ($cargaHoraria < 400){
-                $msg = 'Solo cuenta con '.$cargaHoraria.' de 400 horas minimas en Técnico Auxiliar';
-            }
-        } elseif ($nivelId == 3) {
-            if ($cargaHoraria < 500){
-                $msg = 'Solo cuenta con '.$cargaHoraria.' de 500 horas minimas en Técnico Medio';
-            }
+
         } else {
-            $msg = 'Nivel no encontrado';
+            if ($nivelId == 1) {
+                if ($cargaHoraria < 800){
+                    $msg = 'Solo cuenta con '.$cargaHoraria.' de 800 horas minimas en Técnico Básico';
+                }
+            } elseif ($nivelId == 2) {
+                if ($cargaHoraria < 400){
+                    $msg = 'Solo cuenta con '.$cargaHoraria.' de 400 horas minimas en Técnico Auxiliar';
+                }
+            } elseif ($nivelId == 3) {
+                if ($cargaHoraria < 500){
+                    $msg = 'Solo cuenta con '.$cargaHoraria.' de 500 horas minimas en Técnico Medio';
+                }
+            } else {
+                $msg = 'Nivel no encontrado';
+            }
         }
         return $msg;
     }
@@ -1495,28 +1515,52 @@ class TramiteController extends Controller {
     // PARAMETROS: nivelId, cargaHoraria
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function certTecCargaHorariaNivelExcedente($nivelId,$cargaHoraria) {
+    public function certTecCargaHorariaNivelExcedente($nivelId,$cargaHoraria, $mallaNueva) {
         $msg = 0;
-        if ($nivelId == 1) {
-            if ($cargaHoraria > 1000){
-                $msg = 1000;
+        if($mallaNueva){
+            if ($nivelId == 1) {
+                if ($cargaHoraria > 500){
+                    $msg = 500;
+                } else {
+                    $msg = $cargaHoraria;
+                }
+            } elseif ($nivelId == 2) {
+                if ($cargaHoraria > 500){
+                    $msg = 500;
+                } else {
+                    $msg = $cargaHoraria;
+                }
+            } elseif ($nivelId == 3) {
+                if ($cargaHoraria > 1000){
+                    $msg = 1000;
+                } else {
+                    $msg = $cargaHoraria;
+                }
             } else {
-                $msg = $cargaHoraria;
-            }
-        } elseif ($nivelId == 2) {
-            if ($cargaHoraria > 500){
-                $msg = 500;
-            } else {
-                $msg = $cargaHoraria;
-            }
-        } elseif ($nivelId == 3) {
-            if ($cargaHoraria > 800){
-                $msg = 800;
-            } else {
-                $msg = $cargaHoraria;
+                $msg = 0;
             }
         } else {
-            $msg = 0;
+            if ($nivelId == 1) {
+                if ($cargaHoraria > 1000){
+                    $msg = 1000;
+                } else {
+                    $msg = $cargaHoraria;
+                }
+            } elseif ($nivelId == 2) {
+                if ($cargaHoraria > 500){
+                    $msg = 500;
+                } else {
+                    $msg = $cargaHoraria;
+                }
+            } elseif ($nivelId == 3) {
+                if ($cargaHoraria > 800){
+                    $msg = 800;
+                } else {
+                    $msg = $cargaHoraria;
+                }
+            } else {
+                $msg = 0;
+            }
         }
         return $msg;
     }
@@ -2315,7 +2359,7 @@ class TramiteController extends Controller {
     // PARAMETROS: estudianteId, gestionId, especialidadId, nivelId
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId) {
+    public function getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId, $mallaNueva) {
         $msgContenido = "";
         $cargaHorariaTotal = 0;
 
@@ -2336,7 +2380,7 @@ class TramiteController extends Controller {
         // }
 
         // VALIDACION DE CARGA HORARIA POR ESTUDIANTE SEGUN MODULOS APROBADOS (MAYORES A 36 O 51)
-        $valCertTecCargaHoraria = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, $nivelId);
+        $valCertTecCargaHoraria = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, $nivelId, $mallaNueva);
         $cargaHoraria = 0;
         if(!$valCertTecCargaHoraria[0]){
             $msgContenido = ($msgContenido=="") ? $valCertTecCargaHoraria[1] : $msgContenido.', '.$valCertTecCargaHoraria[1];
@@ -2347,13 +2391,13 @@ class TramiteController extends Controller {
         // VALIDACION DE UNA CERTIFICACION ANTERIOR PARA CONTINUAR CON EL SIGUIENTE NIVEL
         // TECNICO MEDIO
         if($nivelId == 3){
-            $valCertTecCargaHorariaAuxiliar = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 2);
+            $valCertTecCargaHorariaAuxiliar = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 2, $mallaNueva);
             // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
             // $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 2);
             // if(count($objModulosObservados)>0){
             //     $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel auxiliar: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
             // }
-            $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 1);
+            $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 1, $mallaNueva);
             // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
             // $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 1);
             // if(count($objModulosObservados)>0){
@@ -2381,7 +2425,7 @@ class TramiteController extends Controller {
 
         // TECNICO AUXILIAR
         if($nivelId == 2){
-            $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 1);
+            $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 1, $mallaNueva);
             // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
             // $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 1);
             // if(count($objModulosObservados)>0){
@@ -2438,7 +2482,7 @@ class TramiteController extends Controller {
         // }
 
         // VALIDACION DE CARGA HORARIA POR ESTUDIANTE SEGUN MODULOS APROBADOS (MAYORES A 36 O 51)
-        $valCertTecCargaHoraria = $this->getCertTecCargaHorariaGestionPeriodoEstudiante($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId);
+        $valCertTecCargaHoraria = $this->getCertTecCargaHorariaGestionPeriodoEstudiante($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId, $mallaNueva);
         $cargaHoraria = 0;
         if(!$valCertTecCargaHoraria[0]){
             $msgContenido = ($msgContenido=="") ? $valCertTecCargaHoraria[1] : $msgContenido.', '.$valCertTecCargaHoraria[1];
@@ -2449,13 +2493,13 @@ class TramiteController extends Controller {
         // VALIDACION DE UNA CERTIFICACION ANTERIOR PARA CONTINUAR CON EL SIGUIENTE NIVEL
         // TECNICO MEDIO
         if($nivelId == 3){
-            $valCertTecCargaHorariaAuxiliar = $this->getCertTecCargaHorariaGestionPeriodoEstudiante($participanteId, $especialidadId, 2, $gestionId, $periodoId);
+            $valCertTecCargaHorariaAuxiliar = $this->getCertTecCargaHorariaGestionPeriodoEstudiante($participanteId, $especialidadId, 2, $gestionId, $periodoId, $mallaNueva);
             // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
             // $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 2);
             // if(count($objModulosObservados)>0){
             //     $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel auxiliar: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
             // }
-            $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaGestionPeriodoEstudiante($participanteId, $especialidadId, 1, $gestionId, $periodoId);
+            $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaGestionPeriodoEstudiante($participanteId, $especialidadId, 1, $gestionId, $periodoId, $mallaNueva);
             // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
             // $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 1);
             // if(count($objModulosObservados)>0){
@@ -2483,7 +2527,7 @@ class TramiteController extends Controller {
 
         // TECNICO AUXILIAR
         if($nivelId == 2){
-            $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 1);
+            $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 1, $mallaNueva);
             // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
             // $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 1);
             // if(count($objModulosObservados)>0){
