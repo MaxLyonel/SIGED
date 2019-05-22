@@ -282,12 +282,13 @@ class FlujoUsuariosController extends Controller
                 join lugar_tipo lt on wfu.lugar_tipo_id=lt.id
                 join lugar_nivel_tipo ln on lt.lugar_nivel_id=ln.id
                 join persona p on u.persona_id=p.id
-                where wfu.esactivo is true and not wfu.id=". $id ." and wfu.flujo_proceso_id=". $wfusuario->getFlujoProceso()->getId() ."  order by lt.lugar,p.nombre");
+                where wfu.esactivo is true and not wfu.id=". $id ." and wfu.flujo_proceso_id=". $wfusuario->getFlujoProceso()->getId() ." and lt.id=". $wfusuario->getLugarTipoId() ."  order by lt.lugar,p.nombre");
             $query->execute();
             $wfu = $query->fetchAll();
             //dump($wfu);die;
             if(!$wfu){
-                $mensaje = 'No se puede derivar los tramites, pues no existe otro usuario asignado a la tarea: '.$wfusuario->getFlujoProceso()->getProceso()->getProcesoTipo().'.</br>Primero ASIGNE UN NUEVO usuario para esta tarea.';
+                $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->find($wfusuario->getLugarTipoId())->getLugar();
+                $mensaje = 'No se puede derivar los tramites, pues no existe otro usuario asignado a la tarea: <b>'.$wfusuario->getFlujoProceso()->getProceso()->getProcesoTipo().'</b> de la jurisdicción: <b>'. $lugar .'</b>.</br>Primero <b>ASIGNE UN NUEVO</b> usuario para esta tarea.';
                 $response = new JsonResponse();
                 return $response->setData(array('msg' => $mensaje));
             }else{
