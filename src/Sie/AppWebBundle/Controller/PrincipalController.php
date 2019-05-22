@@ -168,10 +168,18 @@ class PrincipalController extends Controller {
 
      // this is fot the RUDE Operativo
     private function formOperativoRude($data,$objTypeOfUE){
-      return $this->createFormBuilder()
+        $arrData = json_decode($data,true);
+
+       $form = $this->createFormBuilder()
             ->add('data', 'hidden', array('data'=>$data))
             ->add('downOperativoRude','button',array('label'=>'Generar Archivo RUDE', 'attr'=>array('class'=>'btn btn-inverse btn-warning btn-stroke text-center btn-block', 'onclick'=> 'downOperativoRudeup()') ))
-            ->getForm();
+            ->add('gestion', 'hidden', array('data' => $this->sesion->get('currentyear')))
+            ;
+        $sieValue = ($arrData['id']>0)?$arrData['id']:'';
+        $sieType = ($arrData['id']>0)?true:false;
+        $form = $form->add('sie', 'text', array('label' => 'SIE', 'attr' => array('maxlength' => 8, 'class' => 'form-control','placeholder'=>'Introduzca SIE', 'value'=>$sieValue, 'readonly'=>$sieType)));
+        $form = $form->getForm();    
+        return $form;
 
     }
 
