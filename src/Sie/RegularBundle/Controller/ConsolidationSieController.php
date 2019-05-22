@@ -309,7 +309,8 @@ class ConsolidationSieController extends Controller {
 
                 //get the content of file
                 $fileInfoContent = file($dirtmp . '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 2]);
-                
+                $fileInfoContent2 = file_get_contents($dirtmp . '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 2]);
+
                 //validate the full descompresition with the SieTypeFile from begin to the end
                 if ((strcmp(preg_replace('/\s+/', '', $fileInfoContent[0]), preg_replace('/\s+/', '', $fileInfoContent[sizeof($fileInfoContent) - 1]))) !== 0) {
                     $session->getFlashBag()->add('warningcons', 'El archivo ' . $originalName . ' tiene fallas en el contenido');
@@ -497,8 +498,25 @@ class ConsolidationSieController extends Controller {
 */
 
                 //move the file on the new local path
-                rename($dirtmp . '/' . $originalName, $periodoDir . '/' . $originalName);
-                rename($dirtmp . '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 2], $periodoDir . '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 2]);
+                // check if the file exists to move it
+                if(is_readable($dirtmp . '/' . $originalName) && is_readable($periodoDir)){
+                  rename($dirtmp . '/' . $originalName, $periodoDir . '/' . $originalName);  
+                }else{
+                    $session->getFlashBag()->add('warningcons', 'Problemas al intenar subir el archivo emp');
+                    system('rm -fr ' . $dirtmp);
+                    return $this->redirect($this->generateUrl('consolidation_sie_web'));
+                }
+
+                if(is_readable($dirtmp . '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 2]) && is_readable($periodoDir)){
+                  rename($dirtmp . '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 2], $periodoDir . '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 2]);
+                  // put the user owner on the file                 
+                  // system('chown root:root '. $periodoDir . '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 2]);
+                }else{
+                    $session->getFlashBag()->add('warningcons', 'Problemas al intenar subir el archivo');
+                    system('rm -fr ' . $dirtmp);
+                    return $this->redirect($this->generateUrl('consolidation_sie_web'));                  
+                }
+                
                 // todo the save record on the db if not exists
                 if (!$objUploadFile) {
                     $objUploadFileNew = new UploadFileControl();
