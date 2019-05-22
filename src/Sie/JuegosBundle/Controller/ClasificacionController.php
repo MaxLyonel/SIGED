@@ -1058,7 +1058,7 @@ class ClasificacionController extends Controller {
                     foreach ($objDeportistasFase as $inscrito) {
                         $inscritoId = (int)$inscrito['eInsJueId'];
                         $inscritoPosicion = (int)$inscrito['posicion'];
-                        //$inscritoEquipoId = (int)$inscrito['equipoId'];
+                        $inscritoEquipoId = (int)$inscrito['equipoId'];
                         if($pruebaId == 89 or $pruebaId == 90){
                             $inscritoEquipoId = (int)$inscrito['ue'];
                         } else {
@@ -1139,28 +1139,28 @@ class ClasificacionController extends Controller {
         $gestionActual = date_format($fechaActual,'Y');
         // $gestionActual = 2018;
 
-        $em = $this->getDoctrine()->getManager();src/Sie/JuegosBundle/Controller/ClasificacionController.php
+        $em = $this->getDoctrine()->getManager();
         //get grado
         $apruebas = array();
         $ainscritos = array();
-        $entity = $em->getRepository('SieAppWebBusrc/Sie/JuegosBundle/Controller/ClasificacionController.php
-        $query = $entity->createQueryBuilder('pt'src/Sie/JuegosBundle/Controller/ClasificacionController.php
-                ->innerJoin('SieAppWebBundle:Discsrc/Sie/JuegosBundle/Controller/ClasificacionController.php
-                ->innerJoin('SieAppWebBundle:Genesrc/Sie/JuegosBundle/Controller/ClasificacionController.php
+        $entity = $em->getRepository('SieAppWebBundle:PruebaTipo');
+        $query = $entity->createQueryBuilder('pt')
+                ->innerJoin('SieAppWebBundle:DisciplinaTipo', 'dt', 'WITH', 'dt.id = pt.disciplinaTipo')
+                ->innerJoin('SieAppWebBundle:GeneroTipo', 'gt', 'WITH', 'gt.id = pt.generoTipo')
                 ->where('dt.id = :disciplinaId')
                 ->andWhere('gt.id = :generoId')
-                ->setParameter('disciplinaId', $dsrc/Sie/JuegosBundle/Controller/ClasificacionController.php
-                ->setParameter('generoId', $genersrc/Sie/JuegosBundle/Controller/ClasificacionController.php
+                ->setParameter('disciplinaId', $disciplina)
+                ->setParameter('generoId', $genero)
                 ->distinct()
                 ->orderBy('pt.prueba', 'ASC')
                 ->getQuery();
         $aPruebas = $query->getResult();
         foreach ($aPruebas as $prueba) {
-            $apruebas[$prueba->getId()] = $pruebasrc/Sie/JuegosBundle/Controller/ClasificacionController.php
+            $apruebas[$prueba->getId()] = $prueba->getPrueba();
         }
 
         if (count($apruebas) > 0){
-            $aprueba01 = array_keys($apruebas)[0]src/Sie/JuegosBundle/Controller/ClasificacionController.php
+            $aprueba01 = array_keys($apruebas)[0];
         } else {
             $aprueba01 = 0;
         }
