@@ -1450,7 +1450,6 @@ class Notas{
                 $inicio = 6;
                 $fin = 8;
             }
-            $fechaEtapasArray = array();
 
             foreach ($asignaturas as $a) {
                 $notasArray[$cont] = array('areaId'=>$a['id'],'area'=>$a['area'],'idAsignatura'=>$a['asignaturaId'],'asignatura'=>$a['asignatura']);
@@ -1617,7 +1616,12 @@ class Notas{
                 }
             }
 
-            $estadosPermitidos = array(0,4,5,70,71,72,73,47);
+            if($gestion < 2019){
+                $estadosPermitidos = array(0,4,5,70,71,72,73,47);    
+            }else{
+                $estadosPermitidos = array(0,4,5,79,6,10);
+            }
+            
 			// Tipos de notas
             if (($discapacidad == 3 or $discapacidad == 5 or $discapacidad == 7) and $gestion > 2018){
                 $tiposNotas = $this->em->getRepository('SieAppWebBundle:NotaEspecialTipo')->findById(array(1,2,4));
@@ -1647,7 +1651,6 @@ class Notas{
                 'estadosPermitidos' =>$estadosPermitidos,
                 'tiposNotas'        =>$tiposNotasArray,
                 'estadosFinales'    =>$estadosFinales,
-                'fechaEtapas'       =>$fechaEtapasArray
             );
 
         } catch (Exception $e) {

@@ -41,24 +41,10 @@
                                 {% for i in 1..notas.operativo %}
                                     {% if i < 5  %}
                                         <td>
-                                            
-                                                <label for="fechaEtapas" class="col-sm-2">Fechas:</label>
-                                                <div class="col-sm-7">
-                                                    <input type="text" id="fechaEtapas" placeholder= "{{ "now"|date("d/m/Y") }}-{{ "now"|date("d/m/Y") }}"class="form-control noedit fecha" name="fechaEtapas[{{i}}]" value={% if notas.fechaEtapas and notas.fechaEtapas[i] is defined  %} "{{notas.fechaEtapas[i].fechaEtapa}}" disabled {% else %} "" {% endif %} autocomplete="off" required ></br>
-                                                </div>
-
-                                            {# <div class="row">
-                                                <label for="fechainicio" class="col-sm-2">Fechas:</label>
-                                                <div class="col-sm-7">
-                                                    <input type="text" id="fechainicio" placeholder="dia/mes/año"class="form-control noedit fecha" name="fechaInicio[{{i}}]" value={% if notas.fechaEtapas and notas.fechaEtapas[i] is defined  %} "{{notas.fechaEtapas[i].fechainicio}}" disabled {% else %} "" {% endif %} data-date-format="dd-mm-yyyy" autocomplete="off" required ></br>
-                                                </div>
-                                            </div>    #} 
-                                            {# <div class="row">
-                                                <label for="fechafin" class="col-sm-1">Al:</label>
-                                                <div class="col-sm-6">
-                                                    <input type="text" id="fechafin" placeholder="dia/mes/año" class="form-control noedit fecha" name="fechaFin[{{i}}]" value={% if notas.fechaEtapas and notas.fechaEtapas[i] is defined %} "{{notas.fechaEtapas[i].fechafin}}" disabled {% else %} "" {% endif %} data-date-format="dd-mm-yyyy" autocomplete="off" required >
-                                                </div>
-                                            </div>  #}
+                                            <label for="fechaEtapas" class="col-sm-2">Fechas:</label>
+                                            <div class="col-sm-7">
+                                                <input type="text" id="fechaEtapas" placeholder= "{{ "now"|date("d/m/Y") }}-{{ "now"|date("d/m/Y") }}"class="form-control noedit fecha" name="fechaEtapas[{{i}}]" value={% if notas.fechaEtapas and notas.fechaEtapas[i] is defined  %} "{{notas.fechaEtapas[i].fechaEtapa}}" disabled {% else %} "" {% endif %} autocomplete="off" required ></br>
+                                            </div>
                                         </td>
                                     {% else %}
                                         {% if notas.nivel != 11 %}

@@ -94,14 +94,14 @@
 
                                 <td>
                                     {# {% if 1==1 %} #}
-                                    {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and arrDataLibreta.areaEspecialId in [1,2,3,4,5,6,7] and arrDataLibreta.nivelId not in [405] %}
+                                    {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and arrDataLibreta.calificaciones == true and operativo > 0 %}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
                                         <button type="button" class="btn btn-circle btn-danger " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{data.estInsEspId}});" >
                                             <i class="fa fa-list"></i>
                                         </button>
                                     </div>
                                     {% endif %}
-                                    {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and arrDataLibreta.areaEspecialId in [1,2,3,5] and  operativo > 0 and gestion >= 2019 and arrDataLibreta.calificaciones == true %}
+                                    {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and operativo > 0 and arrDataLibreta.libreta == true %}
                                         {% if arrDataLibreta.areaEspecialId == 2 %}
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Imprimir Libreta">
                                                 <button type="button" class="btn btn-circle btn-lilac " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getLibretasVisual('{{infoUe}}', '{{data|json_encode()}}');" >

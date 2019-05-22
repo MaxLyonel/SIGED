@@ -382,7 +382,7 @@ class CreacionCursosEspecialController extends Controller {
 //                     'especialServicioTipo'=>$form['servicio'],
 //             		'especialNivelTecnicoTipo'=>$form['nivelTecnico'],
 //             		'especialTecnicaEspecialidadTipo'=>$form['tecnica']));
-
+            //dump($form);die;
             if($curso){
                 $this->get('session')->getFlashBag()->add('newCursoError', 'No se pudo crear el curso, ya existe un curso con las mismas características.');
                 return $this->redirect($this->generateUrl('creacioncursos_especial',array('op'=>'result')));
@@ -394,7 +394,7 @@ class CreacionCursosEspecialController extends Controller {
                 */
                 $lugar = "";
                 if (isset($form['educacionCasa']) and $form['educacionCasa'] == 1){
-                    $modalidad = 1;
+                    //$modalidad = 1;
                     if(isset($form['multiple']) and $form['multiple'] != 'Otro'){
                         $lugar="EDUCACION EN CASA" . '-' . $form['multiple'];
                     }elseif(isset($form['fisicoMotor']) and $form['fisicoMotor'] != 'Otro'){
@@ -402,8 +402,8 @@ class CreacionCursosEspecialController extends Controller {
                     }else {
                         $lugar="EDUCACION EN CASA";
                     }
-                    
-                }elseif($form['area'] == 1 and ($form['programa'] == 13 or $form['servicio'] == 20)){
+                }   
+                /* }elseif($form['area'] == 1 and ($form['programa'] == 13 or $form['servicio'] == 20)){
                     $modalidad = 2;
                 }elseif($form['area'] == 2 and ($form['programa'] == 10 or $form['servicio'] == 21)){
                     $modalidad = 2;
@@ -415,7 +415,8 @@ class CreacionCursosEspecialController extends Controller {
                     $modalidad = 2;
                 }else{
                     $modalidad = 1;
-                }
+                } */
+                $modalidad = $form['modalidad'];
                 if (isset($form['multiple']) && $form['area'] == 5 && !isset($form['educacionCasa'])){
                     if($form['multiple'] != 'Otro'){
                         $lugar=$form['multiple'];
@@ -565,7 +566,7 @@ class CreacionCursosEspecialController extends Controller {
             if($modalidad == 1){
                 $nivelesArray = array(405,410,411);
             }else{
-                $nivelesArray = array(410);
+                $nivelesArray = array(410,411);
             }
     		$query = $em->createQuery(
     				'SELECT n.id, n.nivel FROM SieAppWebBundle:NivelTipo n
@@ -797,10 +798,14 @@ class CreacionCursosEspecialController extends Controller {
             }
         }
     	elseif ($area == "2" and $nivel == "411" and  $grado == "99" ) {
-            if($modalidad == 1){
-                $nivelesArray = array(7,8,9,11,12,14,15,16);
+            if ($this->session->get('idGestion') < 2019) {
+                $nivelesArray = array(7,8,9,10,11,12,14,15,16);
             }else{
-                $nivelesArray = array(10);
+                if($modalidad == 1){
+                    $nivelesArray = array(7,8,9,12,14,15,16);
+                }else{
+                    $nivelesArray = array(10);
+                }
             }
     		$query = $em->createQuery(
     				'SELECT p.id, p.programa FROM SieAppWebBundle:EspecialProgramaTipo p

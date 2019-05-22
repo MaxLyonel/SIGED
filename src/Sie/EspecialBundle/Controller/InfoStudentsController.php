@@ -168,11 +168,18 @@ class InfoStudentsController extends Controller {
       $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
       $nivelesLibreta = array(401,402,403,404);
       $programasLibreta = array(7,8,9,12,14,15);
-      
-      if(in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
+      if($gestion >2018 and $nivel <> 405){
+        $arrDataLibreta['calificaciones'] = true;
+      }elseif(in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
         $arrDataLibreta['calificaciones'] = true;
       }else{
         $arrDataLibreta['calificaciones'] = false;
+      }
+      
+      if((in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))) and $gestion>2018){
+        $arrDataLibreta['libreta'] = true;
+      }else{
+        $arrDataLibreta['libreta'] = false;
       }
       
       // $UePlenasAddSpeciality = (in_array($sie, $arrUePlenasAddSpeciality))?true:false;
@@ -395,11 +402,18 @@ class InfoStudentsController extends Controller {
       $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
       $nivelesLibreta = array(401,402,403,404);
       $programasLibreta = array(7,8,9,12,14,15);
-      
-      if(in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
+      if($gestion >2018 and $nivel <> 405){
+        $arrDataLibreta['calificaciones'] = true;
+      }elseif(in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
         $arrDataLibreta['calificaciones'] = true;
       }else{
         $arrDataLibreta['calificaciones'] = false;
+      }
+      
+      if((in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))) and $gestion>2018){
+        $arrDataLibreta['libreta'] = true;
+      }else{
+        $arrDataLibreta['libreta'] = false;
       }
       //reload the students list
       $exist = true;
@@ -613,10 +627,18 @@ class InfoStudentsController extends Controller {
       $nivelesLibreta = array(401,402,403,404);
       $programasLibreta = array(7,8,9,12,14,15);
       
-      if(in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
+      if($gestion >2018 and $nivel <> 405){
+        $arrDataLibreta['calificaciones'] = true;
+      }elseif(in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
         $arrDataLibreta['calificaciones'] = true;
       }else{
         $arrDataLibreta['calificaciones'] = false;
+      }
+      
+      if((in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))) and $gestion>2018){
+        $arrDataLibreta['libreta'] = true;
+      }else{
+        $arrDataLibreta['libreta'] = false;
       }
       // Para el centralizador
       $itemsUe = $aInfoUeducativa['ueducativaInfo']['nivel'].",".$aInfoUeducativa['ueducativaInfo']['grado'].",".$aInfoUeducativa['ueducativaInfo']['paralelo'];

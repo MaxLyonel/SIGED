@@ -48,26 +48,27 @@
 						{% endif %}
 					    {# {% include 'SieAppWebBundle:Services/Notas:'~ template ~'.html.twig' with {'notas':notas, 'vista':vista} %} #}
 						{% include 'SieAppWebBundle:Services/Notas:'~ template ~'.html.twig' with { 'notas':notas, 'vista':vista, 'discapacidad':discapacidad } %}
-
-						{% if (operativo >= 4 and notas.estadoMatricula in notas.estadosPermitidos and notas.cuantitativas|length > 0 and actualizar == false) or (notas.gestion < notas.gestionActual and notas.tipoNota == 'Trimestral' and discapacidad != 1) or (notas.gestion < notas.gestionActual and discapacidad == 1 and notas.nivel in [1,11,403]) and notas.cuantitativas|length > 0 %}
-							<table class="table table-condensed table-bordered" style="background:#8AE5B6">
-								<tr>
-									<th style="vertical-align:middle; text-align:center">Actualizar estado de matrícula</th>
-									<td>
-										<select name="nuevoEstadomatricula" id="" class="form-control" required="required">
-											<option value="">Seleccionar...</option>
-											{% for em in estadosMatricula %}
-												{% if notas.estadoMatricula == em.id %}
-													{% set selected = 'selected' %}
-												{% else %}
-													{% set selected = '' %}
-												{% endif %}
-												<option value="{{em.id}}" {{selected}} >{{em.estadomatricula}}</option>
-											{% endfor %}
-										</select>
-									</td>
-								</tr>
-							</table>
+						{% if discapacidad != 2 or  (discapacidad == 2 and notas.gestion  < 2019)%}
+							{% if (operativo >= 4 and notas.estadoMatricula in notas.estadosPermitidos and notas.cuantitativas|length > 0 and actualizar == false) or (notas.gestion < notas.gestionActual and notas.tipoNota == 'Trimestral' and discapacidad != 1) or (notas.gestion < notas.gestionActual and discapacidad == 1 and notas.nivel in [1,11,403]) and notas.cuantitativas|length > 0 %}
+								<table class="table table-condensed table-bordered" style="background:#8AE5B6">
+									<tr>
+										<th style="vertical-align:middle; text-align:center">Actualizar estado de matrícula</th>
+										<td>
+											<select name="nuevoEstadomatricula" id="" class="form-control" required="required">
+												<option value="">Seleccionar...</option>
+												{% for em in estadosMatricula %}
+													{% if notas.estadoMatricula == em.id %}
+														{% set selected = 'selected' %}
+													{% else %}
+														{% set selected = '' %}
+													{% endif %}
+													<option value="{{em.id}}" {{selected}} >{{em.estadomatricula}}</option>
+												{% endfor %}
+											</select>
+										</td>
+									</tr>
+								</table>
+							{% endif %}
 						{% endif %}
 					</div>
 	            </div>
