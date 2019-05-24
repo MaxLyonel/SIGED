@@ -470,7 +470,9 @@ class SolicitudBTHController extends Controller {
                     if($uDestinatario){
                         $id_usuario = $uDestinatario[0]['id'];
                     }else{
-                        return false;
+                        $mensaje="Verificar si el Director de la Unidad Educativa es vigente";
+                        return  new JsonResponse(array('estado' => 4, 'msg' => $mensaje));
+
                     }
                    // dump($uid);die;
                     /**
