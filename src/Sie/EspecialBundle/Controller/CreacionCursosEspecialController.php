@@ -392,8 +392,9 @@ class CreacionCursosEspecialController extends Controller {
                 INDIRECTA = 2
                 LUGAR = EDUCACION EN CASA
                 */
+                //dump($form['educacionCasa']);die;
                 $lugar = "";
-                if (isset($form['educacionCasa']) and $form['educacionCasa'] == 1){
+                if (isset($form['educacionCasa']) and ($form['educacionCasa'] == 1 or $form['educacionCasa']==true) ){
                     //$modalidad = 1;
                     if(isset($form['multiple']) and $form['multiple'] != 'Otro'){
                         $lugar="EDUCACION EN CASA" . '-' . $form['multiple'];
@@ -402,6 +403,7 @@ class CreacionCursosEspecialController extends Controller {
                     }else {
                         $lugar="EDUCACION EN CASA";
                     }
+                    //dump($lugar);die;
                 }   
                 /* }elseif($form['area'] == 1 and ($form['programa'] == 13 or $form['servicio'] == 20)){
                     $modalidad = 2;

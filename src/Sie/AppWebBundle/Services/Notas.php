@@ -1687,9 +1687,9 @@ class Notas{
                                 ->setParameter('idInscripcion',$idInscripcion)
                                 ->getQuery()
                                 ->getResult();
-
+                                
             $cursoOferta = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBy(array('insitucioneducativaCurso'=>$inscripcion->getInstitucioneducativaCurso()->getId()));
-
+            //dump($cursoOferta);die;
             $arrayAsignaturasEstudiante = array();
             foreach ($asignaturas as $a) {
                 $arrayAsignaturasEstudiante[] = $a['asignaturaId'];
@@ -1807,58 +1807,61 @@ class Notas{
                                 ->setParameter('idInscripcion',$idEstudianteInscripcion)
                                 ->getQuery()
                                 ->getResult();
-            //  dump($asignaturasC,$asignaturas);die;
-            foreach ($asignaturasC as $key=>$a) {
-                //dump($asignaturas,$a,$key);die;
-                $notasArray[$cont] = array('areaId'=>$a['id'],'area'=>$a['area'],'idAsignatura'=>$a['asignaturaId'],'asignatura'=>$a['asignatura']);
-
-                $asignaturasNotas = $this->em->createQueryBuilder()
-                                    ->select('en.id as idNota, nt.id as idNotaTipo, nt.notaTipo, ea.id as idEstudianteAsignatura, en.notaCuantitativa, en.notaCualitativa, at.id')
-                                    ->from('SieAppWebBundle:EstudianteNota','en')
-                                    ->innerJoin('SieAppWebBundle:EstudianteAsignatura','ea','WITH','en.estudianteAsignatura = ea.id')
-                                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
-                                    ->innerJoin('SieAppWebBundle:AsignaturaTipo','at','WITH','ieco.asignaturaTipo = at.id')
-                                    ->innerJoin('SieAppWebBundle:NotaTipo','nt','with','en.notaTipo = nt.id')
-                                    ->orderBy('nt.id','ASC')
-                                    ->where('ea.id = :estAsigId')
-                                    ->andWhere('en.notaTipo = :nt')
-                                    ->setParameter('estAsigId',$a['estAsigId'])
-                                    ->setParameter('nt',$etapasArray[0]['idNotaTipo'])
-                                    ->getQuery()
-                                    ->getResult();
-                //dump($asignaturasC,$asignaturasNotas);die;
-                for($i=$inicio;$i<=$fin;$i++){
-                    $existe = 'no';
-                    foreach ($asignaturasNotas as $an) {
-						$valorNota = $an['notaCualitativa'];
-                        if($etapasArray[$i]['idNotaTipo'] == $an['idNotaTipo']){
-                            $notasArray[$cont]['notas'][] =   array(
-                                    'id'=>$cont."-".$etapasArray[$i]['idNotaTipo'],
-                                    'idEstudianteNota'=>$an['idNota'],
-                                    'nota'=>json_decode($valorNota,true),
-                                    'idNotaTipo'=>$an['idNotaTipo'],
-                                    'idEstudianteAsignatura'=>$an['idEstudianteAsignatura']
-                                );
-                            $existe = 'si';
-                            break;
+            //dump($asignaturasC,$asignaturas);die;
+            if($asignaturas){
+                foreach ($asignaturasC as $key=>$a) {
+                    //dump($asignaturas,$a,$key);die;
+                    $notasArray[$cont] = array('areaId'=>$a['id'],'area'=>$a['area'],'idAsignatura'=>$a['asignaturaId'],'asignatura'=>$a['asignatura']);
+    
+                    $asignaturasNotas = $this->em->createQueryBuilder()
+                                        ->select('en.id as idNota, nt.id as idNotaTipo, nt.notaTipo, ea.id as idEstudianteAsignatura, en.notaCuantitativa, en.notaCualitativa, at.id')
+                                        ->from('SieAppWebBundle:EstudianteNota','en')
+                                        ->innerJoin('SieAppWebBundle:EstudianteAsignatura','ea','WITH','en.estudianteAsignatura = ea.id')
+                                        ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
+                                        ->innerJoin('SieAppWebBundle:AsignaturaTipo','at','WITH','ieco.asignaturaTipo = at.id')
+                                        ->innerJoin('SieAppWebBundle:NotaTipo','nt','with','en.notaTipo = nt.id')
+                                        ->orderBy('nt.id','ASC')
+                                        ->where('ea.id = :estAsigId')
+                                        ->andWhere('en.notaTipo = :nt')
+                                        ->setParameter('estAsigId',$a['estAsigId'])
+                                        ->setParameter('nt',$etapasArray[0]['idNotaTipo'])
+                                        ->getQuery()
+                                        ->getResult();
+                    //dump($asignaturasC,$asignaturasNotas);die;
+                    for($i=$inicio;$i<=$fin;$i++){
+                        $existe = 'no';
+                        foreach ($asignaturasNotas as $an) {
+                            $valorNota = $an['notaCualitativa'];
+                            if($etapasArray[$i]['idNotaTipo'] == $an['idNotaTipo']){
+                                $notasArray[$cont]['notas'][] =   array(
+                                        'id'=>$cont."-".$etapasArray[$i]['idNotaTipo'],
+                                        'idEstudianteNota'=>$an['idNota'],
+                                        'nota'=>json_decode($valorNota,true),
+                                        'idNotaTipo'=>$an['idNotaTipo'],
+                                        'idEstudianteAsignatura'=>$an['idEstudianteAsignatura']
+                                    );
+                                $existe = 'si';
+                                break;
+                            }
+    
                         }
-
+                        //dump($notasArray);die;
+                        if($existe == 'no'){
+                            $valorNota = '';
+                            $notasArray[$cont]['notas'][] =   array(
+                                                        'id'=>$cont."-".$etapasArray[$i]['idNotaTipo'],
+                                                        'idEstudianteNota'=>'nuevo',
+                                                        'nota'=>$valorNota,
+                                                        'idNotaTipo'=>$etapasArray[$i]['idNotaTipo'],
+                                                        'idEstudianteAsignatura'=>$asignaturas[$key]['estAsigId']
+                                                    );
+                        }
                     }
-                    //dump($notasArray);die;
-                    if($existe == 'no'){
-                        $valorNota = '';
-                        $notasArray[$cont]['notas'][] =   array(
-                                                    'id'=>$cont."-".$etapasArray[$i]['idNotaTipo'],
-                                                    'idEstudianteNota'=>'nuevo',
-                                                    'nota'=>$valorNota,
-                                                    'idNotaTipo'=>$etapasArray[$i]['idNotaTipo'],
-                                                    'idEstudianteAsignatura'=>$asignaturas[$key]['estAsigId']
-                                                );
-                    }
-                }
-                
-                $cont++;
+                    
+                    $cont++;
+                }    
             }
+            
             //dump($notasArray);die;
             $areas = array();
             $areas = $notasArray;
@@ -1893,7 +1896,8 @@ class Notas{
                 }
             }
 
-            $estadosPermitidos = array(0,4,5,70,71,72,73,47);
+            $estadosPermitidos = array(0,4,5,70,71,72,73,47,78,79,80);
+            //dump($areas);die;
 
 			// Tipos de notas
             $tiposNotas = $this->em->getRepository('SieAppWebBundle:NotaEspecialTipo')->findById(array(1,2,3,5));    
