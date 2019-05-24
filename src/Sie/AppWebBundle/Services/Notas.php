@@ -118,7 +118,6 @@ class Notas{
                 foreach ($cursoOferta as $co) {
                     if(!in_array($co->getAsignaturaTipo()->getId(), $arrayAsignaturasEstudiante)){
 
-                        $query = $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');")->execute();
                         // Si no existe la asignatura, registramos la asignatura para el maestro
                         $newEstAsig = new EstudianteAsignatura();
                         $newEstAsig->setGestionTipo($this->em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
@@ -295,9 +294,9 @@ class Notas{
                 
                 $nuevaArea = false;
                 foreach ($cursoOferta as $co) {
-                    if(!in_array($co->getAsignaturaTipo()->getId(), $arrayAsignaturasEstudiante)){
+                    // LA MATERIA TECNICA GENERAL Y ESPECILIZADA NO SE AGREGAN AUTOMATICAMENTE A TODOS LOS ESTUDIANTES A PARTIR DE LA GESTION 2019
+                    if(!in_array($co->getAsignaturaTipo()->getId(), $arrayAsignaturasEstudiante) and ($gestion < 2019 or ($gestion >= 2019 and $nivel == 13 and $grado >= 3 and $co->getAsignaturaTipo()->getId() != 1038 and $co->getAsignaturaTipo()->getId() != 1039))) {
 
-                        $query = $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');")->execute();
                         // Si no existe la asignatura, registramos la asignatura para el maestro
                         $newEstAsig = new EstudianteAsignatura();
                         $newEstAsig->setGestionTipo($this->em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));

@@ -53,6 +53,14 @@ services:
         calls:
             - [setServices, ["@sie_app_web.funciones","@notas"]]
 
+    areasEstudiante:
+        class: Sie\AppWebBundle\Services\AreasEstudiante
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
+            router: "@router"
+        calls:
+            - [setServices, ["@sie_app_web.funciones","@notas"]]
+
     login:
         class: Sie\AppWebBundle\Services\Login
         arguments:
