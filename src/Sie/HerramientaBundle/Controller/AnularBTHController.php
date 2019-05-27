@@ -67,7 +67,9 @@ class AnularBTHController extends Controller {
                         $flujo = $query->fetchAll();
                         $flujo_id = $flujo[0]['id'];
                         $tramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('institucioneducativa'=>$sie,'gestionId'=>$this->session->get('currentyear'),'flujoTipo'=>$flujo_id));
-                        if($tramite->getFechaFin() == null){
+
+                        //dump((int)$tramite_tipo->getId());die;
+                        if($tramite->getFechaFin() == null ){
                             return new JsonResponse(array('estado'=>3,
                                 'sie'=>$institucionEducativabth[0]['institucioneducativa_id'],
                                 'ue'=>$institucionEducativabth[0]['institucioneducativa'])
@@ -77,6 +79,7 @@ class AnularBTHController extends Controller {
                             $msg = "El trámte ya fue finalizado";
                             return new JsonResponse(array('estado' => $estado, 'msg' => $msg));
                         }
+
                     }
                     else{
                         $estado = 5;
@@ -113,7 +116,7 @@ class AnularBTHController extends Controller {
 
             $flujo_id = $this->obtieneflujo();
             $tramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('institucioneducativa'=>$sie,'gestionId'=>$this->session->get('currentyear'),'flujoTipo'=>$flujo_id));
-
+            $tramite_tipo = $tramite->getTramiteTipo();
             $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
             //dump($tramiteDetalle->getTramiteEstado()->getId());die;
             if($tramiteDetalle->getFlujoProceso()->getId() == 26 and $tramiteDetalle->getTramiteEstado()->getId() ==3 ){
@@ -123,43 +126,49 @@ class AnularBTHController extends Controller {
                 //dump("el tramite esta en la bandeja del distrito y esta recepcionado, debe hacer la devolucion a la Unidad Educativa" );die;
             }elseif(($tramiteDetalle->getFlujoProceso()->getId() == 26 and $tramiteDetalle->getTramiteEstado()->getId() == 4) or ($tramiteDetalle->getFlujoProceso()->getId() == 25 and $tramiteDetalle->getTramiteEstado()->getId() == 3) )
                 {
-
-                    if($tramite->getFechaFin() == null) {
-                        //1.- registrar en la tabla institucioneducativa_operativo_log para el resguardo
-                        $em = $this->getDoctrine()->getManager();
-                        $institucioneducativaOperativoLog = new InstitucioneducativaOperativoLog();
-                        $institucioneducativaOperativoLog->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(8));
-                        $institucioneducativaOperativoLog->setGestionTipoId($gestion);
-                        $institucioneducativaOperativoLog->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
-                        $institucioneducativaOperativoLog->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie));
-                        $institucioneducativaOperativoLog->setInstitucioneducativaSucursal(0);
-                        $institucioneducativaOperativoLog->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(0));
-                        $institucioneducativaOperativoLog->setDescripcion('Anulacion BTH - Habilitacion descarga IGM');
-                        $institucioneducativaOperativoLog->setEsexitoso('t');
-                        $institucioneducativaOperativoLog->setEsonline('t');
-                        $institucioneducativaOperativoLog->setUsuario($this->session->get('userId'));
-                        $institucioneducativaOperativoLog->setFechaRegistro(new \DateTime('now'));
-                        $institucioneducativaOperativoLog->setClienteDescripcion($_SERVER['HTTP_USER_AGENT']);
-                        $em->persist($institucioneducativaOperativoLog);
-                        $em->flush();
-                        //$em->getConnection()->commit();
-                        //2.- Eliminar el registro de la tabla institucioneducaivahumanisticotecnico
-                        $institucionBth = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array('institucioneducativaId' => $sie, 'gestionTipoId' => $this->session->get('currentyear')));
-                        if ($institucionBth){
-                            $em->remove($institucionBth);
+                    if((int)$tramite_tipo->getId() == 28){//sI ES DE TIPO RATIFICACION NO SE PUEDE ANULAR EL TRAMITE
+                        $estado = 3;////revisar
+                        $msg = "El trámite no puede ser anulado ya que es de tipo Ratificación.";
+                        return new JsonResponse(array('estado' => $estado, 'msg' => $msg));
+                    } else{
+                        if($tramite->getFechaFin() == null) {
+                            //1.- registrar en la tabla institucioneducativa_operativo_log para el resguardo
+                            $em = $this->getDoctrine()->getManager();
+                            $institucioneducativaOperativoLog = new InstitucioneducativaOperativoLog();
+                            $institucioneducativaOperativoLog->setInstitucioneducativaOperativoLogTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLogTipo')->find(8));
+                            $institucioneducativaOperativoLog->setGestionTipoId($gestion);
+                            $institucioneducativaOperativoLog->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find(1));
+                            $institucioneducativaOperativoLog->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie));
+                            $institucioneducativaOperativoLog->setInstitucioneducativaSucursal(0);
+                            $institucioneducativaOperativoLog->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(0));
+                            $institucioneducativaOperativoLog->setDescripcion('Anulacion BTH - Habilitacion descarga IGM');
+                            $institucioneducativaOperativoLog->setEsexitoso('t');
+                            $institucioneducativaOperativoLog->setEsonline('t');
+                            $institucioneducativaOperativoLog->setUsuario($this->session->get('userId'));
+                            $institucioneducativaOperativoLog->setFechaRegistro(new \DateTime('now'));
+                            $institucioneducativaOperativoLog->setClienteDescripcion($_SERVER['HTTP_USER_AGENT']);
+                            $em->persist($institucioneducativaOperativoLog);
                             $em->flush();
-                            $tramite->setFechaFin(new \DateTime('now'));
-                            $em->persist($tramite);
-                            $em->flush();
-                            $estado = 1;
-                            $msg = "Se finalizó el trámite de la Unidad Educativa " . $sie . "la cual No podrá realizar nuevamente su solucitud como BTH";
-                            return new JsonResponse(array('estado' => $estado, 'msg' => $msg));
-                        }
-                    }else{
+                            //$em->getConnection()->commit();
+                            //2.- Eliminar el registro de la tabla institucioneducaivahumanisticotecnico
+                            $institucionBth = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array('institucioneducativaId' => $sie, 'gestionTipoId' => $this->session->get('currentyear')));
+                            if ($institucionBth){
+                                $em->remove($institucionBth);
+                                $em->flush();
+                                $tramite->setFechaFin(new \DateTime('now'));
+                                $em->persist($tramite);
+                                $em->flush();
+                                $estado = 1;
+                                $msg = "Se finalizó el trámite de la Unidad Educativa " . $sie . "la cual No podrá realizar nuevamente su solucitud como BTH";
+                                return new JsonResponse(array('estado' => $estado, 'msg' => $msg));
+                            }
+                        }else{
                             $estado = 2;
                             $msg = "El trámte ya fue finalizado";
                             return new JsonResponse(array('estado' => $estado, 'msg' => $msg));
                         }
+                    }
+
 
                 }else if ($tramiteDetalle->getFlujoProceso()->getId() == 30 and $tramiteDetalle->getTramiteEstado()->getId() ==4){
                     $msg = "El trámite esta es su bandeja de Recibidos como devuelto y aun no fue recepcionado.";
