@@ -435,6 +435,12 @@ class ConsolidationSieController extends Controller {
                 $yearDirToSave =  $aDataExtractFileUE[4];
                 if (!file_exists($yearDir)) {
                     mkdir($yearDir, 0770);
+                }else{
+                    if (!is_readable($yearDir)) {
+                        $session->getFlashBag()->add('warningcons', 'Problemas con permisos al intenar subir el archivo emp');
+                        system('rm -fr ' . $dirtmp);
+                        return $this->redirect($this->generateUrl('consolidation_sie_web'));   
+                    }
                 }
                 //create the distrito directory
                 $distritoDir = $yearDir . '/' . $aDataExtractFileUE[38];
@@ -442,6 +448,12 @@ class ConsolidationSieController extends Controller {
 
                 if (!file_exists($distritoDir)) {
                     mkdir($distritoDir, 0770);
+                }else{
+                    if (!is_readable($distritoDir)) {
+                        $session->getFlashBag()->add('warningcons', 'Problemas con permisos al intenar subir el archivo emp');
+                        system('rm -fr ' . $dirtmp);
+                        return $this->redirect($this->generateUrl('consolidation_sie_web'));   
+                    }
                 }
                 //create the cod UE directory
                 $unidadEducativaDir = $distritoDir . '/' . $aDataExtractFileUE[1];
@@ -449,6 +461,12 @@ class ConsolidationSieController extends Controller {
 
                 if (!file_exists($unidadEducativaDir)) {
                     mkdir($unidadEducativaDir, 0770);
+                }else{
+                    if (!is_readable($unidadEducativaDir)) {
+                        $session->getFlashBag()->add('warningcons', 'Problemas con permisos al intenar subir el archivo emp');
+                        system('rm -fr ' . $dirtmp);
+                        return $this->redirect($this->generateUrl('consolidation_sie_web'));   
+                    }
                 }
                 //create the sucursal directory
                 $periodoDir = $unidadEducativaDir . '/' . $aDataExtractFileUE[5];
@@ -456,6 +474,12 @@ class ConsolidationSieController extends Controller {
 
                 if (!file_exists($periodoDir)) {
                     mkdir($periodoDir, 0770);
+                }else{
+                    if (!is_readable($periodoDir)) {
+                        $session->getFlashBag()->add('warningcons', 'Problemas con permisos al intenar subir el archivo emp');
+                        system('rm -fr ' . $dirtmp);
+                        return $this->redirect($this->generateUrl('consolidation_sie_web'));   
+                    }
                 }
 // dump($periodoDirToSave. '/' . $aDataFileUnzip[sizeof($aDataFileUnzip) - 2]);
 // die;
