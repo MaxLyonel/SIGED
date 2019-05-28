@@ -1,0 +1,64 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Registro de especialidad del estudiante</h3>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse"><i class="fa fa-angle-up"></i></button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+
+            <form action="" id="formEspecialidad" onsubmit="saveEspecialidad(); return false">
+	            <div class="panel-body">
+					{% include 'SieHerramientaBundle:InfoEstudianteNotas:encabezadoNotas.html.twig' %}
+					
+					<div class="alert alert-warning">
+						<i class="fa fa-info-circle"></i> Debe registrar la especialidad del estudiante, para poder realizar el llenado de celificaciones.
+					</div>
+						
+					<div class="form-group">
+						<label class="col-md-3 text-right">Especialidad:</label>
+						<div class="col-md-9">
+							{{ form_widget(form.idieeht) }}
+						</div>
+					</div>
+					{{ form_widget(form) }}
+					
+	            </div>
+	            <div class="panel-footer text-right">
+	            	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+	            	<button type="submit" class="btn btn-primary">Registar especialidad</button>
+	            </div>
+			</form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	
+	function saveEspecialidad(){
+		var data = $('#formEspecialidad').serialize();
+		$.ajax({
+		    type: 'post',
+		    data: data,
+		    url: "{{ path('herramienta_infoEstudianteAreasEstudiante_especilidad_registrar') }}",
+		    beforeSend: function () {
+
+		    },
+		    success: function (data) {
+		        getNotas(data.infoUe, data.infoStudent, data.idInscripcion);
+		    },
+		    statusCode: {
+		        500: function () {
+		        	alert('Ocurrio un error al agregar la especialidad');
+		        },
+		        404: function () {
+
+		        }
+		    }
+		});
+	}
+</script>
