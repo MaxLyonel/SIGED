@@ -16,7 +16,10 @@
                     <div class="clearfix"></div>
                 </div><!-- /.panel-heading -->
                 <div class="panel-sub-heading">
-                    <div class="callout callout-info"><p>check the sie file</p></div>
+                    <div class="callout callout-info"><p>
+                        Resultado de la Busqueda:</br>
+                        <strong>Revise el listado para verificar el estado del archivo subido, los archivos Observado tienen que ser nuevamente subidos, para su respectiva consolidaci&oacute;n</strong> 
+                    </p></div>
                 </div><!-- /.panel-subheading -->
                 <div class="panel-body no-padding rounded-bottom">
 
@@ -36,6 +39,7 @@
                                     <th>Distrito</th>
                                     <th>Fecha Subida</th>
                                     <th>Estado</th>
+                                    <th>Opci&oacute;n</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -53,9 +57,11 @@
                                         <td data-title="F. Subida." class="text-center">{{ entity.dateUpload |date('d-m-Y') }}</td>
                                         {%if entity.estadoFile==1%}
                                             <td data-title="Estado" class='success' ><i class='fa fa-check-square-o'></i> Subido/En espera de consolidación</td>
+                                            <td data-title="Estado" class='success' ></td>
 
                                         {%else%}
-                                            <td data-title="Estado" class='danger'><i class='fa fa-exclamation-triangle'></i>Corrupto</td>
+                                            <td data-title="Estado" class='danger'><i class='fa fa-exclamation-triangle'></i>Archivo Observado</td>
+                                            <td data-title="Estado" class='danger'><a href="{{path('consolidation_sie_web')}}">Subir Archivo</a></td>
                                         {%endif%}
                                     </tr>
                                 {% endfor %}
