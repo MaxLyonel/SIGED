@@ -16,9 +16,9 @@
                     <div class="clearfix"></div>
                 </div><!-- /.panel-heading -->
                 <div class="panel-sub-heading">
-                    <div class="callout callout-info"><p>
-                        Resultado de la Busqueda:</br>
-                        <strong>Revise el listado para verificar el estado del archivo subido, los archivos Observado tienen que ser nuevamente subidos, para su respectiva consolidaci&oacute;n</strong> 
+                    <div class="callout callout-info">
+                        <p class="text"><strong>Resultado de la Busqueda:</br></strong> 
+                        Revise el listado para verificar el estado del archivo subido, los archivos Observado tienen que ser nuevamente subidos, para su respectiva consolidaci&oacute;n
                     </p></div>
                 </div><!-- /.panel-subheading -->
                 <div class="panel-body no-padding rounded-bottom">
@@ -61,7 +61,19 @@
 
                                         {%else%}
                                             <td data-title="Estado" class='danger'><i class='fa fa-exclamation-triangle'></i>Archivo Observado</td>
-                                            <td data-title="Estado" class='danger'><a href="{{path('consolidation_sie_web')}}">Subir Archivo</a></td>
+                                            <td data-title="Estado" class='danger'>
+                                                <form name="form" action="{{path('consolidation_sie_web')}}" method="post" class="tab-content form-horizontal" id="opensiefileIdForm" onsubmit="return true;" target="_blank">                      
+                                                        <div class="form-footer">
+                                                            <div class="pull-right">
+                                                                <button type="submit" id="form_find" name="form[find]" class="btn btn-xs btn-danger" >Subir Archivo</button>
+                                                            </div>
+                                                            <div class="clearfix"></div>
+                                                        </div><!-- /.form-footer -->
+                                                        <input type="hidden" id="form_sie" name="form[sie]" value="{{entity.id}}">
+                                                </form>
+
+
+                                            </td>
                                         {%endif%}
                                     </tr>
                                 {% endfor %}

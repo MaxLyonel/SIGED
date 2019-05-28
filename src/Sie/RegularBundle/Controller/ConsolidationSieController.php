@@ -30,20 +30,28 @@ class ConsolidationSieController extends Controller {
      * @return objeto form para la subida de archivo
      */
     public function indexAction(Request $request) {
+
         //$sesion = $request->getSession();
         $em = $this->getDoctrine()->getManager();
         $id_usuario = $this->session->get('userId');
+
+            
 
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $aAccess = array(5, 2, 9);
+        $aAccess = array(5, 2, 9, 8);
         if (in_array($this->session->get('roluser'), $aAccess)) {
             $institutionData = $this->intitucioneducativaData($this->session->get('personaId'), $this->session->get('currentyear'));
-            
-            $institutionData1 = $this->getDataUe($this->session->get('ie_id'));
+            //get the send data if controll up sie file
+            $form = $request->get('form');
+            if($form){
+                $institutionData1 = $this->getDataUe($form['sie']);
+            }else{
+                $institutionData1 = $this->getDataUe($this->session->get('ie_id'));
+            }           
             
             //verificar si es IE
             if ($institutionData1) {
