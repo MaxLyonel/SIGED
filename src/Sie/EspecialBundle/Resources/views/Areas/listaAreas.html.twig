@@ -53,9 +53,7 @@
         <div class="row">
             <div class="col-md-12s">
                 <div id="divAdicionMaestros" style="display:none">
-                    <div class="alert-info"><i class="fa fa-info-circle"></i>
-                        NOTA: Debe asignar el(los) maestro(s) a las áreas adicionadas.
-                    </div>
+                    <div id="maestro_msg"></div>
                     <div class="row" id="modalidadCasa" style="display: none">
                         <div class="col-md-5">
                             <div class="form-group">
@@ -115,9 +113,17 @@
 <script>
 
     $(function () {
+        setMessageMaestro('info', 'NOTA: Debe asignar el(los) maestro(s) a las áreas adicionadas.', false);
         $('.chosen-select').chosen({allow_single_deselect:false});
         $("#maestro_responsable").chosen({allow_single_deselect:false});
     });
+
+    function setMessageMaestro(tipo, mensaje, estado) {
+        $('#maestro_msg').html('<div class="alert-'+tipo+'"><i class="fa fa-info-circle"></i> '+mensaje+'</div>');
+        if (estado == true) {
+            setTimeout(function(){ $('#maestro_msg').html('<div class="alert-info"><i class="fa fa-info-circle"></i> NOTA: Debe asignar el(los) maestro(s) a las áreas adicionadas.</div>'); }, 2500);
+        }
+    }
 
     $('#wizard').bwizard();
     function cargarMaestro(control,curso){
@@ -158,10 +164,20 @@
                 success: function (data) {
                     $("#maestro_responsable").empty();
                     $("#maestro_responsable").append('<option value="" disabled selected>Seleccione...</option>');
-                    $.each(data.maestros, function (i, value) {
-                        $("#maestro_responsable").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                    $("#maestro_responsable").trigger("chosen:updated");
+                    if (data.msg == 'exito') {
+                        if (data.maestros.length > 0 || Object.keys(data.maestros).length > 0) {
+                            $.each(data.maestros, function (i, value) {
+                                $("#maestro_responsable").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $("#maestro_responsable").trigger("chosen:updated");
+                        } else {
+                            setMessageMaestro('warning', 'NOTA: El Centro de Educación Especial no cuenta con maestros responsables.', true);
+                        }
+                    } else if (data.msg == 'noinst') {
+                        setMessageMaestro('warning', 'NOTA: Código SIE incorrecto.', true);
+                    } else if (data.msg == 'nodist') {
+                        setMessageMaestro('warning', 'NOTA: Código SIE no corresponde al mismo distrito.', true);
+                    }
                 }
             });
         }
