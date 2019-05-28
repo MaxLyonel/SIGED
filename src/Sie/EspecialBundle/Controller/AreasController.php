@@ -1417,7 +1417,7 @@ class AreasController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $gestion = $this->session->get('idGestion');
         $institucioneducativa = $request->get('centro_educativo');
-        $maestrosArray = array();//Validar centro, distrito
+        $maestrosArray = array();
         $ieresult = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id'=>$institucioneducativa, 'institucioneducativaTipo'=>4));
         if ($ieresult) {
             $ieactual = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id'=>$this->session->get('ie_id'), 'institucioneducativaTipo'=>4));
