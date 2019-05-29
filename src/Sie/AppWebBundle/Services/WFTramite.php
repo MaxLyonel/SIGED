@@ -410,7 +410,7 @@ class WFTramite {
                 $uDestinatario = $query->fetchAll();
                 if($uDestinatario){
                     if(count($uDestinatario)>1){
-                        $uid = $this->asiganaUsuarioDestinatario($tarea_actual,$tarea_sig_id,$uDestinatario[0]['lugar_tipo_id']);
+                        $uid = $this->asignaUsuarioDestinatario($tarea_actual,$tarea_sig_id,$uDestinatario[0]['lugar_tipo_id']);
                     }else{
                         $uid = $uDestinatario[0]['usuario_id'];
                     }
@@ -428,7 +428,7 @@ class WFTramite {
                 if($uDestinatario){
                     //dump($uDestinatario);die;
                     if(count($uDestinatario)>1){
-                        $uid = $this->asiganaUsuarioDestinatario($tarea_actual,$tarea_sig_id,$uDestinatario[0]['lugar_tipo_id']);
+                        $uid = $this->asignaUsuarioDestinatario($tarea_actual,$tarea_sig_id,$uDestinatario[0]['lugar_tipo_id']);
                     }else{
                         $uid = $uDestinatario[0]['usuario_id'];
                     }   
@@ -459,7 +459,7 @@ class WFTramite {
                     if($uDestinatario){
                         //dump(count($uDestinatario));die;
                         if(count($uDestinatario)>1){
-                            $uid = $this->asiganaUsuarioDestinatario($tarea_actual,$tarea_sig_id,1);
+                            $uid = $this->asignaUsuarioDestinatario($tarea_actual,$tarea_sig_id,1);
                         }else{
                             $uid = $uDestinatario[0]['usuario_id'];
                         }

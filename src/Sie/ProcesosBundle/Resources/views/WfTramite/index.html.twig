@@ -5,13 +5,13 @@
 
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> Trámites <span>Nuevo Trámite</span></h2>
+        <h2><i class="fa fa-list-alt"></i> Trámites <span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
-                    <a href="#">Inicio</a>
+                    <a href="#">Trámites</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
             </ol>
@@ -88,7 +88,7 @@
                                                                 <tr>
                                                                     <th class="text-center" style="max-width: 5px">No.</th>
                                                                     <th>Trámite</th>
-                                                                    <th class="text-center" style="max-width: 20px">Nuevo Trámite</th>
+                                                                    <th class="text-center">Nuevo Trámite</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -98,7 +98,7 @@
                                                                             <strong>{{ loop.index }}</strong>
                                                                         </td>
                                                                         <td>{{ entity.flujo }}</td>
-                                                                        <td class="text-center" style="max-width: 20px">
+                                                                        <td class="text-center">
                                                                             <a href="{{ path('wf_tramite_nuevo', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Iniciar Trámite">
                                                                                 <i class="fa fa-pencil"></i>
                                                                             </a>
