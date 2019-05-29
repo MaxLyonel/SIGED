@@ -29,3 +29,8 @@ sie_procesos_tramite_rue:
 sie_procesos_flujousuarios:
     resource: "@SieProcesosBundle/Resources/config/routing/usuarios.yml"
     prefix:   /flujousuarios
+
+#modulo de tramites con flujos
+sie_procesos_wf_tramite:
+    resource: "@SieProcesosBundle/Resources/config/routing/wftramite.yml"
+    prefix:   /sie/tramite
