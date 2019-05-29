@@ -1,0 +1,98 @@
+{% extends "::layoutTramites.html.twig"%}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+    </style>
+{% endblock %}
+
+{% block contentBread %}
+    <ol class="breadcrumb">
+        <li>
+            <i class="fa fa-home"></i>
+            <a href="{{path('tramite_documento_firma_diploma_humanistico_autorizacion_lista')}}">Perfil</a>
+            <i class="fa fa-angle-right"></i>
+            <a href="#">Autorización Firma</a>
+        </li>
+        {% block contentSearchBread %}
+        {% endblock %}
+    </ol>
+{% endblock %}
+
+{% block contentoption %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table class="table table-issue-tracker table-middle table-info">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Departamento</th>
+                                <th>Tipo</th>
+                                <th>Persona</th>
+                                <th>Firma</th>
+                                <th>Fecha registro</th>
+                                <th>Editar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if firmas is defined  %}
+                                {% for detalle in firmas %}  
+                                    <tr>
+                                        <td>
+                                            {{ loop.index }}
+                                        </td>
+                                        <td>
+                                            {{ detalle.lugar }}
+                                        </td>
+                                        <td>
+                                            {{ detalle.tipo }}
+                                        </td>
+                                        <td>
+                                            {{ detalle.persona }}
+                                        </td>
+                                        <td>
+                                            <img style="display: block; width: 150px; height:150px;" src="data:image/png;base64,{{ detalle.firma }}" />
+                                        </td>
+                                        <td>
+                                            {{ detalle.fecha_registro|date('d/m/Y h:i') }}
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-form" onclick="firma('{{detalle.id|base64_encode}}');" >
+                                                <i class="fa fa-edit"></i> Cambiar Firma
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div><!-- /.panel-body -->
+            </div>
+        </div>
+    </div><!-- /.row -->
+    <div class="modal fade bs-example-modal-form" tabindex="-1" role="dialog" aria-hidden="true" id="modal">        
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var firma = function(firma){
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('tramite_documento_firma_modifica'),
+                data: {'firma':firma},
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                    success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+    
+                },
+            });        
+        };
+        $(window).load(function(){
+        });
+    </script>
+{% endblock %}
