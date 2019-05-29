@@ -1,0 +1,29 @@
+herramienta_infoEstudianteAreasEstudiante_index:
+    path:     /index
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteAreasEstudiante:index"}
+    options:
+         expose: true
+
+herramienta_infoEstudianteAreasEstudiante_new:
+    path:     /new
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteAreasEstudiante:new"}
+    options:
+         expose: true
+
+herramienta_infoEstudianteAreasEstudiante_delete:
+    path:     /delete
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteAreasEstudiante:delete"}
+    options:
+         expose: true
+
+herramienta_infoEstudianteAreasEstudiante_especilidad_verificar:
+    path:     /especialidad_verificar
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteAreasEstudiante:especialidadVerificar"}
+    options:
+         expose: true
+
+herramienta_infoEstudianteAreasEstudiante_especilidad_registrar:
+    path:     /especialidad_registrar
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteAreasEstudiante:especialidadRegistrar"}
+    options:
+         expose: true

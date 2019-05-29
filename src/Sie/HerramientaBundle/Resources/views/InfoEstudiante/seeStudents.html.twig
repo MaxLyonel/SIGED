@@ -175,6 +175,15 @@
                                     {% endif %}
                                 </td>
                                 <td>
+                                    {# AREAS ESTUDIANTE #}
+                                    {% if gestion >= 2019 and data.estadomatriculaId in [4] and nivel == 13 and grado >= 3 %}
+                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Areas estudiante">
+                                            <button type="button" class="btn btn-circle btn-warning" data-toggle="modal" data-target=".bs-example-modal-table" onclick="areasEstudiante('{{infoUe}}','{{jsnInfoStudent}}');" >
+                                                <i class="fa fa-bars"></i>
+                                            </button>
+                                        </div>
+                                    {% endif %}
+                                    
                                     {# RUDE #}
                                     {% if gestion >= 2018 and data.estadomatriculaId in [4,5] and false %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
@@ -205,11 +214,23 @@
                                     {# REGISTRO DE NOTAS #}
                                     {% if app.session.get('acceso_total') %}
                                         {% if data.estadomatriculaId == 4 or (data.estadomatriculaId in [5,11,55] and gestion == app.session.get('currentyear')) or app.session.get('ie_id') == '81981478'  or app.session.get('ie_id') == '81700043' or app.session.get('ie_id') == '80980175' or (data.estadomatriculaId == 55 and gestion < app.session.get('currentyear')) %}
-                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
-                                                <button type="button" class="btn btn-circle btn-danger " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}','{{jsnInfoStudent}}');" >
-                                                    <i class="fa fa-list"></i>
-                                                </button>
-                                            </div>
+                                            {# SE VALIDA LA ESPECIALIDAD PARA ESTUDIANTES DE 5 Y 6 DE SECUNDARIA #}
+                                            {% if gestion >= 2019 and nivel == 13 and grado >= 5 %}
+
+                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
+                                                    <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                        <i class="fa fa-list"></i>
+                                                    </button>
+                                                </div>
+                                            {% else %}
+                                                {# PARA TODAS LAS DEMAS GESTIONES #}
+                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
+                                                    <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                        <i class="fa fa-list"></i>
+                                                    </button>
+                                                </div>
+                                            {% endif %}
+
                                         {% endif %}
                                     {% endif %}
 
@@ -320,7 +341,7 @@
 {% endif %}
 
 <script>
-    var getNotas = function (infoUe, infoStudent) {
+    var getNotas = function (infoUe, infoStudent, idInscripcion) {
         $.ajax({
             type: 'post',
             data: ({infoUe: infoUe, infoStudent: infoStudent}),
@@ -331,6 +352,7 @@
             success: function (data) {
                 $('#modal').empty();
                 $('#modal').append(data);
+                $('#modal').modal('show');
             },
             statusCode: {
                 500: function () {
@@ -342,6 +364,35 @@
             }
         });
     };
+
+    var validarEspecialidad = function(infoUe, infoStudent,idInscripcion){
+        $.ajax({
+            type: 'post',
+            data: ({idInscripcion: idInscripcion, infoUe: infoUe, infoStudent: infoStudent }),
+            url: "{{ path('herramienta_infoEstudianteAreasEstudiante_especilidad_verificar') }}",
+            beforeSend: function () {
+                
+            },
+            success: function (data) {
+
+                if(typeof data === 'object'){
+                    getNotas(data.infoUe, data.infoStudent, data.idInscripcion);
+                }else{
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                    $('#modal').modal('show');
+                }
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    }
 
     var getCargaHorariaPlena = function (infoUe, infoStudent) {
         $.ajax({
@@ -678,6 +729,38 @@
       } else {
         return false;
       }
+    };
+
+    var areasEstudiante = function (infoUe, infoStudent) {
+
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: "{{ path('herramienta_infoEstudianteAreasEstudiante_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $('#modal').append('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="panel panel-tab panel-tab-double"><div class="panel-heading no-padding"><div style="height:50px; background:#E14031; color:#FFFFFF; margin-top:-10px;"><h4 style="padding:15px 0px 0px 10px; text-align:left">Adición y Eliminación de Áreas / Estudiante</h4></div></div><div class="panel-body no-padding" id="modal-body"><div style="text-align:center; color:#69A7E2; font-size:17px; padding:20px"><img src="{{asset("img/loading.gif")}}"><br>Cargando...</div></div></div></div></div>');
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+                $('#sandbox-container input').datepicker({
+                  autoclose: true,
+                  todayHighlight: true,
+                  format: 'dd-mm-yyyy',
+                  language: "es"
+                });
+                //$('#modal').modal({backdrop: 'static', keyboard: false})
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
     };
 
 </script>
