@@ -541,12 +541,15 @@ class ClasificacionController extends Controller {
         $arrIdInscription = array();
         $ainscritos = array();
 
-        //dump($infoDeporte);die;
         foreach ($objDeportistasFase as $inscrito) {
             $inscritoId = (int)$inscrito['eInsJueId'];
             $inscritoPosicion = (int)$inscrito['posicion'];
-            $inscritoEquipoId = (int)$inscrito['equipoId'];
-            $inscritoNombre = trim('PUESTO'.$inscritoPosicion.' - '.$inscrito['paterno'].' '.$inscrito['materno'].' '.$inscrito['nombre']);
+            if($pruebaId == 89 or $pruebaId == 90){
+                $inscritoEquipoId = (int)$inscrito['ue'];
+            } else {
+                $inscritoEquipoId = (int)$inscrito['equipoId'];
+            }
+            $inscritoNombre = trim('PUESTO '.$inscritoPosicion.' - '.$inscrito['paterno'].' '.$inscrito['materno'].' '.$inscrito['nombre']);
             $entrenadorNombre = trim($inscrito['paternoPersona'].' '.$inscrito['maternoPersona'].' '.$inscrito['nombrePersona']);
             if ($entrenadorNombre == "" or !isset($entrenadorNombre) or $entrenadorNombre == false){
                 $entrenadorNombre = "Registrar entrenador";
@@ -557,8 +560,9 @@ class ClasificacionController extends Controller {
         $arrIdInscription=array();
         $arrNewTeam = array();
         $entrenador = "";
+
         foreach ($ainscritos as $key => $value) {
-            if($key != 0 or $pruebaId == 89 or $pruebaId == 90){
+            if($key != 0 or $pruebaId == 89 or $pruebaId == 90){                
                 foreach ($value as $idinscription => $student) {
                     $arrIdInscription[]=$idinscription;
                     $jsonIdInscription = json_encode($arrIdInscription);
@@ -1055,7 +1059,12 @@ class ClasificacionController extends Controller {
                         $inscritoId = (int)$inscrito['eInsJueId'];
                         $inscritoPosicion = (int)$inscrito['posicion'];
                         $inscritoEquipoId = (int)$inscrito['equipoId'];
-                        $inscritoNombre = trim('PUESTO'.$inscritoPosicion.' - '.$inscrito['paterno'].' '.$inscrito['materno'].' '.$inscrito['nombre']);
+                        if($pruebaId == 89 or $pruebaId == 90){
+                            $inscritoEquipoId = (int)$inscrito['ue'];
+                        } else {
+                            $inscritoEquipoId = (int)$inscrito['equipoId'];
+                        }
+                        $inscritoNombre = trim('PUESTO '.$inscritoPosicion.' - '.$inscrito['paterno'].' '.$inscrito['materno'].' '.$inscrito['nombre']);
                         $entrenadorNombre = trim($inscrito['paternoPersona'].' '.$inscrito['maternoPersona'].' '.$inscrito['nombrePersona']);
                         if ($entrenadorNombre == "" or !isset($entrenadorNombre) or $entrenadorNombre == false){
                             $entrenadorNombre = "Registrar entrenador";

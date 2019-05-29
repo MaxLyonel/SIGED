@@ -371,6 +371,30 @@ class InstitucioneducativaRepository extends EntityRepository {
         ;
         return $qb->getQuery()->getResult();
     }
+
+    /*
+     * select *
+      from institucioneducativa i
+      left join upload_file_control uf on (i.id = uf.cod_ue)
+      where uf.distrito = '2085'
+     */
+
+    public function getFilesUploadByDistritoAndOperativo($data) {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb
+                ->select('i.id, i.institucioneducativa, uf.bimestre, uf.operativo,uf.estadoFile, uf.gestion, uf.distrito, uf.path, uf.dateUpload')
+                ->from('SieAppWebBundle:Institucioneducativa', 'i')
+                ->leftjoin('SieAppWebBundle:UploadFileControl', 'uf', 'WITH', 'i.id = uf.codUe')
+                ->where('uf.distrito = :id')
+                ->andwhere('uf.operativo = :operativo')
+                ->andwhere('uf.gestion = :gestion')
+                ->setParameter('id', $data['distrito'])
+                ->setParameter('operativo', $data['operativo'])
+                ->setParameter('gestion', $data['gestion'])
+                ->orderby('uf.dateUpload')
+        ;
+        return $qb->getQuery()->getResult();
+    }
     /**
      * getFilesUploadByDistrito description by UE
      * @param  [type] $id [description]

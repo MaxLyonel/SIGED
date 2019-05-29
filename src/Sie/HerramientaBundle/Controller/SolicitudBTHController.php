@@ -470,7 +470,9 @@ class SolicitudBTHController extends Controller {
                     if($uDestinatario){
                         $id_usuario = $uDestinatario[0]['id'];
                     }else{
-                        return false;
+                        $mensaje="Verificar si el Director de la Unidad Educativa es vigente";
+                        return  new JsonResponse(array('estado' => 4, 'msg' => $mensaje));
+
                     }
                    // dump($uid);die;
                     /**
@@ -1792,11 +1794,14 @@ class SolicitudBTHController extends Controller {
                  * Al dar como respuesta NO se elimina el registro de la UE de la tabla InstitucioneducativaHumanisticoTecnico y
                  * no se registran las especialidades
                  */
-                $institucionBth = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array('institucioneducativaId'=>$institucionid,'gestionTipoId'=>$this->session->get('currentyear')));
-                if($institucionBth){
-                    $em->remove($institucionBth);
-                    $em->flush();
+                if($evaluacion2 =='NO'){
+                    $institucionBth = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array('institucioneducativaId'=>$institucionid,'gestionTipoId'=>$this->session->get('currentyear')));
+                    if($institucionBth){
+                        $em->remove($institucionBth);
+                        $em->flush();
+                    }
                 }
+
 
 
             }

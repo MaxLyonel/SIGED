@@ -54,7 +54,8 @@
                                 {% for c in notas.cualitativas %}
                                     {% if c.idNotaTipo != 18 %}
                                         <td>
-                                            {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
+                                            {# {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %} #}
+
                                                 {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
                                                     {% if (c.notaCualitativa == "") or (vista == 2) or (c.idNotaTipo == notas.operativo and notas.gestion == notas.gestionActual) %}
                                                         <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
@@ -72,7 +73,7 @@
                                                         <textarea class="form-control jnumbersletters" rows="20" cols="50" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="400" disabled="disabled">{{c.notaCualitativa}}</textarea>
                                                     </p>
                                                 {% endif %}
-                                            {% endif %}
+                                            {# {% endif %} #}
                                         </td>
                                     {% endif %}
                                 {% endfor %}

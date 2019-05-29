@@ -126,10 +126,12 @@ class Funciones {
 
     public function setLogTransaccion($key,$tabla,$tipoTransaccion,$observacion,$valorNuevo,$valorAnt,$sistema,$archivo){
         //try {
-            $serializer = SerializerBuilder::create()->build();
-            $valorAnt = $serializer->serialize($valorAnt, 'json');
-            $serializer2 = SerializerBuilder::create()->build();
-            $valorNuevo = $serializer2->serialize($valorNuevo, 'json');
+            // $serializer = SerializerBuilder::create()->build();
+            // $valorAnt = $serializer->serialize($valorAnt, 'json');
+            // $serializer2 = SerializerBuilder::create()->build();
+            // $valorNuevo = $serializer2->serialize($valorNuevo, 'json');
+            $valorNuevo = json_encode($valorNuevo);
+            $valorAnt = json_encode($valorAnt);
 
             $newLogTransaccion = new LogTransaccion();
             $newLogTransaccion->setKey($key);
@@ -1360,6 +1362,34 @@ class Funciones {
         }
     }    
 
+    /**
+     * Servicio para validar si un estudiante tiene diploma de bachiller
+     * @param  [integer] $idInscripcion     [Id de inscripcion del estudiante]
+     * @return [boolean]                    [Retorna true si el estudainte tiene diploma, false si no tiene]
+     */
+    public function validarTieneDiploma($idInscripcion){
+        try {
+            $diploma = $this->em->createQueryBuilder()
+                                ->select('d')
+                                ->from('SieAppWebBundle:Tramite','t')
+                                ->innerJoin('SieAppWebBundle:Documento','d','with','d.tramite = t.id')
+                                ->where('t.estudianteInscripcion = :idInscripcion')
+                                ->andWhere('d.documentoEstado = 1')
+                                ->setParameter('idInscripcion', $idInscripcion)
+                                ->getQuery()
+                                ->getResult();
 
+            $tieneDocumento = false;
+            // Verificamos si tiene diploma o algun documento
+            if($diploma){
+                $tieneDocumento = true;
+            }
+
+            return $tieneDocumento;
+
+        } catch (Exception $e) {
+            
+        }
+    }
 
 }

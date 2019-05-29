@@ -53,14 +53,13 @@
                                 {% else %}
                                     <td><span class={% if d.tramite_estado_id in [3,15] %}"label label-success"{% else %}"label label-danger" {% endif %}>{{ d.tramite_estado }}</span></td>
                                 {% endif %}
-                                {% if d.es_evaluacion == true  %}
-                                    {% if d.valor_evaluacion == "SI" %}
-                                        <td>PROCEDENTE: {{d.obs}}</td>
-                                    {% else %}
-                                        <td>IMPROCEDENTE: {{d.obs}}</td>
-                                    {% endif %}
+                                {% if d.es_evaluacion == true  and d.fecha_envio %}
+                                    <td>¿{{d.variable_evaluacion}}?</br>
+                                         {{d.valor_evaluacion}}</br>
+                                        {% if d.obs  %} Observación: {{d.obs}} {% endif %}
+                                    </td>
                                 {% else %}
-                                    <td>{{d.obs}}</td>
+                                    <td>{% if d.obs  %} Observación: {{d.obs}} {% endif %}</td>
                                 {% endif %}
                             {% else %}
                                 <td> {% if fecha_fin == null %}<span class="label label-warning">PENDIENTE</span>{% endif %}</td>
