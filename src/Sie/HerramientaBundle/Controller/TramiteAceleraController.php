@@ -161,7 +161,7 @@ class TramiteAceleraController extends Controller
         $tarea_id = $flujoproceso->getId();
         $tabla = 'institucioneducativa';
         $institucioneducativa_id = $datos['institucioneducativa_id'];
-        $tipotramite = $em->getRepository('SieAppWebBundle:TramiteTipo')->findOneBy(array('obs' => 'TA'));
+        $tipotramite = $em->getRepository('SieAppWebBundle:TramiteTipo')->findOneBy(array('obs' => 'AA'));
         if ($tipotramite == null) {
             $estado = 500;
             return $response->setData(array('estado' => $estado, 'msg' => 'Tipo de Trámite no habilitado.'));
@@ -207,6 +207,7 @@ class TramiteAceleraController extends Controller
             ->getSingleResult();
         $datos = json_decode($resultDatos->getdatos());
         $restudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($datos->estudiante_id);
+        // $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$restudiante));dump($restudianteinst->getInstitucioneducativaCurso());die;
         $estudiante = $restudiante->getNombre().' '.$restudiante->getPaterno().' '.$restudiante->getMaterno();
         $rude = $restudiante->getCodigoRude();
         $informe = $datos->informe;
