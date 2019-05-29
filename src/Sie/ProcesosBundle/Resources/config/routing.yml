@@ -34,4 +34,8 @@ sie_procesos_adicioneliminacionespecialidadesBTH:
     resource: "@SieProcesosBundle/Resources/config/routing/tramiteadicioneliminacionespecialidadesBTH.yml"
     prefix:   /AddElimEspecialidades
 
+#modulo de tramites con flujos
+sie_procesos_wf_tramite:
+    resource: "@SieProcesosBundle/Resources/config/routing/wftramite.yml"
+    prefix:   /sie/tramite
 

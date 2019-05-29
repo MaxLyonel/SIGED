@@ -1,0 +1,163 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+
+    <link href="{{asset('css/bootstrap-fileupload.min.css')}}" rel="stylesheet">
+    <link href="{{asset('css/bootstrap-fileupload.css')}}" rel="stylesheet">
+
+{% endblock %}
+
+
+
+{% block contentoption %} 
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1><i class="fa fa-upload animated flip"></i> Archivos consolidados
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="{{path('consolidation_sie_web') }}">Buscar</a>
+                    </li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-12">
+
+            {% for flashMessage in app.session.flashbag.get('warningcons') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Warning!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+            {% for flashMessage in app.session.flashbag.get('successcons') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Warning! </strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- /.row -->
+
+    <div class="row">
+
+
+        <div class="col-md-7 col-md-offset-2">
+
+            <!-- Start input fields - horizontal form -->
+            <div class="panel rounded shadow">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">
+                            
+                                <center>Seguimiento de Archivos consolidados<br>
+                                    <p class="text-blue">Ingrese: Código de ditrito y Operativo  </p>
+                                </center>
+                        </h3>
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-sub-heading">
+                    
+                        
+                        
+                    
+                    
+                </div><!-- /.panel-subheading -->
+                <div class="panel-body no-padding rounded-bottom">
+                    {{ form_start(form,{ 'attr': {'class': 'tab-content form-horizontal','id':'findsiefileFormId','onsubmit':'return false;'} } ) }}
+                        <div class="form-body">
+                        
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">{{form_label(form.distrito)}} <b class="text-red">(*)</b> </label>
+                                <div class="col-sm-9">
+                                    {{form_widget(form.distrito)}}
+                                    </br>
+                                </div>
+                            </div><!-- /.form-group -->
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">{{form_label(form.operativo)}} <b class="text-red">(*)</b></label>
+                                <div class="col-sm-9">
+                                    {{form_widget(form.operativo)}}
+                                    </br>
+                                </div>
+                            </div><!-- /.form-group -->
+
+                        </div><!-- /.form-body -->
+                        <div class="form-footer">
+                            <div class="pull-right">
+                                {{form_widget(form.find)}}
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!-- /.form-footer -->
+                    {{form_end(form)}}
+                    
+                </div><!-- /.panel-body -->
+            </div><!-- /.panel -->
+            <!--/ End input fields - horizontal form -->
+
+        </div>
+
+   
+      
+ </div>
+ <div class="row">
+    <div class="col-md-12">
+         <div id="idFiles">
+         </div>  
+    </div>  
+</div>  
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+    var findSieFiles = function(){
+        var codDistrito = $('#form_distrito').val();
+        var operativo = $('#form_operativo').val();
+        if(codDistrito==''){
+            alert('Introduzca Distrito');
+            return false;    
+        }
+        if(operativo==0){
+            alert('Introduzca Operativo');
+            return false;    
+        }
+        var form = $('#findsiefileFormId').serialize();
+
+        $.ajax({
+            type: 'post',
+            url: Routing.generate('review_up_sie_file_find'),
+            data: form,
+            beforeSend: function () {
+                $("#idFiles").empty();
+                $("#idFiles").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+            },
+            success: function (data) {
+                $("#idFiles").empty();
+                $("#idFiles").html(data);
+            },
+            error: function (data) {
+                $("#idFiles").empty();
+                $("#idFiles").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No hay conexion con el servidor</div>');
+            }
+        });
+        
+            
+    };
+    </script>
+{% endblock %}
