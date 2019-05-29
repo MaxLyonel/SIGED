@@ -364,4 +364,136 @@ class WFTramite {
         return true;
     }
 
+    /**
+     * funcion para asignar el usuario destinatario de la tarea actual
+     */
+    public function obtieneUsuarioDestinatario($tarea_actual,$tarea_sig_id,$id_tabla,$tabla,$tramite)
+    {
+        
+        $flujoprocesoSiguiente = $this->em->getRepository('SieAppWebBundle:FlujoProceso')->find($tarea_sig_id);
+        $nivel = $flujoprocesoSiguiente->getRolTipo()->getLugarNivelTipo();
+        //dump($nivel);die;
+        switch ($tabla) {
+            case 'institucioneducativa':
+                if ($tramite->getInstitucioneducativa()){
+                    $institucioneducativa = $this->em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id_tabla);
+                    $lugar_tipo_distrito = $institucioneducativa->getleJuridicciongeografica()->getLugarTipoIdDistrito();
+                    $lugar_tipo_departamento = $institucioneducativa->getleJuridicciongeografica()->getlugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getLugartipo()->getCodigo();
+                }else{
+                    $wfdatos = $this->em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
+                        ->select('wfd')
+                        ->innerJoin('SieAppWebBundle:TramiteDetalle', 'td', 'with', 'td.id = wfd.tramiteDetalle')
+                        ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'fp.id = td.flujoProceso')
+                        ->where('td.tramite='.$tramite->getId())
+                        ->andWhere("fp.orden=1")
+                        ->andWhere("wfd.esValido=true")
+                        ->getQuery()
+                        ->getResult();
+                    $lugar_tipo_distrito = $wfdatos[0]->getLugarTipoDistritoId();
+                    $lt = $this->em->getRepository('SieAppWebBundle:LugarTipo')->find($lugar_tipo_distrito);
+                    $lugar_tipo_departamento = $lt->getLugarTipo()->getCodigo();
+                }
+                break;
+            case 'estudiante_inscripcion':
+                break;
+            case 'apoderado_inscripcion':
+                break;
+            case 'maestro_inscripcion':
+                break;
+        }
+
+        switch ($nivel->getId()) {
+            case 7:   // Distrito
+                //dump($lugar_tipo_distrito);die;
+                $query = $this->em->getConnection()->prepare("select * from wf_usuario_flujo_proceso where flujo_proceso_id=". $flujoprocesoSiguiente->getId()." and esactivo is true and  lugar_tipo_id=".$lugar_tipo_distrito);
+                $query->execute();
+                $uDestinatario = $query->fetchAll();
+                if($uDestinatario){
+                    if(count($uDestinatario)>1){
+                        $uid = $this->asiganaUsuarioDestinatario($tarea_actual,$tarea_sig_id,$uDestinatario[0]['lugar_tipo_id']);
+                    }else{
+                        $uid = $uDestinatario[0]['usuario_id'];
+                    }
+                }else{
+                    return false;
+                }
+                
+                break;
+            case 6:   // Departamento
+            case 8:
+                //dump($lugar_tipo_departamento);die;
+                $query = $this->em->getConnection()->prepare("select ufp.* from wf_usuario_flujo_proceso ufp join lugar_tipo lt on ufp.lugar_tipo_id=lt.id where ufp.flujo_proceso_id=". $flujoprocesoSiguiente->getId()." and ufp.esactivo is true and cast(lt.codigo as int)=".$lugar_tipo_departamento);
+                $query->execute();
+                $uDestinatario = $query->fetchAll();
+                if($uDestinatario){
+                    //dump($uDestinatario);die;
+                    if(count($uDestinatario)>1){
+                        $uid = $this->asiganaUsuarioDestinatario($tarea_actual,$tarea_sig_id,$uDestinatario[0]['lugar_tipo_id']);
+                    }else{
+                        $uid = $uDestinatario[0]['usuario_id'];
+                    }   
+                }else{
+                    return false;
+                }
+                
+                break;
+            case 0://nivel nacional
+                //dump($flujoprocesoSiguiente->getRolTipo()->getId());die;
+                if($flujoprocesoSiguiente->getRolTipo()->getId() == 9){  // si es director
+                    $query = $this->em->getConnection()->prepare("select u.* from maestro_inscripcion m
+                    join usuario u on m.persona_id=u.persona_id
+                    where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=".(new \DateTime())->format('Y')." and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
+                    //where m.institucioneducativa_id=".$institucioneducativa->getId()." and m.gestion_tipo_id=2018 and (m.cargo_tipo_id=1 or m.cargo_tipo_id=12) and m.es_vigente_administrativo is true and u.esactivo is true");
+                    $query->execute();
+                    $uDestinatario = $query->fetchAll();
+                    //dump($uDestinatario);die;
+                    if($uDestinatario){
+                        $uid = $uDestinatario[0]['id'];
+                    }else{
+                        return false;
+                    }
+                }elseif($flujoprocesoSiguiente->getRolTipo()->getId() == 8){ // si es tecnico nacional
+                    $query = $this->em->getConnection()->prepare("select * from wf_usuario_flujo_proceso ufp where ufp.esactivo is true and ufp.flujo_proceso_id=". $flujoprocesoSiguiente->getId()." and lugar_tipo_id=1");
+                    $query->execute();
+                    $uDestinatario = $query->fetchAll();
+                    if($uDestinatario){
+                        //dump(count($uDestinatario));die;
+                        if(count($uDestinatario)>1){
+                            $uid = $this->asiganaUsuarioDestinatario($tarea_actual,$tarea_sig_id,1);
+                        }else{
+                            $uid = $uDestinatario[0]['usuario_id'];
+                        }
+                    }else{
+                        return false;
+                    }
+                }
+                break;
+        }
+
+        $usuario = $this->em->getRepository('SieAppWebBundle:Usuario')->find($uid);
+        return $usuario;
+    }
+
+    /**
+     * funcion que asigna usuario destinatario si la tarea tiene mas de un usuario registrado
+     */
+    public function asignaUsuarioDestinatario($tarea_actual_id,$tarea_sig_id,$lugar_tipo)
+    {
+        $query = $this->em->getConnection()->prepare("select a.usuario_id,case when b.nro is null then 0 else b.nro end as nro
+        from 
+        (select usuario_id from wf_usuario_flujo_proceso wf
+        where wf.flujo_proceso_id=". $tarea_sig_id ." and wf.esactivo is true and wf.lugar_tipo_id=". $lugar_tipo .")a
+        left join 
+        (select td.usuario_destinatario_id,count(*) as nro
+        from tramite t
+        join tramite_detalle td on cast(t.tramite as int)=td.id
+        where flujo_proceso_id=". $tarea_actual_id ." and (td.tramite_estado_id=15 or td.tramite_estado_id=4) group by td.usuario_destinatario_id)b on a.usuario_id=b.usuario_destinatario_id  order by b.nro desc");
+        $query->execute();
+        $usuarios = $query->fetchAll();
+        //dump($usuarios);die;
+        $uid = $usuarios[0]['usuario_id'];
+        //dump($uid);die;
+        return $uid;
+    }
+
 }
