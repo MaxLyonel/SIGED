@@ -63,7 +63,9 @@
                     <div class="pull-left">
                         <h3 class="panel-title">
                             
-                                <center>Seguimiento de Archivos consolidados<br></center>
+                                <center>Seguimiento de Archivos consolidados<br>
+                                    <p class="text-blue">Ingrese: Código de ditrito y Operativo  </p>
+                                </center>
                         </h3>
                     </div>
                     <div class="clearfix"></div>
@@ -80,7 +82,7 @@
                         <div class="form-body">
                         
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">{{form_label(form.distrito)}}</label>
+                                <label class="col-sm-3 control-label">{{form_label(form.distrito)}} <b class="text-red">(*)</b> </label>
                                 <div class="col-sm-9">
                                     {{form_widget(form.distrito)}}
                                     </br>
@@ -88,7 +90,7 @@
                             </div><!-- /.form-group -->
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">{{form_label(form.operativo)}}</label>
+                                <label class="col-sm-3 control-label">{{form_label(form.operativo)}} <b class="text-red">(*)</b></label>
                                 <div class="col-sm-9">
                                     {{form_widget(form.operativo)}}
                                     </br>
@@ -103,7 +105,7 @@
                             <div class="clearfix"></div>
                         </div><!-- /.form-footer -->
                     {{form_end(form)}}
-                    <p class="text">Ingrese: Código de ditrito y Operativo  </p>
+                    
                 </div><!-- /.panel-body -->
             </div><!-- /.panel -->
             <!--/ End input fields - horizontal form -->

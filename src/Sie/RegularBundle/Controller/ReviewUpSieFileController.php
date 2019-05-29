@@ -23,6 +23,12 @@ class ReviewUpSieFileController extends Controller{
     }
 
     public function indexAction(Request $request){
+        //get the user session id
+        $id_usuario = $this->session->get('userId');
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
 
         return $this->render('SieRegularBundle:ReviewUpSieFile:index.html.twig', array(
                 'form' => $this->distritoform()->createView()
@@ -43,10 +49,21 @@ class ReviewUpSieFileController extends Controller{
     }
 
     public function findAction(Request $request){
+        //get the user session id
+        $id_usuario = $this->session->get('userId');
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
         //get the send values
         $form = $request->get('form');
+        
         // create db c onexion
         $em = $this->getDoctrine()->getManager();
+        //get the lost emp files
+        // $bimestre = $form['operativo']-1;
+        // $query = $em->getConnection()->prepare("select * from sp_verifica_archivos_emp('" . $form['gestion'] . "',' ','" . $form['distrito'] . "',' ','" . $bimestre . "') ;");
+        // $query->execute();
         //get all files to the distrito selected
         $objUeUploadFiles = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getFilesUploadByDistritoAndOperativo($form);
         
