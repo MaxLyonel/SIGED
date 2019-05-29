@@ -31,3 +31,9 @@ info_students_removeinscription:
     defaults: { _controller: SieEspecialBundle:InfoStudents:removeInscription }
     options:
          expose: true
+
+info_students_cambiar_estado_matricula:
+    path:     /sie/cambiarestado/
+    defaults: { _controller: SieEspecialBundle:InfoStudents:cambiarEstadoMatricula }
+    options:
+         expose: true

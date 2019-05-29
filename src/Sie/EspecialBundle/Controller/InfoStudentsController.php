@@ -9,10 +9,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Sie\AppWebBundle\Entity\EstudianteInscripcion;
 use Sie\AppWebBundle\Entity\EstudianteInscripcionEspecial;
+use Sie\AppWebBundle\Entity\EstadomatriculaTipo;
+use Doctrine\ORM\EntityRepository;
 
 class InfoStudentsController extends Controller {
 
   public $session;
+  public $idEstadoMatricula;
   // public $idInstitucion;
 
   /**
@@ -667,5 +670,40 @@ class InfoStudentsController extends Controller {
                   'ueducativaInfo'=> $aInfoUeducativa['ueducativaInfo']
                   // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
       ));
+  }
+
+  /*Modificacion de estado de matricula*/
+  public function cambiarEstadoMatriculaAction(Request $request){
+    //get the send values
+    //dump($request);die;
+    $em = $this->getDoctrine()->getManager();
+    $estInsEspId = $request->get('idInscripcionEspecial');
+    $eie = $em->getRepository('SieAppWebBundle:EstudianteInscripcionEspecial')->find($estInsEspId);
+    
+    return $this->render('SieEspecialBundle:InfoStudents:cambiarEstadoMatricula.html.twig', array(
+      'form'=>$this->estadoMatriculaForm($eie)->createView()
+    ));
+}
+  /**
+  *  Formulario de estado matricula
+  **/
+  private function estadoMatriculaForm($eie){
+
+    $em = $this->getDoctrine()->getManager();
+    $estadomatriculaId = $eie->getestudianteInscripcion()->getEstadomatriculaTipo()->getId();
+    $eiId = $eie->getEstudianteInscripcion()->getId();
+    $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(10,6,$estadomatriculaId)));
+    $emArray = array();
+    foreach($estadosMatricula as $em){
+      $emArray[$em->getId()] = $em->getestadomatricula();
+
+    }
+    
+    $form = $this->createFormBuilder()
+            ->add('ieId', 'hidden', array('data'=> $eiId))
+            ->add('estadomatriculaTipo','choice',array('label'=>'Estado','required'=>true,'data'=>$estadomatriculaId,'choices'=>$emArray,'attr' => array('class' => 'form-control')))
+            ->add('guardar', 'button', array('label'=> 'Guardar', 'attr'=>array('class'=>'btn btn-success', 'onclick'=>'guardarEstado()')))
+            ->getForm();
+    return $form;
   }
 }
