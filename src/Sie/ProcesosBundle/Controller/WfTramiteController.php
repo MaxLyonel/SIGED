@@ -1,6 +1,6 @@
 <?php
 
-namespace Sie\AppWebBundle\Controller;
+namespace Sie\ProcesosBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,13 +37,40 @@ class WfTramiteController extends Controller
     }
     
     /**
-     * Listado de los tipo de flujos para iniciar un tramite
+     * principal
      */
     public function indexAction(Request $request)
     {
         
         $this->session = $request->getSession();
         //dump($this->session);die;
+        $usuario = $this->session->get('userId');
+        $rol = $this->session->get('roluser');
+        $pathSystem = $this->session->get('pathSystem');
+        //validation if the user is logged
+        if (!isset($usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        
+        $em = $this->getDoctrine()->getManager();
+        $flujotipo = $em->getRepository('SieAppWebBundle:FlujoTipo')->createQueryBuilder('ft')
+                ->select('ft')
+                ->where('ft.id > 5')
+                ->andWhere("ft.obs like '%ACTIVO%'")
+                ->getQuery()
+                ->getResult();
+        $data['entities'] = $flujotipo;
+        $data['titulo'] = "Nuevo trámite";
+        return $this->render('SieProcesosBundle:WfTramite:index.html.twig', $data);
+    }
+    /**
+     * Listado de los tipo de flujos para iniciar un tramite
+     */
+    public function listaAction(Request $request)
+    {
+        
+        $this->session = $request->getSession();
+        //dump($request);die;
         $usuario = $this->session->get('userId');
         $rol = $this->session->get('roluser');
         $pathSystem = $this->session->get('pathSystem');
@@ -62,8 +89,8 @@ class WfTramiteController extends Controller
                 ->getResult();
         //dump($flujotipo);die;
         $data['entities'] = $flujotipo;
-        $data['titulo'] = "Listado de trámites existentes";
-        return $this->render($pathSystem.':WfTramite:index.html.twig', $data);
+        $data['titulo'] = "Nuevo trámite";
+        return $this->render('SieProcesosBundle:WfTramite:lista.html.twig', $data);
     }
 
     /**
@@ -179,7 +206,7 @@ class WfTramiteController extends Controller
         $data['entities'] = $query->fetchAll();;
         $data['titulo'] = "Listado de trámites recibidos";
         //dump($data);die;
-        return $this->render($pathSystem.':WfTramite:recibidos.html.twig', $data);
+        return $this->render('SieProcesosBundle:WfTramite:recibidos.html.twig', $data);
     }
 
     /**
@@ -779,7 +806,7 @@ class WfTramiteController extends Controller
         $data['entities'] = $query->fetchAll();;
         //dump($data);die;
         $data['titulo'] = "Listado de trámites enviados";
-        return $this->render($pathSystem.':WfTramite:enviados.html.twig', $data);
+        return $this->render('SieProcesosBundle:WfTramite:enviados.html.twig', $data);
     }
     
     /**
@@ -815,7 +842,7 @@ class WfTramiteController extends Controller
         $query->execute();
         $data['entities'] = $query->fetchAll();;
         $data['titulo'] = "Listado de trámites concluidos";
-        return $this->render($pathSystem.':WfTramite:concluidos.html.twig', $data);
+        return $this->render('SieProcesosBundle:WfTramite:concluidos.html.twig', $data);
     }
     /**
      * Impresion de formularios como comprobantes
@@ -968,7 +995,7 @@ class WfTramiteController extends Controller
         }
        
         $flujoSeguimientoForm = $this->createFlujoSeguimientoForm(); 
-        return $this->render($pathSystem.':WfTramite:flujoSeguimiento.html.twig', array(
+        return $this->render('SieProcesosBundle:WfTramite:flujoSeguimiento.html.twig', array(
             'form' => $flujoSeguimientoForm->createView(),
         ));
         
@@ -1012,7 +1039,7 @@ class WfTramiteController extends Controller
             $data = $this->listarF($form['proceso'],$form['tramite']);
             //dump($data);die;
         }
-        return $this->render($pathSystem.':WfTramite:flujo.html.twig',$data);
+        return $this->render('SieProcesosBundle:WfTramite:flujo.html.twig',$data);
         
     }
         

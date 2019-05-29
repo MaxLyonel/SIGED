@@ -1,0 +1,54 @@
+wf_tramite_index:
+    path:     /
+    defaults: { _controller: SieProcesosBundle:WfTramite:index }
+wf_tramite_lista:
+    path:     /lista
+    defaults: { _controller: SieProcesosBundle:WfTramite:lista }
+
+wf_tramite_nuevo:
+    path:     /{id}/nuevo
+    defaults: { _controller: SieProcesosBundle:WfTramite:nuevo }
+
+wf_tramite_recibido:
+    path:     /recibidos
+    defaults: { _controller: SieProcesosBundle:WfTramite:recibidos }
+
+wf_tramite_recibido_guardar:
+    path:     /recibidosguardar
+    defaults: { _controller: SieProcesosBundle:WfTramite:recibidosGuardar }
+
+wf_tramite_recibido_enviar:
+    path:     /{id}/recibidosenviar
+    defaults: { _controller: SieProcesosBundle:WfTramite:recibidosEnviar }
+
+wf_tramite_recibido_detalle:
+    path:     /recibidosdetalle
+    defaults: { _controller: SieProcesosBundle:WfTramite:recibidosDetalle }
+
+wf_tramite_recibido_derivar:
+    path:     /recibidosderivar
+    defaults: { _controller: SieProcesosBundle:WfTramite:recibidosDerivar }
+
+wf_tramite_recibido_derivar_guardar:
+    path:     /recibidosderivarguardar
+    defaults: { _controller: SieProcesosBundle:WfTramite:recibidosDerivarGuardar }
+
+wf_tramite_enviados:
+    path:     /enviados
+    defaults: { _controller: SieProcesosBundle:WfTramite:enviados }
+
+wf_tramite_concluidos:
+    path:     /concluidos
+    defaults: { _controller: SieProcesosBundle:WfTramite:concluidos }
+
+wf_tramite_reporte_formulario:
+    path:     /{idtramite}/{id_td}/reporteformulario
+    defaults: { _controller: "SieProcesosBundle:WfTramite:reporteFormulario" }
+
+wf_tramite_seguimiento:
+    path:     /seguimiento
+    defaults: { _controller: SieProcesosBundle:WfTramite:seguimientoTramite }
+
+wf_tramite_seguimiento_verflujo:
+    path:     /verflujo
+    defaults: { _controller: "SieProcesosBundle:WfTramite:verFlujo" }
