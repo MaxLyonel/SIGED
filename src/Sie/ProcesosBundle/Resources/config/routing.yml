@@ -29,3 +29,9 @@ sie_procesos_tramite_rue:
 sie_procesos_flujousuarios:
     resource: "@SieProcesosBundle/Resources/config/routing/usuarios.yml"
     prefix:   /flujousuarios
+
+sie_procesos_adicioneliminacionespecialidadesBTH:
+    resource: "@SieProcesosBundle/Resources/config/routing/tramiteadicioneliminacionespecialidadesBTH.yml"
+    prefix:   /AddElimEspecialidades
+
+
