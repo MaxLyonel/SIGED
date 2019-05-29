@@ -301,29 +301,34 @@
         }
 
         function listarProgramas() {
-			var area  = $('#form_area').val();
-        	var nivel = $('#form_nivel').val();
-            var grado = $('#form_grado').val();
-            var modalidad = $('#form_modalidad').val();
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('listar_programas_especial', {'area':area,'nivel':nivel,'grado':grado,'modalidad':modalidad}),
-                beforeSend: function () {
-                    $("#form_programa").empty();
-                    $("#form_programa").append('<option value="">Buscando...</option>');
-                },
-                success: function (data) {
-                    $("#form_programa").empty();
-                    if(nivel != 410){
-                        $("#form_programa").append('<option value="">Seleccionar...</option>');
+            if ($('#form_educacionCasa').is(":checked")) {
+                alert('No se puede seleccionar Apoyo Técnico Pedagógico por que está marcado Programa de Atención en Casa.');
+                $('#form_servicio').val('');
+            } else {
+                var area  = $('#form_area').val();
+                var nivel = $('#form_nivel').val();
+                var grado = $('#form_grado').val();
+                var modalidad = $('#form_modalidad').val();
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('listar_programas_especial', {'area':area,'nivel':nivel,'grado':grado,'modalidad':modalidad}),
+                    beforeSend: function () {
+                        $("#form_programa").empty();
+                        $("#form_programa").append('<option value="">Buscando...</option>');
+                    },
+                    success: function (data) {
+                        $("#form_programa").empty();
+                        if(nivel != 410){
+                            $("#form_programa").append('<option value="">Seleccionar...</option>');
+                        }
+                        $.each(data.programas, function (i, value) {
+                            $("#form_programa").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        
+                        dropdown("#form_programa");
                     }
-                    $.each(data.programas, function (i, value) {
-                        $("#form_programa").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                    
-                    dropdown("#form_programa");
-                }
-            });
+                });
+            }
         }
 
         function validacion(){
@@ -350,11 +355,17 @@
         };
 
         $('#form_educacionCasa').change(function() {
-            if($(this).is(":checked")) {
-                var returnVal = confirm("¿Esta seguro(a) de definir el curso para Educación en Casa?");
-                $(this).attr("checked", returnVal);
+            if ($('#form_servicio').val() != 20) {
+                if($(this).is(":checked")) {
+                   var returnVal = confirm("¿Esta seguro(a) de definir el curso para Programa de Atención en Casa?");
+                    $(this).attr("checked", returnVal);
+                }
+                $('#form_educacionCasa').val($(this).is(':checked'));
+            } else {
+                alert('No se puede marcar Programa de Atención en Casa por que está seleccionado Apoyo Técnico Pedagógico.');
+                $(this).attr("checked", false);
+                $('#form_educacionCasa').val(false);
             }
-            $('#form_educacionCasa').val($(this).is(':checked'));        
         });
         function reseteaTodo() {
             var area  = $('#form_area').val();

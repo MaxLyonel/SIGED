@@ -2328,8 +2328,15 @@ class Notas{
                 }
             }
             
+<<<<<<< HEAD
             if (($subarea == 4 or $subarea == 6 or $subarea == 7 or $subarea == 2 or $subarea == 3 or $subarea == 5 or $subarea == 1 ) and $gestion > 2018){
                 $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(10,78));
+=======
+            if (($subarea == 4 or $subarea == 7) and $gestion > 2018){
+                $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(10,38,78));
+            }elseif ($subarea == 6 and $gestion > 2018){
+                $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(10,38,78,79));
+>>>>>>> 78b4a57415f6a8663f347ffdcd5f0f4b363c726f
             }else{
                 $estadosFinales = array();
             }

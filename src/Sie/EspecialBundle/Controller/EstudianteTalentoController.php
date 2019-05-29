@@ -48,13 +48,15 @@ class EstudianteTalentoController extends Controller {
         if ($rol != 9 || $flujotipo_id==null) {
             return $this->redirect($this->generateUrl('wf_tramite_index'));
         }//dump($request->getSession()->get('pathSystem'));die;
+        //$autorizados = ['82230104', '80480250', '80980495', '80980579', '80900074', '40730256', '80730696', '81220087', '81230262', '82480035', '61470053', '81480136', '81480196', '81410158', '71980052', '81980780', '61900026', '81730091', '61710057', '81710072'];
         if ($request->getSession()->get('pathSystem') == "SieHerramientaBundle") {
-            //Completar las condiciones para obtener CE autorizados
             $ieducativa_result = $em->getRepository('SieAppWebBundle:Institucioneducativa')->createQueryBuilder('ie')
                 ->select('ie.id, ie.institucioneducativa')
                 ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'with', 'ie.id = iec.institucioneducativa')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaAreaEspecialAutorizado', 'ieaea', 'with', 'ie.id = ieaea.institucioneducativa')//Autorizado
                 ->where('iec.gestionTipo = :gestion')
                 ->andWhere('ie.institucioneducativaTipo=4')
+                ->andWhere('ieaea.especialAreaTipo=7')//Autorizado
                 ->setParameter('gestion', $request->getSession()->get('currentyear'))
                 ->distinct('ie.id')
                 ->orderBy("ie.institucioneducativa")
@@ -62,9 +64,25 @@ class EstudianteTalentoController extends Controller {
                 ->getResult();
             return $this->render('SieHerramientaBundle:TramiteTalento:new.html.twig', array('centros' => $ieducativa_result, 'flujotipo_id' => $flujotipo_id));
         } else {
-            $ieducativa_result = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->getSession()->get('ie_id'));
-            $centro_inscripcion = $ieducativa_result == null ? '' : $ieducativa_result->getId();
-            $centro = $ieducativa_result == null ? '' : $ieducativa_result->getInstitucioneducativa();
+            $centro_inscripcion = 0;
+            $centro = '';
+            $ieducativa_result = $em->getRepository('SieAppWebBundle:Institucioneducativa')->createQueryBuilder('ie')
+                ->select('ie.id, ie.institucioneducativa')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'with', 'ie.id = iec.institucioneducativa')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaAreaEspecialAutorizado', 'ieaea', 'with', 'ie.id = ieaea.institucioneducativa')//Autorizado
+                ->where('ie.id = :codigo')
+                ->andWhere('iec.gestionTipo = :gestion')
+                ->andWhere('ie.institucioneducativaTipo=4')
+                ->andWhere('ieaea.especialAreaTipo=7')//Autorizado
+                ->setParameter('codigo', $request->getSession()->get('ie_id'))
+                ->setParameter('gestion', $request->getSession()->get('currentyear'))
+                ->distinct('ie.id')
+                ->getQuery()
+                ->getResult();
+            if (count($ieducativa_result)>0) {
+                $centro_inscripcion = $ieducativa_result[0]['id'];
+                $centro = $ieducativa_result[0]['institucioneducativa'];
+            } 
             return $this->render('SieEspecialBundle:EstudianteTalento:new.html.twig', array('centro_inscripcion' => $centro_inscripcion, 'centro' => $centro, 'flujotipo_id' => $flujotipo_id));
         }
     }
@@ -78,7 +96,7 @@ class EstudianteTalentoController extends Controller {
         $estudiante_result = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rude));
         $estudiante = array();
         if (!empty($estudiante_result)){
-            $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $estudiante_result), array('id' => 'DESC'));
+            $einscripcion_result = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $estudiante_result, 'estadomatriculaTipo' => 4), array('id' => 'DESC'));
             if (!empty($einscripcion_result)){
                 $estudianteinscripcion_id = $einscripcion_result->getId();
                 $resultDatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
@@ -103,13 +121,6 @@ class EstudianteTalentoController extends Controller {
                 } else {
                     $msg = "exito";
                 }
-                $institucioneducativa_curso_id = $einscripcion_result->getInstitucioneducativaCurso();
-                $iecurso_result = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('id' => $institucioneducativa_curso_id));//'gestion_tipo_id' => $gestion_actual
-                if (!empty($iecurso_result)){
-                    $ieducativa_result = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $iecurso_result->getInstitucioneducativa()));
-                } else {
-                    $ieducativa_result = null;
-                }
                 $estudiante = array(
                     'id' => $estudiante_result->getId(),
                     'nombre' => $estudiante_result->getNombre(),
@@ -120,7 +131,7 @@ class EstudianteTalentoController extends Controller {
                     'fecha_nacimiento' => $estudiante_result->getFechaNacimiento()==null?array(date=>''):$estudiante_result->getFechaNacimiento(),
                     'estudiante_ins_id' => $estudianteinscripcion_id,
                     'estudiante_id' => $estudiante_result->getId(),
-                    'institucion_educativa' => $ieducativa_result==null?'':$ieducativa_result->getInstitucioneducativa(),
+                    'institucion_educativa' => $einscripcion_result->getInstitucioneducativaCurso()->getInstitucioneducativa()->getInstitucioneducativa(),
                 );
             } else {
                 $msg = 'noins';
