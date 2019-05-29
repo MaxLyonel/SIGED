@@ -20,8 +20,12 @@
                     {% if esvisual == false %}
                         <th>Campo</th>
                         <th>Código</th>
-                     {% endif %}
-                    <th>Área</th>            
+                    {% endif %}
+                    {% if progSer %}
+                        <th>{{progSer}}</th>
+                    {% else %}
+                        <th>Área</th>
+                    {% endif %}    
                 </tr>
             </thead>
             <tbody>
@@ -79,7 +83,11 @@
                         <table class="table table-bordered cf" id="tablaAdicionMaestros">
                             <thead class="cf"> 
                                 <tr>
-                                    <th class="col-lg-4">Área</th>
+                                     {% if progSer %}
+                                        <th class="col-lg-4">{{progSer}}</th>
+                                    {% else %}
+                                        <th class="col-lg-4">Área</th>
+                                    {% endif %} 
                                     <th class="col-lg-8">Maestro</th>            
                                 </tr>
                             </thead>

@@ -757,9 +757,10 @@ class InstitucioneducativaRepository extends EntityRepository {
     public function getListStudentPerCourseSpecial($sie, $gestion, $iecId) {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb
-                ->select('e.id, eie.id as estInsEspId, ei.id as estInsId, e.carnetIdentidad,e.complemento,e.codigoRude, e.paterno, e.materno, e.nombre,e.fechaNacimiento')
+                ->select('e.id, eie.id as estInsEspId, ei.id as estInsId, e.carnetIdentidad,e.complemento,e.codigoRude, e.paterno, e.materno, e.nombre,e.fechaNacimiento,emt.id as estadomatriculaId,emt.estadomatricula')
                 ->from('SieAppWebBundle:EstudianteInscripcionEspecial', 'eie')
                 ->leftjoin('SieAppWebBundle:estudianteInscripcion', 'ei', 'WITH', 'eie.estudianteInscripcion = ei.id')
+                ->leftjoin('SieAppWebBundle:EstadomatriculaTipo', 'emt', 'WITH', 'emt.id = ei.estadomatriculaTipo')
                 ->leftjoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'ei.estudiante = e.id')
                 ->leftjoin('SieAppWebBundle:InstitucioneducativaCursoEspecial', 'iece', 'WITH', 'eie.institucioneducativaCursoEspecial = iece.id')
                 ->where('eie.institucioneducativaCursoEspecial = :iecId')

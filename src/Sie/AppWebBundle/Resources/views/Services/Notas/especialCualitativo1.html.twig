@@ -104,29 +104,23 @@
                                                         </td>
                                                     </tr>
                                                 </table>
-                                                {#<textarea class="notaCualitativa" name="nota[]" id="{{n.id}}" onkeypress="" pattern="[0-9A-Z]{1,200}" required autocomplete="off" style="text-transform: uppercase; width:165px" rows="6" minlength="3" maxlength="400">{{n.nota}}</textarea>#}
                                             </td>
                                         {% else %}
                                             {# <td data-title="{{n.idNotaTipo}} Bimestre"> #}
                                             <td data-title={% if notas.gestion > 2018 and discapacidad == 2  %} "{{n.idNotaTipo}}° Etapa" {% else %} "{{n.idNotaTipo}} Bimestre" {% endif %}>
-                                                {#
-                                                <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
-                                                <input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
-                                                <input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
-                                                #}
                                                 <table class="table">
                                                     <tr>
                                                         <td style = "border-top-style: none;">Contenidos Programados:</td>
-                                                        <td style = "border-top-style: none;"><textarea class="form-control" name="" disabled>{{n.nota.contenidos}}</textarea></td>
+                                                        <td style = "border-top-style: none;"><textarea class="form-control" name="" readonly>{{n.nota.contenidos}}</textarea></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Resultados Alcanzados:</td>
-                                                        <td><textarea class="form-control" name="" disabled>{{n.nota.resultados}}</textarea></td>
+                                                        <td><textarea class="form-control" name="" readonly>{{n.nota.resultados}}</textarea></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Indicador Alcanzado:</td>
                                                         <td>
-                                                            <select class="form-control" name="" id="" disabled>
+                                                            <select class="form-control" name="" id="" readonly>
                                                                 <option value="">Seleccionar....</option>
                                                                 {% for tn in notas.tiposNotas %}
                                                                     <option value="{{tn.id}}" {% if tn.id == n.nota.idIndicador %} selected {% endif %} title="{{ tn.descripcion }}">{{tn.nota}}</option>
@@ -137,7 +131,7 @@
                                                     <tr>
                                                         <td>Estado Final:</td>
                                                         <td>
-                                                            <select class="form-control" name="" id="" disabled>
+                                                            <select class="form-control" name="" id="" readonly>
                                                                 <option value="">Seleccionar....</option>
                                                                 {% for ef in notas.estadosFinales %}
                                                                     <option value="{{ef.id}}" {% if ef.id == n.nota.idEstado %} selected {% endif %}>{{ef.estadomatricula}}</option>
@@ -146,21 +140,19 @@
                                                         </td>
                                                     </tr>
                                                 </table>
-                                                {#<textarea class="" name="nota[]" id="{{n.id}}" onkeyup="this.focus();" pattern="[0-9A-Z]{1,200}" required autocomplete="off" style="text-transform: uppercase; width:160px; background:#EFEFEF; border-color:#E2E2E2" rows="6" minlength="3" maxlength="400" readonly="readonly">{{n.nota}}</textarea>#}
                                             </td>
                                         {% endif %}
                                     {% else %}
-                                    {# {{dump(notas)}} #}
                                         {# <td data-title="{{n.idNotaTipo}} Bimestre"> #}
                                         <td data-title={% if notas.gestion > 2018 and discapacidad == 2  %} "{{n.idNotaTipo}}° Etapa" {% else %} "{{n.idNotaTipo}} Bimestre" {% endif %}>
                                             <table class="table">
                                                 <tr>
                                                     <td style = "border-top-style: none;">Contenidos Programados</td>
-                                                    <td style = "border-top-style: none;"><textarea class="form-control" name="contenidos[]" disabled>{{n.nota.contenidos}} </textarea></td>
+                                                    <td style = "border-top-style: none;"><textarea class="form-control" name="contenidos[]" disabled>{% if n.nota %}{{n.nota.contenidos}} {% endif %}</textarea></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Resultados Alcanzados</td>
-                                                    <td><textarea class="form-control" name="" disabled>{{n.nota.resultados}}</textarea></td>
+                                                    <td><textarea class="form-control" name="" disabled>{% if n.nota %}{{n.nota.resultados}} {% endif %}</textarea></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Indicador Alcanzado</td>
@@ -168,7 +160,7 @@
                                                         <select class="form-control" name="" id="" disabled>
                                                             <option value="">Seleccionar....</option>
                                                             {% for tn in notas.tiposNotas %}
-                                                                <option value="{{tn.id}}" {% if tn.id == n.nota.idIndicador %} selected {% endif %} title="{{ tn.descripcion }}">{{tn.nota}}</option>
+                                                                <option value="{{tn.id}}" {% if n.nota and tn.id == n.nota.idIndicador %} selected {% endif %} title="{{ tn.descripcion }}">{{tn.nota}}</option>
                                                             {% endfor %}
                                                         </select>
                                                     </td>
@@ -179,13 +171,12 @@
                                                         <select class="form-control" name="" id="" disabled>
                                                             <option value="">Seleccionar....</option>
                                                             {% for ef in notas.estadosFinales %}
-                                                                <option value="{{ef.id}}" {% if ef.id == n.nota.idEstado %} selected {% endif %}>{{ef.estadomatricula}}</option>
+                                                                <option value="{{ef.id}}" {% if n.nota and ef.id == n.nota.idEstado %} selected {% endif %}>{{ef.estadomatricula}}</option>
                                                             {% endfor %}
                                                         </select>
                                                     </td>
                                                 </tr>
                                             </table>
-                                            {#<textarea id="{{n.id}}" class="" style="text-transform: uppercase; width:160px; background:#EFEFEF; border-color:#E2E2E2" rows="6" minlength="3" maxlength="400" disabled="disabled">{{n.nota}}</textarea>#}
                                         </td>
                                     {% endif %}
                                 {% endfor %}

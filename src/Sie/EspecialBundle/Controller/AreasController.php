@@ -498,6 +498,7 @@ class AreasController extends Controller {
             $grado = $institucionCurso->getGradoTipo()->getId();
             $asignaturas = null;
             $programaServicio = null;
+            $progSer = null;
             
             switch($idNivel){
                 case 401:   switch ($grado) {
@@ -625,6 +626,7 @@ class AreasController extends Controller {
                                     ->getResult();
                                     $programaServicio = $institucionCursoEspecial->getEspecialProgramaTipo()->getPrograma();
                                     $esvisual = true;
+                                    $progSer = "Programa";
                                     break;
                                         
                             }
@@ -638,6 +640,7 @@ class AreasController extends Controller {
                                     ->getResult();
                             $programaServicio = $institucionCursoEspecial->getEspecialServicioTipo()->getServicio();
                             $esvisual = true;
+                            $progSer = "Servicio";
                             break;
             	case 11:    $asignaturas = $em->createQuery(
                                     'SELECT at
@@ -784,7 +787,7 @@ class AreasController extends Controller {
                            ->getResult();
             $em->getConnection()->commit();
             //dump($maestros);die;
-            return $this->render('SieEspecialBundle:Areas:listaAreas.html.twig', array('areasNivel' => $areasArray, 'maestros' => $maestros,'esvisual'=>$esvisual));
+            return $this->render('SieEspecialBundle:Areas:listaAreas.html.twig', array('areasNivel' => $areasArray, 'maestros' => $maestros,'esvisual'=>$esvisual,'progSer'=>$progSer));
         } catch (Exception $ex) {
             //$em->getConnection()->rollback();
         }
@@ -800,6 +803,7 @@ class AreasController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             $form = $request->get('form');
+            $progSer = null;
             //dump($form);die;
             if($form['idArea'] == 2 or $form['idArea'] == 4 or $form['idArea'] == 6 or $form['idArea'] == 7 or $form['nivel'] == 410 or $form['nivel'] == 411){
                 $esvisual = true;
@@ -851,8 +855,10 @@ class AreasController extends Controller {
                     if($tac['idAsignatura']==4){
                         if($tac['idPrograma']==99){
                             $programaServicio = $tac['servicio'];
+                            $progSer = "Servicio";
                         }else{
                             $programaServicio = $tac['programa'];
+                            $progSer = "Programa";
                         }
                     }else{
                         $programaServicio = null;
@@ -870,6 +876,7 @@ class AreasController extends Controller {
                             'curso' => $curso,
                             'mensaje' => $mensaje,
                             'esvisual' => $esvisual,
+                            'progSer' => $progSer,
                             'form' => $this->createFormToBuild($form['idInstitucion'], $form['idGestion'], '4')->createView()
                 ));
             } else {
@@ -895,6 +902,7 @@ class AreasController extends Controller {
      * Fcunrion para eadicionar y elimiar areas
      */
     public function lista_areas_curso_adicionar_eliminarAction(Request $request) {
+        
         try {
             
             $em = $this->getDoctrine()->getManager();
@@ -915,7 +923,7 @@ class AreasController extends Controller {
             $cursoEspecial = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->findOneBy(array('institucioneducativaCurso'=>$idCurso));
             $idEspecialArea = $cursoEspecial->getEspecialAreaTipo()->getId();
             $nivel = $curso->getNivelTipo()->getId();
-            
+            $progSer = null;
             if($idEspecialArea == 2 or $idEspecialArea == 4 or $idEspecialArea == 6 or $idEspecialArea == 7 or $nivel == 410 or $nivel == 411){
                 $esvisual = true;
             }else{
@@ -1065,8 +1073,10 @@ class AreasController extends Controller {
                 if($tac['idAsignatura']==4){
                     if($tac['idPrograma']==99){
                         $programaServicio = $tac['servicio'];
+                        $progSer = "Servicio";
                     }else{
                         $programaServicio = $tac['programa'];
+                        $progSer = "Programa";
                     }
                 }else{
                     $programaServicio = null;
@@ -1085,6 +1095,7 @@ class AreasController extends Controller {
                     'curso'         => $curso, 
                     'mensaje'       => '',
                     'esvisual'      => $esvisual,
+                    'progSer'       => $progSer,
                     'form'          => $this->createFormToBuild($this->session->get('idInstitucion'), $this->session->get('idGestion'), '4')->createView()));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();

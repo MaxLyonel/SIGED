@@ -31,7 +31,11 @@
                         <th>Campo</th>
                         <th>Código</th>
                     {% endif %}
-                    <th>Área</th>
+                    {% if progSer %}
+                        <th>{{progSer}}</th>
+                    {% else %}
+                        <th>Área</th>
+                    {% endif %}                        
                     <!-- Opcion de eliminar solo para nacionales -->
                     
                     <th>Acciones</th>
