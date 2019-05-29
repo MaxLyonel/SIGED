@@ -52,13 +52,15 @@
                                             {{ detalle.persona }}
                                         </td>
                                         <td>
-                                            <img style="display: block; width: 150px; height:150px;" src="data:image/png;base64,{{ detalle.firma }}" />
+                                            <div id="img{{ loop.index }}" >
+                                                <img style="display: block; width: 150px; height:150px;" src="data:image/png;base64,{{ detalle.firma }}" />
+                                            </div>
                                         </td>
                                         <td>
                                             {{ detalle.fecha_registro|date('d/m/Y h:i') }}
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-form" onclick="firma('{{detalle.id|base64_encode}}');" >
+                                            <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-form" onclick="firma('{{detalle.id|base64_encode}}','{{ loop.index }}');" >
                                                 <i class="fa fa-edit"></i> Cambiar Firma
                                             </button>
                                         </td>
@@ -77,11 +79,11 @@
 {% block javascripts %}
     {{parent()}}
     <script>
-        var firma = function(firma){
+        var firma = function(firma, id){
             $.ajax({
                 type: 'post',
                 url: Routing.generate('tramite_documento_firma_modifica'),
-                data: {'firma':firma},
+                data: {'firma':firma, 'id':id},
                 beforeSend: function () {
                     $('#modal').empty();
                 },

@@ -259,7 +259,7 @@ class DocumentoFirmaController extends Controller {
             inner join lugar_tipo as lt on lt.id = df.lugar_tipo_id
             inner join persona_tipo as pt on pt.id = df.persona_tipo_id
             where df.esactivo = true
-            order by pt.persona, lt.lugar, p.nombre, p.paterno, p.materno
+            order by pt.persona, lt.lugar, p.nombre, p.paterno, p.materno, df.id
         ");
         $query->execute();
         $entity = $query->fetchAll();
@@ -274,18 +274,20 @@ class DocumentoFirmaController extends Controller {
     public function modificaAction(Request $request){
         // get the send values
     	$firma = base64_decode($request->get('firma'));
+    	$id = $request->get('id');
     	// $arrData = json_decode($jsonData,true);
     	//$arrCouchs = $this->getTheCouch(json_decode($jsonData,true));
     	// $showOptionRegister = sizeof($arrCouchs)>0?false:true;
         $showOptionRegister = true;
     	return $this->render($this->session->get('pathSystem') . ':DocumentoFirma:firmaModifica.html.twig',array(
-    		'form'=>$this->creaFormularioFirma($firma)->createView(),
+    		'form'=>$this->creaFormularioFirma($firma, $id)->createView(),
     	));
     }
 
-    private function creaFormularioFirma($firmaId)
+    private function creaFormularioFirma($firmaId, $id)
     { 
         $form = $this->createFormBuilder()
+            ->add('id', 'hidden', array('attr' => array('value' => $id))) 
             ->add('firma', 'hidden', array('attr' => array('value' => base64_encode($firmaId))))            
             ->add('foto', 'file', array('label' => 'Fotografía (.png)', 'required' => true)) 
             ->add('save', 'button', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-blue', 'onclick'=>'confirma()')))
@@ -309,7 +311,7 @@ class DocumentoFirmaController extends Controller {
             $em->getConnection()->beginTransaction();
             try{        
             $entityDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->findOneBy(array('id' => $documentoFirmaId));
-                $entityDocumentoFirma->setFirma(stream_get_contents($strm));
+                $entityDocumentoFirma->setFirma(base64_encode(stream_get_contents($strm)));
                 $entityDocumentoFirma->setObs('Modificado');
                 $em->persist($entityDocumentoFirma);
                 $em->flush(); 
@@ -326,7 +328,7 @@ class DocumentoFirmaController extends Controller {
         $response = new JsonResponse();
         return $response->setData(
             array(
-                'firma1' => pg_escape_bytea(stream_get_contents($strm)), 
+                'firma1' => (($entityDocumentoFirma->getFirma())), 
                 'msg_correcto' => $msg_correcto, 
                 'msg_incorrecto' => $msg_incorrecto
             )
