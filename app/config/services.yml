@@ -61,6 +61,12 @@ services:
         calls:
             - [setServices, ["@sie_app_web.funciones","@notas"]]
 
+    wftramite:
+        class: Sie\AppWebBundle\Services\WFTramite
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
+            router: "@router"
+
     login:
         class: Sie\AppWebBundle\Services\Login
         arguments:

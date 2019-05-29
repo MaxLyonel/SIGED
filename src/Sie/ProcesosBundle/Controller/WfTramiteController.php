@@ -1,6 +1,6 @@
 <?php
 
-namespace Sie\AppWebBundle\Controller;
+namespace Sie\ProcesosBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,8 +19,6 @@ use Sie\AppWebBundle\Entity\TramiteDetalle;
 use Sie\AppWebBundle\Entity\WfSolicitudTramite;
 use Sie\AppWebBundle\Entity\WfUsuarioFlujoProceso;
 
-
-
 /**
  * WfTramite controller.
  *
@@ -37,13 +35,40 @@ class WfTramiteController extends Controller
     }
     
     /**
-     * Listado de los tipo de flujos para iniciar un tramite
+     * principal
      */
     public function indexAction(Request $request)
     {
         
         $this->session = $request->getSession();
         //dump($this->session);die;
+        $usuario = $this->session->get('userId');
+        $rol = $this->session->get('roluser');
+        $pathSystem = $this->session->get('pathSystem');
+        //validation if the user is logged
+        if (!isset($usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        
+        $em = $this->getDoctrine()->getManager();
+        $flujotipo = $em->getRepository('SieAppWebBundle:FlujoTipo')->createQueryBuilder('ft')
+                ->select('ft')
+                ->where('ft.id > 5')
+                ->andWhere("ft.obs like '%ACTIVO%'")
+                ->getQuery()
+                ->getResult();
+        $data['entities'] = $flujotipo;
+        $data['titulo'] = "Nuevo trámite";
+        return $this->render('SieProcesosBundle:WfTramite:index.html.twig', $data);
+    }
+    /**
+     * Listado de los tipo de flujos para iniciar un tramite
+     */
+    public function listaAction(Request $request)
+    {
+        
+        $this->session = $request->getSession();
+        //dump($request);die;
         $usuario = $this->session->get('userId');
         $rol = $this->session->get('roluser');
         $pathSystem = $this->session->get('pathSystem');
@@ -62,8 +87,8 @@ class WfTramiteController extends Controller
                 ->getResult();
         //dump($flujotipo);die;
         $data['entities'] = $flujotipo;
-        $data['titulo'] = "Listado de trámites existentes";
-        return $this->render($pathSystem.':WfTramite:index.html.twig', $data);
+        $data['titulo'] = "Nuevo trámite";
+        return $this->render('SieProcesosBundle:WfTramite:lista.html.twig', $data);
     }
 
     /**
@@ -179,7 +204,7 @@ class WfTramiteController extends Controller
         $data['entities'] = $query->fetchAll();
         $data['titulo'] = "Listado de trámites recibidos";
         //dump($data);die;
-        return $this->render($pathSystem.':WfTramite:recibidos.html.twig', $data);
+        return $this->render('SieProcesosBundle:WfTramite:recibidos.html.twig', $data);
     }
 
     /**
@@ -208,7 +233,8 @@ class WfTramiteController extends Controller
         }else{
             $tarea = $tramiteDetalle->getFlujoProceso()->getTareaSigId();
         }
-        $mensaje = $this->guardarTramiteRecibido($usuario,$tarea,$idtramite);
+        $mensaje = $this->get('wftramite')->guardarTramiteRecibido($usuario,$tarea,$idtramite);
+        //$mensaje = $this->guardarTramiteRecibido($usuario,$tarea,$idtramite);
         if($mensaje['dato'] == true){
             $request->getSession()
                 ->getFlashBag()
@@ -218,7 +244,7 @@ class WfTramiteController extends Controller
                 ->getFlashBag()
                 ->add('error', $mensaje['msg']);
         }
-        return $this->redirectToRoute('wf_tramite_recibido');
+        return $this->redirectToRoute('wf_tramite_index');
 
         //return $this->render('SieHerramientaBundle:WfTramite:recibidos.html.twig');
     }
@@ -251,9 +277,10 @@ class WfTramiteController extends Controller
             $request->getSession()
                     ->getFlashBag()
                     ->add('error', "No tiene tuición para este tramite");
-                    return $this->redirectToRoute('wf_tramite_recibido');
+                    return $this->redirectToRoute('wf_tramite_index');
         }  
     }
+<<<<<<< HEAD:src/Sie/AppWebBundle/Controller/WfTramiteController.php
     
     /**
      * funcion general para guardar un nuevo tramite
@@ -734,6 +761,8 @@ class WfTramiteController extends Controller
         }
         return true;
     }
+=======
+>>>>>>> devprocesos:src/Sie/ProcesosBundle/Controller/WfTramiteController.php
 
     /**
      * Listado de trámites envidos
@@ -779,7 +808,7 @@ class WfTramiteController extends Controller
         $data['entities'] = $query->fetchAll();;
         //dump($data);die;
         $data['titulo'] = "Listado de trámites enviados";
-        return $this->render($pathSystem.':WfTramite:enviados.html.twig', $data);
+        return $this->render('SieProcesosBundle:WfTramite:enviados.html.twig', $data);
     }
     
     /**
@@ -815,7 +844,7 @@ class WfTramiteController extends Controller
         $query->execute();
         $data['entities'] = $query->fetchAll();;
         $data['titulo'] = "Listado de trámites concluidos";
-        return $this->render($pathSystem.':WfTramite:concluidos.html.twig', $data);
+        return $this->render('SieProcesosBundle:WfTramite:concluidos.html.twig', $data);
     }
     /**
      * Impresion de formularios como comprobantes
@@ -845,7 +874,7 @@ class WfTramiteController extends Controller
             $request->getSession()
                     ->getFlashBag()
                     ->add('error', "La tarea: ". $flujoproceso->getProcesoTipo()->getProceso() ." correspondiente al tramite Nro. ". $id . "no cuenta con un reporte.");
-                    return $this->redirectToRoute('wf_tramite_enviados');
+                    return $this->redirectToRoute('wf_tramite_index');
         }
     }
         
@@ -866,7 +895,7 @@ class WfTramiteController extends Controller
         $flujotipo = $request->get('flujo');
        
         $detalle = $this->detalle($flujotipo,$idtramite); 
-        return $this->render($pathSystem.':WfTramite:detalle.html.twig', array(
+        return $this->render('SieProcesosBundle:WfTramite:detalle.html.twig', array(
             'detalle' => $detalle['detalle'],'fecha_fin'=>$detalle['fecha_fin'],'idtramite'=>$idtramite,
         ));
         
@@ -916,7 +945,7 @@ class WfTramiteController extends Controller
             ->add('guardar','submit',array('label'=>'Derivar'))
             ->getForm();
         
-        return $this->render($pathSystem.':WfTramite:derivar.html.twig', array(
+        return $this->render('SieProcesosBundle:WfTramite:derivar.html.twig', array(
             'form' => $form->createView(),'idtramite'=>$idtramite,
         ));
         
@@ -949,7 +978,7 @@ class WfTramiteController extends Controller
         $request->getSession()
                 ->getFlashBag()
                 ->add('exito', "El Tramite Nro.:". $idtramite ." fué Derivado a: ".$usuario->getPersona()->getNombre()." ".$usuario->getPersona()->getPaterno()." ".$usuario->getPersona()->getMaterno());
-        return $this->redirectToRoute('wf_tramite_recibido');
+        return $this->redirectToRoute('wf_tramite_index');
         
     }
 
@@ -968,7 +997,7 @@ class WfTramiteController extends Controller
         }
        
         $flujoSeguimientoForm = $this->createFlujoSeguimientoForm(); 
-        return $this->render($pathSystem.':WfTramite:flujoSeguimiento.html.twig', array(
+        return $this->render('SieProcesosBundle:WfTramite:flujoSeguimiento.html.twig', array(
             'form' => $flujoSeguimientoForm->createView(),
         ));
         
@@ -1012,7 +1041,7 @@ class WfTramiteController extends Controller
             $data = $this->listarF($form['proceso'],$form['tramite']);
             //dump($data);die;
         }
-        return $this->render($pathSystem.':WfTramite:flujo.html.twig',$data);
+        return $this->render('SieProcesosBundle:WfTramite:flujo.html.twig',$data);
         
     }
         

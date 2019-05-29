@@ -469,7 +469,14 @@
                       </ul>
                     </li>
                     {% endif %}
-                    {% if app.session.get('roluser') != 20  %}
+                    <li class="">
+                        <a href="{{path('wf_tramite_index')}}">
+                            <span class="icon"><i class="fa fa-home"></i></span>
+                            <span class="text">Trámites</span>
+                            <span class="selected"></span>
+                        </a>
+                    </li>
+                    {# {% if app.session.get('roluser') != 20  %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
@@ -492,7 +499,7 @@
                                 <li><a href="{{ path('wf_tramite_seguimiento')}}">Seguimiento</a></li>
                             </ul>
                         </li>
-                    {% endif %}
+                    {% endif %} #}
                     {% if app.session.get('roluser') == 8  or app.session.get('roluser') == 20  %}
                         <li class="submenu">
                             <a href="javascript:void(0);">

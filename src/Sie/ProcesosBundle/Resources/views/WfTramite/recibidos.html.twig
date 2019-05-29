@@ -1,34 +1,10 @@
-{% extends 'layoutHerramienta.html.twig' %}
-{% block stylesheets %}
-    {{parent()}}
     <style>
         .modal-dialog{
             width: 70%;
         }
     </style>
-{% endblock %}
 
-{% block contentoption %}
 
-    <!-- Start page header -->
-    <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> Trámites <span>Recibidos</span></h2>
-        <div class="breadcrumb-wrapper hidden-xs">
-            <span class="label">Usted esta aquí:</span>
-            <ol class="breadcrumb">
-                <li>
-                    <i class="fa fa-home"></i>
-                    <a href="#">Inicio</a>
-                    <i class="fa fa-angle-right"></i>
-                </li>
-            </ol>
-        </div><!-- /.breadcrumb-wrapper -->
-    </div><!-- /.header-content -->
-    <!--/ End page header -->
-
-    <div class="body-content animated fadeIn">
-        <div class="row">
-            <div class="col-md-12">
                 {% if app.session.flashBag.has('exito') %}
                     <div class="alert alert-success">
                         {% for msg in app.session.flashBag.get('exito') %}
@@ -53,20 +29,10 @@
                         {% endfor %}
                     </div>
                 {% endif %}    
-                <!-- Start default panel -->
-                <div class="panel panel-primary rounded shadow">
-                    <!-- Start panel heading -->
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{{titulo}}</h3>
-                        <div class="clearfix"></div>
-                    </div><!-- /.panel-heading -->
-                    <!--/ End panel heading -->
-                    <!-- Start panel content -->
-                    <div class="panel-body">
                         <div class="row">
 							<div class="col-md-12">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-primary datatable" id="recepDep">
+                                <table class="table table-bordered table-striped table-primary datatable" id="table">
                                     <thead>
                                         <tr>
                                             <th style="min-width: 15px;">No. Trámite</th>
@@ -164,20 +130,8 @@
                             </div>
                             </div>
                         </div>
-                    </div><!-- /.panel-body -->
-                    <!--/ End panel content -->
-                </div><!-- /.panel -->  
-                <!--/ End default panel -->
-            </div>
-        </div><!-- /.row -->
-    </div>
-    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
-    </div><!-- /.modal -->  
-{% endblock %}
-{% block javascripts %}
-    {{parent()}}
     <script>
-        $( document ).ready(function() {
+        {# $( document ).ready(function() {
             cargatablas();
         });
         var statSend = false;
@@ -220,7 +174,7 @@
                     }
                 } );
             } );
-        };
+        }; #}
         function detalle(id,flujo){
             //confirm('¿Esta suguro de eliminar?');
             //alert(id);
@@ -259,4 +213,3 @@
             });
         }
     </script>
-{% endblock %}
