@@ -391,7 +391,7 @@ class InstitucioneducativaRepository extends EntityRepository {
                 ->setParameter('id', $data['distrito'])
                 ->setParameter('operativo', $data['operativo'])
                 ->setParameter('gestion', $data['gestion'])
-                ->orderby('uf.dateUpload')
+                ->orderby('i.id')
         ;
         return $qb->getQuery()->getResult();
     }
