@@ -128,7 +128,6 @@ class Notas{
                 foreach ($cursoOferta as $co) {
                     if(!in_array($co->getAsignaturaTipo()->getId(), $arrayAsignaturasEstudiante)){
 
-                        $query = $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');")->execute();
                         // Si no existe la asignatura, registramos la asignatura para el maestro
                         $newEstAsig = new EstudianteAsignatura();
                         $newEstAsig->setGestionTipo($this->em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
@@ -138,6 +137,25 @@ class Notas{
                         $this->em->persist($newEstAsig);
                         $this->em->flush();
                         $nuevaArea = true;
+
+                        // Registro de materia para estudiantes estudiante_asignatura en el log
+                        $arrayEstAsig = [];
+                        $arrayEstAsig['id'] = $newEstAsig->getId();
+                        $arrayEstAsig['gestionTipo'] = $newEstAsig->getGestionTipo()->getId();
+                        $arrayEstAsig['fechaRegistro'] = $newEstAsig->getFechaRegistro()->format('d-m-Y');
+                        $arrayEstAsig['estudianteInscripcion'] = $newEstAsig->getEstudianteInscripcion()->getId();
+                        $arrayEstAsig['institucioneducativaCursoOferta'] = $newEstAsig->getInstitucioneducativaCursoOferta()->getId();
+                        
+                        $this->funciones->setLogTransaccion(
+                            $newEstAsig->getId(),
+                            'estudiante_asignatura',
+                            'C',
+                            '',
+                            $arrayEstAsig,
+                            '',
+                            'ACADEMICO',
+                            json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                        );
                     }
                 }
 
@@ -286,9 +304,9 @@ class Notas{
                 
                 $nuevaArea = false;
                 foreach ($cursoOferta as $co) {
-                    if(!in_array($co->getAsignaturaTipo()->getId(), $arrayAsignaturasEstudiante)){
+                    // LA MATERIA TECNICA GENERAL Y ESPECILIZADA NO SE AGREGAN AUTOMATICAMENTE A TODOS LOS ESTUDIANTES A PARTIR DE LA GESTION 2019
+                    if(!in_array($co->getAsignaturaTipo()->getId(), $arrayAsignaturasEstudiante) and ($gestion < 2019 or ($gestion >= 2019 and $nivel == 13 and $grado >= 3 and $co->getAsignaturaTipo()->getId() != 1038 and $co->getAsignaturaTipo()->getId() != 1039))) {
 
-                        $query = $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');")->execute();
                         // Si no existe la asignatura, registramos la asignatura para el maestro
                         $newEstAsig = new EstudianteAsignatura();
                         $newEstAsig->setGestionTipo($this->em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
@@ -298,6 +316,25 @@ class Notas{
                         $this->em->persist($newEstAsig);
                         $this->em->flush();
                         $nuevaArea = true;
+
+                        // Registro de materia para estudiantes estudiante_asignatura en el log
+                        $arrayEstAsig = [];
+                        $arrayEstAsig['id'] = $newEstAsig->getId();
+                        $arrayEstAsig['gestionTipo'] = $newEstAsig->getGestionTipo()->getId();
+                        $arrayEstAsig['fechaRegistro'] = $newEstAsig->getFechaRegistro()->format('d-m-Y');
+                        $arrayEstAsig['estudianteInscripcion'] = $newEstAsig->getEstudianteInscripcion()->getId();
+                        $arrayEstAsig['institucioneducativaCursoOferta'] = $newEstAsig->getInstitucioneducativaCursoOferta()->getId();
+                        
+                        $this->funciones->setLogTransaccion(
+                            $newEstAsig->getId(),
+                            'estudiante_asignatura',
+                            'C',
+                            '',
+                            $arrayEstAsig,
+                            '',
+                            'ACADEMICO',
+                            json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                        );
                     }
                 }
 
@@ -553,7 +590,7 @@ class Notas{
                                                          'idEstudianteNotaCualitativa'=>$c->getId(),
                                                          'idNotaTipo'=>$c->getNotaTipo()->getId(),
                                                          'notaCualitativa'=>$c->getNotaCualitativa(),
-                                                         'notaCualitativa'=>$c->getNotaCuantitativa(),
+                                                         'notaCuantitativa'=>$c->getNotaCuantitativa(),
                                                          'notaTipo'=>$c->getNotaTipo()->getNotaTipo()
                                                         );
                             $existe = true;
@@ -769,7 +806,7 @@ class Notas{
             dump($idNotaTipo);
             dump($idEstudianteAsignatura);
             dump($notas);
-
+die;/*
             dump($idEstudianteNotaCualitativa);
             dump($idNotaTipoCualitativa);
             dump($notaCualitativa);
@@ -811,18 +848,26 @@ class Notas{
                             $this->em->persist($newNota);
                             $this->em->flush();
 
-                            // Registro log
-                            /*
+                            // Registro de notas estudiante en el log
+                            $arrayNota = [];
+                            $arrayNota['id'] = $newNota->getId();
+                            $arrayNota['notaTipo'] = $newNota->getNotaTipo()->getId();
+                            $arrayNota['estudianteAsignatura'] = $newNota->getEstudianteAsignatura()->getId();
+                            $arrayNota['notaCuantitativa'] = $newNota->getNotaCuantitativa();
+                            $arrayNota['notaCualitativa'] = $newNota->getNotaCualitativa();
+                            $arrayNota['fechaRegistro'] = $newNota->getFechaRegistro()->format('d-m-Y');
+                            $arrayNota['fechaModificacion'] = $newNota->getFechaModificacion()->format('d-m-Y');
+                            
                             $this->funciones->setLogTransaccion(
                                 $newNota->getId(),
                                 'estudiante_nota',
                                 'C',
                                 '',
-                                $newNota,
+                                $arrayNota,
                                 '',
-                                'SERVICIO',
+                                'SERVICIO NOTAS',
                                 json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-                            );*/
+                            );
                         }
                     }else{
                         $updateNota = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->find($idEstudianteNota[$i]);
@@ -831,32 +876,68 @@ class Notas{
                             if($nivel == 11){
                                 // Verificamos si la nota fue modificada o no para guardar los datos del usuario
                                 if($updateNota->getNotaCualitativa() != mb_strtoupper($notas[$i],'utf-8') and $notas[$i] != ""){
-                                    //$updateNota->setUsuarioId($this->session->get('userId'));
+                                    
+                                    // Registro de notas estudiante en el log
+                                    $anterior = [];
+                                    $anterior['id'] = $updateNota->getId();
+                                    $anterior['notaTipo'] = $updateNota->getNotaTipo()->getId();
+                                    $anterior['notaCualitativa'] = $updateNota->getNotaCualitativa();
+                                    $anterior['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+
                                     $updateNota->setFechaModificacion(new \DateTime('now'));
                                     $updateNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
+                                    $this->em->flush();
+
+                                    // Registro de notas estudiante en el log
+                                    $nuevo = [];
+                                    $nuevo['id'] = $updateNota->getId();
+                                    $nuevo['notaTipo'] = $updateNota->getNotaTipo()->getId();
+                                    $nuevo['notaCualitativa'] = $updateNota->getNotaCualitativa();
+                                    $nuevo['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+                                    
+                                    $this->funciones->setLogTransaccion(
+                                        $updateNota->getId(),
+                                        'estudiante_nota',
+                                        'U',
+                                        '',
+                                        $nuevo,
+                                        $anterior,
+                                        'SERVICIO NOTAS',
+                                        json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                                    );
                                 }
                             }else{
                                 // Verificamos si la nota fue modificada o no para guardar los datos del usuario
                                 if($updateNota->getNotaCuantitativa() != $notas[$i] and $notas[$i] != 0 and $notas[$i] > 0 and $notas[$i] <= 100 ){
-                                    //$updateNota->setUsuarioId($this->session->get('userId'));
+                                    
+                                    $anterior = [];
+                                    $anterior['id'] = $updateNota->getId();
+                                    $anterior['notaTipo'] = $updateNota->getNotaTipo()->getId();
+                                    $anterior['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
+                                    $anterior['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+
                                     $updateNota->setFechaModificacion(new \DateTime('now'));
                                     $updateNota->setNotaCuantitativa($notas[$i]);
+                                    $this->em->flush();
+
+                                    $nuevo = [];
+                                    $nuevo['id'] = $updateNota->getId();
+                                    $nuevo['notaTipo'] = $updateNota->getNotaTipo()->getId();
+                                    $nuevo['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
+                                    $nuevo['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+
+                                    $this->funciones->setLogTransaccion(
+                                        $updateNota->getId(),
+                                        'estudiante_nota',
+                                        'U',
+                                        '',
+                                        $nuevo,
+                                        $anterior,
+                                        'SERVICIO NOTAS',
+                                        json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                                    );
                                 }
                             }
-                            $this->em->flush();
-
-                            // Registro log
-                            /*
-                            $this->funciones->setLogTransaccion(
-                                $newNota->getId(),
-                                'estudiante_nota',
-                                'C',
-                                '',
-                                $newNota,
-                                '',
-                                'SERVICIO',
-                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-                            );*/
                         }
                     }
                 }
@@ -885,26 +966,76 @@ class Notas{
                             $newCualitativa->setObs('');
                             $this->em->persist($newCualitativa);
                             $this->em->flush();
+
+                            /// Registro de notas estudiante en el log
+                            $arrayNotaCualitativa = [];
+                            $arrayNotaCualitativa['id'] = $newCualitativa->getId();
+                            $arrayNotaCualitativa['notaTipo'] = $newCualitativa->getNotaTipo()->getId();
+                            $arrayNotaCualitativa['estudianteInscripcion'] = $newCualitativa->getEstudianteInscripcion()->getId();
+                            $arrayNotaCualitativa['notaCuantitativa'] = $newCualitativa->getNotaCuantitativa();
+                            $arrayNotaCualitativa['notaCualitativa'] = $newCualitativa->getNotaCualitativa();
+                            $arrayNotaCualitativa['fechaRegistro'] = $newCualitativa->getFechaRegistro()->format('d-m-Y');
+                            $arrayNotaCualitativa['fechaModificacion'] = $newCualitativa->getFechaModificacion()->format('d-m-Y');
+                            
+                            $this->funciones->setLogTransaccion(
+                                $newCualitativa->getId(),
+                                'estudiante_nota_cualitativa',
+                                'C',
+                                '',
+                                $arrayNotaCualitativa,
+                                '',
+                                'SERVICIO NOTAS',
+                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                            );
                         }
                     }else{
                         $updateCualitativa = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->find($idEstudianteNotaCualitativa[$j]);
                         if($updateCualitativa){
                             // Verificamos si la nota fue modificada para guardar los datos del usuario que lo modifico
                             if($updateCualitativa->getNotaCualitativa() != mb_strtoupper($notaCualitativa[$j],'utf-8')){
+
+                                /// Registro de notas estudiante en el log
+                                $anterior = [];
+                                $anterior['id'] = $updateCualitativa->getId();
+                                $anterior['notaTipo'] = $updateCualitativa->getNotaTipo()->getId();
+                                $anterior['notaCuantitativa'] = $updateCualitativa->getNotaCuantitativa();
+                                $anterior['notaCualitativa'] = $updateCualitativa->getNotaCualitativa();
+                                $anterior['fechaModificacion'] = $updateCualitativa->getFechaModificacion()->format('d-m-Y');
+
+
                                 $updateCualitativa->setUsuarioId($this->session->get('userId'));
                                 $updateCualitativa->setFechaModificacion(new \DateTime('now'));
+
+                                if ($gestion >= 2019 and ($nivel == 12 or $nivel == 13)) {
+                                    $updateCualitativa->setNotaCuantitativa($notaCualitativa[$j]);
+                                    $updateCualitativa->setNotaCualitativa('');
+                                } else {
+                                    $updateCualitativa->setNotaCuantitativa(0);
+                                    $updateCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa[$j],'utf-8'));
+                                }
+
+                                $this->em->persist($updateCualitativa);
+                                $this->em->flush();
+
+                                $nuevo = [];
+                                $nuevo['id'] = $updateCualitativa->getId();
+                                $nuevo['notaTipo'] = $updateCualitativa->getNotaTipo()->getId();
+                                $nuevo['notaCuantitativa'] = $updateCualitativa->getNotaCuantitativa();
+                                $nuevo['notaCualitativa'] = $updateCualitativa->getNotaCualitativa();
+                                $nuevo['fechaModificacion'] = $updateCualitativa->getFechaModificacion()->format('d-m-Y');
+                                
+                                $this->funciones->setLogTransaccion(
+                                    $updateCualitativa->getId(),
+                                    'estudiante_nota_cualitativa',
+                                    'U',
+                                    '',
+                                    $nuevo,
+                                    $anterior,
+                                    'SERVICIO NOTAS',
+                                    json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                                );
                             }
 
-                            if ($gestion >= 2019 and ($nivel == 12 or $nivel == 13)) {
-                                $updateCualitativa->setNotaCuantitativa($notaCualitativa[$j]);
-                                $updateCualitativa->setNotaCualitativa('');
-                            } else {
-                                $updateCualitativa->setNotaCuantitativa(0);
-                                $updateCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa[$j],'utf-8'));
-                            }
-
-                            $this->em->persist($updateCualitativa);
-                            $this->em->flush();
                         }
                     }
                 }
@@ -934,20 +1065,89 @@ class Notas{
                             $newNota->setObs('');
                             $this->em->persist($newNota);
                             $this->em->flush();
+
+                            // Registro de notas estudiante en el log
+                            $arrayNota = [];
+                            $arrayNota['id'] = $newNota->getId();
+                            $arrayNota['notaTipo'] = $newNota->getNotaTipo()->getId();
+                            $arrayNota['estudianteAsignatura'] = $newNota->getEstudianteAsignatura()->getId();
+                            $arrayNota['notaCuantitativa'] = $newNota->getNotaCuantitativa();
+                            $arrayNota['notaCualitativa'] = $newNota->getNotaCualitativa();
+                            $arrayNota['fechaRegistro'] = $newNota->getFechaRegistro()->format('d-m-Y');
+                            $arrayNota['fechaModificacion'] = $newNota->getFechaModificacion()->format('d-m-Y');
+                            
+                            $this->funciones->setLogTransaccion(
+                                $newNota->getId(),
+                                'estudiante_nota',
+                                'C',
+                                '',
+                                $arrayNota,
+                                '',
+                                'SERVICIO NOTAS',
+                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                            );
                         }
                     }else{
                         $updateNota = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->find($idEstudianteNota[$i]);
                         if($updateNota){
-                            if($notas[$i]!=0){
+                            if($notas[$i] != 0){
+
                                 if($nivel == 11 or $nivel == 1 or $nivel == 403){
+                                    // Registro de notas estudiante en el log
+                                    $anterior = [];
+                                    $anterior['id'] = $updateNota->getId();
+                                    $anterior['notaTipo'] = $updateNota->getNotaTipo()->getId();
+                                    $anterior['notaCualitativa'] = $updateNota->getNotaCualitativa();
+                                    $anterior['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+
                                     $updateNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
+                                    $updateNota->setUsuarioId($this->session->get('userId'));
+                                    $updateNota->setFechaModificacion(new \DateTime('now'));
+                                    $this->em->persist($updateNota);
+                                    $this->em->flush();
+
+                                    // Registro de notas estudiante en el log
+                                    $nuevo = [];
+                                    $nuevo['id'] = $updateNota->getId();
+                                    $nuevo['notaTipo'] = $updateNota->getNotaTipo()->getId();
+                                    $nuevo['notaCualitativa'] = $updateNota->getNotaCualitativa();
+                                    $nuevo['fechaRegistro'] = $updateNota->getFechaRegistro()->format('d-m-Y');
+                                    $nuevo['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+
                                 }else{
+                                    // Registro de notas estudiante en el log
+                                    $anterior = [];
+                                    $anterior['id'] = $updateNota->getId();
+                                    $anterior['notaTipo'] = $updateNota->getNotaTipo()->getId();
+                                    $anterior['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
+                                    $anterior['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+
                                     $updateNota->setNotaCuantitativa($notas[$i]);
+                                    $updateNota->setUsuarioId($this->session->get('userId'));
+                                    $updateNota->setFechaModificacion(new \DateTime('now'));
+                                    $this->em->persist($updateNota);
+                                    $this->em->flush();
+
+                                    // Registro de notas estudiante en el log
+                                    $nuevo = [];
+                                    $nuevo['id'] = $updateNota->getId();
+                                    $nuevo['notaTipo'] = $updateNota->getNotaTipo()->getId();
+                                    $nuevo['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
+                                    $nuevo['fechaRegistro'] = $updateNota->getFechaRegistro()->format('d-m-Y');
+                                    $nuevo['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
                                 }
-                                $updateNota->setUsuarioId($this->session->get('userId'));
-                                $updateNota->setFechaModificacion(new \DateTime('now'));
-                                $this->em->persist($updateNota);
-                                $this->em->flush();
+
+                                $this->funciones->setLogTransaccion(
+                                    $updateNota->getId(),
+                                    'estudiante_nota',
+                                    'U',
+                                    '',
+                                    $nuevo,
+                                    $anterior,
+                                    'SERVICIO NOTAS',
+                                    json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                                );
+
                             }else{
                                 // Eliminar la nota de reforzamiento o promedio final si es cero
                                 $this->em->remove($updateNota);
@@ -956,6 +1156,7 @@ class Notas{
                         }
                     }
                 }
+
                 if($nivel == 12 or $nivel == 2 or $nivel == 3 or ($nivel == 13 and $gestion <= 2013)){
                     // Registro de notas cualitativas de primaria
                     for($j=0;$j<count($idEstudianteNotaC);$j++){
@@ -963,21 +1164,71 @@ class Notas{
                             // Verificamos si la nota cuantitativa existe para hacer el update
                             $existeNotaCuantitativa = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('notaTipo'=>$idNotaTipoC[$j],'estudianteAsignatura'=>$idEstudianteAsignaturaC[$j]));
                             if($existeNotaCuantitativa){
+
+                                $anterior = [];
+                                $anterior['id'] = $existeNotaCuantitativa->getId();
+                                $anterior['notaTipo'] = $existeNotaCuantitativa->getNotaTipo()->getId();
+                                $anterior['notaCuantitativa'] = $existeNotaCuantitativa->getNotaCuantitativa();
+                                $anterior['fechaModificacion'] = $existeNotaCuantitativa->getFechaModificacion()->format('d-m-Y');
+
                                 $existeNotaCuantitativa->setNotaCualitativa(mb_strtoupper($notasC[$j],'utf-8'));
                                 $existeNotaCuantitativa->setUsuarioId($this->session->get('userId'));
                                 $existeNotaCuantitativa->setFechaModificacion(new \DateTime('now'));
                                 $this->em->persist($existeNotaCuantitativa);
                                 $this->em->flush();
+
+                                // Registro de notas estudiante en el log
+                                $nuevo = [];
+                                $nuevo['id'] = $existeNotaCuantitativa->getId();
+                                $nuevo['notaTipo'] = $existeNotaCuantitativa->getNotaTipo()->getId();
+                                $nuevo['notaCuantitativa'] = $existeNotaCuantitativa->getNotaCuantitativa();
+                                $nuevo['fechaModificacion'] = $existeNotaCuantitativa->getFechaModificacion()->format('d-m-Y');
+                                
+                                $this->funciones->setLogTransaccion(
+                                    $existeNotaCuantitativa->getId(),
+                                    'estudiante_nota',
+                                    'U',
+                                    '',
+                                    $nuevo,
+                                    $anterior,
+                                    'SERVICIO NOTAS',
+                                    json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                                );
                             }
 
                         }else{
                             $updateNota = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->find($idEstudianteNotaC[$j]);
                             if($updateNota){
+
+                                $anterior = [];
+                                $anterior['id'] = $updateNota->getId();
+                                $anterior['notaTipo'] = $updateNota->getNotaTipo()->getId();
+                                $anterior['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
+                                $anterior['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+
                                 $updateNota->setNotaCualitativa(mb_strtoupper($notasC[$j],'utf-8'));
                                 $updateNota->setUsuarioId($this->session->get('userId'));
                                 $updateNota->setFechaModificacion(new \DateTime('now'));
                                 $this->em->persist($updateNota);
                                 $this->em->flush();
+
+                                // Registro de notas estudiante en el log
+                                $nuevo = [];
+                                $nuevo['id'] = $updateNota->getId();
+                                $nuevo['notaTipo'] = $updateNota->getNotaTipo()->getId();
+                                $nuevo['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
+                                $nuevo['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+                                
+                                $this->funciones->setLogTransaccion(
+                                    $newNota->getId(),
+                                    'estudiante_nota',
+                                    'U',
+                                    '',
+                                    $nuevo,
+                                    $anterior,
+                                    'SERVICIO NOTAS',
+                                    json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                                );
                             }
                         }
                     }
@@ -997,14 +1248,61 @@ class Notas{
                             $newCualitativa->setObs('');
                             $this->em->persist($newCualitativa);
                             $this->em->flush();
+
+                            /// Registro de notas estudiante en el log
+                            $arrayNotaCualitativa = [];
+                            $arrayNotaCualitativa['id'] = $newCualitativa->getId();
+                            $arrayNotaCualitativa['notaTipo'] = $newCualitativa->getNotaTipo()->getId();
+                            $arrayNotaCualitativa['estudianteInscripcion'] = $newCualitativa->getEstudianteInscripcion()->getId();
+                            $arrayNotaCualitativa['notaCuantitativa'] = $newCualitativa->getNotaCuantitativa();
+                            $arrayNotaCualitativa['notaCualitativa'] = $newCualitativa->getNotaCualitativa();
+                            $arrayNotaCualitativa['fechaRegistro'] = $newCualitativa->getFechaRegistro()->format('d-m-Y');
+                            $arrayNotaCualitativa['fechaModificacion'] = $newCualitativa->getFechaModificacion()->format('d-m-Y');
+                            
+                            $this->funciones->setLogTransaccion(
+                                $newCualitativa->getId(),
+                                'estudiante_nota_cualitativa',
+                                'C',
+                                '',
+                                $arrayNotaCualitativa,
+                                '',
+                                'SERVICIO NOTAS',
+                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                            );
                         }else{
                             $updateCualitativa = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->find($idEstudianteNotaCualitativa[$j]);
                             if($updateCualitativa){
+
+                                /// Registro de notas estudiante en el log
+                                $anterior = [];
+                                $anterior['id'] = $updateCualitativa->getId();
+                                $anterior['notaTipo'] = $updateCualitativa->getNotaTipo()->getId();
+                                $anterior['notaCualitativa'] = $updateCualitativa->getNotaCualitativa();
+                                $anterior['fechaModificacion'] = $updateCualitativa->getFechaModificacion()->format('d-m-Y');
+
                                 $updateCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa[$j],'utf-8'));
                                 $updateCualitativa->setUsuarioId($this->session->get('userId'));
                                 $updateCualitativa->setFechaModificacion(new \DateTime('now'));
                                 $this->em->persist($updateCualitativa);
                                 $this->em->flush();
+
+                                /// Registro de notas estudiante en el log
+                                $nuevo = [];
+                                $nuevo['id'] = $updateCualitativa->getId();
+                                $nuevo['notaTipo'] = $updateCualitativa->getNotaTipo()->getId();
+                                $nuevo['notaCualitativa'] = $updateCualitativa->getNotaCualitativa();
+                                $nuevo['fechaModificacion'] = $updateCualitativa->getFechaModificacion()->format('d-m-Y');
+                                
+                                $this->funciones->setLogTransaccion(
+                                    $updateCualitativa->getId(),
+                                    'estudiante_nota_cualitativa',
+                                    'U',
+                                    '',
+                                    $nuevo,
+                                    $anterior,
+                                    'SERVICIO NOTAS',
+                                    json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                                );
                             }
                         }
                     }
@@ -1027,6 +1325,12 @@ class Notas{
             $this->em->getConnection()->beginTransaction();
             $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
 
+            // ARRAY PARA EL LOG
+            $anterior = [];
+            $anterior['id'] = $inscripcion->getId();
+            $anterior['estadoMatricula'] = $inscripcion->getEstadomatriculaTipo()->getId();
+            ////////////////////
+
             $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
             $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
             $nivel = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
@@ -1048,9 +1352,29 @@ class Notas{
 
                 if($operativo >= 4){
                     $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+
                     $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
                     $this->em->persist($inscripcion);
                     $this->em->flush();
+
+                    $nuevo = [];
+                    $nuevo['id'] = $inscripcion->getId();
+                    $nuevo['estadoMatricula'] = $inscripcion->getEstadomatriculaTipo()->getId();       
+
+                    if ($anterior['estadoMatricula'] != $nuevo['estadoMatricula']) {
+
+                        $this->funciones->setLogTransaccion(
+                            $inscripcion->getId(),
+                            'estudiante_inscripcion',
+                            'U',
+                            '',
+                            $nuevo,
+                            $anterior,
+                            'SERVICIO NOTAS - ESTADO MATRICULA',
+                            json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                        );
+                    }
+
                 }
             }else{
                 $asignaturas = $this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findby(array('estudianteInscripcion'=>$idInscripcion));
@@ -1144,11 +1468,46 @@ class Notas{
                                     $this->em->persist($inscripcion);
                                     $this->em->flush();
                                     
+                                    /// Registro den log de estado de matricula
+                                    $nuevo = [];
+                                    $nuevo['id'] = $inscripcion->getId();
+                                    $nuevo['estadoMatricula'] = $inscripcion->getEstadomatriculaTipo()->getId();
+
+                                    if ($anterior['estadoMatricula'] != $nuevo['estadoMatricula']) {
+                                        $this->funciones->setLogTransaccion(
+                                            $inscripcion->getId(),
+                                            'estudiante_inscripcion',
+                                            'U',
+                                            $request->server->get('HTTP_HOST'),
+                                            $nuevo,
+                                            $anterior,
+                                            'SERVICIO NOTAS - ESTADO MATRICULA',
+                                            json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                                        );
+                                    }
                                 }
                             }else{
+
                                 $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($nuevoEstado));
                                 $this->em->persist($inscripcion);
                                 $this->em->flush();
+
+                                /// Registro den log de estado de matricula
+                                $nuevo = [];
+                                $nuevo['id'] = $inscripcion->getId();
+                                $nuevo['estadoMatricula'] = $inscripcion->getEstadomatriculaTipo()->getId();  
+                                if ($anterior['estadoMatricula'] != $nuevo['estadoMatricula']) {
+                                    $this->funciones->setLogTransaccion(
+                                        $inscripcion->getId(),
+                                        'estudiante_inscripcion',
+                                        'U',
+                                        '',
+                                        $nuevo,
+                                        $anterior,
+                                        'SERVICIO NOTAS - ESTADO MATRICULA',
+                                        json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                                    );
+                                }
                             }
                         }
                     }
@@ -1305,18 +1664,67 @@ class Notas{
         $this->em->persist($newNota);
         $this->em->flush();
 
+        // Registro de notas estudiante en el log
+        $arrayNota = [];
+        $arrayNota['id'] = $newNota->getId();
+        $arrayNota['notaTipo'] = $newNota->getNotaTipo()->getId();
+        $arrayNota['estudianteAsignatura'] = $newNota->getEstudianteAsignatura()->getId();
+        $arrayNota['notaCuantitativa'] = $newNota->getNotaCuantitativa();
+        $arrayNota['notaCualitativa'] = $newNota->getNotaCualitativa();
+        $arrayNota['fechaRegistro'] = $newNota->getFechaRegistro()->format('d-m-Y');
+        $arrayNota['fechaModificacion'] = $newNota->getFechaModificacion()->format('d-m-Y');
+        
+        $this->funciones->setLogTransaccion(
+            $newNota->getId(),
+            'estudiante_asignatura',
+            'C',
+            '',
+            $arrayNota,
+            '',
+            'SERVICIO NOTAS',
+            json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+        );
+
         return $newNota;
     }
 
     public function modificarNota($idEstudianteNota, $notaCuantitativa, $notaCualitativa){
         $datosNota = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->find($idEstudianteNota);
         if($datosNota){
+
+            // Registro de notas estudiante en el log
+            $anterior = [];
+            $anterior['id'] = $datosNota->getId();
+            $anterior['notaTipo'] = $datosNota->getNotaTipo()->getId();
+            $anterior['notaCuantitativa'] = $datosNota->getNotaCuantitativa();
+            $anterior['notaCualitativa'] = $datosNota->getNotaCualitativa();
+            $anterior['fechaModificacion'] = $datosNota->getFechaModificacion()->format('d-m-Y');
+
             $datosNota->setNotaCuantitativa($notaCuantitativa);
             $datosNota->setNotaCualitativa(mb_strtoupper($notaCualitativa, 'utf-8'));
             $datosNota->setUsuarioId($this->session->get('userId'));
             $datosNota->setFechaModificacion(new \DateTime('now'));
             $this->em->persist($datosNota);
             $this->em->flush();
+
+            // Registro de notas estudiante en el log
+            $nuevo = [];
+            $nuevo['id'] = $datosNota->getId();
+            $nuevo['notaTipo'] = $datosNota->getNotaTipo()->getId();
+            $nuevo['notaCuantitativa'] = $datosNota->getNotaCuantitativa();
+            $nuevo['notaCualitativa'] = $datosNota->getNotaCualitativa();
+            $nuevo['fechaModificacion'] = $datosNota->getFechaModificacion()->format('d-m-Y');
+            
+            $this->funciones->setLogTransaccion(
+                $datosNota->getId(),
+                'estudiante_asignatura',
+                'U',
+                '',
+                $nuevo,
+                $anterior,
+                'SERVICIO NOTAS',
+                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+            );
         }
 
         return $datosNota;
@@ -1327,7 +1735,6 @@ class Notas{
     */
     public function registrarNotaCualitativa($idNotaTipo, $idEstudianteInscripcion, $notaCualitativa){
         // Reiniciamos la secuencia de la tabla notas
-        $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota_cualitativa');")->execute();        
         $newNotaCualitativa = new EstudianteNotaCualitativa();
         $newNotaCualitativa->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaTipo));
         $newNotaCualitativa->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idEstudianteInscripcion));
@@ -1340,17 +1747,64 @@ class Notas{
         $this->em->persist($newNotaCualitativa);
         $this->em->flush();
 
+        /// Registro de notas estudiante en el log
+        $arrayNotaCualitativa = [];
+        $arrayNotaCualitativa['id'] = $newNotaCualitativa->getId();
+        $arrayNotaCualitativa['notaTipo'] = $newNotaCualitativa->getNotaTipo()->getId();
+        $arrayNotaCualitativa['estudianteInscripcion'] = $newNotaCualitativa->getEstudianteInscripcion()->getId();
+        $arrayNotaCualitativa['notaCuantitativa'] = $newNotaCualitativa->getNotaCuantitativa();
+        $arrayNotaCualitativa['notaCualitativa'] = $newNotaCualitativa->getNotaCualitativa();
+        $arrayNotaCualitativa['fechaRegistro'] = $newNotaCualitativa->getFechaRegistro()->format('d-m-Y');
+        $arrayNotaCualitativa['fechaModificacion'] = $newNotaCualitativa->getFechaModificacion()->format('d-m-Y');
+        
+        $this->funciones->setLogTransaccion(
+            $newNotaCualitativa->getId(),
+            'estudiante_nota_cualitativa',
+            'C',
+            '',
+            $arrayNotaCualitativa,
+            '',
+            'SERVICIO NOTAS',
+            json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+        );
+
         return $newNotaCualitativa;
     }
 
     public function modificarNotaCualitativa($idEstudianteNotaCualitativa, $notaCualitativa){
         $datosNotaCualitativa = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->find($idEstudianteNotaCualitativa);
         if($datosNotaCualitativa){
+
+            /// Registro de notas estudiante en el log
+            $anterior = [];
+            $anterior['id'] = $datosNotaCualitativa->getId();
+            $anterior['notaTipo'] = $datosNotaCualitativa->getNotaTipo()->getId();
+            $anterior['notaCualitativa'] = $datosNotaCualitativa->getNotaCualitativa();
+            $anterior['fechaModificacion'] = $datosNotaCualitativa->getFechaModificacion()->format('d-m-Y');
+
             $datosNotaCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa, 'utf-8'));
             $datosNotaCualitativa->setUsuarioId($this->session->get('userId'));
             $datosNotaCualitativa->setFechaModificacion(new \DateTime('now'));
             $this->em->persist($datosNotaCualitativa);
             $this->em->flush();
+
+            /// Registro de notas estudiante en el log
+            $nuevo = [];
+            $nuevo['id'] = $datosNotaCualitativa->getId();
+            $nuevo['notaTipo'] = $datosNotaCualitativa->getNotaTipo()->getId();
+            $nuevo['notaCualitativa'] = $datosNotaCualitativa->getNotaCualitativa();
+            $nuevo['fechaModificacion'] = $datosNotaCualitativa->getFechaModificacion()->format('d-m-Y');
+            
+            $this->funciones->setLogTransaccion(
+                $updateCualitativa->getId(),
+                'estudiante_nota_cualitativa',
+                'U',
+                '',
+                $nuevo,
+                $anterior,
+                'SERVICIO NOTAS',
+                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+            );
         }
 
         return $datosNotaCualitativa;
@@ -1412,6 +1866,25 @@ class Notas{
                     $this->em->persist($newEstAsig);
                     $this->em->flush();
                     $nuevaArea = true;
+
+                    // Registro de materia para estudiantes estudiante_asignatura en el log
+                    $arrayEstAsig = [];
+                    $arrayEstAsig['id'] = $newEstAsig->getId();
+                    $arrayEstAsig['gestionTipo'] = $newEstAsig->getGestionTipo()->getId();
+                    $arrayEstAsig['fechaRegistro'] = $newEstAsig->getFechaRegistro()->format('d-m-Y');
+                    $arrayEstAsig['estudianteInscripcion'] = $newEstAsig->getEstudianteInscripcion()->getId();
+                    $arrayEstAsig['institucioneducativaCursoOferta'] = $newEstAsig->getInstitucioneducativaCursoOferta()->getId();
+                    
+                    $this->funciones->setLogTransaccion(
+                        $newEstAsig->getId(),
+                        'estudiante_asignatura',
+                        'C',
+                        '',
+                        $arrayEstAsig,
+                        '',
+                        'ACADEMICO',
+                        json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                    );
                 }
             }
 
@@ -1911,7 +2384,7 @@ class Notas{
                 'estadosPermitidos' =>$estadosPermitidos,
                 'tiposNotas'        =>$tiposNotasArray,
                 'estadosFinales'    =>$estadosFinales,
-                'etapas'            =>$etapasArray
+                'etapas'            =>$etapasArray,
             );
 
         } catch (Exception $e) {
@@ -1974,7 +2447,6 @@ class Notas{
                 for($i=0;$i<count($idEstudianteNota);$i++) {
                     if($idEstudianteNota[$i] == 'nuevo'){
                         //if((!in_array($nivel, $nivelesCualitativos) and $notas[$i] != 0 ) or (in_array($nivel, $nivelesCualitativos) and $notas[$i] != "")){
-                            $query = $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota');")->execute();
                             $newNota = new EstudianteNota();
                             $newNota->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaTipo[$i]));
                             $newNota->setEstudianteAsignatura($this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($idEstudianteAsignatura[$i]));
@@ -1997,23 +2469,39 @@ class Notas{
                             $this->em->persist($newNota);
                             $this->em->flush();
 
-                            // Registro log
-                            /*
+                            // Registro de notas estudiante en el log
+                            $arrayNota = [];
+                            $arrayNota['id'] = $newNota->getId();
+                            $arrayNota['notaTipo'] = $newNota->getNotaTipo()->getId();
+                            $arrayNota['estudianteAsignatura'] = $newNota->getEstudianteAsignatura()->getId();
+                            $arrayNota['notaCuantitativa'] = $newNota->getNotaCuantitativa();
+                            $arrayNota['notaCualitativa'] = $newNota->getNotaCualitativa();
+                            $arrayNota['fechaRegistro'] = $newNota->getFechaRegistro()->format('d-m-Y');
+                            $arrayNota['fechaModificacion'] = $newNota->getFechaModificacion()->format('d-m-Y');
+                            
                             $this->funciones->setLogTransaccion(
                                 $newNota->getId(),
                                 'estudiante_nota',
                                 'C',
                                 '',
-                                $newNota,
+                                $arrayNota,
                                 '',
-                                'SERVICIO',
+                                'SERVICIO NOTAS',
                                 json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-                            );*/
+                            );
                         //}
                     }else{
                         $updateNota = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->find($idEstudianteNota[$i]);
                         $regAnterior = clone $updateNota;
                         if($updateNota){
+                            /// Registro de notas estudiante en el log
+                            $anterior = [];
+                            $anterior['id'] = $updateNota->getId();
+                            $anterior['notaTipo'] = $updateNota->getNotaTipo()->getId();
+                            $anterior['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
+                            $anterior['notaCualitativa'] = $updateNota->getNotaCualitativa();
+                            $anterior['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+
                             if($nivel == 401 or $nivel == 402 or $nivel == 403 or $nivel == 411){
                                 if($gestion > 2018 and ($discapacidad == 2 or $discapacidad == 3 or $discapacidad == 5)){
                                     $updateNota->setNotaCualitativa(json_encode($notas[$i]));
@@ -2028,18 +2516,24 @@ class Notas{
                             $this->em->persist($updateNota);
                             $this->em->flush();
 
-                            // Registro log
-                            /*
+                            /// Registro de notas estudiante en el log
+                            $nuevo = [];
+                            $nuevo['id'] = $updateNota->getId();
+                            $nuevo['notaTipo'] = $updateNota->getNotaTipo()->getId();
+                            $nuevo['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
+                            $nuevo['notaCualitativa'] = $updateNota->getNotaCualitativa();
+                            $nuevo['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+                            
                             $this->funciones->setLogTransaccion(
-                                $newNota->getId(),
+                                $updateNota->getId(),
                                 'estudiante_nota',
-                                'C',
+                                'U',
                                 '',
-                                $newNota,
-                                '',
-                                'SERVICIO',
+                                $nuevo,
+                                $anterior,
+                                'SERVICIO NOTAS',
                                 json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-                            );*/
+                            );
                         }
                     }
                     if ($discapacidad == 1 and (($i+1)%5 == 0) and $request->get('operativo') == 4 and $nivel == 404) {
@@ -2092,15 +2586,63 @@ class Notas{
                             $newCualitativa->setObs('');
                             $this->em->persist($newCualitativa);
                             $this->em->flush();
+
+                            // Registro de notas estudiante en el log
+                            $arrayNotaCualitativa = [];
+                            $arrayNotaCualitativa['id'] = $newCualitativa->getId();
+                            $arrayNotaCualitativa['notaTipo'] = $newCualitativa->getNotaTipo()->getId();
+                            $arrayNotaCualitativa['estudianteInscripcion'] = $newCualitativa->getEstudianteInscripcion()->getId();
+                            $arrayNotaCualitativa['notaCuantitativa'] = $newCualitativa->getNotaCuantitativa();
+                            $arrayNotaCualitativa['notaCualitativa'] = $newCualitativa->getNotaCualitativa();
+                            $arrayNotaCualitativa['fechaRegistro'] = $newCualitativa->getFechaRegistro()->format('d-m-Y');
+                            $arrayNotaCualitativa['fechaModificacion'] = $newCualitativa->getFechaModificacion()->format('d-m-Y');
+                            
+                            $this->funciones->setLogTransaccion(
+                                $newCualitativa->getId(),
+                                'estudiante_nota_cualitativa',
+                                'C',
+                                '',
+                                $arrayNotaCualitativa,
+                                '',
+                                'SERVICIO NOTAS',
+                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                            );
+
                         }
                     }else{
                         $updateCualitativa = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->find($idEstudianteNotaCualitativa[$j]);
                         if($updateCualitativa){
+
+                            // Registro de notas estudiante en el log
+                            $anterior = [];
+                            $anterior['id'] = $updateCualitativa->getId();
+                            $anterior['notaTipo'] = $updateCualitativa->getNotaTipo()->getId();
+                            $anterior['notaCualitativa'] = $updateCualitativa->getNotaCualitativa();
+                            $anterior['fechaModificacion'] = $updateCualitativa->getFechaModificacion()->format('d-m-Y');
+
                             $updateCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa[$j],'utf-8'));
                             $updateCualitativa->setUsuarioId($this->session->get('userId'));
                             $updateCualitativa->setFechaModificacion(new \DateTime('now'));
                             $this->em->persist($updateCualitativa);
                             $this->em->flush();
+
+                            // Registro de notas estudiante en el log
+                            $nuevo = [];
+                            $nuevo['id'] = $updateCualitativa->getId();
+                            $nuevo['notaTipo'] = $updateCualitativa->getNotaTipo()->getId();
+                            $nuevo['notaCualitativa'] = $updateCualitativa->getNotaCualitativa();
+                            $nuevo['fechaModificacion'] = $updateCualitativa->getFechaModificacion()->format('d-m-Y');
+                            
+                            $this->funciones->setLogTransaccion(
+                                $updateCualitativa->getId(),
+                                'estudiante_nota_cualitativa',
+                                'U',
+                                '',
+                                $nuevo,
+                                $anterior,
+                                'SERVICIO NOTAS',
+                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                            );
                         }
                     }
                 }
@@ -2126,11 +2668,41 @@ class Notas{
                             $newNota->setObs('');
                             $this->em->persist($newNota);
                             $this->em->flush();
+
+                            // Registro de notas estudiante en el log
+                            $arrayNota = [];
+                            $arrayNota['id'] = $newNota->getId();
+                            $arrayNota['notaTipo'] = $newNota->getNotaTipo()->getId();
+                            $arrayNota['estudianteAsignatura'] = $newNota->getEstudianteAsignatura()->getId();
+                            $arrayNota['notaCuantitativa'] = $newNota->getNotaCuantitativa();
+                            $arrayNota['notaCualitativa'] = $newNota->getNotaCualitativa();
+                            $arrayNota['fechaRegistro'] = $newNota->getFechaRegistro()->format('d-m-Y');
+                            $arrayNota['fechaModificacion'] = $newNota->getFechaModificacion()->format('d-m-Y');
+                            
+                            $this->funciones->setLogTransaccion(
+                                $newNota->getId(),
+                                'estudiante_nota',
+                                'C',
+                                '',
+                                $arrayNota,
+                                '',
+                                'SERVICIO NOTAS',
+                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                            );
                         }
                     }else{
                         $updateNota = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->find($idEstudianteNota[$i]);
                         if($updateNota){
                             if(($idNotaTipo[$i] <=9) or (($idNotaTipo[$i]==10 or $idNotaTipo[$i]==11) and $notas[$i]!=0)){
+
+                                /// Registro de notas estudiante en el log
+                                $anterior = [];
+                                $anterior['id'] = $updateNota->getId();
+                                $anterior['notaTipo'] = $updateNota->getNotaTipo()->getId();
+                                $anterior['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
+                                $anterior['notaCualitativa'] = $updateNota->getNotaCualitativa();
+                                $anterior['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+
                                 if($nivel == 11 or $nivel == 1 or $nivel == 401 or $nivel == 402 or $nivel == 403 or $nivel == 411){
                                     $updateNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
                                 }else{
@@ -2140,6 +2712,26 @@ class Notas{
                                 $updateNota->setFechaModificacion(new \DateTime('now'));
                                 $this->em->persist($updateNota);
                                 $this->em->flush();
+
+                                /// Registro de notas estudiante en el log
+                                $nuevo = [];
+                                $nuevo['id'] = $updateNota->getId();
+                                $nuevo['notaTipo'] = $updateNota->getNotaTipo()->getId();
+                                $nuevo['notaCuantitativa'] = $updateNota->getNotaCuantitativa();
+                                $nuevo['notaCualitativa'] = $updateNota->getNotaCualitativa();
+                                $nuevo['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+                                
+                                $this->funciones->setLogTransaccion(
+                                    $updateNota->getId(),
+                                    'estudiante_nota',
+                                    'U',
+                                    '',
+                                    $nuevo,
+                                    $anterior,
+                                    'SERVICIO NOTAS',
+                                    json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                                );
+
                             }else{
                                 // Eliminar la nota de reforzamiento o promedio final si es cero
                                 $this->em->remove($updateNota);
@@ -2160,16 +2752,60 @@ class Notas{
                                 $existeNotaCuantitativa->setFechaModificacion(new \DateTime('now'));
                                 $this->em->persist($existeNotaCuantitativa);
                                 $this->em->flush();
+
+                                $arrayNota = [];
+                                $arrayNota['id'] = $existeNotaCuantitativa->getId();
+                                $arrayNota['notaTipo'] = $existeNotaCuantitativa->getNotaTipo()->getId();
+                                $arrayNota['estudianteAsignatura'] = $existeNotaCuantitativa->getEstudianteAsignatura()->getId();
+                                $arrayNota['notaCuantitativa'] = $existeNotaCuantitativa->getNotaCuantitativa();
+                                $arrayNota['notaCualitativa'] = $existeNotaCuantitativa->getNotaCualitativa();
+                                $arrayNota['fechaRegistro'] = $existeNotaCuantitativa->getFechaRegistro()->format('d-m-Y');
+                                $arrayNota['fechaModificacion'] = $existeNotaCuantitativa->getFechaModificacion()->format('d-m-Y');
+                                
+                                $this->funciones->setLogTransaccion(
+                                    $existeNotaCuantitativa->getId(),
+                                    'estudiante_nota',
+                                    'U',
+                                    '',
+                                    $arrayNota,
+                                    '',
+                                    'SERVICIO NOTAS',
+                                    json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                                );
                             }
 
                         }else{
                             $updateNota = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->find($idEstudianteNotaC[$j]);
                             if($updateNota){
+
+                                $anterior = [];
+                                $anterior['id'] = $updateNota->getId();
+                                $anterior['notaTipo'] = $updateNota->getNotaTipo()->getId();
+                                $anterior['notaCualitativa'] = $updateNota->getNotaCualitativa();
+                                $anterior['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+
                                 $updateNota->setNotaCualitativa(mb_strtoupper($notasC[$j],'utf-8'));
                                 $updateNota->setUsuarioId($this->session->get('userId'));
                                 $updateNota->setFechaModificacion(new \DateTime('now'));
                                 $this->em->persist($updateNota);
                                 $this->em->flush();
+
+                                $nuevo = [];
+                                $nuevo['id'] = $updateNota->getId();
+                                $nuevo['notaTipo'] = $updateNota->getNotaTipo()->getId();
+                                $nuevo['notaCualitativa'] = $updateNota->getNotaCualitativa();
+                                $nuevo['fechaModificacion'] = $updateNota->getFechaModificacion()->format('d-m-Y');
+                                
+                                $this->funciones->setLogTransaccion(
+                                    $updateNota->getId(),
+                                    'estudiante_nota',
+                                    'U',
+                                    '',
+                                    $nuevo,
+                                    $anterior,
+                                    'SERVICIO NOTAS',
+                                    json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                                );
                             }
                         }
                     }
@@ -2189,14 +2825,61 @@ class Notas{
                             $newCualitativa->setObs('');
                             $this->em->persist($newCualitativa);
                             $this->em->flush();
+
+                            // Registro de notas estudiante en el log
+                            $arrayNotaCualitativa = [];
+                            $arrayNotaCualitativa['id'] = $newCualitativa->getId();
+                            $arrayNotaCualitativa['notaTipo'] = $newCualitativa->getNotaTipo()->getId();
+                            $arrayNotaCualitativa['estudianteInscripcion'] = $newCualitativa->getEstudianteInscripcion()->getId();
+                            $arrayNotaCualitativa['notaCuantitativa'] = $newCualitativa->getNotaCuantitativa();
+                            $arrayNotaCualitativa['notaCualitativa'] = $newCualitativa->getNotaCualitativa();
+                            $arrayNotaCualitativa['fechaRegistro'] = $newCualitativa->getFechaRegistro()->format('d-m-Y');
+                            $arrayNotaCualitativa['fechaModificacion'] = $newCualitativa->getFechaModificacion()->format('d-m-Y');
+                            
+                            $this->funciones->setLogTransaccion(
+                                $newCualitativa->getId(),
+                                'estudiante_nota_cualitativa',
+                                'C',
+                                '',
+                                $arrayNotaCualitativa,
+                                '',
+                                'SERVICIO NOTAS',
+                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                            );
                         }else{
                             $updateCualitativa = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->find($idEstudianteNotaCualitativa[$j]);
                             if($updateCualitativa){
+
+                                // Registro de notas estudiante en el log
+                                $arrayNotaCualitativa = [];
+                                $arrayNotaCualitativa['id'] = $updateCualitativa->getId();
+                                $arrayNotaCualitativa['notaTipo'] = $updateCualitativa->getNotaTipo()->getId();
+                                $arrayNotaCualitativa['notaCualitativa'] = $updateCualitativa->getNotaCualitativa();
+                                $arrayNotaCualitativa['fechaModificacion'] = $updateCualitativa->getFechaModificacion()->format('d-m-Y');
+
                                 $updateCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa[$j],'utf-8'));
                                 $updateCualitativa->setUsuarioId($this->session->get('userId'));
                                 $updateCualitativa->setFechaModificacion(new \DateTime('now'));
                                 $this->em->persist($updateCualitativa);
                                 $this->em->flush();
+
+                                // Registro de notas estudiante en el log
+                                $arrayNotaCualitativa = [];
+                                $arrayNotaCualitativa['id'] = $updateCualitativa->getId();
+                                $arrayNotaCualitativa['notaTipo'] = $updateCualitativa->getNotaTipo()->getId();
+                                $arrayNotaCualitativa['notaCualitativa'] = $updateCualitativa->getNotaCualitativa();
+                                $arrayNotaCualitativa['fechaModificacion'] = $updateCualitativa->getFechaModificacion()->format('d-m-Y');
+                                
+                                $this->funciones->setLogTransaccion(
+                                    $updateCualitativa->getId(),
+                                    'estudiante_nota_cualitativa',
+                                    'U',
+                                    '',
+                                    $nuevo,
+                                    $anterior,
+                                    'SERVICIO NOTAS',
+                                    json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                                );
                             }
                         }
                     }

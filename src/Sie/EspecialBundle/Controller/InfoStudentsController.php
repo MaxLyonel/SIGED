@@ -674,36 +674,150 @@ class InfoStudentsController extends Controller {
 
   /*Modificacion de estado de matricula*/
   public function cambiarEstadoMatriculaAction(Request $request){
-    //get the send values
     //dump($request);die;
     $em = $this->getDoctrine()->getManager();
-    $estInsEspId = $request->get('idInscripcionEspecial');
-    $eie = $em->getRepository('SieAppWebBundle:EstudianteInscripcionEspecial')->find($estInsEspId);
-    
-    return $this->render('SieEspecialBundle:InfoStudents:cambiarEstadoMatricula.html.twig', array(
-      'form'=>$this->estadoMatriculaForm($eie)->createView()
-    ));
-}
-  /**
-  *  Formulario de estado matricula
-  **/
-  private function estadoMatriculaForm($eie){
-
-    $em = $this->getDoctrine()->getManager();
-    $estadomatriculaId = $eie->getestudianteInscripcion()->getEstadomatriculaTipo()->getId();
-    $eiId = $eie->getEstudianteInscripcion()->getId();
-    $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(10,6,$estadomatriculaId)));
+    $estInsId = $request->get('estInsId');
+    $eslibreta = $request->get('eslibreta');
+    $infoUe = $request->get('infoUe');
+    //dump($estInsId);die;
+    $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($estInsId);
+    $estadomatriculaId = $inscripcion->getEstadomatriculaTipo()->getId();
+    if($eslibreta == true){
+      $emPermitidos = array(10,6,$estadomatriculaId);
+    }else{
+      $emPermitidos = array(6,$estadomatriculaId);
+    }
+    $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>$emPermitidos));
     $emArray = array();
     foreach($estadosMatricula as $em){
       $emArray[$em->getId()] = $em->getestadomatricula();
 
     }
     
+    return $this->render('SieEspecialBundle:InfoStudents:cambiarEstadoMatricula.html.twig', array(
+      'form'=>$this->estadoMatriculaForm($estadomatriculaId,$estInsId,$emArray,$infoUe)->createView(),
+      'inscripcion' => $inscripcion,
+    ));
+  }
+  /**
+  *  Formulario de estado matricula
+  **/
+  private function estadoMatriculaForm($estadomatriculaId,$estInsId,$emArray,$infoUe){
+    
     $form = $this->createFormBuilder()
-            ->add('ieId', 'hidden', array('data'=> $eiId))
-            ->add('estadomatriculaTipo','choice',array('label'=>'Estado','required'=>true,'data'=>$estadomatriculaId,'choices'=>$emArray,'attr' => array('class' => 'form-control')))
+            ->add('ieId', 'hidden', array('data'=> $estInsId))
+            ->add('data', 'hidden', array('data'=> $infoUe))
+            ->add('estadomatriculaTipo','choice',array('label'=>'Cambiar estado:','required'=>true,'data'=>$estadomatriculaId,'choices'=>$emArray,'attr' => array('class' => 'form-control')))
             ->add('guardar', 'button', array('label'=> 'Guardar', 'attr'=>array('class'=>'btn btn-success', 'onclick'=>'guardarEstado()')))
             ->getForm();
     return $form;
+  }
+
+  /*guardar estado de matricula*/
+  public function guardarEstadoMatriculaAction(Request $request){
+    //dump($request);die;
+    $em = $this->getDoctrine()->getManager();
+    $form = $request->get('form');
+    $aInfoUeducativa = unserialize($form['data']);
+
+    $sie = $aInfoUeducativa['requestUser']['sie'];
+    $iecId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
+    $ieceId = $aInfoUeducativa['ueducativaInfoId']['ieceId'];
+    $nivel = $aInfoUeducativa['ueducativaInfoId']['nivelId'];
+    $grado = $aInfoUeducativa['ueducativaInfoId']['gradoId'];
+    $turno = $aInfoUeducativa['ueducativaInfoId']['turnoId'];
+    $ciclo = $aInfoUeducativa['ueducativaInfoId']['cicloId'];
+    $gestion = $aInfoUeducativa['requestUser']['gestion'];
+    $paralelo = $aInfoUeducativa['ueducativaInfoId']['paraleloId'];
+    $gradoname = $aInfoUeducativa['ueducativaInfo']['grado'];
+    $paraleloname = $aInfoUeducativa['ueducativaInfo']['paralelo'];
+    //dump($form);die;
+    $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($form['ieId']);
+    $notas = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->createQueryBuilder('ea')
+                    ->select('en')
+                    ->innerJoin('SieAppWebBundle:EstudianteNota', 'en', 'with', 'en.estudianteAsignatura = ea.id')
+                    ->where('ea.estudianteInscripcion='.$form['ieId'])
+                    ->getQuery()
+                    ->getResult();
+  
+  $sw = true;
+  if($form['estadomatriculaTipo'] == 6 and $notas){  //NO INCORPORADO
+    $sw = false;
+    $this->session->getFlashBag()->add('noinscription', 'No corresponde el cambio de estado a <strong>NO INCORPORADO</strong>, pues estudiante cuanta con calificaciones.');
+  }
+  if($form['estadomatriculaTipo'] == 10 and !$notas) { //RETIRO ABANDONO
+    $sw = false;
+    $this->session->getFlashBag()->add('noinscription', 'No corresponde el cambio de estado a <strong>RETIRADO ABANDONO</strong>, pues estudiante no cuanta con calificaciones.');
+  }
+  if($sw == true){
+    try {
+      $em->getConnection()->beginTransaction();
+      
+      $inscripcion->setEstadomatriculaInicioTipo($inscripcion->getEstadomatriculaTipo());
+      $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($form['estadomatriculaTipo']));
+      $em->flush();
+      $em->getConnection()->commit();
+
+      $this->session->getFlashBag()->add('goodinscription', 'Se cambió el estado de matricula del estudiante');
+    }catch (Exception $e){
+      $em->getConnection()->rollback();
+      echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+    }
+
+  }
+    
+    // Para el centralizador
+    $itemsUe = $aInfoUeducativa['ueducativaInfo']['nivel'].",".$aInfoUeducativa['ueducativaInfo']['grado'].",".$aInfoUeducativa['ueducativaInfo']['paralelo'];
+
+    $operativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToCollege($sie,$gestion);
+    
+    $arrDataLibreta = array();
+    $arrDataLibreta['areaEspecialId'] = ($aInfoUeducativa['ueducativaInfoId']['areaEspecialId'])?$aInfoUeducativa['ueducativaInfoId']['areaEspecialId']:'';
+    $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
+    $nivelesLibreta = array(401,402,403,404);
+    $programasLibreta = array(7,8,9,12,14,15);
+    if($gestion >2018 and $nivel <> 405){
+      $arrDataLibreta['calificaciones'] = true;
+    }elseif(in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
+      $arrDataLibreta['calificaciones'] = true;
+    }else{
+      $arrDataLibreta['calificaciones'] = false;
+    }
+    
+    if((in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))) and $gestion>2018){
+      $arrDataLibreta['libreta'] = true;
+    }else{
+      $arrDataLibreta['libreta'] = false;
+    }
+    //reload the students list
+    $exist = true;
+    $objStudents = array();
+
+    $objStudents = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getListStudentPerCourseSpecial($aInfoUeducativa['requestUser']['sie'], $aInfoUeducativa['requestUser']['gestion'],$aInfoUeducativa['ueducativaInfoId']['ieceId']);
+    $dataUe=(unserialize($form['data']));
+
+    return $this->render($this->session->get('pathSystem') . ':InfoStudents:seeStudents.html.twig', array(
+                'objStudents' => $objStudents,
+                'sie' => $sie,
+                'turno' => $turno,
+                'nivel' => $nivel,
+                'grado' => $grado,
+                'paralelo' => $paralelo,
+                'gestion' => $gestion,
+                'infoUe' => $form['data'],
+                'aData' => $form['data'],
+                'gradoname' => $gradoname,
+                'paraleloname' => $paraleloname,
+                // 'nivelname' => $nivelname,
+                'form' => $this->createFormStudentInscription($form['data'])->createView(),
+                'exist' => $exist,
+                'itemsUe'=>$itemsUe,
+                'ciclo'=>$ciclo,
+                'operativo'=>$operativo,
+                'arrDataLibreta'=> $arrDataLibreta,
+                'ueducativaInfo'=> $aInfoUeducativa['ueducativaInfo']
+                // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
+    ));
+
   }
 }

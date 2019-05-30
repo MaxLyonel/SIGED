@@ -1,6 +1,7 @@
 consolidation_sie_web:
     path:    /
     defaults: { _controller: SieRegularBundle:ConsolidationSie:index }
+    methods:    GET|POST|HEAD
     
 consolidation_sie_upfile_web:
     path:    /upfile

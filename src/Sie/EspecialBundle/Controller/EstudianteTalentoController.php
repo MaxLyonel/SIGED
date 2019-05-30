@@ -30,7 +30,6 @@ use Sie\AppWebBundle\DBAL\Types\DeteccionTipo;
 use Sie\AppWebBundle\DBAL\Types\DificultadAprendizajeTipo;
 
 use Sie\ProcesosBundle\Controller\TramiteRueController;
-use Sie\AppWebBundle\Controller\WfTramiteController;
 
 /**
  * EstudianteTalento controller.
@@ -152,8 +151,8 @@ class EstudianteTalentoController extends Controller {
         $usuario_id = $request->getSession()->get('userId');
         $rol_id = $request->getSession()->get('roluser');
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $datos['flujotipo_id'], 'orden' => 1));
-        $flujo_tipo = $flujoproceso->getFlujoTipo()->getId(); //10 Talento Extraordinario
-        $tarea_id = $flujoproceso->getId();//59 Solicita Talento, flujo_proceso
+        $flujo_tipo = $flujoproceso->getFlujoTipo()->getId();
+        $tarea_id = $flujoproceso->getId();
         $tabla = 'institucioneducativa';
         $centroinscripcion_id = $datos['centro_inscripcion'];//$request->getSession()->get('ie_id');
         $tipotramite = $em->getRepository('SieAppWebBundle:TramiteTipo')->findOneBy(array('obs' => 'TE'));
@@ -171,9 +170,7 @@ class EstudianteTalentoController extends Controller {
             $distrito_id = $ieducativa->getLeJuridicciongeografica()->getLugarTipoIdDistrito();
             $lugarlocalidad_id = $ieducativa->getLeJuridicciongeografica()->getLugarTipoLocalidad()->getId();
         }
-        $wfTramiteController = new WfTramiteController();
-        $wfTramiteController->setContainer($this->container);
-        $result = $wfTramiteController->guardarTramiteNuevo($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $centroinscripcion_id, $observaciones, $tipotramite_id,'', $tramite_id, json_encode($datos), $lugarlocalidad_id, $distrito_id);
+        $result = $this->get('wftramite')->guardarTramiteNuevo($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $centroinscripcion_id, $observaciones, $tipotramite_id,'', $tramite_id, json_encode($datos), $lugarlocalidad_id, $distrito_id);
         if ($result['dato'] == true) {
             $msg = $result['msg'];
         } else {
@@ -234,8 +231,8 @@ class EstudianteTalentoController extends Controller {
         $tramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneById($datos['tramite_id']);
 
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 2));
-        $flujo_tipo = $flujoproceso->getFlujoTipo()->getId(); //10 Talento Extraordinario
-        $tarea_id = $flujoproceso->getId();//60 Determina talento, flujo_proceso = tarea
+        $flujo_tipo = $flujoproceso->getFlujoTipo()->getId();
+        $tarea_id = $flujoproceso->getId();
         $tabla = 'institucioneducativa';
         $centroinscripcion_id = $request->getSession()->get('ie_id');
         $observaciones = 'Informe psicopedagógico';
@@ -249,9 +246,7 @@ class EstudianteTalentoController extends Controller {
             $distrito_id = $ieducativa->getLeJuridicciongeografica()->getLugarTipoIdDistrito();
             $lugarlocalidad_id = $ieducativa->getLeJuridicciongeografica()->getLugarTipoLocalidad()->getId();
         }
-        $wfTramiteController = new WfTramiteController();
-        $wfTramiteController->setContainer($this->container);
-        $result = $wfTramiteController->guardarTramiteEnviado($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $centroinscripcion_id, $observaciones, $evaluacion, $tramite_id, json_encode($datos), $lugarlocalidad_id, $distrito_id);
+        $result = $this->get('wftramite')->guardarTramiteEnviado($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $centroinscripcion_id, $observaciones, $evaluacion, $tramite_id, json_encode($datos), $lugarlocalidad_id, $distrito_id);
         if ($result['dato'] == true) {
             $estado = 200;
             $msg = $result['msg'];
@@ -327,10 +322,7 @@ class EstudianteTalentoController extends Controller {
             $distrito_id = $ieducativa->getLeJuridicciongeografica()->getLugarTipoIdDistrito();
             $lugarlocalidad_id = $ieducativa->getLeJuridicciongeografica()->getLugarTipoLocalidad()->getId();
         }
-
-        $wfTramiteController = new WfTramiteController();
-        $wfTramiteController->setContainer($this->container);
-        $result = $wfTramiteController->guardarTramiteEnviado($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $centroinscripcion_id, $observaciones, $evaluacion, $tramite_id, json_encode($tareasDatos), $lugarlocalidad_id, $distrito_id);
+        $result = $this->get('wftramite')->guardarTramiteEnviado($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $centroinscripcion_id, $observaciones, $evaluacion, $tramite_id, json_encode($tareasDatos), $lugarlocalidad_id, $distrito_id);
         if ($result['dato'] == true) {
             if ($tareasDatos[1]['datos']['es_talento'] == 'SI') {
                 try {

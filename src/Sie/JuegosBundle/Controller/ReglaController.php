@@ -485,6 +485,9 @@ class ReglaController extends Controller
                 if ($entidadUsuarioId == 99226  ){  // VILLA ABECIA - LAS CARRERAS
                     $xCupo = 2;
                 }
+                if ($entidadUsuarioId == 31630  ){  // SAN ANDRES / LORETO
+                    $xCupo = 2;
+                }
                 $cupoPresentacion = $cupoPresentacion * $xCupo;
                 if($pruebaParticipacionId == 2){   
                     $cupoInscripcion = $cupoInscripcion * $xCupo;

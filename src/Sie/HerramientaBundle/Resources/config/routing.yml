@@ -199,6 +199,7 @@ sie_herramienta_registro_estudiante:
      resource: "@SieHerramientaBundle/Resources/config/routing/regstudent.yml"
      prefix:   /sie/regstudent
 
+
 sie_herramienta_tramite_talento:
     resource: "@SieHerramientaBundle/Resources/config/routing/tramiteTalento.yml"
     prefix:   /sie/tramitetalento
@@ -206,3 +207,8 @@ sie_herramienta_tramite_talento:
 sie_herramienta_tramite_acelera:
     resource: "@SieHerramientaBundle/Resources/config/routing/tramiteAcelera.yml"
     prefix:   /sie/tramiteacelera
+
+sie_herramienta_anular_bth:
+     resource: "@SieHerramientaBundle/Resources/config/routing/anularBTH.yml"
+     prefix:   /sie/anularbth
+

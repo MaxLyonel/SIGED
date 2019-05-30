@@ -340,6 +340,14 @@ class SolicitudModificacionCalificacionesController extends Controller {
                 }
             }
 
+
+            // Validamos que no tenga diploma impreso
+            $tieneDiploma = $this->get('funciones')->validarTieneDiploma($idInscripcion);
+            if($tieneDiploma){
+                $this->get('session')->getFlashBag()->add('noSearch', 'No puede realizar la solicitud porque el estudiante, ya tiene diploma de bachiller impreso.');
+                return $this->render('SieRegularBundle:SolicitudModificacionCalificaciones:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
+            }
+
             //VAlidamos que la gestion sea del 2010 para arriba
             if($gestion < 2008 or $gestion > 2018){
                 $this->get('session')->getFlashBag()->add('noSearch', 'Solo se pueden hacer modificacion de calificaciones entre las gestiones 2008 a 2018!');

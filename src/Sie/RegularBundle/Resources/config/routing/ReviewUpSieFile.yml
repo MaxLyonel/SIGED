@@ -1,0 +1,14 @@
+
+review_up_sie_file_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:ReviewUpSieFile:index }
+
+review_up_sie_file_find:
+    path:     /find
+    defaults: { _controller: SieRegularBundle:ReviewUpSieFile:find }
+    options:
+        expose: true
+
+review_up_sie_file_download_file:
+    path:     /downloadFile
+    defaults: { _controller: SieRegularBundle:ReviewUpSieFile:downloadFile }

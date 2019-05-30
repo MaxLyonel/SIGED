@@ -37,3 +37,9 @@ info_students_cambiar_estado_matricula:
     defaults: { _controller: SieEspecialBundle:InfoStudents:cambiarEstadoMatricula }
     options:
          expose: true
+
+info_students_guardar_estado_matricula:
+    path:     /sie/gardarestado/
+    defaults: { _controller: SieEspecialBundle:InfoStudents:guardarEstadoMatricula }
+    options:
+         expose: true

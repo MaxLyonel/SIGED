@@ -220,13 +220,16 @@ class NoteConsultationParentsController extends Controller {
         }
 
         $sufijo = '_cuant';
+        $asignaturasInicial = array();
         if($inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId() == 11){
+            if ($gestion >= 2019) {
+                $asignaturasInicial = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('estudianteInscripcion' => $inscripcionid), array('id' => 'ASC'));
+            }
             $sufijo = '_cual';
         }
 
         $indicesArray = array();
         foreach ($cabeceraArray as $key => $value) {
-
             $indicesArray[$key] = strtolower($value->getNotaAbrev().$sufijo);
         }
 
@@ -242,7 +245,8 @@ class NoteConsultationParentsController extends Controller {
             'inscripcion' => $inscripcion,
             'gestion' => $gestion,
             'subsistema' => $subsistema,
-            'cualitativo' => $cuali
+            'cualitativo' => $cuali,
+            'asignaturasInicial' => $asignaturasInicial
         ));
     }
     /*

@@ -6,7 +6,7 @@
               {% for flashMessage in app.session.flashbag.get('noinscription') %}
                   <div class="alert alert-warning alert-dismissible" role="alert">
                       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                      <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                      <strong><i class='fa fa-linux'></i></strong> {{ flashMessage| raw }}
                   </div>
               {% endfor %}
 
@@ -94,7 +94,7 @@
                                 {% if data.estadomatriculaId == 4 %}
                                     <td>
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Cambiar estado">
-                                            <button type="submit" class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getEstadosMatricula({{data.estInsEspId}});">
+                                            <button type="submit" class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getEstadosMatricula('{{infoUe}}',{{data.estInsId}},{{arrDataLibreta.libreta}});">
                                                 {{data.estadomatricula}}
                                             </button>
                                         </div>    
@@ -208,10 +208,10 @@
         });
     };
 
-    var getEstadosMatricula = function (idInscripcionEspecial) {
+    var getEstadosMatricula = function (infoUe,estInsId,eslibreta) {
         $.ajax({
-            type: 'get',
-            data: ({idInscripcionEspecial: idInscripcionEspecial}),
+            type: 'post',
+            data: ({infoUe: infoUe, estInsId: estInsId, eslibreta: eslibreta}),
             url: "{{ path('info_students_cambiar_estado_matricula') }}",
             beforeSend: function () {
                 $('#modal').empty();

@@ -1,0 +1,180 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block contentoption %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Deshabilitación de U.E. BTH
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  Buscar</li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+<div class="body-content animated fadeIn">
+    <div class="row">
+        <div id="mensaje"></div>
+    </div>
+    <div class="col-md-12">
+        <div class="panel rounded panel panel-icon panel-primary">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Buscar SIE</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body no-padding">
+                <form id="form_busquedabth">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="control-label">Inserte SIE</label>
+                            <input type="text" class="form-control rounded" name="sie" id="sie" style="text-transform: uppercase" maxlength="8" autocomplete="off" required>
+                        </div>
+                    </div>
+                    <div class="form-footer">
+                        <div class="pull-right">
+                            <button type="submit" class="btn btn-theme" id="buscarbth">Buscar</button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12" id="respuestabth" style="display: none" >
+        <div class="panel rounded shadow">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Unidad Educativa</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body no-padding">
+
+                    <div class="form-body">
+                        <div id="no-more-tables">
+                            <table class="table" id="tablaelimina">
+                                <thead>
+                                <tr>
+                                    <th>Sie</th>
+                                    <th>Unidad Educativa</th>
+                                    <th>Opciones</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><label id="sie_id"></label> </td>
+                                        <td><label id="ue"></label></td>
+                                        <td data-title="Acciones">
+                                            <button class="btn btn-success rounded" onclick="anularBTh()" id="btnanulabth" > Deshabilitar</button>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="form-footer">
+
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+{% block javascripts%}
+ {{ parent() }}
+<script>
+    $(".alert").fadeTo(3000, 1000).slideUp(1000, function(){
+        $(".alert").slideUp(1000);
+    });
+    $("#form_busquedabth").submit( function (event) {
+        event.preventDefault();
+       /* $("#buscarbth").attr('disabled', true);*/
+        var formdata = $('#form_busquedabth').serialize();
+        $.ajax({
+            type: 'post',
+            url: "{{ path('anularbth_listasie') }}",
+            data: formdata,
+            beforeSend: function () {
+                //$("#respuestabth").empty();
+                //$("#respuestabth").append('<div class="text-center">Cargando... <img src="{ {asset('img/loading.gif')}}" /></div>');
+            },
+            success: function (data) {
+                console.log(data);
+                if(data.estado==1){
+                    mesage("danger","Notificación",data.msg);
+                }else if(data.estado==2){
+                    mesage("warning","Notificación",data.msg);
+                }else if(data.estado==4){
+                    mesage("danger","Notificación",data.msg);
+                }else if(data.estado==5){
+                    mesage("danger","Notificación",data.msg);
+                }else if(data.estado==3){
+                    $('#respuestabth').show(300);
+                    $('#sie_id').text(data.sie);
+                    $('#ue').text(data.ue);
+                }
+            },
+            error: function (error) {
+                $("#buscarbth").attr('disabled', false);
+            }
+        });
+    });
+    function anularBTh() {
+        swal({
+            title: "¿Está Segura/o de deshabilitar la U.E. como BTH ?",
+            text: "Tomar en cuenta que el trámite de la Unidad Educativa se finalizará.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Continuar"]
+        })
+            .then(function(willDelete)  {
+                if (willDelete) {
+                    var formData = {sie:$('#sie_id').text()};
+                    console.log(formData);
+                    $.ajax({
+                        type: 'post',
+                        url: "{{ path('anularbth_anula') }}",
+                        data: formData,
+                        beforeSend: function () {
+                            /*$("#eventos").empty();
+                            $("#eventos").append('<div class="text-center">Cargando... <img src="{ {asset('img/loading.gif')}}" /></div>');*/
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            //$("#btnanulabth").attr('disabled', false);
+                            if (data.estado == 1) {
+                                mesage("success","Notificación",data.msg);
+                                $('#respuestabth').hide();
+
+                                //window.location.reload(true)
+                                //setTimeout(function () { window.location.reload(true);}, 2000);
+                            }else if (data.estado == 2) {
+                                mesage("danger","Notificación",data.msg);
+                            }else {
+                                mesage("danger","Notificación",data.msg);
+                            }
+
+                        },
+                        error: function (error) {
+                            $("#guardar").attr('disabled', false);
+                        }
+                    });
+                }
+            });
+    }
+
+    function mesage(tipo, titulo, msg) {
+        $("#mensaje").html('<div class="alert alert-'+ tipo +' alert-dismissible" role="alert">\n' +
+            '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+            '<strong>'+ titulo +'</strong> '+ msg +' </div>');
+    }
+</script>
+{% endblock %}
