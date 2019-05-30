@@ -7,7 +7,7 @@
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
-                    <a href="{{ path('wf_tramite_recibido') }}">Bandeja</a>
+                    <a href="{{ path('wf_tramite_index') }}">Bandeja</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
                 <li class="active">Finalizar</li>
@@ -149,7 +149,7 @@
         function closeModal() {
             $("#modalConfirm").modal('hide');
             if ($("#tramite_st").val()==1) {
-                location.href = "{{ path('wf_tramite_recibido') }}";
+                location.href = "{{ path('wf_tramite_index') }}";
             }
         }
     </script>

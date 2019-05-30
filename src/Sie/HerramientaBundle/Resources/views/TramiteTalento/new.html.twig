@@ -219,7 +219,6 @@
                     $("#carga").empty();
                     if (data.estado == 200) {
                         clearInput();
-                        //location.href = "{ { path('wf_tramite_recibido') }}";
                         location.href = "{{ path('wf_tramite_index') }}";
                     } else {
                         mesage('danger', 'Alerta', data.msg, false);
