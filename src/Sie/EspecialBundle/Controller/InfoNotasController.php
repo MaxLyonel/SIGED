@@ -62,7 +62,8 @@ class InfoNotasController extends Controller {
             switch ($discapacidad) {
                 case 1: // Auditiva
                         //if($nivel != 405){
-                        if($nivel == 403 or $nivel == 404){
+                        $programa = $cursoEspecial->getEspecialProgramaTipo()->getId();
+                        if($nivel == 403 or $nivel == 404 or ($nivel == 411 and $programa==19)){
                             $notas = $this->get('notas')->regular($idInscripcion,$operativo);
                             if($notas['tipoNota'] == 'Trimestre'){
                                 $template = 'trimestral';
