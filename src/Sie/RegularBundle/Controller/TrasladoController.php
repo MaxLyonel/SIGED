@@ -150,7 +150,7 @@ class TrasladoController extends Controller {
             }//end if
 
             //check if the student has calification
-            if(!$bolNote){
+            if($bolNote){
               $session->getFlashBag()->add('noticemove', 'El estudiante no cuenta con notas... favor revisar calificaciones');
               return $this->render($this->session->get('pathSystem') . ':Traslado:index.html.twig', array(
                           'form' => $this->createSearchForm()->createView(),
