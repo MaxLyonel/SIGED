@@ -78,7 +78,7 @@
 	            {% if notas.estadoMatricula in notas.estadosPermitidos and notas.cuantitativas|length > 0 and onlyview == false %}
 		            <button type="submit" class="btn btn-success">Guardar Cambios</button>
 		        {% endif %}
-				{% if (notas.estadoMatricula in notas.estadosPermitidos and notas.gestion > 2018 and discapacidad in [4,6,7]) %}
+				{% if (notas.estadoMatricula in notas.estadosPermitidos and notas.gestion > 2018 and (discapacidad == 4 or discapacidad == 6 or discapacidad == 7 or (discapacidad == 2 and progserv == 21) or (discapacidad == 1 and progserv in [20,21,22]))) %}
 					<button type="submit" class="btn btn-success">Guardar</button>
 				{% endif %}
 	        </div>

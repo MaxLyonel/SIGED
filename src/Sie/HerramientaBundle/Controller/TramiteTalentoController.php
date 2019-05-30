@@ -54,7 +54,7 @@ class TramiteTalentoController extends Controller
         $tarea_id = $flujoproceso->getId();//59 Solicita Talento, flujo_proceso
         $tabla = 'institucioneducativa';
         $centroinscripcion_id = $datos['centro_inscripcion'];//$request->getSession()->get('ie_id');
-        $tipotramite = $em->getRepository('SieAppWebBundle:TramiteTipo')->findOneBy(array('obs' => 'TL'));
+        $tipotramite = $em->getRepository('SieAppWebBundle:TramiteTipo')->findOneBy(array('obs' => 'TE'));
         if ($tipotramite == null) {
             $estado = 500;
             return $response->setData(array('estado' => $estado, 'msg' => 'Tipo de Trámite no habilitado.'));

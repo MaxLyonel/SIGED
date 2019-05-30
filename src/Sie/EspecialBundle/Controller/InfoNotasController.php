@@ -57,12 +57,14 @@ class InfoNotasController extends Controller {
             $notas = null;
             $vista = 1;
             $discapacidad = $cursoEspecial->getEspecialAreaTipo()->getId();
+            $progserv = '';
             //dump($discapacidad);die;
             $estadosMatricula = null;
             switch ($discapacidad) {
                 case 1: // Auditiva
                         //if($nivel != 405){
-                        if($nivel == 403 or $nivel == 404){
+                        $progserv = $cursoEspecial->getEspecialProgramaTipo()->getId();
+                        if($nivel == 403 or $nivel == 404 or ($nivel == 411 and $progserv == 19)){//Verificar el seguimiento para 19
                             $notas = $this->get('notas')->regular($idInscripcion,$operativo);
                             if($notas['tipoNota'] == 'Trimestre'){
                                 $template = 'trimestral';
@@ -87,6 +89,7 @@ class InfoNotasController extends Controller {
                         break;
                 case 2: // Visual
                         $programa = $cursoEspecial->getEspecialProgramaTipo()->getId();
+                        $progserv = $cursoEspecial->getEspecialServicioTipo()->getId();
                         if($nivel == 411 and in_array($programa, array(7,8,9,12,14,15))){
                             if($gestion < 2019){
                                 if($notas['tipoNota'] == 'Trimestre'){
@@ -175,11 +178,11 @@ class InfoNotasController extends Controller {
                 case 100: // Modalidad Indirecta
                         break;
             }
-            //dump($notas);die;
+            // dump($notas);die;
             if($notas){
-                return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array('notas'=>$notas,'inscripcion'=>$inscripcion,'vista'=>$vista,'template'=>$template,'actualizar'=>$actualizarMatricula,'operativo'=>$operativo,'estadosMatricula'=>$estadosMatricula,'discapacidad'=>$discapacidad));
+                return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array('notas'=>$notas,'inscripcion'=>$inscripcion,'vista'=>$vista,'template'=>$template,'actualizar'=>$actualizarMatricula,'operativo'=>$operativo,'estadosMatricula'=>$estadosMatricula,'discapacidad'=>$discapacidad,'progserv'=>$progserv));
             }else{
-                return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array('iesp'=>$inscripcionEspecial));
+                return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array('iesp'=>$inscripcionEspecial, 'notas'=>$notas));
             }
 
         } catch (Exception $e) {

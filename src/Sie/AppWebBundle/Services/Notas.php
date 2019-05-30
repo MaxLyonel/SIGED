@@ -2384,7 +2384,7 @@ die;/*
                 'estadosPermitidos' =>$estadosPermitidos,
                 'tiposNotas'        =>$tiposNotasArray,
                 'estadosFinales'    =>$estadosFinales,
-                'etapas'            =>$etapasArray
+                'etapas'            =>$etapasArray,
             );
 
         } catch (Exception $e) {
